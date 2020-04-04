@@ -1,0 +1,348 @@
+#version 450
+
+/*
+CRT Shader by EasyMode with addition of scaling functions from hsm-mega-screen-scale
+License: GPL
+
+Addition of hsm-mega-screen-scale by HyperspaceMadness remimcgill@hotmail.com
+*/
+
+// Modifications from hsm-mega-bezel-include.inc integration
+// Added the following
+// Import Screen Scale Functions and global structure
+#include "hsm-mega-screen-scale.inc"
+// End Addition
+
+layout(push_constant) uniform Push
+{
+	float GAMMA_OUTPUT;
+	float SHARPNESS_H;
+	float SHARPNESS_V;
+	float MASK_TYPE;
+	float MASK_STRENGTH_MIN;
+	float MASK_STRENGTH_MAX;
+	float MASK_SIZE;
+	float SCANLINE_STRENGTH_MIN;
+	float SCANLINE_STRENGTH_MAX;
+	float SCANLINE_BEAM_MIN;
+	float SCANLINE_BEAM_MAX;
+    // Modifications from hsm-mega-bezel-include.inc integration
+    // Removed the following
+	// float GEOM_CURVATURE;
+	// float GEOM_WARP;
+	// float GEOM_CORNER_SIZE;
+	// float GEOM_CORNER_SMOOTH;
+	float INTERLACING_TOGGLE;
+	float HALATION;
+	float DIFFUSION;
+	float BRIGHTNESS;
+} params;
+
+#pragma parameter emh_title 			"______EASYMODE HALATION______" 0 0 0 1
+#pragma parameter GAMMA_OUTPUT          "    Gamma Output" 2.2 0.1 5.0 0.01
+#pragma parameter SHARPNESS_H           "    Sharpness Horizontal" 0.6 0.0 1.0 0.05
+#pragma parameter SHARPNESS_V           "    Sharpness Vertical" 1.0 0.0 1.0 0.05
+#pragma parameter MASK_TYPE             "    Mask Type" 4.0 0.0 7.0 1.0
+#pragma parameter MASK_STRENGTH_MIN     "    Mask Strength Min." 0.2 0.0 0.5 0.01
+#pragma parameter MASK_STRENGTH_MAX     "    Mask Strength Max." 0.2 0.0 0.5 0.01
+#pragma parameter MASK_SIZE             "    Mask Size" 1.0 1.0 100.0 1.0
+#pragma parameter SCANLINE_STRENGTH_MIN "    Scanline Strength Min." 0.2 0.0 1.0 0.05
+#pragma parameter SCANLINE_STRENGTH_MAX "    Scanline Strength Max." 0.4 0.0 1.0 0.05
+#pragma parameter SCANLINE_BEAM_MIN     "    Scanline Beam Min." 1.0 0.25 5.0 0.05
+#pragma parameter SCANLINE_BEAM_MAX     "    Scanline Beam Max." 1.0 0.25 5.0 0.05
+
+// Modifications from hsm-mega-bezel-include.inc integration
+// Removed the following
+// #pragma parameter GEOM_CURVATURE "Geom Curvature" 0.0 0.0 0.1 0.01
+// #pragma parameter GEOM_WARP "Geom Warp" 0.0 0.0 0.1 0.01
+// #pragma parameter GEOM_CORNER_SIZE "Geom Corner Size" 0.0 0.0 0.1 0.01
+// #pragma parameter GEOM_CORNER_SMOOTH "Geom Corner Smoothness" 150.0 50.0 1000.0 25.0
+
+#pragma parameter INTERLACING_TOGGLE    "    Interlacing Toggle" 1.0 0.0 1.0 1.0
+#pragma parameter HALATION              "    Halation" 0.03 0.0 1.0 0.01
+#pragma parameter DIFFUSION             "    Diffusion" 0.0 0.0 1.0 0.01
+#pragma parameter BRIGHTNESS            "    Brightness" 1.0 0.0 2.0 0.05
+
+// REMOVED FOR MEGA SCREEN SCALE because MEGA SCREEN SCALE has its own globals, required variables moved to params
+/* Removed the following
+layout(std140, set = 0, binding = 0) uniform UBO
+{
+	mat4 MVP;
+	uint FrameCount;
+	vec4 OriginalSize;
+	vec4 ORIG_LINEARIZEDSize;
+} global;
+*/
+
+/*
+    CRT Shader by EasyMode
+    License: GPL
+*/
+
+#define FIX(c) max(abs(c), 1e-5)
+#define PI 3.141592653589
+#define TEX2D(c) texture(tex, c)
+
+float curve_distance(float x, float sharp)
+{
+    float x_step = step(0.5, x);
+    float curve = 0.5 - sqrt(0.25 - (x - x_step) * (x - x_step)) * sign(0.5 - x);
+
+    return mix(x, curve, sharp);
+}
+
+mat4x4 get_color_matrix(sampler2D tex, vec2 co, vec2 dx)
+{
+    return mat4x4(TEX2D(co - dx), TEX2D(co), TEX2D(co + dx), TEX2D(co + 2.0 * dx));
+}
+
+vec4 filter_lanczos(vec4 coeffs, mat4x4 color_matrix)
+{
+    vec4 col = color_matrix * coeffs;
+    vec4 sample_min = min(color_matrix[1], color_matrix[2]);
+    vec4 sample_max = max(color_matrix[1], color_matrix[2]);
+
+    col = clamp(col, sample_min, sample_max);
+
+    return col;
+}
+
+vec3 get_scanline_weight(float pos, float beam, float strength)
+{
+    float weight = 1.0 - pow(cos(pos * 2.0 * PI) * 0.5 + 0.5, beam);
+    
+    weight = weight * strength * 2.0 + (1.0 - strength);
+    
+    return vec3(weight);
+}
+
+// Modifications from hsm-mega-bezel-include.inc integration
+/* Removed the following
+vec2 curve_coordinate(vec2 co, float curvature)
+{
+    vec2 curve = vec2(curvature, curvature * 0.75);
+    vec2 co2 = co + co * curve - curve / 2.0;
+    vec2 co_weight = vec2(co.y, co.x) * 2.0 - 1.0;
+
+    co = mix(co, co2, co_weight * co_weight);
+
+    return co;
+}
+
+float get_corner_weight(vec2 co, vec2 corner, float smoothfunc)
+{
+    float corner_weight;
+    
+    co = min(co, vec2(1.0) - co) * vec2(1.0, 0.75);
+    co = (corner - min(co, corner));
+    corner_weight = clamp((corner.x - sqrt(dot(co, co))) * smoothfunc, 0.0, 1.0);
+    corner_weight = mix(1.0, corner_weight, ceil(corner.x));
+    
+    return corner_weight;
+}
+*/
+
+#pragma stage vertex
+layout(location = 0) in vec4 Position;
+layout(location = 1) in vec2 TexCoord;
+layout(location = 0) out vec2 vTexCoord;
+
+// Modifications from hsm-mega-bezel-include.inc integration
+// Added the following
+layout(location = 1) out vec2 screenScale;
+// End Addition
+
+void main()
+{
+   gl_Position = global.MVP * Position;
+   vTexCoord = TexCoord;
+
+    // Modifications from hsm-mega-bezel-include.inc integration
+    // Added the following
+    screenScale =  HMSS_GetScreenScale();
+    vTexCoord = HMSS_GetScreenVTexCoord(vTexCoord);
+}
+
+#pragma stage fragment
+layout(location = 0) in vec2 vTexCoord;
+
+// Modifications from hsm-mega-bezel-include.inc integration
+// Added the following
+layout(location = 1) in vec2 screenScale;
+// End Addition
+
+layout(location = 0) out vec4 FragColor;
+layout(set = 0, binding = 2) uniform sampler2D Source;
+layout(set = 0, binding = 3) uniform sampler2D ORIG_LINEARIZED;
+
+// TODO need to add Overscan Crop
+
+void main()
+{
+    // Modifications from hsm-mega-bezel-include.inc integration
+    /* Removed the following
+    vec2 tex_size = global.SourceSize.xy;
+    */
+
+    // TODO implement Cropping
+    // Added the following
+    vec2 tex_size = global.SourceSize.xy;
+    // End Addition
+
+    vec2 midpoint = vec2(0.5, 0.5);
+    float scan_offset = 0.0;
+    float timer = vec2(global.FrameCount, global.FrameCount).x;
+
+    if (params.INTERLACING_TOGGLE > 0.5 && global.SourceSize.y >= 400)
+    {
+        tex_size.y *= 0.5;
+
+        if (mod(timer, 2.0) > 0.0)
+        {
+            midpoint.y = 0.75;
+            scan_offset = 0.5;
+        }        
+        else midpoint.y = 0.25;
+    }
+
+    vec2 co = vTexCoord * tex_size * global.SourceSize.zw;
+
+    // Modifications from hsm-mega-bezel-include.inc integration
+    /* Removed the following
+    vec2 xy = curve_coordinate(co, params.GEOM_WARP);
+    float corner_weight = get_corner_weight(curve_coordinate(co, params.GEOM_CURVATURE), vec2(params.GEOM_CORNER_SIZE), params.GEOM_CORNER_SMOOTH);
+    Not sure why params.GEOM_WARP was used for the main coordinate and params.GEOM_CURVATURE was used for the corner
+    */
+
+    // ADDED the following to add overscan crop and use different curvature from mega screen scale
+    // corner_weight is also set to 1 so the corner will not be masked, and will be masked in a later pass 
+    vec2 xy = HMSS_GetWrappedCurvedCoord(co, 1);
+    float corner_weight = 1;
+    xy = HMSS_GetCropOverscanCoord(xy);
+    // End Addition
+
+    xy *= global.SourceSize.xy / tex_size;
+
+    vec2 dx = vec2(1.0 / tex_size.x, 0.0);
+    vec2 dy = vec2(0.0, 1.0 / tex_size.y);
+    vec2 pix_co = xy * tex_size - midpoint;
+    vec2 tex_co = (floor(pix_co) + midpoint) / tex_size;
+    vec2 dist = fract(pix_co);
+    float curve_x, curve_y;
+    vec3 col, col2, diff;
+
+    curve_x = curve_distance(dist.x, params.SHARPNESS_H * params.SHARPNESS_H);
+    curve_y = curve_distance(dist.y, params.SHARPNESS_V * params.SHARPNESS_V);
+
+    vec4 coeffs_x = PI * vec4(1.0 + curve_x, curve_x, 1.0 - curve_x, 2.0 - curve_x);
+    vec4 coeffs_y = PI * vec4(1.0 + curve_y, curve_y, 1.0 - curve_y, 2.0 - curve_y);
+
+    coeffs_x = FIX(coeffs_x);
+    coeffs_x = 2.0 * sin(coeffs_x) * sin(coeffs_x / 2.0) / (coeffs_x * coeffs_x);
+    coeffs_x /= dot(coeffs_x, vec4(1.0));
+
+    coeffs_y = FIX(coeffs_y);
+    coeffs_y = 2.0 * sin(coeffs_y) * sin(coeffs_y / 2.0) / (coeffs_y * coeffs_y);
+    coeffs_y /= dot(coeffs_y, vec4(1.0));
+
+    mat4x4 color_matrix;
+
+    color_matrix[0] = filter_lanczos(coeffs_x, get_color_matrix(ORIG_LINEARIZED, tex_co - dy, dx));
+    color_matrix[1] = filter_lanczos(coeffs_x, get_color_matrix(ORIG_LINEARIZED, tex_co, dx));
+    color_matrix[2] = filter_lanczos(coeffs_x, get_color_matrix(ORIG_LINEARIZED, tex_co + dy, dx));
+    color_matrix[3] = filter_lanczos(coeffs_x, get_color_matrix(ORIG_LINEARIZED, tex_co + 2.0 * dy, dx));
+
+    col = filter_lanczos(coeffs_y, color_matrix).rgb;
+    diff = texture(Source, xy).rgb;
+
+    float rgb_max = max(col.r, max(col.g, col.b));
+
+    // Modifications from hsm-mega-bezel-include.inc integration
+    /* Removed the following
+    float sample_offset = (global.SourceSize.y * global.OutputSize.w) * 0.5;
+    */
+
+    // Modifications from hsm-mega-bezel-include.inc integration
+    // Added the Following
+    float sample_offset = (global.SourceSize.y * global.OutputSize.w * screenScale.y) * 0.5;
+    // End Addition
+
+    float scan_pos = xy.y * tex_size.y + scan_offset;
+    float scan_strength = mix(params.SCANLINE_STRENGTH_MAX, params.SCANLINE_STRENGTH_MIN, rgb_max);
+    float scan_beam = clamp(rgb_max * params.SCANLINE_BEAM_MAX, params.SCANLINE_BEAM_MIN, params.SCANLINE_BEAM_MAX);
+    vec3 scan_weight = vec3(0.0);
+
+    float mask_colors;
+    float mask_dot_width;
+    float mask_dot_height;
+    float mask_stagger;
+    float mask_dither;
+    vec4 mask_config;
+
+    if      (params.MASK_TYPE == 1) mask_config = vec4(2.0, 1.0, 1.0, 0.0);
+    else if (params.MASK_TYPE == 2) mask_config = vec4(3.0, 1.0, 1.0, 0.0);
+    else if (params.MASK_TYPE == 3) mask_config = vec4(2.1, 1.0, 1.0, 0.0);
+    else if (params.MASK_TYPE == 4) mask_config = vec4(3.1, 1.0, 1.0, 0.0);
+    else if (params.MASK_TYPE == 5) mask_config = vec4(2.0, 1.0, 1.0, 1.0);
+    else if (params.MASK_TYPE == 6) mask_config = vec4(3.0, 2.0, 1.0, 3.0);
+    else if (params.MASK_TYPE == 7) mask_config = vec4(3.0, 2.0, 2.0, 3.0);
+
+    mask_colors = floor(mask_config.x);
+    mask_dot_width = mask_config.y;
+    mask_dot_height = mask_config.z;
+    mask_stagger = mask_config.w;
+    mask_dither = fract(mask_config.x) * 10.0;
+
+    // Modifications from hsm-mega-bezel-include.inc integration
+    /* Removed the following
+    vec2 mod_fac = floor(vTexCoord * global.OutputSize.xy * global.SourceSize.xy / (global.SourceSize.xy * vec2(params.MASK_SIZE, mask_dot_height * params.MASK_SIZE)));
+    */
+
+    // Added the following
+    vec2 mod_fac = floor(vTexCoord * global.OutputSize.xy * screenScale * global.SourceSize.xy / (global.SourceSize.xy * vec2(params.MASK_SIZE, mask_dot_height * params.MASK_SIZE)));
+    // End Addition
+
+    int dot_no = int(mod((mod_fac.x + mod(mod_fac.y, 2.0) * mask_stagger) / mask_dot_width, mask_colors));
+    float dither = mod(mod_fac.y + mod(floor(mod_fac.x / mask_colors), 2.0), 2.0);
+
+    float mask_strength = mix(params.MASK_STRENGTH_MAX, params.MASK_STRENGTH_MIN, rgb_max);
+    float mask_dark, mask_bright, mask_mul;
+    vec3 mask_weight;
+
+    mask_dark = 1.0 - mask_strength;
+    mask_bright = 1.0 + mask_strength * 2.0;
+
+    if (dot_no == 0) mask_weight = mix(vec3(mask_bright, mask_bright, mask_bright), vec3(mask_bright, mask_dark, mask_dark), mask_colors - 2.0);
+    else if (dot_no == 1) mask_weight = mix(vec3(mask_dark, mask_dark, mask_dark), vec3(mask_dark, mask_bright, mask_dark), mask_colors - 2.0);
+    else mask_weight = vec3(mask_dark, mask_dark, mask_bright);
+
+    if (dither > 0.9) mask_mul = mask_dark;
+    else mask_mul = mask_bright;
+
+    mask_weight *= mix(1.0, mask_mul, mask_dither);
+    mask_weight = mix(vec3(1.0), mask_weight, clamp(params.MASK_TYPE, 0.0, 1.0));
+
+    col2 = (col * mask_weight);
+    col2 *= params.BRIGHTNESS;
+
+    scan_weight = get_scanline_weight(scan_pos - sample_offset, scan_beam, scan_strength);
+    col = clamp(col2 * scan_weight, 0.0, 1.0);
+    scan_weight = get_scanline_weight(scan_pos, scan_beam, scan_strength);
+    col += clamp(col2 * scan_weight, 0.0, 1.0);
+    scan_weight = get_scanline_weight(scan_pos + sample_offset, scan_beam, scan_strength);
+    col += clamp(col2 * scan_weight, 0.0, 1.0);
+    col /= 3.0;
+
+    col *= vec3(corner_weight);
+    col += diff * mask_weight * params.HALATION * vec3(corner_weight);
+    col += diff * params.DIFFUSION * vec3(corner_weight);
+
+    // Modifications from hsm-mega-bezel-include.inc integration
+    // Added
+    col = pow(col, 1.0 / vec3(global.hmss_post_crt_gamma));
+    // End Addition
+
+    col = pow(col, vec3(1.0 / params.GAMMA_OUTPUT));
+
+   FragColor = vec4(col, 1.0);
+}

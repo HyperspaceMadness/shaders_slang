@@ -31,7 +31,7 @@ layout(push_constant) uniform Push
 
 #define LAST_PASS
 #define SIMULATE_CRT_ON_LCD
-#include "../../../../include/compat_macros.inc"
+#include "../../../../../include/compat_macros.inc"
 #include "../user-settings.h"
 #include "derived-settings-and-constants.h"
 #include "bind-shader-params.h"
@@ -54,7 +54,7 @@ layout(push_constant) uniform Push
 
 //////////////////////////////////  INCLUDES  //////////////////////////////////
 
-#include "../../../../include/gamma-management.h"
+#include "../../../../../include/gamma-management.h"
 #include "tex2Dantialias.h"
 #include "geometry-functions.h"
 
@@ -204,6 +204,12 @@ void main()
     const float2 video_uv =
         (video_uv_no_geom_overscan - float2(0.5, 0.5))/geom_overscan + float2(0.5, 0.5);
     const float2 tex_uv = video_uv * (IN.video_size * texture_size_inv);
+
+    // HSM Addition
+    #ifdef PAINT_CURVATURE
+        FragColor = vec4(video_uv);
+        return;
+    #endif
 
     //  Get a matrix transforming pixel vectors to tex_uv vectors:
     const float2x2 pixel_to_tex_uv =

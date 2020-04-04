@@ -30,7 +30,7 @@ layout(push_constant) uniform Push
 
 /////////////////////////////  SETTINGS MANAGEMENT  ////////////////////////////
 
-#include "../../../../include/compat_macros.inc"
+#include "../../../../../include/compat_macros.inc"
 #include "../user-settings.h"
 #include "derived-settings-and-constants.h"
 #include "bind-shader-params.h"
@@ -38,7 +38,7 @@ layout(push_constant) uniform Push
 
 ///////////////////////////////  VERTEX INCLUDES  ///////////////////////////////
 
-#include "../../../../include/gamma-management.h"
+#include "../../../../../include/gamma-management.h"
 #include "phosphor-mask-resizing.h"
 
 float bloom_approx_scale_x = params.OutputSize.x / params.SourceSize.y;

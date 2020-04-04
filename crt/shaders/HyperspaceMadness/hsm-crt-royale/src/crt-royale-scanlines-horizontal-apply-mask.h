@@ -49,7 +49,7 @@ const float max_viewport_size_x = 1080.0*1024.0*(4.0/3.0);
 
 /////////////////////////////  SETTINGS MANAGEMENT  ////////////////////////////
 
-#include "../../../../include/compat_macros.inc"
+#include "../../../../../include/compat_macros.inc"
 #include "../user-settings.h"
 #include "derived-settings-and-constants.h"
 #include "bind-shader-params.h"
@@ -59,7 +59,7 @@ const float max_viewport_size_x = 1080.0*1024.0*(4.0/3.0);
 
 #include "scanline-functions.h"
 #include "phosphor-mask-resizing.h"
-#include "../../../../include/gamma-management.h"
+#include "../../../../../include/gamma-management.h"
 
 ///////////////////////////////////  HELPERS  //////////////////////////////////
 

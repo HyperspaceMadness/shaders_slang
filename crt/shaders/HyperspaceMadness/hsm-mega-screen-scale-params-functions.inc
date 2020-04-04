@@ -7,6 +7,8 @@ Description:
 	-Parameters to be used by Mega Screen Scale and Mega Bezel
 */
 
+//#define TELMO_TEST
+
 #include "hsm-helper-functions.inc"
 
 // Screen Scale Required Parameters
@@ -36,6 +38,7 @@ Description:
 #pragma parameter hmss_crop_overscan_left 				"[CROPPING]  Crop Overscan Left" 0 -256 256 1
 #pragma parameter hmss_crop_overscan_right 				"[CROPPING]  Crop Overscan Right" 0 -256 256 1
 
+//#pragma parameter hmss_curvature_type 					"[CURVATURE]  Curvature Mode (0:2D 1-3:Geom)" 0 0 3
 #pragma parameter hmss_curvature_on_long_axis 			"[CURVATURE]  Curvature on Long Axis (default 3)" 0 0 12.5 0.2
 #pragma parameter hmss_curvature_on_short_axis 			"[CURVATURE]  Curvature on Short Axis (default 4)" 0 0 12.5 0.2
 
@@ -92,8 +95,6 @@ float HMSS_GetIsCroppedOriginalSizeVertical()
 	float cropped_aspect_ratio = cropped_original_size.x/cropped_original_size.y;
 	return cropped_aspect_ratio < 1 ? 1 : 0;
 }
-
-
 
 float HMSS_GetScreenAspectRatio()
 {
@@ -495,10 +496,21 @@ vec4 HMSS_COMPAT_TEXTURE(sampler2D in_sampler, vec2 in_coord)
 
 	vec2 sample_coord = HMSS_GetCropOverscanCoord(ctr_coord + 0.5);
 
-	vec4 sampled_color = texture(in_sampler, sample_coord);
-	vec4 negative_crop_color = vec4(global.hmss_negative_crop_brightness / 100, global.hmss_negative_crop_brightness / 100, global.hmss_negative_crop_brightness / 100, 1);
+	#ifdef TELMO_TEST
+		if (HMSS_IsInNegativeCropArea(sample_coord) == 1)
+		{
+			return vec4(global.hmss_negative_crop_brightness / 100, global.hmss_negative_crop_brightness / 100, global.hmss_negative_crop_brightness / 100, 1);
+		}
+		else
+		{
+			return texture(in_sampler, sample_coord);
+		}
+	#else
+		vec4 sampled_color = texture(in_sampler, sample_coord);
+		vec4 negative_crop_color = vec4(global.hmss_negative_crop_brightness / 100, global.hmss_negative_crop_brightness / 100, global.hmss_negative_crop_brightness / 100, 1);
 
-	float negative_crop = HMSS_IsInNegativeCropArea(sample_coord);
+		float negative_crop = HMSS_IsInNegativeCropArea(sample_coord);
 
-	return negative_crop * negative_crop_color + (1 - negative_crop) * sampled_color;
+		return negative_crop * negative_crop_color + (1 - negative_crop) * sampled_color;
+	#endif
 }

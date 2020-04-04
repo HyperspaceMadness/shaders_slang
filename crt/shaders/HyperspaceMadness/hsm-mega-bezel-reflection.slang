@@ -261,8 +261,10 @@ layout(set = 0, binding = 5) uniform sampler2D BR_MirrorReflectionDiffusedPass;
 layout(set = 0, binding = 6) uniform sampler2D BR_MirrorFullscreenGlowPass;
 
 layout(set = 0, binding = 7)  uniform sampler2D BackgroundImage;
-layout(set = 0, binding = 11) uniform sampler2D TubeGlassImage;
-layout(set = 0, binding = 9)  uniform sampler2D OverlayImage;
+layout(set = 0, binding = 8)  uniform sampler2D BackgroundVertImage;
+layout(set = 0, binding = 9) uniform sampler2D TubeGlassImage;
+layout(set = 0, binding = 10)  uniform sampler2D OverlayImage;
+layout(set = 0, binding = 11)  uniform sampler2D OverlayVertImage;
 
 void main()
 {
@@ -459,10 +461,16 @@ void main()
 
 		vec4 base_image	= frag_color_linear;
 		vec2 tiled_image_coord = mod(imageLayerCoord, 1);
-		vec4 background_image = texture(BackgroundImage, tiled_image_coord).rgba;
+		vec4 background_image = vec4(0);
+		if (HMSS_GetScreenAspectRatio() > 1)
+		{
+			background_image = texture(BackgroundImage, tiled_image_coord).rgba;
+		}
+		else 
+		{
+			background_image = texture(BackgroundVertImage, tiled_image_coord).rgba;
+		}
 		background_image = global.hmbz_background_image_brightness * HHLP_Linearize(background_image);
-
-
 
 		//----------------------------------------------------
 		// Image Bezel - Applied ON TOP of the CRT image, BELOW the reflection
@@ -699,9 +707,16 @@ void main()
 			frag_color_linear += reflected_color;
 		}
 	}
-	vec4 overlay_image = texture(OverlayImage, imageLayerCoord).rgba;
+	vec4 overlay_image = vec4(0);
 
-
+	if (HMSS_GetScreenAspectRatio() > 1)
+	{
+		overlay_image = texture(OverlayImage, imageLayerCoord).rgba;
+	}
+	else 
+	{
+		overlay_image = texture(OverlayVertImage, imageLayerCoord).rgba;
+	}
 	
 	FragColor = mix(clamp(HHLP_Delinearize(frag_color_linear), 0, 1), overlay_image, overlay_image.a);
 

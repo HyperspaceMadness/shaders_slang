@@ -1,0 +1,174 @@
+shaders = 13
+
+// Add Mega Screen Scale Params for the UI
+//      A hack to add the mega-screen-scale parameters at the beginning of the list for easy access
+shader0 = ../crt/shaders/hyperspacemadness/hsm-stock-with-mega-screen-scale-params.slang
+
+shader1 = ../stock.slang
+
+shader2 = ../stock.slang
+
+shader3 = ../stock.slang
+
+// Afterglow and Black Level ----------------------------------------------------------------
+//      Almost the same as Guest's original afterglow but can brighten the black without losing the afterglow
+shader4 = ../crt/shaders/hyperspacemadness/hsm-guest-afterglow-with-black-level.slang
+filter_linear4 = false
+scale_type4 = source
+scale4 = 1.0
+alias4 = AfterglowPass
+
+shader5 = ../crt/shaders/hyperspacemadness/hsm-lcd-grid-v2.slang
+filter_linear5 = "false"
+scale_type5 = "viewport"
+scale5 = "1.0"
+
+shader6 = ../handheld/shaders/color/gba-color.slang
+filter_linear6 = "false"
+scale_type6 = "source"
+scale6 = "1.0"
+alias6 = BR_CrtPass
+
+// Linearize & Reduce Resolution ----------------------------------------------------------------
+//      Reduce the resolution to a small static size regardless of final resolution
+//      Allows consistent look and faster at different final resolutions for blur
+//      Mipmap option allows downscaling without artifacts
+shader7 = ../crt/shaders/hyperspacemadness/linearize.slang
+mipmap_input7 = true
+filter_linear7 = true
+scale_type7 = absolute
+float_framebuffer7 = true
+// scale_x7 = 480
+// scale_y7 = 270
+// scale_x7 = 960
+// scale_y7 = 540
+scale_x7 = 800
+scale_y7 = 600
+alias7 = BR_MirrorLowResPass
+
+// Add Blur for the Reflection (Horizontal) ----------------------------------------------------------------
+shader8 = ../crt/shaders/hyperspacemadness/hsm-blur-outside-screen-horiz.slang
+filter_linear8 = false
+scale_type8 = source
+float_framebuffer8 = true
+
+// Add Blur for the Reflection (Vertical) ----------------------------------------------------------------
+shader9 = ../crt/shaders/hyperspacemadness/hsm-blur-outside-screen-vert.slang
+filter_linear9 = false
+scale_type9 = source
+float_framebuffer9 = true
+alias9 = BR_MirrorBlurredPass
+
+// Reduce resolution ----------------------------------------------------------------
+// Reduced to a very small amount so we can create a blur which will create a glow from the screen
+//      Mipmap option allows smoother downscaling
+shader10 = ../blurs/blur9x9.slang
+mipmap_input10 = true
+filter_linear10 = true
+scale_type10 = absolute
+float_framebuffer10 = true
+scale_x10 = 128
+scale_y10 = 128
+alias10 = BR_MirrorReflectionDiffusedPass
+
+// Add Diffused glow all around the screen ----------------------------------------------------------------
+//      lurred so much that it's non directional
+//      Mipmap option allows downscaling without artifacts
+shader11 = ../blurs/blur9x9.slang
+mipmap_input11 = true
+filter_linear11 = true
+scale_type11 = absolute
+float_framebuffer11 = true
+scale_x11 = 12
+scale_y11 = 12
+alias11 = BR_MirrorFullscreenGlowPass
+
+// Bezel Generation & Reflection ----------------------------------------------------------------
+//      Uses these previous passes:
+//          BR_CrtPass
+//          BR_MirrorBlurredPass
+//          BR_MirrorReflectionDiffusedPass
+//          BR_MirrorFullscreenGlowPass
+//      Blur passes are in linearized color space, and CRT Pass already has gamma encoded in it
+//
+//      Uses these textures
+//          BezelImage_Horzizontal
+//          BezelImage_Vertical
+
+shader12 = ../crt/shaders/hyperspacemadness/hsm-mega-bezel-reflection.slang
+mipmap_input12 = true
+filter_linear12 = true
+scale_type12 = viewport
+float_framebuffer12 = true
+
+
+// Define textures to be used by the different passes
+textures = "BezelImage_Horzizontal;BezelImage_Vertical;OverlayImage_Horzizontal;OverlayImage_Vertical"
+
+BezelImage_Horzizontal = ../crt/shaders/hyperspacemadness/textures/BezelImage_UnderReflection_CarbonFiber_5040x2880.png
+BezelImage_Vertical = ../crt/shaders/hyperspacemadness/textures/BezelImage_UnderReflection_CarbonFiber_5040x2880.png
+
+OverlayImage_Horzizontal = ../crt/shaders/hyperspacemadness/textures/OverlayImage_OverReflection_Transparent_5040x2880.png
+OverlayImage_Vertical = ../crt/shaders/hyperspacemadness/textures/OverlayImage_OverReflection_Transparent_5040x2880.png
+
+parameters = "RSUBPIX_R;RSUBPIX_G;RSUBPIX_B;GSUBPIX_R;GSUBPIX_G;GSUBPIX_B;BSUBPIX_R;BSUBPIX_G;BSUBPIX_B;gain;gamma;blacklevel;ambient;BGR;hmss_mega_screen_scale_on;hmss_screen_aspect_ratio;hmss_integer_scale_mode;hmss_int_scale_multiple_offset;hmss_non_integer_scale;hmss_int_scale_border_min_height;hmss_scanline_direction;hmss_curvature_on_long_axis;hmss_curvature_on_short_axis;hmss_corner_radius;hmss_tube_black_edge_thickness;hmbz_frame_thickness;hmbz_bezel_width;hmbz_bezel_height;hmbz_image_bezel_opacity;hmbz_bezel_opacity;hmbz_bezel_brightness;hmbz_frame_opacity;hmbz_image_bezel_cut_out_inside_frame;hmbz_image_bezel_scale_mode;hmbz_image_bezel_aspect_ratio;hmbz_image_bezel_tube_height;hmss_crop_overscan_top;hmss_crop_overscan_bottom;hmss_crop_overscan_left;hmss_crop_overscan_right;hmss_crop_and_afterglow_black_level;hbl_blur_min;hbl_blur_max;hbl_sharpness_falloff_speed;hbl_sharpness_falloff_distance;hbr_global_amount;hbr_global_gamma_adjust;hbr_diffused_reflection;hbr_fullscreen_glow;hbr_fullscreen_glow_gamma;hag_afterglow_persistence"
+
+RSUBPIX_R = "0.750000"
+RSUBPIX_G = "0.000000"
+RSUBPIX_B = "0.000000"
+GSUBPIX_R = "0.000000"
+GSUBPIX_G = "0.750000"
+GSUBPIX_B = "0.000000"
+BSUBPIX_R = "0.000000"
+BSUBPIX_G = "0.000000"
+BSUBPIX_B = "0.750000"
+gain = "1.500000"
+gamma = "2.200000"
+blacklevel = "0.000000"
+ambient = "0.000000"
+BGR = "1.000000"
+
+hmss_mega_screen_scale_on = 1
+hmss_screen_aspect_ratio = 1.5
+hmss_integer_scale_mode = 2
+hmss_int_scale_multiple_offset = -1
+// hmss_non_integer_scale = 83
+hmss_int_scale_border_min_height = 6
+// hmss_scanline_direction = 0
+
+hmss_curvature_on_long_axis = 0
+hmss_curvature_on_short_axis = 0
+hmss_corner_radius = 1
+// hmss_tube_black_edge_thickness = 1.6
+// hmbz_bezel_width = 7.5;
+// hmbz_bezel_height = 6;
+// hmbz_frame_thickness = 7;
+ 
+// hmbz_image_bezel_opacity = 1
+// hmbz_bezel_opacity = 1
+// hmbz_bezel_brightness = 10
+// hmbz_frame_opacity = 1;
+// hmbz_image_bezel_cut_out_inside_frame = 1;
+
+// hmbz_image_bezel_scale_mode = 0
+hmbz_image_bezel_aspect_ratio = 1.75
+// hmbz_image_bezel_tube_height = 69
+
+// hmss_crop_overscan_top = 0
+// hmss_crop_overscan_bottom = 0
+// hmss_crop_overscan_left = 0
+// hmss_crop_overscan_right = 0
+// hmss_crop_and_afterglow_black_level = 0
+
+// hbl_blur_min = 0
+// hbl_blur_max = 0.4
+// hbl_sharpness_falloff_speed = 0.5
+// hbl_sharpness_falloff_distance = 8
+
+// hbr_global_amount = 1.4
+// hbr_global_gamma_adjust = 1.2
+// hbr_diffused_reflection = 0
+// hbr_fullscreen_glow = 300
+// hbr_fullscreen_glow_gamma = 1.6
+
+// hag_afterglow_persistence = 0.2

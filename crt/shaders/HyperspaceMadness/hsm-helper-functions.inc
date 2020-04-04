@@ -6,6 +6,7 @@ License: GPL
 Description:
 
 */
+float PI = 3.1415;
 
 float HHLP_GetMaskCenteredOnValue(float in_value, float value_to_match, float threshold)
 {
@@ -39,10 +40,36 @@ float HHLP_QuadraticBezier (float x, vec2 a){
   return y;
 }
 
-float HHLP_GetDistanceToLine(float x1, float y1, 
-                       float a, float b,  
-                       float c) 
-{ 
+float HHLP_SineInOut(float x)
+{
+  x = max(0, min(x, 1));
+  return sin((x - 0.5) * PI) * 0.5 + 0.5;
+}
+
+float HHLP_PowerIn(float x, float in_exponent) {
+  x = max(0, min(x, 1));
+  return pow(x, in_exponent);
+}
+
+float HHLP_PowerOut(float x, float in_exponent) {
+  x = 1.0 - max(0, min(x, 1));
+  return 1.0 - pow(x, in_exponent);
+}
+
+float HHLP_PowerInOut(float x, float in_exponent) {
+  x = max(0, min(x, 1));
+  if (x < 0.5) 
+  {
+    return pow(x * 2, in_exponent) * 0.5;
+  } 
+  else 
+  {
+    return 1.0 - pow((1 - x) * 2, in_exponent) * 0.5;
+  }
+}
+
+float HHLP_GetDistanceToLine(float x1, float y1, float a, float b, float c) 
+{
     float d = abs((a * x1 + b * y1 + c)) /  
               (sqrt(a * a + b * b));
     return d; 

@@ -134,8 +134,8 @@ alias15 = BR_MirrorFullscreenGlowPass
 //      Blur passes are in linearized color space, and CRT Pass already has gamma encoded in it
 //
 //      Uses these textures
-//          BezelImage_Horzizontal
-//          BezelImage_Vertical
+//          BackgroundImage
+//          BackgroundImage_Vertical
 
 shader16 = ../crt/shaders/hyperspacemadness/hsm-mega-bezel-reflection.slang
 mipmap_input16 = true
@@ -145,15 +145,13 @@ float_framebuffer16 = true
 
 
 // Define textures to be used by the different passes
-textures = "BezelImage_Horzizontal;BezelImage_Vertical;OverlayImage_Horzizontal;OverlayImage_Vertical"
+textures = "BackgroundImage;TubeGlassImage;OverlayImage;"
 
-BezelImage_Horzizontal = ../crt/shaders/hyperspacemadness/textures/BezelImage_UnderReflection_CarbonFiber_3840x2160.png
-BezelImage_Vertical = ../crt/shaders/hyperspacemadness/textures/BezelImage_UnderReflection_CarbonFiber_3840x2160.png
+BackgroundImage = ../crt/shaders/hyperspacemadness/textures/BackgroundImage_3840x2160.png
+TubeGlassImage = ../crt/shaders/hyperspacemadness/textures/TubeGlassOverlayImage_3840x2160.png
+OverlayImage = ../crt/shaders/hyperspacemadness/textures/OverlayImage_OverReflection_3840x2160.png
 
-OverlayImage_Horzizontal = ../crt/shaders/hyperspacemadness/textures/OverlayImage_OverReflection_Transparent_3840x2160.png
-OverlayImage_Vertical = ../crt/shaders/hyperspacemadness/textures/OverlayImage_OverReflection_Transparent_3840x2160.png
-
-parameters = "hmss_mega_screen_scale_on;hmss_screen_aspect_ratio;hmss_integer_scale_mode;hmss_int_scale_multiple_offset;hmss_non_integer_scale;hmss_int_scale_border_min_height;hmss_scanline_direction;hmss_curvature_on_long_axis;hmss_curvature_on_short_axis;hmss_corner_radius;hmss_tube_black_edge_thickness;hmbz_frame_thickness;hmbz_bezel_width;hmbz_bezel_height;hmbz_image_bezel_opacity;hmbz_bezel_opacity;hmbz_bezel_brightness;hmbz_frame_opacity;hmbz_image_bezel_cut_out_inside_frame;hmbz_image_bezel_scale_mode;hmbz_image_bezel_aspect_ratio;hmbz_image_bezel_tube_height;hmss_crop_overscan_top;hmss_crop_overscan_bottom;hmss_crop_overscan_left;hmss_crop_overscan_right;hmss_pre_crt_black_level;hbl_blur_min;hbl_blur_max;hbr_global_amount;hbr_global_gamma_adjust;hbr_diffused_reflection;hbr_fullscreen_glow;hbr_fullscreen_glow_gamma;hag_afterglow_persistence"
+parameters = "hmss_mega_screen_scale_on;hmss_screen_aspect_ratio;hmss_integer_scale_mode;hmss_int_scale_multiple_offset;hmss_non_integer_scale;hmss_int_scale_border_min_height;hmss_scanline_direction;hmss_curvature_on_long_axis;hmss_curvature_on_short_axis;hmss_corner_radius;hmss_tube_black_edge_thickness;hmbz_frame_thickness;hmbz_bezel_width;hmbz_bezel_height;hmbz_background_image_opacity;hmbz_bezel_opacity;hmbz_bezel_brightness;hmbz_frame_opacity;hmbz_background_image_cut_out_inside_frame;hmbz_background_image_scale_mode;hmbz_background_image_aspect_ratio;hmbz_background_image_tube_height;hmss_crop_overscan_top;hmss_crop_overscan_bottom;hmss_crop_overscan_left;hmss_crop_overscan_right;hmss_pre_crt_black_level;hbl_blur_min;hbl_blur_max;hbr_global_amount;hbr_global_gamma_adjust;hbr_diffused_reflection;hbr_fullscreen_glow;hbr_fullscreen_glow_gamma;hag_afterglow_persistence"
 
 hmss_mega_screen_scale_on = 1
 // hmss_screen_aspect_ratio = 1.5
@@ -171,15 +169,15 @@ hmss_corner_radius = 10
 // hmbz_bezel_height = 6;
 // hmbz_frame_thickness = 7;
  
-// hmbz_image_bezel_opacity = 1
+// hmbz_background_image_opacity = 1
 // hmbz_bezel_opacity = 1
 // hmbz_bezel_brightness = 10
 // hmbz_frame_opacity = 1;
-// hmbz_image_bezel_cut_out_inside_frame = 1;
+// hmbz_background_image_cut_out_inside_frame = 1;
 
-// hmbz_image_bezel_scale_mode = 0
-hmbz_image_bezel_aspect_ratio = 1.75
-// hmbz_image_bezel_tube_height = 69
+// hmbz_background_image_scale_mode = 0
+hmbz_background_image_aspect_ratio = 1.75
+// hmbz_background_image_tube_height = 69
 
 // hmss_crop_overscan_top = 0
 // hmss_crop_overscan_bottom = 0

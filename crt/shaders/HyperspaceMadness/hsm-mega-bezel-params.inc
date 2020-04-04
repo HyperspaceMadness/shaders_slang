@@ -25,7 +25,7 @@
 #pragma parameter hmbz_frame_opacity 					"[FRAME]  Opacity" 1 0 1 0.05
 #pragma parameter hmbz_frame_brightness 				"[FRAME]   Brightness" 100 0 300 2
 #pragma parameter hmbz_frame_thickness 					"[FRAME]   Thickness" 8 0 200 0.2
-#pragma parameter hmbz_frame_outer_corner_radius 		"[FRAME]   Outer Corner Radius" 5 0 10 0.05
+#pragma parameter hmbz_frame_outer_corner_radius 		"[FRAME]   Outer Corner Radius" 5 0 70 0.05
 #pragma parameter hmbz_frame_inner_edge_thickness		"[FRAME]   Inner Edge Thickness" 2 0 50 0.05
 #pragma parameter hmbz_frame_pos_y_offset 				"[FRAME]   Pos Y Offset" 0 -25 25 0.05
 
@@ -35,13 +35,12 @@
 #pragma parameter hmbz_vignette_shadow_opacity			"[FRAME]  Vignette Opacity" 0.8 0 2 0.02
 
 // Bezel Parameters
-#pragma parameter hmbz_image_bezel_opacity 				"[IMAGE BEZEL]  Opacity" 1 0 1 0.05
-#pragma parameter hmbz_image_bezel_brightness 			"[IMAGE BEZEL]  Brightness" 1 0.5 3 0.01
-#pragma parameter hmbz_image_bezel_scale_mode 			"[IMAGE BEZEL]  Scale Mode - 0:Auto 1:Fullscreen 2:Fit Height" 2 0 2 1
-#pragma parameter hmbz_image_bezel_aspect_ratio 		"[IMAGE BEZEL]  Aspect Ratio" 1.77 0.25 4 0.01
-// Visual height of the tube in the texture (Only used in Image Mode 0)
-#pragma parameter hmbz_image_bezel_tube_height     		"[IMAGE BEZEL]  Tube Height (in Texture)" 69 10 150.0 0.1
-#pragma parameter hmbz_image_bezel_cut_out_inside_frame "[IMAGE BEZEL]  Cut Out Inside Frame" 1 0 1 1
+#pragma parameter hmbz_background_image_opacity 		"[BG IMAGE]  Opacity" 1 0 1 0.05
+#pragma parameter hmbz_background_image_brightness 		"[BG IMAGE]  Brightness" 1 0.5 3 0.01
+#pragma parameter hmbz_background_image_scale_mode 		"[BG IMAGE]  Scale Mode - 0:Auto 1:Fullscreen 2:Fit Height" 2 0 2 1
+#pragma parameter hmbz_background_image_aspect_ratio 	"[BG IMAGE]  Aspect Ratio" 1.77 0.25 4 0.01
+// Visual height of the tube in the texture (Only used in Scale Mode 0)
+#pragma parameter hmbz_background_image_tube_height     "[BG IMAGE]  Tube Height (in Texture)" 69 10 150.0 0.1
 
 // Blur
 #pragma parameter hbl_blur_num_samples 					"[REFLECTION BLUR]  Num Samples - 0 for OFF" 20 0 40 1

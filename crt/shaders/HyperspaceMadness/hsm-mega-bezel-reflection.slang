@@ -38,6 +38,7 @@ layout(std140, set = 0, binding = 0) uniform UBO
 	// Screen Scale
 	float hmss_aspect_ratio_mode;
 	float hmss_mega_screen_scale_on;
+	float hmss_rotate_crt_image;
 	float hmss_screen_aspect_ratio;
 	float hmss_scanline_direction;
 	float hmss_integer_scale_mode;
@@ -64,8 +65,8 @@ layout(std140, set = 0, binding = 0) uniform UBO
 	float hmss_pre_crt_luminance;
 	float hmss_post_crt_gamma;
 
-	float hmss_reflection_mirror_stretch;
-	float hmss_reflection_mirror_offset;
+	// float hmss_reflection_mirror_stretch;
+	// float hmss_reflection_mirror_offset;
 
 	// Blur Stuff
 	float hbl_blur_num_samples;
@@ -74,11 +75,11 @@ layout(std140, set = 0, binding = 0) uniform UBO
 	float hbl_sharpness_falloff_distance;
 
 	// Image Bezel
-	float hmbz_image_bezel_opacity;
-	float hmbz_image_bezel_brightness;
-	float hmbz_image_bezel_scale_mode;
-	float hmbz_image_bezel_aspect_ratio;
-	float hmbz_image_bezel_tube_height;
+	float hmbz_background_image_opacity;
+	float hmbz_background_image_brightness;
+	float hmbz_background_image_scale_mode;
+	float hmbz_background_image_aspect_ratio;
+	float hmbz_background_image_tube_height;
 
 	// Generated Bezel
 	float hmbz_bezel_opacity;
@@ -109,7 +110,6 @@ layout(std140, set = 0, binding = 0) uniform UBO
 	float hmbz_frame_pos_y_offset;
 	float hmbz_frame_shadow_opacity;
 	float hmbz_frame_shadow_width;
-	float hmbz_image_bezel_cut_out_inside_frame;
 
 	float hmbz_vignette_shadow_opacity;
 	
@@ -158,15 +158,15 @@ vec2 HMBZ_GetImageLayerCoord(vec2 viewport_coord)
 {
 	vec2 tube_scale = HMSS_GetTubeScale();
 	float output_aspect = global.OutputSize.x / global.OutputSize.y;
-	float aspect_difference = global.hmbz_image_bezel_aspect_ratio / output_aspect;
+	float aspect_difference = global.hmbz_background_image_aspect_ratio / output_aspect;
 
 	vec2 fit_height_scale = vec2(aspect_difference, 1);
-	vec2 screen_height_match_scale =  fit_height_scale * tube_scale.y / (global.hmbz_image_bezel_tube_height / 100);
+	vec2 screen_height_match_scale =  fit_height_scale * tube_scale.y / (global.hmbz_background_image_tube_height / 100);
 
-	vec2 scale = global.hmbz_image_bezel_scale_mode > 0.5 ? (global.hmbz_image_bezel_scale_mode > 1.5 ? fit_height_scale : vec2(1, 1)) : screen_height_match_scale;
+	vec2 scale = global.hmbz_background_image_scale_mode > 0.5 ? (global.hmbz_background_image_scale_mode > 1.5 ? fit_height_scale : vec2(1, 1)) : screen_height_match_scale;
 
 	// If using auto scale mode and apply the position adjustment from mega screen scale
-	vec2 out_coord = global.hmbz_image_bezel_scale_mode == 0 ? HMSS_GetCoordWithPositionOffset(viewport_coord) : viewport_coord;
+	vec2 out_coord = global.hmbz_background_image_scale_mode == 0 ? HMSS_GetCoordWithPositionOffset(viewport_coord) : viewport_coord;
 	return HMSS_GetInverseScaledCoord(out_coord, scale);
 }
 
@@ -254,10 +254,9 @@ layout(set = 0, binding = 4) uniform sampler2D BR_MirrorBlurredPass;
 layout(set = 0, binding = 5) uniform sampler2D BR_MirrorReflectionDiffusedPass;
 layout(set = 0, binding = 6) uniform sampler2D BR_MirrorFullscreenGlowPass;
 
-layout(set = 0, binding = 7)  uniform sampler2D BezelImage_Horzizontal;
-layout(set = 0, binding = 8) uniform sampler2D BezelImage_Vertical;
-layout(set = 0, binding = 9)  uniform sampler2D OverlayImage_Horzizontal;
-layout(set = 0, binding = 10)  uniform sampler2D OverlayImage_Vertical;
+layout(set = 0, binding = 7)  uniform sampler2D BackgroundImage;
+layout(set = 0, binding = 11) uniform sampler2D TubeGlassImage;
+layout(set = 0, binding = 9)  uniform sampler2D OverlayImage;
 
 void main()
 {
@@ -272,7 +271,7 @@ void main()
 	//----------------------------------------------------
 	// Generated Bezel & Reflection
 	//----------------------------------------------------
-	if (global.hbr_global_amount != 0 || global.hmbz_image_bezel_opacity != 0)
+	if (global.hbr_global_amount != 0 || global.hmbz_background_image_opacity != 0)
 	{
 		// Stuff for debugging the mapping space
 		#ifdef ShowPlacementGuide
@@ -411,8 +410,8 @@ void main()
 
 		float fade_out_to_corner = HHLP_QuadraticBezier(clamp(length(outermap_warped_outside_screen_vector) / (corner_crease_length * 2), 0, 1), vec2(0.5, global.hmbz_bezel_corner_highlight_spread_falloff / 100));
 
-		float corner_fade_width_inner = global.hmbz_bezel_corner_highlight_inner_spread / 100 * (screen_scale.x + screen_scale.y) * global.hmbz_bezel_inner_corner_radius_scale * (global.hmss_corner_radius / 10) / 250 * 1.2;
-		float corner_fade_width_outer = global.hmbz_bezel_corner_highlight_outer_spread / 100 * (screen_scale.x + screen_scale.y) * (global.hmbz_bezel_outer_corner_radius_scale / 10) / 100 * 7;
+		float corner_fade_width_inner = global.hmbz_bezel_corner_highlight_inner_spread / 100 * (screen_scale.x + screen_scale.y) * global.hmbz_bezel_inner_corner_radius_scale * global.hmss_corner_radius / 10 / 250 * 1.2;
+		float corner_fade_width_outer = global.hmbz_bezel_corner_highlight_outer_spread / 100 * (screen_scale.x + screen_scale.y) * global.hmbz_bezel_outer_corner_radius_scale * global.hmss_corner_radius / 10 / 250 * 1.6;
 		float corner_fade_width = (corner_fade_width_inner + fade_out_to_corner * (corner_fade_width_outer - corner_fade_width_inner));
 
 		// Get a vector perpendicular to the crease that we can shift the crease to blend between bottom/top and sides
@@ -434,7 +433,7 @@ void main()
 		bottom_mask = (1 -top_half_mask) * top_bottom_vs_sides_mask;
 
 		float corner_mask = smoothstep(corner_fade_width / 2, 0, distance_from_crease);
-		
+
 		top_corner_mask = corner_mask * top_half_mask;
 		bottom_corner_mask = corner_mask * (1 - top_half_mask);
 
@@ -447,20 +446,24 @@ void main()
 
 		vec4 base_image	= frag_color_linear;
 		vec2 tiled_image_coord = mod(imageLayerCoord, 1);
-		vec4 bezel_image = HMSS_GetScreenAspectRatio() < 1 ? texture(BezelImage_Vertical, tiled_image_coord).rgba : texture(BezelImage_Horzizontal, tiled_image_coord).rgba;
-		bezel_image = global.hmbz_image_bezel_brightness * HHLP_Linearize(bezel_image);
+		vec4 background_image = texture(BackgroundImage, tiled_image_coord).rgba;
+		background_image = global.hmbz_background_image_brightness * HHLP_Linearize(background_image);
 
 		//----------------------------------------------------
 		// Image Bezel - Applied ON TOP of the CRT image, BELOW the reflection
 		//----------------------------------------------------
 		// TODO The position adjustment is moving the texture twice as fast as the screen
-		if (global.hmbz_image_bezel_opacity != 0)
+		if (global.hmbz_background_image_opacity != 0)
 		{
-			float bezel_image_alpha = bezel_image.a;
+			float bezel_image_alpha = background_image.a;
 
-			// Add Bezel & Frame color to the screen color
-			float clipping_mask = global.hmbz_image_bezel_cut_out_inside_frame == 1 ? outside_bezel_mask * bezel_image_alpha : bezel_image_alpha;
-			frag_color_linear	= vec4(mix(base_image, bezel_image, global.hmbz_image_bezel_opacity * clipping_mask));
+			// Add Background
+			float clipping_mask = outside_bezel_mask * bezel_image_alpha;
+			frag_color_linear	= vec4(mix(base_image, background_image, global.hmbz_background_image_opacity * clipping_mask));
+
+			// Add Glass Reflection image on top of base image
+			vec4 tube_glass_image = texture(TubeGlassImage, imageLayerCoord).rgba;
+			frag_color_linear	= vec4(mix(frag_color_linear, tube_glass_image, tube_glass_image.a));
 		}
 
 		//----------------------------------------------------
@@ -508,7 +511,7 @@ void main()
 			float hmbz_brightness_shadow = 0;
 
 			vec3 orig_color = HHLP_Linearize(vec4(HMSS_HSVtoRGB(vec3(global.hmbz_bezel_color_hue / 360, global.hmbz_bezel_color_saturation / 100, global.hmbz_bezel_color_value / 100)), 1)).rgb;
-			vec3 base_color = mix(orig_color, bezel_image.rgb, global.hmbz_bezel_color_blend_with_image);
+			vec3 base_color = mix(orig_color, background_image.rgb, global.hmbz_bezel_color_blend_with_image);
 
 			vec3 base_color_with_noise = mix(base_color, 1.5 * base_color * noise_mask, global.hmbz_bezel_noise / 100);
 			vec3 top_color = hmbz_bezel_brightness_top * global.hmbz_bezel_brightness / 100 * base_color_with_noise;
@@ -609,18 +612,22 @@ void main()
 			float radial_inner_fade_mask = clamp_0_1(0.3 + 0.7 * HHLP_QuadraticBezier(smoothstep(0.01, 0.3, outside_ratio_warped / (global.hbr_radial_fade_width / 500)), vec2(0.1, 0.3)));
 
 			// Lateral fade - Fading left to right across the bottom or top to bottom along the sides 
-			float lateral_fade_outer_mask = (1 - sides_mask) * GetFade(abs(outermap_warped_coord_ctr.x) + (global.hbr_lateral_outer_fade_position / -1000) / screen_aspect, 
+			float lateral_fade_mask = (1 - sides_mask) * GetFade(abs(outermap_warped_coord_ctr.x) + (global.hbr_lateral_outer_fade_position / -1000) / screen_aspect, 
 																		outermap_screen_size_from_center.x,
 																		outermap_screen_size_from_center.x * (global.hbr_lateral_outer_fade_distance / 100))
 											+  sides_mask * GetFade(abs(outermap_warped_coord_ctr.y) + (global.hbr_lateral_outer_fade_position / -1000) / screen_aspect, 
 																	outermap_screen_size_from_center.y, 
 																	outermap_screen_size_from_center.y * (global.hbr_lateral_outer_fade_distance / 100)); 
 
+			vec2 screen_coord_ctr = screenCoord - 0.5;
+			float edge_lateral_fade_mask = (1 - sides_mask) * smoothstep(0.5, 0.5 - 0.07 / HMSS_GetScreenAspectRatio(), abs(screen_coord_ctr.x))
+											+  sides_mask * smoothstep(0.5, 0.43, abs(screen_coord_ctr.y));
+
 			// float lateral_fade_center_mask = (1 - sides_mask) * clamp_0_1(GetFade(abs(outermap_warped_coord_ctr.x), 0, 0.5))
 			// 										+ sides_mask * clamp_0_1(GetFade(abs(outermap_warped_coord_ctr.y), 0, 0.5));
 
 			// Put all the fades together into one mask
-			float combined_fade_mask = clamp_0_1(global.hbr_fade_amount * (radial_fade_mask * lateral_fade_outer_mask)) + 1 - global.hbr_fade_amount;
+			float combined_fade_mask = clamp_0_1(global.hbr_fade_amount * (radial_fade_mask * lateral_fade_mask)) + 1 - global.hbr_fade_amount;
 
 
 			// Because the mirroring of the screen has been done in the mirror-wrap shader we just need to sample the screen
@@ -649,7 +656,7 @@ void main()
 			//vec4 unblurred_reflection_scatter_color = GetStoichaicBlurredSample(BR_MirrorLowResPass, viewportCoord.xy, stoichaic_blur_samples, stoichaic_blur_max, stoichaic_blur_amount);
 
 			// Add Fullscreen Glow
-			float lateral_fade_outer_mask_for_glow = (lateral_fade_outer_mask - 1) * 0.8 + 1;
+			float lateral_fade_outer_mask_for_glow = (lateral_fade_mask - 1) * 0.8 + 1;
 
 			//Combine diffused and undiffused reflection
 			
@@ -671,7 +678,9 @@ void main()
 			vec4 edge_reflected_color = 1.25 * global.hbr_inner_edge_reflection * (blurred_reflection_color + 0.50 * diffused_reflection_color);
 
 			// Add Bezel and Edge reflection together
-			vec4 reflected_color = bezel_reflected_color * (1 - edge_mask) + edge_reflected_color * edge_mask;
+			vec4 reflected_color =  (1 - edge_mask) * bezel_reflected_color + 
+									edge_lateral_fade_mask * edge_mask * edge_reflected_color + 
+									corner_mask * edge_mask * corner_reflection_color;
 			reflected_color = global.hbr_global_amount * pow(reflected_color, vec4(global.hbr_global_gamma_adjust)) * outside_tube_mask;
 			
 			// Mask Reflection to only appear inside the bezel
@@ -685,11 +694,9 @@ void main()
 			frag_color_linear += reflected_color;
 		}
 	}
-	vec4 overlay_image = HMSS_GetScreenAspectRatio() < 1 ? texture(OverlayImage_Vertical, imageLayerCoord).rgba : texture(OverlayImage_Horzizontal, imageLayerCoord).rgba;
+	vec4 overlay_image = texture(OverlayImage, imageLayerCoord).rgba;
 
 	FragColor = mix(clamp(HHLP_Delinearize(frag_color_linear), 0, 1), overlay_image, overlay_image.a);
-
-
 
 	// Add the color for the debug Stuff
 	#ifdef ShowPlacementGuide

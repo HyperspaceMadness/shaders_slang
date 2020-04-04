@@ -184,6 +184,7 @@ void main()
     vec2 tex_size = global.SourceSize.xy;
     */
 
+    // TODO implement Cropping
     // Added the following
     vec2 tex_size = global.SourceSize.xy;
     // End Addition

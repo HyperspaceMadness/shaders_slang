@@ -40,23 +40,17 @@ float HHLP_QuadraticBezier (float x, vec2 a){
   return y;
 }
 
-float HHLP_SineInOut(float x)
-{
-  x = max(0, min(x, 1));
-  return sin((x - 0.5) * PI) * 0.5 + 0.5;
-}
-
-float HHLP_PowerIn(float x, float in_exponent) {
+float HHLP_EasePowerIn(float x, float in_exponent) {
   x = max(0, min(x, 1));
   return pow(x, in_exponent);
 }
 
-float HHLP_PowerOut(float x, float in_exponent) {
+float HHLP_EasePowerOut(float x, float in_exponent) {
   x = 1.0 - max(0, min(x, 1));
   return 1.0 - pow(x, in_exponent);
 }
 
-float HHLP_PowerInOut(float x, float in_exponent) {
+float HHLP_EasePowerInOut(float x, float in_exponent) {
   x = max(0, min(x, 1));
   if (x < 0.5) 
   {

@@ -1,0 +1,122 @@
+shaders = 14
+
+// Add Mega Screen Scale Params for the UI
+//      Add the mega-screen-scale parameters at the beginning of the list for easy access
+//      Debug Drawing of the resolution/screen scaling is also included here
+shader0 = ../crt/shaders/hyperspacemadness/hsm-stock-with-mega-screen-scale-params.slang
+
+// NOTE: desired put De-Dithering or TV Signal effects here, e.g. GTU, NTSC, CBOD
+shader1 = ../stock.slang
+
+shader2 = ../stock.slang
+
+shader3 = ../stock.slang
+
+// Guest-Venom Pass ----------------------------------------------------------------
+shader4 = ../crt/shaders/guest/lut/lut.slang
+filter_linear4 = false
+scale_type4 = source
+scale4 = 1.0
+
+// Guest-Venom Pass ----------------------------------------------------------------
+shader5 = ../crt/shaders/guest/color-profiles.slang
+filter_linear5 = true
+scale_type5 = source
+scale5 = 1.0
+
+// Guest-Venom Pass ----------------------------------------------------------------
+shader6 = ../crt/shaders/guest/d65-d50.slang
+filter_linear6 = true
+scale_type6 = source
+scale6 = 1.0
+alias6 = WhitePointPass
+
+// Afterglow and Black Level ----------------------------------------------------------------
+//      Almost the same as Guest's original afterglow but can brighten the black without losing the afterglow
+shader7 = ../crt/shaders/hyperspacemadness/hsm-guest-afterglow-with-black-level.slang
+filter_linear7 = false
+scale_type7 = source
+scale7 = 1.0
+alias7 = AfterglowPass
+
+// Guest-Venom Pass ----------------------------------------------------------------
+shader8 = ../crt/shaders/guest/avg-lum.slang
+filter_linear8 = true
+scale_type8 = source
+scale8 = 1.0
+mipmap_input8 = true
+float_framebuffer8 = true
+alias8 = AvgLumPass
+
+// Guest-Venom Pass ----------------------------------------------------------------
+shader9 = ../crt/shaders/guest/linearize.slang
+filter_linear9 = false
+scale_type9 = source
+scale9 = 1.0
+float_framebuffer9 = true
+alias9 = LinearizePass
+
+// Guest-Venom Pass ----------------------------------------------------------------
+shader10 = ../crt/shaders/guest/blur_horiz.slang
+filter_linear10 = false
+scale_type10 = source
+scale10 = 1.0
+float_framebuffer10 = true
+
+// Guest-Venom Pass ----------------------------------------------------------------
+shader11 = ../crt/shaders/guest/blur_vert.slang
+filter_linear11 = false
+scale_type11 = source
+scale11 = 1.0
+float_framebuffer11 = true
+alias11 = GlowPass
+
+// Guest-Venom Pass ----------------------------------------------------------------
+shader12 = ../crt/shaders/guest/linearize_scanlines.slang
+filter_linear12 = true
+scale_type12 = source
+scale12 = 1.0
+float_framebuffer12 = true
+
+// CRT Shader - Guest-Venom ----------------------------------------------------------------
+//      Guest's Awesome Shader!!!
+//      Has been slightly altered to use the same scaling as the rest of the shders for the bezel & reflection
+shader13 = ../crt/shaders/hyperspacemadness/hsm-crt-guest-dr-venom-with-scaling.slang
+mipmap_input13 = true
+filter_linear13 = true
+scale_type13 = viewport
+scale_x13 = 1.0
+scale_y13 = 1.0
+
+//shaders/guest/crt-guest-dr-venom.slang //
+
+
+// Define textures to be used by the different passes
+textures = "SamplerLUT1;SamplerLUT2;SamplerLUT3;"
+SamplerLUT1 = ../crt/shaders/guest/lut/sony_trinitron1.png
+SamplerLUT1_linear = true 
+SamplerLUT2 = ../crt/shaders/guest/lut/sony_trinitron2.png
+SamplerLUT2_linear = true 
+SamplerLUT3 = ../crt/shaders/guest/lut/other1.png
+SamplerLUT3_linear = true
+
+
+parameters = "hmss_mega_screen_scale_on;hmss_screen_scale_only;hmss_screen_aspect_ratio;hmss_integer_scale_mode;hmss_int_scale_multiple_offset;hmss_non_integer_scale;hmss_int_scale_border_min_height;hmss_scanline_direction;hmss_curvature_on_long_axis;hmss_curvature_on_short_axis;hmss_corner_radius;hmss_tube_black_edge_thickness;hmss_crop_overscan_top;hmss_crop_overscan_bottom;hmss_crop_overscan_left;hmss_crop_overscan_right;hmss_pre_crt_black_level;hag_afterglow_persistence"
+
+hmss_mega_screen_scale_on = 1
+hmss_screen_scale_only = 1
+// hmss_screen_aspect_ratio = 1.5
+// hmss_integer_scale_mode = 1
+// hmss_int_scale_multiple_offset = 0
+// hmss_non_integer_scale = 83
+hmss_int_scale_border_min_height = 5.5
+// hmss_scanline_direction = 0
+
+hmss_curvature_on_long_axis = 3
+hmss_curvature_on_short_axis = 4
+hmss_corner_radius = 10
+// hmss_tube_black_edge_thickness = 1.6
+
+// hag_afterglow_persistence = 0.2
+
+

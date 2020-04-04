@@ -2,6 +2,17 @@
 #pragma parameter hag_afterglow_persistence             "[AFTERGLOW]  Persistence"   0.05 0.0 1.0 0.01
 #pragma parameter hag_afterglow_saturation              "[AFTERGLOW]  Saturation"    0.10 0.0 1.0 0.01
 
+// Background
+#pragma parameter hmbz_background_image_opacity 		"[BG IMAGE]  Opacity" 1 0 1 0.05
+#pragma parameter hmbz_background_image_brightness 		"[BG IMAGE]  Brightness" 1 0.5 3 0.01
+#pragma parameter hmbz_background_image_scale_mode 		"[BG IMAGE]  Scale Mode - 0:Auto 1:Fullscreen 2:Fit Height" 2 0 2 1
+#pragma parameter hmbz_background_image_aspect_ratio 	"[BG IMAGE]  Aspect Ratio" 1.77 0.25 4 0.01
+// Visual height of the tube in the texture (Only used in Scale Mode 0)
+#pragma parameter hmbz_background_image_tube_height     "[BG IMAGE]  Tube Height (in Texture)" 69 10 150.0 0.1
+
+#pragma parameter hmbz_tube_glass_image_opacity         "[TUBE]  Tube Glass Image Opacity (Additive)" 0 0 200 0.2
+#pragma parameter hmbz_tube_edge_shadow                 "[TUBE]  Tube Edge Shadow" 0.7 0 2 0.05
+
 #pragma parameter hmbz_bezel_color_hue					"[BEZEL & FRAME]  Color Hue" 0 0 360 0.5
 #pragma parameter hmbz_bezel_color_saturation			"[BEZEL & FRAME]  Color Saturation" 0 0 100 1
 #pragma parameter hmbz_bezel_color_value				"[BEZEL & FRAME]  Color Value (Brightness)" 9 0 100 0.2
@@ -22,7 +33,7 @@
 #pragma parameter hmbz_bezel_corner_highlight_outer_spread 	 "[BEZEL]  Corner Highlight Outer Spread" 100 0 500 10
 #pragma parameter hmbz_bezel_corner_highlight_spread_falloff "[BEZEL]  Corner Highlight Spread Falloff"  50 1 200 1
 
-#pragma parameter hmbz_frame_opacity 					"[FRAME]  Opacity" 1 0 1 0.05
+#pragma parameter hmbz_frame_opacity 					"[FRAME]   Opacity" 1 0 1 0.05
 #pragma parameter hmbz_frame_brightness 				"[FRAME]   Brightness" 100 0 300 2
 #pragma parameter hmbz_frame_thickness 					"[FRAME]   Thickness" 8 0 200 0.2
 #pragma parameter hmbz_frame_outer_corner_radius 		"[FRAME]   Outer Corner Radius" 5 0 70 0.05
@@ -34,13 +45,6 @@
 
 #pragma parameter hmbz_vignette_shadow_opacity			"[FRAME]  Vignette Opacity" 0.8 0 2 0.02
 
-// Bezel Parameters
-#pragma parameter hmbz_background_image_opacity 		"[BG IMAGE]  Opacity" 1 0 1 0.05
-#pragma parameter hmbz_background_image_brightness 		"[BG IMAGE]  Brightness" 1 0.5 3 0.01
-#pragma parameter hmbz_background_image_scale_mode 		"[BG IMAGE]  Scale Mode - 0:Auto 1:Fullscreen 2:Fit Height" 2 0 2 1
-#pragma parameter hmbz_background_image_aspect_ratio 	"[BG IMAGE]  Aspect Ratio" 1.77 0.25 4 0.01
-// Visual height of the tube in the texture (Only used in Scale Mode 0)
-#pragma parameter hmbz_background_image_tube_height     "[BG IMAGE]  Tube Height (in Texture)" 69 10 150.0 0.1
 
 // Blur
 #pragma parameter hbl_blur_num_samples 					"[REFLECTION BLUR]  Num Samples - 0 for OFF" 20 0 40 1

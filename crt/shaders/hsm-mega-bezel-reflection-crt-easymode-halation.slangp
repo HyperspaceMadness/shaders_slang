@@ -3,7 +3,7 @@ shaders = 18
 // Add Mega Screen Scale Params for the UI
 //      Add the mega-screen-scale parameters at the beginning of the list for easy access
 //      Debug Drawing of the resolution/screen scaling is also included here
-shader0 = ../crt/shaders/hyperspacemadness/hsm-stock-with-mega-screen-scale-params.slang
+shader0 = ../crt/shaders/hyperspacemadness/hsm-stock-with-mega-screen-scale-bezel-params.slang
 
 shader1 = ../stock.slang
 
@@ -164,6 +164,7 @@ parameters = "INTERLACING_TOGGLE;hmss_mega_screen_scale_on;hmss_screen_aspect_ra
 INTERLACING_TOGGLE = 0
 
 hmss_mega_screen_scale_on = 1
+hmss_screen_scale_only = 0
 // hmss_screen_aspect_ratio = 1.5
 // hmss_integer_scale_mode = 1
 // hmss_int_scale_multiple_offset = 0

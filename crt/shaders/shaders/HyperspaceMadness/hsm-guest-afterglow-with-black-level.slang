@@ -21,8 +21,6 @@
    
 */
 
-// Get the black level from here
-#include "hsm-mega-screen-scale.inc"
 
 
 layout(push_constant) uniform Push
@@ -32,7 +30,10 @@ layout(push_constant) uniform Push
    float hag_afterglow_saturation;
 } params;
 
-#include "hsm-mega-bezel-params.inc"
+//#include "hsm-mega-bezel-params.inc"
+// Get the black level from here
+#include "hsm-mega-screen-scale.inc"
+
 
 #define COMPAT_TEXTURE(c,d) texture(c,d)
 

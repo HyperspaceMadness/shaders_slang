@@ -79,6 +79,8 @@ layout(push_constant) uniform Push
 	inter;
 } params;
 
+
+
 // Modifications from hsm-mega-bezel-include.inc integration
 /* Removed the following
 layout(std140, set = 0, binding = 0) uniform UBO
@@ -478,9 +480,18 @@ void main()
 	
    	// Added the following
 	vec2 screen_coord = texcoord.xy;
-	vec2 curved_screen_coord = HMSS_GetCurvedCoord(texcoord, 1);
-	vec2 curved_wrapped_screen_coord = HMSS_GetWrappedCurvedCoord(texcoord*(TextureSize.xy/InputSize.xy), 1)*(InputSize.xy/TextureSize.xy);
-	vec2 pos = curved_wrapped_screen_coord;
+	vec2 pos = vec2(0, 0);
+
+	// If we are only using the screen scale with no bezel/reflection we don't need a wrapped coordinate
+	if (global.hmss_screen_scale_only == 1)
+	{
+		pos = HMSS_GetCurvedCoord(texcoord*(TextureSize.xy/InputSize.xy), 1);
+	}
+	else
+	{
+		pos = HMSS_GetWrappedCurvedCoord(texcoord*(TextureSize.xy/InputSize.xy), 1)*(InputSize.xy/TextureSize.xy);
+	}
+
 	vec2 coffset = ((TATE < 0.5) ? vec2(0.0,0.5) : vec2(0.5, 0.0));
 	if ((interm == 1.0 || interm == 2.0) && inter <= mix(SourceSize.y, SourceSize.x, TATE)) coffset = vec2(0.0);	
 	vec2 ps = 1 / SourceSize;
@@ -728,6 +739,11 @@ void main()
 	// Gamma
 	color = pow(color, 1.0 / vec3(global.hmss_post_crt_gamma));
 	color = pow(color, vec3(1.0/gamma_out));
+
+	if (global.hmss_screen_scale_only == 1)
+	{
+		color *= HMSS_GetCornerMask(pos, global.hmss_corner_radius, global.hmss_screen_edge_sharpness);
+	}
 
 	FragColor = vec4(color, 1);
 	// End Addition

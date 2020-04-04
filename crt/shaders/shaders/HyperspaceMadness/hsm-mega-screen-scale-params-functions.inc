@@ -10,15 +10,15 @@ Description:
 #include "hsm-helper-functions.inc"
 
 // Screen Scale Required Parameters
-#pragma parameter hmss_mega_screen_scale_on				"___HSM MEGA BEZEL__ V.2020-03-29 -SCREEN SCALE ON" 0 0 1 1
-#pragma parameter hmss_screen_scale_debug				"[SCALING]  Screen Scale Debug" 0 0 1 1
+#pragma parameter hmss_mega_screen_scale_on				"___HSM MEGA BEZEL__ V.2020-04-01 -SCREEN SCALE ON" 0 0 1 1
+#pragma parameter hmss_screen_scale_debug				"[SCREEN SCALE]  Screen Scale Debug" 0 0 1 1
+#pragma parameter hmss_screen_scale_only             	"[SCREEN SCALE]  Screen Scale Only (No Bezel in Preset)" 0 0 1 1
+
 #pragma parameter hmss_rotate_crt_image					"[SCALING]  Rotate CRT Image"  0 0 3 1
 //#pragma parameter hmss_flip_screen_vertical			"[SCALING]  Flip Screen Vertical"  0 0 1 1
 #pragma parameter hmss_aspect_ratio_mode 				"[SCALING]  Aspect Ratio Mode (0:Auto, 1:Horizontal, 2:Vert)"  0 0 2 1
 #pragma parameter hmss_screen_aspect_ratio				"[SCALING]  Screen Aspect Ratio"  1.3333 0 3 0.002
 
-
-// TODO need Horizontal and Vertical Int Scale
 #pragma parameter hmss_integer_scale_mode 				"[SCALING]  Integer Scale Mode - 0:Off, 1-ShortAxis, 2-BothAxes" 0 0 2 1
 // Non integer scale is set to 82.97 so that cores which output 224px will have integer scale by default
 // This is 8x integer scale at 3840x2160 and 6x integer scale at 1920x1080
@@ -38,15 +38,20 @@ Description:
 
 #pragma parameter hmss_curvature_on_long_axis 			"[CURVATURE]  Curvature on Long Axis (default 3)" 0 0 12.5 0.2
 #pragma parameter hmss_curvature_on_short_axis 			"[CURVATURE]  Curvature on Short Axis (default 4)" 0 0 12.5 0.2
-#pragma parameter hmss_corner_radius 					"[CURVATURE]  Corner Radius (Default 10)" 0 0 70 1
-#pragma parameter hmss_screen_edge_sharpness 			"[CURVATURE]  Outer Edge Sharpness" 1 0 1 0.05
-#pragma parameter hmss_tube_black_edge_thickness 		"[CURVATURE]  Tube Black Edge Thickness" 1.2 -0.5 8 0.05
+
+#pragma parameter hmss_corner_radius 					"[SCREEN EDGE]  Screen Corner Radius (Default 10)" 0 0 70 1
+#pragma parameter hmss_screen_edge_sharpness 			"[SCREEN EDGE]  Screen Edge Sharpness" 0.4 0 1 0.01
+#pragma parameter hmss_tube_black_edge_thickness 		"[SCREEN EDGE]  Tube Black Edge Thickness" 1.2 -0.5 8 0.05
 
 #pragma parameter hmss_pre_crt_black_level 				"[COLOR]  Pre-CRT Black Level" 0 -30 30 0.05-
 #pragma parameter hmss_pre_crt_gamma					"[COLOR]  Pre-CRT Gamma" 1 0.01 2 0.01
 #pragma parameter hmss_pre_crt_luminance				"[COLOR]  Pre-CRT Luminance" 1 0 2 0.01
 #pragma parameter hmss_post_crt_gamma					"[COLOR]  Post-CRT Gamma" 1 0.01 2 0.01
 #pragma parameter hmss_negative_crop_brightness			"[COLOR]  Negative Crop Brightness" 0 0 100 0.01
+
+#pragma parameter hag_afterglow_amount                  "[AFTERGLOW]  Amount"        0.07 0.0 1.0 0.01
+#pragma parameter hag_afterglow_persistence             "[AFTERGLOW]  Persistence"   0.05 0.0 1.0 0.01
+#pragma parameter hag_afterglow_saturation              "[AFTERGLOW]  Saturation"    0.10 0.0 1.0 0.01
 
 // #pragma parameter hmss_reflection_mirror_stretch 		"[REFLECTION]  Mirror Stretch" 1.1 0.1 5 0.02
 // #pragma parameter hmss_reflection_mirror_offset 		"[REFLECTION]  Mirror Offset" -2 -100 100 0.1
@@ -302,7 +307,7 @@ vec2 HMSS_GetWrappedCurvedCoord(vec2 in_coord, float curvature_multiplier)
 			// float corner_angle_degrees = atan(normalized_vec.y / normalized_vec.x) / (2 * pi) * 360;
 			//float corner_mask = smoothstep(40, 43, corner_angle_degrees);
 
-			float blend_to_uncurved = HHLP_PowerInOut(outside_ratio, 2);
+			float blend_to_uncurved = HHLP_EasePowerInOut(outside_ratio, 2);
 
 			ctr_mirror_coord = blend_to_uncurved * ctr_coord + (1 - blend_to_uncurved) * ctr_mirror_coord;
 		}

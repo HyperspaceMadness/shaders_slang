@@ -17,8 +17,6 @@ Description:
 	- Thanks to Torridgristle for his curvature function!
 */
 
-#define verticalScanlineSupport
-
 layout(std140, set = 0, binding = 0) uniform UBO
 {
 	mat4 MVP;
@@ -29,7 +27,9 @@ layout(std140, set = 0, binding = 0) uniform UBO
 	uint FrameCount;
 
 	float hmss_mega_screen_scale_on;
+	float hmss_screen_scale_only;
 	float hmss_screen_scale_debug;
+	
 	float hmss_rotate_crt_image;
 	float hmss_aspect_ratio_mode;
 	float hmss_screen_aspect_ratio;
@@ -41,22 +41,23 @@ layout(std140, set = 0, binding = 0) uniform UBO
 	float hmss_position_offset_x;
 	float hmss_position_offset_y;
 
+	float hmss_crop_overscan_top;
+	float hmss_crop_overscan_bottom;
+	float hmss_crop_overscan_left;
+	float hmss_crop_overscan_right;
+
 	float hmss_curvature_on_long_axis;
 	float hmss_curvature_on_short_axis;
 	float hmss_corner_radius;
 	float hmss_screen_edge_sharpness;
 	float hmss_tube_black_edge_thickness;
 
-	float hmss_crop_overscan_top;
-	float hmss_crop_overscan_bottom;
-	float hmss_crop_overscan_left;
-	float hmss_crop_overscan_right;
-	float hmss_negative_crop_brightness;
-
 	float hmss_pre_crt_black_level;
 	float hmss_pre_crt_gamma;
 	float hmss_pre_crt_luminance;
 	float hmss_post_crt_gamma;
+
+	float hmss_negative_crop_brightness;
 
 	// float hmss_reflection_mirror_stretch;
 	// float hmss_reflection_mirror_offset;

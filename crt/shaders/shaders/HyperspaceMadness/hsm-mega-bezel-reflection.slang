@@ -20,7 +20,7 @@ Thanks to:
 */
 
 // Uncomment the following if you want to see the Placement Guide
-// #define ShowPlacementGuide
+#define ShowPlacementGuide
 
 // Following Prefixes are used to make the parameter names unique to this shader
 // hmbz_ prefix (for Bezel)
@@ -48,16 +48,17 @@ layout(std140, set = 0, binding = 0) uniform UBO
 	float hmss_position_offset_x;
 	float hmss_position_offset_y;
 
+	float hmss_crop_overscan_top;
+	float hmss_crop_overscan_bottom;
+	float hmss_crop_overscan_left;
+	float hmss_crop_overscan_right;
+
 	float hmss_curvature_on_long_axis;
 	float hmss_curvature_on_short_axis;
 	float hmss_corner_radius;
 	float hmss_screen_edge_sharpness;
 	float hmss_tube_black_edge_thickness;
 
-	float hmss_crop_overscan_top;
-	float hmss_crop_overscan_bottom;
-	float hmss_crop_overscan_left;
-	float hmss_crop_overscan_right;
 	float hmss_negative_crop_brightness;
 
 	float hmss_pre_crt_black_level;
@@ -65,14 +66,10 @@ layout(std140, set = 0, binding = 0) uniform UBO
 	float hmss_pre_crt_luminance;
 	float hmss_post_crt_gamma;
 
+	float hmss_screen_scale_only;
+
 	// float hmss_reflection_mirror_stretch;
 	// float hmss_reflection_mirror_offset;
-
-	// Blur Stuff
-	float hbl_blur_num_samples;
-	float hbl_blur_min;
-	float hbl_blur_max;
-	float hbl_sharpness_falloff_distance;
 
 	// Image Bezel
 	float hmbz_background_image_opacity;
@@ -80,6 +77,9 @@ layout(std140, set = 0, binding = 0) uniform UBO
 	float hmbz_background_image_scale_mode;
 	float hmbz_background_image_aspect_ratio;
 	float hmbz_background_image_tube_height;
+
+	float hmbz_tube_glass_image_opacity;
+	float hmbz_tube_edge_shadow;
 
 	// Generated Bezel
 	float hmbz_bezel_opacity;
@@ -100,7 +100,7 @@ layout(std140, set = 0, binding = 0) uniform UBO
 	float hmbz_bezel_corner_highlight_spread_falloff; // TODO Need to keep this?
 	float hmbz_bezel_noise;
 //	float hbr_noise_falloff;
-	
+
 	// Generated Frame
 	float hmbz_frame_opacity;
 	float hmbz_frame_brightness;
@@ -113,6 +113,12 @@ layout(std140, set = 0, binding = 0) uniform UBO
 
 	float hmbz_vignette_shadow_opacity;
 	
+	// Blur Stuff
+	float hbl_blur_num_samples;
+	float hbl_blur_min;
+	float hbl_blur_max;
+	float hbl_sharpness_falloff_distance;
+
 	// Reflection
 	float hbr_global_amount;
 	float hbr_global_gamma_adjust;
@@ -260,6 +266,13 @@ layout(set = 0, binding = 9)  uniform sampler2D OverlayImage;
 
 void main()
 {
+	// Stuff for debugging
+	#ifdef ShowPlacementGuide
+		float placement_guide_red_alpha = 0;
+		float placement_guide_green_alpha = 0;
+		float placement_guide_blue_alpha = 0;
+	#endif
+
 	//----------------------------------------------------
 	// CRT Pass
 	//----------------------------------------------------
@@ -273,13 +286,6 @@ void main()
 	//----------------------------------------------------
 	if (global.hbr_global_amount != 0 || global.hmbz_background_image_opacity != 0)
 	{
-		// Stuff for debugging the mapping space
-		#ifdef ShowPlacementGuide
-			float placement_guide_red_alpha = 0;
-			float placement_guide_green_alpha = 0;
-			float placement_guide_blue_alpha = 0;
-		#endif
-
 		//----------------------------------------------------
 		//  Calculate Outside mapping Coords
 		//----------------------------------------------------
@@ -315,7 +321,6 @@ void main()
 		float outside_bezel_mask;
 		float edge_mask;
 		float noise_mask;
-		float guide_feedback_mask;
 
 		// screen_aspect is 1.33 for a standard old-style tube placed horizontally
 		screen_aspect = HMSS_GetScreenAspectRatio();
@@ -442,12 +447,22 @@ void main()
 
 		noise_mask = clamp(fract(sin(dot(outermap_warped_coord_ctr + vec2(0.5, 0.5) + 1, vec2(12.9898, 78.233))) * 43758.5453), 0, 1);
 		
-		guide_feedback_mask = 0;
+		vec2 inside_tube_coord = clamp(0.5 - clamp(abs(tube_warped_coord_ctr), vec2(0), vec2(0.5)), 0, 1);
+//		float dist_inside_tube_edge = length(inside_tube_coord);
+		float tube_shadow_mask = HMSS_GetCornerMask(tube_warped_coord_ctr + 0.5, global.hmbz_bezel_inner_corner_radius_scale * global.hmss_corner_radius, 0); //HHLP_EasePowerOut(smoothstep(global.hmbz_tube_edge_shadow * 0.2, 0.01, dist_inside_tube_edge), 3); //HHLP_QuadraticBezier(smoothstep(1 / 100, 0, dist_inside_tube_edge), vec2(0, 1));
+		float tube_edge_shadow_mult = global.hmbz_tube_edge_shadow * (tube_shadow_mask) + (1 - global.hmbz_tube_edge_shadow);
+		// #ifdef ShowPlacementGuide
+		// 	placement_guide_red_alpha += 0.5*tube_shadow_mask;
+		// #endif
+
+		frag_color_linear *= tube_edge_shadow_mult;
 
 		vec4 base_image	= frag_color_linear;
 		vec2 tiled_image_coord = mod(imageLayerCoord, 1);
 		vec4 background_image = texture(BackgroundImage, tiled_image_coord).rgba;
 		background_image = global.hmbz_background_image_brightness * HHLP_Linearize(background_image);
+
+
 
 		//----------------------------------------------------
 		// Image Bezel - Applied ON TOP of the CRT image, BELOW the reflection
@@ -459,11 +474,23 @@ void main()
 
 			// Add Background
 			float clipping_mask = outside_bezel_mask * bezel_image_alpha;
-			frag_color_linear	= vec4(mix(base_image, background_image, global.hmbz_background_image_opacity * clipping_mask));
+			frag_color_linear	= vec4(mix(base_image, tube_edge_shadow_mult * background_image, global.hmbz_background_image_opacity * clipping_mask));
+		}
 
-			// Add Glass Reflection image on top of base image
-			vec4 tube_glass_image = texture(TubeGlassImage, imageLayerCoord).rgba;
-			frag_color_linear	= vec4(mix(frag_color_linear, tube_glass_image, tube_glass_image.a));
+		//----------------------------------------------------
+		// Tube Glass Image
+		//----------------------------------------------------
+		if (global.hmbz_tube_glass_image_opacity > 0)
+		{
+			vec4 tube_glass_image = HHLP_Linearize(texture(TubeGlassImage, tube_coord).rgba);
+
+
+			frag_color_linear	= frag_color_linear + (global.hmbz_tube_glass_image_opacity / 100) * tube_shadow_mask * tube_glass_image.a * (1 - outside_tube_mask) * tube_glass_image;
+			
+			// Mix
+			// {
+			// 	frag_color_linear	= vec4(mix(frag_color_linear, tube_glass_image, (global.hmbz_tube_glass_image_opacity / 100 - 1) * tube_glass_image.a * (1 - outside_tube_mask)));
+			// }
 		}
 
 		//----------------------------------------------------
@@ -477,21 +504,6 @@ void main()
 			So instead of trying to use the coordinates from the screen/tube we use a larger space 
 			and subtract the screen space to see how far we are outside of the sreen
 			*/
-
-			// Stuff for debugging the mapping space
-			#ifdef ShowPlacementGuide
-				float placement_guide_red_alpha = 0;
-				float placement_guide_green_alpha = 0;
-				float placement_guide_blue_alpha = 0;
-
-				placement_guide_red_alpha += guide_feedback_mask;
-			#endif
-
-
-
-			#ifdef ShowPlacementGuide
-				placement_guide_red_alpha += 0.05 * smoothstep(0, 0.001, frame_coord_ctr.x - 0.5);
-			#endif
 			
 			float hmbz_bezel_brightness_top = 0.5;
 			float hmbz_bezel_brightness_sides = 1;
@@ -585,13 +597,6 @@ void main()
 
 			// Add Bezel, Frame & Shadow color to the screen color
 			frag_color_linear = mix(frag_color_linear, bezel_and_frame_color_v4, final_mask);
-
-			// Add the color for the debug stuff
-			#ifdef ShowPlacementGuide
-				frag_color_linear += vec4(1, 0, 0, 1) * placement_guide_red_alpha;
-				frag_color_linear += vec4(0, 1, 0, 1) * placement_guide_green_alpha;
-				frag_color_linear += vec4(0, 0, 1, 1) * placement_guide_blue_alpha;
-			#endif
 		}
 
 		//----------------------------------------------------
@@ -696,6 +701,8 @@ void main()
 	}
 	vec4 overlay_image = texture(OverlayImage, imageLayerCoord).rgba;
 
+
+	
 	FragColor = mix(clamp(HHLP_Delinearize(frag_color_linear), 0, 1), overlay_image, overlay_image.a);
 
 	// Add the color for the debug Stuff
@@ -703,5 +710,7 @@ void main()
 		FragColor += vec4(1, 0, 0, 1) * placement_guide_red_alpha;
 		FragColor += vec4(0, 1, 0, 1) * placement_guide_green_alpha;
 		FragColor += vec4(0, 0, 1, 1) * placement_guide_blue_alpha;
-	#endif
+	#endif	
+
+
 }

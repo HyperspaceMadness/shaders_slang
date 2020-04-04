@@ -49,7 +49,11 @@ void main()
 {
     gl_Position = global.MVP * Position;
     vTexCoord = TexCoord;
+
+    // Modifications from hsm-mega-bezel-include.inc integration
+    // Added
     vTexCoord = HMSS_GetScreenVTexCoord(vTexCoord);
+    // End Addition
 }
 
 #pragma stage fragment
@@ -83,7 +87,13 @@ float intsmear(float x, float dx, float d, float coeffs[7])
 
 void main()
 {
+    // TODO Add Support for Cropping?
+
+    // Modifications from hsm-mega-bezel-include.inc integration
+    // Added
     vec2 curved_coord = HMSS_GetWrappedCurvedCoord(vTexCoord, 1);
+    // End Addition
+
     vec2 texelSize = global.SourceSize.zw;
     /* float2 range = IN.video_size / (IN.output_size * IN.texture_size); */
     vec2 range = global.OutputSize.zw;
@@ -124,6 +134,11 @@ void main()
     vec3 averageColor = topLeftColor + bottomRightColor + bottomLeftColor + topRightColor;
 
     averageColor = mat3(cred, cgreen, cblue) * averageColor;
+
+    // Modifications from hsm-mega-bezel-include.inc integration
+    // Added
+    averageColor = pow(averageColor, 1.0 / vec3(global.hmss_post_crt_gamma));
+    // End Addition
 
     FragColor = vec4(pow(averageColor, vec3(1.0/outgamma)),0.0);
 }

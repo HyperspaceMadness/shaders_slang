@@ -10,7 +10,7 @@ Description:
 #include "hsm-helper-functions.inc"
 
 // Screen Scale Required Parameters
-#pragma parameter hmss_mega_screen_scale_on				"___HSM MEGA BEZEL__ V.2020-03-26 -SCREEN SCALE ON" 0 0 1 1
+#pragma parameter hmss_mega_screen_scale_on				"___HSM MEGA BEZEL__ V.2020-03-28 -SCREEN SCALE ON" 0 0 1 1
 #pragma parameter hmss_screen_scale_debug				"[SCALING]  Screen Scale Debug" 0 0 1 1
 #pragma parameter hmss_aspect_ratio_mode 				"[SCALING]  Aspect Ratio Mode (0:Auto, 1:Horizontal, 2:Vert)"  0 0 2 1
 #pragma parameter hmss_screen_aspect_ratio				"[SCALING]  Screen Aspect Ratio"  1.3333 0 3 0.002
@@ -23,15 +23,15 @@ Description:
 #pragma parameter hmss_int_scale_multiple_offset 		"[SCALING]  Int Scale Multiple Offset" 0 -20 20 1
 #pragma parameter hmss_int_scale_border_min_height 		"[SCALING]  Int Scale Border Min Height %" 5.5 -20 20 0.5
 
-#pragma parameter hmss_scanline_direction 				"[SCALING]  Scanline Dir Guest-Venom  (0:Auto, 1:Horiz, 2:Vert)"  0 0 2 1
+#pragma parameter hmss_scanline_direction 				"[SCANLINES]  Scanline Dir Guest-Venom (0:Auto, 1:Horiz, 2:Vert)"  0 0 2 1
 
-#pragma parameter hmss_position_offset_x 				"[SCALING]  Position Offset X" 0 -100 100 0.1
-#pragma parameter hmss_position_offset_y 				"[SCALING]  Position Offset Y" 0 -100 100 0.1
+#pragma parameter hmss_position_offset_x 				"[POSITION]  Position Offset X" 0 -100 100 0.1
+#pragma parameter hmss_position_offset_y 				"[POSITION]  Position Offset Y" 0 -100 100 0.1
 
-#pragma parameter hmss_crop_overscan_top 				"[SCALING]  Crop Overscan Top" 0 -256 256 1
-#pragma parameter hmss_crop_overscan_bottom 			"[SCALING]  Crop Overscan Bottom" 0 -256 256 1
-#pragma parameter hmss_crop_overscan_left 				"[SCALING]  Crop Overscan Left" 0 -256 256 1
-#pragma parameter hmss_crop_overscan_right 				"[SCALING]  Crop Overscan Right" 0 -256 256 1
+#pragma parameter hmss_crop_overscan_top 				"[CROPPING]  Crop Overscan Top" 0 -256 256 1
+#pragma parameter hmss_crop_overscan_bottom 			"[CROPPING]  Crop Overscan Bottom" 0 -256 256 1
+#pragma parameter hmss_crop_overscan_left 				"[CROPPING]  Crop Overscan Left" 0 -256 256 1
+#pragma parameter hmss_crop_overscan_right 				"[CROPPING]  Crop Overscan Right" 0 -256 256 1
 
 #pragma parameter hmss_curvature_on_long_axis 			"[CURVATURE]  Curvature on Long Axis (default 3)" 0 0 12.5 0.2
 #pragma parameter hmss_curvature_on_short_axis 			"[CURVATURE]  Curvature on Short Axis (default 4)" 0 0 12.5 0.2
@@ -39,9 +39,11 @@ Description:
 #pragma parameter hmss_screen_edge_sharpness 			"[CURVATURE]  Outer Edge Sharpness" 1 0 1 0.05
 #pragma parameter hmss_tube_black_edge_thickness 		"[CURVATURE]  Tube Black Edge Thickness" 1.2 -0.5 8 0.05
 
-#pragma parameter hmss_crop_and_afterglow_black_level 	"[COLOR]  Black Level (For Afterglow & Neg Crop)" 0 -30 30 0.05-
-#pragma parameter hmss_crop_and_afterglow_gamma			"[COLOR]  Gamma (For Afterglow & Neg Crop)" 1 0.5 2 0.01
-#pragma parameter hmss_crop_and_afterglow_luminance		"[COLOR]  Luminance (For Afterglow & Neg Crop)" 1 0 2 0.01
+#pragma parameter hmss_pre_crt_black_level 				"[COLOR]  Pre-CRT Black Level" 0 -30 30 0.05-
+#pragma parameter hmss_pre_crt_gamma					"[COLOR]  Pre-CRT Gamma" 1 0.01 2 0.01
+#pragma parameter hmss_pre_crt_luminance				"[COLOR]  Pre-CRT Luminance" 1 0 2 0.01
+#pragma parameter hmss_post_crt_gamma					"[COLOR]  Post-CRT Gamma" 1 0.01 2 0.01
+#pragma parameter hmss_negative_crop_brightness			"[COLOR]  Negative Crop Brightness" 0 0 100 0.01
 
 #pragma parameter hmss_reflection_mirror_stretch 		"[REFLECTION]  Mirror Stretch" 1.1 0.1 5 0.02
 #pragma parameter hmss_reflection_mirror_offset 		"[REFLECTION]  Mirror Offset" -2 -100 100 0.1
@@ -69,6 +71,44 @@ float HMSS_GetIsCroppedOriginalSizeVertical()
 	vec2 cropped_original_size = HMSS_GetCroppedSize(global.OriginalSize.xy);
 	float cropped_aspect_ratio = cropped_original_size.x/cropped_original_size.y;
 	return cropped_aspect_ratio < 1 ? 1 : 0;
+}
+
+float HMSS_GetHasNegativeCrop()
+{
+	float has_negative_crop = (global.hmss_crop_overscan_top < 0 || 
+								global.hmss_crop_overscan_bottom < 0 || 
+								global.hmss_crop_overscan_left < 0 || 
+								global.hmss_crop_overscan_right < 0 ) ? 1 : 0;
+	return has_negative_crop;
+}
+
+// Check to see if we are in the negative crop area
+float HMSS_IsInNegativeCropArea(vec2 in_coord)
+{
+	if (HMSS_GetHasNegativeCrop() == 1)
+	{
+		if (global.hmss_crop_overscan_top < 0 && in_coord.y < 0)
+		{
+			return 1;
+		}
+		if (global.hmss_crop_overscan_bottom < 0 && in_coord.y > 1)
+		{
+			return 1;
+		}
+		if (global.hmss_crop_overscan_left < 0 && in_coord.x < 0)
+		{
+			return 1;
+		}
+		if (global.hmss_crop_overscan_bottom < 0 && in_coord.x > 1)
+		{
+			return 1;
+		}
+	}
+	// If Has Negative crop is off we can't be in a negative crop area
+	else
+	{
+		return 0;
+	}
 }
 
 float HMSS_GetScreenAspectRatio()
@@ -151,7 +191,10 @@ vec2 HMSS_GetScreenScale()
 
 vec2 HMSS_GetScreenSize()
 {
-	return global.FinalViewportSize.xy * HMSS_GetScreenScale();
+	vec2 viewport_size = global.FinalViewportSize.xy * HMSS_GetScreenScale();
+	// Round this so we get proper integers
+	viewport_size = vec2(round(viewport_size.x), round(viewport_size.y));
+	return viewport_size;
 }
 
 vec2 HMSS_GetIntegerScaleMult()
@@ -159,10 +202,9 @@ vec2 HMSS_GetIntegerScaleMult()
 	float epsilon = 0.002;
 	vec2 integer_scale = HMSS_GetScreenSize() / HMSS_GetCroppedOriginalSize();
 	integer_scale = vec2(fract(integer_scale.x + 0.001) < epsilon ? round(integer_scale.x) : integer_scale.x,
-						fract(integer_scale.y + 0.001) < epsilon ? round(integer_scale.y) : integer_scale.y);
+						 fract(integer_scale.y + 0.001) < epsilon ? round(integer_scale.y) : integer_scale.y);
 	return integer_scale;
 }
-
 
 vec2 HMSS_GetScreenScaleWithEdgeHeight(float edge_height)
 // Edge Height is a 0 to 1 percentage of the screen height
@@ -236,53 +278,70 @@ vec2 HMSS_GetWrappedCurvedCoord(vec2 in_coord, float curvature_multiplier)
 	float curved_coord_distance = sqrt(ctr_coord_0_1.x * ctr_coord_0_1.x + ctr_coord_0_1.y * ctr_coord_0_1.y);
 	vec2 ctr_mirror_coord = ctr_coord;
 
-	if (curved_coord_distance > 1.41)
+	// Only curve the coordinate if the coordinate is inside the sphere where the coordinate space is continuous
+	if (curved_coord_distance < 1.41)
 	{
-		if (abs(ctr_coord.x) > 0.5)
-		{
-			ctr_mirror_coord.x = ctr_screen_edge_coord.x - global.hmss_reflection_mirror_stretch * vector_outside.x + sign(ctr_screen_edge_coord.x) * global.hmss_reflection_mirror_offset / aspect_ratio / 100;
-		}
-		if (abs(ctr_coord.y) > 0.5)
-		{
-			ctr_mirror_coord.y = ctr_screen_edge_coord.y - global.hmss_reflection_mirror_stretch * vector_outside.y + sign(ctr_screen_edge_coord.x) * global.hmss_reflection_mirror_offset / 100;
-		}
-		
-		return ctr_mirror_coord + 0.5;
+		ctr_mirror_coord = HMSS_GetCurvedCoord(in_coord, curvature_multiplier) - 0.5;
 	}
+	if (abs(ctr_mirror_coord.x) > 0.5)
+	{
+		ctr_mirror_coord.x = ctr_mirror_coord.x - 2 * sign(ctr_mirror_coord.x) * (abs(ctr_mirror_coord.x) - 0.5);
+	}
+	if (abs(ctr_mirror_coord.y) > 0.5)
+	{
+		ctr_mirror_coord.y = ctr_mirror_coord.y - 2 * sign(ctr_mirror_coord.y) * (abs(ctr_mirror_coord.y) - 0.5);
+	}
+	return (ctr_mirror_coord + 0.5);
 
-	vec2 ctr_curved_coord = HMSS_GetCurvedCoord(in_coord, curvature_multiplier) - 0.5;
-	vec2 ctr_blended_coord = ctr_curved_coord;
 
-	// TODO need to repeat edge when we are in the black edge area
-		if ((abs(ctr_curved_coord.x) > 0.5 && abs(ctr_curved_coord.y) > 0.5))
-		{
-			return ctr_mirror_coord + 0.5;
-		}
+	// Old version of reflection coord which is actually goes straight out from the side instead of being curved
+	// if (curved_coord_distance > 1.41)
+	// {
+	// 	if (abs(ctr_coord.x) > 0.5)
+	// 	{
+	// 		ctr_mirror_coord.x = ctr_screen_edge_coord.x - global.hmss_reflection_mirror_stretch * vector_outside.x + sign(ctr_screen_edge_coord.x) * global.hmss_reflection_mirror_offset / aspect_ratio / 100;
+	// 	}
+	// 	if (abs(ctr_coord.y) > 0.5)
+	// 	{
+	// 		ctr_mirror_coord.y = ctr_screen_edge_coord.y - global.hmss_reflection_mirror_stretch * vector_outside.y + sign(ctr_screen_edge_coord.x) * global.hmss_reflection_mirror_offset / 100;
+	// 	}
+		
+	// 	return ctr_mirror_coord + 0.5;
+	// }
 
-		if (abs(ctr_curved_coord.x) + global.hmss_tube_black_edge_thickness / 100 / aspect_ratio > 0.5)
-		{
-			vec2 ctr_curved_screen_edge_coord = HMSS_GetCurvedCoord(vec2(ctr_screen_edge_coord.x, ctr_coord.y) + 0.5, curvature_multiplier) - 0.5;
-			float curved_offset = ctr_curved_screen_edge_coord.x - ctr_screen_edge_coord.x;
-			ctr_mirror_coord.x = ctr_screen_edge_coord.x - global.hmss_reflection_mirror_stretch * vector_outside.x - 2 * curved_offset + sign(ctr_screen_edge_coord.x) * (2 * global.hmss_tube_black_edge_thickness + global.hmss_reflection_mirror_offset) / 100 / aspect_ratio;
-			ctr_mirror_coord.x = clamp(ctr_mirror_coord.x, -0.49999, 0.49999);
-		}
-		if (abs(ctr_curved_coord.y) + global.hmss_tube_black_edge_thickness / 100 > 0.5)
-		{
-			vec2 ctr_curved_screen_edge_coord = HMSS_GetCurvedCoord(vec2(ctr_coord.x, ctr_screen_edge_coord.y) + 0.5, curvature_multiplier) - 0.5;
-			float curved_offset = ctr_curved_screen_edge_coord.y - ctr_screen_edge_coord.y;
-			ctr_mirror_coord.y = ctr_screen_edge_coord.y - global.hmss_reflection_mirror_stretch * vector_outside.y - 2 * curved_offset + sign(ctr_screen_edge_coord.y) * (2 * global.hmss_tube_black_edge_thickness + global.hmss_reflection_mirror_offset) / 100;
-			ctr_mirror_coord.y = clamp(ctr_mirror_coord.y, -0.49999, 0.49999);
-		}
-		if (abs(ctr_curved_coord.x) > 0.5 || abs(ctr_curved_coord.y) > 0.5)
-		{
-			ctr_blended_coord = HMSS_GetCurvedCoord(ctr_mirror_coord + 0.5, curvature_multiplier) - 0.5;
-		}
-		if (abs(ctr_curved_coord.x) > 0.5 && abs(ctr_curved_coord.y) > 0.5)
-		{
-			ctr_blended_coord = ctr_mirror_coord + 0.5;
-		}
+	// vec2 ctr_curved_coord = HMSS_GetCurvedCoord(in_coord, curvature_multiplier) - 0.5;
+	// vec2 ctr_blended_coord = ctr_curved_coord;
+
+	// // TODO need to repeat edge when we are in the black edge area
+	// 	if ((abs(ctr_curved_coord.x) > 0.5 && abs(ctr_curved_coord.y) > 0.5))
+	// 	{
+	// 		return ctr_mirror_coord + 0.5;
+	// 	}
+
+	// 	if (abs(ctr_curved_coord.x) + global.hmss_tube_black_edge_thickness / 100 / aspect_ratio > 0.5)
+	// 	{
+	// 		vec2 ctr_curved_screen_edge_coord = HMSS_GetCurvedCoord(vec2(ctr_screen_edge_coord.x, ctr_coord.y) + 0.5, curvature_multiplier) - 0.5;
+	// 		float curved_offset = ctr_curved_screen_edge_coord.x - ctr_screen_edge_coord.x;
+	// 		ctr_mirror_coord.x = ctr_screen_edge_coord.x - global.hmss_reflection_mirror_stretch * vector_outside.x - 2 * curved_offset + sign(ctr_screen_edge_coord.x) * (2 * global.hmss_tube_black_edge_thickness + global.hmss_reflection_mirror_offset) / 100 / aspect_ratio;
+	// 		ctr_mirror_coord.x = clamp(ctr_mirror_coord.x, -0.49999, 0.49999);
+	// 	}
+	// 	if (abs(ctr_curved_coord.y) + global.hmss_tube_black_edge_thickness / 100 > 0.5)
+	// 	{
+	// 		vec2 ctr_curved_screen_edge_coord = HMSS_GetCurvedCoord(vec2(ctr_coord.x, ctr_screen_edge_coord.y) + 0.5, curvature_multiplier) - 0.5;
+	// 		float curved_offset = ctr_curved_screen_edge_coord.y - ctr_screen_edge_coord.y;
+	// 		ctr_mirror_coord.y = ctr_screen_edge_coord.y - global.hmss_reflection_mirror_stretch * vector_outside.y - 2 * curved_offset + sign(ctr_screen_edge_coord.y) * (2 * global.hmss_tube_black_edge_thickness + global.hmss_reflection_mirror_offset) / 100;
+	// 		ctr_mirror_coord.y = clamp(ctr_mirror_coord.y, -0.49999, 0.49999);
+	// 	}
+	// 	if (abs(ctr_curved_coord.x) > 0.5 || abs(ctr_curved_coord.y) > 0.5)
+	// 	{
+	// 		ctr_blended_coord = HMSS_GetCurvedCoord(ctr_mirror_coord + 0.5, curvature_multiplier) - 0.5;
+	// 	}
+	// 	if (abs(ctr_curved_coord.x) > 0.5 && abs(ctr_curved_coord.y) > 0.5)
+	// 	{
+	// 		ctr_blended_coord = ctr_mirror_coord + 0.5;
+	// 	}
 	
-	return ctr_blended_coord + 0.5;
+	//return ctr_blended_coord + 0.5;
 }
 
 // Borrowed from cgwg's crt-geom, under GPL
@@ -386,14 +445,14 @@ vec4 HMSS_ApplyBlackLevelGammaLuminance(vec4 in_color, float color_is_linear)
 
 	vec3 rgb_color = in_color.rgb;
 	// Black Level Adjustment
-	rgb_color -= vec3(global.hmss_crop_and_afterglow_black_level / 100);
-	rgb_color *= vec3(1.0) / vec3(1.0 - global.hmss_crop_and_afterglow_black_level / 100);
+	rgb_color -= vec3(global.hmss_pre_crt_black_level / 100);
+	rgb_color *= vec3(1.0) / vec3(1.0 - global.hmss_pre_crt_black_level / 100);
 
 	// Gamma
-	rgb_color = pow(rgb_color, 1.0 / vec3(global.hmss_crop_and_afterglow_gamma));
+	rgb_color = pow(rgb_color, 1.0 / vec3(global.hmss_pre_crt_gamma));
 
 	// Luminance
-	rgb_color = clamp(HMSS_HSVtoRGB(HMSS_RGBtoHSV(clamp(rgb_color, 0, 1)) * vec3(1, 1, global.hmss_crop_and_afterglow_luminance)), 0.0, 1.0);
+	rgb_color = clamp(HMSS_HSVtoRGB(HMSS_RGBtoHSV(clamp(rgb_color, 0, 1)) * vec3(1, 1, global.hmss_pre_crt_luminance)), 0.0, 1.0);
 
 	vec4 out_color = vec4(rgb_color, 1);
 
@@ -408,18 +467,17 @@ vec4 HMSS_ApplyBlackLevelGammaLuminance(vec4 in_color, float color_is_linear)
 vec4 HMSS_COMPAT_TEXTURE(sampler2D in_sampler, vec2 in_coord)
 {
 	vec2 ctr_wrapped_coord = in_coord - 0.5;
-
-		ctr_wrapped_coord = clamp(ctr_wrapped_coord, -0.49999, 0.49999);
+	ctr_wrapped_coord = clamp(ctr_wrapped_coord, -0.49999, 0.49999);
 
 	vec2 sample_coord = HMSS_GetCropOverscanCoord(ctr_wrapped_coord + 0.5);
 
 	// When coord is outside the texture use the specified luminance
-	if (abs(sample_coord.x - 0.5) < 0.5 && abs(sample_coord.y - 0.5) < 0.5)
+	if (HMSS_IsInNegativeCropArea(sample_coord) == 1)
 	{
-        return texture(in_sampler, sample_coord);
+		return vec4(global.hmss_negative_crop_brightness / 100, global.hmss_negative_crop_brightness / 100, global.hmss_negative_crop_brightness / 100, 1);
 	}
 	else
 	{
-		return HMSS_ApplyBlackLevelGammaLuminance(vec4(0,0,0,1), 1);
+        return texture(in_sampler, sample_coord);
 	}
 }

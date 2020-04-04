@@ -57,10 +57,12 @@ layout(std140, set = 0, binding = 0) uniform UBO
 	float hmss_crop_overscan_bottom;
 	float hmss_crop_overscan_left;
 	float hmss_crop_overscan_right;
+	float hmss_negative_crop_brightness;
 
-	float hmss_crop_and_afterglow_black_level;
-	float hmss_crop_and_afterglow_gamma;
-	float hmss_crop_and_afterglow_luminance;
+	float hmss_pre_crt_black_level;
+	float hmss_pre_crt_gamma;
+	float hmss_pre_crt_luminance;
+	float hmss_post_crt_gamma;
 
 	float hmss_reflection_mirror_stretch;
 	float hmss_reflection_mirror_offset;
@@ -264,7 +266,8 @@ void main()
 	//----------------------------------------------------
 	// Get the CRT pass and make it in linear space & mask the area outside the screen
 	vec4 frag_color_linear = HHLP_Linearize(COMPAT_TEXTURE(BR_CrtPass, viewportCoord.xy));
-	frag_color_linear *= HMSS_GetCornerMask(HMSS_GetCurvedCoord(screenCoord, 1), global.hmss_corner_radius, global.hmss_screen_edge_sharpness);
+	// Shrink the mask by 0.001 to clip off outer edge
+	frag_color_linear *= HMSS_GetCornerMask(((HMSS_GetCurvedCoord(screenCoord, 1) - 0.5) * 1.001) + 0.5, global.hmss_corner_radius, global.hmss_screen_edge_sharpness);
 
 	//----------------------------------------------------
 	// Generated Bezel & Reflection
@@ -504,7 +507,7 @@ void main()
 			float hmbz_bezel_brightness_frame_outer_edge = 0.5;
 			float hmbz_brightness_shadow = 0;
 
-			vec3 orig_color = HHLP_Linearize(vec4(HMSS_HSVtoRGB(vec3(global.hmbz_bezel_color_hue / 100, global.hmbz_bezel_color_saturation / 100, global.hmbz_bezel_color_value / 100)), 1)).rgb;
+			vec3 orig_color = HHLP_Linearize(vec4(HMSS_HSVtoRGB(vec3(global.hmbz_bezel_color_hue / 360, global.hmbz_bezel_color_saturation / 100, global.hmbz_bezel_color_value / 100)), 1)).rgb;
 			vec3 base_color = mix(orig_color, bezel_image.rgb, global.hmbz_bezel_color_blend_with_image);
 
 			vec3 base_color_with_noise = mix(base_color, 1.5 * base_color * noise_mask, global.hmbz_bezel_noise / 100);

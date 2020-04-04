@@ -2,7 +2,7 @@
 #pragma parameter hag_afterglow_persistence             "[AFTERGLOW]  Persistence"   0.05 0.0 1.0 0.01
 #pragma parameter hag_afterglow_saturation              "[AFTERGLOW]  Saturation"    0.10 0.0 1.0 0.01
 
-#pragma parameter hmbz_bezel_color_hue					"[BEZEL & FRAME]  Color Hue" 0 0 100 0.5
+#pragma parameter hmbz_bezel_color_hue					"[BEZEL & FRAME]  Color Hue" 0 0 360 0.5
 #pragma parameter hmbz_bezel_color_saturation			"[BEZEL & FRAME]  Color Saturation" 0 0 100 1
 #pragma parameter hmbz_bezel_color_value				"[BEZEL & FRAME]  Color Value (Brightness)" 9 0 100 0.2
 #pragma parameter hmbz_bezel_color_blend_with_image		"[BEZEL & FRAME]  Blend Color with Image" 0 0 1 0.05
@@ -37,8 +37,8 @@
 // Bezel Parameters
 #pragma parameter hmbz_image_bezel_opacity 				"[IMAGE BEZEL]  Opacity" 1 0 1 0.05
 #pragma parameter hmbz_image_bezel_brightness 			"[IMAGE BEZEL]  Brightness" 1 0.5 3 0.01
-#pragma parameter hmbz_image_bezel_scale_mode 			"[IMAGE BEZEL]  Scale Mode - 0:Auto 1:Fullscreen 2:Fit Height" 0 0 2 1
-#pragma parameter hmbz_image_bezel_aspect_ratio 		"[IMAGE BEZEL]  Aspect Ratio" 1.75 0.25 4 0.01
+#pragma parameter hmbz_image_bezel_scale_mode 			"[IMAGE BEZEL]  Scale Mode - 0:Auto 1:Fullscreen 2:Fit Height" 2 0 2 1
+#pragma parameter hmbz_image_bezel_aspect_ratio 		"[IMAGE BEZEL]  Aspect Ratio" 1.77 0.25 4 0.01
 // Visual height of the tube in the texture (Only used in Image Mode 0)
 #pragma parameter hmbz_image_bezel_tube_height     		"[IMAGE BEZEL]  Tube Height (in Texture)" 69 10 150.0 0.1
 #pragma parameter hmbz_image_bezel_cut_out_inside_frame "[IMAGE BEZEL]  Cut Out Inside Frame" 1 0 1 1

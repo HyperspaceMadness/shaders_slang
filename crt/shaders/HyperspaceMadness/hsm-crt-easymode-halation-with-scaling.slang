@@ -335,6 +335,12 @@ void main()
     col *= vec3(corner_weight);
     col += diff * mask_weight * params.HALATION * vec3(corner_weight);
     col += diff * params.DIFFUSION * vec3(corner_weight);
+
+    // Modifications from hsm-mega-bezel-include.inc integration
+    // Added
+    col = pow(col, 1.0 / vec3(global.hmss_post_crt_gamma));
+    // End Addition
+
     col = pow(col, vec3(1.0 / params.GAMMA_OUTPUT));
 
    FragColor = vec4(col, 1.0);

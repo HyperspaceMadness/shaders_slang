@@ -35,11 +35,11 @@ layout(push_constant) uniform Push
 	// Modifications from hsm-mega-bezel-include.inc integration
 	// Removed the following
 	// float TATE
+	// IOS, 
+	// OS, 
+	// BLOOM, 
 
-	float IOS, 
-	OS, 
-	BLOOM, 
-	brightboost, 
+	float brightboost, 
 	brightboost1, 
 	gsl, 
 	scanline1, 
@@ -99,11 +99,11 @@ layout(std140, set = 0, binding = 0) uniform UBO
 // #define TATE         params.TATE     // Screen orientation
 // #pragma parameter IOS "Smart Integer Scaling: 1.0:Y, 2.0:'X'+Y" 0.0 0.0 2.0 1.0
 // #define IOS          params.IOS     // Smart Integer Scaling
+// #pragma parameter OS "R. Bloom Overscan Mode" 1.0 0.0 2.0 1.0
+// #define OS           params.OS     // Do overscan
+// #pragma parameter BLOOM "Raster bloom %" 0.0 0.0 20.0 1.0
+// #define BLOOM        params.BLOOM     // Bloom overscan percentage
 
-#pragma parameter OS "R. Bloom Overscan Mode" 1.0 0.0 2.0 1.0
-#define OS           params.OS     // Do overscan
-#pragma parameter BLOOM "Raster bloom %" 0.0 0.0 20.0 1.0
-#define BLOOM        params.BLOOM     // Bloom overscan percentage
 #pragma parameter brightboost "Bright Boost Dark Pixels" 1.40 0.50 4.00 0.05
 #define brightboost  params.brightboost     // adjust brightness
 #pragma parameter brightboost1 "Bright Boost Bright Pixels" 1.15 0.50 2.00 0.05
@@ -197,7 +197,7 @@ layout(std140, set = 0, binding = 0) uniform UBO
 // Removed the following
 //#define gl_FragCoord (vTexCoord * OutputSize.xy)
 // Added the following
-#define gl_FragCoord HMSS_GetScreenScale() * (vTexCoord * OutputSize.xy)
+#define gl_FragCoord (vTexCoord * OutputSize.xy)
 // End Addition
 
 #pragma stage vertex
@@ -212,7 +212,7 @@ void main()
 
    // Modifications from hsm-mega-bezel-include.inc integration
    // Added the following
-   vTexCoord = HMSS_GetScreenVTexCoord(vTexCoord);
+   //vTexCoord = HMSS_GetScreenVTexCoord(vTexCoord);
    // End Addition
 }
 
@@ -441,17 +441,11 @@ void main()
 {
 	float lum = COMPAT_TEXTURE(PassPrev5Texture, vec2(0.1,0.1)).a;
 
-	// Calculating texel coordinates
-   
-	vec2 texcoord = TEX0.xy;
-
-	// Modifications from hsm-mega-bezel-include.inc integration
-	// Added the following
-	float TATE = HMSS_GetUseVerticalScanlines();
-	// End Addition
-
 	// Modifications from hsm-mega-bezel-include.inc integration
 	/* Removed the following
+	// Calculating texel coordinates
+	vec2 texcoord = TEX0.xy;
+
 	if (IOS > 0.0){
 		vec2 ofactor = OutputSize.xy/InputSize.xy;
 		vec2 intfactor = round(ofactor);
@@ -460,40 +454,38 @@ void main()
 		texcoord = Overscan(texcoord*(SourceSize.xy/InputSize.xy), scan, scan)*(InputSize.xy/SourceSize.xy);
 		if (IOS == 1.0) texcoord = mix(vec2(TEX0.x, texcoord.y), vec2(texcoord.x, TEX0.y), TATE);
 	}
-	*/
 
 	float factor  = 1.00 + (1.0-0.5*OS)*BLOOM/100.0 - lum*BLOOM/100.0;
 	texcoord  = Overscan(texcoord*(SourceSize.xy/InputSize.xy), factor, factor)*(InputSize.xy/SourceSize.xy);
+	*/
 
 	// Modifications from hsm-mega-bezel-include.inc integration
 	// Added the following
-	texcoord  = HMSS_GetCropOverscanCoord(texcoord);
+	float TATE = HMSS_GetUseVerticalScanlines();
+	vec2 texcoord  = HMSS_GetScreenVTexCoord(vTexCoord);
+	
 	// End Addition
 
 	// Modifications from hsm-mega-bezel-include.inc integration
 	/* Removed the following
 	 vec2 pos  = Warp(texcoord*(TextureSize.xy/InputSize.xy))*(InputSize.xy/TextureSize.xy);
 	 vec2 pos0 = Warp(TEX0.xy*(TextureSize.xy/InputSize.xy))*(InputSize.xy/TextureSize.xy);
+	 vec2 coffset = ((TATE < 0.5) ? vec2(0.0,0.5) : vec2(0.5, 0.0));
+	 if ((interm == 1.0 || interm == 2.0) && inter <= mix(SourceSize.y, SourceSize.x, TATE)) coffset = vec2(0.0);	
+	vec2 ps = SourceSize.zw;
+	vec2 OGL2Pos = pos * SourceSize.xy - coffset;
 	*/
+	
    	// Added the following
 	vec2 screen_coord = texcoord.xy;
 	vec2 curved_screen_coord = HMSS_GetCurvedCoord(texcoord, 1);
 	vec2 curved_wrapped_screen_coord = HMSS_GetWrappedCurvedCoord(texcoord*(TextureSize.xy/InputSize.xy), 1)*(InputSize.xy/TextureSize.xy);
 	vec2 pos = curved_wrapped_screen_coord;
+	vec2 coffset = ((TATE < 0.5) ? vec2(0.0,0.5) : vec2(0.5, 0.0));
+	if ((interm == 1.0 || interm == 2.0) && inter <= mix(SourceSize.y, SourceSize.x, TATE)) coffset = vec2(0.0);	
+	vec2 ps = 1 / SourceSize;
+	vec2 OGL2Pos = pos * SourceSize - coffset;
 	// End Addition
-
-	 vec2 coffset = ((TATE < 0.5) ? vec2(0.0,0.5) : vec2(0.5, 0.0));
-	 if ((interm == 1.0 || interm == 2.0) && inter <= mix(SourceSize.y, SourceSize.x, TATE)) coffset = vec2(0.0);	
-
-	// Modifications from hsm-mega-bezel-include.inc integration
-	/* Removed the following
-	vec2 ps = SourceSize.zw;
-	*/
-	// Added the following
-	vec2 ps = 1 / SourceSize.xy;
-	// End Addition
-
-	vec2 OGL2Pos = pos * SourceSize.xy - coffset;
 
 	vec2 fp = fract(OGL2Pos);
 	
@@ -723,15 +715,19 @@ void main()
 
 	color = color + glow*Bloom;
 		
-	color = pow(color, vec3(1.0/gamma_out));
 	
 	// Modifications from hsm-mega-bezel-include.inc integration
 	/* Remove the following
+	color = pow(color, vec3(1.0/gamma_out));
 	FragColor = vec4(color*corner(pos0), 1.0);
 	*/
 
 	// Added the following
 	// Don't apply the corner mask here, do it later in the shader chain
+	// Addition
+	// Gamma
+	color = pow(color, 1.0 / vec3(global.hmss_post_crt_gamma));
+	color = pow(color, vec3(1.0/gamma_out));
 
 	FragColor = vec4(color, 1);
 	// End Addition

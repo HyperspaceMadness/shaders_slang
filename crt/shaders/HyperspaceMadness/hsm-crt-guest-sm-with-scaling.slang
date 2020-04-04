@@ -89,7 +89,11 @@ layout(push_constant) uniform Push
 #pragma parameter bglow "Base Glow" 0.0 0.0 1.0 0.01
 #pragma parameter bloom "Bloom" 0.40 0.0 2.0 0.05
 #pragma parameter autobrm "Automatic Brightness (Mask)" 0.5 0.0 1.0 0.1
-#pragma parameter smart "1:Smart 2:Crop 3:Overscan Y Integer Scaling" 0.0 0.0 3.0 1.0
+
+// Modifications from hsm-mega-screen-scale.inc integration
+// Removed the following
+// #pragma parameter smart "1:Smart 2:Crop 3:Overscan Y Integer Scaling" 0.0 0.0 3.0 1.0
+
 #pragma parameter brightboost1 "Bright boost dark colors" 1.40 0.5 5.0 0.10
 #pragma parameter brightboost2 "Bright boost bright colors" 1.15 0.5 3.0 0.05
 #pragma parameter stype "Scanline Type" 1.0 0.0 3.0 1.0
@@ -283,15 +287,15 @@ void main()
 
 	float gamma = COMPAT_TEXTURE(LinPass, vec2(0.5,0.1)).a;
 	
+	/* Modifications from hsm-mega-screen-scale.inc integration
+	// Removed the following
 	if (smart == 1.0 || smart == 2.0 || smart == 3.0)
 	{
 		float intfactor = round(factor); if (smart == 2.0) intfactor = floor(factor); if (smart == 3.0) intfactor = ceil(factor);
 		float diff = factor/intfactor;
 		tex.y = Overscan(tex.y/(ratio), diff)*ratio;
 	}
-	
-	/* Modifications from hsm-mega-screen-scale.inc integration
-	// Removed the following
+
 	tex = Warp(tex/vec2(1.0,ratio))*vec2(1.0,ratio);
 	*/
 	
@@ -517,7 +521,16 @@ void main()
 	
 	float fgamma = 1.0/gamma_out;
 	if (stype == 1.0) fgamma = gamma;
+
+	/* Removed
 	vec3 color1g = pow(color, vec3(fgamma));
+	*/
+
+	// Addition
+	// Gamma
+	vec3 color1g = pow(color, 1.0 / vec3(global.hmss_post_crt_gamma));
+	color1g = pow(color1g, vec3(fgamma));
+	// End Addition
 	
     FragColor = vec4(color1g, 1.0);
 }

@@ -50,10 +50,12 @@ layout(std140, set = 0, binding = 0) uniform UBO
 	float hmss_crop_overscan_bottom;
 	float hmss_crop_overscan_left;
 	float hmss_crop_overscan_right;
+	float hmss_negative_crop_brightness;
 
-	float hmss_crop_and_afterglow_black_level;
-	float hmss_crop_and_afterglow_gamma;
-	float hmss_crop_and_afterglow_luminance;
+	float hmss_pre_crt_black_level;
+	float hmss_pre_crt_gamma;
+	float hmss_pre_crt_luminance;
+	float hmss_post_crt_gamma;
 
 	float hmss_reflection_mirror_stretch;
 	float hmss_reflection_mirror_offset;

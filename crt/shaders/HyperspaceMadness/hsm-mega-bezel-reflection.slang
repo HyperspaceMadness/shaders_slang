@@ -474,7 +474,7 @@ void main()
 
 			// Add Background
 			float clipping_mask = outside_bezel_mask * bezel_image_alpha;
-			frag_color_linear	= vec4(mix(base_image, tube_edge_shadow_mult * background_image, global.hmbz_background_image_opacity * clipping_mask));
+			frag_color_linear	= vec4(mix(tube_edge_shadow_mult * base_image, background_image, global.hmbz_background_image_opacity * clipping_mask));
 		}
 
 		//----------------------------------------------------

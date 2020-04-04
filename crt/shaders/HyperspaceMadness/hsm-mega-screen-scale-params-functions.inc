@@ -10,11 +10,11 @@ Description:
 #include "hsm-helper-functions.inc"
 
 // Screen Scale Required Parameters
-#pragma parameter hmss_mega_screen_scale_on				"___HSM MEGA BEZEL__ V.2020-04-01 -SCREEN SCALE ON" 0 0 1 1
+#pragma parameter hmss_mega_screen_scale_on				"___HSM MEGA BEZEL__ V.2020-04-02 -SCREEN SCALE ON" 0 0 1 1
 #pragma parameter hmss_screen_scale_debug				"[SCREEN SCALE]  Screen Scale Debug" 0 0 1 1
 #pragma parameter hmss_screen_scale_only             	"[SCREEN SCALE]  Screen Scale Only (No Bezel in Preset)" 0 0 1 1
 
-#pragma parameter hmss_rotate_crt_image					"[SCALING]  Rotate CRT Image"  0 0 3 1
+#pragma parameter hmss_rotate_crt_image					"[SCALING]  Rotate CRT Image"  0 0 1 1
 //#pragma parameter hmss_flip_screen_vertical			"[SCALING]  Flip Screen Vertical"  0 0 1 1
 #pragma parameter hmss_aspect_ratio_mode 				"[SCALING]  Aspect Ratio Mode (0:Auto, 1:Horizontal, 2:Vert)"  0 0 2 1
 #pragma parameter hmss_screen_aspect_ratio				"[SCALING]  Screen Aspect Ratio"  1.3333 0 3 0.002
@@ -41,13 +41,13 @@ Description:
 
 #pragma parameter hmss_corner_radius 					"[SCREEN EDGE]  Screen Corner Radius (Default 10)" 0 0 70 1
 #pragma parameter hmss_screen_edge_sharpness 			"[SCREEN EDGE]  Screen Edge Sharpness" 0.4 0 1 0.01
-#pragma parameter hmss_tube_black_edge_thickness 		"[SCREEN EDGE]  Tube Black Edge Thickness" 1.2 -0.5 8 0.05
+#pragma parameter hmss_tube_black_edge_thickness 		"[SCREEN EDGE]  Tube Black Edge Thickness" 1.2 -2 8 0.05
 
 #pragma parameter hmss_pre_crt_black_level 				"[COLOR]  Pre-CRT Black Level" 0 -30 30 0.05-
 #pragma parameter hmss_pre_crt_gamma					"[COLOR]  Pre-CRT Gamma" 1 0.01 2 0.01
 #pragma parameter hmss_pre_crt_luminance				"[COLOR]  Pre-CRT Luminance" 1 0 2 0.01
 #pragma parameter hmss_post_crt_gamma					"[COLOR]  Post-CRT Gamma" 1 0.01 2 0.01
-#pragma parameter hmss_negative_crop_brightness			"[COLOR]  Negative Crop Brightness" 0 0 100 0.01
+#pragma parameter hmss_negative_crop_brightness			"[COLOR]  Negative Crop Brightness" 0 0 20 0.02
 
 #pragma parameter hag_afterglow_amount                  "[AFTERGLOW]  Amount"        0.07 0.0 1.0 0.01
 #pragma parameter hag_afterglow_persistence             "[AFTERGLOW]  Persistence"   0.05 0.0 1.0 0.01
@@ -93,34 +93,7 @@ float HMSS_GetIsCroppedOriginalSizeVertical()
 	return cropped_aspect_ratio < 1 ? 1 : 0;
 }
 
-float HMSS_GetHasNegativeCrop()
-{
-	float has_negative_crop = (global.hmss_crop_overscan_top < 0 || 
-								global.hmss_crop_overscan_bottom < 0 || 
-								global.hmss_crop_overscan_left < 0 || 
-								global.hmss_crop_overscan_right < 0 ) ? 1 : 0;
-	return has_negative_crop;
-}
 
-// Check to see if we are in the negative crop area
-float HMSS_IsInNegativeCropArea(vec2 in_coord)
-{
-	if (HMSS_GetHasNegativeCrop() == 1)
-	{
-		if ((global.hmss_crop_overscan_top < 0 && in_coord.y < 0) ||
-			(global.hmss_crop_overscan_bottom < 0 && in_coord.y > 1) ||
-			(global.hmss_crop_overscan_left < 0 && in_coord.x < 0) ||
-			(global.hmss_crop_overscan_bottom < 0 && in_coord.x > 1))
-		{
-			return 1;
-		}
-	}
-	// If Has Negative crop is off we can't be in a negative crop area
-	else
-	{
-		return 0;
-	}
-}
 
 float HMSS_GetScreenAspectRatio()
 {
@@ -385,51 +358,6 @@ float HMSS_GetCornerMask(vec2 in_coord, float corner_radius, float edge_sharpnes
 	return clamp((corner_distance.x - distance) * (edge_sharpness * 500 + 100), 0.0, 1.0);
 }
 
-vec2 HMSS_RotateCoordinate(vec2 in_coord, float counterclockwise_turns)
-{
-	vec2 ctr_coord = in_coord - 0.5;
-	if (counterclockwise_turns == 1)
-	{
-		ctr_coord = vec2(-ctr_coord.y, ctr_coord.x);
-	}
-	if (counterclockwise_turns == 2)
-	{
-		ctr_coord = vec2(-ctr_coord.x, -ctr_coord.y);
-	}
-	if (counterclockwise_turns == 3)
-	{
-		ctr_coord = vec2(ctr_coord.y, -ctr_coord.x);
-	}
-	return ctr_coord + 0.5;
-}
-
-vec2 HMSS_GetCropOverscanCoord(vec2 in_coord){
-	if (global.hmss_mega_screen_scale_on == 0)
-	{
-		return in_coord;
-	}
-	else
-	{
-		vec2 rotated_original_size = HMSS_GetRotatedOriginalSize();
-		float ratio_crop_right = global.hmss_crop_overscan_right / rotated_original_size.x;
-		float ratio_crop_left = global.hmss_crop_overscan_left / rotated_original_size.x;
-		float ratio_crop_top = global.hmss_crop_overscan_top / rotated_original_size.y;
-		float ratio_crop_bottom = global.hmss_crop_overscan_bottom / rotated_original_size.y;
-
-		float cropped_range_x = (1.0 - ratio_crop_right) - (0.0 + ratio_crop_left);
-		float cropped_range_y = (1.0 - ratio_crop_bottom) - (0.0 + ratio_crop_top);
-		vec2 crop_coord = vec2(ratio_crop_left + in_coord.x * cropped_range_x, 
-								ratio_crop_top + in_coord.y * cropped_range_y);
-
-		if (global.hmss_rotate_crt_image > 0)
-		{
-			crop_coord = HMSS_RotateCoordinate(crop_coord, global.hmss_rotate_crt_image);
-		}
-
-		return crop_coord;
-	}
-}
-
 vec2 HMSS_GetPositionOffset()
 {
 	if (global.hmss_mega_screen_scale_on == 0)
@@ -516,6 +444,50 @@ vec4 HMSS_ApplyBlackLevelGammaLuminance(vec4 in_color, float color_is_linear)
 	return out_color;
 }
 
+vec2 HMSS_RotateCoordinate(vec2 in_coord, float counterclockwise_turns)
+{
+	vec2 ctr_coord = in_coord - 0.5;
+	// if (counterclockwise_turns == 1)
+	// {
+		ctr_coord = (1 - counterclockwise_turns) * ctr_coord + counterclockwise_turns * vec2(-ctr_coord.y, ctr_coord.x);
+	// }
+	// if (counterclockwise_turns == 2)
+	// {
+	// 	ctr_coord = vec2(-ctr_coord.x, -ctr_coord.y);
+	// }
+	// if (counterclockwise_turns == 3)
+	// {
+	// 	ctr_coord = vec2(ctr_coord.y, -ctr_coord.x);
+	// }
+	return ctr_coord + 0.5;
+}
+
+vec2 HMSS_GetCropOverscanCoord(vec2 in_coord){
+	vec2 rotated_original_size = HMSS_GetRotatedOriginalSize();
+	float ratio_crop_right = global.hmss_crop_overscan_right / rotated_original_size.x;
+	float ratio_crop_left = global.hmss_crop_overscan_left / rotated_original_size.x;
+	float ratio_crop_top = global.hmss_crop_overscan_top / rotated_original_size.y;
+	float ratio_crop_bottom = global.hmss_crop_overscan_bottom / rotated_original_size.y;
+
+	float cropped_range_x = (1.0 - ratio_crop_right) - (0.0 + ratio_crop_left);
+	float cropped_range_y = (1.0 - ratio_crop_bottom) - (0.0 + ratio_crop_top);
+	vec2 crop_coord = vec2(ratio_crop_left + in_coord.x * cropped_range_x, 
+							ratio_crop_top + in_coord.y * cropped_range_y);
+	crop_coord = HMSS_RotateCoordinate(crop_coord, global.hmss_rotate_crt_image);
+	return crop_coord;
+}
+
+// Check to see if we are in the negative crop area
+float HMSS_IsInNegativeCropArea(vec2 in_coord)
+{
+	float result = abs(clamp(global.hmss_crop_overscan_top, -1, 0) * clamp(in_coord.y, -1, 0)) * 100000 +
+				   abs(clamp(global.hmss_crop_overscan_bottom, -1, 0) * (clamp(in_coord.y, 1, 2) - 1)) * 100000 +
+				   abs(clamp(global.hmss_crop_overscan_left, -1, 0) * clamp(in_coord.x, -1, 0)) * 100000 +
+				   abs(clamp(global.hmss_crop_overscan_right, -1, 0) * (clamp(in_coord.x, 1, 2) - 1)) * 100000;
+	return clamp(result, 0, 1);
+}
+
+// Texture Sampler function which implements cropping the source image
 vec4 HMSS_COMPAT_TEXTURE(sampler2D in_sampler, vec2 in_coord)
 {
 	vec2 ctr_coord = in_coord - 0.5;
@@ -523,13 +495,10 @@ vec4 HMSS_COMPAT_TEXTURE(sampler2D in_sampler, vec2 in_coord)
 
 	vec2 sample_coord = HMSS_GetCropOverscanCoord(ctr_coord + 0.5);
 
-	// When coord is outside the texture use the specified luminance
-	if (HMSS_IsInNegativeCropArea(sample_coord) == 1)
-	{
-		return vec4(global.hmss_negative_crop_brightness / 100, global.hmss_negative_crop_brightness / 100, global.hmss_negative_crop_brightness / 100, 1);
-	}
-	else
-	{
-        return texture(in_sampler, sample_coord);
-	}
+	vec4 sampled_color = texture(in_sampler, sample_coord);
+	vec4 negative_crop_color = vec4(global.hmss_negative_crop_brightness / 100, global.hmss_negative_crop_brightness / 100, global.hmss_negative_crop_brightness / 100, 1);
+
+	float negative_crop = HMSS_IsInNegativeCropArea(sample_coord);
+
+	return negative_crop * negative_crop_color + (1 - negative_crop) * sampled_color;
 }

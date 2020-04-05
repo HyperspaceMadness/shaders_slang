@@ -56,6 +56,10 @@ const float bloom_diff_thresh_ = 1.0/256.0;
 #include "phosphor-mask-resizing.h"
 #include "scanline-functions.h"
 
+// HSM Added
+///////////////////////////////  HSM INCLUDES  ///////////////////////////////
+#include "../../hsm-mega-screen-scale-params-functions.inc"
+
 #pragma stage vertex
 layout(location = 0) in vec4 Position;
 layout(location = 1) in vec2 TexCoord;
@@ -99,6 +103,11 @@ void main()
     brightpass_tex_uv = video_uv * BRIGHTPASSvideo_size /
         BRIGHTPASStexture_size;
     bloom_tex_uv = tex_uv;
+
+    // HSM Added
+    vec2 screen_scale = HMSS_GetScreenScale();
+    vec2 position_offset = HMSS_GetPositionOffset();
+    halation_tex_uv = HMSS_GetVTexCoordWithArgs(halation_tex_uv, screen_scale, position_offset);
 
     //  We're horizontally blurring the bloom input (vertically blurred
     //  brightpass).  Get the uv distance between output pixels / input texels

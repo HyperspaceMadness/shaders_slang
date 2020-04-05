@@ -61,6 +61,10 @@ const float max_viewport_size_x = 1080.0*1024.0*(4.0/3.0);
 #include "phosphor-mask-resizing.h"
 #include "../../../../../include/gamma-management.h"
 
+// HSM Added
+///////////////////////////////  HSM INCLUDES  ///////////////////////////////
+#include "../../hsm-mega-screen-scale-params-functions.inc"
+
 ///////////////////////////////////  HELPERS  //////////////////////////////////
 
 inline float4 tex2Dtiled_mask_linearize(const sampler2D tex,
@@ -99,8 +103,10 @@ void main()
 {
    gl_Position = global.MVP * Position;
    float2 tex_uv = TexCoord;
-	//  Our various input textures use different coords.
+	
+    //  Our various input textures use different coords.
     video_uv = tex_uv * IN.texture_size/IN.video_size;
+
     scanline_texture_size_inv =
         float2(1.0, 1.0)/VERTICAL_SCANLINEStexture_size;
     //video_uv = video_uv;
@@ -111,6 +117,14 @@ void main()
     halation_tex_uv = video_uv * HALATION_BLURvideo_size /
         HALATION_BLURtexture_size;
     //scanline_texture_size_inv = scanline_texture_size_inv;
+
+    // HSM Added
+    vec2 screen_scale = HMSS_GetScreenScale();
+    vec2 position_offset = HMSS_GetPositionOffset();
+    scanline_tex_uv = HMSS_GetVTexCoordWithArgs(scanline_tex_uv, screen_scale, position_offset);
+    blur3x3_tex_uv = HMSS_GetVTexCoordWithArgs(blur3x3_tex_uv, screen_scale, position_offset);
+    halation_tex_uv = HMSS_GetVTexCoordWithArgs(halation_tex_uv, screen_scale, position_offset);
+    // End Addition
 
     //  Get a consistent name for the final mask texture size.  Sample mode 0
     //  uses the manually resized mask, but ignore it if we never resized.
@@ -162,7 +176,7 @@ void main()
     //  resolution, apply halation (bouncing electrons), and apply the phosphor
     //  mask.  Fake a bloom if requested.  Unless we fake a bloom, the output
     //  will be dim from the scanline auto-dim, mask dimming, and low gamma.
-
+    
     //  Horizontally sample the current row (a vertically interpolated scanline)
     //  and account for horizontal convergence offsets, given in units of texels.
     const float3 scanline_color_dim = sample_rgb_scanline_horizontal(

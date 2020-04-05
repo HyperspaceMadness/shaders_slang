@@ -53,6 +53,11 @@ const float bloom_diff_thresh_ = 1.0/256.0;
 #include "phosphor-mask-resizing.h"
 #include "scanline-functions.h"
 
+// HSM Added
+///////////////////////////////  HSM INCLUDES  ///////////////////////////////
+
+#include "../../hsm-mega-screen-scale-params-functions.inc"
+
 #pragma stage vertex
 layout(location = 0) in vec4 Position;
 layout(location = 1) in vec2 TexCoord;
@@ -87,6 +92,11 @@ void main()
     scanline_tex_uv = video_uv * MASKED_SCANLINESvideo_size /
         MASKED_SCANLINEStexture_size;
     blur3x3_tex_uv = video_uv * BLOOM_APPROXvideo_size / BLOOM_APPROXtexture_size;
+
+    // HSM Added
+    vec2 screen_scale = HMSS_GetScreenScale();
+    vec2 position_offset = HMSS_GetPositionOffset();
+    blur3x3_tex_uv = HMSS_GetVTexCoordWithArgs(blur3x3_tex_uv, screen_scale, position_offset);
 
     //  Calculate a runtime bloom_sigma in case it's needed:
     const float mask_tile_size_x = get_resized_mask_tile_size(

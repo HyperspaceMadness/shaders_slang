@@ -16,7 +16,8 @@
 # calculate scale_y5 (among other values):
 # 1.) geom_max_aspect_ratio = (geom_max_aspect_ratio used to calculate scale_y5)
 
-shaders = "17"
+shaders = "16"
+
 
 // Add Mega Screen Scale Params for the UI
 //      Add the mega-screen-scale parameters at the beginning of the list for easy access
@@ -189,90 +190,13 @@ mipmap_input15 = "true"
 texture_wrap_mode15 = "clamp_to_edge"
 alias15 = BR_CrtPass
 
-shader16 = "../crt/shaders/HyperspaceMadness/hsm-crt-royale/src/crt-royale-geometry-paint-curvature.slang"
-filter_linear16 = "true"
-scale_type16 = "viewport"
-mipmap_input16 = "true"
-float_framebuffer16 = true
-alias16 = BR_Curvature
 
-// Linearize & Reduce Resolution ----------------------------------------------------------------
-//      Reduce the resolution to a small static size regardless of final resolution
-//      Allows consistent look and faster at different final resolutions for blur
-//      Mipmap option allows downscaling without artifacts
-shader17 = ../crt/shaders/hyperspacemadness/linearize.slang
-mipmap_input17 = true
-filter_linear17 = true
-scale_type17 = absolute
-float_framebuffer17 = true
-// scale_x17 = 480
-// scale_y17 = 270
-// scale_x17 = 960
-// scale_y17 = 540
-scale_x17 = 800
-scale_y17 = 600
-alias17 = BR_MirrorLowResPass
-
-// Add Blur for the Reflection (Horizontal) ----------------------------------------------------------------
-shader18 = ../crt/shaders/hyperspacemadness/hsm-blur-outside-screen-horiz.slang
-filter_linear18 = false
-scale_type18 = source
-float_framebuffer18 = true
-
-// Add Blur for the Reflection (Vertical) ----------------------------------------------------------------
-shader19 = ../crt/shaders/hyperspacemadness/hsm-blur-outside-screen-vert.slang
-filter_linear19 = false
-scale_type19 = source
-float_framebuffer19 = true
-alias19 = BR_MirrorBlurredPass
-
-// Reduce resolution ----------------------------------------------------------------
-// Reduced to a very small amount so we can create a blur which will create a glow from the screen
-//      Mipmap option allows smoother downscaling
-shader20 = ../blurs/blur9x9.slang
-mipmap_input20 = true
-filter_linear20 = true
-scale_type20 = absolute
-float_framebuffer20 = true
-scale_x20 = 128
-scale_y20 = 128
-alias20 = BR_MirrorReflectionDiffusedPass
-
-// Add Diffused glow all around the screen ----------------------------------------------------------------
-//      lurred so much that it's non directional
-//      Mipmap option allows downscaling without artifacts
-shader21 = ../blurs/blur9x9.slang
-mipmap_input21 = true
-filter_linear21 = true
-scale_type21 = absolute
-float_framebuffer21 = true
-scale_x21 = 12
-scale_y21 = 12
-alias21 = BR_MirrorFullscreenGlowPass
-
-// Bezel Generation & Reflection ----------------------------------------------------------------
-//      Uses these previous passes:
-//          BR_CrtPass
-//          BR_MirrorBlurredPass
-//          BR_MirrorReflectionDiffusedPass
-//          BR_MirrorFullscreenGlowPass
-//      Blur passes are in linearized color space, and CRT Pass already has gamma encoded in it
-//
-//      Uses these textures
-//          OverlayImage
-//          OverlayImage_Vertical
-
-shader22 = ../crt/shaders/hyperspacemadness/hsm-mega-bezel-reflection.slang
-mipmap_input22 = true
-filter_linear22 = true
-scale_type22 = viewport
-float_framebuffer22 = false
 
 # Set an identifier, filename, and sampling traits for the phosphor mask texture.
 # Load an aperture grille, slot mask, and an EDP shadow mask, and load a small
 # non-mipmapped version and a large mipmapped version.
 # TODO: Test masks in other directories.
-textures = "mask_grille_texture_small;mask_grille_texture_large;mask_slot_texture_small;mask_slot_texture_large;mask_shadow_texture_small;mask_shadow_texture_large;BackgroundImage;TubeGlassImage;OverlayImage"
+textures = "mask_grille_texture_small;mask_grille_texture_large;mask_slot_texture_small;mask_slot_texture_large;mask_shadow_texture_small;mask_shadow_texture_large"
 mask_grille_texture_small = "../crt/shaders/HyperspaceMadness/hsm-crt-royale/TileableLinearApertureGrille15Wide8And5d5SpacingResizeTo64.png"
 mask_grille_texture_large = "../crt/shaders/HyperspaceMadness/hsm-crt-royale/TileableLinearApertureGrille15Wide8And5d5Spacing.png"
 mask_slot_texture_small = "../crt/shaders/HyperspaceMadness/hsm-crt-royale/TileableLinearSlotMaskTall15Wide9And4d5Horizontal9d14VerticalSpacingResizeTo64.png"
@@ -298,12 +222,6 @@ mask_slot_texture_large_mipmap = "true"     # Essential for hardware-resized mas
 mask_shadow_texture_small_mipmap = "false"  # Mipmapping causes artifacts with manually resized masks without tex2Dlod
 mask_shadow_texture_large_mipmap = "true"   # Essential for hardware-resized masks
 
-BackgroundImage = ../crt/shaders/hyperspacemadness/textures/BackgroundImage_3840x2160.png
-BackgroundVertImage = ../crt/shaders/hyperspacemadness/textures/BackgroundImage_3840x2160.png
-TubeGlassImage = ../crt/shaders/hyperspacemadness/textures/TubeGlassOverlayImage_3840x2160.png
-OverlayImage = ../crt/shaders/hyperspacemadness/textures/OverlayImage_OverReflection_3840x2160.png
-OverlayVertImage = ../crt/shaders/hyperspacemadness/textures/OverlayImage_OverReflection_3840x2160.png
-
 parameters = "geom_mode_runtime;geom_view_dist;border_size;border_compress;interlace_detect_toggle;hmss_mega_screen_scale_on;hmss_screen_scale_only;hmss_screen_aspect_ratio;hmss_integer_scale_mode;hmss_int_scale_multiple_offset;hmss_non_integer_scale;hmss_int_scale_border_min_height;hmss_scanline_direction;hmss_curvature_on_long_axis;hmss_curvature_on_short_axis;hmss_corner_radius;hmss_tube_black_edge_thickness;hmbz_frame_thickness;hmbz_bezel_width;hmbz_bezel_height;hmbz_background_image_opacity;hmbz_bezel_opacity;hmbz_bezel_brightness;hmbz_frame_opacity;hmbz_background_image_cut_out_inside_frame;hmbz_background_image_scale_mode;hmbz_background_image_aspect_ratio;hmbz_background_image_tube_height;hmss_crop_overscan_top;hmss_crop_overscan_bottom;hmss_crop_overscan_left;hmss_crop_overscan_right;hmss_pre_crt_black_level;hbl_blur_min;hbl_blur_max;hbr_global_amount;hbr_global_gamma_adjust;hbr_diffused_reflection;hbr_fullscreen_glow;hbr_fullscreen_glow_gamma;hag_afterglow_persistence"
 
 geom_mode_runtime = 2;
@@ -325,19 +243,6 @@ hmss_curvature_on_long_axis = 3
 hmss_curvature_on_short_axis = 4
 hmss_corner_radius = 10
 // hmss_tube_black_edge_thickness = 1.6
-// hmbz_bezel_width = 7.5;
-// hmbz_bezel_height = 6;
-// hmbz_frame_thickness = 7;
- 
-// hmbz_background_image_opacity = 1
-// hmbz_bezel_opacity = 1
-// hmbz_bezel_brightness = 10
-// hmbz_frame_opacity = 1;
-// hmbz_background_image_cut_out_inside_frame = 1;
-
-// hmbz_background_image_scale_mode = 0
-hmbz_background_image_aspect_ratio = 1.75
-// hmbz_background_image_tube_height = 69
 
 // hmss_crop_overscan_top = 0
 // hmss_crop_overscan_bottom = 0
@@ -345,15 +250,5 @@ hmbz_background_image_aspect_ratio = 1.75
 // hmss_crop_overscan_right = 0
 // hmss_pre_crt_black_level = 0
 
-// hbl_blur_min = 0
-// hbl_blur_max = 0.4
-
-
-
-// hbr_global_amount = 1.4
-// hbr_global_gamma_adjust = 1.2
-// hbr_diffused_reflection = 0
-// hbr_fullscreen_glow = 300
-// hbr_fullscreen_glow_gamma = 1.6
 
 // hag_afterglow_persistence = 0.2

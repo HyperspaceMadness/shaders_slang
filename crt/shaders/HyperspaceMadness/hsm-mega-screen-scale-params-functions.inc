@@ -12,7 +12,7 @@ Description:
 #include "hsm-helper-functions.inc"
 
 // Screen Scale Required Parameters
-#pragma parameter hmss_mega_screen_scale_on				"___HSM MEGA BEZEL__ V.2020-04-02 -SCREEN SCALE ON" 0 0 1 1
+#pragma parameter hmss_mega_screen_scale_on				"___HSM MEGA BEZEL__ V.2020-04-05 -SCREEN SCALE ON" 0 0 1 1
 #pragma parameter hmss_screen_scale_debug				"[SCREEN SCALE]  Screen Scale Debug" 0 0 1 1
 #pragma parameter hmss_screen_scale_only             	"[SCREEN SCALE]  Screen Scale Only (No Bezel in Preset)" 0 0 1 1
 

@@ -25,6 +25,45 @@
 layout(std140, set = 0, binding = 0) uniform UBO
 {
 	mat4 MVP;
+    vec4 SourceSize;
+	vec4 OriginalSize;
+	vec4 OutputSize;
+	vec4 FinalViewportSize;
+	uint FrameCount;
+
+	float hmss_mega_screen_scale_on;
+	float hmss_screen_scale_only;
+	float hmss_screen_scale_debug;
+	
+	float hmss_rotate_crt_image;
+	float hmss_aspect_ratio_mode;
+	float hmss_screen_aspect_ratio;
+	float hmss_scanline_direction;
+	float hmss_integer_scale_mode;
+	float hmss_non_integer_scale;
+    float hmss_int_scale_multiple_offset;
+	float hmss_int_scale_border_min_height;
+	float hmss_position_offset_x;
+	float hmss_position_offset_y;
+
+	float hmss_crop_overscan_top;
+	float hmss_crop_overscan_bottom;
+	float hmss_crop_overscan_left;
+	float hmss_crop_overscan_right;
+
+	float hmss_curvature_on_long_axis;
+	float hmss_curvature_on_short_axis;
+	float hmss_corner_radius;
+	float hmss_screen_edge_sharpness;
+	float hmss_tube_black_edge_thickness;
+
+	float hmss_pre_crt_black_level;
+	float hmss_pre_crt_gamma;
+	float hmss_pre_crt_luminance;
+	float hmss_post_crt_gamma;
+
+	float hmss_negative_crop_brightness;
+
 	float crt_gamma;
 	float lcd_gamma;
 	float levels_contrast;
@@ -208,9 +247,9 @@ static const float gba_gamma = 3.5; //  Irrelevant but necessary to define.
 #define aa_gauss_sigma global.aa_gauss_sigma
 #pragma parameter geom_mode_runtime "Geometry - Mode" 0.0 0.0 3.0 1.0
 #define geom_mode_runtime global.geom_mode_runtime
-#pragma parameter geom_radius "Geometry - Radius" 2.0 0.16 1024.0 0.1
+#pragma parameter geom_radius "Geometry - Radius" 2.0 0.16 1024.0 0.05
 #define geom_radius global.geom_radius
-#pragma parameter geom_view_dist "Geometry - View Distance" 2.0 0.5 1024.0 0.25
+#pragma parameter geom_view_dist "Geometry - View Distance" 2.0 0.5 1024.0 0.1
 #define geom_view_dist global.geom_view_dist
 #pragma parameter geom_tilt_angle_x "Geometry - Tilt Angle X" 0.0 -3.14159265 3.14159265 0.017453292519943295
 #define geom_tilt_angle_x global.geom_tilt_angle_x

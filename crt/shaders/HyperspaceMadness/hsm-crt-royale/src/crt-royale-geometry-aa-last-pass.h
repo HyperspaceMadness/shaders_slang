@@ -58,6 +58,9 @@ layout(push_constant) uniform Push
 #include "tex2Dantialias.h"
 #include "geometry-functions.h"
 
+// HSM Added
+///////////////////////////////  HSM INCLUDES  ///////////////////////////////
+#include "../../hsm-mega-screen-scale-params-functions.inc"
 
 ///////////////////////////////////  HELPERS  //////////////////////////////////
 
@@ -90,7 +93,12 @@ void main()
     output_size_inv = float2(1.0, 1.0)/IN.output_size;
 
     //  Get aspect/overscan vectors from scalar parameters (likely uniforms):
+    /* HSM Removed
     const float viewport_aspect_ratio = IN.output_size.x/IN.output_size.y;
+    */
+    // HSM Added
+    const float viewport_aspect_ratio = IN.output_size.x/IN.output_size.y * HMSS_GetScreenAspectRatio();
+
     const float2 geom_aspect = get_aspect_vector(viewport_aspect_ratio);
     const float2 geom_overscan = get_geom_overscan_vector();
     geom_aspect_and_overscan = float4(geom_aspect, geom_overscan);
@@ -207,7 +215,7 @@ void main()
 
     // HSM Addition
     #ifdef PAINT_CURVATURE
-        FragColor = vec4(video_uv);
+        FragColor = vec4(video_uv, 0, 0);
         return;
     #endif
 
@@ -243,7 +251,14 @@ void main()
     }
 
     //  Dim borders and output the final result:
+
+    /* HSM Removed
     const float border_dim_factor = get_border_dim_factor(video_uv, geom_aspect);
+    */
+
+    // HSM Added
+    const float border_dim_factor = get_border_dim_factor(HMSS_GetScreenVTexCoord(video_uv), geom_aspect);
+
     const float3 final_color = color * border_dim_factor;
 
     FragColor = encode_output(float4(final_color, 1.0));

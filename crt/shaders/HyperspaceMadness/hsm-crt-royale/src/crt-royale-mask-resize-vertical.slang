@@ -86,15 +86,19 @@ layout(location = 0) in vec2 src_tex_uv_wrap;
 layout(location = 1) in vec2 resize_magnification_scale;
 layout(location = 0) out vec4 FragColor;
 layout(set = 0, binding = 2) uniform sampler2D Source;
-#ifdef PHOSPHOR_MASK_RESIZE_MIPMAPPED_LUT
-	layout(set = 0, binding = 3) uniform sampler2D mask_grille_texture_large;
-	layout(set = 0, binding = 4) uniform sampler2D mask_slot_texture_large;
-	layout(set = 0, binding = 5) uniform sampler2D mask_shadow_texture_large;
-#else
+
+// HSM Removed
+// #ifdef PHOSPHOR_MASK_RESIZE_MIPMAPPED_LUT
+// 	layout(set = 0, binding = 3) uniform sampler2D mask_grille_texture_large;
+// 	layout(set = 0, binding = 4) uniform sampler2D mask_slot_texture_large;
+// 	layout(set = 0, binding = 5) uniform sampler2D mask_shadow_texture_large;
+// #else
+
 	layout(set = 0, binding = 3) uniform sampler2D mask_grille_texture_small;
 	layout(set = 0, binding = 4) uniform sampler2D mask_slot_texture_small;
 	layout(set = 0, binding = 5) uniform sampler2D mask_shadow_texture_small;
-#endif
+// HSM Removed
+//#endif
 
 void main()
 {
@@ -116,26 +120,28 @@ void main()
             const float2 src_tex_uv = frac(src_tex_uv_wrap);
             float3 pixel_color;
             //  If mask_type is static, this branch will be resolved statically.
-			#ifdef PHOSPHOR_MASK_RESIZE_MIPMAPPED_LUT
-				if(mask_type < 0.5)
-				{
-					pixel_color = downsample_vertical_sinc_tiled(
-						mask_grille_texture_large, src_tex_uv, mask_resize_src_lut_size,
-						src_dy, resize_magnification_scale.y, 1.0);
-				}
-				else if(mask_type < 1.5)
-				{
-					pixel_color = downsample_vertical_sinc_tiled(
-						mask_slot_texture_large, src_tex_uv, mask_resize_src_lut_size,
-						src_dy, resize_magnification_scale.y, 1.0);
-				}
-				else
-				{
-					pixel_color = downsample_vertical_sinc_tiled(
-						mask_shadow_texture_large, src_tex_uv, mask_resize_src_lut_size,
-						src_dy, resize_magnification_scale.y, 1.0);
-				}
-			#else
+            // HSM Removed
+			// #ifdef PHOSPHOR_MASK_RESIZE_MIPMAPPED_LUT
+			// 	if(mask_type < 0.5)
+			// 	{
+			// 		pixel_color = downsample_vertical_sinc_tiled(
+			// 			mask_grille_texture_large, src_tex_uv, mask_resize_src_lut_size,
+			// 			src_dy, resize_magnification_scale.y, 1.0);
+			// 	}
+			// 	else if(mask_type < 1.5)
+			// 	{
+			// 		pixel_color = downsample_vertical_sinc_tiled(
+			// 			mask_slot_texture_large, src_tex_uv, mask_resize_src_lut_size,
+			// 			src_dy, resize_magnification_scale.y, 1.0);
+			// 	}
+			// 	else
+			// 	{
+			// 		pixel_color = downsample_vertical_sinc_tiled(
+			// 			mask_shadow_texture_large, src_tex_uv, mask_resize_src_lut_size,
+			// 			src_dy, resize_magnification_scale.y, 1.0);
+			// 	}
+			// #else
+            //
 				if(mask_type < 0.5)
 				{
 					pixel_color = downsample_vertical_sinc_tiled(
@@ -154,7 +160,9 @@ void main()
 						mask_shadow_texture_small, src_tex_uv, mask_resize_src_lut_size,
 						src_dy, resize_magnification_scale.y, 1.0);
 				}
-			#endif
+            // HSM Removed
+			//#endif
+
             //  The input LUT was linear RGB, and so is our output:
             FragColor = float4(pixel_color, 1.0);
         }

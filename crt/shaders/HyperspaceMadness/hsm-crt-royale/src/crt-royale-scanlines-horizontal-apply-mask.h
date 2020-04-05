@@ -121,6 +121,7 @@ void main()
     // HSM Added
     vec2 screen_scale = HMSS_GetScreenScale();
     vec2 position_offset = HMSS_GetPositionOffset();
+
     scanline_tex_uv = HMSS_GetVTexCoordWithArgs(scanline_tex_uv, screen_scale, position_offset);
     blur3x3_tex_uv = HMSS_GetVTexCoordWithArgs(blur3x3_tex_uv, screen_scale, position_offset);
     halation_tex_uv = HMSS_GetVTexCoordWithArgs(halation_tex_uv, screen_scale, position_offset);
@@ -156,9 +157,12 @@ layout(location = 5) in vec4 mask_tile_start_uv_and_size;
 layout(location = 6) in vec2 mask_tiles_per_screen;
 layout(location = 0) out vec4 FragColor;
 layout(set = 0, binding = 2) uniform sampler2D Source;
-layout(set = 0, binding = 3) uniform sampler2D mask_grille_texture_large;
-layout(set = 0, binding = 4) uniform sampler2D mask_slot_texture_large;
-layout(set = 0, binding = 5) uniform sampler2D mask_shadow_texture_large;
+
+// HSM Removed
+// layout(set = 0, binding = 3) uniform sampler2D mask_grille_texture_large;
+// layout(set = 0, binding = 4) uniform sampler2D mask_slot_texture_large;
+// layout(set = 0, binding = 5) uniform sampler2D mask_shadow_texture_large;
+
 layout(set = 0, binding = 6) uniform sampler2D VERTICAL_SCANLINES;
 layout(set = 0, binding = 7) uniform sampler2D BLOOM_APPROX;
 layout(set = 0, binding = 8) uniform sampler2D HALATION_BLUR;
@@ -179,9 +183,21 @@ void main()
     
     //  Horizontally sample the current row (a vertically interpolated scanline)
     //  and account for horizontal convergence offsets, given in units of texels.
-    const float3 scanline_color_dim = sample_rgb_scanline_horizontal(
-        VERTICAL_SCANLINEStexture, scanline_tex_uv,
-        VERTICAL_SCANLINEStexture_size, scanline_texture_size_inv);
+
+
+    // HSM Removed
+    // const float3 scanline_color_dim = sample_rgb_scanline_horizontal(
+    //     VERTICAL_SCANLINEStexture, scanline_tex_uv,
+    //     VERTICAL_SCANLINEStexture_size, scanline_texture_size_inv);
+
+    // HSM Added
+    vec2 scanline_tex_mirror_wrap_uv = HMSS_GetMirrorWrapCoord(scanline_tex_uv);
+    const float3 scanline_color_dim = sample_rgb_scanline_horizontal(VERTICAL_SCANLINEStexture, 
+                                                                    scanline_tex_mirror_wrap_uv,
+                                                                    VERTICAL_SCANLINEStexture_size, 
+                                                                    scanline_texture_size_inv);
+    // End Addition
+
     const float auto_dim_factor = levels_autodim_temp;
 
     //  Sample the phosphor mask:
@@ -189,36 +205,39 @@ void main()
     const float2 mask_tex_uv = convert_phosphor_tile_uv_wrap_to_tex_uv(
         tile_uv_wrap, mask_tile_start_uv_and_size);
     float3 phosphor_mask_sample;
+    
     #ifdef PHOSPHOR_MASK_MANUALLY_RESIZE
         const bool sample_orig_luts = get_mask_sample_mode() > 0.5;
     #else
         static const bool sample_orig_luts = true;
     #endif
-    if(sample_orig_luts)
-    {
-        //  If mask_type is static, this branch will be resolved statically.
-        if(mask_type < 0.5)
-        {
-            phosphor_mask_sample = tex2D_linearize(
-                mask_grille_texture_large, mask_tex_uv).rgb;
-        }
-        else if(mask_type < 1.5)
-        {
-            phosphor_mask_sample = tex2D_linearize(
-                mask_slot_texture_large, mask_tex_uv).rgb;
-        }
-        else
-        {
-            phosphor_mask_sample = tex2D_linearize(
-                mask_shadow_texture_large, mask_tex_uv).rgb;
-        }
-    }
-    else
-    {
+
+    // HSM Removed
+    // if(sample_orig_luts)
+    // {
+    //     //  If mask_type is static, this branch will be resolved statically.
+    //     if(mask_type < 0.5)
+    //     {
+    //         phosphor_mask_sample = tex2D_linearize(
+    //             mask_grille_texture_large, mask_tex_uv).rgb;
+    //     }
+    //     else if(mask_type < 1.5)
+    //     {
+    //         phosphor_mask_sample = tex2D_linearize(
+    //             mask_slot_texture_large, mask_tex_uv).rgb;
+    //     }
+    //     else
+    //     {
+    //         phosphor_mask_sample = tex2D_linearize(
+    //             mask_shadow_texture_large, mask_tex_uv).rgb;
+    //     }
+    // }
+    // else
+    // {
         //  Sample the resized mask, and avoid tiling artifacts:
         phosphor_mask_sample = tex2Dtiled_mask_linearize(
             MASK_RESIZEtexture, mask_tex_uv).rgb;
-    }
+    //}
 
     //  Sample the halation texture (auto-dim to match the scanlines), and
     //  account for both horizontal and vertical convergence offsets, given

@@ -62,8 +62,8 @@
 //  anisotropic filtering.  (Resampling with mipmapping is even worse: It
 //  creates artifacts, but only with the fully bloomed shader.)  The difference
 //  is subtle with small triads, but you can fix it for a small cost.
-    //#define ANISOTROPIC_RESAMPLING_COMPAT_TEX2DLOD
 
+    //#define ANISOTROPIC_RESAMPLING_COMPAT_TEX2DLOD
 
 //////////////////////////////  DERIVED SETTINGS  //////////////////////////////
 

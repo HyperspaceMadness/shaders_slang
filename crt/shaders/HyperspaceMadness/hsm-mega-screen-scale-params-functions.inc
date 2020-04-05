@@ -478,6 +478,22 @@ vec2 HMSS_GetCropOverscanCoord(vec2 in_coord){
 	return crop_coord;
 }
 
+vec2 HMSS_GetMirrorWrapCoord(vec2 in_coord)
+{
+	vec2 ctr_coord = in_coord - 0.5;
+	vec2 ctr_mirror_coord = vec2(0,0);
+
+	float x_is_outside = clamp((clamp(abs(ctr_coord.x), 0.5, 1) - 0.5) * 100000, 0, 1);
+	ctr_mirror_coord.x = (1 - x_is_outside) * ctr_coord.x + 
+						x_is_outside * (ctr_coord.x - 2 * sign(ctr_coord.x) * (abs(ctr_coord.x) - 0.5));
+
+	float y_is_outside = clamp((clamp(abs(ctr_coord.y), 0.5, 1) - 0.5) * 100000, 0, 1);
+	ctr_mirror_coord.y = (1 - y_is_outside) * ctr_coord.y + 
+						y_is_outside * (ctr_coord.y - 2 * sign(ctr_coord.y) * (abs(ctr_coord.y) - 0.5));
+
+	return ctr_mirror_coord + 0.5;
+}
+
 // Check to see if we are in the negative crop area
 float HMSS_IsInNegativeCropArea(vec2 in_coord)
 {

@@ -218,18 +218,29 @@ static const float gba_gamma = 3.5; //  Irrelevant but necessary to define.
 #pragma parameter beam_horiz_sigma "Beam - Horiz Sigma" 0.35 0.0 0.67 0.005
 #define beam_horiz_sigma global.beam_horiz_sigma
 #pragma parameter beam_horiz_linear_rgb_weight "Beam - Horiz Linear RGB Weight" 1.0 0.0 1.0 0.01
-#pragma parameter convergence_offset_x_r "Convergence - Offset X Red" 0.0 -4.0 4.0 0.05
-#define convergence_offset_x_r global.convergence_offset_x_r
-#pragma parameter convergence_offset_x_g "Convergence - Offset X Green" 0.0 -4.0 4.0 0.05
-#define convergence_offset_x_g global.convergence_offset_x_g
-#pragma parameter convergence_offset_x_b "Convergence - Offset X Blue" 0.0 -4.0 4.0 0.05
-#define convergence_offset_x_b global.convergence_offset_x_b
-#pragma parameter convergence_offset_y_r "Convergence - Offset Y Red" 0.0 -2.0 2.0 0.05
-#define convergence_offset_y_r global.convergence_offset_y_r
-#pragma parameter convergence_offset_y_g "Convergence - Offset Y Green" 0.0 -2.0 2.0 0.05
-#define convergence_offset_y_g global.convergence_offset_y_g
-#pragma parameter convergence_offset_y_b "Convergence - Offset Y Blue" 0.0 -2.0 2.0 0.05
-#define convergence_offset_y_b global.convergence_offset_y_b
+
+// HSM Removed Params Due to Parameter Limit
+// #pragma parameter convergence_offset_x_r "Convergence - Offset X Red" 0.0 -4.0 4.0 0.05
+// #define convergence_offset_x_r global.convergence_offset_x_r
+// #pragma parameter convergence_offset_x_g "Convergence - Offset X Green" 0.0 -4.0 4.0 0.05
+// #define convergence_offset_x_g global.convergence_offset_x_g
+// #pragma parameter convergence_offset_x_b "Convergence - Offset X Blue" 0.0 -4.0 4.0 0.05
+// #define convergence_offset_x_b global.convergence_offset_x_b
+// #pragma parameter convergence_offset_y_r "Convergence - Offset Y Red" 0.0 -2.0 2.0 0.05
+// #define convergence_offset_y_r global.convergence_offset_y_r
+// #pragma parameter convergence_offset_y_g "Convergence - Offset Y Green" 0.0 -2.0 2.0 0.05
+// #define convergence_offset_y_g global.convergence_offset_y_g
+// #pragma parameter convergence_offset_y_b "Convergence - Offset Y Blue" 0.0 -2.0 2.0 0.05
+// #define convergence_offset_y_b global.convergence_offset_y_b
+
+// HSM Added
+#define convergence_offset_x_r clamp(convergence_offsets_r_static.x, -4.0, 4.0)
+#define convergence_offset_x_g clamp(convergence_offsets_g_static.x, -4.0, 4.0)
+#define convergence_offset_x_b clamp(convergence_offsets_b_static.x, -4.0, 4.0)
+#define convergence_offset_y_r clamp(convergence_offsets_r_static.y, -4.0, 4.0)
+#define convergence_offset_y_g clamp(convergence_offsets_g_static.y, -4.0, 4.0)
+#define convergence_offset_y_b clamp(convergence_offsets_b_static.y, -4.0, 4.0)
+
 #pragma parameter mask_type "Mask - Type" 1.0 0.0 2.0 1.0
 #define mask_type global.mask_type
 #pragma parameter mask_sample_mode_desired "Mask - Sample Mode" 0.0 0.0 2.0 1.0   //  Consider blocking mode 2.
@@ -259,9 +270,9 @@ static const float gba_gamma = 3.5; //  Irrelevant but necessary to define.
 #define geom_aspect_ratio_x global.geom_aspect_ratio_x
 #pragma parameter geom_aspect_ratio_y "Geometry - Aspect Ratio Y" 329.0 1.0 512.0 1.0
 #define geom_aspect_ratio_y global.geom_aspect_ratio_y
-#pragma parameter geom_overscan_x "Geometry - Overscan X" 1.0 0.00390625 4.0 0.00390625
+#pragma parameter geom_overscan_x "Geometry - Overscan X" 1.0 0.004 4.0 0.001
 #define geom_overscan_x global.geom_overscan_x
-#pragma parameter geom_overscan_y "Geometry - Overscan Y" 1.0 0.00390625 4.0 0.00390625
+#pragma parameter geom_overscan_y "Geometry - Overscan Y" 1.0 0.004 4.0 0.001
 #define geom_overscan_y global.geom_overscan_y
 #pragma parameter border_size "Border - Size" 0.015 0.0000001 0.5 0.005
 #define border_size global.border_size

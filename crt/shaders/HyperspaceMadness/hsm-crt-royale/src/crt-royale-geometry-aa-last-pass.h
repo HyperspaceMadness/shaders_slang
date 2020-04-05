@@ -254,12 +254,17 @@ void main()
 
     /* HSM Removed
     const float border_dim_factor = get_border_dim_factor(video_uv, geom_aspect);
+    const float3 final_color = color * border_dim_factor;
     */
 
     // HSM Added
-    const float border_dim_factor = get_border_dim_factor(HMSS_GetScreenVTexCoord(video_uv), geom_aspect);
+    #ifdef DIM_BORDER
+        const float border_dim_factor = get_border_dim_factor(HMSS_GetScreenVTexCoord(video_uv), geom_aspect);
 
-    const float3 final_color = color * border_dim_factor;
+        const float3 final_color = color * border_dim_factor;
+    #else
+        const float3 final_color = color;
+    #endif
 
     FragColor = encode_output(float4(final_color, 1.0));
 }

@@ -10,6 +10,7 @@ Description:
 //#define TELMO_TEST
 
 #include "hsm-helper-functions.inc"
+//#include "hsm-royale-geometry-functions.inc"
 
 // Screen Scale Required Parameters
 #pragma parameter hmss_mega_screen_scale_on				"___HSM MEGA BEZEL__ V.2020-04-05 -SCREEN SCALE ON" 0 0 1 1

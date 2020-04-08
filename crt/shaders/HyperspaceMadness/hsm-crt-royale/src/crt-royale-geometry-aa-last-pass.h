@@ -89,15 +89,15 @@ void main()
    gl_Position = global.MVP * Position;
    tex_uv = TexCoord;
     video_and_texture_size_inv =
-        float4(1.0, 1.0, 1.0, 1.0) / float4(IN.video_size, IN.texture_size);
-    output_size_inv = float2(1.0, 1.0)/IN.output_size;
+        float4(1.0, 1.0, 1.0, 1.0) / float4(params.video_size, params.texture_size);
+    output_size_inv = float2(1.0, 1.0)/params.output_size;
 
     //  Get aspect/overscan vectors from scalar parameters (likely uniforms):
     /* HSM Removed
-    const float viewport_aspect_ratio = IN.output_size.x/IN.output_size.y;
+    const float viewport_aspect_ratio = params.output_size.x/params.output_size.y;
     */
     // HSM Added
-    const float viewport_aspect_ratio = IN.output_size.x/IN.output_size.y * HMSS_GetScreenAspectRatio();
+    const float viewport_aspect_ratio = params.output_size.x/params.output_size.y;
 
     const float2 geom_aspect = get_aspect_vector(viewport_aspect_ratio);
     const float2 geom_overscan = get_geom_overscan_vector();
@@ -192,7 +192,7 @@ void main()
     //  and a pixel_to_tangent_video_uv matrix for transforming pixel offsets:
     //  video_uv = relative position in video frame, mapped to [0.0, 1.0] range
     //  tex_uv = relative position in padded texture, mapped to [0.0, 1.0] range
-    const float2 flat_video_uv = tex_uv * (IN.texture_size * video_size_inv);
+    const float2 flat_video_uv = tex_uv * (params.texture_size * video_size_inv);
     float2x2 pixel_to_video_uv;
     float2 video_uv_no_geom_overscan;
     if(geom_mode > 0.5)
@@ -211,7 +211,7 @@ void main()
     //  Correct for overscan here (not in curvature code):
     const float2 video_uv =
         (video_uv_no_geom_overscan - float2(0.5, 0.5))/geom_overscan + float2(0.5, 0.5);
-    const float2 tex_uv = video_uv * (IN.video_size * texture_size_inv);
+    const float2 tex_uv = video_uv * (params.video_size * texture_size_inv);
 
     // HSM Addition
     #ifdef PAINT_CURVATURE
@@ -221,7 +221,7 @@ void main()
 
     //  Get a matrix transforming pixel vectors to tex_uv vectors:
     const float2x2 pixel_to_tex_uv =
-        mul_scale(IN.video_size * texture_size_inv /
+        mul_scale(params.video_size * texture_size_inv /
             geom_aspect_and_overscan.zw, pixel_to_video_uv);
 
     //  Sample!  Skip antialiasing if aa_level < 0.5 or both of these hold:
@@ -236,7 +236,7 @@ void main()
     if(aa_level > 0.5 && (geom_mode > 0.5 || any(bool2((geom_overscan.x != 1.0), (geom_overscan.y != 1.0)))))
     {
         //  Sample the input with antialiasing (due to sharp phosphors, etc.):
-        color = tex2Daa(input_texture, tex_uv, pixel_to_tex_uv, float(IN.frame_count));
+        color = tex2Daa(input_texture, tex_uv, pixel_to_tex_uv, float(params.frame_count));
     }
 
     else if(aa_level > 0.5 && need_subpixel_aa)

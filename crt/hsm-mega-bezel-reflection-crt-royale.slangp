@@ -18,18 +18,18 @@
 
 shaders = "23"
 
-// Add Mega Screen Scale Params for the UI
-//      Add the mega-screen-scale parameters at the beginning of the list for easy access
-//      Debug Drawing of the resolution/screen scaling is also included here
+# Add Mega Screen Scale Params for the UI
+#      Add the mega-screen-scale parameters at the beginning of the list for easy access
+#      Debug Drawing of the resolution/screen scaling is also included here
 shader0 = ../crt/shaders/hyperspacemadness/hsm-stock-with-mega-screen-scale-bezel-params.slang
 
-// NOTE: desired put De-Dithering or TV Signal effects here, e.g. GTU, NTSC, CBOD
+# NOTE: desired put De-Dithering or TV Signal effects here, e.g. GTU, NTSC, CBOD
 shader1 = ../stock.slang
 
 shader2 = ../stock.slang
 
-// Afterglow and Black Level ----------------------------------------------------------------
-//      Almost the same as Guest's original afterglow but can brighten the black without losing the afterglow
+# Afterglow and Black Level ----------------------------------------------------------------
+#      Almost the same as Guest's original afterglow but can brighten the black without losing the afterglow
 shader3 = ../crt/shaders/hyperspacemadness/hsm-guest-afterglow-with-black-level.slang
 filter_linear3 = false
 scale_type3 = source
@@ -304,9 +304,10 @@ TubeGlassImage = ../crt/shaders/hyperspacemadness/textures/TubeGlassOverlayImage
 OverlayImage = ../crt/shaders/hyperspacemadness/textures/OverlayImage_OverReflection_3840x2160.png
 OverlayVertImage = ../crt/shaders/hyperspacemadness/textures/OverlayImage_OverReflection_3840x2160.png
 
-parameters = "geom_mode_runtime;geom_view_dist;geom_overscan_x;geom_overscan_y;border_size;border_compress;interlace_detect_toggle;hmss_mega_screen_scale_on;hmss_screen_scale_only;hmss_screen_aspect_ratio;hmss_integer_scale_mode;hmss_int_scale_multiple_offset;hmss_non_integer_scale;hmss_int_scale_border_min_height;hmss_scanline_direction;hmss_curvature_on_long_axis;hmss_curvature_on_short_axis;hmss_corner_radius;hmss_tube_black_edge_thickness;hmbz_frame_thickness;hmbz_bezel_width;hmbz_bezel_height;hmbz_background_image_opacity;hmbz_bezel_opacity;hmbz_bezel_brightness;hmbz_frame_opacity;hmbz_background_image_cut_out_inside_frame;hmbz_background_image_scale_mode;hmbz_background_image_aspect_ratio;hmbz_background_image_tube_height;hmss_crop_overscan_top;hmss_crop_overscan_bottom;hmss_crop_overscan_left;hmss_crop_overscan_right;hmss_pre_crt_black_level;hbl_blur_min;hbl_blur_max;hbr_global_amount;hbr_global_gamma_adjust;hbr_diffused_reflection;hbr_fullscreen_glow;hbr_fullscreen_glow_gamma;hag_afterglow_persistence"
+parameters = "geom_mode_runtime;geom_radius;geom_view_dist;geom_overscan_x;geom_overscan_y;border_size;border_compress;interlace_detect_toggle;hmss_mega_screen_scale_on;hmss_screen_scale_only;hmss_screen_aspect_ratio;hmss_integer_scale_mode;hmss_int_scale_multiple_offset;hmss_non_integer_scale;hmss_int_scale_border_min_height;hmss_scanline_direction;hmss_curvature_on_long_axis;hmss_curvature_on_short_axis;hmss_corner_radius;hmss_tube_black_edge_thickness;hmbz_frame_thickness;hmbz_bezel_width;hmbz_bezel_height;hmbz_background_image_opacity;hmbz_bezel_opacity;hmbz_bezel_brightness;hmbz_frame_opacity;hmbz_background_image_cut_out_inside_frame;hmbz_background_image_scale_mode;hmbz_background_image_aspect_ratio;hmbz_background_image_tube_height;hmss_crop_overscan_top;hmss_crop_overscan_bottom;hmss_crop_overscan_left;hmss_crop_overscan_right;hmss_pre_crt_black_level;hbl_blur_min;hbl_blur_max;hbr_global_amount;hbr_global_gamma_adjust;hbr_diffused_reflection;hbr_fullscreen_glow;hbr_fullscreen_glow_gamma;hag_afterglow_persistence"
 
 geom_mode_runtime = 2;
+geom_radius = 1.65;
 geom_view_dist = 0.75;
 geom_overscan_x = 0.985;
 geom_overscan_y = 0.985;

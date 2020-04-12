@@ -53,8 +53,14 @@ layout(std140, set = 0, binding = 0) uniform UBO
 	float hmss_crop_overscan_left;
 	float hmss_crop_overscan_right;
 
+	float hmss_curvature_mode;
 	float hmss_curvature_on_long_axis;
 	float hmss_curvature_on_short_axis;
+	float hmss_geom_radius;
+	float hmss_geom_view_dist;
+	float hmss_geom_tilt_angle_x;
+	float hmss_geom_tilt_angle_y;
+	
 	float hmss_corner_radius;
 	float hmss_screen_edge_sharpness;
 	float hmss_tube_black_edge_thickness;
@@ -63,7 +69,7 @@ layout(std140, set = 0, binding = 0) uniform UBO
 
 	float hmss_pre_crt_black_level;
 	float hmss_pre_crt_gamma;
-	float hmss_pre_crt_luminance;
+//	float hmss_pre_crt_luminance;
 	float hmss_post_crt_gamma;
 
 	float hmss_screen_scale_only;
@@ -99,7 +105,6 @@ layout(std140, set = 0, binding = 0) uniform UBO
 	float hmbz_bezel_corner_highlight_outer_spread;
 	float hmbz_bezel_corner_highlight_spread_falloff; // TODO Need to keep this?
 	float hmbz_bezel_noise;
-//	float hbr_noise_falloff;
 
 	// Generated Frame
 	float hmbz_frame_opacity;
@@ -130,22 +135,18 @@ layout(std140, set = 0, binding = 0) uniform UBO
 	float hbr_fullscreen_glow_gamma;
 
 	float hbr_fade_amount;
-	float hbr_radial_fade_speed; // TODO Need to keep this?
 	float hbr_radial_fade_width;
 	float hbr_radial_fade_height;
 
 	float hbr_lateral_outer_fade_position;
 	float hbr_lateral_outer_fade_distance;
 
-	float hbr_corner_fade; // TODO Need to keep this?
+	float hbr_corner_fade;
 	float hbr_corner_fade_distance;
 
 	float hbr_noise_amount;
 	float hbr_noise_samples;
 	float hbr_noise_sample_distance;
-	float hbr_noise_falloff;
-	
-	float hbr_reflection_mask_mode;
 } global;
 
 // Import Screen Scale Functions and parameters
@@ -336,42 +337,61 @@ void main()
 		// Additional scale to be applied to the tube scale to create an expanded mapping area 
 		outermap_scale = vec2(1, 1) * (1.3 + 1);
 
-		// Get a range width from the outer tube edge to the outer edge of the outermap
-		float outermap_range = 0.5 - 0.5 / outermap_scale.y;
-
 		// Coordinate in the space which includes the entire glass area including the illuminated screen and black line around it 
 		tube_coord = HMSS_GetInverseScaledCoord(vTexCoord, tube_scale);
 
-		// Get the coord in a space which is scaled larger to avoid discontinuities outside the corners
-		outermap_coord = HMSS_GetInverseScaledCoord(tube_coord, vec2(outermap_scale.x, outermap_scale.y));
+		// Get a range width from the outer tube edge to the outer edge of the outermap
+		float outermap_range;
+		if (global.hmss_curvature_mode < 0.5)
+		{
+			outermap_range = 0.5 - 0.5 / outermap_scale.y;
 
-		// Warp the outermap coordinate be an increased amount so the curvature around the screen matches
-		outermap_warped_coord_ctr = HMSS_GetCurvedCoord(outermap_coord, global.hmbz_bezel_inner_curvature_scale * 6) - vec2(0.5, 0.5);
+			// Get the coord in a space which is scaled larger to avoid discontinuities outside the corners
+			outermap_coord = HMSS_GetInverseScaledCoord(tube_coord, vec2(outermap_scale.x, outermap_scale.y));
 
-		// Used to scale up the calculated screen size inside the outermap, because the screen shrinks as more curvature is used
-		vec2 curvature_long_short = global.hmbz_bezel_inner_curvature_scale * HMSS_GetLongShortAxisCurvatureValues();
-		vec2 curvature_scale_offset = screen_aspect < 1.0 ? 1 / (1 + vec2(4.4 * curvature_long_short.y, 4.7 * curvature_long_short.x)) : 1 / (1 + vec2(4.7 * curvature_long_short.x, 4.4 * curvature_long_short.y));
+			// Warp the outermap coordinate be an increased amount so the curvature around the screen matches
+			outermap_warped_coord_ctr = HMSS_GetCurvedCoord(outermap_coord, global.hmbz_bezel_inner_curvature_scale * 6) - vec2(0.5, 0.5);
 
-		// Get vector from the screen edge outward
-		vec2 outermap_coord_ctr_warped_clipped_to_screen = clamp(outermap_warped_coord_ctr, -0.5 / outermap_scale * curvature_scale_offset, 0.5 / outermap_scale * curvature_scale_offset) ;
-		outermap_warped_outside_screen_vector = outermap_warped_coord_ctr - outermap_coord_ctr_warped_clipped_to_screen;
+			// Used to scale up the calculated screen size inside the outermap, because the screen shrinks as more curvature is used
+			vec2 curvature_long_short = global.hmbz_bezel_inner_curvature_scale * HMSS_GetLongShortAxisCurvatureValues();
+			vec2 curvature_scale_offset = screen_aspect < 1.0 ? 1 / (1 + vec2(4.4 * curvature_long_short.y, 4.7 * curvature_long_short.x)) : 1 / (1 + vec2(4.7 * curvature_long_short.x, 4.4 * curvature_long_short.y));
 
-		// Get 0-1 ratio of the distance from the screen edge into the outermap range
-		outside_ratio_warped = clamp(length(outermap_warped_outside_screen_vector) / outermap_range, 0, 1);
+			// Get vector from the screen edge outward
+			vec2 outermap_coord_ctr_warped_clipped_to_screen = clamp(outermap_warped_coord_ctr, -0.5 / outermap_scale * curvature_scale_offset, 0.5 / outermap_scale * curvature_scale_offset) ;
+			outermap_warped_outside_screen_vector = outermap_warped_coord_ctr - outermap_coord_ctr_warped_clipped_to_screen;
 
-		// Min and Max values of the screen for both x and y
-		outermap_screen_size_from_center = abs(vec2((-0.5 / outermap_scale.x) * curvature_scale_offset.x, (0.5 / outermap_scale.y) * curvature_scale_offset.y));
+			// Get 0-1 ratio of the distance from the screen edge into the outermap range
+			outside_ratio_warped = clamp(length(outermap_warped_outside_screen_vector) / outermap_range, 0, 1);
 
-		// Create a mask to separate between the inside of the screen to the outside of the tube area
-		tube_warped_coord_ctr = HMSS_GetCurvedCoord(tube_coord, global.hmbz_bezel_inner_curvature_scale * 1) - vec2(0.5, 0.5);
+			// Min and Max values of the screen for both x and y
+			outermap_screen_size_from_center = abs(vec2((-0.5 / outermap_scale.x) * curvature_scale_offset.x, (0.5 / outermap_scale.y) * curvature_scale_offset.y));
 
-		// Get the corner of the screen in the outermap coordinates
-		outermap_screen_corner_ctr_coord = vec2(0.5, -0.5) / outermap_scale * curvature_scale_offset;
+			// Create a mask to separate between the inside of the screen to the outside of the tube area
+			tube_warped_coord_ctr = HMSS_GetCurvedCoord(tube_coord, global.hmbz_bezel_inner_curvature_scale * 1) - vec2(0.5, 0.5);
 
-		// Get a coordinate offset so it is centered around the corner
-		outermap_coord_warped_ctr_at_screen_corner = abs(outermap_warped_coord_ctr) - (vec2(0.5) / outermap_scale * curvature_scale_offset);
+			// Get the corner of the screen in the outermap coordinates
+			outermap_screen_corner_ctr_coord = vec2(0.5, -0.5) / outermap_scale * curvature_scale_offset;
 
-		float screen_scale_diagonal = sqrt(screen_scale.y * screen_scale.y + (screen_scale.y * screen_aspect) + (screen_scale.y * screen_aspect));
+			// Get a coordinate offset so it is centered around the corner
+			outermap_coord_warped_ctr_at_screen_corner = abs(outermap_warped_coord_ctr) - (vec2(0.5) / outermap_scale * curvature_scale_offset);
+		}
+		else
+		{
+			outermap_range = 0.5 * (outermap_scale.y);
+			tube_warped_coord_ctr = HMSS_GetCurvedCoord(tube_coord, global.hmbz_bezel_inner_curvature_scale) - 0.5;
+			outermap_warped_coord_ctr = tube_warped_coord_ctr;
+			outermap_coord = tube_warped_coord_ctr + 0.5;
+			outermap_screen_size_from_center = vec2(0.5, 0.5);
+			outermap_warped_outside_screen_vector = outermap_warped_coord_ctr - clamp(outermap_warped_coord_ctr, -0.5, 0.5);
+			outside_ratio_warped = clamp(length(outermap_warped_outside_screen_vector) / outermap_range, 0, 1);
+			outermap_screen_corner_ctr_coord = vec2(0.5, -0.5);
+
+			// Get a coordinate offset so it is centered around the corner
+			outermap_coord_warped_ctr_at_screen_corner = abs(outermap_warped_coord_ctr) - vec2(0.5);
+		}
+
+
+		float screen_scale_diagonal = sqrt(screen_scale.y * screen_scale.y + (screen_scale.y * screen_aspect) * (screen_scale.y * screen_aspect));
 
 		vec2 outer_bezel_scale = vec2(global.hmbz_bezel_width / 100 / screen_aspect + 1, global.hmbz_bezel_height / 100 + 1);
 		outer_bezel_scale = (outer_bezel_scale - 1) * screen_scale_diagonal + 1;
@@ -490,15 +510,9 @@ void main()
 		//----------------------------------------------------
 		if (global.hmbz_tube_glass_image_opacity > 0)
 		{
-			vec4 tube_glass_image = HHLP_Linearize(texture(TubeGlassImage, tube_coord).rgba);
-
+			vec4 tube_glass_image = HHLP_Linearize(texture(TubeGlassImage, tube_warped_coord_ctr + 0.5).rgba);
 
 			frag_color_linear	= frag_color_linear + (global.hmbz_tube_glass_image_opacity / 100) * tube_shadow_mask * tube_glass_image.a * (1 - outside_tube_mask) * tube_glass_image;
-			
-			// Mix
-			// {
-			// 	frag_color_linear	= vec4(mix(frag_color_linear, tube_glass_image, (global.hmbz_tube_glass_image_opacity / 100 - 1) * tube_glass_image.a * (1 - outside_tube_mask)));
-			// }
 		}
 
 		//----------------------------------------------------
@@ -617,8 +631,9 @@ void main()
 			float corner_fade_mask = (top_corner_mask + bottom_corner_mask) * (global.hbr_corner_fade / 100) * fade_out_to_corner * 2;
 
 			// Radial fade - fading away from the edges of the screen
-			float radial_fade_sides = 1 - HHLP_QuadraticBezier(clamp_0_1(outside_ratio_warped / (global.hbr_radial_fade_width / 500)), vec2(1 - (global.hbr_radial_fade_speed / 100), 1));
-			float radial_fade_top_bottom = 1 - HHLP_QuadraticBezier(clamp_0_1(outside_ratio_warped / (global.hbr_radial_fade_height / 500)), vec2(1 - (global.hbr_radial_fade_speed / 100), 1));
+			float radial_fade_speed = 100;
+			float radial_fade_sides = 1 - HHLP_QuadraticBezier(clamp_0_1(outside_ratio_warped / (global.hbr_radial_fade_width / 500)), vec2(1 - (radial_fade_speed / 100), 1));
+			float radial_fade_top_bottom = 1 - HHLP_QuadraticBezier(clamp_0_1(outside_ratio_warped / (global.hbr_radial_fade_height / 500)), vec2(1 - (radial_fade_speed / 100), 1));
 			float radial_fade_mask = clamp_0_1((1 - sides_mask) * radial_fade_top_bottom
 										+ sides_mask * radial_fade_sides);
 
@@ -648,7 +663,8 @@ void main()
 			//vec4 sampled_noise = GetStoichaicBlurredSample(BR_MirrorLowResPass, viewportCoord, 1, 0.4, 1);
 
 			float stoichaic_blur_samples = global.hbr_noise_samples;
-			float stoichaic_blur_max = HHLP_QuadraticBezier(outside_ratio_warped, vec2(0, global.hbr_noise_falloff)) * 3;
+			float noise_falloff = 0.3;
+			float stoichaic_blur_max = HHLP_QuadraticBezier(outside_ratio_warped, vec2(0, noise_falloff)) * 3;
 			float stoichaic_blur_amount = global.hbr_noise_sample_distance;
 
 			vec4 fullscreen_blurred_sampled_color = GetStoichaicBlurredSample(BR_MirrorFullscreenGlowPass, viewportCoord.xy, stoichaic_blur_samples, (1 - corner_mask) * stoichaic_blur_max * 3, stoichaic_blur_amount);
@@ -697,11 +713,7 @@ void main()
 			reflected_color = global.hbr_global_amount * pow(reflected_color, vec4(global.hbr_global_gamma_adjust)) * outside_tube_mask;
 			
 			// Mask Reflection to only appear inside the bezel
-			if (global.hbr_reflection_mask_mode == 1)
-			{
-				reflected_color *= 1 - outside_bezel_mask; // frame_inner_edge_mask;
-			}
-
+			reflected_color *= 1 - outside_bezel_mask; // frame_inner_edge_mask;
 
 			// Add reflection_color with mask
 			frag_color_linear += reflected_color;

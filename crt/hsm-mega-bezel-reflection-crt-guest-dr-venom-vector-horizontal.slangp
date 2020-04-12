@@ -39,17 +39,11 @@ scale_type7 = source
 scale7 = 1.0
 alias7 = AfterglowPass
 
-// Guest-Venom Pass ----------------------------------------------------------------
-shader8 = ../crt/shaders/guest/avg-lum.slang
-filter_linear8 = true
-scale_type8 = source
-scale8 = 1.0
-mipmap_input8 = true
-float_framebuffer8 = true
-alias8 = AvgLumPass
+// Empty Pass ----------------------------------------------------------------
+shader8 = ../stock.slang
 
 // Guest-Venom Pass ----------------------------------------------------------------
-shader9 = ../crt/shaders/guest/linearize.slang
+shader9 = ../crt/shaders/hyperspacemadness/linearize.slang
 filter_linear9 = false
 scale_type9 = source
 scale9 = 1.0
@@ -94,7 +88,7 @@ alias13 = BR_CrtPass
 //      Reduce the resolution to a small static size regardless of final resolution
 //      Allows consistent look and faster at different final resolutions for blur
 //      Mipmap option allows downscaling without artifacts
-shader14 = ../crt/shaders/hyperspacemadness/linearize.slang
+shader14 = ../crt/shaders/hyperspacemadness/hsm-linearize-crt-pass.slang
 mipmap_input14 = true
 filter_linear14 = true
 scale_type14 = absolute

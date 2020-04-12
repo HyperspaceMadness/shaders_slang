@@ -50,7 +50,7 @@ void main()
     gl_Position = global.MVP * Position;
     vTexCoord = TexCoord;
 
-    // Modifications from hsm-mega-bezel-include.inc integration
+    // HSM Modification
     // Added
     vTexCoord = HMSS_GetScreenVTexCoord(vTexCoord);
     // End Addition
@@ -89,7 +89,7 @@ void main()
 {
     // TODO Add Support for Cropping?
 
-    // Modifications from hsm-mega-bezel-include.inc integration
+    // HSM Modification
     // Added
     vec2 curved_coord = HMSS_GetWrappedCurvedCoord(vTexCoord, 1);
     // End Addition
@@ -135,7 +135,7 @@ void main()
 
     averageColor = mat3(cred, cgreen, cblue) * averageColor;
 
-    // Modifications from hsm-mega-bezel-include.inc integration
+    // HSM Modification
     // Added
     averageColor = pow(averageColor, 1.0 / vec3(global.hmss_post_crt_gamma));
     // End Addition

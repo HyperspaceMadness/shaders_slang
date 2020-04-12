@@ -67,7 +67,7 @@ alias10 = BR_CrtPass
 //      Reduce the resolution to a small static size regardless of final resolution
 //      Allows consistent look and faster at different final resolutions for blur
 //      Mipmap option allows downscaling without artifacts
-shader11 = ../crt/shaders/hyperspacemadness/linearize.slang
+shader11 = ../crt/shaders/hyperspacemadness/hsm-linearize-crt-pass.slang
 mipmap_input11 = true
 filter_linear11 = true
 scale_type11 = absolute

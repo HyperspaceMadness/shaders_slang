@@ -52,6 +52,13 @@ layout(push_constant) uniform Push
         cos_tilt.y*sin_tilt.x, -sin_tilt.y, cos_tilt.y*cos_tilt.x);
 #endif
 
+float geom_mode = global.hmss_curvature_mode;
+float geom_mode_runtime = global.hmss_curvature_mode;
+float geom_radius = global.hmss_geom_radius;
+float geom_view_dist = global.hmss_geom_view_dist;
+float geom_tilt_angle_x = global.hmss_geom_tilt_angle_x;
+float geom_tilt_angle_y = global.hmss_geom_tilt_angle_y;
+
 //////////////////////////////////  INCLUDES  //////////////////////////////////
 
 #include "../../../../../include/gamma-management.h"
@@ -100,7 +107,12 @@ void main()
     const float viewport_aspect_ratio = params.output_size.x/params.output_size.y;
 
     const float2 geom_aspect = get_aspect_vector(viewport_aspect_ratio);
+    /* HSM Removed
     const float2 geom_overscan = get_geom_overscan_vector();
+    */
+    // HSM Added
+    const float2 geom_overscan = vec2(geom_overscan_x, geom_overscan_y);
+
     geom_aspect_and_overscan = float4(geom_aspect, geom_overscan);
 
     #ifdef RUNTIME_GEOMETRY_TILT
@@ -112,7 +124,12 @@ void main()
         //  but we can still combine the pitch/yaw matrices by hand to cut a
         //  few instructions.  Note that cg matrices fill row1 first, then row2,
         //  etc. (row-major order).
-        const float2 geom_tilt_angle = get_geom_tilt_angle_vector();
+        // HSM Removed
+        // const float2 geom_tilt_angle = get_geom_tilt_angle_vector();
+
+        // HSM Added
+        const float2 geom_tilt_angle = float2(geom_tilt_angle_x, geom_tilt_angle_y);
+
         const float2 sin_tilt = sin(geom_tilt_angle);
         const float2 cos_tilt = cos(geom_tilt_angle);
         //  Conceptual breakdown:
@@ -175,6 +192,9 @@ void main()
     const float2 geom_overscan = geom_aspect_and_overscan.zw;
     const float2 video_size_inv = video_and_texture_size_inv.xy;
     const float2 texture_size_inv = video_and_texture_size_inv.zw;
+
+    // HSM Added
+    vec2 output_aspect_vec = geom_overscan.xy;
     //const float2 output_size_inv = output_size_inv;
     #ifdef RUNTIME_GEOMETRY_TILT
         const float3x3 global_to_local = float3x3(global_to_local_row0,
@@ -197,10 +217,34 @@ void main()
     float2 video_uv_no_geom_overscan;
     if(geom_mode > 0.5)
     {
-        video_uv_no_geom_overscan =
-            get_curved_video_uv_coords_and_tangent_matrix(flat_video_uv,
-                eye_pos_local, output_size_inv, geom_aspect,
-                geom_mode, global_to_local, pixel_to_video_uv);
+
+        vec2 screen_scale = HMSS_GetScreenScale();
+        vec2 curvature_mult = 5 * HMSS_GetCurvatureValues() + 1;
+
+        // float final_viewport_aspect = global.FinalViewportSize.x / global.FinalViewportSize.y;
+        // if (final_viewport_aspect > 1)
+        // {
+        //     flat_video_uv.x = (flat_video_uv.x - 0.5) * (global.FinalViewportSize.x / global.FinalViewportSize.y) + 0.5;
+        // }
+        video_uv_no_geom_overscan = HRG_GetGeomCurvedCoord(flat_video_uv, 
+                                                global.hmss_curvature_mode, 
+                                                global.hmss_geom_radius, 
+                                                global.hmss_geom_view_dist, 
+                                                global.hmss_geom_tilt_angle_x, 
+                                                global.hmss_geom_tilt_angle_y,
+                                                screen_scale,
+                                                curvature_mult,
+                                                pixel_to_video_uv);
+        // if (final_viewport_aspect > 1)
+        // {
+        //     flat_video_uv.x = (flat_video_uv.x - 0.5) / (global.FinalViewportSize.x / global.FinalViewportSize.y) + 0.5;
+        // }
+
+        // // HSM Added
+        // video_uv_no_geom_overscan =
+        //     get_curved_video_uv_coords_and_tangent_matrix(flat_video_uv,
+        //         eye_pos_local, output_size_inv, geom_aspect,
+        //         global.hmss_curvature_mode, global_to_local, pixel_to_video_uv);
     }
     else
     {
@@ -259,7 +303,7 @@ void main()
 
     // HSM Added
     #ifdef DIM_BORDER
-        const float border_dim_factor = get_border_dim_factor(HMSS_GetScreenVTexCoord(video_uv), geom_aspect);
+        const float border_dim_factor = HRG_GetBorderDimFactor(HMSS_GetScreenVTexCoord(video_uv), output_aspect_vec, border_size, border_darkness, border_compress);
 
         const float3 final_color = color * border_dim_factor;
     #else

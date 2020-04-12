@@ -73,7 +73,7 @@ mipmap_input11 = true
 //      Reduce the resolution to a small static size regardless of final resolution
 //      Allows consistent look and faster at different final resolutions for blur
 //      Mipmap option allows downscaling without artifacts
-shader12 = ../crt/shaders/hyperspacemadness/linearize.slang
+shader12 = ../crt/shaders/hyperspacemadness/hsm-linearize-crt-pass.slang
 mipmap_input12 = true
 filter_linear12 = true
 scale_type12 = absolute

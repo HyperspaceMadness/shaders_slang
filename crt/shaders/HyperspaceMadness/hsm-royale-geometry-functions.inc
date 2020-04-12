@@ -1,31 +1,18 @@
 /////////////////////////////  GPL LICENSE NOTICE  /////////////////////////////
 
+//  hsm-royale-geometry-functions, extracted from crt-royale
 //  crt-royale: A full-featured CRT shader, with cheese.
-//  Copyright (C) 2014 TroggleMonkey <trogglemonkey@gmx.com>
-//
-//  This program is free software; you can redistribute it and/or modify it
-//  under the terms of the GNU General Public License as published by the Free
-//  Software Foundation; either version 2 of the License, or any later version.
-//
-//  This program is distributed in the hope that it will be useful, but WITHOUT
-//  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-//  FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
-//  more details.
-//
-//  You should have received a copy of the GNU General Public License along with
-//  this program; if not, write to the Free Software Foundation, Inc., 59 Temple
-//  Place, Suite 330, Boston, MA 02111-1307 USA
+//  GPL & Copyright (C) 2014 TroggleMonkey <trogglemonkey@gmx.com>
 
 
 ////////////////////////////  MACROS AND CONSTANTS  ////////////////////////////
 
 //  Curvature-related constants:
-#define MAX_POINT_CLOUD_SIZE 9
-
+#define HRG_MAX_POINT_CLOUD_SIZE 9
 
 /////////////////////////////  CURVATURE FUNCTIONS /////////////////////////////
 
-vec2 quadratic_solve(float a, float b_over_2, float c)
+vec2 hrg_quadratic_solve(float a, float b_over_2, float c)
 {
     //  Requires:   1.) a, b, and c are quadratic formula coefficients
     //              2.) b_over_2 = b/2.0 (simplifies terms to factor 2 out)
@@ -33,65 +20,62 @@ vec2 quadratic_solve(float a, float b_over_2, float c)
     //  Returns:    Returns vec2(first_solution, discriminant), so the caller
     //              can choose how to handle the "no intersection" case.  The
     //              Kahan or Citardauq formula is used for numerical robustness.
-    float discriminant = b_over_2*b_over_2 - a*c;
-    float solution0 = c/(-b_over_2 + sqrt(discriminant));
+    float discriminant = b_over_2 * b_over_2 - a * c;
+    float solution0 = c / (-b_over_2 + sqrt(discriminant));
     return vec2(solution0, discriminant);
 }
 
-vec2 intersect_sphere(vec3 view_vec, vec3 eye_pos_vec)
+vec2 hrg_intersect_sphere(vec3 view_vec, vec3 eye_pos_vec, float in_geom_radius)
 {
     //  Requires:   1.) view_vec and eye_pos_vec are 3D vectors in the sphere's
     //                  local coordinate frame (eye_pos_vec is a position, i.e.
     //                  a vector from the origin to the eye/camera)
-    //              2.) geom_radius is a global containing the sphere's radius
+    //              2.) in_geom_radius is a global containing the sphere's radius
     //  Returns:    Cast a ray of direction view_vec from eye_pos_vec at a
-    //              sphere of radius geom_radius, and return the distance to
+    //              sphere of radius in_geom_radius, and return the distance to
     //              the first intersection in units of length(view_vec).
     //              http://wiki.cgsociety.org/index.php/Ray_Sphere_Intersection
     //  Quadratic formula coefficients (b_over_2 is guaranteed negative):
     float a = dot(view_vec, view_vec);
     float b_over_2 = dot(view_vec, eye_pos_vec);  //  * 2.0 factored out
-    float c = dot(eye_pos_vec, eye_pos_vec) - geom_radius*geom_radius;
-    return quadratic_solve(a, b_over_2, c);
+    float c = dot(eye_pos_vec, eye_pos_vec) - in_geom_radius * in_geom_radius;
+    return hrg_quadratic_solve(a, b_over_2, c);
 }
 
-vec2 intersect_cylinder(vec3 view_vec, vec3 eye_pos_vec)
+vec2 hrg_intersect_cylinder(vec3 view_vec, vec3 eye_pos_vec, float in_geom_radius)
 {
     //  Requires:   1.) view_vec and eye_pos_vec are 3D vectors in the sphere's
     //                  local coordinate frame (eye_pos_vec is a position, i.e.
     //                  a vector from the origin to the eye/camera)
-    //              2.) geom_radius is a global containing the cylinder's radius
+    //              2.) in_geom_radius is a global containing the cylinder's radius
     //  Returns:    Cast a ray of direction view_vec from eye_pos_vec at a
-    //              cylinder of radius geom_radius, and return the distance to
+    //              cylinder of radius in_geom_radius, and return the distance to
     //              the first intersection in units of length(view_vec).  The
     //              derivation of the coefficients is in Christer Ericson's
     //              Real-Time Collision Detection, p. 195-196, and this version
     //              uses LaGrange's identity to reduce operations.
     //  Arbitrary "cylinder top" reference point for an infinite cylinder:
-    vec3 cylinder_top_vec = vec3(0, geom_radius, 0);
-    vec3 cylinder_axis_vec = vec3(0, 1, 0);//vec3(0, 2.0*geom_radius, 0);
+    vec3 cylinder_top_vec = vec3(0, in_geom_radius, 0);
+    vec3 cylinder_axis_vec = vec3(0, 1, 0);//vec3(0, 2.0*in_geom_radius, 0);
     vec3 top_to_eye_vec = eye_pos_vec - cylinder_top_vec;
     vec3 axis_x_view = cross(cylinder_axis_vec, view_vec);
     vec3 axis_x_top_to_eye = cross(cylinder_axis_vec, top_to_eye_vec);
     //  Quadratic formula coefficients (b_over_2 is guaranteed negative):
     float a = dot(axis_x_view, axis_x_view);
     float b_over_2 = dot(axis_x_top_to_eye, axis_x_view);
-    float c = dot(axis_x_top_to_eye, axis_x_top_to_eye) -
-        geom_radius*geom_radius;//*dot(cylinder_axis_vec, cylinder_axis_vec);
-    return quadratic_solve(a, b_over_2, c);
+    float c = dot(axis_x_top_to_eye, axis_x_top_to_eye) - in_geom_radius * in_geom_radius; //*dot(cylinder_axis_vec, cylinder_axis_vec);
+    return hrg_quadratic_solve(a, b_over_2, c);
 }
 
-vec2 cylinder_xyz_to_uv(vec3 intersection_pos_local,
-    vec2 output_aspect)
+vec2 hrg_cylinder_xyz_to_uv( vec3 intersection_pos_local, vec2 output_aspect, float in_geom_radius)
 {
     //  Requires:   An xyz intersection position on a cylinder.
     //  Returns:    video_uv coords mapped to range [-0.5, 0.5]
     //  Mapping:    Define square_uv.x to be the signed arc length in xz-space,
     //              and define square_uv.y = -intersection_pos_local.y (+v = -y).
     //  Start with a numerically robust arc length calculation.
-    float angle_from_image_center = atan2(intersection_pos_local.x,
-        intersection_pos_local.z);
-    float signed_arc_len = angle_from_image_center * geom_radius;
+    float angle_from_image_center = atan(intersection_pos_local.x, intersection_pos_local.z);
+    float signed_arc_len = angle_from_image_center * in_geom_radius;
     //  Get a uv-mapping where [-0.5, 0.5] maps to a "square" area, then divide
     //  by the aspect ratio to stretch the mapping appropriately:
     vec2 square_uv = vec2(signed_arc_len, -intersection_pos_local.y);
@@ -99,33 +83,32 @@ vec2 cylinder_xyz_to_uv(vec3 intersection_pos_local,
     return video_uv;
 }
 
-vec3 cylinder_uv_to_xyz(vec2 video_uv, vec2 output_aspect)
+vec3 hrg_cylinder_uv_to_xyz(vec2 video_uv, vec2 output_aspect, float in_geom_radius)
 {
     //  Requires:   video_uv coords mapped to range [-0.5, 0.5]
     //  Returns:    An xyz intersection position on a cylinder.  This is the
-    //              inverse of cylinder_xyz_to_uv().
+    //              inverse of hrg_cylinder_xyz_to_uv().
     //  Expand video_uv by the aspect ratio to get proportionate x/y lengths,
     //  then calculate an xyz position for the cylindrical mapping above.
     vec2 square_uv = video_uv * output_aspect;
     float arc_len = square_uv.x;
-    float angle_from_image_center = arc_len / geom_radius;
-    float x_pos = sin(angle_from_image_center) * geom_radius;
-    float z_pos = cos(angle_from_image_center) * geom_radius;
-    //  Or: z = sqrt(geom_radius**2 - x**2)
-    //  Or: z = geom_radius/sqrt(1 + tan(angle)**2), x = z * tan(angle)
+    float angle_from_image_center = arc_len / in_geom_radius;
+    float x_pos = sin(angle_from_image_center) * in_geom_radius;
+    float z_pos = cos(angle_from_image_center) * in_geom_radius;
+    //  Or: z = sqrt(in_geom_radius**2 - x**2)
+    //  Or: z = in_geom_radius/sqrt(1 + tan(angle)**2), x = z * tan(angle)
     vec3 intersection_pos_local = vec3(x_pos, -square_uv.y, z_pos);
     return intersection_pos_local;
 }
 
-vec2 sphere_xyz_to_uv(vec3 intersection_pos_local,
-    vec2 output_aspect)
+vec2 hrg_sphere_xyz_to_uv(vec3 intersection_pos_local, vec2 output_aspect, float in_geom_radius)
 {
     //  Requires:   An xyz intersection position on a sphere.
     //  Returns:    video_uv coords mapped to range [-0.5, 0.5]
     //  Mapping:    First define square_uv.x/square_uv.y ==
     //              intersection_pos_local.x/intersection_pos_local.y.  Then,
     //              length(square_uv) is the arc length from the image center
-    //              at (0, 0, geom_radius) along the tangent great circle.
+    //              at (0, 0, in_geom_radius) along the tangent great circle.
     //              Credit for this mapping goes to cgwg: I never managed to
     //              understand his code, but he told me his mapping was based on
     //              great circle distances when I asked him about it, which
@@ -134,12 +117,12 @@ vec2 sphere_xyz_to_uv(vec3 intersection_pos_local,
     //  sphere intersection point and the image center using a method posted by
     //  Roger Stafford on comp.soft-sys.matlab:
     //  https://groups.google.com/d/msg/comp.soft-sys.matlab/zNbUui3bjcA/c0HV_bHSx9cJ
-    vec3 image_center_pos_local = vec3(0, 0, geom_radius);
+    vec3 image_center_pos_local = vec3(0, 0, in_geom_radius);
     float cp_len =
         length(cross(intersection_pos_local, image_center_pos_local));
     float dp = dot(intersection_pos_local, image_center_pos_local);
-    float angle_from_image_center = atan2(cp_len, dp);
-    float arc_len = angle_from_image_center * geom_radius;
+    float angle_from_image_center = atan(cp_len, dp);
+    float arc_len = angle_from_image_center * in_geom_radius;
     //  Get a uv-mapping where [-0.5, 0.5] maps to a "square" area, then divide
     //  by the aspect ratio to stretch the mapping appropriately:
     vec2 square_uv_unit = normalize(vec2(intersection_pos_local.x, -intersection_pos_local.y));
@@ -148,11 +131,11 @@ vec2 sphere_xyz_to_uv(vec3 intersection_pos_local,
     return video_uv;
 }
 
-vec3 sphere_uv_to_xyz(vec2 video_uv, vec2 output_aspect)
+vec3 hrg_sphere_uv_to_xyz(vec2 video_uv, vec2 output_aspect, float in_geom_radius)
 {
     //  Requires:   video_uv coords mapped to range [-0.5, 0.5]
     //  Returns:    An xyz intersection position on a sphere.  This is the
-    //              inverse of sphere_xyz_to_uv().
+    //              inverse of hrg_sphere_xyz_to_uv().
     //  Expand video_uv by the aspect ratio to get proportionate x/y lengths,
     //  then calculate an xyz position for the spherical mapping above.
     vec2 square_uv = video_uv * output_aspect;
@@ -162,109 +145,104 @@ vec3 sphere_uv_to_xyz(vec2 video_uv, vec2 output_aspect)
     //float arc_len = length(square_uv);
     vec2 square_uv_unit = normalize(square_uv);
     float arc_len = square_uv.y/square_uv_unit.y;
-    float angle_from_image_center = arc_len / geom_radius;
-    float xy_dist_from_sphere_center = sin(angle_from_image_center) * geom_radius;
+    float angle_from_image_center = arc_len / in_geom_radius;
+    float xy_dist_from_sphere_center = sin(angle_from_image_center) * in_geom_radius;
     //vec2 xy_pos = xy_dist_from_sphere_center * (square_uv/FIX_ZERO(arc_len));
     vec2 xy_pos = xy_dist_from_sphere_center * square_uv_unit;
-    float z_pos = cos(angle_from_image_center) * geom_radius;
+    float z_pos = cos(angle_from_image_center) * in_geom_radius;
     vec3 intersection_pos_local = vec3(xy_pos.x, -xy_pos.y, z_pos);
     return intersection_pos_local;
 }
 
-vec2 sphere_alt_xyz_to_uv(vec3 intersection_pos_local,
-    vec2 output_aspect)
+vec2 hrg_sphere_alt_xyz_to_uv(vec3 intersection_pos_local, vec2 output_aspect, float in_geom_radius)
 {
     //  Requires:   An xyz intersection position on a cylinder.
     //  Returns:    video_uv coords mapped to range [-0.5, 0.5]
     //  Mapping:    Define square_uv.x to be the signed arc length in xz-space,
     //              and define square_uv.y == signed arc length in yz-space.
-    //  See cylinder_xyz_to_uv() for implementation details (very similar).
-    vec2 angle_from_image_center = atan2( vec2(intersection_pos_local.x, -intersection_pos_local.y),
+    //  See hrg_cylinder_xyz_to_uv() for implementation details (very similar).
+    vec2 angle_from_image_center = atan( vec2(intersection_pos_local.x, -intersection_pos_local.y),
                                                 intersection_pos_local.zz);
-    vec2 signed_arc_len = angle_from_image_center * geom_radius;
+    vec2 signed_arc_len = angle_from_image_center * in_geom_radius;
     vec2 video_uv = signed_arc_len / output_aspect;
     return video_uv;
 }
 
-vec3 sphere_alt_uv_to_xyz(vec2 video_uv, vec2 output_aspect)
+vec3 hrg_sphere_alt_uv_to_xyz(vec2 video_uv, vec2 output_aspect, float in_geom_radius)
 {
     //  Requires:   video_uv coords mapped to range [-0.5, 0.5]
     //  Returns:    An xyz intersection position on a sphere.  This is the
-    //              inverse of sphere_alt_xyz_to_uv().
-    //  See cylinder_uv_to_xyz() for implementation details (very similar).
+    //              inverse of hrg_sphere_alt_xyz_to_uv().
+    //  See hrg_cylinder_uv_to_xyz() for implementation details (very similar).
     vec2 square_uv = video_uv * output_aspect;
     vec2 arc_len = square_uv;
-    vec2 angle_from_image_center = arc_len / geom_radius;
-    vec2 xy_pos = sin(angle_from_image_center) * geom_radius;
-    float z_pos = sqrt(geom_radius*geom_radius - dot(xy_pos, xy_pos));
+    vec2 angle_from_image_center = arc_len / in_geom_radius;
+    vec2 xy_pos = sin(angle_from_image_center) * in_geom_radius;
+    float z_pos = sqrt(in_geom_radius * in_geom_radius - dot(xy_pos, xy_pos));
     return vec3(xy_pos.x, -xy_pos.y, z_pos);
 }
 
-inline vec2 intersect(vec3 view_vec_local, vec3 eye_pos_local,
-    float geom_mode)
+vec2 hrg_intersect(vec3 view_vec_local, vec3 eye_pos_local, float in_geom_mode, float in_geom_radius)
 {
-    return geom_mode < 2.5 ?    intersect_sphere(view_vec_local, eye_pos_local) :
-                                intersect_cylinder(view_vec_local, eye_pos_local);
+    return in_geom_mode < 2.5 ?    hrg_intersect_sphere(view_vec_local, eye_pos_local, in_geom_radius) :
+                                hrg_intersect_cylinder(view_vec_local, eye_pos_local, in_geom_radius);
 }
 
-inline vec2 xyz_to_uv(vec3 intersection_pos_local,
-    vec2 output_aspect, float geom_mode)
+vec2 hrg_xyz_to_uv( vec3 intersection_pos_local, vec2 output_aspect, float in_geom_mode, float in_geom_radius)
 {
-    return geom_mode < 1.5 ?    sphere_xyz_to_uv(intersection_pos_local, output_aspect) :
-                                geom_mode < 2.5 ?   sphere_alt_xyz_to_uv(intersection_pos_local, output_aspect) :
-                                                    cylinder_xyz_to_uv(intersection_pos_local, output_aspect);
+    return in_geom_mode < 1.5 ?    hrg_sphere_xyz_to_uv(intersection_pos_local, output_aspect, in_geom_radius) :
+                                in_geom_mode < 2.5 ?   hrg_sphere_alt_xyz_to_uv(intersection_pos_local, output_aspect, in_geom_radius) :
+                                                    hrg_cylinder_xyz_to_uv(intersection_pos_local, output_aspect, in_geom_radius);
 }
 
-inline vec3 uv_to_xyz(  vec2 uv, 
-                        vec2 output_aspect,
-                        float geom_mode)
+vec3 hrg_uv_to_xyz(vec2 uv, vec2 output_aspect, float in_geom_mode, float in_geom_radius)
 {
-    return geom_mode < 1.5 ? sphere_uv_to_xyz(uv, output_aspect) :
-                             geom_mode < 2.5 ? sphere_alt_uv_to_xyz(uv, output_aspect) :
-                                               cylinder_uv_to_xyz(uv, output_aspect);
+    return in_geom_mode < 1.5 ? hrg_sphere_uv_to_xyz(uv, output_aspect, in_geom_radius) :
+                             in_geom_mode < 2.5 ? hrg_sphere_alt_uv_to_xyz(uv, output_aspect, in_geom_radius) :
+                                               hrg_cylinder_uv_to_xyz(uv, output_aspect, in_geom_radius);
 }
 
-vec2 view_vec_to_uv(vec3 view_vec_local, 
+vec2 hrg_view_vec_to_uv(vec3 view_vec_local, 
                     vec3 eye_pos_local,
                     vec2 output_aspect, 
-                    float geom_mode, 
+                    float in_geom_mode,
+                    float in_geom_radius, 
                     out vec3 intersection_pos)
 {
     //  Get the intersection point on the primitive, given an eye position
     //  and view vector already in its local coordinate frame:
-    vec2 intersect_dist_and_discriminant = intersect(view_vec_local,
-        eye_pos_local, geom_mode);
-    vec3 intersection_pos_local = eye_pos_local +
-                                        view_vec_local * 
-                                        intersect_dist_and_discriminant.x;
+    vec2 intersect_dist_and_discriminant = hrg_intersect(view_vec_local, eye_pos_local, in_geom_mode, in_geom_radius);
+    vec3 intersection_pos_local = eye_pos_local + view_vec_local * intersect_dist_and_discriminant.x;
     //  Save the intersection position to an output parameter:
     intersection_pos = intersection_pos_local;
     //  Transform into uv coords, but give out-of-range coords if the
-    //  view ray doesn't intersect the primitive in the first place:
-    return intersect_dist_and_discriminant.y > 0.005 ?  xyz_to_uv(intersection_pos_local, output_aspect, geom_mode) : 
+    //  view ray doesn't hrg_intersect the primitive in the first place:
+    return intersect_dist_and_discriminant.y > 0.005 ?  hrg_xyz_to_uv(intersection_pos_local, output_aspect, in_geom_mode, in_geom_radius) : 
                                                         vec2(1);
 }
 
-vec3 get_ideal_global_eye_pos_for_points(   vec3 eye_pos,
+vec3 hrg_get_ideal_global_eye_pos_for_points(   vec3 eye_pos,
                                             vec2 output_aspect, 
-                                            vec3 global_coords[MAX_POINT_CLOUD_SIZE],
-                                            int num_points)
+                                            vec3 global_coords[HRG_MAX_POINT_CLOUD_SIZE],
+                                            int num_points,
+                                            float in_geom_radius,
+                                            float in_geom_view_dist)
 {
     //  Requires:   Parameters:
     //              1.) Starting eye_pos is a global 3D position at which the
     //                  camera contains all points in global_coords[] in its FOV
-    //              2.) output_aspect = get_aspect_vector(
+    //              2.) output_aspect = hrg_get_aspect_vector(
     //                      IN.OutputSize.xy.x / IN.OutputSize.xy.y);
     //              3.) global_coords is a point cloud containing global xyz
     //                  coords of extreme points on the simulated CRT screen.
     //              Globals:
-    //              1.) geom_view_dist must be > 0.  It controls the "near
+    //              1.) in_geom_view_dist must be > 0.  It controls the "near
     //                  plane" used to interpret flat_video_uv as a view
     //                  vector, which controls the field of view (FOV).
     //              Eyespace coordinate frame: +x = right, +y = up, +z = back
     //  Returns:    Return an eye position at which the point cloud spans as
     //              much of the screen as possible (given the FOV controlled by
-    //              geom_view_dist) without being cropped or sheared.
+    //              in_geom_view_dist) without being cropped or sheared.
     //  Algorithm:
     //  1.) Move the eye laterally to a point which attempts to maximize the
     //      the amount we can move forward without clipping the CRT screen.
@@ -274,20 +252,20 @@ vec3 get_ideal_global_eye_pos_for_points(   vec3 eye_pos,
     //  pseudo-normalized device coords (where xy ranges from [-0.5, 0.5]
     //  and z = eyespace z):
     //      pndc_coord = vec3(vec2(eyespace_xyz.x, -eyespace_xyz.y)*
-    //      geom_view_dist / (output_aspect * -eyespace_xyz.z), eyespace_xyz.z);
+    //      in_geom_view_dist / (output_aspect * -eyespace_xyz.z), eyespace_xyz.z);
     //  Notes:
-    //  The field of view is controlled by geom_view_dist's magnitude relative to
+    //  The field of view is controlled by in_geom_view_dist's magnitude relative to
     //  the view vector's x and y components:
     //      view_vec.xy ranges from [-0.5, 0.5] * output_aspect
-    //      view_vec.z = -geom_view_dist
+    //      view_vec.z = -in_geom_view_dist
     //  But for the purposes of perspective divide, it should be considered:
-    //      view_vec.xy ranges from [-0.5, 0.5] * output_aspect / geom_view_dist
+    //      view_vec.xy ranges from [-0.5, 0.5] * output_aspect / in_geom_view_dist
     //      view_vec.z = -1
     int max_centering_iters = 1;  //  Keep for easy testing.
     for(int iter = 0; iter < max_centering_iters; iter++)
     {
         //  0.) Get the eyespace coordinates of our point cloud:
-        vec3 eyespace_coords[MAX_POINT_CLOUD_SIZE];
+        vec3 eyespace_coords[HRG_MAX_POINT_CLOUD_SIZE];
         for(int i = 0; i < num_points; i++)
         {
             eyespace_coords[i] = global_coords[i] - eye_pos;
@@ -298,13 +276,13 @@ vec3 get_ideal_global_eye_pos_for_points(   vec3 eye_pos,
         //      applying the eyespace offset (on the way to "clip space").
         //  Solve for two offsets per point based on:
         //      (eyespace_xyz.xy - offset_dr) * vec2(1, -1) *
-        //      geom_view_dist / (output_aspect * -eyespace_xyz.z) = vec2(-0.5)
+        //      in_geom_view_dist / (output_aspect * -eyespace_xyz.z) = vec2(-0.5)
         //      (eyespace_xyz.xy - offset_dr) * vec2(1, -1) *
-        //      geom_view_dist / (output_aspect * -eyespace_xyz.z) = vec2(0.5)
+        //      in_geom_view_dist / (output_aspect * -eyespace_xyz.z) = vec2(0.5)
         //  offset_ul and offset_dr represent the farthest we can move the
         //  eye_pos up-left and down-right.  Save the min of all offset_dr's
         //  and the max of all offset_ul's (since it's negative).
-        float abs_radius = abs(geom_radius);  //  In case anyone gets ideas. ;)
+        float abs_radius = abs(in_geom_radius);  //  In case anyone gets ideas. ;)
         vec2 offset_dr_min = vec2(10.0 * abs_radius, 10.0 * abs_radius);
         vec2 offset_ul_max = vec2(-10.0 * abs_radius, -10.0 * abs_radius);
         for(int i = 0; i < num_points; i++)
@@ -313,10 +291,10 @@ vec3 get_ideal_global_eye_pos_for_points(   vec3 eye_pos,
             vec3 eyespace_xyz = eyespace_coords[i];
             vec2 offset_dr = eyespace_xyz.xy - vec2(-0.5) *
                             (output_aspect * -eyespace_xyz.z) / 
-                            (geom_view_dist * flipy);
+                            (in_geom_view_dist * flipy);
             vec2 offset_ul = eyespace_xyz.xy - vec2(0.5) *
                             (output_aspect * -eyespace_xyz.z) / 
-                            (geom_view_dist * flipy);
+                            (in_geom_view_dist * flipy);
             offset_dr_min = min(offset_dr_min, offset_dr);
             offset_ul_max = max(offset_ul_max, offset_ul);
         }
@@ -333,24 +311,24 @@ vec3 get_ideal_global_eye_pos_for_points(   vec3 eye_pos,
         //      without the point clipping the frustum.  Flip the y
         //      direction in advance (matters for a later step, not here).
         //      Solve for four offsets per point based on:
-        //      eyespace_xyz_flipy.x * geom_view_dist /
+        //      eyespace_xyz_flipy.x * in_geom_view_dist /
         //          (output_aspect.x * (offset_z - eyespace_xyz_flipy.z)) =-0.5
-        //      eyespace_xyz_flipy.y * geom_view_dist /
+        //      eyespace_xyz_flipy.y * in_geom_view_dist /
         //          (output_aspect.y * (offset_z - eyespace_xyz_flipy.z)) =-0.5
-        //      eyespace_xyz_flipy.x * geom_view_dist /
+        //      eyespace_xyz_flipy.x * in_geom_view_dist /
         //          (output_aspect.x * (offset_z - eyespace_xyz_flipy.z)) = 0.5
-        //      eyespace_xyz_flipy.y * geom_view_dist /
+        //      eyespace_xyz_flipy.y * in_geom_view_dist /
         //          (output_aspect.y * (offset_z - eyespace_xyz_flipy.z)) = 0.5
         //      We'll vectorize the actual computation.  Take the maximum of
         //      these four for a single offset, and continue taking the max
         //      for every point (use max because offset.z is negative).
-        float offset_z_max = -10.0 * geom_radius * geom_view_dist;
+        float offset_z_max = -10.0 * in_geom_radius * in_geom_view_dist;
         for(int i = 0; i < num_points; i++)
         {
             vec3 eyespace_xyz_flipy = eyespace_coords[i] * vec3(1, -1, 1);
-            float4 offset_zzzz = eyespace_xyz_flipy.zzzz +  
-                                (eyespace_xyz_flipy.xyxy * geom_view_dist) /
-                                (float4(-0.5, -0.5, 0.5, 0.5) * float4(output_aspect, output_aspect));
+            vec4 offset_zzzz = eyespace_xyz_flipy.zzzz +  
+                                (eyespace_xyz_flipy.xyxy * in_geom_view_dist) /
+                                (vec4(-0.5, -0.5, 0.5, 0.5) * vec4(output_aspect, output_aspect));
             //  Ignore offsets that push positive x/y values to opposite
             //  boundaries, and vice versa, and don't let the camera move
             //  past a point in the dead center of the screen:
@@ -366,20 +344,22 @@ vec3 get_ideal_global_eye_pos_for_points(   vec3 eye_pos,
     return eye_pos;
 }
 
-vec3 get_ideal_global_eye_pos(  mat3x3 local_to_global,
-                                vec2 output_aspect, 
-                                float geom_mode)
+vec3 hrg_get_ideal_global_eye_pos(  mat3x3 local_to_global,
+                                    vec2 output_aspect, 
+                                    float in_geom_mode, 
+                                    float in_geom_radius, 
+                                    float in_geom_view_dist)
 {
     //  Start with an initial eye_pos that includes the entire primitive
     //  (sphere or cylinder) in its field-of-view:
-    vec3 high_view = vec3(0, output_aspect.y, -geom_view_dist);
+    vec3 high_view = vec3(0, output_aspect.y, -in_geom_view_dist);
     vec3 low_view = high_view * vec3(1, -1, 1);
     float len_sq = dot(high_view, high_view);
     float fov = abs(acos(dot(high_view, low_view)/len_sq));
-    //  Trigonometry/similar triangles say distance = geom_radius/sin(fov/2):
-    float eye_z_spherical = geom_radius/sin(fov*0.5);
-    vec3 eye_pos = geom_mode < 2.5 ?  vec3(0, 0, eye_z_spherical) :
-                                            vec3(0, 0, max(geom_view_dist, eye_z_spherical));
+    //  Trigonometry/similar triangles say distance = in_geom_radius/sin(fov/2):
+    float eye_z_spherical = in_geom_radius / sin(fov*0.5);
+    vec3 eye_pos = in_geom_mode < 2.5 ?  vec3(0, 0, eye_z_spherical) :
+                                            vec3(0, 0, max(in_geom_view_dist, eye_z_spherical));
 
     //  Get global xyz coords of extreme sample points on the simulated CRT
     //  screen.  Start with the center, edge centers, and corners of the
@@ -387,17 +367,17 @@ vec3 get_ideal_global_eye_pos(  mat3x3 local_to_global,
     //  by closer points on the primitive, but they may NOT be occluded by
     //  the convex hull of the remaining samples (i.e. the remaining convex
     //  hull might not envelope points that do occlude a back-facing point.)
-    int num_points = MAX_POINT_CLOUD_SIZE;
-    vec3 global_coords[MAX_POINT_CLOUD_SIZE];
-    global_coords[0] = mul(local_to_global, uv_to_xyz(vec2(0,     0),   output_aspect, geom_mode));
-    global_coords[1] = mul(local_to_global, uv_to_xyz(vec2(0,    -0.5), output_aspect, geom_mode));
-    global_coords[2] = mul(local_to_global, uv_to_xyz(vec2(0,     0.5), output_aspect, geom_mode));
-    global_coords[3] = mul(local_to_global, uv_to_xyz(vec2(-0.5,  0),   output_aspect, geom_mode));
-    global_coords[4] = mul(local_to_global, uv_to_xyz(vec2(0.5,   0),   output_aspect, geom_mode));
-    global_coords[5] = mul(local_to_global, uv_to_xyz(vec2(-0.5, -0.5), output_aspect, geom_mode));
-    global_coords[6] = mul(local_to_global, uv_to_xyz(vec2(0.5,  -0.5), output_aspect, geom_mode));
-    global_coords[7] = mul(local_to_global, uv_to_xyz(vec2(-0.5,  0.5), output_aspect, geom_mode));
-    global_coords[8] = mul(local_to_global, uv_to_xyz(vec2(0.5,   0.5), output_aspect, geom_mode));
+    int num_points = HRG_MAX_POINT_CLOUD_SIZE;
+    vec3 global_coords[HRG_MAX_POINT_CLOUD_SIZE];
+    global_coords[0] = hrg_uv_to_xyz(vec2(0,     0),   output_aspect, in_geom_mode, in_geom_radius) * local_to_global;
+    global_coords[1] = hrg_uv_to_xyz(vec2(0,    -0.5), output_aspect, in_geom_mode, in_geom_radius) * local_to_global;
+    global_coords[2] = hrg_uv_to_xyz(vec2(0,     0.5), output_aspect, in_geom_mode, in_geom_radius) * local_to_global;
+    global_coords[3] = hrg_uv_to_xyz(vec2(-0.5,  0),   output_aspect, in_geom_mode, in_geom_radius) * local_to_global;
+    global_coords[4] = hrg_uv_to_xyz(vec2(0.5,   0),   output_aspect, in_geom_mode, in_geom_radius) * local_to_global;
+    global_coords[5] = hrg_uv_to_xyz(vec2(-0.5, -0.5), output_aspect, in_geom_mode, in_geom_radius) * local_to_global;
+    global_coords[6] = hrg_uv_to_xyz(vec2(0.5,  -0.5), output_aspect, in_geom_mode, in_geom_radius) * local_to_global;
+    global_coords[7] = hrg_uv_to_xyz(vec2(-0.5,  0.5), output_aspect, in_geom_mode, in_geom_radius) * local_to_global;
+    global_coords[8] = hrg_uv_to_xyz(vec2(0.5,   0.5), output_aspect, in_geom_mode, in_geom_radius) * local_to_global;
     //  Adding more inner image points could help in extreme cases, but too many
     //  points will kille the framerate.  For safety, default to the initial
     //  eye_pos if any z coords are negative:
@@ -408,20 +388,22 @@ vec3 get_ideal_global_eye_pos(  mat3x3 local_to_global,
     }
     //  Outsource the optimized eye_pos calculation:
     return num_negative_z_coords > 0.5 ?    eye_pos :
-                                            get_ideal_global_eye_pos_for_points(eye_pos, 
-                                                                                output_aspect,
-                                                                                global_coords, 
-                                                                                num_points);
+                                            hrg_get_ideal_global_eye_pos_for_points(eye_pos, 
+                                                                                    output_aspect,
+                                                                                    global_coords, 
+                                                                                    num_points, 
+                                                                                    in_geom_radius, 
+                                                                                    in_geom_view_dist);
 }
 
-mat3x3 get_pixel_to_object_matrix(  mat3x3 global_to_local,
+mat3x3 hrg_get_pixel_to_object_matrix(  mat3x3 global_to_local,
                                     vec3 eye_pos_local, 
                                     vec3 view_vec_global,
                                     vec3 intersection_pos_local, 
                                     vec3 normal,
                                     vec2 output_pixel_size)
 {
-    //  Requires:   See get_curved_video_uv_coords_and_tangent_matrix for
+    //  Requires:   See hrg_get_curved_video_uv_coords_and_tangent_matrix for
     //              descriptions of each parameter.
     //  Returns:    Return a transformation matrix from 2D pixel-space vectors
     //              (where (+1, +1) is a vector to one pixel down-right,
@@ -440,19 +422,17 @@ mat3x3 get_pixel_to_object_matrix(  mat3x3 global_to_local,
     //  1.) Get the local view vecs for the pixels to the right and down:
     vec3 view_vec_right_global =  view_vec_global + vec3(output_pixel_size.x, 0, 0);
     vec3 view_vec_down_global =   view_vec_global + vec3(0, -output_pixel_size.y, 0);
-    vec3 view_vec_right_local =   mul(global_to_local, view_vec_right_global);
-    vec3 view_vec_down_local =    mul(global_to_local, view_vec_down_global);
-    //  2.) Using the true intersection point, intersect the neighboring
+    vec3 view_vec_right_local =   view_vec_right_global * global_to_local;
+    vec3 view_vec_down_local =    view_vec_down_global * global_to_local;
+    //  2.) Using the true intersection point, hrg_intersect the neighboring
     //      view vectors with the tangent plane:
-    vec3 intersection_vec_dot_normal = vec3(  dot(pos - eye_pos, normal), 
-                                                    dot(pos - eye_pos, normal), 
-                                                    dot(pos - eye_pos, normal));
-    vec3 right_pos =  eye_pos + 
-                            (intersection_vec_dot_normal / dot(view_vec_right_local, normal)) *
-                            view_vec_right_local;
-    vec3 down_pos =   eye_pos + 
-                            (intersection_vec_dot_normal / dot(view_vec_down_local, normal)) * 
-                            view_vec_down_local;
+    vec3 intersection_vec_dot_normal = vec3(dot(pos - eye_pos, normal));
+    vec3 right_pos =    eye_pos + 
+                        (intersection_vec_dot_normal / dot(view_vec_right_local, normal)) *
+                        view_vec_right_local;
+    vec3 down_pos =     eye_pos + 
+                        (intersection_vec_dot_normal / dot(view_vec_down_local, normal)) * 
+                        view_vec_down_local;
     //  3.) Subtract the original intersection pos from its neighbors; the
     //      resulting vectors are object-space vectors tangent to the plane.
     //      These vectors are the object-space transformations of (1, 0)
@@ -462,19 +442,19 @@ mat3x3 get_pixel_to_object_matrix(  mat3x3 global_to_local,
     vec3 object_right_vec = right_pos - pos;
     vec3 object_down_vec = down_pos - pos;
     mat3x3 pixel_to_object = mat3x3(
-                                            object_right_vec.x, object_down_vec.x, 0,
-                                            object_right_vec.y, object_down_vec.y, 0,
-                                            object_right_vec.z, object_down_vec.z, 0
-                                        );
+                                    object_right_vec.x, object_down_vec.x, 0,
+                                    object_right_vec.y, object_down_vec.y, 0,
+                                    object_right_vec.z, object_down_vec.z, 0
+                                    );
     return pixel_to_object;
 }
 
-mat3x3 get_object_to_tangent_matrix(vec3 intersection_pos_local,
+mat3x3 hrg_get_object_to_tangent_matrix(vec3 intersection_pos_local,
                                     vec3 normal, 
                                     vec2 output_aspect, 
-                                    float geom_mode)
+                                    float in_geom_mode)
 {
-    //  Requires:   See get_curved_video_uv_coords_and_tangent_matrix for
+    //  Requires:   See hrg_get_curved_video_uv_coords_and_tangent_matrix for
     //              descriptions of each parameter.
     //  Returns:    Return a transformation matrix from 3D object-space vectors
     //              in the CRT's local coordinate frame (right-handed, +y = up)
@@ -504,8 +484,8 @@ mat3x3 get_object_to_tangent_matrix(vec3 intersection_pos_local,
     //  those, but we'll compute the cotangent/cobitangent directly when we can.
     vec3 cotangent_unscaled;
     vec3 cobitangent_unscaled;
-    //  geom_mode should be constant-folded without RUNTIME_GEOMETRY_MODE.
-    if(geom_mode < 1.5)
+    //  in_geom_mode should be constant-folded without RUNTIME_GEOMETRY_MODE.
+    if(in_geom_mode < 1.5)
     {
         //  Sphere:
         //  tangent = normalize(cross(normal, cross(x_vec, pos))) * output_aspect.x
@@ -519,7 +499,7 @@ mat3x3 get_object_to_tangent_matrix(vec3 intersection_pos_local,
         cotangent_unscaled = normalize(cross(y_vec, pos)) * output_aspect.y;
         cobitangent_unscaled = normalize(cross(x_vec, pos)) * output_aspect.x;
     }
-    else if(geom_mode < 2.5)
+    else if(in_geom_mode < 2.5)
     {
         //  Sphere, alternate mapping:
         //  This mapping works a bit like the cylindrical mapping in two
@@ -544,7 +524,7 @@ mat3x3 get_object_to_tangent_matrix(vec3 intersection_pos_local,
         cobitangent_unscaled = vec3(0, -output_aspect.x, 0);
     }
     vec3 computed_normal = cross(cobitangent_unscaled, cotangent_unscaled);
-    float inv_determinant = rsqrt(dot(computed_normal, computed_normal));
+    float inv_determinant = inversesqrt(dot(computed_normal, computed_normal));
     vec3 cotangent = cotangent_unscaled * inv_determinant;
     vec3 cobitangent = cobitangent_unscaled * inv_determinant;
     //  The [cotangent, cobitangent, normal] column vecs form the cotangent
@@ -555,13 +535,15 @@ mat3x3 get_object_to_tangent_matrix(vec3 intersection_pos_local,
     return object_to_tangent;
 }
 
-vec2 get_curved_video_uv_coords_and_tangent_matrix( vec2 flat_video_uv, 
+vec2 hrg_get_curved_video_uv_coords_and_tangent_matrix( vec2 flat_video_uv, 
                                                     vec3 eye_pos_local,
                                                     vec2 output_pixel_size, 
                                                     vec2 output_aspect,
-                                                    float geom_mode, 
+                                                    float in_geom_mode, 
+                                                    float in_geom_radius, 
+                                                    float in_geom_view_dist,
                                                     mat3x3 global_to_local,
-                                                    out float2x2 pixel_to_tangent_video_uv)
+                                                    out mat2x2 pixel_to_tangent_video_uv)
 {
     //  Requires:   Parameters:
     //              1.) flat_video_uv coords are in range [0, 1], where
@@ -569,27 +551,27 @@ vec2 get_curved_video_uv_coords_and_tangent_matrix( vec2 flat_video_uv,
     //                  (1, 1) is the bottom-right corner.
     //              2.) eye_pos_local is the 3D camera position in the simulated
     //                  CRT's local coordinate frame.  For best results, it must
-    //                  be computed based on the same geom_view_dist used here.
+    //                  be computed based on the same in_geom_view_dist used here.
     //              3.) output_pixel_size = vec2(1)/IN.OutputSize.xy
-    //              4.) output_aspect = get_aspect_vector(
+    //              4.) output_aspect = hrg_get_aspect_vector(
     //                      IN.OutputSize.xy.x / IN.OutputSize.xy.y);
-    //              5.) geom_mode is a static or runtime mode setting:
+    //              5.) in_geom_mode is a static or runtime mode setting:
     //                  0 = off, 1 = sphere, 2 = sphere alt., 3 = cylinder
     //              6.) global_to_local is a 3x3 matrix transforming (ordinary)
     //                  worldspace vectors to the CRT's local coordinate frame
     //              Globals:
-    //              1.) geom_view_dist must be > 0.  It controls the "near
+    //              1.) in_geom_view_dist must be > 0.  It controls the "near
     //                  plane" used to interpret flat_video_uv as a view
     //                  vector, which controls the field of view (FOV).
     //  Returns:    Return final uv coords in [0, 1], and return a pixel-
     //              space to video_uv tangent-space matrix in the out parameter.
     //              (This matrix assumes pixel-space +y = down, like +v = down.)
     //              We'll transform flat_video_uv into a view vector, project
-    //              the view vector from the camera/eye, intersect with a sphere
+    //              the view vector from the camera/eye, hrg_intersect with a sphere
     //              or cylinder representing the simulated CRT, and convert the
     //              intersection position into final uv coords and a local
     //              transformation matrix.
-    //  First get the 3D view vector (output_aspect and geom_view_dist are globals):
+    //  First get the 3D view vector (output_aspect and in_geom_view_dist are globals):
     //  1.) Center uv around (0, 0) and make (-0.5, -0.5) and (0.5, 0.5)
     //      correspond to the top-left/bottom-right output screen corners.
     //  2.) Multiply by output_aspect to preemptively "undo" Retroarch's screen-
@@ -601,15 +583,17 @@ vec2 get_curved_video_uv_coords_and_tangent_matrix( vec2 flat_video_uv,
     //      set equal to the user's distance from their physical screen, in
     //      units of the viewport's physical diagonal size.
     vec2 view_uv = (flat_video_uv - vec2(0.5)) * output_aspect;
-    vec3 view_vec_global = vec3(view_uv.x, -view_uv.y, -geom_view_dist);
+    vec3 view_vec_global = vec3(view_uv.x, -view_uv.y, -in_geom_view_dist);
     //  Transform the view vector into the CRT's local coordinate frame, convert
     //  to video_uv coords, and get the local 3D intersection position:
-    vec3 view_vec_local = mul(global_to_local, view_vec_global);
+    vec3 view_vec_local = view_vec_global * global_to_local;
     vec3 pos;
-    vec2 centered_uv = view_vec_to_uv(view_vec_local, 
-                                            eye_pos_local, 
-                                            output_aspect, 
-                                            geom_mode, pos);
+    vec2 centered_uv = hrg_view_vec_to_uv(  view_vec_local, 
+                                        eye_pos_local, 
+                                        output_aspect, 
+                                        in_geom_mode, 
+                                        in_geom_radius, 
+                                        pos);
     vec2 video_uv = centered_uv + vec2(0.5);
     //  Get a pixel-to-tangent-video-uv matrix.  The caller could deal with
     //  all but one of these cases, but that would be more complicated.
@@ -617,92 +601,68 @@ vec2 get_curved_video_uv_coords_and_tangent_matrix( vec2 flat_video_uv,
         //  Derivatives obtain a matrix very fast, but the direction of pixel-
         //  space +y seems to depend on the pass.  Enforce the correct direction
         //  on a best-effort basis (but it shouldn't matter for antialiasing).
-        vec2 duv_dx = ddx(video_uv);
-        vec2 duv_dy = ddy(video_uv);
-        // #ifdef LAST_PASS
-            pixel_to_tangent_video_uv = float2x2(    duv_dx.x,   duv_dy.x,
-                                                    -duv_dx.y,  -duv_dy.y);
+        // vec2 duv_dx = dFdx(video_uv);
+        // vec2 duv_dy = dFdy(video_uv);
+        // // #ifdef LAST_PASS
+        //     pixel_to_tangent_video_uv = mat2x2(    duv_dx.x,   duv_dy.x,
+        //                                             -duv_dx.y,  -duv_dy.y);
     //     #else
-    //         pixel_to_tangent_video_uv = float2x2(   duv_dx.x,   duv_dy.x,
+    //         pixel_to_tangent_video_uv = mat2x2(   duv_dx.x,   duv_dy.x,
     //                                                 duv_dx.y,   duv_dy.y);
     //     #endif
     // #else
         //  Manually define a transformation matrix.  We'll assume pixel-space
         //  +y = down, just like +v = down.
-        bool geom_force_correct_tangent_matrix = true
+        bool geom_force_correct_tangent_matrix = true;
         if(geom_force_correct_tangent_matrix)
         {
             //  Get the surface normal based on the local intersection position:
-            vec3 normal_base = geom_mode < 2.5 ? pos :
-                                                       vec3(pos.x, 0, pos.z);
+            vec3 normal_base = in_geom_mode < 2.5 ?    pos :
+                                                    vec3(pos.x, 0, pos.z);
             vec3 normal = normalize(normal_base);
             //  Get pixel-to-object and object-to-tangent matrices and combine
             //  them into a 2x2 pixel-to-tangent matrix for video_uv offsets:
-            mat3x3 pixel_to_object = get_pixel_to_object_matrix(  global_to_local, 
-                                                                        eye_pos_local, 
-                                                                        view_vec_global, 
-                                                                        pos, 
-                                                                        normal,
-                                                                        output_pixel_size);
-            mat3x3 object_to_tangent = get_object_to_tangent_matrix(pos, normal, output_aspect, geom_mode);
-            mat3x3 pixel_to_tangent3x3 = mul(object_to_tangent, pixel_to_object);
-            pixel_to_tangent_video_uv = float2x2(   pixel_to_tangent3x3[0][0], pixel_to_tangent3x3[0][1], 
+            mat3x3 pixel_to_object = hrg_get_pixel_to_object_matrix(global_to_local, 
+                                                                eye_pos_local, 
+                                                                view_vec_global, 
+                                                                pos, 
+                                                                normal,
+                                                                output_pixel_size);
+            mat3x3 object_to_tangent = hrg_get_object_to_tangent_matrix(pos, normal, output_aspect, in_geom_mode);
+            mat3x3 pixel_to_tangent3x3 = pixel_to_object * object_to_tangent;
+            pixel_to_tangent_video_uv = mat2x2(   pixel_to_tangent3x3[0][0], pixel_to_tangent3x3[0][1], 
                                                     pixel_to_tangent3x3[1][0], pixel_to_tangent3x3[1][1]);//._m00_m01_m10_m11);
         }
         else
         {
             //  Ignore curvature, and just consider flat scaling.  The
             //  difference is only apparent with strong curvature:
-            pixel_to_tangent_video_uv = float2x2(   output_pixel_size.x,    0, 
+            pixel_to_tangent_video_uv = mat2x2(   output_pixel_size.x,    0, 
                                                     0,                      output_pixel_size.y);
         }
-    #endif
+    //#endif
     return video_uv;
 }
 
-float get_border_dim_factor(vec2 video_uv, vec2 output_aspect)
+float HRG_GetBorderDimFactor(vec2 video_uv, vec2 output_aspect, float in_border_size, float in_border_darkness, float in_border_compress)
 {
     //  COPYRIGHT NOTE FOR THIS FUNCTION:
     //  Copyright (C) 2010-2012 cgwg, 2014 TroggleMonkey
     //  This function uses an algorithm first coded in several of cgwg's GPL-
-    //  licensed lines in crt-geom-curved.cg and its ancestors.  The line
-    //  between algorithm and code is nearly indistinguishable here, so it's
-    //  unclear whether I could even release this project under a non-GPL
-    //  license with this function included.
+    //  licensed lines in crt-geom-curved.cg and its ancestors.
 
     //  Calculate border_dim_factor from the proximity to uv-space image
-    //  borders; output_aspect/border_size/border/darkness/border_compress are globals:
+    //  borders; output_aspect/in_border_size/border/darkness/in_border_compress are globals:
     vec2 edge_dists = min(video_uv, vec2(1) - video_uv) * output_aspect;
-    vec2 border_penetration = max(vec2(border_size) - edge_dists, vec2(0));
-    float penetration_ratio = length(border_penetration)/border_size;
+    vec2 border_penetration = max(vec2(in_border_size) - edge_dists, vec2(0));
+    float penetration_ratio = length(border_penetration)/in_border_size;
     float border_escape_ratio = max(1 - penetration_ratio, 0);
-    float border_dim_factor = pow(border_escape_ratio, border_darkness) * max(1, border_compress);
+    float border_dim_factor = pow(border_escape_ratio, in_border_darkness) * max(1, in_border_compress);
     return min(border_dim_factor, 1);
 }
 
-//  Create a local-to-global rotation matrix for the CRT's coordinate frame
-//  and its global-to-local inverse.  See the vertex shader for details.
-//  It's faster to compute these statically if possible.
-// vec2 sin_tilt = sin(geom_tilt_angle_static);
-// vec2 cos_tilt = cos(geom_tilt_angle_static);
-// mat3x3 geom_local_to_global_static = mat3x3(
-//     cos_tilt.x,     sin_tilt.y * sin_tilt.x,    cos_tilt.y * sin_tilt.x,
-//     0,            cos_tilt.y,                 -sin_tilt.y,
-//     -sin_tilt.x, sin_tilt.y*cos_tilt.x, cos_tilt.y*cos_tilt.x);
-// mat3x3 geom_global_to_local_static = mat3x3(
-//     cos_tilt.x,                 0,            -sin_tilt.x,
-//     sin_tilt.y * sin_tilt.x,    cos_tilt.y,     sin_tilt.y*cos_tilt.x,
-//     cos_tilt.y * sin_tilt.x,    -sin_tilt.y,     cos_tilt.y*cos_tilt.x);
-
-
-mat2x2 mul_scale(vec2 scale, mat2x2 matrix)
-{
-    vec4 temp_matrix = (vec4(matrix[0][0], matrix[0][1], matrix[1][0], matrix[1][1]) * scale.xxyy);
-    return mat2x2(temp_matrix.x, temp_matrix.y, temp_matrix.z, temp_matrix.w);
-}
-
 //  Provide accessors for vector constants that pack scalar uniforms:
-inline vec2 get_aspect_vector(float geom_aspect_ratio)
+vec2 hrg_get_aspect_vector(float geom_aspect_ratio)
 {
     //  Get an aspect ratio vector.  Enforce geom_max_aspect_ratio, and prevent
     //  the absolute scale from affecting the uv-mapping for curvature:
@@ -712,32 +672,53 @@ inline vec2 get_aspect_vector(float geom_aspect_ratio)
     return output_aspect;
 }
 
-inline vec2 get_geom_tilt_angle_vector()
+// Returns Diagonal Screen scale relative to the viewport height
+float GetScreenDiagonalScale(vec2 in_screen_scale)
 {
-    return vec2(geom_tilt_angle_x, geom_tilt_angle_y);
+	vec2 screen_scale = in_screen_scale;
+	float screen_scale_x_compensated = screen_scale.x / (global.FinalViewportSize.x/global.FinalViewportSize.y);
+	return sqrt(screen_scale_x_compensated * screen_scale_x_compensated + screen_scale.y * screen_scale.y);
 }
 
-vec2 GetDeformedCoord(vec2 in_coord, float geom_mode, float in_distance, float in_radius, vec2 geom_overscan)
+vec2 HRG_GetGeomCurvedCoord(  vec2 in_coord, 
+                            float in_geom_mode, 
+                            float in_geom_radius, 
+                            float in_geom_view_dist, 
+                            float in_geom_tilt_angle_x, 
+                            float in_geom_tilt_angle_y,
+                            vec2 in_screen_scale,
+                            vec2 in_curvature_mult,
+                            out mat2x2 pixel_to_video_uv)
 {
-    float geom_mode = geom_mode_runtime;
+    vec2 ctr_coord = in_coord - 0.5; 
 
-    tex_uv = TexCoord;
+    // Kind of a Hack
+    // If viewport aspect ratio is horizontal then stretch the coordinate before the distortion is done
+    // This results in the appropriate amount of curvature on horizontal and vertical, 
+    // Without this there was not as much curvature in the vertical direciton as there was supposed to be
+    float final_viewport_aspect = global.FinalViewportSize.x / global.FinalViewportSize.y;
+    // TODO, need the following when the screen is already in a subsection of the screen
+    // if (final_viewport_aspect > 1)
+    // {
+    //     ctr_coord.x *= (global.FinalViewportSize.x / global.FinalViewportSize.y);
+    // }
+    ctr_coord *= in_curvature_mult;
 
-    output_pixel_size = vec2(1, 1) / params.OutputSize.xy;
+    vec2 tex_uv = ctr_coord + 0.5;
 
-    float viewport_aspect_ratio = global.OutputSize.x / global.OutputSize.y;
+    vec2 output_pixel_size = vec2(1.0, 1.0)/global.OutputSize.xy;
 
-    vec2 output_aspect = get_aspect_vector(viewport_aspect_ratio);
+    //float viewport_aspect_ratio = global.OutputSize.x / global.OutputSize.y;
+    float screen_width_to_viewport_width_ratio = (global.FinalViewportSize.x / global.FinalViewportSize.y);
+    float geom_radius_scaled = in_geom_radius * GetScreenDiagonalScale(in_screen_scale);
+
+    vec2 output_aspect = hrg_get_aspect_vector(screen_width_to_viewport_width_ratio);
 
     //  Create a local-to-global rotation matrix for the CRT's coordinate
     //  frame and its global-to-local inverse.  Rotate around the x axis
     //  first (pitch) and then the y axis (yaw) with yucky Euler angles.
     //  Positive angles go clockwise around the right-vec and up-vec.
-    //  Runtime shader parameters prevent us from computing these globally,
-    //  but we can still combine the pitch/yaw matrices by hand to cut a
-    //  few instructions.  Note that cg matrices fill row1 first, then row2,
-    //  etc. (row-major order).
-    vec2 geom_tilt_angle = vec2(geom_tilt_angle_x, geom_tilt_angle_y);
+    vec2 geom_tilt_angle = vec2(in_geom_tilt_angle_x, in_geom_tilt_angle_y);
     vec2 sin_tilt = sin(geom_tilt_angle);
     vec2 cos_tilt = cos(geom_tilt_angle);
 
@@ -750,60 +731,56 @@ vec2 GetDeformedCoord(vec2 in_coord, float geom_mode, float in_distance, float i
                                     0,              1,              0,
                                     -sin_tilt.x,    0,              cos_tilt.x);
 
-    mat3x3 local_to_global = mul(rot_y_matrix, rot_x_matrix);
+    mat3x3 local_to_global = rot_x_matrix * rot_y_matrix;
     //  This is a pure rotation, so transpose = inverse:
     mat3x3 global_to_local = transpose(local_to_global);
-    // //  Decompose the matrix into 3 vec3's for output:
-    // vec3 global_to_local_row0 = vec3(global_to_local[0][0], global_to_local[0][1], global_to_local[0][2]);//._m00_m01_m02);
-    // vec3 global_to_local_row1 = vec3(global_to_local[1][0], global_to_local[1][1], global_to_local[1][2]);//._m10_m11_m12);
-    // vec3 global_to_local_row2 = vec3(global_to_local[2][0], global_to_local[2][1], global_to_local[2][2]);//._m20_m21_m22);
 
-    //  Get an optimal eye position based on geom_view_dist, viewport_aspect,
+    //  Get an optimal eye position based on in_geom_view_dist, viewport_aspect,
     //  and CRT radius/rotation:
-    vec3 eye_pos_global = get_ideal_global_eye_pos(local_to_global, output_aspect, geom_mode);
-    vec3 eye_pos_local = mul(global_to_local, eye_pos_global);
-
-    // mat3x3 global_to_local = mat3x3(global_to_local_row0,
-    //                                 global_to_local_row1, 
-    //                                 global_to_local_row2);
-
-    float geom_mode = geom_mode_runtime;
+    vec3 eye_pos_global = hrg_get_ideal_global_eye_pos( local_to_global, 
+                                                        output_aspect, 
+                                                        in_geom_mode, 
+                                                        geom_radius_scaled, 
+                                                        in_geom_view_dist);
+    vec3 eye_pos_local = eye_pos_global * global_to_local;
 
     //  Get flat and curved texture coords for the current fragment point sample
     //  and a pixel_to_tangent_video_uv matrix for transforming pixel offsets:
     //  video_uv = relative position in video frame, mapped to [0, 1] range
     //  tex_uv = relative position in padded texture, mapped to [0, 1] range
-    vec2 flat_video_uv = tex_uv * global.SourceSize.xy;
-    mat2x2 pixel_to_video_uv;
+    vec4 video_and_texture_size_inv = vec4(1.0, 1.0, 1.0, 1.0) / vec4(global.SourceSize.xy, global.SourceSize.xy);
+    vec2 video_size_inv = video_and_texture_size_inv.xy;
+    vec2 flat_video_uv = tex_uv * (global.SourceSize.xy * video_size_inv);
     vec2 video_uv_no_geom_overscan;
-    if(geom_mode > 0.5)
+    if(in_geom_mode > 0.5)
     {
-        video_uv_no_geom_overscan =  get_curved_video_uv_coords_and_tangent_matrix( flat_video_uv,
-                                                                                    eye_pos_local, 
-                                                                                    output_pixel_size, 
-                                                                                    output_aspect,
-                                                                                    geom_mode, 
-                                                                                    global_to_local, 
-                                                                                    pixel_to_video_uv);
+        video_uv_no_geom_overscan =  hrg_get_curved_video_uv_coords_and_tangent_matrix( flat_video_uv,
+                                                                                        eye_pos_local, 
+                                                                                        output_pixel_size, 
+                                                                                        output_aspect,
+                                                                                        in_geom_mode, 
+                                                                                        geom_radius_scaled,
+                                                                                        in_geom_view_dist,
+                                                                                        global_to_local, 
+                                                                                        pixel_to_video_uv);
     }
     else
     {
         video_uv_no_geom_overscan = flat_video_uv;
-        pixel_to_video_uv = mat2x2(output_pixel_size.x, 0, 0, output_pixel_size.y);
+        pixel_to_video_uv = mat2x2( output_pixel_size.x,    0, 
+                                    0,                      output_pixel_size.y);
     }
-    //  Correct for overscan here (not in curvature code):
-    vec2 video_uv = (video_uv_no_geom_overscan - 0.5) / geom_overscan + 0.5;
 
-    // vec2 tex_uv = video_uv * global.SourceSize.xy;
+    vec2 ctr_curved_coord = video_uv_no_geom_overscan - 0.5;
+    // Scale the coordinate back down in X
+    // if (final_viewport_aspect > 1)
+    // {
+    //     ctr_curved_coord.x /= global.FinalViewportSize.x / global.FinalViewportSize.y;
+    // }
+    ctr_curved_coord /= in_curvature_mult;
 
-    // //  Get a matrix transforming pixel vectors to tex_uv vectors:
-    // mat2x2 pixel_to_tex_uv = mul_scale(global.SourceSize.xy / geom_overscan.xy, pixel_to_video_uv);
+    video_uv_no_geom_overscan = ctr_curved_coord + 0.5;
 
-    // use tex_uv or video_uv?
-
-    // //  Dim borders and output the final result:
-    // float border_dim_factor = get_border_dim_factor(HMSS_GetScreenVTexCoord(video_uv), output_aspect);
-    // vec3 final_color = color * border_dim_factor;
-    return video_uv;
+    return video_uv_no_geom_overscan;
 }
 

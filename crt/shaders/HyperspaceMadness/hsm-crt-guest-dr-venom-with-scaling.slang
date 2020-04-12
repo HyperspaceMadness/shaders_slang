@@ -25,14 +25,14 @@
 
 */
 
-// Modifications from hsm-mega-bezel-include.inc integration
+// HSM Modification
 // Added the following
 #include "hsm-mega-screen-scale.inc"
 // End Addition
 
 layout(push_constant) uniform Push
 {
-	// Modifications from hsm-mega-bezel-include.inc integration
+	// HSM Modification
 	// Removed the following
 	// float TATE
 	// IOS, 
@@ -50,7 +50,7 @@ layout(push_constant) uniform Push
     h_sharp, 
 	s_sharp, 
 
-	// Modifications from hsm-mega-bezel-include.inc integration
+	// HSM Modification
 	// Removed the following
 	// csize, 
 	// bsize, 
@@ -81,7 +81,7 @@ layout(push_constant) uniform Push
 
 
 
-// Modifications from hsm-mega-bezel-include.inc integration
+// HSM Modification
 /* Removed the following
 layout(std140, set = 0, binding = 0) uniform UBO
 {
@@ -95,7 +95,7 @@ layout(std140, set = 0, binding = 0) uniform UBO
 } global;
 */
 
-// Modifications from hsm-mega-bezel-include.inc integration
+// HSM Modification
 // Removed the following
 // #pragma parameter TATE "TATE Mode" 0.0 0.0 1.0 1.0
 // #define TATE         params.TATE     // Screen orientation
@@ -127,7 +127,7 @@ layout(std140, set = 0, binding = 0) uniform UBO
 #pragma parameter s_sharp "Substractive sharpness (relative)" 0.35 0.0 1.0 0.05
 #define s_sharp      params.s_sharp     // substractive sharpness
 
-// Modifications from hsm-mega-bezel-include.inc integration
+// HSM Modification
 // Removed the following
 // #pragma parameter csize "Corner size" 0.0 0.0 0.07 0.01
 // #define csize        params.csize     // corner size
@@ -167,7 +167,7 @@ layout(std140, set = 0, binding = 0) uniform UBO
 #pragma parameter inter "Interlace Trigger Resolution :" 300.0 0.0 800.0 25.0
 #define inter         params.inter     // interlace resolution
 
-// Modifications from hsm-mega-bezel-include.inc integration
+// HSM Modification
 // Removed the following
 // #pragma parameter interm "Interlace Mode (0.0 = OFF):" 1.0 0.0 3.0 1.0
 // #define interm         global.interm     // interlace mode 
@@ -186,7 +186,7 @@ layout(std140, set = 0, binding = 0) uniform UBO
 #define InputSize SourceSize
 #define TextureSize SourceSize
 
-// Modifications from hsm-mega-bezel-include.inc integration
+// HSM Modification
 // Removed the following
 // #define SourceSize global.SourceSize
 // Added the following
@@ -195,7 +195,7 @@ layout(std140, set = 0, binding = 0) uniform UBO
 
 #define OutputSize global.OutputSize
 
-// Modifications from hsm-mega-bezel-include.inc integration
+// HSM Modification
 // Removed the following
 //#define gl_FragCoord (vTexCoord * OutputSize.xy)
 // Added the following
@@ -212,7 +212,7 @@ void main()
    gl_Position = global.MVP * Position;
    vTexCoord = TexCoord * 1.00001;
 
-   // Modifications from hsm-mega-bezel-include.inc integration
+   // HSM Modification
    // Added the following
    //vTexCoord = HMSS_GetScreenVTexCoord(vTexCoord);
    // End Addition
@@ -223,11 +223,19 @@ layout(location = 0) in vec2 vTexCoord;
 layout(location = 0) out vec4 FragColor;
 layout(set = 0, binding = 2) uniform sampler2D Source;
 layout(set = 0, binding = 3) uniform sampler2D LinearizePass;
-layout(set = 0, binding = 4) uniform sampler2D AvgLumPass;
+
+// HSM Modification
+// Removed
+// layout(set = 0, binding = 4) uniform sampler2D AvgLumPass;
+
 layout(set = 0, binding = 5) uniform sampler2D GlowPass;
 
 #define Texture Source
-#define PassPrev5Texture AvgLumPass
+
+// HSM Modification
+// Removed
+// #define PassPrev5Texture AvgLumPass
+
 #define PassPrev4Texture LinearizePass
 #define PassPrev2Texture GlowPass
 
@@ -399,7 +407,7 @@ float SlotMask(vec2 pos, vec3 c)
 	return slot;
 }   
 
-// Modifications from hsm-mega-bezel-include.inc integration
+// HSM Modification
 /* Removed the following
 // Distortion of scanlines, and end of screen alpha (PD Lottes Curvature)
 vec2 Warp(vec2 pos)
@@ -417,7 +425,7 @@ vec2 Overscan(vec2 pos, float dx, float dy){
 } 
 
 
-// Modifications from hsm-mega-bezel-include.inc integration
+// HSM Modification
 /* Removed the following
 // Borrowed from cgwg's crt-geom, under GPL
 float corner(vec2 coord)
@@ -441,10 +449,10 @@ vec3 declip(vec3 c, float b)
 
 void main()
 {
+	// HSM Modification
+	/* Removed the following
 	float lum = COMPAT_TEXTURE(PassPrev5Texture, vec2(0.1,0.1)).a;
 
-	// Modifications from hsm-mega-bezel-include.inc integration
-	/* Removed the following
 	// Calculating texel coordinates
 	vec2 texcoord = TEX0.xy;
 
@@ -461,14 +469,14 @@ void main()
 	texcoord  = Overscan(texcoord*(SourceSize.xy/InputSize.xy), factor, factor)*(InputSize.xy/SourceSize.xy);
 	*/
 
-	// Modifications from hsm-mega-bezel-include.inc integration
+	// HSM Modification
 	// Added the following
 	float TATE = HMSS_GetUseVerticalScanlines();
 	vec2 texcoord  = HMSS_GetScreenVTexCoord(vTexCoord);
 	
 	// End Addition
 
-	// Modifications from hsm-mega-bezel-include.inc integration
+	// HSM Modification
 	/* Removed the following
 	 vec2 pos  = Warp(texcoord*(TextureSize.xy/InputSize.xy))*(InputSize.xy/TextureSize.xy);
 	 vec2 pos0 = Warp(TEX0.xy*(TextureSize.xy/InputSize.xy))*(InputSize.xy/TextureSize.xy);
@@ -727,7 +735,7 @@ void main()
 	color = color + glow*Bloom;
 		
 	
-	// Modifications from hsm-mega-bezel-include.inc integration
+	// HSM Modification
 	/* Remove the following
 	color = pow(color, vec3(1.0/gamma_out));
 	FragColor = vec4(color*corner(pos0), 1.0);

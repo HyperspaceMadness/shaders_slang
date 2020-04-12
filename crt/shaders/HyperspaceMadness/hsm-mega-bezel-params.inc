@@ -45,17 +45,15 @@
 
 #pragma parameter hmbz_vignette_shadow_opacity			"[FRAME]  Vignette Opacity" 0.8 0 2 0.02
 
-
 // Blur
 #pragma parameter hbl_blur_num_samples 					"[REFLECTION BLUR]  Num Samples - 0 for OFF" 20 0 40 1
 #pragma parameter hbl_blur_min 							"[REFLECTION BLUR]  Min" 	0 0 1 0.01
 #pragma parameter hbl_blur_max 							"[REFLECTION BLUR]  Max" 	0.95 0 1 0.01
 
 // Reflection Noise
-#pragma parameter hbr_noise_amount 						"[REFLECTION NOISE]  Amount" 0.5 0 1 0.1
+#pragma parameter hbr_noise_amount 						"[REFLECTION NOISE]   Amount" 0.5 0 1 0.1
 #pragma parameter hbr_noise_samples 					"[REFLECTION NOISE]   Samples (0 for OFF)" 1 0 20 1
 #pragma parameter hbr_noise_sample_distance 			"[REFLECTION NOISE]   Sample Distance" 0.20 0 1 0.01
-#pragma parameter hbr_noise_falloff 					"[REFLECTION NOISE]   Falloff" 0.3 0 1 0.01
 
 // Reflection Parameters
 #pragma parameter hbr_global_amount 					"[REFLECTION]  Global Amount" 0.4 0 3 0.02
@@ -68,7 +66,6 @@
 #pragma parameter hbr_fullscreen_glow_gamma 			"[REFLECTION]  FullScreen Glow Gamma" 3 0 5 0.02
 
 #pragma parameter hbr_fade_amount 						"[REFLECTION]  Fade Amount" 1 0 1 0.05
-#pragma parameter hbr_radial_fade_speed 				"[REFLECTION]  Radial Fade Speed"  100 1 200 1
 #pragma parameter hbr_radial_fade_width 				"[REFLECTION]  Radial Fade Width" 70 0 300 1
 #pragma parameter hbr_radial_fade_height 				"[REFLECTION]  Radial Fade Height" 100 0 300 1
 
@@ -77,5 +74,3 @@
 
 #pragma parameter hbr_corner_fade 						"[REFLECTION]  Corner Fade" 10 1 100 0.5
 #pragma parameter hbr_corner_fade_distance 				"[REFLECTION]  Corner Fade Distance" 100 1 100 1
-
-#pragma parameter hbr_reflection_mask_mode 				"[REFLECTION]  Reflection Mask Mode(0:None, 1-In Frame)" 1 0 2 1

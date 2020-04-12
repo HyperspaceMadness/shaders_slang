@@ -9,8 +9,8 @@ Description:
 
 //#define TELMO_TEST
 
+#include "hsm-royale-geometry-functions.inc"
 #include "hsm-helper-functions.inc"
-//#include "hsm-royale-geometry-functions.inc"
 
 // Screen Scale Required Parameters
 #pragma parameter hmss_mega_screen_scale_on				"___HSM MEGA BEZEL__ V.2020-04-05 -SCREEN SCALE ON" 0 0 1 1
@@ -39,17 +39,21 @@ Description:
 #pragma parameter hmss_crop_overscan_left 				"[CROPPING]  Crop Overscan Left" 0 -256 256 1
 #pragma parameter hmss_crop_overscan_right 				"[CROPPING]  Crop Overscan Right" 0 -256 256 1
 
-//#pragma parameter hmss_curvature_type 					"[CURVATURE]  Curvature Mode (0:2D 1-3:Geom)" 0 0 3
-#pragma parameter hmss_curvature_on_long_axis 			"[CURVATURE]  Curvature on Long Axis (default 3)" 0 0 12.5 0.2
-#pragma parameter hmss_curvature_on_short_axis 			"[CURVATURE]  Curvature on Short Axis (default 4)" 0 0 12.5 0.2
+#pragma parameter hmss_curvature_mode 					"[CURVATURE]  Curvature Mode (0:2D 1-2:Geom Sphere, 3:Geom Cyl)" 1 0 3 1
+#pragma parameter hmss_curvature_on_long_axis 			"[CURVATURE]  Extra Curvature on Long Axis (def 3 for Mode 0)" 0 0 100 1
+#pragma parameter hmss_curvature_on_short_axis 			"[CURVATURE]  Extra Curvature on Short Axis (def 4 for Mode 0)" 0 0 100 1
+#pragma parameter hmss_geom_radius 						"[CURVATURE GEOM]  Geom Radius" 1.5 0.16 1024.0 0.01 // was 2
+#pragma parameter hmss_geom_view_dist 					"[CURVATURE GEOM]  Geom View Distance" 2 0.5 1024.0 0.05
+#pragma parameter hmss_geom_tilt_angle_x 				"[CURVATURE GEOM]  Geom Tilt Angle X" 0 -3.1415 3.1415 0.01745
+#pragma parameter hmss_geom_tilt_angle_y 				"[CURVATURE GEOM]  Geom Tilt Angle Y" 0.0 -3.1415 3.1415 0.01745
 
 #pragma parameter hmss_corner_radius 					"[SCREEN EDGE]  Screen Corner Radius (Default 10)" 0 0 70 1
 #pragma parameter hmss_screen_edge_sharpness 			"[SCREEN EDGE]  Screen Edge Sharpness" 0.4 0 1 0.01
 #pragma parameter hmss_tube_black_edge_thickness 		"[SCREEN EDGE]  Tube Black Edge Thickness" 1.2 -2 8 0.05
 
 #pragma parameter hmss_pre_crt_black_level 				"[COLOR]  Pre-CRT Black Level" 0 -30 30 0.05-
-#pragma parameter hmss_pre_crt_gamma					"[COLOR]  Pre-CRT Gamma" 1 0.01 2 0.01
-#pragma parameter hmss_pre_crt_luminance				"[COLOR]  Pre-CRT Luminance" 1 0 2 0.01
+#pragma parameter hmss_pre_crt_gamma					"[COLOR]  Pre-CRT Gamma" 2.4 0.01 8 0.01
+// #pragma parameter hmss_pre_crt_luminance				"[COLOR]  Pre-CRT Luminance" 1 0 2 0.01
 #pragma parameter hmss_post_crt_gamma					"[COLOR]  Post-CRT Gamma" 1 0.01 2 0.01
 #pragma parameter hmss_negative_crop_brightness			"[COLOR]  Negative Crop Brightness" 0 0 20 0.02
 
@@ -183,6 +187,14 @@ vec2 HMSS_GetScreenSize()
 	return viewport_size;
 }
 
+// Returns Diagonal Screen scale relative to the viewport height
+float HMSS_GetScreenDiagonalScale()
+{
+	vec2 screen_scale = HMSS_GetScreenScale();
+	float screen_scale_x_compensated = screen_scale.x / (global.FinalViewportSize.x/global.FinalViewportSize.y);
+	return sqrt(screen_scale_x_compensated * screen_scale_x_compensated + screen_scale.y * screen_scale.y);
+}
+
 vec2 HMSS_GetIntegerScaleMult()
 {
 	float epsilon = 0.002;
@@ -237,10 +249,10 @@ vec2 HMSS_GetCurvatureValues()
 }
 
 // Torridgristle's curvature
-vec2 HMSS_GetCurvedCoord(vec2 in_coord, float curvature_multiplier)
+vec2 HMSS_Get2DCurvedCoord(vec2 in_coord, float curvature_multiplier)
 {
-	vec2 ctr_coord = in_coord - 0.5;
 	vec2 curvature_values = HMSS_GetCurvatureValues();
+	vec2 ctr_coord = in_coord - 0.5;
 	vec2 distortion = curvature_values * curvature_multiplier * 15.0;
 	vec2 ctr_curved_coord = in_coord * 2.0 - 1.0;
 	float curved_coord_distance = sqrt(ctr_curved_coord.x * ctr_curved_coord.x + ctr_curved_coord.y * ctr_curved_coord.y);
@@ -250,6 +262,33 @@ vec2 HMSS_GetCurvedCoord(vec2 in_coord, float curvature_multiplier)
 	ctr_curved_coord = ctr_curved_coord * 0.5;
 
 	return clamp(ctr_curved_coord, -1, 1) + 0.5;
+}
+
+
+vec2 HMSS_GetCurvedCoord(vec2 in_coord, float curvature_multiplier)
+{
+	if (global.hmss_curvature_mode > 0.5)
+	{
+		mat2x2 pixel_to_video_uv;
+        vec2 screen_scale = HMSS_GetScreenScale();
+		vec2 curvature_values = HMSS_GetCurvatureValues();
+        vec2 curvature_mult = curvature_values / 2 + 1;
+		float epsilon = 0.001;
+        vec2 curved_coord = HRG_GetGeomCurvedCoord(in_coord, 
+													global.hmss_curvature_mode, 
+													global.hmss_geom_radius * (1 / (curvature_multiplier + epsilon)), 
+													global.hmss_geom_view_dist,
+													global.hmss_geom_tilt_angle_x,
+													global.hmss_geom_tilt_angle_y,
+													screen_scale,
+													curvature_mult,
+													pixel_to_video_uv);
+		return curved_coord;
+	}
+	else
+	{
+		return HMSS_Get2DCurvedCoord(in_coord, curvature_multiplier);
+	}
 }
 
 // TODO to get a better blend at the corners we need to guess the offset from the curved corner will be then blend using this
@@ -265,27 +304,34 @@ vec2 HMSS_GetWrappedCurvedCoord(vec2 in_coord, float curvature_multiplier)
 	vec2 ctr_mirror_coord = ctr_coord;
 
 	// Only curve the coordinate if the coordinate is inside the sphere where the coordinate space is continuous
-	float max_curved_range = 1.41;
-	if (curved_coord_distance < max_curved_range)
+	if (global.hmss_curvature_mode < 0.5)
+	{
+		float max_curved_range = 1.41;
+		if (curved_coord_distance < max_curved_range)
+		{
+			ctr_mirror_coord = HMSS_GetCurvedCoord(in_coord, curvature_multiplier) - 0.5;
+
+			if (abs(ctr_coord_0_1.x) > 1 || abs(ctr_coord_0_1.y) > 1)
+			{
+				float length_inside = length(clamp(abs(ctr_coord_0_1), 0, 1));
+				float length_outside = curved_coord_distance - length_inside;
+				float outside_range = max_curved_range - length_inside;
+				float outside_ratio = length_outside / outside_range;
+				
+				// vec2 normalized_vec = abs(normalize(ctr_coord_0_1));
+				// float pi = 3.1415;
+				// float corner_angle_degrees = atan(normalized_vec.y / normalized_vec.x) / (2 * pi) * 360;
+				//float corner_mask = smoothstep(40, 43, corner_angle_degrees);
+
+				float blend_to_uncurved = HHLP_EasePowerInOut(outside_ratio, 2);
+
+				ctr_mirror_coord = blend_to_uncurved * ctr_coord + (1 - blend_to_uncurved) * ctr_mirror_coord;
+			}
+		}
+	}
+	else
 	{
 		ctr_mirror_coord = HMSS_GetCurvedCoord(in_coord, curvature_multiplier) - 0.5;
-
-		if (abs(ctr_coord_0_1.x) > 1 || abs(ctr_coord_0_1.y) > 1)
-		{
-			float length_inside = length(clamp(abs(ctr_coord_0_1), 0, 1));
-			float length_outside = curved_coord_distance - length_inside;
-			float outside_range = max_curved_range - length_inside;
-			float outside_ratio = length_outside / outside_range;
-			
-			// vec2 normalized_vec = abs(normalize(ctr_coord_0_1));
-			// float pi = 3.1415;
-			// float corner_angle_degrees = atan(normalized_vec.y / normalized_vec.x) / (2 * pi) * 360;
-			//float corner_mask = smoothstep(40, 43, corner_angle_degrees);
-
-			float blend_to_uncurved = HHLP_EasePowerInOut(outside_ratio, 2);
-
-			ctr_mirror_coord = blend_to_uncurved * ctr_coord + (1 - blend_to_uncurved) * ctr_mirror_coord;
-		}
 	}
 	if (abs(ctr_mirror_coord.x) > 0.5)
 	{
@@ -431,10 +477,10 @@ vec4 HMSS_ApplyBlackLevelGammaLuminance(vec4 in_color, float color_is_linear)
 	rgb_color *= vec3(1.0) / vec3(1.0 - global.hmss_pre_crt_black_level / 100);
 
 	// Gamma
-	rgb_color = pow(rgb_color, 1.0 / vec3(global.hmss_pre_crt_gamma));
+	rgb_color = pow(rgb_color, 1.0 / vec3(global.hmss_pre_crt_gamma / 2.4));
 
 	// Luminance
-	rgb_color = clamp(HMSS_HSVtoRGB(HMSS_RGBtoHSV(clamp(rgb_color, 0, 1)) * vec3(1, 1, global.hmss_pre_crt_luminance)), 0.0, 1.0);
+	// rgb_color = clamp(HMSS_HSVtoRGB(HMSS_RGBtoHSV(clamp(rgb_color, 0, 1)) * vec3(1, 1, global.hmss_pre_crt_luminance)), 0.0, 1.0);
 
 	vec4 out_color = vec4(rgb_color, 1);
 

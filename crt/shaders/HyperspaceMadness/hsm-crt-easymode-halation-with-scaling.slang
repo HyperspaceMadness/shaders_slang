@@ -7,7 +7,7 @@ License: GPL
 Addition of hsm-mega-screen-scale by HyperspaceMadness remimcgill@hotmail.com
 */
 
-// Modifications from hsm-mega-bezel-include.inc integration
+// HSM Modification
 // Added the following
 // Import Screen Scale Functions and global structure
 #include "hsm-mega-screen-scale.inc"
@@ -26,7 +26,7 @@ layout(push_constant) uniform Push
 	float SCANLINE_STRENGTH_MAX;
 	float SCANLINE_BEAM_MIN;
 	float SCANLINE_BEAM_MAX;
-    // Modifications from hsm-mega-bezel-include.inc integration
+    // HSM Modification
     // Removed the following
 	// float GEOM_CURVATURE;
 	// float GEOM_WARP;
@@ -51,7 +51,7 @@ layout(push_constant) uniform Push
 #pragma parameter SCANLINE_BEAM_MIN     "    Scanline Beam Min." 1.0 0.25 5.0 0.05
 #pragma parameter SCANLINE_BEAM_MAX     "    Scanline Beam Max." 1.0 0.25 5.0 0.05
 
-// Modifications from hsm-mega-bezel-include.inc integration
+// HSM Modification
 // Removed the following
 // #pragma parameter GEOM_CURVATURE "Geom Curvature" 0.0 0.0 0.1 0.01
 // #pragma parameter GEOM_WARP "Geom Warp" 0.0 0.0 0.1 0.01
@@ -116,7 +116,7 @@ vec3 get_scanline_weight(float pos, float beam, float strength)
     return vec3(weight);
 }
 
-// Modifications from hsm-mega-bezel-include.inc integration
+// HSM Modification
 /* Removed the following
 vec2 curve_coordinate(vec2 co, float curvature)
 {
@@ -147,7 +147,7 @@ layout(location = 0) in vec4 Position;
 layout(location = 1) in vec2 TexCoord;
 layout(location = 0) out vec2 vTexCoord;
 
-// Modifications from hsm-mega-bezel-include.inc integration
+// HSM Modification
 // Added the following
 layout(location = 1) out vec2 screenScale;
 // End Addition
@@ -157,7 +157,7 @@ void main()
    gl_Position = global.MVP * Position;
    vTexCoord = TexCoord;
 
-    // Modifications from hsm-mega-bezel-include.inc integration
+    // HSM Modification
     // Added the following
     screenScale =  HMSS_GetScreenScale();
     vTexCoord = HMSS_GetScreenVTexCoord(vTexCoord);
@@ -166,7 +166,7 @@ void main()
 #pragma stage fragment
 layout(location = 0) in vec2 vTexCoord;
 
-// Modifications from hsm-mega-bezel-include.inc integration
+// HSM Modification
 // Added the following
 layout(location = 1) in vec2 screenScale;
 // End Addition
@@ -179,7 +179,7 @@ layout(set = 0, binding = 3) uniform sampler2D ORIG_LINEARIZED;
 
 void main()
 {
-    // Modifications from hsm-mega-bezel-include.inc integration
+    // HSM Modification
     /* Removed the following
     vec2 tex_size = global.SourceSize.xy;
     */
@@ -207,7 +207,7 @@ void main()
 
     vec2 co = vTexCoord * tex_size * global.SourceSize.zw;
 
-    // Modifications from hsm-mega-bezel-include.inc integration
+    // HSM Modification
     /* Removed the following
     vec2 xy = curve_coordinate(co, params.GEOM_WARP);
     float corner_weight = get_corner_weight(curve_coordinate(co, params.GEOM_CURVATURE), vec2(params.GEOM_CORNER_SIZE), params.GEOM_CORNER_SMOOTH);
@@ -257,12 +257,12 @@ void main()
 
     float rgb_max = max(col.r, max(col.g, col.b));
 
-    // Modifications from hsm-mega-bezel-include.inc integration
+    // HSM Modification
     /* Removed the following
     float sample_offset = (global.SourceSize.y * global.OutputSize.w) * 0.5;
     */
 
-    // Modifications from hsm-mega-bezel-include.inc integration
+    // HSM Modification
     // Added the Following
     float sample_offset = (global.SourceSize.y * global.OutputSize.w * screenScale.y) * 0.5;
     // End Addition
@@ -293,7 +293,7 @@ void main()
     mask_stagger = mask_config.w;
     mask_dither = fract(mask_config.x) * 10.0;
 
-    // Modifications from hsm-mega-bezel-include.inc integration
+    // HSM Modification
     /* Removed the following
     vec2 mod_fac = floor(vTexCoord * global.OutputSize.xy * global.SourceSize.xy / (global.SourceSize.xy * vec2(params.MASK_SIZE, mask_dot_height * params.MASK_SIZE)));
     */
@@ -337,7 +337,7 @@ void main()
     col += diff * mask_weight * params.HALATION * vec3(corner_weight);
     col += diff * params.DIFFUSION * vec3(corner_weight);
 
-    // Modifications from hsm-mega-bezel-include.inc integration
+    // HSM Modification
     // Added
     col = pow(col, 1.0 / vec3(global.hmss_post_crt_gamma));
     // End Addition

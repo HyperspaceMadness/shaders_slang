@@ -46,15 +46,21 @@ layout(std140, set = 0, binding = 0) uniform UBO
 	float hmss_crop_overscan_left;
 	float hmss_crop_overscan_right;
 
+	float hmss_curvature_mode;
 	float hmss_curvature_on_long_axis;
 	float hmss_curvature_on_short_axis;
+	float hmss_geom_radius;
+	float hmss_geom_view_dist;
+	float hmss_geom_tilt_angle_x;
+	float hmss_geom_tilt_angle_y;
+	
 	float hmss_corner_radius;
 	float hmss_screen_edge_sharpness;
 	float hmss_tube_black_edge_thickness;
 
 	float hmss_pre_crt_black_level;
 	float hmss_pre_crt_gamma;
-	float hmss_pre_crt_luminance;
+	// float hmss_pre_crt_luminance;
 	float hmss_post_crt_gamma;
 
 	float hmss_negative_crop_brightness;

@@ -51,15 +51,21 @@ layout(std140, set = 0, binding = 0) uniform UBO
 	float hmss_crop_overscan_left;
 	float hmss_crop_overscan_right;
 
+	float hmss_curvature_mode;
 	float hmss_curvature_on_long_axis;
 	float hmss_curvature_on_short_axis;
+	float hmss_geom_radius;
+	float hmss_geom_view_dist;
+	float hmss_geom_tilt_angle_x;
+	float hmss_geom_tilt_angle_y;
+
 	float hmss_corner_radius;
 	float hmss_screen_edge_sharpness;
 	float hmss_tube_black_edge_thickness;
 
 	float hmss_pre_crt_black_level;
 	float hmss_pre_crt_gamma;
-	float hmss_pre_crt_luminance;
+	// float hmss_pre_crt_luminance;
 	float hmss_post_crt_gamma;
 
 	float hmss_negative_crop_brightness;
@@ -256,16 +262,16 @@ static const float gba_gamma = 3.5; //  Irrelevant but necessary to define.
 #define aa_cubic_c global.aa_cubic_c
 #pragma parameter aa_gauss_sigma "AA - Gaussian Sigma" 0.5 0.0625 1.0 0.015625
 #define aa_gauss_sigma global.aa_gauss_sigma
-#pragma parameter geom_mode_runtime "Geometry - Mode" 0.0 0.0 3.0 1.0
-#define geom_mode_runtime global.geom_mode_runtime
-#pragma parameter geom_radius "Geometry - Radius" 2.0 0.16 1024.0 0.05
-#define geom_radius global.geom_radius
-#pragma parameter geom_view_dist "Geometry - View Distance" 2.0 0.5 1024.0 0.1
-#define geom_view_dist global.geom_view_dist
-#pragma parameter geom_tilt_angle_x "Geometry - Tilt Angle X" 0.0 -3.14159265 3.14159265 0.017453292519943295
-#define geom_tilt_angle_x global.geom_tilt_angle_x
-#pragma parameter geom_tilt_angle_y "Geometry - Tilt Angle Y" 0.0 -3.14159265 3.14159265 0.017453292519943295
-#define geom_tilt_angle_y global.geom_tilt_angle_y
+// #pragma parameter geom_mode_runtime "Geometry - Mode" 0.0 0.0 3.0 1.0
+// #define geom_mode_runtime global.geom_mode_runtime
+// #pragma parameter geom_radius "Geometry - Radius" 2.0 0.16 1024.0 0.05
+// #define geom_radius global.geom_radius
+// #pragma parameter geom_view_dist "Geometry - View Distance" 2.0 0.5 1024.0 0.1
+// #define geom_view_dist global.geom_view_dist
+// #pragma parameter geom_tilt_angle_x "Geometry - Tilt Angle X" 0.0 -3.14159265 3.14159265 0.017453292519943295
+// #define geom_tilt_angle_x global.geom_tilt_angle_x
+// #pragma parameter geom_tilt_angle_y "Geometry - Tilt Angle Y" 0.0 -3.14159265 3.14159265 0.017453292519943295
+// #define geom_tilt_angle_y global.geom_tilt_angle_y
 #pragma parameter geom_aspect_ratio_x "Geometry - Aspect Ratio X" 432.0 1.0 512.0 1.0
 #define geom_aspect_ratio_x global.geom_aspect_ratio_x
 #pragma parameter geom_aspect_ratio_y "Geometry - Aspect Ratio Y" 329.0 1.0 512.0 1.0
@@ -300,15 +306,17 @@ inline float2 get_aspect_vector(const float geom_aspect_ratio)
     return geom_aspect;
 }
 
-inline float2 get_geom_overscan_vector()
-{
-    return float2(geom_overscan_x, geom_overscan_y);
-}
+//  HSM Removed
+// inline float2 get_geom_overscan_vector()
+// {
+//     return float2(geom_overscan_x, geom_overscan_y);
+// }
 
-inline float2 get_geom_tilt_angle_vector()
-{
-    return float2(geom_tilt_angle_x, geom_tilt_angle_y);
-}
+// inline float2 get_geom_tilt_angle_vector()
+// {
+//     return float2(geom_tilt_angle_x, geom_tilt_angle_y);
+// }
+
 
 inline float3 get_convergence_offsets_x_vector()
 {

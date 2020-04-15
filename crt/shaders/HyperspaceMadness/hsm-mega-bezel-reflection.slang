@@ -64,6 +64,7 @@ layout(std140, set = 0, binding = 0) uniform UBO
 	float hmss_corner_radius;
 	float hmss_screen_edge_sharpness;
 	float hmss_tube_black_edge_thickness;
+	float hmss_tube_black_edge_curvature_scale;
 
 	float hmss_negative_crop_brightness;
 
@@ -98,7 +99,6 @@ layout(std140, set = 0, binding = 0) uniform UBO
 	float hmbz_bezel_width;
 	float hmbz_bezel_height;
 	float hmbz_bezel_inner_edge_thickness;
-	float hmbz_bezel_inner_curvature_scale;
 	float hmbz_bezel_inner_corner_radius_scale;
 	float hmbz_bezel_outer_corner_radius_scale;
 	float hmbz_bezel_corner_highlight_inner_spread;
@@ -154,13 +154,6 @@ layout(std140, set = 0, binding = 0) uniform UBO
 #include "hsm-mega-screen-scale-params-functions.inc"
 #include "hsm-mega-bezel-params.inc"
 
-#include "hsm-text.inc"
-
-#define COMPAT_TEXTURE(c,d) texture(c,d)
-#define TEX0 vTexCoord
-#define gl_FragCoord (viewportCoord * OutputSize.xy)
-
-
 vec2 HMBZ_GetImageLayerCoord(vec2 viewport_coord)
 {
 	vec2 tube_scale = HMSS_GetTubeScale();
@@ -203,7 +196,7 @@ vec4 GetStoichaicBlurredSample(sampler2D in_sampler, vec2 in_coord, float num_sa
 {
 	if (num_samples == 0 || max_blur_size == 0 || blur_ratio == 0)
 	{
-		return COMPAT_TEXTURE(in_sampler, in_coord);
+		return texture(in_sampler, in_coord);
 	}
 
 	// Common value for max_blur_size is about 40
@@ -217,7 +210,7 @@ vec4 GetStoichaicBlurredSample(sampler2D in_sampler, vec2 in_coord, float num_sa
 	{
 		radius_vector.x = rand(radius);
 		radius_vector.y = rand(radius);
-		blurred_color += COMPAT_TEXTURE(in_sampler, in_coord + radius_vector * p)/num_samples;
+		blurred_color += texture(in_sampler, in_coord + radius_vector * p)/num_samples;
 	}
 
 	return blurred_color;
@@ -255,17 +248,18 @@ layout(location = 0) out vec4 FragColor;
 
 // Create a 2D sampler from Source and assign it to the variable name Texture
 layout(set = 0, binding = 1) uniform sampler2D Source;
-layout(set = 0, binding = 2) uniform sampler2D BR_CrtPass;
-layout(set = 0, binding = 3) uniform sampler2D BR_MirrorLowResPass;
-layout(set = 0, binding = 4) uniform sampler2D BR_MirrorBlurredPass;
-layout(set = 0, binding = 5) uniform sampler2D BR_MirrorReflectionDiffusedPass;
-layout(set = 0, binding = 6) uniform sampler2D BR_MirrorFullscreenGlowPass;
+layout(set = 0, binding = 2) uniform sampler2D BR_MappingPass;
+layout(set = 0, binding = 3) uniform sampler2D BR_CrtPass;
+layout(set = 0, binding = 4) uniform sampler2D BR_MirrorLowResPass;
+layout(set = 0, binding = 5) uniform sampler2D BR_MirrorBlurredPass;
+layout(set = 0, binding = 6) uniform sampler2D BR_MirrorReflectionDiffusedPass;
+layout(set = 0, binding = 7) uniform sampler2D BR_MirrorFullscreenGlowPass;
 
-layout(set = 0, binding = 7)  uniform sampler2D BackgroundImage;
-layout(set = 0, binding = 8)  uniform sampler2D BackgroundVertImage;
-layout(set = 0, binding = 9) uniform sampler2D TubeGlassImage;
-layout(set = 0, binding = 10)  uniform sampler2D OverlayImage;
-layout(set = 0, binding = 11)  uniform sampler2D OverlayVertImage;
+layout(set = 0, binding = 8)  uniform sampler2D BackgroundImage;
+layout(set = 0, binding = 9)  uniform sampler2D BackgroundVertImage;
+layout(set = 0, binding = 10) uniform sampler2D TubeGlassImage;
+layout(set = 0, binding = 11)  uniform sampler2D OverlayImage;
+layout(set = 0, binding = 12)  uniform sampler2D OverlayVertImage;
 
 void main()
 {
@@ -276,11 +270,15 @@ void main()
 		float placement_guide_blue_alpha = 0;
 	#endif
 
+	vec4 mapping_coords = HMSS_GetCachedCurvedScreenAndTubeCoords(BR_MappingPass, viewportCoord.xy);
+	vec2 screen_coord_warped = mapping_coords.xy;
+	vec2 tube_coord_warped = mapping_coords.zw;
+
 	//----------------------------------------------------
 	// CRT Pass
 	//----------------------------------------------------
 	// Get the CRT pass and make it in linear space & mask the area outside the screen
-	vec4 frag_color_linear = HHLP_Linearize(COMPAT_TEXTURE(BR_CrtPass, viewportCoord.xy));
+	vec4 frag_color_linear = HHLP_Linearize(texture(BR_CrtPass, viewportCoord.xy));
 	// Shrink the mask by 0.001 to clip off outer edge
 	frag_color_linear *= HMSS_GetCornerMask(((HMSS_GetCurvedCoord(screenCoord, 1) - 0.5) * 1.001) + 0.5, global.hmss_corner_radius, global.hmss_screen_edge_sharpness);
 
@@ -350,10 +348,10 @@ void main()
 			outermap_coord = HMSS_GetInverseScaledCoord(tube_coord, vec2(outermap_scale.x, outermap_scale.y));
 
 			// Warp the outermap coordinate be an increased amount so the curvature around the screen matches
-			outermap_warped_coord_ctr = HMSS_GetCurvedCoord(outermap_coord, global.hmbz_bezel_inner_curvature_scale * 6) - vec2(0.5, 0.5);
+			outermap_warped_coord_ctr = HMSS_GetCurvedCoord(outermap_coord, global.hmss_tube_black_edge_curvature_scale * 6) - vec2(0.5, 0.5);
 
 			// Used to scale up the calculated screen size inside the outermap, because the screen shrinks as more curvature is used
-			vec2 curvature_long_short = global.hmbz_bezel_inner_curvature_scale * HMSS_GetLongShortAxisCurvatureValues();
+			vec2 curvature_long_short = global.hmss_tube_black_edge_curvature_scale * HMSS_GetLongShortAxisCurvatureValues();
 			vec2 curvature_scale_offset = screen_aspect < 1.0 ? 1 / (1 + vec2(4.4 * curvature_long_short.y, 4.7 * curvature_long_short.x)) : 1 / (1 + vec2(4.7 * curvature_long_short.x, 4.4 * curvature_long_short.y));
 
 			// Get vector from the screen edge outward
@@ -367,7 +365,7 @@ void main()
 			outermap_screen_size_from_center = abs(vec2((-0.5 / outermap_scale.x) * curvature_scale_offset.x, (0.5 / outermap_scale.y) * curvature_scale_offset.y));
 
 			// Create a mask to separate between the inside of the screen to the outside of the tube area
-			tube_warped_coord_ctr = HMSS_GetCurvedCoord(tube_coord, global.hmbz_bezel_inner_curvature_scale * 1) - vec2(0.5, 0.5);
+			tube_warped_coord_ctr = HMSS_GetCurvedCoord(tube_coord, global.hmss_tube_black_edge_curvature_scale * 1) - vec2(0.5, 0.5);
 
 			// Get the corner of the screen in the outermap coordinates
 			outermap_screen_corner_ctr_coord = vec2(0.5, -0.5) / outermap_scale * curvature_scale_offset;
@@ -377,12 +375,12 @@ void main()
 		}
 		else
 		{
-			outermap_range = 0.5 * (outermap_scale.y);
-			tube_warped_coord_ctr = HMSS_GetCurvedCoord(tube_coord, global.hmbz_bezel_inner_curvature_scale) - 0.5;
+			outermap_range = 0.5 * (outermap_scale.y) * 0.7;
+			tube_warped_coord_ctr = tube_coord_warped - 0.5;
 			outermap_warped_coord_ctr = tube_warped_coord_ctr;
 			outermap_coord = tube_warped_coord_ctr + 0.5;
 			outermap_screen_size_from_center = vec2(0.5, 0.5);
-			outermap_warped_outside_screen_vector = outermap_warped_coord_ctr - clamp(outermap_warped_coord_ctr, -0.5, 0.5);
+			outermap_warped_outside_screen_vector = outermap_warped_coord_ctr - clamp(outermap_warped_coord_ctr, -0.490, 0.490);
 			outside_ratio_warped = clamp(length(outermap_warped_outside_screen_vector) / outermap_range, 0, 1);
 			outermap_screen_corner_ctr_coord = vec2(0.5, -0.5);
 
@@ -673,15 +671,15 @@ void main()
 			
 			vec4 fullscreen_glow_color = pow(fullscreen_blurred_sampled_color, vec4(global.hbr_fullscreen_glow_gamma));
 			
-			vec4 diffused_reflection_color = COMPAT_TEXTURE(BR_MirrorReflectionDiffusedPass, viewportCoord.xy);
+			vec4 diffused_reflection_color = texture(BR_MirrorReflectionDiffusedPass, viewportCoord.xy);
 			vec4 diffused_reflection_scatter_color = GetStoichaicBlurredSample(BR_MirrorReflectionDiffusedPass, viewportCoord.xy, stoichaic_blur_samples, stoichaic_blur_max, stoichaic_blur_amount);
 			vec4 diffused_reflection_blended_color = mix(diffused_reflection_color, diffused_reflection_scatter_color, global.hbr_noise_amount);
 
-			vec4 blurred_reflection_color = COMPAT_TEXTURE(BR_MirrorBlurredPass, viewportCoord.xy);
+			vec4 blurred_reflection_color = texture(BR_MirrorBlurredPass, viewportCoord.xy);
 			vec4 blurred_reflection_scatter_color = GetStoichaicBlurredSample(BR_MirrorBlurredPass, viewportCoord.xy, stoichaic_blur_samples, stoichaic_blur_max, stoichaic_blur_amount);
 			vec4 blurred_reflection_blended_color = mix(blurred_reflection_color, blurred_reflection_scatter_color, global.hbr_noise_amount);
 
-			//vec4 unblurred_reflection_color = COMPAT_TEXTURE(BR_MirrorLowResPass, viewportCoord.xy);
+			//vec4 unblurred_reflection_color = texture(BR_MirrorLowResPass, viewportCoord.xy);
 			//vec4 unblurred_reflection_scatter_color = GetStoichaicBlurredSample(BR_MirrorLowResPass, viewportCoord.xy, stoichaic_blur_samples, stoichaic_blur_max, stoichaic_blur_amount);
 
 			// Add Fullscreen Glow

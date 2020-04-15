@@ -57,6 +57,7 @@ layout(std140, set = 0, binding = 0) uniform UBO
 	float hmss_corner_radius;
 	float hmss_screen_edge_sharpness;
 	float hmss_tube_black_edge_thickness;
+	float hmss_tube_black_edge_curvature_scale;
 
 	float hmss_pre_crt_black_level;
 	float hmss_pre_crt_gamma;

@@ -50,6 +50,7 @@ Description:
 #pragma parameter hmss_corner_radius 					"[SCREEN EDGE]  Screen Corner Radius (Default 10)" 0 0 70 1
 #pragma parameter hmss_screen_edge_sharpness 			"[SCREEN EDGE]  Screen Edge Sharpness" 0.4 0 1 0.01
 #pragma parameter hmss_tube_black_edge_thickness 		"[SCREEN EDGE]  Tube Black Edge Thickness" 1.2 -2 8 0.05
+#pragma parameter hmss_tube_black_edge_curvature_scale 		"[BEZEL]  Inner Curvature" 1 0 4 0.1
 
 #pragma parameter hmss_pre_crt_black_level 				"[COLOR]  Pre-CRT Black Level" 0 -30 30 0.05-
 #pragma parameter hmss_pre_crt_gamma					"[COLOR]  Pre-CRT Gamma" 2.4 0.01 8 0.01
@@ -254,12 +255,34 @@ vec2 HMSS_Get2DCurvedCoord(vec2 in_coord, float curvature_multiplier)
 	vec2 curvature_values = HMSS_GetCurvatureValues();
 	vec2 ctr_coord = in_coord - 0.5;
 	vec2 distortion = curvature_values * curvature_multiplier * 15.0;
-	vec2 ctr_curved_coord = in_coord * 2.0 - 1.0;
+	vec2 ctr_coord_0_1 = in_coord * 2.0 - 1.0;
+	vec2 ctr_curved_coord = ctr_coord_0_1;
 	float curved_coord_distance = sqrt(ctr_curved_coord.x * ctr_curved_coord.x + ctr_curved_coord.y * ctr_curved_coord.y);
 	ctr_curved_coord = ctr_curved_coord / curved_coord_distance;
 	ctr_curved_coord = ctr_curved_coord * (1.0 - pow(vec2(1.0 - (curved_coord_distance / 1.4142135623730950488016887242097)), (1.0 / (1.0 + distortion * 0.2))));
 	ctr_curved_coord = ctr_curved_coord / clamp(1.0 - pow(vec2(0.29289321881345247559915563789515), (1.0 / (vec2(1.0) + distortion * 0.2))), 0.0001, 10);
 	ctr_curved_coord = ctr_curved_coord * 0.5;
+
+	float max_curved_range = 1.41;
+	if (curved_coord_distance < max_curved_range)
+	{
+		if (abs(ctr_coord_0_1.x) > 1 || abs(ctr_coord_0_1.y) > 1)
+		{
+			float length_inside = length(clamp(abs(ctr_coord_0_1), 0, 1));
+			float length_outside = curved_coord_distance - length_inside;
+			float outside_range = max_curved_range - length_inside;
+			float outside_ratio = length_outside / outside_range;
+			
+			// vec2 normalized_vec = abs(normalize(ctr_coord_0_1));
+			// float pi = 3.1415;
+			// float corner_angle_degrees = atan(normalized_vec.y / normalized_vec.x) / (2 * pi) * 360;
+			//float corner_mask = smoothstep(40, 43, corner_angle_degrees);
+
+			float blend_to_uncurved = HHLP_EasePowerInOut(outside_ratio, 2);
+
+			ctr_curved_coord = blend_to_uncurved * ctr_coord + (1 - blend_to_uncurved) * ctr_curved_coord;
+		}
+	}
 
 	return clamp(ctr_curved_coord, -1, 1) + 0.5;
 }
@@ -291,48 +314,10 @@ vec2 HMSS_GetCurvedCoord(vec2 in_coord, float curvature_multiplier)
 	}
 }
 
-// TODO to get a better blend at the corners we need to guess the offset from the curved corner will be then blend using this
-vec2 HMSS_GetWrappedCurvedCoord(vec2 in_coord, float curvature_multiplier)
+vec2 HMSS_GetMirrorWrappedCoord(vec2 in_coord)
 {
-	float aspect_ratio = HMSS_GetScreenAspectRatio();
-	vec2 ctr_coord = in_coord - 0.5;
-	vec2 ctr_screen_edge_coord = clamp(ctr_coord, -0.5, 0.5);
-	vec2 vector_outside = ctr_coord - ctr_screen_edge_coord;
+	vec2 ctr_mirror_coord = in_coord - 0.5;
 
-	vec2 ctr_coord_0_1 = ctr_coord * 2.0;
-	float curved_coord_distance = sqrt(ctr_coord_0_1.x * ctr_coord_0_1.x + ctr_coord_0_1.y * ctr_coord_0_1.y);
-	vec2 ctr_mirror_coord = ctr_coord;
-
-	// Only curve the coordinate if the coordinate is inside the sphere where the coordinate space is continuous
-	if (global.hmss_curvature_mode < 0.5)
-	{
-		float max_curved_range = 1.41;
-		if (curved_coord_distance < max_curved_range)
-		{
-			ctr_mirror_coord = HMSS_GetCurvedCoord(in_coord, curvature_multiplier) - 0.5;
-
-			if (abs(ctr_coord_0_1.x) > 1 || abs(ctr_coord_0_1.y) > 1)
-			{
-				float length_inside = length(clamp(abs(ctr_coord_0_1), 0, 1));
-				float length_outside = curved_coord_distance - length_inside;
-				float outside_range = max_curved_range - length_inside;
-				float outside_ratio = length_outside / outside_range;
-				
-				// vec2 normalized_vec = abs(normalize(ctr_coord_0_1));
-				// float pi = 3.1415;
-				// float corner_angle_degrees = atan(normalized_vec.y / normalized_vec.x) / (2 * pi) * 360;
-				//float corner_mask = smoothstep(40, 43, corner_angle_degrees);
-
-				float blend_to_uncurved = HHLP_EasePowerInOut(outside_ratio, 2);
-
-				ctr_mirror_coord = blend_to_uncurved * ctr_coord + (1 - blend_to_uncurved) * ctr_mirror_coord;
-			}
-		}
-	}
-	else
-	{
-		ctr_mirror_coord = HMSS_GetCurvedCoord(in_coord, curvature_multiplier) - 0.5;
-	}
 	if (abs(ctr_mirror_coord.x) > 0.5)
 	{
 		ctr_mirror_coord.x = ctr_mirror_coord.x - 2 * sign(ctr_mirror_coord.x) * (abs(ctr_mirror_coord.x) - 0.5);
@@ -342,7 +327,13 @@ vec2 HMSS_GetWrappedCurvedCoord(vec2 in_coord, float curvature_multiplier)
 		ctr_mirror_coord.y = ctr_mirror_coord.y - 2 * sign(ctr_mirror_coord.y) * (abs(ctr_mirror_coord.y) - 0.5);
 	}
 
-	return (ctr_mirror_coord + 0.5);
+	return ctr_mirror_coord + 0.5;
+}
+
+// TODO to get a better blend at the corners we need to guess the offset from the curved corner will be then blend using this
+vec2 HMSS_GetWrappedCurvedCoord(vec2 in_coord, float curvature_multiplier)
+{
+	return HMSS_GetMirrorWrappedCoord(HMSS_GetCurvedCoord(in_coord, curvature_multiplier));
 
 	// Old version of reflection coord which is actually goes straight out from the side instead of being curved
 	// if (curved_coord_distance > 1.41)
@@ -392,6 +383,28 @@ vec2 HMSS_GetWrappedCurvedCoord(vec2 in_coord, float curvature_multiplier)
 	// 	}
 	
 	//return ctr_blended_coord + 0.5;
+}
+
+// Returns curved coordinates for the coordinate supplied
+// Cached coordinate comes from the mapping pass texture supplied
+// x & y are the curved screen coordinates, z & w are the curved tube coordinates
+vec4 HMSS_GetCachedCurvedScreenAndTubeCoords(sampler2D in_mapping_pass, vec2 in_coord)
+{
+	return texture(in_mapping_pass, in_coord);
+}
+
+// Returns curved screen coordinates for the coordinate supplied
+// Cached coordinate comes from the mapping pass texture supplied
+vec2 HMSS_GetCachedCurvedScreenCoord(sampler2D in_mapping_pass, vec2 in_coord)
+{
+	return HMSS_GetCachedCurvedScreenAndTubeCoords(in_mapping_pass, in_coord).xy;
+}
+
+// Returns curved tube coordinates for the coordinate supplied
+// Cached coordinate comes from the mapping pass texture supplied
+vec2 HMSS_GetCachedCurvedTubeCoord(sampler2D in_mapping_pass, vec2 in_coord)
+{
+	return HMSS_GetCachedCurvedScreenAndTubeCoords(in_mapping_pass, in_coord).zw;
 }
 
 // Borrowed from cgwg's crt-geom, under GPL

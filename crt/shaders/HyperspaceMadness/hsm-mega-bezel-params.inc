@@ -21,7 +21,6 @@
 #pragma parameter hmbz_bezel_opacity 					"[BEZEL]  Opacity" 1 0 1 0.05
 #pragma parameter hmbz_bezel_width 						"[BEZEL]  Width" 6.5 -10 200 0.1
 #pragma parameter hmbz_bezel_height 					"[BEZEL]  Height" 5 -10 200 0.1
-#pragma parameter hmbz_bezel_inner_curvature_scale 		"[BEZEL]  Inner Curvature" 1 0 4 0.1
 #pragma parameter hmbz_bezel_inner_corner_radius_scale	"[BEZEL]  Inner Corner Radius Scale" 0.5 0 10 0.1
 #pragma parameter hmbz_bezel_outer_corner_radius_scale 	"[BEZEL]  Outer Corner Radius Scale" 1 0 10 0.1
 #pragma parameter hmbz_bezel_inner_edge_thickness		"[BEZEL]  Inner Edge Thickness" 0.5 0 5 0.1

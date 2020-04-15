@@ -1,5 +1,3 @@
-shaders = 20    
-
 // Add Mega Screen Scale Params for the UI
 //      Add the mega-screen-scale parameters at the beginning of the list for easy access
 //      Debug Drawing of the resolution/screen scaling is also included here
@@ -71,73 +69,83 @@ filter_linear12 = true
 scale_type12 = source
 scale12 = 1.0
 float_framebuffer12 = true
+alias12 = CrtInputPass
+
+// Screen Scale & Tube Scale Curvature Mapping
+// Write mapping into the pass, of the 4 channels, x & y are screen warped coord and z & w are tube warped coord
+shader13 = ../crt/shaders/hyperspacemadness/hsm-curvature-mapping.slang
+mipmap_input13 = true
+filter_linear13 = true
+scale_type13 = viewport
+float_framebuffer13 = true
+//format13 R16G16B16A16_SFLOAT
+alias13 = BR_MappingPass
 
 // CRT Shader - Guest-Venom ----------------------------------------------------------------
 //      Guest's Awesome Shader!!!
 //      Has been slightly altered to use the same scaling as the rest of the shders for the bezel & reflection
-shader13 = ../crt/shaders/hyperspacemadness/hsm-crt-guest-dr-venom-with-scaling.slang
-mipmap_input13 = true
-filter_linear13 = true
-scale_type13 = viewport
-scale_x13 = 1.0
-scale_y13 = 1.0
-float_framebuffer13 = true
-alias13 = BR_CrtPass
-
+shader14 = ../crt/shaders/hyperspacemadness/hsm-crt-guest-dr-venom-with-scaling.slang
+mipmap_input14 = true
+filter_linear14 = true
+scale_type14 = viewport
+scale_x14 = 1.0
+scale_y14 = 1.0
+float_framebuffer14 = true
+alias14 = BR_CrtPass
 
 // Linearize & Reduce Resolution ----------------------------------------------------------------
 //      Reduce the resolution to a small static size regardless of final resolution
 //      Allows consistent look and faster at different final resolutions for blur
 //      Mipmap option allows downscaling without artifacts
-shader14 = ../crt/shaders/hyperspacemadness/hsm-linearize-crt-pass.slang
-mipmap_input14 = true
-filter_linear14 = true
-scale_type14 = absolute
-float_framebuffer14 = true
-// scale_x14 = 480
-// scale_y14 = 270
-// scale_x14 = 960
-// scale_y14 = 540
-scale_x14 = 800
-scale_y14 = 600
-alias14 = BR_MirrorLowResPass
+shader15 = ../crt/shaders/hyperspacemadness/hsm-linearize-crt-pass.slang
+mipmap_input15 = true
+filter_linear15 = true
+scale_type15 = absolute
+float_framebuffer15 = true
+// scale_x15 = 480
+// scale_y15 = 270
+// scale_x15 = 960
+// scale_y15 = 540
+scale_x15 = 800
+scale_y15 = 600
+alias15 = BR_MirrorLowResPass
 
 // Add Blur for the Reflection (Horizontal) ----------------------------------------------------------------
-shader15 = ../crt/shaders/hyperspacemadness/hsm-blur-outside-screen-horiz.slang
-filter_linear15 = false
-scale_type15 = source
-float_framebuffer15 = true
-
-// Add Blur for the Reflection (Vertical) ----------------------------------------------------------------
-shader16 = ../crt/shaders/hyperspacemadness/hsm-blur-outside-screen-vert.slang
+shader16 = ../crt/shaders/hyperspacemadness/hsm-blur-outside-screen-horiz.slang
 filter_linear16 = false
 scale_type16 = source
 float_framebuffer16 = true
-alias16 = BR_MirrorBlurredPass
+
+// Add Blur for the Reflection (Vertical) ----------------------------------------------------------------
+shader17 = ../crt/shaders/hyperspacemadness/hsm-blur-outside-screen-vert.slang
+filter_linear17 = false
+scale_type17 = source
+float_framebuffer17 = true
+alias17 = BR_MirrorBlurredPass
 
 // Reduce resolution ----------------------------------------------------------------
 // Reduced to a very small amount so we can create a blur which will create a glow from the screen
 //      Mipmap option allows smoother downscaling
-shader17 = ../blurs/blur9x9.slang
-mipmap_input17 = true
-filter_linear17 = true
-scale_type17 = absolute
-float_framebuffer17 = true
-scale_x17 = 128
-scale_y17 = 128
-alias17 = BR_MirrorReflectionDiffusedPass
-
-// Add Diffused glow all around the screen ----------------------------------------------------------------
-//      lurred so much that it's non directional
-//      Mipmap option allows downscaling without artifacts
 shader18 = ../blurs/blur9x9.slang
 mipmap_input18 = true
 filter_linear18 = true
 scale_type18 = absolute
 float_framebuffer18 = true
-scale_x18 = 12
-scale_y18 = 12
-alias18 = BR_MirrorFullscreenGlowPass
+scale_x18 = 128
+scale_y18 = 128
+alias18 = BR_MirrorReflectionDiffusedPass
+
+// Add Diffused glow all around the screen ----------------------------------------------------------------
+//      lurred so much that it's non directional
+//      Mipmap option allows downscaling without artifacts
+shader19 = ../blurs/blur9x9.slang
+mipmap_input19 = true
+filter_linear19 = true
+scale_type19 = absolute
+float_framebuffer19 = true
+scale_x19 = 12
+scale_y19 = 12
+alias19 = BR_MirrorFullscreenGlowPass
 
 // Bezel Generation & Reflection ----------------------------------------------------------------
 //      Uses these previous passes:
@@ -151,12 +159,13 @@ alias18 = BR_MirrorFullscreenGlowPass
 //          OverlayImage
 //          OverlayImage_Vertical
 
-shader19 = ../crt/shaders/hyperspacemadness/hsm-mega-bezel-reflection.slang
-mipmap_input19 = true
-filter_linear19 = true
-scale_type19 = viewport
-float_framebuffer19 = false
+shader20 = ../crt/shaders/hyperspacemadness/hsm-mega-bezel-reflection.slang
+mipmap_input20 = true
+filter_linear20 = true
+scale_type20 = viewport
+float_framebuffer20 = false
 
+shaders = 21
 
 // Define textures to be used by the different passes
 textures = "SamplerLUT1;SamplerLUT2;SamplerLUT3;BackgroundImage;BackgroundVertImage;TubeGlassImage;OverlayImage;OverlayVertImage;"

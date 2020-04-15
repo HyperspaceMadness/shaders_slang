@@ -221,7 +221,12 @@ void main()
 #pragma stage fragment
 layout(location = 0) in vec2 vTexCoord;
 layout(location = 0) out vec4 FragColor;
-layout(set = 0, binding = 2) uniform sampler2D Source;
+// HSM Removed
+// layout(set = 0, binding = 2) uniform sampler2D Source;
+// HSM Added
+layout(set = 0, binding = 2) uniform sampler2D CrtInputPass;
+layout(set = 0, binding = 4) uniform sampler2D BR_MappingPass;
+
 layout(set = 0, binding = 3) uniform sampler2D LinearizePass;
 
 // HSM Modification
@@ -230,11 +235,12 @@ layout(set = 0, binding = 3) uniform sampler2D LinearizePass;
 
 layout(set = 0, binding = 5) uniform sampler2D GlowPass;
 
-#define Texture Source
-
-// HSM Modification
-// Removed
+// HSM Removed
+// #define Texture Source
 // #define PassPrev5Texture AvgLumPass
+
+// HSM Added
+#define Texture CrtInputPass
 
 #define PassPrev4Texture LinearizePass
 #define PassPrev2Texture GlowPass
@@ -493,11 +499,12 @@ void main()
 	// If we are only using the screen scale with no bezel/reflection we don't need a wrapped coordinate
 	if (global.hmss_screen_scale_only == 1)
 	{
-		pos = HMSS_GetCurvedCoord(texcoord*(TextureSize.xy/InputSize.xy), 1);
+		pos = HMSS_GetCachedCurvedScreenCoord(BR_MappingPass, vTexCoord);
 	}
 	else
 	{
-		pos = HMSS_GetWrappedCurvedCoord(texcoord*(TextureSize.xy/InputSize.xy), 1)*(InputSize.xy/TextureSize.xy);
+		pos = HMSS_GetCachedCurvedScreenCoord(BR_MappingPass, vTexCoord);
+		pos = HMSS_GetMirrorWrappedCoord(pos);
 	}
 
 	vec2 coffset = ((TATE < 0.5) ? vec2(0.0,0.5) : vec2(0.5, 0.0));

@@ -1,5 +1,3 @@
-shaders = 20
-
 // Add Mega Screen Scale Params for the UI
 //      Add the mega-screen-scale parameters at the beginning of the list for easy access
 //      Debug Drawing of the resolution/screen scaling is also included here
@@ -50,14 +48,14 @@ float_framebuffer9 = true
 alias9 = LinearizePass
 
 // Guest-Venom Pass ----------------------------------------------------------------
-shader10 = ../crt/shaders/guest/blur_horiz.slang
+shader10 = ../crt/shaders/hyperspacemadness/hsm-guest-blur_horiz.slang
 filter_linear10 = false
 scale_type10 = source
 scale10 = 1.0
 float_framebuffer10 = true
 
 // Guest-Venom Pass ----------------------------------------------------------------
-shader11 = ../crt/shaders/guest/blur_vert.slang
+shader11 = ../crt/shaders/hyperspacemadness/hsm-guest-blur_vert.slang
 filter_linear11 = false
 scale_type11 = source
 scale11 = 1.0
@@ -78,64 +76,72 @@ shader13 = ../crt/shaders/hyperspacemadness/hsm-crt-guest-dr-venom-with-scaling.
 mipmap_input13 = true
 filter_linear13 = true
 scale_type13 = viewport
-scale_x13 = 1.0
-scale_y13 = 1.0
+scale13 = 1.0
 float_framebuffer13 = true
 alias13 = BR_CrtPass
+
+// Tube Scale Curvature Mapping
+// Write mapping into the pass, of the 4 channels, x & y are screen warped coord and z & w are tube warped coord
+shader14 = ../crt/shaders/hyperspacemadness/hsm-curvature-mapping.slang
+mipmap_input14 = true
+filter_linear14 = true
+scale_type14 = viewport
+float_framebuffer14 = true
+alias14 = BR_MappingPass
 
 // Linearize & Reduce Resolution ----------------------------------------------------------------
 //      Reduce the resolution to a small static size regardless of final resolution
 //      Allows consistent look and faster at different final resolutions for blur
 //      Mipmap option allows downscaling without artifacts
-shader14 = ../crt/shaders/hyperspacemadness/hsm-linearize-crt-pass.slang
-mipmap_input14 = true
-filter_linear14 = true
-scale_type14 = absolute
-float_framebuffer14 = true
-// scale_x14 = 480
-// scale_y14 = 270
-// scale_x14 = 960
-// scale_y14 = 540
-scale_x14 = 800
-scale_y14 = 600
-alias14 = BR_MirrorLowResPass
+shader15 = ../crt/shaders/hyperspacemadness/hsm-linearize-crt-pass.slang
+mipmap_input15 = true
+filter_linear15 = true
+scale_type15 = absolute
+float_framebuffer15 = true
+// scale_x15 = 480
+// scale_y15 = 270
+// scale_x15 = 960
+// scale_y15 = 540
+scale_x15 = 800
+scale_y15 = 600
+alias15 = BR_MirrorLowResPass
 
 // Add Blur for the Reflection (Horizontal) ----------------------------------------------------------------
-shader15 = ../crt/shaders/hyperspacemadness/hsm-blur-outside-screen-horiz.slang
-filter_linear15 = false
-scale_type15 = source
-float_framebuffer15 = true
-
-// Add Blur for the Reflection (Vertical) ----------------------------------------------------------------
-shader16 = ../crt/shaders/hyperspacemadness/hsm-blur-outside-screen-vert.slang
+shader16 = ../crt/shaders/hyperspacemadness/hsm-blur-outside-screen-horiz.slang
 filter_linear16 = false
 scale_type16 = source
 float_framebuffer16 = true
-alias16 = BR_MirrorBlurredPass
+
+// Add Blur for the Reflection (Vertical) ----------------------------------------------------------------
+shader17 = ../crt/shaders/hyperspacemadness/hsm-blur-outside-screen-vert.slang
+filter_linear17 = false
+scale_type17 = source
+float_framebuffer17 = true
+alias17 = BR_MirrorBlurredPass
 
 // Reduce resolution ----------------------------------------------------------------
 // Reduced to a very small amount so we can create a blur which will create a glow from the screen
 //      Mipmap option allows smoother downscaling
-shader17 = ../blurs/blur9x9.slang
-mipmap_input17 = true
-filter_linear17 = true
-scale_type17 = absolute
-float_framebuffer17 = true
-scale_x17 = 128
-scale_y17 = 128
-alias17 = BR_MirrorReflectionDiffusedPass
-
-// Add Diffused glow all around the screen ----------------------------------------------------------------
-//      lurred so much that it's non directional
-//      Mipmap option allows downscaling without artifacts
 shader18 = ../blurs/blur9x9.slang
 mipmap_input18 = true
 filter_linear18 = true
 scale_type18 = absolute
 float_framebuffer18 = true
-scale_x18 = 12
-scale_y18 = 12
-alias18 = BR_MirrorFullscreenGlowPass
+scale_x18 = 128
+scale_y18 = 128
+alias18 = BR_MirrorReflectionDiffusedPass
+
+// Add Diffused glow all around the screen ----------------------------------------------------------------
+//      lurred so much that it's non directional
+//      Mipmap option allows downscaling without artifacts
+shader19 = ../blurs/blur9x9.slang
+mipmap_input19 = true
+filter_linear19 = true
+scale_type19 = absolute
+float_framebuffer19 = true
+scale_x19 = 12
+scale_y19 = 12
+alias19 = BR_MirrorFullscreenGlowPass
 
 // Bezel Generation & Reflection ----------------------------------------------------------------
 //      Uses these previous passes:
@@ -149,11 +155,14 @@ alias18 = BR_MirrorFullscreenGlowPass
 //          OverlayImage
 //          OverlayImage_Vertical
 
-shader19 = ../crt/shaders/hyperspacemadness/hsm-mega-bezel-reflection.slang
-mipmap_input19 = true
-filter_linear19 = true
-scale_type19 = viewport
-float_framebuffer19 = false
+shader20 = ../crt/shaders/hyperspacemadness/hsm-mega-bezel-reflection.slang
+mipmap_input20 = true
+filter_linear20 = true
+scale_type20 = viewport
+float_framebuffer20 = false
+
+// Define how many shaders will be used from this list
+shaders = 21
 
 
 // Define textures to be used by the different passes
@@ -172,19 +181,26 @@ OverlayImage = ../crt/shaders/hyperspacemadness/textures/OverlayImage_OverReflec
 OverlayVertImage = ../crt/shaders/hyperspacemadness/textures/OverlayImage_OverReflection_3840x2160.png
 
 
-parameters = "hmss_mega_screen_scale_on;hmss_screen_scale_only;hmss_screen_aspect_ratio;hmss_integer_scale_mode;hmss_int_scale_multiple_offset;hmss_non_integer_scale;hmss_int_scale_border_min_height;hmss_scanline_direction;hmss_curvature_on_long_axis;hmss_curvature_on_short_axis;hmss_corner_radius;hmss_tube_black_edge_thickness;hmbz_frame_thickness;hmbz_bezel_width;hmbz_bezel_height;hmbz_background_image_opacity;hmbz_bezel_opacity;hmbz_bezel_brightness;hmbz_frame_opacity;hmbz_background_image_cut_out_inside_frame;hmbz_background_image_scale_mode;hmbz_background_image_aspect_ratio;hmbz_background_image_tube_height;hmss_crop_overscan_top;hmss_crop_overscan_bottom;hmss_crop_overscan_left;hmss_crop_overscan_right;hmss_pre_crt_black_level;hbl_blur_min;hbl_blur_max;hbr_global_amount;hbr_global_gamma_adjust;hbr_diffused_reflection;hbr_fullscreen_glow;hbr_fullscreen_glow_gamma;hag_afterglow_persistence"
+parameters = "hmss_mega_screen_scale_on;hmss_screen_scale_only;hmss_screen_aspect_ratio;hmss_integer_scale_mode;hmss_int_scale_multiple_offset;hmss_non_integer_scale;hmss_int_scale_border_min_height;hmss_scanline_direction;hmss_curvature_mode;hmss_curvature_2D_long_axis;hmss_curvature_2D_short_axis;hmss_curvature_3D_radius;hmss_curvature_3D_view_dist;hmss_curvature_3D_tilt_angle_x;hmss_curvature_3D_tilt_angle_y;hmss_corner_radius;hmss_tube_black_edge_thickness;hmbz_frame_thickness;hmbz_bezel_width;hmbz_bezel_height;hmbz_background_image_opacity;hmbz_bezel_opacity;hmbz_bezel_brightness;hmbz_frame_opacity;hmbz_background_image_cut_out_inside_frame;hmbz_background_image_scale_mode;hmbz_background_image_aspect_ratio;hmbz_background_image_tube_height;hmss_crop_overscan_top;hmss_crop_overscan_bottom;hmss_crop_overscan_left;hmss_crop_overscan_right;hmss_pre_crt_black_level;hbl_blur_min;hbl_blur_max;hbr_global_amount;hbr_global_gamma_adjust;hbr_diffused_reflection;hbr_fullscreen_glow;hbr_fullscreen_glow_gamma;hag_afterglow_persistence"
 
 hmss_mega_screen_scale_on = 1
 hmss_screen_scale_only = 0
 hmss_screen_aspect_ratio = 1.5
-hmss_integer_scale_mode = 1
+hmss_integer_scale_mode = 2
 // hmss_int_scale_multiple_offset = 0
 // hmss_non_integer_scale = 83
 hmss_int_scale_border_min_height = 9
 // hmss_scanline_direction = 0
 
-hmss_curvature_on_long_axis = 2.4
-hmss_curvature_on_short_axis = 4
+// Curvature
+hmss_curvature_mode = 0
+hmss_curvature_2D_long_axis = 1.5
+hmss_curvature_2D_short_axis = 4
+hmss_curvature_3D_radius = 2
+hmss_curvature_3D_view_dist = 2
+// hmss_curvature_3D_tilt_angle_x = 0
+// hmss_curvature_3D_tilt_angle_y = 0
+
 hmss_corner_radius = 10
 hmss_tube_black_edge_thickness = 1.6
 hmbz_bezel_width = 7.5;
@@ -195,7 +211,6 @@ hmbz_frame_thickness = 7;
 // hmbz_bezel_opacity = 1
 // hmbz_bezel_brightness = 10
 // hmbz_frame_opacity = 1;
-// hmbz_background_image_cut_out_inside_frame = 1;
 
 //hmbz_background_image_scale_mode = 0
 hmbz_background_image_aspect_ratio = 1.75

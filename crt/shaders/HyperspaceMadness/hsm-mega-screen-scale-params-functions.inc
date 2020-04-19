@@ -13,9 +13,9 @@ Description:
 #include "hsm-helper-functions.inc"
 
 // Screen Scale Required Parameters
-#pragma parameter hmss_mega_screen_scale_on				"___HSM MEGA BEZEL__ V.2020-04-05 -SCREEN SCALE ON" 0 0 1 1
+#pragma parameter hmss_mega_screen_scale_on				"___HSM MEGA BEZEL__ V.2020-04-05 -SCREEN SCALE ON" 1 0 1 1
 #pragma parameter hmss_screen_scale_debug				"[SCREEN SCALE]  Screen Scale Debug" 0 0 1 1
-#pragma parameter hmss_screen_scale_only             	"[SCREEN SCALE]  Screen Scale Only (No Bezel in Preset)" 0 0 1 1
+// #pragma parameter hmss_screen_scale_only             	"[SCREEN SCALE]  Screen Scale Only (No Bezel in Preset)" 0 0 1 1
 
 #pragma parameter hmss_rotate_crt_image					"[SCALING]  Rotate CRT Image"  0 0 1 1
 //#pragma parameter hmss_flip_screen_vertical			"[SCALING]  Flip Screen Vertical"  0 0 1 1
@@ -39,31 +39,32 @@ Description:
 #pragma parameter hmss_crop_overscan_left 				"[CROPPING]  Crop Overscan Left" 0 -256 256 1
 #pragma parameter hmss_crop_overscan_right 				"[CROPPING]  Crop Overscan Right" 0 -256 256 1
 
-#pragma parameter hmss_curvature_mode 					"[CURVATURE]  Curvature Mode (0:2D 1-2:Geom Sphere, 3:Geom Cyl)" 1 0 3 1
-#pragma parameter hmss_curvature_on_long_axis 			"[CURVATURE]  Extra Curvature on Long Axis (def 3 for Mode 0)" 0 0 100 1
-#pragma parameter hmss_curvature_on_short_axis 			"[CURVATURE]  Extra Curvature on Short Axis (def 4 for Mode 0)" 0 0 100 1
-#pragma parameter hmss_geom_radius 						"[CURVATURE GEOM]  Geom Radius" 1.5 0.16 1024.0 0.01 // was 2
-#pragma parameter hmss_geom_view_dist 					"[CURVATURE GEOM]  Geom View Distance" 2 0.5 1024.0 0.05
-#pragma parameter hmss_geom_tilt_angle_x 				"[CURVATURE GEOM]  Geom Tilt Angle X" 0 -3.1415 3.1415 0.01745
-#pragma parameter hmss_geom_tilt_angle_y 				"[CURVATURE GEOM]  Geom Tilt Angle Y" 0.0 -3.1415 3.1415 0.01745
+#pragma parameter hmss_curvature_mode 					"[CURVATURE MODE]  Curvature Mode (0:2D 1-2:3D Sphere, 3:3D Cyl)" 1 0 3 1
+#pragma parameter hmss_curvature_3D_radius 				"[CURVATURE 3D]  3D Radius" 2 0.16 1024 0.01
+#pragma parameter hmss_curvature_3D_view_dist 			"[CURVATURE 3D]  3D View Distance" 2 0.5 1024 0.05
+#pragma parameter hmss_curvature_3D_tilt_angle_x 		"[CURVATURE 3D]  3D Tilt Angle X" 0 -3.1415 3.1415 0.01745
+#pragma parameter hmss_curvature_3D_tilt_angle_y 		"[CURVATURE 3D]  3D Tilt Angle Y" 0 -3.1415 3.1415 0.01745
+#pragma parameter hmss_curvature_2D_long_axis 			"[CURVATURE 2D]  2D/Extra3D Curvature on Long Axis (def 2)" 0 0 100 0.2
+#pragma parameter hmss_curvature_2D_short_axis 			"[CURVATURE 2D]  2D/Extra3D Curvature on Short Axis (def 3)" 0 0 100 0.2
+#pragma parameter hmss_curvature_post_scale_x 			"[CURVATURE POST SCALE]  Scale X" 100 70 130 0.2
+#pragma parameter hmss_curvature_post_scale_y 			"[CURVATURE POST SCALE]  Scale Y" 100 70 130 0.2
 
 #pragma parameter hmss_corner_radius 					"[SCREEN EDGE]  Screen Corner Radius (Default 10)" 0 0 70 1
 #pragma parameter hmss_screen_edge_sharpness 			"[SCREEN EDGE]  Screen Edge Sharpness" 0.4 0 1 0.01
-#pragma parameter hmss_tube_black_edge_thickness 		"[SCREEN EDGE]  Tube Black Edge Thickness" 1.2 -2 8 0.05
-#pragma parameter hmss_tube_black_edge_curvature_scale 		"[BEZEL]  Inner Curvature" 1 0 4 0.1
+
+#pragma parameter hmss_tube_black_edge_thickness 		"[TUBE EDGE]  Black Edge Thickness" 1.2 -2 8 0.05
+#pragma parameter hmss_tube_black_edge_curvature_scale 	"[TUBE EDGE]  Black Edge Curvature Scale" 1 0 4 0.1
 
 #pragma parameter hmss_pre_crt_black_level 				"[COLOR]  Pre-CRT Black Level" 0 -30 30 0.05-
 #pragma parameter hmss_pre_crt_gamma					"[COLOR]  Pre-CRT Gamma" 2.4 0.01 8 0.01
-// #pragma parameter hmss_pre_crt_luminance				"[COLOR]  Pre-CRT Luminance" 1 0 2 0.01
+#pragma parameter hmss_pre_crt_luminance				"[COLOR]  Pre-CRT Luminance" 1 0 2 0.01
 #pragma parameter hmss_post_crt_gamma					"[COLOR]  Post-CRT Gamma" 1 0.01 2 0.01
 #pragma parameter hmss_negative_crop_brightness			"[COLOR]  Negative Crop Brightness" 0 0 20 0.02
 
 #pragma parameter hag_afterglow_amount                  "[AFTERGLOW]  Amount"        0.07 0.0 1.0 0.01
-#pragma parameter hag_afterglow_persistence             "[AFTERGLOW]  Persistence"   0.05 0.0 1.0 0.01
-#pragma parameter hag_afterglow_saturation              "[AFTERGLOW]  Saturation"    0.10 0.0 1.0 0.01
+// #pragma parameter hag_afterglow_persistence             "[AFTERGLOW]  Persistence"   0.05 0.0 1.0 0.01
+// #pragma parameter hag_afterglow_saturation              "[AFTERGLOW]  Saturation"    0.10 0.0 1.0 0.01
 
-// #pragma parameter hmss_reflection_mirror_stretch 		"[REFLECTION]  Mirror Stretch" 1.1 0.1 5 0.02
-// #pragma parameter hmss_reflection_mirror_offset 		"[REFLECTION]  Mirror Offset" -2 -100 100 0.1
 // Screen Scale Required Parameters End
 
 vec2 HMSS_GetRotatedOriginalSize()
@@ -102,7 +103,7 @@ float HMSS_GetIsCroppedOriginalSizeVertical()
 	return cropped_aspect_ratio < 1 ? 1 : 0;
 }
 
-float HMSS_GetScreenAspectRatio()
+float HMSS_GetScreenAspect()
 {
 	float horizontal_aspect_ratio = global.hmss_screen_aspect_ratio;
 	float vertical_aspect_ratio = 1.0 / global.hmss_screen_aspect_ratio;
@@ -118,7 +119,7 @@ float HMSS_GetFinalViewportAspectRatio()
 
 float HMSS_GetUseVerticalScanlines()
 {
-	float auto_use_vert_scanlines = HMSS_GetScreenAspectRatio() < 1 ? 1 : 0;
+	float auto_use_vert_scanlines = HMSS_GetScreenAspect() < 1 ? 1 : 0;
 	return global.hmss_scanline_direction < 1 ? auto_use_vert_scanlines : (global.hmss_scanline_direction < 2 ? 0 : 1);
 }
 
@@ -144,7 +145,7 @@ vec2 HMSS_GetScreenScale()
 	else
 	{
 		float output_aspect_ratio = HMSS_GetFinalViewportAspectRatio();
-		float aspect_ratio = HMSS_GetScreenAspectRatio();
+		float aspect_ratio = HMSS_GetScreenAspect();
 		float inverse_aspect_ratio = 1.0 / aspect_ratio;
 
 		// Get Original size with cropping applied as this affects the integer scale
@@ -237,15 +238,55 @@ vec2 HMSS_GetInverseScaledCoord(vec2 in_coord, vec2 in_scale)
 	return scaled_coord;
 }
 
+vec2 HMSS_GetPositionOffset()
+{
+	if (global.hmss_mega_screen_scale_on == 0)
+	{
+		return vec2(0, 0);
+	}
+	else
+	{
+		float output_aspect_ratio = global.FinalViewportSize.x / global.FinalViewportSize.y;
+		return vec2(global.hmss_position_offset_x / 100 / output_aspect_ratio, -global.hmss_position_offset_y / 100);
+	}
+}
+
+vec2 HMSS_GetCoordWithPositionOffset(vec2 in_coord)
+{
+	if (global.hmss_mega_screen_scale_on == 0)
+	{
+		return in_coord;
+	}
+	else
+	{
+		return in_coord - HMSS_GetPositionOffset();
+	}
+}
+
+vec2 HMSS_GetVTexCoordWithArgs(vec2 in_coord, vec2 in_scale, vec2 position_offset)
+{
+	return HMSS_GetInverseScaledCoord(HMSS_GetCoordWithPositionOffset(in_coord), in_scale);
+}
+
+vec2 HMSS_GetScreenVTexCoord(vec2 in_coord)
+{
+	return HMSS_GetVTexCoordWithArgs(in_coord, HMSS_GetScreenScale(), HMSS_GetPositionOffset());
+}
+
+vec2 HMSS_GetTubeVTexCoord(vec2 in_coord)
+{
+	return HMSS_GetVTexCoordWithArgs(in_coord, HMSS_GetTubeScale(), HMSS_GetPositionOffset());
+}
+
 vec2 HMSS_GetLongShortAxisCurvatureValues()
 {
-	return vec2(global.hmss_curvature_on_long_axis / 100, global.hmss_curvature_on_short_axis / 100);
+	return vec2(global.hmss_curvature_2D_long_axis / 100, global.hmss_curvature_2D_short_axis / 100);
 }
 
 vec2 HMSS_GetCurvatureValues()
 {
-	vec2 curvature_values = HMSS_GetScreenAspectRatio() < 1 ? vec2(global.hmss_curvature_on_short_axis / 100, global.hmss_curvature_on_long_axis / 100 ) 
-														: vec2(global.hmss_curvature_on_long_axis / 100, global.hmss_curvature_on_short_axis / 100 );
+	vec2 curvature_values = HMSS_GetScreenAspect() < 1 ? vec2(global.hmss_curvature_2D_short_axis / 100, global.hmss_curvature_2D_long_axis / 100 ) 
+														: vec2(global.hmss_curvature_2D_long_axis / 100, global.hmss_curvature_2D_short_axis / 100 );
 	return curvature_values;
 }
 
@@ -287,31 +328,37 @@ vec2 HMSS_Get2DCurvedCoord(vec2 in_coord, float curvature_multiplier)
 	return clamp(ctr_curved_coord, -1, 1) + 0.5;
 }
 
+vec2 HMSS_GetPostCurvatureScaledCoord(vec2 in_curved_coord)
+{
+	return (in_curved_coord - 0.5) / vec2(global.hmss_curvature_post_scale_x / 100, global.hmss_curvature_post_scale_y / 100) + 0.5;
+}
 
 vec2 HMSS_GetCurvedCoord(vec2 in_coord, float curvature_multiplier)
 {
+	vec2 curved_coord = vec2(0, 0);
 	if (global.hmss_curvature_mode > 0.5)
 	{
-		mat2x2 pixel_to_video_uv;
-        vec2 screen_scale = HMSS_GetScreenScale();
-		vec2 curvature_values = HMSS_GetCurvatureValues();
-        vec2 curvature_mult = curvature_values / 2 + 1;
 		float epsilon = 0.001;
-        vec2 curved_coord = HRG_GetGeomCurvedCoord(in_coord, 
-													global.hmss_curvature_mode, 
-													global.hmss_geom_radius * (1 / (curvature_multiplier + epsilon)), 
-													global.hmss_geom_view_dist,
-													global.hmss_geom_tilt_angle_x,
-													global.hmss_geom_tilt_angle_y,
-													screen_scale,
-													curvature_mult,
-													pixel_to_video_uv);
-		return curved_coord;
+		float geom_radius_with_mult = global.hmss_curvature_3D_radius * (1 / (curvature_multiplier + epsilon));
+        float screen_aspect = HMSS_GetScreenAspect();
+        vec2 extra_curvature_mult = HMSS_GetCurvatureValues() / 2 * 50 + 1;
+		mat2x2 pixel_to_video_uv;
+		curved_coord = HRG_GetGeomCurvedCoord(	in_coord, 
+												global.hmss_curvature_mode, 
+												geom_radius_with_mult,
+												global.hmss_curvature_3D_view_dist,
+												global.hmss_curvature_3D_tilt_angle_x,
+												global.hmss_curvature_3D_tilt_angle_y,
+												screen_aspect,
+												extra_curvature_mult,
+												pixel_to_video_uv);
 	}
 	else
 	{
-		return HMSS_Get2DCurvedCoord(in_coord, curvature_multiplier);
+		curved_coord = HMSS_Get2DCurvedCoord(in_coord, curvature_multiplier);
 	}
+
+	return HMSS_GetPostCurvatureScaledCoord(curved_coord);
 }
 
 vec2 HMSS_GetMirrorWrappedCoord(vec2 in_coord)
@@ -387,31 +434,18 @@ vec2 HMSS_GetWrappedCurvedCoord(vec2 in_coord, float curvature_multiplier)
 
 // Returns curved coordinates for the coordinate supplied
 // Cached coordinate comes from the mapping pass texture supplied
-// x & y are the curved screen coordinates, z & w are the curved tube coordinates
-vec4 HMSS_GetCachedCurvedScreenAndTubeCoords(sampler2D in_mapping_pass, vec2 in_coord)
-{
-	return texture(in_mapping_pass, in_coord);
-}
-
-// Returns curved screen coordinates for the coordinate supplied
-// Cached coordinate comes from the mapping pass texture supplied
-vec2 HMSS_GetCachedCurvedScreenCoord(sampler2D in_mapping_pass, vec2 in_coord)
-{
-	return HMSS_GetCachedCurvedScreenAndTubeCoords(in_mapping_pass, in_coord).xy;
-}
-
-// Returns curved tube coordinates for the coordinate supplied
-// Cached coordinate comes from the mapping pass texture supplied
+// x & y are the curved tube coordinates
 vec2 HMSS_GetCachedCurvedTubeCoord(sampler2D in_mapping_pass, vec2 in_coord)
 {
-	return HMSS_GetCachedCurvedScreenAndTubeCoords(in_mapping_pass, in_coord).zw;
+	//return HMSS_GetCurvedCoord(HMSS_GetTubeVTexCoord(in_coord), 1);
+	return texture(in_mapping_pass, in_coord).xy;
 }
 
 // Borrowed from cgwg's crt-geom, under GPL
 float HMSS_GetCornerMask(vec2 in_coord, float corner_radius, float edge_sharpness)
 // returns 0.0 - 1.0 value used for masking the corner so it looks round
 {
-	vec2 new_coord = min(in_coord, vec2(1.0) - in_coord) * vec2(HMSS_GetFinalViewportAspectRatio() / HMSS_GetScreenAspectRatio(), 1);
+	vec2 new_coord = min(in_coord, vec2(1.0) - in_coord) * vec2(HMSS_GetFinalViewportAspectRatio() / HMSS_GetScreenAspect(), 1);
 	vec2 corner_distance = vec2(max(corner_radius / 1000.0, max((1.0 - global.hmss_screen_edge_sharpness * edge_sharpness) * 0.01, 0.002)));
 	new_coord = (corner_distance - min(new_coord, corner_distance));
 	float distance = sqrt(dot(new_coord, new_coord));
@@ -419,45 +453,7 @@ float HMSS_GetCornerMask(vec2 in_coord, float corner_radius, float edge_sharpnes
 	return clamp((corner_distance.x - distance) * (edge_sharpness * 500 + 100), 0.0, 1.0);
 }
 
-vec2 HMSS_GetPositionOffset()
-{
-	if (global.hmss_mega_screen_scale_on == 0)
-	{
-		return vec2(0, 0);
-	}
-	else
-	{
-		float output_aspect_ratio = global.FinalViewportSize.x / global.FinalViewportSize.y;
-		return vec2(global.hmss_position_offset_x / 100 / output_aspect_ratio, -global.hmss_position_offset_y / 100);
-	}
-}
 
-vec2 HMSS_GetCoordWithPositionOffset(vec2 in_coord)
-{
-	if (global.hmss_mega_screen_scale_on == 0)
-	{
-		return in_coord;
-	}
-	else
-	{
-		return in_coord - HMSS_GetPositionOffset();
-	}
-}
-
-vec2 HMSS_GetVTexCoordWithArgs(vec2 in_coord, vec2 in_scale, vec2 position_offset)
-{
-	return HMSS_GetInverseScaledCoord(HMSS_GetCoordWithPositionOffset(in_coord), in_scale);
-}
-
-vec2 HMSS_GetScreenVTexCoord(vec2 in_coord)
-{
-	return HMSS_GetVTexCoordWithArgs(in_coord, HMSS_GetScreenScale(), HMSS_GetPositionOffset());
-}
-
-vec2 HMSS_GetTubeVTexCoord(vec2 in_coord)
-{
-	return HMSS_GetVTexCoordWithArgs(in_coord, HMSS_GetTubeScale(), HMSS_GetPositionOffset());
-}
 
 vec3 HMSS_RGBtoHSV(vec3 c)
 {

@@ -1,9 +1,7 @@
-shaders = 14
-
 // Add Mega Screen Scale Params for the UI
 //      Add the mega-screen-scale parameters at the beginning of the list for easy access
 //      Debug Drawing of the resolution/screen scaling is also included here
-shader0 = ../crt/shaders/hyperspacemadness/hsm-stock-with-mega-screen-scale-params.slang
+shader0 = ../crt/shaders/hyperspacemadness/hsm-stock-with-mega-screen-scale-bezel-params.slang
 
 // NOTE: desired put De-Dithering or TV Signal effects here, e.g. GTU, NTSC, CBOD
 shader1 = ../stock.slang
@@ -51,14 +49,14 @@ float_framebuffer9 = true
 alias9 = LinearizePass
 
 // Guest-Venom Pass ----------------------------------------------------------------
-shader10 = ../crt/shaders/guest/blur_horiz.slang
+shader10 = ../crt/shaders/hyperspacemadness/hsm-guest-blur_horiz.slang
 filter_linear10 = false
 scale_type10 = source
 scale10 = 1.0
 float_framebuffer10 = true
 
 // Guest-Venom Pass ----------------------------------------------------------------
-shader11 = ../crt/shaders/guest/blur_vert.slang
+shader11 = ../crt/shaders/hyperspacemadness/hsm-guest-blur_vert.slang
 filter_linear11 = false
 scale_type11 = source
 scale11 = 1.0
@@ -71,19 +69,25 @@ filter_linear12 = true
 scale_type12 = source
 scale12 = 1.0
 float_framebuffer12 = true
+alias12 = CrtInputPass
+
+shader13 = ../stock.slang
 
 // CRT Shader - Guest-Venom ----------------------------------------------------------------
 //      Guest's Awesome Shader!!!
 //      Has been slightly altered to use the same scaling as the rest of the shders for the bezel & reflection
-shader13 = ../crt/shaders/hyperspacemadness/hsm-crt-guest-dr-venom-with-scaling.slang
-mipmap_input13 = true
-filter_linear13 = true
-scale_type13 = viewport
-scale_x13 = 1.0
-scale_y13 = 1.0
+shader14 = ../crt/shaders/hyperspacemadness/hsm-crt-guest-dr-venom-with-scaling-no-bezel.slang
+mipmap_input14 = true
+filter_linear14 = true
+scale_type14 = viewport
+scale_x14 = 1.0
+scale_y14 = 1.0
+float_framebuffer14 = true
+alias14 = BR_CrtPass
 
 //shaders/guest/crt-guest-dr-venom.slang //
 
+shaders = 15
 
 // Define textures to be used by the different passes
 textures = "SamplerLUT1;SamplerLUT2;SamplerLUT3;"
@@ -95,7 +99,7 @@ SamplerLUT3 = ../crt/shaders/guest/lut/other1.png
 SamplerLUT3_linear = true
 
 
-parameters = "hmss_mega_screen_scale_on;hmss_screen_scale_only;hmss_screen_aspect_ratio;hmss_integer_scale_mode;hmss_int_scale_multiple_offset;hmss_non_integer_scale;hmss_int_scale_border_min_height;hmss_scanline_direction;hmss_curvature_on_long_axis;hmss_curvature_on_short_axis;hmss_corner_radius;hmss_tube_black_edge_thickness;hmss_crop_overscan_top;hmss_crop_overscan_bottom;hmss_crop_overscan_left;hmss_crop_overscan_right;hmss_pre_crt_black_level;hag_afterglow_persistence"
+parameters = "hmss_mega_screen_scale_on;hmss_screen_scale_only;hmss_screen_aspect_ratio;hmss_integer_scale_mode;hmss_int_scale_multiple_offset;hmss_non_integer_scale;hmss_int_scale_border_min_height;hmss_scanline_direction;hmss_curvature_2D_long_axis;hmss_curvature_2D_short_axis;hmss_corner_radius;hmss_tube_black_edge_thickness;hmss_crop_overscan_top;hmss_crop_overscan_bottom;hmss_crop_overscan_left;hmss_crop_overscan_right;hmss_pre_crt_black_level;hag_afterglow_persistence"
 
 hmss_mega_screen_scale_on = 1
 hmss_screen_scale_only = 1
@@ -106,8 +110,8 @@ hmss_screen_scale_only = 1
 hmss_int_scale_border_min_height = 5.5
 // hmss_scanline_direction = 0
 
-hmss_curvature_on_long_axis = 3
-hmss_curvature_on_short_axis = 4
+// hmss_curvature_2D_long_axis = 3
+// hmss_curvature_2D_short_axis = 4
 hmss_corner_radius = 10
 // hmss_tube_black_edge_thickness = 1.6
 

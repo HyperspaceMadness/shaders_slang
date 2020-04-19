@@ -32,7 +32,7 @@ layout(std140, set = 0, binding = 0) uniform UBO
 	uint FrameCount;
 
 	float hmss_mega_screen_scale_on;
-	float hmss_screen_scale_only;
+	// float hmss_screen_scale_only;
 	float hmss_screen_scale_debug;
 	
 	float hmss_rotate_crt_image;
@@ -52,12 +52,14 @@ layout(std140, set = 0, binding = 0) uniform UBO
 	float hmss_crop_overscan_right;
 
 	float hmss_curvature_mode;
-	float hmss_curvature_on_long_axis;
-	float hmss_curvature_on_short_axis;
-	float hmss_geom_radius;
-	float hmss_geom_view_dist;
-	float hmss_geom_tilt_angle_x;
-	float hmss_geom_tilt_angle_y;
+	float hmss_curvature_3D_radius;
+	float hmss_curvature_3D_view_dist;
+	float hmss_curvature_3D_tilt_angle_x;
+	float hmss_curvature_3D_tilt_angle_y;
+	float hmss_curvature_2D_long_axis;
+	float hmss_curvature_2D_short_axis;
+    float hmss_curvature_post_scale_x;
+    float hmss_curvature_post_scale_y;
 
 	float hmss_corner_radius;
 	float hmss_screen_edge_sharpness;
@@ -306,11 +308,10 @@ inline float2 get_aspect_vector(const float geom_aspect_ratio)
     return geom_aspect;
 }
 
-//  HSM Removed
-// inline float2 get_geom_overscan_vector()
-// {
-//     return float2(geom_overscan_x, geom_overscan_y);
-// }
+inline float2 get_geom_overscan_vector()
+{
+    return float2(geom_overscan_x, geom_overscan_y);
+}
 
 // inline float2 get_geom_tilt_angle_vector()
 // {

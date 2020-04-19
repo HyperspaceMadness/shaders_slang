@@ -49,14 +49,14 @@ float_framebuffer9 = true
 alias9 = LinearizePass
 
 // Guest-Venom Pass ----------------------------------------------------------------
-shader10 = ../crt/shaders/guest/blur_horiz.slang
+shader10 = ../crt/shaders/hyperspacemadness/hsm-guest-blur_horiz.slang
 filter_linear10 = false
 scale_type10 = source
 scale10 = 1.0
 float_framebuffer10 = true
 
 // Guest-Venom Pass ----------------------------------------------------------------
-shader11 = ../crt/shaders/guest/blur_vert.slang
+shader11 = ../crt/shaders/hyperspacemadness/hsm-guest-blur_vert.slang
 filter_linear11 = false
 scale_type11 = source
 scale11 = 1.0
@@ -69,29 +69,26 @@ filter_linear12 = true
 scale_type12 = source
 scale12 = 1.0
 float_framebuffer12 = true
-alias12 = CrtInputPass
-
-// Screen Scale & Tube Scale Curvature Mapping
-// Write mapping into the pass, of the 4 channels, x & y are screen warped coord and z & w are tube warped coord
-shader13 = ../crt/shaders/hyperspacemadness/hsm-curvature-mapping.slang
-mipmap_input13 = true
-filter_linear13 = true
-scale_type13 = viewport
-float_framebuffer13 = true
-//format13 R16G16B16A16_SFLOAT
-alias13 = BR_MappingPass
 
 // CRT Shader - Guest-Venom ----------------------------------------------------------------
 //      Guest's Awesome Shader!!!
 //      Has been slightly altered to use the same scaling as the rest of the shders for the bezel & reflection
-shader14 = ../crt/shaders/hyperspacemadness/hsm-crt-guest-dr-venom-with-scaling.slang
+shader13 = ../crt/shaders/hyperspacemadness/hsm-crt-guest-dr-venom-with-scaling.slang
+mipmap_input13 = true
+filter_linear13 = true
+scale_type13 = viewport
+scale13 = 1.0
+float_framebuffer13 = true
+alias13 = BR_CrtPass
+
+// Tube Scale Curvature Mapping
+// Write mapping into the pass, of the 4 channels, x & y are screen warped coord and z & w are tube warped coord
+shader14 = ../crt/shaders/hyperspacemadness/hsm-curvature-mapping.slang
 mipmap_input14 = true
 filter_linear14 = true
 scale_type14 = viewport
-scale_x14 = 1.0
-scale_y14 = 1.0
 float_framebuffer14 = true
-alias14 = BR_CrtPass
+alias14 = BR_MappingPass
 
 // Linearize & Reduce Resolution ----------------------------------------------------------------
 //      Reduce the resolution to a small static size regardless of final resolution
@@ -165,6 +162,7 @@ filter_linear20 = true
 scale_type20 = viewport
 float_framebuffer20 = false
 
+// Define how many shaders will be used from this list
 shaders = 21
 
 // Define textures to be used by the different passes
@@ -182,7 +180,7 @@ TubeGlassImage = ../crt/shaders/hyperspacemadness/textures/TubeGlassOverlayImage
 OverlayImage = ../crt/shaders/hyperspacemadness/textures/OverlayImage_OverReflection_3840x2160.png
 OverlayVertImage = ../crt/shaders/hyperspacemadness/textures/OverlayImage_OverReflection_3840x2160.png
 
-parameters = "hmss_mega_screen_scale_on;hmss_screen_scale_only;hmss_screen_aspect_ratio;hmss_integer_scale_mode;hmss_int_scale_multiple_offset;hmss_non_integer_scale;hmss_int_scale_border_min_height;hmss_scanline_direction;hmss_curvature_on_long_axis;hmss_curvature_on_short_axis;hmss_corner_radius;hmss_tube_black_edge_thickness;hmbz_frame_thickness;hmbz_bezel_width;hmbz_bezel_height;hmbz_background_image_opacity;hmbz_bezel_opacity;hmbz_bezel_brightness;hmbz_frame_opacity;hmbz_background_image_cut_out_inside_frame;hmbz_background_image_scale_mode;hmbz_background_image_aspect_ratio;hmbz_background_image_tube_height;hmss_crop_overscan_top;hmss_crop_overscan_bottom;hmss_crop_overscan_left;hmss_crop_overscan_right;hmss_pre_crt_black_level;hbl_blur_min;hbl_blur_max;hbr_global_amount;hbr_global_gamma_adjust;hbr_diffused_reflection;hbr_fullscreen_glow;hbr_fullscreen_glow_gamma;hag_afterglow_persistence"
+parameters = "hmss_mega_screen_scale_on;hmss_screen_scale_only;hmss_screen_aspect_ratio;hmss_integer_scale_mode;hmss_int_scale_multiple_offset;hmss_non_integer_scale;hmss_int_scale_border_min_height;hmss_scanline_direction;hmss_curvature_mode;hmss_curvature_2D_long_axis;hmss_curvature_2D_short_axis;hmss_curvature_3D_radius;hmss_curvature_3D_view_dist;hmss_curvature_3D_tilt_angle_x;hmss_curvature_3D_tilt_angle_y;hmss_corner_radius;hmss_tube_black_edge_thickness;hmbz_frame_thickness;hmbz_bezel_width;hmbz_bezel_height;hmbz_background_image_opacity;hmbz_bezel_opacity;hmbz_bezel_brightness;hmbz_frame_opacity;hmbz_background_image_cut_out_inside_frame;hmbz_background_image_scale_mode;hmbz_background_image_aspect_ratio;hmbz_background_image_tube_height;hmss_crop_overscan_top;hmss_crop_overscan_bottom;hmss_crop_overscan_left;hmss_crop_overscan_right;hmss_pre_crt_black_level;hbl_blur_min;hbl_blur_max;hbr_global_amount;hbr_global_gamma_adjust;hbr_diffused_reflection;hbr_fullscreen_glow;hbr_fullscreen_glow_gamma;hag_afterglow_persistence"
 
 hmss_mega_screen_scale_on = 1
 hmss_screen_scale_only = 0
@@ -193,19 +191,26 @@ hmss_screen_scale_only = 0
 hmss_int_scale_border_min_height = 5.5
 // hmss_scanline_direction = 0
 
-hmss_curvature_on_long_axis = 3
-hmss_curvature_on_short_axis = 4
+////-- Curvature --////
+// hmss_curvature_mode = 1
+// hmss_curvature_2D_long_axis = 0
+// hmss_curvature_2D_short_axis = 0
+// hmss_curvature_3D_radius = 2
+// hmss_curvature_3D_view_dist = 2
+// hmss_curvature_3D_tilt_angle_x = 0
+// hmss_curvature_3D_tilt_angle_y = 0
+
 hmss_corner_radius = 10
 // hmss_tube_black_edge_thickness = 1.6
 // hmbz_bezel_width = 7.5;
 // hmbz_bezel_height = 6;
-// hmbz_frame_thickness = 7;
- 
+
 // hmbz_background_image_opacity = 1
 // hmbz_bezel_opacity = 1
 // hmbz_bezel_brightness = 10
-// hmbz_frame_opacity = 1;
-// hmbz_background_image_cut_out_inside_frame = 1;
+
+// hmbz_frame_thickness = 7;
+ // hmbz_frame_opacity = 1;
 
 // hmbz_background_image_scale_mode = 0
 hmbz_background_image_aspect_ratio = 1.75
@@ -219,8 +224,6 @@ hmbz_background_image_aspect_ratio = 1.75
 
 // hbl_blur_min = 0
 // hbl_blur_max = 0.4
-
-
 
 // hbr_global_amount = 1.4
 // hbr_global_gamma_adjust = 1.2

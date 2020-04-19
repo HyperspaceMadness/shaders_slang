@@ -8,7 +8,7 @@ Addition of hsm-mega-screen-scale by HyperspaceMadness remimcgill@hotmail.com
 */
 
 // HSM Modification
-// Added the following
+// HSM Added
 // Import Screen Scale Functions and global structure
 #include "hsm-mega-screen-scale.inc"
 // End Addition
@@ -51,8 +51,7 @@ layout(push_constant) uniform Push
 #pragma parameter SCANLINE_BEAM_MIN     "    Scanline Beam Min." 1.0 0.25 5.0 0.05
 #pragma parameter SCANLINE_BEAM_MAX     "    Scanline Beam Max." 1.0 0.25 5.0 0.05
 
-// HSM Modification
-// Removed the following
+// HSM Removed
 // #pragma parameter GEOM_CURVATURE "Geom Curvature" 0.0 0.0 0.1 0.01
 // #pragma parameter GEOM_WARP "Geom Warp" 0.0 0.0 0.1 0.01
 // #pragma parameter GEOM_CORNER_SIZE "Geom Corner Size" 0.0 0.0 0.1 0.01
@@ -116,8 +115,7 @@ vec3 get_scanline_weight(float pos, float beam, float strength)
     return vec3(weight);
 }
 
-// HSM Modification
-/* Removed the following
+/* HSM Removed
 vec2 curve_coordinate(vec2 co, float curvature)
 {
     vec2 curve = vec2(curvature, curvature * 0.75);
@@ -148,7 +146,7 @@ layout(location = 1) in vec2 TexCoord;
 layout(location = 0) out vec2 vTexCoord;
 
 // HSM Modification
-// Added the following
+// HSM Added
 layout(location = 1) out vec2 screenScale;
 // End Addition
 
@@ -158,7 +156,7 @@ void main()
    vTexCoord = TexCoord;
 
     // HSM Modification
-    // Added the following
+    // HSM Added
     screenScale =  HMSS_GetScreenScale();
     vTexCoord = HMSS_GetScreenVTexCoord(vTexCoord);
 }
@@ -167,7 +165,7 @@ void main()
 layout(location = 0) in vec2 vTexCoord;
 
 // HSM Modification
-// Added the following
+// HSM Added
 layout(location = 1) in vec2 screenScale;
 // End Addition
 
@@ -185,7 +183,7 @@ void main()
     */
 
     // TODO implement Cropping
-    // Added the following
+    // HSM Added
     vec2 tex_size = global.SourceSize.xy;
     // End Addition
 
@@ -263,7 +261,7 @@ void main()
     */
 
     // HSM Modification
-    // Added the Following
+    // HSM Added the Following
     float sample_offset = (global.SourceSize.y * global.OutputSize.w * screenScale.y) * 0.5;
     // End Addition
 
@@ -298,7 +296,7 @@ void main()
     vec2 mod_fac = floor(vTexCoord * global.OutputSize.xy * global.SourceSize.xy / (global.SourceSize.xy * vec2(params.MASK_SIZE, mask_dot_height * params.MASK_SIZE)));
     */
 
-    // Added the following
+    // HSM Added
     vec2 mod_fac = floor(vTexCoord * global.OutputSize.xy * screenScale * global.SourceSize.xy / (global.SourceSize.xy * vec2(params.MASK_SIZE, mask_dot_height * params.MASK_SIZE)));
     // End Addition
 
@@ -338,7 +336,7 @@ void main()
     col += diff * params.DIFFUSION * vec3(corner_weight);
 
     // HSM Modification
-    // Added
+    // HSM Added
     col = pow(col, 1.0 / vec3(global.hmss_post_crt_gamma));
     // End Addition
 

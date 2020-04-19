@@ -26,14 +26,16 @@
 layout(push_constant) uniform Push
 {
    float hag_afterglow_amount;
-   float hag_afterglow_persistence;
-   float hag_afterglow_saturation;
+   // float hag_afterglow_persistence;
+   // float hag_afterglow_saturation;
 } params;
 
 //#include "hsm-mega-bezel-params.inc"
 // Get the black level from here
 #include "hsm-mega-screen-scale.inc"
 
+const float hag_afterglow_persistence = 0.5;
+const float hag_afterglow_saturation = 0.1;
 
 #define COMPAT_TEXTURE(c,d) texture(c,d)
 
@@ -72,7 +74,7 @@ layout(set = 0, binding = 8) uniform sampler2D OriginalHistory6;
 
 vec3 afterglow(float number)
 {
-	return vec3(params.hag_afterglow_amount) * exp2(-vec3(params.hag_afterglow_persistence) * vec3(number * number));
+	return vec3(params.hag_afterglow_amount) * exp2(-vec3(hag_afterglow_persistence) * vec3(number * number));
 }
 
 void main()
@@ -89,7 +91,7 @@ void main()
       glow += COMPAT_TEXTURE(Prev5Texture, TEX0.xy).rgb * afterglow(5.0);
       glow += COMPAT_TEXTURE(Prev6Texture, TEX0.xy).rgb * afterglow(6.0);
 
-      glow = normalize(pow(glow + vec3(eps), vec3(params.hag_afterglow_saturation))) * length(glow);		
+      glow = normalize(pow(glow + vec3(eps), vec3(hag_afterglow_saturation))) * length(glow);		
       
       float glow_over_threshold = (rgb_color.r + rgb_color.g + rgb_color.b) > 7.0 / 255.0 ? 0 : 1;
       

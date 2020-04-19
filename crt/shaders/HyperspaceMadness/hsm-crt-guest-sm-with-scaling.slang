@@ -47,7 +47,7 @@ Uses a red/magenta/cyan/green pattern for even spacing of the LCD subpixels.
 */
 
 // Modifications from hsm-mega-screen-scale.inc integration
-// Added the following
+// HSM Added
 #include "hsm-mega-screen-scale.inc"
 // End Addition
 
@@ -64,7 +64,7 @@ layout(push_constant) uniform Push
 	float h_sharp, cubic, mask, maskmode, maskdark, maskbright, masksize, gamma_out;
 
 	// Modifications from hsm-mega-screen-scale.inc integration
-	// Added the following
+	// HSM Added
 	float bglow;
 	float bloom;
 	float autobrm;	
@@ -124,7 +124,7 @@ layout(push_constant) uniform Push
 // #define bglow global.bglow
 // #define autobrm global.autobrm
 
-// Added the following
+// HSM Added
 #define bglow params.bglow
 #define autobrm params.autobrm
 // End Addition
@@ -136,7 +136,7 @@ layout(push_constant) uniform Push
 // Removed the following
 // #define bloom global.bloom
 
-// Added the following
+// HSM Added
 #define bloom params.bloom
 // End Addition
 
@@ -149,7 +149,7 @@ layout(push_constant) uniform Push
 // Removed the following
 // #define sclip global.sclip
 
-// Added the following
+// HSM Added
 #define sclip params.sclip
 // End Addition
 
@@ -299,7 +299,7 @@ void main()
 	tex = Warp(tex/vec2(1.0,ratio))*vec2(1.0,ratio);
 	*/
 	
-	// Added the following
+	// HSM Added
 	tex = HMSS_GetScreenVTexCoord(tex/vec2(1.0,ratio))*vec2(1.0,ratio);
 	tex = HMSS_GetWrappedCurvedCoord(tex/vec2(1.0,ratio), 1)*vec2(1.0,ratio);
 	// End Addition

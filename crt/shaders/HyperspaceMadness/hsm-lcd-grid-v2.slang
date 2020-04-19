@@ -51,7 +51,7 @@ void main()
     vTexCoord = TexCoord;
 
     // HSM Modification
-    // Added
+    // HSM Added
     vTexCoord = HMSS_GetScreenVTexCoord(vTexCoord);
     // End Addition
 }
@@ -90,7 +90,7 @@ void main()
     // TODO Add Support for Cropping?
 
     // HSM Modification
-    // Added
+    // HSM Added
     vec2 curved_coord = HMSS_GetWrappedCurvedCoord(vTexCoord, 1);
     // End Addition
 
@@ -136,7 +136,7 @@ void main()
     averageColor = mat3(cred, cgreen, cblue) * averageColor;
 
     // HSM Modification
-    // Added
+    // HSM Added
     averageColor = pow(averageColor, 1.0 / vec3(global.hmss_post_crt_gamma));
     // End Addition
 

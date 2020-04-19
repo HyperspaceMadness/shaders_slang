@@ -15,14 +15,8 @@ void main()
    gl_Position = global.MVP * Position;
    vTexCoord = TexCoord * 1.0001;
    
-   // Coordinate with position offset
-   vTexCoord = HMSS_GetCoordWithPositionOffset(vTexCoord);
-
    // Coordinate in the space which includes the entire glass area including the illuminated screen and black line around it 
-   screenCoord = HMSS_GetInverseScaledCoord(vTexCoord, HMSS_GetScreenScale());
-
-   // Coordinate in the space which includes the entire glass area including the illuminated screen and black line around it 
-   tubeCoord = HMSS_GetInverseScaledCoord(vTexCoord, HMSS_GetTubeScale());
+   tubeCoord = HMSS_GetTubeVTexCoord(vTexCoord);
 }
 
 #pragma stage fragment
@@ -33,7 +27,6 @@ layout(location = 0) out vec4 FragColor;
 
 void main()
 {
-   vec2 screen_curved_coord = HMSS_GetCurvedCoord(screenCoord, 1);
    vec2 tube_curved_coord = HMSS_GetCurvedCoord(tubeCoord, global.hmss_tube_black_edge_curvature_scale);
-   FragColor = vec4(screen_curved_coord.x, screen_curved_coord.y, tube_curved_coord.x, tube_curved_coord.y);
+   FragColor = vec4(tube_curved_coord.x, tube_curved_coord.y, 0, 0);
 }

@@ -686,33 +686,25 @@ vec2 HRG_GetGeomCurvedCoord(  vec2 in_coord,
                             float in_geom_view_dist, 
                             float in_geom_tilt_angle_x, 
                             float in_geom_tilt_angle_y,
-                            vec2 in_screen_scale,
-                            vec2 in_curvature_mult,
+                            float in_screen_aspect,
+                            vec2 in_extra_curvature_mult,
                             out mat2x2 pixel_to_video_uv)
 {
     vec2 ctr_coord = in_coord - 0.5; 
 
-    // Kind of a Hack
-    // If viewport aspect ratio is horizontal then stretch the coordinate before the distortion is done
-    // This results in the appropriate amount of curvature on horizontal and vertical, 
-    // Without this there was not as much curvature in the vertical direciton as there was supposed to be
     float final_viewport_aspect = global.FinalViewportSize.x / global.FinalViewportSize.y;
-    // TODO, need the following when the screen is already in a subsection of the screen
-    // if (final_viewport_aspect > 1)
-    // {
-    //     ctr_coord.x *= (global.FinalViewportSize.x / global.FinalViewportSize.y);
-    // }
-    ctr_coord *= in_curvature_mult;
+
+    // Kind of a Hack, Multiply the coordinate by a factor, do curvature 
+    // then return it to the original scale
+    ctr_coord *= in_extra_curvature_mult;
 
     vec2 tex_uv = ctr_coord + 0.5;
 
     vec2 output_pixel_size = vec2(1.0, 1.0)/global.OutputSize.xy;
 
-    //float viewport_aspect_ratio = global.OutputSize.x / global.OutputSize.y;
-    float screen_width_to_viewport_width_ratio = (global.FinalViewportSize.x / global.FinalViewportSize.y);
-    float geom_radius_scaled = in_geom_radius * GetScreenDiagonalScale(in_screen_scale);
+    float geom_radius_scaled = in_geom_radius;// * GetScreenDiagonalScale(in_screen_scale);
 
-    vec2 output_aspect = hrg_get_aspect_vector(screen_width_to_viewport_width_ratio);
+    vec2 output_aspect = hrg_get_aspect_vector(in_screen_aspect);
 
     //  Create a local-to-global rotation matrix for the CRT's coordinate
     //  frame and its global-to-local inverse.  Rotate around the x axis
@@ -777,7 +769,7 @@ vec2 HRG_GetGeomCurvedCoord(  vec2 in_coord,
     // {
     //     ctr_curved_coord.x /= global.FinalViewportSize.x / global.FinalViewportSize.y;
     // }
-    ctr_curved_coord /= in_curvature_mult;
+    ctr_curved_coord /= in_extra_curvature_mult;
 
     video_uv_no_geom_overscan = ctr_curved_coord + 0.5;
 

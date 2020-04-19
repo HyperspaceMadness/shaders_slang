@@ -28,9 +28,9 @@
 //  - Didn't get to instruction level optimization
 //  - Could likely use texture fetch to generate phosphor mask
 //--------------------------------------------------------------
-// Added options to disable unused features
+// HSM Added options to disable unused features
 //--------------------------------------------------------------
-// Added in exposure matching
+// HSM Added in exposure matching
 //  - Given scan-line effect and mask always darkens image
 //  - Uses generalized tonemapper to boost mid-level
 //  - Note this can compress highlights
@@ -39,14 +39,14 @@
 //--------------------------------------------------------------
 // Includes option saturation and contrast controls
 //--------------------------------------------------------------
-// Added in subtractive aperture grille
+// HSM Added in subtractive aperture grille
 //  - This is a bit brighter than prior
 //--------------------------------------------------------------
 // Make sure input to this filter is already low-resolution
 //  - This is not designed to work on titles doing the following
 //     - Rendering to hi-res with nearest sampling
 //--------------------------------------------------------------
-// Added a fast and more pixely option for 2 tap/pixel
+// HSM Added a fast and more pixely option for 2 tap/pixel
 //--------------------------------------------------------------
 // Improved the vignette when WARP is enabled
 //--------------------------------------------------------------

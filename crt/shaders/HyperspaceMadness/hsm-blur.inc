@@ -43,9 +43,7 @@ void main()
 {
 	if (params.hbl_blur_num_samples > 0)
 	{
-		vec4 mapping_coords = HMSS_GetCachedCurvedScreenAndTubeCoords(BR_MappingPass, vTexCoord.xy);
-		vec2 screen_coord_warped = mapping_coords.xy;
-		vec2 tube_coord_warped = mapping_coords.zw;
+		vec2 tube_coord_warped = HMSS_GetCachedCurvedTubeCoord(BR_MappingPass, vTexCoord.xy);
 
 		// General variables related to the main masks referenced later
 		float screen_aspect;
@@ -73,7 +71,7 @@ void main()
 		float noise_mask;
 
 		// screen_aspect is 1.33 for a standard old-style tube placed horizontally
-		screen_aspect = HMSS_GetScreenAspectRatio();
+		screen_aspect = HMSS_GetScreenAspect();
 
 		// Scale of the light generating part of the screen relative to the viewport
 		screen_scale = HMSS_GetScreenScale();

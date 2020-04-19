@@ -27,7 +27,6 @@ layout(std140, set = 0, binding = 0) uniform UBO
 	uint FrameCount;
 
 	float hmss_mega_screen_scale_on;
-	float hmss_screen_scale_only;
 	float hmss_screen_scale_debug;
 	
 	float hmss_rotate_crt_image;
@@ -47,12 +46,14 @@ layout(std140, set = 0, binding = 0) uniform UBO
 	float hmss_crop_overscan_right;
 
 	float hmss_curvature_mode;
-	float hmss_curvature_on_long_axis;
-	float hmss_curvature_on_short_axis;
-	float hmss_geom_radius;
-	float hmss_geom_view_dist;
-	float hmss_geom_tilt_angle_x;
-	float hmss_geom_tilt_angle_y;
+	float hmss_curvature_3D_radius;
+	float hmss_curvature_3D_view_dist;
+	float hmss_curvature_3D_tilt_angle_x;
+	float hmss_curvature_3D_tilt_angle_y;
+	float hmss_curvature_2D_long_axis;
+	float hmss_curvature_2D_short_axis;
+	float hmss_curvature_post_scale_x;
+	float hmss_curvature_post_scale_y;
 	
 	float hmss_corner_radius;
 	float hmss_screen_edge_sharpness;
@@ -61,13 +62,9 @@ layout(std140, set = 0, binding = 0) uniform UBO
 
 	float hmss_pre_crt_black_level;
 	float hmss_pre_crt_gamma;
-	// float hmss_pre_crt_luminance;
 	float hmss_post_crt_gamma;
 
 	float hmss_negative_crop_brightness;
-
-	// float hmss_reflection_mirror_stretch;
-	// float hmss_reflection_mirror_offset;
 } global;
 
 #include "hsm-mega-screen-scale-params-functions.inc"

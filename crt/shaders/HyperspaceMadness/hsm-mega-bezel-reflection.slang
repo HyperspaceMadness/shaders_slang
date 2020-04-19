@@ -54,12 +54,14 @@ layout(std140, set = 0, binding = 0) uniform UBO
 	float hmss_crop_overscan_right;
 
 	float hmss_curvature_mode;
-	float hmss_curvature_on_long_axis;
-	float hmss_curvature_on_short_axis;
-	float hmss_geom_radius;
-	float hmss_geom_view_dist;
-	float hmss_geom_tilt_angle_x;
-	float hmss_geom_tilt_angle_y;
+	float hmss_curvature_3D_radius;
+	float hmss_curvature_3D_view_dist;
+	float hmss_curvature_3D_tilt_angle_x;
+	float hmss_curvature_3D_tilt_angle_y;
+	float hmss_curvature_2D_long_axis;
+	float hmss_curvature_2D_short_axis;
+	float hmss_curvature_post_scale_x;
+	float hmss_curvature_post_scale_y;
 	
 	float hmss_corner_radius;
 	float hmss_screen_edge_sharpness;
@@ -70,13 +72,7 @@ layout(std140, set = 0, binding = 0) uniform UBO
 
 	float hmss_pre_crt_black_level;
 	float hmss_pre_crt_gamma;
-//	float hmss_pre_crt_luminance;
 	float hmss_post_crt_gamma;
-
-	float hmss_screen_scale_only;
-
-	// float hmss_reflection_mirror_stretch;
-	// float hmss_reflection_mirror_offset;
 
 	// Image Bezel
 	float hmbz_background_image_opacity;
@@ -101,9 +97,9 @@ layout(std140, set = 0, binding = 0) uniform UBO
 	float hmbz_bezel_inner_edge_thickness;
 	float hmbz_bezel_inner_corner_radius_scale;
 	float hmbz_bezel_outer_corner_radius_scale;
-	float hmbz_bezel_corner_highlight_inner_spread;
-	float hmbz_bezel_corner_highlight_outer_spread;
-	float hmbz_bezel_corner_highlight_spread_falloff; // TODO Need to keep this?
+	float hbr_corner_inner_spread;
+	float hbr_corner_outer_spread;
+	float hbr_corner_spread_falloff; // TODO Need to keep this?
 	float hmbz_bezel_noise;
 
 	// Generated Frame
@@ -116,7 +112,7 @@ layout(std140, set = 0, binding = 0) uniform UBO
 	float hmbz_frame_shadow_opacity;
 	float hmbz_frame_shadow_width;
 
-	float hmbz_vignette_shadow_opacity;
+	float hmbz_background_image_vignette_opacity;
 	
 	// Blur Stuff
 	float hbl_blur_num_samples;
@@ -270,9 +266,7 @@ void main()
 		float placement_guide_blue_alpha = 0;
 	#endif
 
-	vec4 mapping_coords = HMSS_GetCachedCurvedScreenAndTubeCoords(BR_MappingPass, viewportCoord.xy);
-	vec2 screen_coord_warped = mapping_coords.xy;
-	vec2 tube_coord_warped = mapping_coords.zw;
+	vec2 tube_coord_warped = HMSS_GetCachedCurvedTubeCoord(BR_MappingPass, viewportCoord.xy);
 
 	//----------------------------------------------------
 	// CRT Pass
@@ -324,7 +318,7 @@ void main()
 		float noise_mask;
 
 		// screen_aspect is 1.33 for a standard old-style tube placed horizontally
-		screen_aspect = HMSS_GetScreenAspectRatio();
+		screen_aspect = HMSS_GetScreenAspect();
 
 		// Scale of the light generating part of the screen relative to the viewport
 		screen_scale = HMSS_GetScreenScale();
@@ -433,10 +427,10 @@ void main()
 		// Get the distance perpendicular to the crease direction so we can use it to fade later
 		float distance_from_crease = HHLP_GetDistanceToLine(outermap_coord_warped_ctr_at_screen_corner.x, outermap_coord_warped_ctr_at_screen_corner.y, 1, corner_crease_dir.y / corner_crease_dir.x, 0 );
 
-		float fade_out_to_corner = HHLP_QuadraticBezier(clamp(length(outermap_warped_outside_screen_vector) / (corner_crease_length * 2), 0, 1), vec2(0.5, global.hmbz_bezel_corner_highlight_spread_falloff / 100));
+		float fade_out_to_corner = HHLP_QuadraticBezier(clamp(length(outermap_warped_outside_screen_vector) / (corner_crease_length * 2), 0, 1), vec2(0.5, global.hbr_corner_spread_falloff / 100));
 
-		float corner_fade_width_inner = global.hmbz_bezel_corner_highlight_inner_spread / 100 * (screen_scale.x + screen_scale.y) * global.hmbz_bezel_inner_corner_radius_scale * global.hmss_corner_radius / 10 / 250 * 1.2;
-		float corner_fade_width_outer = global.hmbz_bezel_corner_highlight_outer_spread / 100 * (screen_scale.x + screen_scale.y) * global.hmbz_bezel_outer_corner_radius_scale * global.hmss_corner_radius / 10 / 250 * 1.6;
+		float corner_fade_width_inner = global.hbr_corner_inner_spread / 100 * (screen_scale.x + screen_scale.y) * global.hmbz_bezel_inner_corner_radius_scale * global.hmss_corner_radius / 10 / 250 * 1.2;
+		float corner_fade_width_outer = global.hbr_corner_outer_spread / 100 * (screen_scale.x + screen_scale.y) * global.hmbz_bezel_outer_corner_radius_scale * global.hmss_corner_radius / 10 / 250 * 1.6;
 		float corner_fade_width = (corner_fade_width_inner + fade_out_to_corner * (corner_fade_width_outer - corner_fade_width_inner));
 
 		// Get a vector perpendicular to the crease that we can shift the crease to blend between bottom/top and sides
@@ -480,7 +474,7 @@ void main()
 		vec4 base_image	= frag_color_linear;
 		vec2 tiled_image_coord = mod(imageLayerCoord, 1);
 		vec4 background_image = vec4(0);
-		if (HMSS_GetScreenAspectRatio() > 1)
+		if (HMSS_GetScreenAspect() > 1)
 		{
 			background_image = texture(BackgroundImage, tiled_image_coord).rgba;
 		}
@@ -491,7 +485,7 @@ void main()
 		background_image = global.hmbz_background_image_brightness * HHLP_Linearize(background_image);
 
 		//----------------------------------------------------
-		// Image Bezel - Applied ON TOP of the CRT image, BELOW the reflection
+		// Background Image - Applied at the bottom
 		//----------------------------------------------------
 		// TODO The position adjustment is moving the texture twice as fast as the screen
 		if (global.hmbz_background_image_opacity != 0)
@@ -499,8 +493,21 @@ void main()
 			float bezel_image_alpha = background_image.a;
 
 			// Add Background
-			float clipping_mask = outside_bezel_mask * bezel_image_alpha;
+			float outside_tube_mask_wider = 1 - HMSS_GetCornerMask(tube_warped_coord_ctr * 0.996 + 0.5, global.hmbz_bezel_inner_corner_radius_scale * global.hmss_corner_radius, 0.9);
+
+			float clipping_mask = outside_tube_mask_wider * bezel_image_alpha;
 			frag_color_linear	= vec4(mix(tube_edge_shadow_mult * base_image, background_image, global.hmbz_background_image_opacity * clipping_mask));
+		
+			if (global.hmbz_background_image_vignette_opacity != 0)
+			{
+				// Get Mask for the Vignette around the sides and top and bottom of the screen
+				float side_vignette_width = (1 - screen_scale.x);
+				float vignette_shadow_mask = 0.9 * HHLP_QuadraticBezier(smoothstep(side_vignette_width, 0, 0.5 - abs(viewportCoord.x - 0.5)), vec2(1, 0)) +
+											0.9 * HHLP_QuadraticBezier(smoothstep(viewportCoord.y > 0.5 ? 0.25 : 0.2, 0, 0.55 - abs(viewportCoord.y - 0.5)), vec2(1, 0));
+				float vignette_final_mask = outside_tube_mask * clamp(global.hmbz_background_image_vignette_opacity * vignette_shadow_mask, 0, 1);
+				frag_color_linear = mix(frag_color_linear, vec4(0, 0, 0, 1), vignette_final_mask);
+			}
+		
 		}
 
 		//----------------------------------------------------
@@ -508,15 +515,15 @@ void main()
 		//----------------------------------------------------
 		if (global.hmbz_tube_glass_image_opacity > 0)
 		{
-			vec4 tube_glass_image = HHLP_Linearize(texture(TubeGlassImage, tube_warped_coord_ctr + 0.5).rgba);
+			vec4 tube_glass_image = HHLP_Linearize(texture(TubeGlassImage, tube_coord_warped).rgba);
 
 			frag_color_linear	= frag_color_linear + (global.hmbz_tube_glass_image_opacity / 100) * tube_shadow_mask * tube_glass_image.a * (1 - outside_tube_mask) * tube_glass_image;
 		}
-
-		//----------------------------------------------------
+		
+		// ----------------------------------------------------
 		// Generated Bezel - Applied ON TOP of the Image Bezel, BELOW the reflection
-		//----------------------------------------------------
-		if (global.hmbz_bezel_opacity != 0 || global.hmbz_frame_opacity != 0 || global.hmbz_vignette_shadow_opacity != 0)
+		// ----------------------------------------------------
+		if (global.hmbz_bezel_opacity != 0 || global.hmbz_frame_opacity != 0)
 		{
 			/* This first bit is to get a mapping of the space outside of the screen which is continuous
 			This is more complicated than you would expect because since we are using curved coordinates 
@@ -598,21 +605,23 @@ void main()
 			float dist_outside_frame = length(clamp(abs(frame_outside_coord_ctr) - frame_edge, 0, 1) * vec2(screen_aspect, 1));
 			float frame_shadow_mask_0 = HHLP_QuadraticBezier(smoothstep(global.hmbz_frame_shadow_width / 100, 0, dist_outside_frame), vec2(1, 0));
 
-			// Get Mask for the Vignette around the sides and top and bottom of the screen
-			float side_vignette_width = (1 - screen_scale.x);
-			float vignette_shadow_mask = 0.9 * HHLP_QuadraticBezier(smoothstep(side_vignette_width, 0, 0.5 - abs(viewportCoord.x - 0.5)), vec2(1, 0)) +
-										0.9 * HHLP_QuadraticBezier(smoothstep(viewportCoord.y > 0.5 ? 0.25 : 0.2, 0, 0.55 - abs(viewportCoord.y - 0.5)), vec2(1, 0));
-
 			// Get masks for shadows, from frame as well as sides and top and bottom of viewport
 			float bezel_mask = outside_tube_mask * (1 - outside_bezel_mask);
 			float frame_mask = outside_bezel_mask * (1 - outside_frame_mask);
 			float frame_shadow_mask = outside_frame_mask * frame_shadow_mask_0;
 
 			// Get 
-			float final_mask =  global.hmbz_bezel_opacity * bezel_mask + 
-								global.hmbz_frame_opacity * frame_mask + 
-								global.hmbz_frame_opacity * global.hmbz_frame_shadow_opacity * frame_shadow_mask +
-								global.hmbz_vignette_shadow_opacity * vignette_shadow_mask;
+			float final_mask =  0;
+			
+			if (global.hmbz_bezel_opacity > 0.001)
+			{
+				final_mask += global.hmbz_bezel_opacity * bezel_mask;
+			}
+			if (global.hmbz_frame_opacity > 0.001)
+			{
+				final_mask += global.hmbz_frame_opacity * frame_mask;
+				final_mask += global.hmbz_frame_opacity * global.hmbz_frame_shadow_opacity * frame_shadow_mask;
+			}
 			final_mask = outside_tube_mask * clamp(final_mask, 0, 1);
 
 			// Add Bezel, Frame & Shadow color to the screen color
@@ -646,7 +655,7 @@ void main()
 																	outermap_screen_size_from_center.y * (global.hbr_lateral_outer_fade_distance / 100)); 
 
 			vec2 screen_coord_ctr = screenCoord - 0.5;
-			float edge_lateral_fade_mask = (1 - sides_mask) * smoothstep(0.5, 0.5 - 0.07 / HMSS_GetScreenAspectRatio(), abs(screen_coord_ctr.x))
+			float edge_lateral_fade_mask = (1 - sides_mask) * smoothstep(0.5, 0.5 - 0.07 / HMSS_GetScreenAspect(), abs(screen_coord_ctr.x))
 											+  sides_mask * smoothstep(0.5, 0.43, abs(screen_coord_ctr.y));
 
 			// float lateral_fade_center_mask = (1 - sides_mask) * clamp_0_1(GetFade(abs(outermap_warped_coord_ctr.x), 0, 0.5))
@@ -719,7 +728,7 @@ void main()
 	}
 	vec4 overlay_image = vec4(0);
 
-	if (HMSS_GetScreenAspectRatio() > 1)
+	if (HMSS_GetScreenAspect() > 1)
 	{
 		overlay_image = texture(OverlayImage, imageLayerCoord).rgba;
 	}

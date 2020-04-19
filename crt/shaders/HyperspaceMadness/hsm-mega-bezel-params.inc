@@ -1,6 +1,6 @@
-#pragma parameter hag_afterglow_amount                  "[AFTERGLOW]  Amount"        0.07 0.0 1.0 0.01
-#pragma parameter hag_afterglow_persistence             "[AFTERGLOW]  Persistence"   0.05 0.0 1.0 0.01
-#pragma parameter hag_afterglow_saturation              "[AFTERGLOW]  Saturation"    0.10 0.0 1.0 0.01
+// Tube Glass & Shadow
+#pragma parameter hmbz_tube_glass_image_opacity         "[TUBE]  Tube Glass Image Opacity (Additive)" 0 0 200 0.2
+#pragma parameter hmbz_tube_edge_shadow                 "[TUBE]  Tube Edge Shadow" 0.7 0 2 0.05
 
 // Background
 #pragma parameter hmbz_background_image_opacity 		"[BG IMAGE]  Opacity" 1 0 1 0.05
@@ -11,9 +11,6 @@
 #pragma parameter hmbz_background_image_tube_height      "[BG IMAGE]  Tube Height (in Texture)" 69 10 150.0 0.1
 #pragma parameter hmbz_background_image_vignette_opacity "[BG IMAGE]  Vignette Opacity" 0.8 0 2 0.02
 
-// Tube Glass & Shadow
-#pragma parameter hmbz_tube_glass_image_opacity         "[TUBE]  Tube Glass Image Opacity (Additive)" 0 0 200 0.2
-#pragma parameter hmbz_tube_edge_shadow                 "[TUBE]  Tube Edge Shadow" 0.7 0 2 0.05
 
 #pragma parameter hmbz_bezel_color_hue					"[BEZEL & FRAME COLOR]  Color Hue" 0 0 360 0.5
 #pragma parameter hmbz_bezel_color_saturation			"[BEZEL & FRAME COLOR]  Color Saturation" 0 0 100 1

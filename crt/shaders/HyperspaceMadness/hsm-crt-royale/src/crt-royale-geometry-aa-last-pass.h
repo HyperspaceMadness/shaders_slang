@@ -262,22 +262,22 @@ void main()
     const bool need_subpixel_aa = false;//abs_aa_r_offset.x + abs_aa_r_offset.y > 0.0;
     float3 color;
 
-    // if(aa_level > 0.5 && (geom_mode > 0.5 || any(bool2((geom_overscan.x != 1.0), (geom_overscan.y != 1.0)))))
-    // {
+    if(aa_level > 0.5 && (geom_mode > 0.5 || any(bool2((geom_overscan.x != 1.0), (geom_overscan.y != 1.0)))))
+    {
         //  Sample the input with antialiasing (due to sharp phosphors, etc.):
         color = tex2Daa(input_texture, tex_uv, pixel_to_tex_uv, float(IN.frame_count));
-    // }
+    }
 
-    // else if(aa_level > 0.5 && need_subpixel_aa)
-    // {
-    //     //  Sample at each subpixel location:
-    //     color = tex2Daa_subpixel_weights_only(
-    //         input_texture, tex_uv, pixel_to_tex_uv);
-    // }
-    // else
-    // {
-    //     color = tex2D_linearize(input_texture, tex_uv).rgb;
-    // }
+    else if(aa_level > 0.5 && need_subpixel_aa)
+    {
+        //  Sample at each subpixel location:
+        color = tex2Daa_subpixel_weights_only(
+            input_texture, tex_uv, pixel_to_tex_uv);
+    }
+    else
+    {
+        color = tex2D_linearize(input_texture, tex_uv).rgb;
+    }
 
     //  Dim borders and output the final result:
 

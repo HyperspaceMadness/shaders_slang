@@ -170,7 +170,6 @@ parameters = "INTERLACING_TOGGLE;hmss_mega_screen_scale_on;hmss_screen_aspect_ra
 INTERLACING_TOGGLE = 0
 
 hmss_mega_screen_scale_on = 1
-hmss_screen_scale_only = 0
 // hmss_screen_aspect_ratio = 1.5
 // hmss_integer_scale_mode = 1
 // hmss_int_scale_multiple_offset = 0

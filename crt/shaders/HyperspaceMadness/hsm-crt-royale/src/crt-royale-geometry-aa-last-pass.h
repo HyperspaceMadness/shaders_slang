@@ -214,9 +214,8 @@ void main()
         //         geom_mode, global_to_local, pixel_to_video_uv);
 
         float screen_aspect = HMSS_GetScreenAspect();
-        vec2 curvature_mult = 5 * HMSS_GetCurvatureValues() + 1;
+        vec2 extra_curvature_mult = HMSS_GetCurvatureValues() / 2 * 50 + 1;
 
-        vec2 post_curvature_scale = vec2(1, 1);
         vec2 scaled_curved_uv = HRG_GetGeomCurvedCoord(scaled_flat_video_uv, 
                                                         global.hmss_curvature_mode, 
                                                         global.hmss_curvature_3D_radius, 
@@ -224,10 +223,10 @@ void main()
                                                         global.hmss_curvature_3D_tilt_angle_x, 
                                                         global.hmss_curvature_3D_tilt_angle_y,
                                                         screen_aspect,
-                                                        curvature_mult,
+                                                        extra_curvature_mult,
                                                         pixel_to_video_uv);
         scaled_curved_uv = HMSS_GetPostCurvatureScaledCoord(scaled_curved_uv);
-        video_uv_no_geom_overscan = (scaled_curved_uv - 0.5) * screen_scale / post_curvature_scale + 0.5 + HMSS_GetPositionOffset();
+        video_uv_no_geom_overscan = (scaled_curved_uv - 0.5) * screen_scale + 0.5 + HMSS_GetPositionOffset();
 
     }
     else

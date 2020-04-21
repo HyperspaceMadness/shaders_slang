@@ -67,9 +67,9 @@ layout(std140, set = 0, binding = 0) uniform UBO
 #define beam_max     params.beam_max     // bright area beam max - wide
 #pragma parameter beam_size "Increased bright scanline beam" 0.70 0.0 1.0 0.05
 #define beam_size    params.beam_size     // increased max. beam size
-#pragma parameter h_sharp "Horizontal sharpness" 5.25 1.5 20.0 0.25
+#pragma parameter h_sharp "Horizontal sharpness" 5.25 1.0 15.0 0.25
 #define h_sharp      params.h_sharp     // pixel sharpness
-#pragma parameter s_sharp "Substractive sharpness (relative)" 0.40 0.0 1.0 0.05
+#pragma parameter s_sharp "Substractive sharpness (relative)" 0.40 0.0 1.0 0.10
 #define s_sharp      params.s_sharp     // substractive sharpness
 #pragma parameter csize "Corner size" 0.0 0.0 0.07 0.01
 #define csize        params.csize     // corner size
@@ -85,7 +85,7 @@ layout(std140, set = 0, binding = 0) uniform UBO
 #define shadowMask   params.shadowMask     // Mask Style
 #pragma parameter masksize "CRT Mask Size (2.0 is nice in 4k)" 1.0 1.0 2.0 1.0
 #define masksize     params.masksize     // Mask Size
-#pragma parameter vertmask "PVM Like Colors" 0.0 0.0 0.25 0.01
+#pragma parameter vertmask "PVM Like Colors" 0.0 -0.30 0.30 0.02
 #define vertmask     params.vertmask     // Vertical mask
 #pragma parameter slotmask "Slot Mask Strength" 0.0 0.0 1.0 0.05
 #define slotmask     params.slotmask     // Slot Mask ON/OFF
@@ -172,7 +172,7 @@ vec3 sw1(vec3 x, vec3 color, float scanline)
 	float br = clamp(0.8*beam_min - 1.0, 0.2, 0.45);
 	vec3 res = exp2(-scanline*ex*ex)/(1.0-br+br*mx);
 	mx = max(max(res.r,res.g),res.b);
-	float scans1 = scans; if (vertmask > 0.0) scans1=1.0;
+	float scans1 = scans; if (abs(vertmask) > 0.01) scans1=1.0;
 	return mix(vec3(mx), res, scans1);		
 }    
 
@@ -184,7 +184,7 @@ vec3 sw2(vec3 x, vec3 color, float scanline)
 	vec3 ex = x*tmp;
 	vec3 res = exp2(-scanline*ex*ex)/(0.6 + 0.4*mx);
 	mx = max(max(res.r,res.g),res.b);
-	float scans1 = scans; if (vertmask > 0.0) scans1=0.75;	
+	float scans1 = scans; if (abs(vertmask) > 0.01) scans1=0.85;	
 	return mix(vec3(mx), res, scans1);	
 } 
 
@@ -298,7 +298,7 @@ vec3 Mask(vec2 pos, vec3 c)
 		float maskTmp = min(1.6*max(mx-mcut,0.0)/(1.0-mcut) , mc);
 		mask = vec3(maskTmp);
 		pos.x = fract(pos.x/2.0);
-		if  (pos.x < 0.5) mask = vec3(1.0);
+		if  (pos.x < 0.5) mask = vec3(1.0 + 0.6*(1.0-mx));
 	}    
 	
 	return mask;
@@ -378,7 +378,10 @@ void main()
 	vec2 pos0 = Warp(TEX0.xy*(TextureSize.xy/InputSize.xy))*(InputSize.xy/TextureSize.xy);
    
 	vec2 coffset = vec2(0.5, 0.5);
-	if ((interm == 1.0 || interm == 2.0) && inter <= mix(SourceSize.y, SourceSize.x, TATE)) coffset = vec2(0.5, 0.0);	
+	bool interb = (interm > 0.5 && interm < 2.5 && inter <= mix(SourceSize.y, SourceSize.x, TATE));
+	bool notate  = (TATE < 0.5);
+	
+	if (interb) coffset = ((notate) ? vec2(0.5,0.0) : vec2(0.0, 0.5));
 	
 	vec2 ps = SourceSize.zw;
 	vec2 OGL2Pos = pos * SourceSize.xy - coffset;
@@ -395,14 +398,14 @@ void main()
 	vec2 off2 = x2;
 	vec2 offy = dy;
 	float fpx = fp.x;
-	if(TATE > 0.5)
+	if(!notate)
 	{
 		offx = dy;
 		off2 = y2;
 		offy = dx;
 		fpx = fp.y;
 	}
-	float  f = (TATE < 0.5) ? fp.y : fp.x;
+	float  f = (notate) ? fp.y : fp.x;
 	
 	vec2 pC4 = floor(OGL2Pos) * ps + 0.5*ps;
 	
@@ -426,10 +429,10 @@ void main()
 	float fp1 = 1.-fpx;
 
 	float twl3 = max(wl3 - sharp1, 0.0);
-	float twl2 = max(wl2 - sharp1, mix(0.0,mix(-0.17, -0.025, fp.x),float(s_sharp > 0.05)));
+	float twl2 = max(wl2 - sharp1, mix(0.0,mix(-0.18, -0.01, fpx),float(s_sharp > 0.05)));
 	float twl1 = max(wl1 - sharp1, 0.0);
 	float twr1 = max(wr1 - sharp1, 0.0);	
-	float twr2 = max(wr2 - sharp1, mix(0.0,mix(-0.17, -0.025, 1.-fp.x),float(s_sharp > 0.05)));
+	float twr2 = max(wr2 - sharp1, mix(0.0,mix(-0.18, -0.01, fp1),float(s_sharp > 0.05)));
 	float twr3 = max(wr3 - sharp1, 0.0);
 	
 	float wtt = 1.0/(twl3+twl2+twl1+twr1+twr2+twr3);
@@ -491,7 +494,7 @@ void main()
 	
 	vec3 color0 = color1;
 
-	if ((interm == 1.0 || interm == 2.0) && inter <= mix(SourceSize.y, SourceSize.x, TATE))
+	if (interb)
 	{
 		pC4-= 2.*offy;
 	
@@ -534,10 +537,13 @@ void main()
 	vec3 cref1 = mix(sctmp, scolor1, beam_size);
 	vec3 cref2 = mix(sctmp, scolor2, beam_size);
 	
-	vec3 shift = vec3(-vertmask, vertmask, -vertmask);
+	vec3 shift = vec3(-vertmask, vertmask, -vertmask); if (vertmask < 0.0) shift = shift.grr;
+
+	vec3 f1 = vec3(f); 
+	vec3 f2 = vec3(1.0-f);
 	
-	vec3 f1 = clamp(vec3(f) + shift*0.5*(1.0+f), 0.0, 1.0); 
-	vec3 f2 = clamp(vec3(1.0-f) - shift*0.5*(2.0-f), 0.0, 1.0);
+	f1 = max(f1 + shift*0.5*(1.0+f), 0.75*f); 
+	f2 = max(f2 - shift*0.5*(2.0-f), 0.75*(1.0-f));
 	
 	if (gsl == 0.0) { w1 = sw0(f1,cref1,shape1); w2 = sw0(f2,cref2,shape2);} else
 	if (gsl == 1.0) { w1 = sw1(f1,cref1,shape1); w2 = sw1(f2,cref2,shape2);} else
@@ -548,23 +554,18 @@ void main()
 	
 	if (interm > 0.5 && inter <= mix(SourceSize.y, SourceSize.x, TATE)) 
 	{
-		float line_no  = floor(mod(mix(  OGL2Pos.y,  OGL2Pos.x, TATE),2.0));		
-		float frame_no = floor(mod(float(global.FrameCount),2.0));
-		
-		if (interm == 1.0)
+		if (interm < 2.5)
 		{
-			vec3 icolor1 = mix(color1, color0, abs(line_no-frame_no));
-			vec3 icolor2 = mix(color1, color2, abs(line_no-frame_no));
+			float line_no  = floor(mod(mix(  OGL2Pos.y,  OGL2Pos.x, TATE),2.0));		
+			float frame_no = floor(mod(float(global.FrameCount),2.0));
+			float ii = (interm > 1.5) ? 0.5 : abs(line_no-frame_no);
+			
+			vec3 icolor1 = mix(color1, color0, ii);
+			vec3 icolor2 = mix(color1, color2, ii);
+			
 			color = mix(icolor1, icolor2, f);
+			mcolor = sqrt(color); 			
 		} 
-		else if (interm == 2.0)
-		{
-			float v0 = exp2(-2.25*2.25);			
-			float v1 = exp2(-2.25*(0.5+f)*(0.5+f)) - v0;
-			float v2 = exp2(-2.25*(0.5-f)*(0.5-f)) - v0;
-			float v3 = exp2(-2.25*(1.5-f)*(1.5-f)) - v0;
-			color = (v1*color0 + v2*color1 + v3*color2)/(v1+v2+v3);
-		}
 		else color = mix(color1, color2, f);
 	}
 	
@@ -576,14 +577,14 @@ void main()
 	vec3 orig1 = color; float pixbr = max(max(ctmp.r,ctmp.g),ctmp.b); vec3 orig = ctmp; w1 = w1+w2; float w3 = max(max(w1.r,w1.g),w1.b); 
 	vec3 cmask = vec3(1.0); vec3 cmask1 = cmask; vec3 one = vec3(1.0);
 	
-	cmask*= (TATE < 0.5) ? Mask(gl_FragCoord.xy * 1.000001,mcolor) :
+	cmask*= (notate) ? Mask(gl_FragCoord.xy * 1.000001,mcolor) :
 		Mask(gl_FragCoord.yx * 1.000001,mcolor);
 	
 	color = color*cmask;
 	
 	color = min(color,1.0);
 	
-	cmask1 *= (TATE < 0.5) ? SlotMask(gl_FragCoord.xy * 1.000001,tmp) :
+	cmask1 *= (notate) ? SlotMask(gl_FragCoord.xy * 1.000001,tmp) :
 		SlotMask(gl_FragCoord.yx * 1.000001,tmp);		
 	
 	color = color*cmask1; cmask = cmask*cmask1; cmask = min(cmask, 1.0);
@@ -593,7 +594,7 @@ void main()
 	vec3 Bloom1 = 2.0*Bloom*Bloom;
 	Bloom1 = min(Bloom1, 0.75);
 	float bmax = max(max(Bloom1.r,Bloom1.g),Bloom1.b);
-	float pmax = 0.825;
+	float pmax = 0.80;
 	Bloom1 = min(Bloom1, pmax*bmax)/pmax;
 	
 	Bloom1 = mix(min( Bloom1, color), Bloom1, 0.5*(orig1+color));
@@ -604,7 +605,7 @@ void main()
 	
 	color = min(color, 1.0);
 	if (interm < 0.5 || inter > mix(SourceSize.y, SourceSize.x, TATE)) color = declip(color, pow(w3,0.6));	
-	color = min(color, mix(cmask,one,0.5));
+	color = min(color, mix(cmask,one,0.6));
 
 	color = color + glow*Bloom;
 		

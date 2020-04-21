@@ -150,20 +150,29 @@ layout(std140, set = 0, binding = 0) uniform UBO
 #include "hsm-mega-screen-scale-params-functions.inc"
 #include "hsm-mega-bezel-params.inc"
 
-vec2 HMBZ_GetImageLayerCoord(vec2 viewport_coord)
+vec2 HMBZ_GetImageLayerCoord(vec2 viewport_coord, vec2 position_offset)
 {
-	vec2 tube_scale = HMSS_GetTubeScale();
 	float output_aspect = global.OutputSize.x / global.OutputSize.y;
 	float aspect_difference = global.hmbz_background_image_aspect_ratio / output_aspect;
-
 	vec2 fit_height_scale = vec2(aspect_difference, 1);
-	vec2 screen_height_match_scale =  fit_height_scale * tube_scale.y / (global.hmbz_background_image_tube_height / 100);
 
-	vec2 scale = global.hmbz_background_image_scale_mode > 0.5 ? (global.hmbz_background_image_scale_mode > 1.5 ? fit_height_scale : vec2(1, 1)) : screen_height_match_scale;
+	// If the texture is supposed to be fit to the screen
+	if (global.hmbz_background_image_scale_mode == 1)
+		return viewport_coord;
 
-	// If using auto scale mode and apply the position adjustment from mega screen scale
-	vec2 out_coord = global.hmbz_background_image_scale_mode == 0 ? HMSS_GetCoordWithPositionOffset(viewport_coord) : viewport_coord;
-	return HMSS_GetInverseScaledCoord(out_coord, scale);
+	// If the texture is supposed to fit vertically
+	if (global.hmbz_background_image_scale_mode == 2)
+		return (viewport_coord - 0.5) / fit_height_scale + 0.5;
+
+	// Otherwise use Auto Scaling with Position offset
+	else
+	{
+		// If using auto scale mode and apply the position adjustment from mega screen scale
+		vec2 tube_scale = HMSS_GetTubeScale();
+		vec2 screen_height_match_scale =  fit_height_scale * tube_scale.y / (global.hmbz_background_image_tube_height / 100);
+		vec2 scale = screen_height_match_scale;
+		return HMSS_GetInverseScaledCoord(HMSS_GetCoordWithPositionOffset(viewport_coord), scale);
+	}
 }
 
 float clamp_0_1(float in_value)
@@ -228,7 +237,7 @@ void main()
 	vTexCoord = HMSS_GetCoordWithPositionOffset(TexCoord * 1.0001);
 	screenCoord = HMSS_GetScreenVTexCoord(TexCoord);
 
-	imageLayerCoord = HMBZ_GetImageLayerCoord(vTexCoord);
+	imageLayerCoord = HMBZ_GetImageLayerCoord(viewportCoord, HMSS_GetPositionOffset());
 }
 
 #pragma stage fragment

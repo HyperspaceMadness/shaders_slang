@@ -45,6 +45,13 @@ void main()
 {
 	vec4	c	=	texture(Source, vTexCoord);
 
+	// If GTU is off return the color from the last pass
+	if (params.gtu_on < 1)
+	{
+		FragColor = c;
+		return;
+	}
+
 	if(params.compositeConnection > 0.0)
 		c.rgb	=	c.rgb * RGB_to_YIQ;
    FragColor = c;

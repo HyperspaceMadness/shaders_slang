@@ -13,7 +13,7 @@ Description:
 #include "hsm-helper-functions.inc"
 
 // Screen Scale Required Parameters
-#pragma parameter hmss_mega_screen_scale_on				"___HSM MEGA BEZEL__ V.2020-04-20 -SCREEN SCALE ON" 1 0 1 1
+#pragma parameter hmss_mega_screen_scale_on				"___HSM MEGA BEZEL__ V.2020-04-26 -SCREEN SCALE ON" 1 0 1 1
 #pragma parameter hmss_screen_scale_debug				"[SCREEN SCALE]  Screen Scale Debug" 0 0 1 1
 
 #pragma parameter hmss_rotate_crt_image					"[SCALING]  Rotate CRT Image"  0 0 1 1
@@ -61,6 +61,9 @@ Description:
 #pragma parameter hmss_tube_black_edge_thickness 		"[TUBE]  Black Edge Thickness" 1.2 -2 8 0.05
 #pragma parameter hmss_tube_black_edge_curvature_scale 	"[TUBE]  Black Edge Curvature Scale" 1 0 4 0.1
 
+// Macros.
+#define FIX(c) max(abs(c), 1e-5)
+#define PI 3.141592653589
 
 vec2 HMSS_GetRotatedOriginalSize()
 {
@@ -91,11 +94,11 @@ vec2 HMSS_GetCroppedOriginalSize()
 	return HMSS_GetCroppedSize(HMSS_GetRotatedOriginalSize());
 }
 
-float HMSS_GetIsCroppedOriginalSizeVertical()
+float HMSS_GetIsOriginalSizeVertical()
 {
-	vec2 cropped_original_size = HMSS_GetCroppedOriginalSize();
-	float cropped_aspect_ratio = cropped_original_size.x/cropped_original_size.y;
-	return cropped_aspect_ratio < 1 ? 1 : 0;
+	vec2 rotated_original_size = HMSS_GetRotatedOriginalSize();
+	float aspect_ratio = rotated_original_size.x/rotated_original_size.y;
+	return aspect_ratio < 1 ? 1 : 0;
 }
 
 float HMSS_GetScreenAspect()
@@ -103,7 +106,7 @@ float HMSS_GetScreenAspect()
 	float horizontal_aspect_ratio = global.hmss_screen_aspect_ratio;
 	float vertical_aspect_ratio = 1.0 / global.hmss_screen_aspect_ratio;
 	
-	float auto_screen_aspect_ratio = HMSS_GetIsCroppedOriginalSizeVertical() > 0.5 ? vertical_aspect_ratio : horizontal_aspect_ratio;
+	float auto_screen_aspect_ratio = HMSS_GetIsOriginalSizeVertical() > 0.5 ? vertical_aspect_ratio : horizontal_aspect_ratio;
 	return global.hmss_aspect_ratio_mode < 1 ? auto_screen_aspect_ratio : (global.hmss_aspect_ratio_mode < 2 ? horizontal_aspect_ratio : vertical_aspect_ratio);
 }
 
@@ -123,7 +126,7 @@ float HMSS_GetScreenInverseAspectRatio()
 	float horizontal_aspect_ratio = global.hmss_screen_aspect_ratio;
 	float vertical_aspect_ratio = 1.0 / global.hmss_screen_aspect_ratio;
 
-	float auto_screen_aspect_ratio = HMSS_GetIsCroppedOriginalSizeVertical() > 0.5 ? vertical_aspect_ratio : horizontal_aspect_ratio;
+	float auto_screen_aspect_ratio = HMSS_GetIsOriginalSizeVertical() > 0.5 ? vertical_aspect_ratio : horizontal_aspect_ratio;
 	return global.hmss_aspect_ratio_mode < 1 ? auto_screen_aspect_ratio : (global.hmss_aspect_ratio_mode < 2 ? horizontal_aspect_ratio : vertical_aspect_ratio);
 }
 
@@ -285,12 +288,72 @@ vec2 HMSS_GetCurvatureValues()
 	return curvature_values;
 }
 
-// Torridgristle's curvature
-vec2 HMSS_Get2DCurvedCoord(vec2 in_coord, float curvature_multiplier)
+// float Geom_Intersect(vec2 in_coord , vec2 sinangle, vec2 cosangle, float in_radius)
+// {
+//   float A = dot(in_coord, in_coord) + d.x * d.x;
+//   float B = 2.0 * (in_radius * (dot(in_coord, sinangle) - d.x * cosangle.x * cosangle.y) - d.x * d.x);
+//   float C = d.x * d.x + 2.0 * in_radius * d.x * cosangle.x * cosangle.y;
+//   return (-B-sqrt(B * B - 4.0 * A * C)) / (2.0 * A);
+// }
+
+// vec2 Geom_Backward_Transform(vec2 in_coord, vec2 sinangle, vec2 cosangle, float in_radius)
+// {
+//   float c = Geom_Intersect(in_coord, sinangle, cosangle, in_radius);
+//   vec2 pt = vec2(c) * in_coord;
+//   pt -= vec2(-in_radius) * sinangle;
+//   pt /= vec2(in_radius);
+//   vec2 tang = sinangle / cosangle;
+//   vec2 poc = pt / cosangle;
+//   float A = dot(tang, tang) + 1.0;
+//   float B = -2.0 * dot(poc, tang);
+//   float C = dot(poc,poc)-1.0;
+//   float a = (-B + sqrt(B * B - 4.0 * A * C)) / (2.0 * A);
+//   vec2 uv = (pt - a * sinangle) / cosangle;
+//   float r = FIX(in_radius * acos(a));
+//   return uv * r / sin(r / in_radius);
+// }
+
+// vec2 Geom_Transform(vec2 coord, vec3 stretch, vec2 sinangle, vec2 cosangle, float in_radius, vec2 in_aspect)
+// {
+//   coord = (coord-vec2(0.5)) * in_aspect.xy * stretch.z + stretch.xy;
+//   return (Geom_Backward_Transform(coord, sinangle, cosangle, in_radius) / in_aspect.xy + vec2(0.5));
+// }
+
+// vec2 HMSS_GetGeomCurvedCoord(vec2 in_coord, float tilt_x, float tilt_y)
+// {
+// 	vec2 ang = vec2(tilt_x, tilt_y);
+// 	float v_sinangle = sin(ang);
+// 	float v_cosangle = cos(ang);
+// 	float v_stretch = maxscale(v_sinangle, v_cosangle);
+// 	vec2 curved_coord = Geom_Transform(in_coord, v_stretch, v_sinangle, v_cosangle);
+
+// 	return curved_coord;
+// }
+
+vec2 HMSS_GetCrtPiCurvedCoord(vec2 in_coord, vec2 in_curvature)
 {
-	vec2 curvature_values = HMSS_GetCurvatureValues();
+	// Barrel distortion shrinks the display area a bit, this will allow us to counteract that.
+	in_curvature *= 5;
+	vec2 barrelScale = 1.0 - (0.23 * in_curvature);
+    in_coord -= vec2(0.5);
+    float rsq = in_coord.x * in_coord.x + in_coord.y * in_coord.y;
+    in_coord += in_coord * (in_curvature * rsq);
+    in_coord *= barrelScale;
+	in_coord += vec2(0.5);
+    // if (abs(in_coord.x) >= 0.5 || abs(in_coord.y) >= 0.5)
+    //     in_coord = vec2(-1.0);     // If out of bounds, return an invalid value.
+    // else
+    // {
+    //     in_coord += vec2(0.5);
+    // }
+
+    return in_coord;
+}
+
+vec2 HMSS_GetTorridGristleCurvedCoord(vec2 in_coord, vec2 curvature_values)
+{
 	vec2 ctr_coord = in_coord - 0.5;
-	vec2 distortion = curvature_values * curvature_multiplier * 15.0;
+	vec2 distortion = curvature_values * 15.0;
 	vec2 ctr_coord_0_1 = in_coord * 2.0 - 1.0;
 	vec2 ctr_curved_coord = ctr_coord_0_1;
 	float curved_coord_distance = sqrt(ctr_curved_coord.x * ctr_curved_coord.x + ctr_curved_coord.y * ctr_curved_coord.y);
@@ -319,9 +382,33 @@ vec2 HMSS_Get2DCurvedCoord(vec2 in_coord, float curvature_multiplier)
 			ctr_curved_coord = blend_to_uncurved * ctr_coord + (1 - blend_to_uncurved) * ctr_curved_coord;
 		}
 	}
+	else
+		ctr_curved_coord = in_coord - 0.5;
 
-	return clamp(ctr_curved_coord, -1, 1) + 0.5;
+	return ctr_curved_coord + 0.5;
 }
+
+// Torridgristle's curvature
+vec2 HMSS_Get2DCurvedCoord(vec2 in_coord, float curvature_multiplier)
+{
+	// vec2 curvature_values = curvature_multiplier * HMSS_GetCurvatureValues();
+	// return HMSS_GetTorridGristleCurvedCoord(in_coord, curvature_values);
+	vec2 curvature_values = HMSS_GetCurvatureValues();
+	return HMSS_GetCrtPiCurvedCoord(in_coord, curvature_values);
+}
+
+// // Used to get the circular area where the 2D curved coordinates are valid
+// // Takes an uncurved coordinate
+// float HMSS_Get2DInsideRangeMask(vec2 in_coord)
+// {
+// 	vec2 ctr_coord = in_coord - 0.5;
+// 	vec2 ctr_coord_0_1 = in_coord * 2.0 - 1.0;
+// 	vec2 ctr_curved_coord = ctr_coord_0_1;
+// 	float curved_coord_distance = sqrt(ctr_curved_coord.x * ctr_curved_coord.x + ctr_curved_coord.y * ctr_curved_coord.y);
+// 	float max_curved_range = 1.40;
+
+// 	return 1 - clamp((curved_coord_distance - max_curved_range) * 10000, 0, 1);
+// }
 
 vec2 HMSS_GetPostCurvatureScaledCoord(vec2 in_curved_coord)
 {
@@ -360,14 +447,11 @@ vec2 HMSS_GetMirrorWrappedCoord(vec2 in_coord)
 {
 	vec2 ctr_mirror_coord = in_coord - 0.5;
 
-	if (abs(ctr_mirror_coord.x) > 0.5)
-	{
-		ctr_mirror_coord.x = ctr_mirror_coord.x - 2 * sign(ctr_mirror_coord.x) * (abs(ctr_mirror_coord.x) - 0.5);
-	}
-	if (abs(ctr_mirror_coord.y) > 0.5)
-	{
-		ctr_mirror_coord.y = ctr_mirror_coord.y - 2 * sign(ctr_mirror_coord.y) * (abs(ctr_mirror_coord.y) - 0.5);
-	}
+	float mirror_x = clamp(clamp(abs(ctr_mirror_coord.x) - 0.5, 0, 1) * 100000, 0, 1);
+	float mirror_y = clamp(clamp(abs(ctr_mirror_coord.y) - 0.5, 0, 1) * 100000, 0, 1);
+
+	ctr_mirror_coord.x = ctr_mirror_coord.x - mirror_x * 2 * sign(ctr_mirror_coord.x) * (abs(ctr_mirror_coord.x) - 0.5);
+	ctr_mirror_coord.y = ctr_mirror_coord.y - mirror_y * 2 * sign(ctr_mirror_coord.y) * (abs(ctr_mirror_coord.y) - 0.5);
 
 	return ctr_mirror_coord + 0.5;
 }
@@ -430,10 +514,14 @@ vec2 HMSS_GetWrappedCurvedCoord(vec2 in_coord, float curvature_multiplier)
 // Returns curved coordinates for the coordinate supplied
 // Cached coordinate comes from the mapping pass texture supplied
 // x & y are the curved tube coordinates
-vec2 HMSS_GetCachedCurvedTubeCoord(sampler2D in_mapping_pass, vec2 in_coord)
+vec4 HMSS_GetCachedCurvedValues(sampler2D in_mapping_pass, vec2 in_coord, inout vec2 out_curved_coord, inout float outside_tube_mask, inout float edge_mask)
 {
 	//return HMSS_GetCurvedCoord(HMSS_GetTubeVTexCoord(in_coord), 1);
-	return texture(in_mapping_pass, in_coord).xy;
+	vec4 texture_sample = texture(in_mapping_pass, in_coord);
+	out_curved_coord = texture_sample.xy;
+	outside_tube_mask = texture_sample.z;
+	edge_mask = texture_sample.w;
+	return texture_sample;
 }
 
 // Borrowed from cgwg's crt-geom, under GPL
@@ -447,7 +535,6 @@ float HMSS_GetCornerMask(vec2 in_coord, float corner_radius, float edge_sharpnes
 
 	return clamp((corner_distance.x - distance) * (edge_sharpness * 500 + 100), 0.0, 1.0);
 }
-
 
 
 vec3 HMSS_RGBtoHSV(vec3 c)
@@ -559,22 +646,10 @@ vec4 HMSS_COMPAT_TEXTURE(sampler2D in_sampler, vec2 in_coord)
 	ctr_coord = clamp(ctr_coord, -0.49999, 0.49999);
 
 	vec2 sample_coord = HMSS_GetCropOverscanCoord(ctr_coord + 0.5);
+	vec4 sampled_color = texture(in_sampler, sample_coord);
+	vec4 negative_crop_color = vec4(global.hmss_negative_crop_brightness / 100, global.hmss_negative_crop_brightness / 100, global.hmss_negative_crop_brightness / 100, 1);
 
-	#ifdef TELMO_TEST
-		if (HMSS_IsInNegativeCropArea(sample_coord) == 1)
-		{
-			return vec4(global.hmss_negative_crop_brightness / 100, global.hmss_negative_crop_brightness / 100, global.hmss_negative_crop_brightness / 100, 1);
-		}
-		else
-		{
-			return texture(in_sampler, sample_coord);
-		}
-	#else
-		vec4 sampled_color = texture(in_sampler, sample_coord);
-		vec4 negative_crop_color = vec4(global.hmss_negative_crop_brightness / 100, global.hmss_negative_crop_brightness / 100, global.hmss_negative_crop_brightness / 100, 1);
+	float negative_crop = HMSS_IsInNegativeCropArea(sample_coord);
 
-		float negative_crop = HMSS_IsInNegativeCropArea(sample_coord);
-
-		return negative_crop * negative_crop_color + (1 - negative_crop) * sampled_color;
-	#endif
+	return negative_crop * negative_crop_color + (1 - negative_crop) * sampled_color;
 }

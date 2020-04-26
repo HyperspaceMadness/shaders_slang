@@ -468,13 +468,7 @@ void main()
 	vec2 screen_coord = texcoord.xy;
 	vec2 pos = vec2(0, 0);
 
-	pos = HMSS_GetCurvedCoord(HMSS_GetScreenVTexCoord(vTexCoord), 1);
-
-	// // If we are only using the screen scale with no bezel/reflection we don't need a wrapped coordinate
-	#ifndef NO_BEZEL
-		pos = HMSS_GetMirrorWrappedCoord(pos);
-	#endif
-	// End Addition
+	pos = HMSS_GetWrappedCurvedCoord(HMSS_GetScreenVTexCoord(vTexCoord), 1);
 
 	vec2 coffset = vec2(0.5, 0.5);
 	bool interb = (interm > 0.5 && interm < 2.5 && inter <= mix(SourceSize.y, SourceSize.x, TATE));

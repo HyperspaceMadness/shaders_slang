@@ -1,46 +1,22 @@
 #version 450
 
 /*
-   Average Luminance Shader
-   
-   Copyright (C) 2018-2020 guest(r) - guest.r@gmail.com
+   Average Luminance Shader, original by adapted by HyperspaceMadness, 
+   Original by guest(r) - guest.r@gmail.com
 
-   This program is free software; you can redistribute it and/or
-   modify it under the terms of the GNU General Public License
-   as published by the Free Software Foundation; either version 2
-   of the License, or (at your option) any later version.
+   Average Luminance is written to the alpha channel so it can be dropped
+   into the shader chain without affecting the visible image
 
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-   GNU General Public License for more details.
-
-   You should have received a copy of the GNU General Public License
-   along with this program; if not, write to the Free Software
-   Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
-   
-   Thanks to HunterK for the mipmap hint. :D  
+   This is expected to be placed after a linearize pass
 */
 
 layout(push_constant) uniform Push
 {
 	uint FrameCount;
 	vec4 SourceSize;
-	float lsmooth;
 } params;
 
-// HSM Removed
-// #pragma parameter lsmooth "Raster Bloom Effect Smoothing" 0.90 0.50 0.99 0.01
-
-// #define lsmooth params.lsmooth
-
-// HSM Added
-#define lsmooth 0.9
-
-#define COMPAT_TEXTURE(c,d) texture(c,d)
 #define SourceSize params.SourceSize
-#define InputSize SourceSize
-#define TEX0 vTexCoord
 
 layout(std140, set = 0, binding = 0) uniform UBO
 {
@@ -62,31 +38,35 @@ void main()
 layout(location = 0) in vec2 vTexCoord;
 layout(location = 0) out vec4 FragColor;
 layout(set = 0, binding = 2) uniform sampler2D Source;
-layout(set = 0, binding = 3) uniform sampler2D AvgLumPassFeedback;
-
-#define PassPrev2Texture WhitePointPass
 
 void main()
 {
-	if (vTexCoord.x > 0.2 || vTexCoord.y > 0.2) discard;
+	// Don't write pixel if within bounds
+	// if (vTexCoord.x > 0.2 || vTexCoord.y > 0.2) discard;
 	
 	float m = max(log2(SourceSize.x), log2(SourceSize.y));
 	m = max(m - 1.0, 1.0);
 	
 	float ltotal = 0.0;
 	
-	ltotal+= max(0.0, length(textureLod(Source, vec2(0.25, 0.25), m).rgb));
-	ltotal+= max(0.0, length(textureLod(Source, vec2(0.25, 0.75), m).rgb));
-	ltotal+= max(0.0, length(textureLod(Source, vec2(0.75, 0.25), m).rgb));
-	ltotal+= max(0.0, length(textureLod(Source, vec2(0.75, 0.75), m).rgb));
-	
-	ltotal*=0.25;
+	float num_samples = 5;
+	float sample_dist = 1 / (num_samples - 1);
+	vec4 tex_sample = vec4(0);
+	for (float i = 0; i <= num_samples; i++)
+	{
+		for (float j = 0; j <= num_samples; j++)
+		{
+			tex_sample = textureLod(Source, vec2(sample_dist * i, sample_dist * j), m);
+			ltotal += max(0.0, (tex_sample.r + tex_sample.g + tex_sample.g) / 3);
+			// ltotal += max(0.0, length(tex_sample.rgb));
+			
+		}
+	}
+	ltotal /= num_samples * num_samples;
 	
 	ltotal = pow(0.577350269 * ltotal, 0.6);
 	
-	float lhistory = texture(AvgLumPassFeedback, vec2(0.1,0.1)).a;
+	vec4 source_sample = texture(Source, vTexCoord);
 
-	ltotal = mix(ltotal, lhistory, lsmooth);	
-	
-	FragColor = vec4(ltotal);
+	FragColor = vec4(source_sample.rgb, ltotal);
 }

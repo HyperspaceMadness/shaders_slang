@@ -18,15 +18,18 @@ layout(push_constant) uniform Push
 layout(location = 0) in vec4 Position;
 layout(location = 1) in vec2 TexCoord;
 layout(location = 0) out vec2 vTexCoord;
+layout(location = 1) out vec2 viewportCoord;
 
 void main()
 {
 	gl_Position = global.MVP * Position;
     vTexCoord = TexCoord * 1.0001;
+	viewportCoord = vTexCoord;
 }
 
 #pragma stage fragment
 layout(location = 0) in vec2 vTexCoord;
+layout(location = 1) in vec2 viewportCoord;
 layout(location = 0) out vec4 FragColor;
 layout(set = 0, binding = 2) uniform sampler2D Source;
 layout(set = 0, binding = 3) uniform sampler2D BR_MirrorLowResPass;
@@ -43,7 +46,23 @@ void main()
 {
 	if (params.hbl_blur_num_samples > 0)
 	{
-		vec2 tube_coord_warped = HMSS_GetCachedCurvedTubeCoord(BR_MappingPass, vTexCoord.xy);
+		vec2 tube_coord_warped = vec2(0, 0);
+		float outside_tube_mask = 0;
+		float edge_mask = 0;
+		HMSS_GetCachedCurvedValues(BR_MappingPass, viewportCoord.xy, tube_coord_warped, outside_tube_mask, edge_mask);
+
+		vec2 tube_warped_coord_ctr = tube_coord_warped - 0.5;
+
+		//----------------------------------------------------
+		//  Calculate Outside mapping Coords
+		//----------------------------------------------------
+
+		/* This first big chunk is to get a mapping of the space outside of the screen which is continuous
+		This is more complicated than you would expect because since we are using curved coordinates 
+		there are discontinuities outside the normal screen corners, e.g. where x > 1 and y > 1
+		So instead of trying to use the coordinates from the screen/tube we use a larger space 
+		and subtract the screen space to see how far we are outside of the sreen
+		*/
 
 		// General variables related to the main masks referenced later
 		float screen_aspect;
@@ -51,7 +70,6 @@ void main()
 		vec2 screen_scale;
 		vec2 tube_scale;
 		vec2 tube_coord;
-		vec2 tube_warped_coord_ctr;
 		vec2 outermap_coord;
 		vec2 outermap_warped_coord_ctr;
 		vec2 outermap_warped_outside_screen_vector;
@@ -65,9 +83,9 @@ void main()
 		float sides_mask;
 		float top_corner_mask;	
 		float bottom_corner_mask;
-		float outside_tube_mask;
+		// float outside_tube_mask;
 		float outside_bezel_mask;
-		float edge_mask;
+		// float edge_mask;
 		float noise_mask;
 
 		// screen_aspect is 1.33 for a standard old-style tube placed horizontally
@@ -86,56 +104,22 @@ void main()
 		tube_coord = HMSS_GetInverseScaledCoord(vTexCoord, tube_scale);
 
 		// Get a range width from the outer tube edge to the outer edge of the outermap
-		float outermap_range;
-		if (global.hmss_curvature_mode < 0.5)
-		{
-			outermap_range = 0.5 - 0.5 / outermap_scale.y;
+		float outermap_range = 0.5 * (outermap_scale.y) * 0.7;
+		outermap_warped_coord_ctr = tube_warped_coord_ctr;
+		outermap_coord = tube_warped_coord_ctr + 0.5;
+		outermap_screen_size_from_center = vec2(0.5, 0.5);
+		outermap_warped_outside_screen_vector = outermap_warped_coord_ctr - clamp(outermap_warped_coord_ctr, -0.490, 0.490);
+		outside_ratio_warped = clamp(length(outermap_warped_outside_screen_vector) / outermap_range, 0, 1);
 
-			// Get the coord in a space which is scaled larger to avoid discontinuities outside the corners
-			outermap_coord = HMSS_GetInverseScaledCoord(tube_coord, vec2(outermap_scale.x, outermap_scale.y));
+		// Get a coordinate offset so it is centered around the corner
+		outermap_coord_warped_ctr_at_screen_corner = abs(outermap_warped_coord_ctr) - vec2(0.5);
 
-			// Warp the outermap coordinate be an increased amount so the curvature around the screen matches
-			outermap_warped_coord_ctr = HMSS_GetCurvedCoord(outermap_coord, global.hmss_tube_black_edge_curvature_scale * 6) - vec2(0.5, 0.5);
+		#ifdef GLASS_PRESET
+			float hbl_sharpness_falloff_distance = 20;
+		#else
+			float hbl_sharpness_falloff_distance = 7;
+		#endif
 
-			// Used to scale up the calculated screen size inside the outermap, because the screen shrinks as more curvature is used
-			vec2 curvature_long_short = global.hmss_tube_black_edge_curvature_scale * HMSS_GetLongShortAxisCurvatureValues();
-			vec2 curvature_scale_offset = screen_aspect < 1.0 ? 1 / (1 + vec2(4.4 * curvature_long_short.y, 4.7 * curvature_long_short.x)) : 1 / (1 + vec2(4.7 * curvature_long_short.x, 4.4 * curvature_long_short.y));
-
-			// Get vector from the screen edge outward
-			vec2 outermap_coord_ctr_warped_clipped_to_screen = clamp(outermap_warped_coord_ctr, -0.5 / outermap_scale * curvature_scale_offset, 0.5 / outermap_scale * curvature_scale_offset) ;
-			outermap_warped_outside_screen_vector = outermap_warped_coord_ctr - outermap_coord_ctr_warped_clipped_to_screen;
-
-			// Get 0-1 ratio of the distance from the screen edge into the outermap range
-			outside_ratio_warped = clamp(length(outermap_warped_outside_screen_vector) / outermap_range, 0, 1);
-
-			// Min and Max values of the screen for both x and y
-			outermap_screen_size_from_center = abs(vec2((-0.5 / outermap_scale.x) * curvature_scale_offset.x, (0.5 / outermap_scale.y) * curvature_scale_offset.y));
-
-			// Create a mask to separate between the inside of the screen to the outside of the tube area
-			tube_warped_coord_ctr = HMSS_GetCurvedCoord(tube_coord, global.hmss_tube_black_edge_curvature_scale * 1) - vec2(0.5, 0.5);
-
-			// Get the corner of the screen in the outermap coordinates
-			outermap_screen_corner_ctr_coord = vec2(0.5, -0.5) / outermap_scale * curvature_scale_offset;
-
-			// Get a coordinate offset so it is centered around the corner
-			outermap_coord_warped_ctr_at_screen_corner = abs(outermap_warped_coord_ctr) - (vec2(0.5) / outermap_scale * curvature_scale_offset);
-		}
-		else
-		{
-			outermap_range = 0.5 * (outermap_scale.y) * 0.7;
-			tube_warped_coord_ctr = tube_coord_warped - 0.5;
-			outermap_warped_coord_ctr = tube_warped_coord_ctr;
-			outermap_coord = tube_warped_coord_ctr + 0.5;
-			outermap_screen_size_from_center = vec2(0.5, 0.5);
-			outermap_warped_outside_screen_vector = outermap_warped_coord_ctr - clamp(outermap_warped_coord_ctr, -0.490, 0.490);
-			outside_ratio_warped = clamp(length(outermap_warped_outside_screen_vector) / outermap_range, 0, 1);
-			outermap_screen_corner_ctr_coord = vec2(0.5, -0.5);
-
-			// Get a coordinate offset so it is centered around the corner
-			outermap_coord_warped_ctr_at_screen_corner = abs(outermap_warped_coord_ctr) - vec2(0.5);
-		}
-
-		float hbl_sharpness_falloff_distance = 7;
 		float blur_ratio = clamp_0_1(outside_ratio_warped / (hbl_sharpness_falloff_distance / 100));
 		float blur_midpoint = 0.12;
 		float hbl_sharpness_falloff_speed = 1;
@@ -159,8 +143,7 @@ void main()
 		float max_blur_range = 7;
 		float mid_blur_range = 7;
 		float min_blur_range = 10;
-		float blur_falloff = (
-								0.5 +
+		float blur_falloff = (  0.5 +
 								max_blur_range * smoothstep(1, last_blur_ratio_blend_point, blur_ratio) +
 								min_blur_range * smoothstep(last_blur_ratio_blend_point, 0, blur_ratio)
 								) / 100;
@@ -181,7 +164,8 @@ void main()
 			float k = exp(-blur_falloff * (i) * (i));
 			k_total += k;
 			
-			vec4 sampled_color = COMPAT_TEXTURE(Source, vTexCoord + vec2(float(i) * dx, float(i) * dy));
+			vec2 sample_coord = vTexCoord + vec2(float(i) * dx, float(i) * dy);
+			vec4 sampled_color = COMPAT_TEXTURE(Source, sample_coord);
 			
 			col += k * sampled_color.rgb;
 		}

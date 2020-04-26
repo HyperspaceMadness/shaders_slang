@@ -3,146 +3,166 @@
 //      Debug Drawing of the resolution/screen scaling is also included here
 shader0 = ../crt/shaders/hyperspacemadness/hsm-stock-with-mega-screen-scale-bezel-params.slang
 
-// NOTE: desired put De-Dithering or TV Signal effects here, e.g. GTU, NTSC, CBOD
-shader1 = ../stock.slang
+// NOTE: desired put De-Dithering or TV Signal effects here in 1, 2 & 3, e.g. GTU, NTSC, CBOD
 
-shader2 = ../stock.slang
+shader1 = ../crt/shaders/hyperspacemadness/hsm-cbod/hsm-cbod-v1-pass1.slang
 
-shader3 = ../stock.slang
+shader2 = ../crt/shaders/hyperspacemadness/hsm-cbod/hsm-cbod-v1-pass2.slang
 
-// Guest-Venom Pass ----------------------------------------------------------------
-shader4 = ../crt/shaders/guest/lut/lut.slang
-filter_linear4 = false
-scale_type4 = source
-scale4 = 1.0
+// GTU Signal
+shader3 = ../crt/shaders/hyperspacemadness/hsm-gtu/hsm-gtu-pass1.slang
+float_framebuffer3 = true
 
-// Guest-Venom Pass ----------------------------------------------------------------
-shader5 = ../crt/shaders/guest/color-profiles.slang
+shader4 = ../crt/shaders/hyperspacemadness/hsm-gtu/hsm-gtu-pass2.slang
+filter_linear4 = true
+float_framebuffer4 = true
+
+// Calculate Average Luminance  ----------------------------------------------------------------
+shader5 = ../crt/shaders/hyperspacemadness/hsm-avg-lum.slang
 filter_linear5 = true
+mipmap_input5 = true
+float_framebuffer5 = true
+alias5 = AvgLumPass
+
+// Guest-Venom Pass ----------------------------------------------------------------
+shader5 = ../crt/shaders/guest/lut/lut.slang
+filter_linear5 = false
 scale_type5 = source
 scale5 = 1.0
 
 // Guest-Venom Pass ----------------------------------------------------------------
-shader6 = ../crt/shaders/guest/d65-d50.slang
+shader6 = ../crt/shaders/guest/color-profiles.slang
 filter_linear6 = true
 scale_type6 = source
 scale6 = 1.0
-alias6 = WhitePointPass
+
+// Guest-Venom Pass ----------------------------------------------------------------
+shader7 = ../crt/shaders/guest/d65-d50.slang
+filter_linear7 = true
+scale_type7 = source
+scale7 = 1.0
+alias7 = WhitePointPass
 
 // Afterglow and Black Level ----------------------------------------------------------------
 //      Almost the same as Guest's original afterglow but can brighten the black without losing the afterglow
-shader7 = ../crt/shaders/hyperspacemadness/hsm-guest-afterglow-with-black-level.slang
-filter_linear7 = false
-scale_type7 = source
-scale7 = 1.0
-alias7 = AfterglowPass
+shader8 = ../crt/shaders/hyperspacemadness/hsm-guest-afterglow-with-black-level.slang
+filter_linear8 = false
+scale_type8 = source
+scale8 = 1.0
+alias8 = AfterglowPass
 
-// Empty Pass ----------------------------------------------------------------
-shader8 = ../stock.slang
+shader9 = ../stock.slang
 
-// Guest-Venom Pass ----------------------------------------------------------------
-shader9 = ../crt/shaders/hyperspacemadness/linearize.slang
-filter_linear9 = false
-scale_type9 = source
-scale9 = 1.0
-float_framebuffer9 = true
-alias9 = LinearizePass
-
-// Guest-Venom Pass ----------------------------------------------------------------
-shader10 = ../crt/shaders/hyperspacemadness/hsm-guest-blur_horiz.slang
+// Linearize Color ----------------------------------------------------------------
+shader10 = ../crt/shaders/hyperspacemadness/linearize.slang
 filter_linear10 = false
 scale_type10 = source
 scale10 = 1.0
 float_framebuffer10 = true
+alias10 = LinearizePass
 
 // Guest-Venom Pass ----------------------------------------------------------------
-shader11 = ../crt/shaders/hyperspacemadness/hsm-guest-blur_vert.slang
+shader11 = ../crt/shaders/hyperspacemadness/hsm-guest-blur_horiz.slang
 filter_linear11 = false
 scale_type11 = source
 scale11 = 1.0
 float_framebuffer11 = true
-alias11 = GlowPass
 
 // Guest-Venom Pass ----------------------------------------------------------------
-shader12 = ../crt/shaders/guest/linearize_scanlines.slang
-filter_linear12 = true
+shader12 = ../crt/shaders/hyperspacemadness/hsm-guest-blur_vert.slang
+filter_linear12 = false
 scale_type12 = source
 scale12 = 1.0
 float_framebuffer12 = true
+alias12 = GlowPass
+
+// Guest-Venom Pass ----------------------------------------------------------------
+shader13 = ../crt/shaders/guest/linearize_scanlines.slang
+filter_linear13 = true
+scale_type13 = source
+scale13 = 1.0
+float_framebuffer13 = true
 
 // CRT Shader - Guest-Venom ----------------------------------------------------------------
 //      Guest's Awesome Shader!!!
 //      Has been slightly altered to use the same scaling as the rest of the shders for the bezel & reflection
-shader13 = ../crt/shaders/hyperspacemadness/hsm-crt-guest-dr-venom-with-scaling.slang
-mipmap_input13 = true
-filter_linear13 = true
-scale_type13 = viewport
-scale13 = 1.0
-float_framebuffer13 = true
-alias13 = BR_CrtPass
-
-// Tube Scale Curvature Mapping
-// Write mapping into the pass, of the 4 channels, x & y are screen warped coord and z & w are tube warped coord
-shader14 = ../crt/shaders/hyperspacemadness/hsm-curvature-mapping.slang
+shader14 = ../crt/shaders/hyperspacemadness/hsm-crt-guest-dr-venom-with-scaling.slang
 mipmap_input14 = true
 filter_linear14 = true
 scale_type14 = viewport
+scale14 = 1.0
 float_framebuffer14 = true
-alias14 = BR_MappingPass
+wrap_mode14 = mirrored_repeat
+alias14 = BR_CrtPass
+
+// Tube Scale Curvature Mapping
+// Write mapping into the pass, of the 4 channels, x & y are tube warped coord and z & w are outside tube mask and edge mask
+shader15 = ../crt/shaders/hyperspacemadness/hsm-curvature-mapping.slang
+mipmap_input15 = true
+filter_linear15 = true
+scale_type15 = viewport
+float_framebuffer15 = true
+wrap_mode15 = mirrored_repeat
+alias15 = BR_MappingPass
 
 // Linearize & Reduce Resolution ----------------------------------------------------------------
 //      Reduce the resolution to a small static size regardless of final resolution
 //      Allows consistent look and faster at different final resolutions for blur
 //      Mipmap option allows downscaling without artifacts
-shader15 = ../crt/shaders/hyperspacemadness/hsm-linearize-crt-pass.slang
-mipmap_input15 = true
-filter_linear15 = true
-scale_type15 = absolute
-float_framebuffer15 = true
-// scale_x15 = 480
-// scale_y15 = 270
-// scale_x15 = 960
-// scale_y15 = 540
-scale_x15 = 800
-scale_y15 = 600
-alias15 = BR_MirrorLowResPass
+shader16 = ../crt/shaders/hyperspacemadness/hsm-linearize-crt-pass.slang
+mipmap_input16 = true
+filter_linear16 = true
+scale_type16 = absolute
+float_framebuffer16 = true
+// scale_x16 = 480
+// scale_y16 = 270
+// scale_x16 = 960
+// scale_y16 = 540
+scale_x16 = 800
+scale_y16 = 600
+wrap_mode16 = mirrored_repeat
+alias16 = BR_MirrorLowResPass
 
 // Add Blur for the Reflection (Horizontal) ----------------------------------------------------------------
-shader16 = ../crt/shaders/hyperspacemadness/hsm-blur-outside-screen-horiz.slang
-filter_linear16 = false
-scale_type16 = source
-float_framebuffer16 = true
-
-// Add Blur for the Reflection (Vertical) ----------------------------------------------------------------
-shader17 = ../crt/shaders/hyperspacemadness/hsm-blur-outside-screen-vert.slang
+shader17 = ../crt/shaders/hyperspacemadness/hsm-blur-outside-screen-horiz.slang
 filter_linear17 = false
 scale_type17 = source
+wrap_mode17 = mirrored_repeat
 float_framebuffer17 = true
-alias17 = BR_MirrorBlurredPass
+
+// Add Blur for the Reflection (Vertical) ----------------------------------------------------------------
+shader18 = ../crt/shaders/hyperspacemadness/hsm-blur-outside-screen-vert.slang
+filter_linear18 = false
+scale_type18 = source
+float_framebuffer18 = true
+wrap_mode18 = mirrored_repeat
+alias18 = BR_MirrorBlurredPass
 
 // Reduce resolution ----------------------------------------------------------------
 // Reduced to a very small amount so we can create a blur which will create a glow from the screen
 //      Mipmap option allows smoother downscaling
-shader18 = ../blurs/blur9x9.slang
-mipmap_input18 = true
-filter_linear18 = true
-scale_type18 = absolute
-float_framebuffer18 = true
-scale_x18 = 128
-scale_y18 = 128
-alias18 = BR_MirrorReflectionDiffusedPass
-
-// Add Diffused glow all around the screen ----------------------------------------------------------------
-//      lurred so much that it's non directional
-//      Mipmap option allows downscaling without artifacts
 shader19 = ../blurs/blur9x9.slang
 mipmap_input19 = true
 filter_linear19 = true
 scale_type19 = absolute
 float_framebuffer19 = true
-scale_x19 = 12
-scale_y19 = 12
-alias19 = BR_MirrorFullscreenGlowPass
+scale_x19 = 128
+scale_y19 = 128
+wrap_mode19 = mirrored_repeat
+alias19 = BR_MirrorReflectionDiffusedPass
+
+// Add Diffused glow all around the screen ----------------------------------------------------------------
+//      lurred so much that it's non directional
+//      Mipmap option allows downscaling without artifacts
+shader20 = ../blurs/blur9x9.slang
+mipmap_input20 = true
+filter_linear20 = true
+scale_type20 = absolute
+float_framebuffer20 = true
+scale_x20 = 12
+scale_y20 = 12
+wrap_mode20 = mirrored_repeat
+alias20 = BR_MirrorFullscreenGlowPass
 
 // Bezel Generation & Reflection ----------------------------------------------------------------
 //      Uses these previous passes:
@@ -153,17 +173,20 @@ alias19 = BR_MirrorFullscreenGlowPass
 //      Blur passes are in linearized color space, and CRT Pass already has gamma encoded in it
 //
 //      Uses these textures
-//          OverlayImage
-//          OverlayImage_Vertical
+            // BackgroundImage
+            // BackgroundVertImage
+            // TubeGlassImage
+            // OverlayImage
+            // OverlayVertImage
 
-shader20 = ../crt/shaders/hyperspacemadness/hsm-mega-bezel-reflection.slang
-mipmap_input20 = true
-filter_linear20 = true
-scale_type20 = viewport
-float_framebuffer20 = false
+shader21 = ../crt/shaders/hyperspacemadness/hsm-mega-bezel-reflection.slang
+mipmap_input21 = true
+filter_linear21 = true
+scale_type21 = viewport
+float_framebuffer21 = false
 
 // Define how many shaders will be used from this list
-shaders = 21
+shaders = 22
 
 // Define textures to be used by the different passes
 textures = "SamplerLUT1;SamplerLUT2;SamplerLUT3;BackgroundImage;BackgroundVertImage;TubeGlassImage;OverlayImage;OverlayVertImage;"
@@ -180,7 +203,7 @@ TubeGlassImage = ../crt/shaders/hyperspacemadness/textures/TubeGlassOverlayImage
 OverlayImage = ../crt/shaders/hyperspacemadness/textures/OverlayImage_OverReflection_3840x2160.png
 OverlayVertImage = ../crt/shaders/hyperspacemadness/textures/OverlayImage_OverReflection_3840x2160.png
 
-parameters = "hmss_mega_screen_scale_on;hmss_screen_aspect_ratio;hmss_integer_scale_mode;hmss_int_scale_multiple_offset;hmss_non_integer_scale;hmss_int_scale_border_min_height;hmss_scanline_direction;hmss_curvature_mode;hmss_curvature_2D_long_axis;hmss_curvature_2D_short_axis;hmss_curvature_3D_radius;hmss_curvature_3D_view_dist;hmss_curvature_3D_tilt_angle_x;hmss_curvature_3D_tilt_angle_y;hmss_corner_radius;hmss_tube_black_edge_thickness;hmbz_frame_thickness;hmbz_bezel_width;hmbz_bezel_height;hmbz_background_image_opacity;hmbz_bezel_opacity;hmbz_bezel_brightness;hmbz_frame_opacity;hmbz_background_image_cut_out_inside_frame;hmbz_background_image_scale_mode;hmbz_background_image_aspect_ratio;hmbz_background_image_tube_height;hmss_crop_overscan_top;hmss_crop_overscan_bottom;hmss_crop_overscan_left;hmss_crop_overscan_right;hmss_pre_crt_black_level;hbl_blur_min;hbl_blur_max;hbr_global_amount;hbr_global_gamma_adjust;hbr_diffused_reflection;hbr_fullscreen_glow;hbr_fullscreen_glow_gamma;hag_afterglow_persistence"
+parameters = "hmss_mega_screen_scale_on;hmss_screen_aspect_ratio;hmss_integer_scale_mode;hmss_int_scale_multiple_offset;hmss_non_integer_scale;hmss_int_scale_border_min_height;hmss_scanline_direction;hmss_curvature_mode;hmss_curvature_2D_long_axis;hmss_curvature_2D_short_axis;hmss_curvature_3D_radius;hmss_curvature_3D_view_dist;hmss_curvature_3D_tilt_angle_x;hmss_curvature_3D_tilt_angle_y;hmss_corner_radius;hmss_tube_black_edge_thickness;hmss_screen_edge_sharpness;hmbz_tube_glass_image_opacity;hmbz_tube_edge_shadow;hmbz_background_image_aspect_ratio;hmbz_background_image_tube_height;hmbz_background_image_vignette_opacity;hmbz_bezel_inner_corner_radius_scale;hmbz_bezel_inner_edge_thickness;hmbz_background_image_opacity;hmbz_bezel_opacity;hmbz_bezel_width;hmbz_bezel_height;hmbz_bezel_color_hue;hmbz_bezel_color_saturation;hmbz_bezel_color_value;hmbz_bezel_color_blend_with_image;hmbz_bezel_brightness;hmbz_bezel_highlight;hmbz_bezel_noise;hmbz_frame_opacity;hmbz_frame_thickness;hmbz_frame_inner_edge_thickness;hmbz_background_image_scale_mode;hmss_crop_overscan_top;hmss_crop_overscan_bottom;hmss_crop_overscan_left;hmss_crop_overscan_right;hmss_pre_crt_black_level;hbl_blur_min;hbl_blur_max;hbr_global_amount;hbr_global_gamma_adjust;hbr_inner_edge_reflection;hbr_inner_edge_fullscreen_glow;hbr_diffused_reflection;hbr_fullscreen_glow;hbr_fullscreen_glow_gamma;hag_afterglow_persistence;hbr_noise_samples;hbr_noise_amount;hbr_noise_sample_distance;hbr_fade_amount;hbr_radial_fade_width;hbr_radial_fade_height;hbr_lateral_outer_fade_position;hbr_lateral_outer_fade_distance;hbr_corner_fade;hbr_corner_inner_spread;hbr_corner_outer_spread"
 
 hmss_mega_screen_scale_on = 1
 // hmss_screen_aspect_ratio = 1.5
@@ -200,20 +223,30 @@ hmss_int_scale_border_min_height = 5.5
 // hmss_curvature_3D_tilt_angle_y = 0
 
 hmss_corner_radius = 10
-// hmss_tube_black_edge_thickness = 1.6
-// hmbz_bezel_width = 7.5;
-// hmbz_bezel_height = 6;
+// hmss_tube_black_edge_thickness = -0.2
+// hmbz_bezel_width = 200
+// hmbz_bezel_height = 200
 
-// hmbz_background_image_opacity = 1
-// hmbz_bezel_opacity = 1
-// hmbz_bezel_brightness = 10
+// hmbz_background_image_opacity = 0
+// hmbz_bezel_opacity = 0
+// hmbz_bezel_color_hue = 0
+// hmbz_bezel_color_saturation = 0
+// hmbz_bezel_color_value = 0
+// hmbz_bezel_color_blend_with_image = 1
 
+// hmbz_bezel_brightness = 40
+// hmbz_bezel_highlight = 50
+// hmbz_bezel_noise = 0
+
+// hmbz_tube_glass_image_opacity = 5
+// hmbz_frame_opacity = 0
 // hmbz_frame_thickness = 7;
- // hmbz_frame_opacity = 1;
+// hmbz_frame_inner_edge_thickness = 0.15
 
 // hmbz_background_image_scale_mode = 0
-hmbz_background_image_aspect_ratio = 1.75
+// hmbz_background_image_aspect_ratio = 1.75
 // hmbz_background_image_tube_height = 69
+// hmbz_background_image_vignette_opacity = 0.4
 
 // hmss_crop_overscan_top = 0
 // hmss_crop_overscan_bottom = 0
@@ -221,15 +254,33 @@ hmbz_background_image_aspect_ratio = 1.75
 // hmss_crop_overscan_right = 0
 // hmss_pre_crt_black_level = 0
 
-// hbl_blur_min = 0
-// hbl_blur_max = 0.4
+// hmss_screen_edge_sharpness = 1
+// hmbz_tube_edge_shadow = 0
+// hmbz_bezel_inner_corner_radius_scale = 1
+// hmbz_bezel_inner_edge_thickness = 2.5
 
-// hbr_global_amount = 1.4
-// hbr_global_gamma_adjust = 1.2
+// hbl_blur_min = 0.3
+// hbl_blur_max = 0.6
+
+// hbr_noise_amount = 1
+// hbr_noise_samples = 4
+// hbr_noise_sample_distance = 0.15
+
+// hbr_global_amount = 0.5
+// hbr_global_gamma_adjust = 0.9
+// hbr_inner_edge_reflection = 0.6
+// hbr_inner_edge_fullscreen_glow = 0.4
 // hbr_diffused_reflection = 0
-// hbr_fullscreen_glow = 300
-// hbr_fullscreen_glow_gamma = 1.6
-
+// hbr_fullscreen_glow = 30
+// hbr_fullscreen_glow_gamma = 1.5
+// hbr_fade_amount = 0.2
+// hbr_radial_fade_width = 500
+// hbr_radial_fade_height = 300
+// hbr_lateral_outer_fade_position = 500
+// hbr_lateral_outer_fade_distance = 20
+// hbr_corner_fade = 10
+// hbr_corner_inner_spread = 0
+// hbr_corner_outer_spread = 0
 // hag_afterglow_persistence = 0.2
 
 

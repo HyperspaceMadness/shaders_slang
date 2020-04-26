@@ -8,13 +8,13 @@ layout(push_constant) uniform Push
 	float signalResolution;
 	float signalResolutionI;
 	float signalResolutionQ;
-
+   float gtu_on;
 	float compositeConnection;
 } params;
 
-#pragma parameter signalResolution  "[GTU]  Signal Resolution Y" 256.0 16.0 1024.0 16.0
-#pragma parameter signalResolutionI "[GTU]  Signal Resolution I" 83.0 1.0 350.0 2.0
-#pragma parameter signalResolutionQ "[GTU]  Signal Resolution Q" 25.0 1.0 350.0 2.0
+#pragma parameter signalResolution  "[TV PROCESS GTU]  Signal Resolution Y" 256.0 16.0 1024.0 16.0
+#pragma parameter signalResolutionI "[TV PROCESS GTU]  Signal Resolution I" 83.0 1.0 350.0 2.0
+#pragma parameter signalResolutionQ "[TV PROCESS GTU]  Signal Resolution Q" 25.0 1.0 350.0 2.0
 
 layout(std140, set = 0, binding = 0) uniform UBO
 {
@@ -62,6 +62,13 @@ layout(set = 0, binding = 2) uniform sampler2D Source;
 
 void main()
 {
+   // If GTU is off return the color from the last pass
+	if (params.gtu_on < 1)
+   {
+		FragColor = texture(Source, vTexCoord);
+      return;
+   } 
+
 	float offset   = fract((vTexCoord.x * params.SourceSize.x) - 0.5);
 	vec3	tempColor = vec3(0.0);
 	float	X;

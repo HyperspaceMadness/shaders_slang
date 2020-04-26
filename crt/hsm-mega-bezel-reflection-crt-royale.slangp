@@ -16,46 +16,63 @@
 # calculate scale_y5 (among other values):
 # 1.) geom_max_aspect_ratio = (geom_max_aspect_ratio used to calculate scale_y5)
 
-# Add Mega Screen Scale Params for the UI
-#      Add the mega-screen-scale parameters at the beginning of the list for easy access
-#      Debug Drawing of the resolution/screen scaling is also included here
+// Add Mega Screen Scale Params for the UI
+//      Add the mega-screen-scale parameters at the beginning of the list for easy access
+//      Debug Drawing of the resolution/screen scaling is also included here
 shader0 = ../crt/shaders/hyperspacemadness/hsm-stock-with-mega-screen-scale-bezel-params.slang
 
-# NOTE: desired put De-Dithering or TV Signal effects here, e.g. GTU, NTSC, CBOD
-shader1 = ../stock.slang
+// Calculate Average Luminance  ----------------------------------------------------------------
+shader1 = ../crt/shaders/hyperspacemadness/hsm-avg-lum.slang
+filter_linear1 = true
+mipmap_input1 = true
+float_framebuffer1 = true
+alias1 = AvgLumPass
 
-shader2 = ../stock.slang
+// NOTE: desired put De-Dithering or TV Signal effects here in 1, 2 & 3, e.g. GTU, NTSC, CBOD
 
-# Afterglow and Black Level ----------------------------------------------------------------
-#      Almost the same as Guest's original afterglow but can brighten the black without losing the afterglow
-shader3 = ../crt/shaders/hyperspacemadness/hsm-guest-afterglow-with-black-level.slang
-filter_linear3 = false
-scale_type3 = source
-scale3 = 1.0
+// CBOD De-Dithering Pass 1
+shader2 = ../crt/shaders/hyperspacemadness/hsm-cbod/hsm-cbod-v1-pass1.slang
 
-# Pass4: Linearize the input based on CRT gamma and bob interlaced fields.
+// CBOD De-Dithering Pass 2
+shader3 = ../crt/shaders/hyperspacemadness/hsm-cbod/hsm-cbod-v1-pass2.slang
+
+// GTU Pass 1
+shader4 = ../crt/shaders/hyperspacemadness/hsm-gtu/hsm-gtu-pass1.slang
+float_framebuffer4 = true
+
+// GTU Pass 2
+shader5 = ../crt/shaders/hyperspacemadness/hsm-gtu/hsm-gtu-pass2.slang
+filter_linear5 = true
+float_framebuffer5 = true
+
+// Afterglow and Black Level ----------------------------------------------------------------
+//      Almost the same as Guest's original afterglow but can brighten the black without losing the afterglow
+shader6 = ../crt/shaders/hyperspacemadness/hsm-guest-afterglow-with-black-level.slang
+alias6 = AfterglowPass
+
+# Pass7: Linearize the input based on CRT gamma and bob interlaced fields.
 # (Bobbing ensures we can immediately blur without getting artifacts.)
-shader4 = "../crt/shaders/HyperspaceMadness/hsm-crt-royale/src/crt-royale-first-pass-linearize-crt-gamma-bob-fields.slang"
-alias4 = "ORIG_LINEARIZED"
-filter_linear4 = "false"
-scale_type4 = "source"
-scale4 = "1.0"
-srgb_framebuffer4 = "true"
+shader7 = "../crt/shaders/HyperspaceMadness/hsm-crt-royale/src/crt-royale-first-pass-linearize-crt-gamma-bob-fields.slang"
+alias7 = "ORIG_LINEARIZED"
+filter_linear7 = "false"
+scale_type7 = "source"
+scale7 = "1.0"
+srgb_framebuffer7 = "true"
 
-# Pass5: Resample interlaced (and misconverged) scanlines vertically.
+# Pass8: Resample interlaced (and misconverged) scanlines vertically.
 # Separating vertical/horizontal scanline sampling is faster: It lets us
 # consider more scanlines while calculating weights for fewer pixels, and
 # it reduces our samples from vertical*horizontal to vertical+horizontal.
 # This has to come right after ORIG_LINEARIZED, because there's no
 # "original_source" scale_type we can use later.
-shader5 = "../crt/shaders/HyperspaceMadness/hsm-crt-royale/src/crt-royale-scanlines-vertical-interlacing.slang"
-alias5 = "VERTICAL_SCANLINES"
-filter_linear5 = "true"
-scale_type_x5 = "source"
-scale_x5 = "1.0"
-scale_type_y5 = "viewport"
-scale_y5 = "1.0"
-srgb_framebuffer5 = "true"
+shader8 = "../crt/shaders/HyperspaceMadness/hsm-crt-royale/src/crt-royale-scanlines-vertical-interlacing.slang"
+alias8 = "VERTICAL_SCANLINES"
+filter_linear8 = "true"
+scale_type_x8 = "source"
+scale_x8 = "1.0"
+scale_type_y8 = "viewport"
+scale_y8 = "1.0"
+srgb_framebuffer8 = "true"
 
 # Pass6: Do a small resize blur of ORIG_LINEARIZED at an absolute size, and
 # account for convergence offsets.  We want to blur a predictable portion of the
@@ -69,32 +86,32 @@ srgb_framebuffer5 = "true"
 #     may be a good thing for people who like to crank it up).
 # Note the 4:3 aspect ratio assumes the input has cropped geom_overscan (so it's
 # *intended* for an ~4:3 aspect ratio).
-shader6 = "../crt/shaders/HyperspaceMadness/hsm-crt-royale/src/crt-royale-bloom-approx.slang"
-alias6 = "BLOOM_APPROX"
-filter_linear6 = "true"
-scale_type6 = "absolute"
-scale_x6 = "320"
-scale_y6 = "240"
-srgb_framebuffer6 = "true"
+shader9 = "../crt/shaders/HyperspaceMadness/hsm-crt-royale/src/crt-royale-bloom-approx.slang"
+alias9 = "BLOOM_APPROX"
+filter_linear9 = "true"
+scale_type9 = "absolute"
+scale_x9 = "320"
+scale_y9 = "240"
+srgb_framebuffer9 = "true"
 
-# Pass7: Vertically blur the input for halation and refractive diffusion.
+# Pass10: Vertically blur the input for halation and refractive diffusion.
 # Base this on BLOOM_APPROX: This blur should be small and fast, and blurring
 # a constant portion of the screen is probably physically correct if the
 # viewport resolution is proportional to the simulated CRT size.
-shader7 = "../blurs/blur9fast-vertical.slang"
-filter_linear7 = "true"
-scale_type7 = "source"
-scale7 = "1.0"
-srgb_framebuffer7 = "true"
+shader10 = "../blurs/blur9fast-vertical.slang"
+filter_linear10 = "true"
+scale_type10 = "source"
+scale10 = "1.0"
+srgb_framebuffer10 = "true"
 
-# Pass8: Horizontally blur the input for halation and refractive diffusion.
+# Pass11: Horizontally blur the input for halation and refractive diffusion.
 # Note: Using a one-pass 9x9 blur is about 1% slower.
-shader8 = "../blurs/blur9fast-horizontal.slang"
-alias8 = "HALATION_BLUR"
-filter_linear8 = "true"
-scale_type8 = "source"
-scale8 = "1.0"
-srgb_framebuffer8 = "true"
+shader11 = "../blurs/blur9fast-horizontal.slang"
+alias11 = "HALATION_BLUR"
+filter_linear11 = "true"
+scale_type11 = "source"
+scale11 = "1.0"
+srgb_framebuffer11 = "true"
 
 # Pass9: Lanczos-resize the phosphor mask vertically.  Set the absolute
 # scale_x9 == mask_texture_small_size.x (see IMPORTANT above).  Larger scales
@@ -129,130 +146,130 @@ srgb_framebuffer8 = "true"
 #   scale_y9 = 4.0/3.0 * 2.0/(341.33333 / 8.0) = 0.0625
 # IMPORTANT: The scales MUST be calculated in this way.  If you wish to change
 # geom_max_aspect_ratio, update that constant in user-preset-constants.h!
-shader9 = "../crt/shaders/HyperspaceMadness/hsm-crt-royale/src/crt-royale-mask-resize-vertical.slang"
-filter_linear9 = "true"
-scale_type_x9 = "absolute"
-scale_x9 = "64"
-scale_type_y9 = "viewport"
-scale_y9 = "0.0625" # Safe for >= 341.333 horizontal triads at viewport size
-#srgb_framebuffer9 = "false" # mask_texture is already assumed linear
+shader12 = "../crt/shaders/HyperspaceMadness/hsm-crt-royale/src/crt-royale-mask-resize-vertical.slang"
+filter_linear12 = "true"
+scale_type_x12 = "absolute"
+scale_x12 = "64"
+scale_type_y12 = "viewport"
+scale_y12 = "0.0625" # Safe for >= 341.333 horizontal triads at viewport size
+#srgb_framebuffer12 = "false" # mask_texture is already assumed linear
 
-# Pass10: Lanczos-resize the phosphor mask horizontally.  scale_x10 = scale_y9.
+# Pass13: Lanczos-resize the phosphor mask horizontally.  scale_x13 = scale_y9.
 # TODO: Check again if the shaders actually require equal scales.
-shader10 = "../crt/shaders/HyperspaceMadness/hsm-crt-royale/src/crt-royale-mask-resize-horizontal.slang"
-alias10 = "MASK_RESIZE"
-filter_linear10 = "false"
-scale_type_x10 = "viewport"
-scale_x10 = "0.0625"
-scale_type_y10 = "source"
-scale_y10 = "1.0"
-#srgb_framebuffer10 = "false" # mask_texture is already assumed linear
+shader13 = "../crt/shaders/HyperspaceMadness/hsm-crt-royale/src/crt-royale-mask-resize-horizontal.slang"
+alias13 = "MASK_RESIZE"
+filter_linear13 = "false"
+scale_type_x13 = "viewport"
+scale_x13 = "0.0625"
+scale_type_y13 = "source"
+scale_y13 = "1.0"
+#srgb_framebuffer13 = "false" # mask_texture is already assumed linear
 
-# Pass11: Resample (misconverged) scanlines horizontally, apply halation, and
+# Pass14: Resample (misconverged) scanlines horizontally, apply halation, and
 # apply the phosphor mask.
-shader11 = "../crt/shaders/HyperspaceMadness/hsm-crt-royale/src/crt-royale-scanlines-horizontal-apply-mask.slang"
-alias11 = "MASKED_SCANLINES"
-filter_linear11 = "true" # This could just as easily be nearest neighbor.
-scale_type11 = "viewport"
-scale11 = "1.0"
-srgb_framebuffer11 = "true"
-
-# Pass 12: Compute a brightpass.  This will require reading the final mask.
-shader12 = "../crt/shaders/HyperspaceMadness/hsm-crt-royale/src/crt-royale-brightpass.slang"
-alias12 = "BRIGHTPASS"
-filter_linear12 = "true" # This could just as easily be nearest neighbor.
-scale_type12 = "viewport"
-scale12 = "1.0"
-srgb_framebuffer12 = "true"
-
-# Pass 13: Blur the brightpass vertically
-shader13 = "../crt/shaders/HyperspaceMadness/hsm-crt-royale/src/crt-royale-bloom-vertical.slang"
-filter_linear13 = "true" # This could just as easily be nearest neighbor.
-scale_type13 = "source"
-scale13 = "1.0"
-srgb_framebuffer13 = "true"
-
-# Pass 14: Blur the brightpass horizontally and combine it with the dimpass:
-shader14 = "../crt/shaders/HyperspaceMadness/hsm-crt-royale/src/crt-royale-bloom-horizontal-reconstitute.slang"
-filter_linear14 = "true"
-scale_type14 = "source"
+shader14 = "../crt/shaders/HyperspaceMadness/hsm-crt-royale/src/crt-royale-scanlines-horizontal-apply-mask.slang"
+alias14 = "MASKED_SCANLINES"
+filter_linear14 = "true" # This could just as easily be nearest neighbor.
+scale_type14 = "viewport"
 scale14 = "1.0"
 srgb_framebuffer14 = "true"
 
-# Pass 15: Compute curvature/AA:
-shader15 = "../crt/shaders/HyperspaceMadness/hsm-crt-royale/src/crt-royale-geometry-aa-last-pass-no-dim-border.slang"
-filter_linear15 = "true"
+# Pass 15: Compute a brightpass.  This will require reading the final mask.
+shader15 = "../crt/shaders/HyperspaceMadness/hsm-crt-royale/src/crt-royale-brightpass.slang"
+alias15 = "BRIGHTPASS"
+filter_linear15 = "true" # This could just as easily be nearest neighbor.
 scale_type15 = "viewport"
-mipmap_input15 = "true"
-texture_wrap_mode15 = "clamp_to_edge"
-alias15 = BR_CrtPass
+scale15 = "1.0"
+srgb_framebuffer15 = "true"
+
+# Pass 16: Blur the brightpass vertically
+shader16 = "../crt/shaders/HyperspaceMadness/hsm-crt-royale/src/crt-royale-bloom-vertical.slang"
+filter_linear16 = "true" # This could just as easily be nearest neighbor.
+scale_type16 = "source"
+scale16 = "1.0"
+srgb_framebuffer16 = "true"
+
+# Pass 17: Blur the brightpass horizontally and combine it with the dimpass:
+shader17 = "../crt/shaders/HyperspaceMadness/hsm-crt-royale/src/crt-royale-bloom-horizontal-reconstitute.slang"
+filter_linear17 = "true"
+scale_type17 = "source"
+scale17 = "1.0"
+srgb_framebuffer17 = "true"
+
+# Pass 18: Compute curvature/AA:
+shader18 = "../crt/shaders/HyperspaceMadness/hsm-crt-royale/src/crt-royale-geometry-aa-last-pass-no-dim-border.slang"
+filter_linear18 = "true"
+scale_type18 = "viewport"
+mipmap_input18 = "true"
+texture_wrap_mode18 = "clamp_to_edge"
+alias18 = BR_CrtPass
 
 // Screen Scale & Tube Scale Curvature Mapping
-// Write mapping into the pass, of the 4 channels, x & y are screen warped coord and z & w are tube warped coord
-shader16 = ../crt/shaders/hyperspacemadness/hsm-curvature-mapping.slang
-mipmap_input16 = true
-filter_linear16 = true
-// mipmap_input16 = true
-// filter_linear16 = true
-scale_type16 = viewport
-// scale16 = 0.5
-float_framebuffer16 = true
-// format16 R32G32B32A32_SFLOAT
-alias16 = BR_MappingPass
+// Write mapping into the pass, of the 4 channels, x & y are tube warped coord and z & w are outside tube mask and edge mask
+shader19 = ../crt/shaders/hyperspacemadness/hsm-curvature-mapping.slang
+mipmap_input19 = true
+filter_linear19 = true
+// mipmap_input19 = true
+// filter_linear19 = true
+scale_type19 = viewport
+// scale19 = 0.5
+float_framebuffer19 = true
+// format19 R32G32B32A32_SFLOAT
+alias19 = BR_MappingPass
 
 // Linearize & Reduce Resolution ----------------------------------------------------------------
 //      Reduce the resolution to a small static size regardless of final resolution
 //      Allows consistent look and faster at different final resolutions for blur
 //      Mipmap option allows downscaling without artifacts
-shader17 = ../crt/shaders/hyperspacemadness/hsm-linearize-crt-pass.slang
-mipmap_input17 = true
-filter_linear17 = true
-scale_type17 = absolute
-float_framebuffer17 = true
-// scale_x17 = 480
-// scale_y17 = 270
-// scale_x17 = 960
-// scale_y17 = 540
-scale_x17 = 800
-scale_y17 = 600
-alias17 = BR_MirrorLowResPass
-
-// Add Blur for the Reflection (Horizontal) ----------------------------------------------------------------
-shader18 = ../crt/shaders/hyperspacemadness/hsm-blur-outside-screen-horiz.slang
-filter_linear18 = false
-scale_type18 = source
-float_framebuffer18 = true
-
-// Add Blur for the Reflection (Vertical) ----------------------------------------------------------------
-shader19 = ../crt/shaders/hyperspacemadness/hsm-blur-outside-screen-vert.slang
-filter_linear19 = false
-scale_type19 = source
-float_framebuffer19 = true
-alias19 = BR_MirrorBlurredPass
-
-// Reduce resolution ----------------------------------------------------------------
-// Reduced to a very small amount so we can create a blur which will create a glow from the screen
-//      Mipmap option allows smoother downscaling
-shader20 = ../blurs/blur9x9.slang
+shader20 = ../crt/shaders/hyperspacemadness/hsm-linearize-crt-pass.slang
 mipmap_input20 = true
 filter_linear20 = true
 scale_type20 = absolute
 float_framebuffer20 = true
-scale_x20 = 128
-scale_y20 = 128
-alias20 = BR_MirrorReflectionDiffusedPass
+// scale_x20 = 480
+// scale_y20 = 270
+// scale_x20 = 960
+// scale_y20 = 540
+scale_x20 = 800
+scale_y20 = 600
+alias20 = BR_MirrorLowResPass
+
+// Add Blur for the Reflection (Horizontal) ----------------------------------------------------------------
+shader21 = ../crt/shaders/hyperspacemadness/hsm-blur-outside-screen-horiz.slang
+filter_linear21 = false
+scale_type21 = source
+float_framebuffer21 = true
+
+// Add Blur for the Reflection (Vertical) ----------------------------------------------------------------
+shader22 = ../crt/shaders/hyperspacemadness/hsm-blur-outside-screen-vert.slang
+filter_linear22 = false
+scale_type22 = source
+float_framebuffer22 = true
+alias22 = BR_MirrorBlurredPass
+
+// Reduce resolution ----------------------------------------------------------------
+// Reduced to a very small amount so we can create a blur which will create a glow from the screen
+//      Mipmap option allows smoother downscaling
+shader23 = ../blurs/blur9x9.slang
+mipmap_input23 = true
+filter_linear23 = true
+scale_type23 = absolute
+float_framebuffer23 = true
+scale_x23 = 128
+scale_y23 = 128
+alias23 = BR_MirrorReflectionDiffusedPass
 
 // Add Diffused glow all around the screen ----------------------------------------------------------------
 //      lurred so much that it's non directional
 //      Mipmap option allows downscaling without artifacts
-shader21 = ../blurs/blur9x9.slang
-mipmap_input21 = true
-filter_linear21 = true
-scale_type21 = absolute
-float_framebuffer21 = true
-scale_x21 = 12
-scale_y21 = 12
-alias21 = BR_MirrorFullscreenGlowPass
+shader24 = ../blurs/blur9x9.slang
+mipmap_input24 = true
+filter_linear24 = true
+scale_type24 = absolute
+float_framebuffer24 = true
+scale_x24 = 12
+scale_y24 = 12
+alias24 = BR_MirrorFullscreenGlowPass
 
 // Bezel Generation & Reflection ----------------------------------------------------------------
 //      Uses these previous passes:
@@ -266,13 +283,14 @@ alias21 = BR_MirrorFullscreenGlowPass
 //          OverlayImage
 //          OverlayImage_Vertical
 
-shader22 = ../crt/shaders/hyperspacemadness/hsm-mega-bezel-reflection.slang
-mipmap_input22 = true
-filter_linear22 = true
-scale_type22 = viewport
-float_framebuffer22 = false
+shader25 = ../crt/shaders/hyperspacemadness/hsm-mega-bezel-reflection.slang
+mipmap_input25 = true
+filter_linear25 = true
+scale_type25 = viewport
+float_framebuffer25 = false
 
-shaders = "23"
+
+shaders = "26"
 
 # Set an identifier, filename, and sampling traits for the phosphor mask texture.
 # Load an aperture grille, slot mask, and an EDP shadow mask, and load a small
@@ -310,7 +328,7 @@ TubeGlassImage = ../crt/shaders/hyperspacemadness/textures/TubeGlassOverlayImage
 OverlayImage = ../crt/shaders/hyperspacemadness/textures/OverlayImage_OverReflection_3840x2160.png
 OverlayVertImage = ../crt/shaders/hyperspacemadness/textures/OverlayImage_OverReflection_3840x2160.png
 
-parameters = "hmss_curvature_mode;hmss_curvature_3D_radius;hmss_curvature_3D_view_dist;geom_overscan_x;geom_overscan_y;border_size;border_compress;interlace_detect_toggle;hmss_mega_screen_scale_on;hmss_screen_aspect_ratio;hmss_integer_scale_mode;hmss_int_scale_multiple_offset;hmss_non_integer_scale;hmss_int_scale_border_min_height;hmss_scanline_direction;hmss_curvature_2D_long_axis;hmss_curvature_2D_short_axis;hmss_corner_radius;hmss_tube_black_edge_thickness;hmbz_frame_thickness;hmbz_bezel_width;hmbz_bezel_height;hmbz_background_image_opacity;hmbz_bezel_opacity;hmbz_bezel_brightness;hmbz_frame_opacity;hmbz_background_image_cut_out_inside_frame;hmbz_background_image_scale_mode;hmbz_background_image_aspect_ratio;hmbz_background_image_tube_height;hmss_crop_overscan_top;hmss_crop_overscan_bottom;hmss_crop_overscan_left;hmss_crop_overscan_right;hmss_pre_crt_black_level;hbl_blur_min;hbl_blur_max;hbr_global_amount;hbr_global_gamma_adjust;hbr_diffused_reflection;hbr_fullscreen_glow;hbr_fullscreen_glow_gamma;hag_afterglow_persistence"
+parameters = "hmss_curvature_mode;hmss_curvature_3D_radius;hmss_curvature_3D_view_dist;geom_overscan_x;geom_overscan_y;border_size;border_compress;interlace_detect_toggle;hmss_mega_screen_scale_on;hmss_screen_aspect_ratio;hmss_integer_scale_mode;hmss_int_scale_multiple_offset;hmss_non_integer_scale;hmss_int_scale_border_min_height;hmss_scanline_direction;hmss_curvature_2D_long_axis;hmss_curvature_2D_short_axis;hmss_corner_radius;hmss_tube_black_edge_thickness;hmbz_frame_thickness;hmbz_bezel_width;hmbz_bezel_height;hmbz_background_image_opacity;hmbz_bezel_opacity;hmbz_bezel_brightness;hmbz_frame_opacity;hmbz_background_image_scale_mode;hmbz_background_image_aspect_ratio;hmbz_background_image_tube_height;hmss_crop_overscan_top;hmss_crop_overscan_bottom;hmss_crop_overscan_left;hmss_crop_overscan_right;hmss_pre_crt_black_level;hbl_blur_min;hbl_blur_max;hbr_global_amount;hbr_global_gamma_adjust;hbr_diffused_reflection;hbr_fullscreen_glow;hbr_fullscreen_glow_gamma;hag_afterglow_persistence"
 
 // geom_overscan_x = 0.985;
 // geom_overscan_y = 0.985;

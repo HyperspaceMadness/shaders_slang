@@ -1,4 +1,0 @@
-# Debugging test for mask
-shader0 = ../crt/shaders/hyperspacemadness/hsm-mask-test.slang
-
-shaders = 1

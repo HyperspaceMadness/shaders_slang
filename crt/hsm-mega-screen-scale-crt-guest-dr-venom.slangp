@@ -1,93 +1,76 @@
-// Add Mega Screen Scale Params for the UI
+// Add Mega Screen Scale Params & Initial Prep
 //      Add the mega-screen-scale parameters at the beginning of the list for easy access
-//      Debug Drawing of the resolution/screen scaling is also included here
-shader0 = ../crt/shaders/hyperspacemadness/hsm-stock-with-mega-screen-scale-bezel-params.slang
-
-// NOTE: desired put De-Dithering or TV Signal effects here, e.g. GTU, NTSC, CBOD
-shader1 = ../stock.slang
-
-shader2 = ../stock.slang
-
-shader3 = ../stock.slang
+//      Add Afterglow, Black Level & Gamma
+//      Calculate Average Luminance and put in alpha channel
+//      Debug Drawing of the resolution/screen scaling
+shader0 = ../crt/shaders/HyperspaceMadness/hsm-prep-initial-debug-avgluma-afterglow-screen-scale-only.slang
+alias0  = AvgLumPass
 
 // Guest-Venom Pass ----------------------------------------------------------------
-shader4 = ../crt/shaders/guest/lut/lut.slang
+shader1 = ../crt/shaders/guest/lut/lut.slang
+filter_linear1 = false
+scale_type1 = source
+scale1 = 1.0
+
+// Guest-Venom Pass ----------------------------------------------------------------
+shader2 = ../crt/shaders/guest/color-profiles.slang
+filter_linear2 = true
+scale_type2 = source
+scale2 = 1.0
+
+// Guest-Venom Pass ----------------------------------------------------------------
+shader3 = ../crt/shaders/guest/d65-d50.slang
+filter_linear3 = true
+scale_type3 = source
+scale3 = 1.0
+alias3 = WhitePointPass
+
+// Guest-Venom Pass ----------------------------------------------------------------
+shader4 = ../crt/shaders/HyperspaceMadness/linearize.slang
 filter_linear4 = false
 scale_type4 = source
 scale4 = 1.0
+float_framebuffer4 = true
+alias4 = LinearizePass
 
 // Guest-Venom Pass ----------------------------------------------------------------
-shader5 = ../crt/shaders/guest/color-profiles.slang
-filter_linear5 = true
+shader5 = ../crt/shaders/HyperspaceMadness/hsm-guest-blur_horiz.slang
+filter_linear5 = false
 scale_type5 = source
 scale5 = 1.0
+float_framebuffer5 = true
 
 // Guest-Venom Pass ----------------------------------------------------------------
-shader6 = ../crt/shaders/guest/d65-d50.slang
-filter_linear6 = true
+shader6 = ../crt/shaders/HyperspaceMadness/hsm-guest-blur_vert.slang
+filter_linear6 = false
 scale_type6 = source
 scale6 = 1.0
-alias6 = WhitePointPass
+float_framebuffer6 = true
+alias6 = GlowPass
 
-// Afterglow and Black Level ----------------------------------------------------------------
-//      Almost the same as Guest's original afterglow but can brighten the black without losing the afterglow
-shader7 = ../crt/shaders/hyperspacemadness/hsm-guest-afterglow-with-black-level.slang
-filter_linear7 = false
+// Guest-Venom Pass ----------------------------------------------------------------
+shader7 = ../crt/shaders/HyperspaceMadness/hsm-guest-linearize_scanlines.slang
+filter_linear7 = true
 scale_type7 = source
 scale7 = 1.0
-alias7 = AfterglowPass
-
-// Empty Pass ----------------------------------------------------------------
-shader8 = ../stock.slang
-
-// Guest-Venom Pass ----------------------------------------------------------------
-shader9 = ../crt/shaders/hyperspacemadness/linearize.slang
-filter_linear9 = false
-scale_type9 = source
-scale9 = 1.0
-float_framebuffer9 = true
-alias9 = LinearizePass
-
-// Guest-Venom Pass ----------------------------------------------------------------
-shader10 = ../crt/shaders/hyperspacemadness/hsm-guest-blur_horiz.slang
-filter_linear10 = false
-scale_type10 = source
-scale10 = 1.0
-float_framebuffer10 = true
-
-// Guest-Venom Pass ----------------------------------------------------------------
-shader11 = ../crt/shaders/hyperspacemadness/hsm-guest-blur_vert.slang
-filter_linear11 = false
-scale_type11 = source
-scale11 = 1.0
-float_framebuffer11 = true
-alias11 = GlowPass
-
-// Guest-Venom Pass ----------------------------------------------------------------
-shader12 = ../crt/shaders/guest/linearize_scanlines.slang
-filter_linear12 = true
-scale_type12 = source
-scale12 = 1.0
-float_framebuffer12 = true
-alias12 = CrtInputPass
-
-shader13 = ../stock.slang
+float_framebuffer7 = true
+alias7 = CrtInputPass
 
 // CRT Shader - Guest-Venom ----------------------------------------------------------------
 //      Guest's Awesome Shader!!!
 //      Has been slightly altered to use the same scaling as the rest of the shders for the bezel & reflection
-shader14 = ../crt/shaders/hyperspacemadness/hsm-crt-guest-dr-venom-with-scaling-no-bezel.slang
-mipmap_input14 = true
-filter_linear14 = true
-scale_type14 = viewport
-scale_x14 = 1.0
-scale_y14 = 1.0
-float_framebuffer14 = true
-alias14 = BR_CrtPass
+shader8 = ../crt/shaders/HyperspaceMadness/hsm-crt-guest-dr-venom-with-scaling-no-bezel.slang
+mipmap_input8 = true
+filter_linear8 = true
+scale_type8 = viewport
+scale_x8 = 1.0
+scale_y8 = 1.0
+float_framebuffer8 = true
+alias8 = BR_CrtPass
 
 //shaders/guest/crt-guest-dr-venom.slang //
 
-shaders = 15
+shaders = 9
 
 // Define textures to be used by the different passes
 textures = "SamplerLUT1;SamplerLUT2;SamplerLUT3;"

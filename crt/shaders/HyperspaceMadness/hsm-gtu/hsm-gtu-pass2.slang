@@ -13,8 +13,11 @@ layout(push_constant) uniform Push
 } params;
 
 #pragma parameter signalResolution  "[TV PROCESS GTU]  Signal Resolution Y" 256.0 16.0 1024.0 16.0
-#pragma parameter signalResolutionI "[TV PROCESS GTU]  Signal Resolution I" 83.0 1.0 350.0 2.0
-#pragma parameter signalResolutionQ "[TV PROCESS GTU]  Signal Resolution Q" 25.0 1.0 350.0 2.0
+// #pragma parameter signalResolutionI "[TV PROCESS GTU]  Signal Resolution I" 83.0 1.0 350.0 2.0
+// #pragma parameter signalResolutionQ "[TV PROCESS GTU]  Signal Resolution Q" 25.0 1.0 350.0 2.0
+
+const float signalResolutionI = 83;
+const float signalResolutionQ = 25;
 
 layout(std140, set = 0, binding = 0) uniform UBO
 {
@@ -38,7 +41,7 @@ layout(std140, set = 0, binding = 0) uniform UBO
 //#define X(i) (offset-(i))
 #define GETC (texture(Source, vec2(vTexCoord.x - X * params.SourceSize.z, vTexCoord.y)).rgb)
 
-#define VAL_composite vec3((c.x*STU(X,(params.signalResolution * params.SourceSize.z))),(c.y*STU(X,(params.signalResolutionI * params.SourceSize.z))),(c.z*STU(X,(params.signalResolutionQ * params.SourceSize.z))))
+#define VAL_composite vec3((c.x*STU(X,(params.signalResolution * params.SourceSize.z))),(c.y*STU(X,(signalResolutionI * params.SourceSize.z))),(c.z*STU(X,(signalResolutionQ * params.SourceSize.z))))
 #define VAL (c*STU(X,(params.signalResolution * params.SourceSize.z)))
 
 #define PROCESS(i) X=(offset-(i));c=GETC;tempColor+=VAL;
@@ -75,7 +78,7 @@ void main()
 	vec3	c;
 	float range;
 	if (params.compositeConnection > 0.0)
-      range=ceil(0.5+params.SourceSize.x/min(min(params.signalResolution,params.signalResolutionI),params.signalResolutionQ));
+      range=ceil(0.5+params.SourceSize.x/min(min(params.signalResolution,signalResolutionI),signalResolutionQ));
    else
       range=ceil(0.5+params.SourceSize.x/params.signalResolution);
 	  

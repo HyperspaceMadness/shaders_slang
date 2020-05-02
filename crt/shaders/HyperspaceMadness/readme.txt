@@ -37,8 +37,6 @@ Shader chain shaders in order
 -BR_CrtPass
 	hsm-crt-guest-dr-venom-with-scaling.slang (Or any CRT shader which integrates the mega-screen-scale scaling)
 -hsm-blur-scanlines.slang - If necessary turn on to blurs scanlines to avoid moire ringing artifacts
--BR_MirrorLowResPass
-	linearize.slang - Pass reduces resolution to a lower fixed resolution so blur is fast and consistent regardless of final output resolution
 -hsm-blur-outside-screen-horiz.slang - adds blur which is used by the reflection pass
 -BR_MirrorBlurredPass
 	hsm-blur-outside-screen-vert.slang - adds blur which is used by the reflection pass

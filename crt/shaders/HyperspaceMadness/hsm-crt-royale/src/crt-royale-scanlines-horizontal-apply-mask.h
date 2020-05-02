@@ -98,6 +98,7 @@ layout(location = 3) out vec2 halation_tex_uv;
 layout(location = 4) out vec2 scanline_texture_size_inv;
 layout(location = 5) out vec4 mask_tile_start_uv_and_size;
 layout(location = 6) out vec2 mask_tiles_per_screen;
+layout(location = 7) out vec2 screenScale;
 
 void main()
 {
@@ -119,12 +120,12 @@ void main()
     //scanline_texture_size_inv = scanline_texture_size_inv;
 
     // HSM Added
-    vec2 screen_scale = HMSS_GetScreenScale();
+    screenScale = HMSS_GetScreenScale();
     vec2 position_offset = HMSS_GetPositionOffset();
 
-    scanline_tex_uv = HMSS_GetVTexCoordWithArgs(scanline_tex_uv, screen_scale, position_offset);
-    blur3x3_tex_uv = HMSS_GetVTexCoordWithArgs(blur3x3_tex_uv, screen_scale, position_offset);
-    halation_tex_uv = HMSS_GetVTexCoordWithArgs(halation_tex_uv, screen_scale, position_offset);
+    scanline_tex_uv = HMSS_GetVTexCoordWithArgs(scanline_tex_uv, screenScale, position_offset);
+    blur3x3_tex_uv = HMSS_GetVTexCoordWithArgs(blur3x3_tex_uv, screenScale, position_offset);
+    halation_tex_uv = HMSS_GetVTexCoordWithArgs(halation_tex_uv, screenScale, position_offset);
     // End Addition
 
     //  Get a consistent name for the final mask texture size.  Sample mode 0
@@ -155,6 +156,7 @@ layout(location = 3) in vec2 halation_tex_uv;
 layout(location = 4) in vec2 scanline_texture_size_inv;
 layout(location = 5) in vec4 mask_tile_start_uv_and_size;
 layout(location = 6) in vec2 mask_tiles_per_screen;
+layout(location = 7) in vec2 screenScale;
 layout(location = 0) out vec4 FragColor;
 layout(set = 0, binding = 2) uniform sampler2D Source;
 
@@ -311,15 +313,15 @@ void main()
             //  the phosphor emission, but I haven't found a way to make the
             //  brightness correct across the whole color range, especially with
             //  different bloom_underestimate_levels values.)
-            const float desired_triad_size = lerp(global.mask_triad_size_desired,
-                IN.output_size.x/global.mask_num_triads_desired,
-                global.mask_specify_num_triads);
-            const float bloom_sigma = get_min_sigma_to_blur_triad(
-                desired_triad_size, bloom_diff_thresh);
+            const float desired_triad_size = lerp(  global.mask_triad_size_desired,
+                                                    IN.output_size.x / global.mask_num_triads_desired,
+                                                    global.mask_specify_num_triads)
+                                                    * screenScale.y;
+            
+            const float bloom_sigma = get_min_sigma_to_blur_triad(desired_triad_size, bloom_diff_thresh);
             const float center_weight = get_center_weight(bloom_sigma);
-            const float3 max_area_contribution_approx =
-                max(float3(0.0, 0.0, 0.0), phosphor_blur_approx -
-                center_weight * phosphor_emission);
+            const float3 max_area_contribution_approx = max(float3(0.0, 0.0, 0.0), 
+                                                        phosphor_blur_approx - center_weight * phosphor_emission);
             const float3 area_contrib_underestimate =
                 bloom_underestimate_levels * max_area_contribution_approx;
             const float3 blend_ratio_temp =

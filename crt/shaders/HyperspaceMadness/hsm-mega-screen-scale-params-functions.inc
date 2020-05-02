@@ -13,7 +13,7 @@ Description:
 #include "hsm-helper-functions.inc"
 
 // Screen Scale Required Parameters
-#pragma parameter hmss_mega_screen_scale_on				"___HSM MEGA BEZEL__ V.2020-04-26 -SCREEN SCALE ON" 1 0 1 1
+#pragma parameter hmss_mega_screen_scale_on				"___HSM MEGA BEZEL__ V.2020-05-03 -SCREEN SCALE ON" 1 0 1 1
 #pragma parameter hmss_screen_scale_debug				"[SCREEN SCALE]  Screen Scale Debug" 0 0 1 1
 
 #pragma parameter hmss_rotate_crt_image					"[SCALING]  Rotate CRT Image"  0 0 1 1
@@ -50,13 +50,14 @@ Description:
 
 #pragma parameter hmss_corner_radius 					"[SCREEN EDGE]  Screen Corner Radius (Default 10)" 0 0 70 1
 #pragma parameter hmss_screen_edge_sharpness 			"[SCREEN EDGE]  Screen Edge Sharpness" 0.4 0 1 0.01
+#pragma parameter hmss_screen_vignette                  "[SCREEN EDGE]  Screen Vignette" 0 0 1 0.01
 
 #pragma parameter hmss_pre_crt_black_level 				"[COLOR]  Pre-CRT Black Level" 0 -30 30 0.05-
 #pragma parameter hmss_pre_crt_gamma					"[COLOR]  Pre-CRT Gamma" 2.4 0.01 8 0.01
 #pragma parameter hmss_post_crt_gamma					"[COLOR]  Post-CRT Gamma" 1 0.01 2 0.01
 #pragma parameter hmss_negative_crop_brightness			"[COLOR]  Negative Crop Brightness" 0 0 20 0.02
 
-#pragma parameter hag_afterglow_amount                  "[AFTERGLOW]  Amount"        0.07 0.0 1.0 0.01
+#pragma parameter hmss_afterglow_amount                  "[AFTERGLOW]  Amount"        0.07 0.0 1.0 0.01
 
 #pragma parameter hmss_tube_black_edge_thickness 		"[TUBE]  Black Edge Thickness" 1.2 -2 8 0.05
 #pragma parameter hmss_tube_black_edge_curvature_scale 	"[TUBE]  Black Edge Curvature Scale" 1 0 4 0.1
@@ -555,7 +556,7 @@ vec3 HMSS_HSVtoRGB(vec3 c)
     return c.z * mix(K.xxx, clamp(p - K.xxx, 0.0, 1.0), c.y);
 }
 
-vec4 HMSS_ApplyBlackLevelGammaLuminance(vec4 in_color, float color_is_linear)
+vec4 HMSS_ApplyBlackLevelGamma(vec4 in_color, float color_is_linear)
 {
 	if (color_is_linear == 0)
 	{
@@ -652,4 +653,20 @@ vec4 HMSS_COMPAT_TEXTURE(sampler2D in_sampler, vec2 in_coord)
 	float negative_crop = HMSS_IsInNegativeCropArea(sample_coord);
 
 	return negative_crop * negative_crop_color + (1 - negative_crop) * sampled_color;
+}
+
+float HMSS_GetVignetteFactor(vec2 coord, float amount)
+{
+	float orig_mamehlsl_amount = amount;
+	vec2 ctr_coord = coord - 0.5;
+
+	float vignette_length = length(ctr_coord * vec2(0.5 * global.OutputSize.x/global.OutputSize.y + 0.5, 1));
+	float vignette_blur = (orig_mamehlsl_amount * 0.75) + 0.25;
+
+	// 0.5 full screen fitting circle
+	float vignette_radius = 1.0 - (orig_mamehlsl_amount * 0.25);
+	float vignette = smoothstep(vignette_radius, vignette_radius - vignette_blur, vignette_length);
+
+	float vignette_multiplier = smoothstep(0, 0.05, amount);
+	return 1 - vignette_multiplier + vignette * vignette_multiplier;
 }

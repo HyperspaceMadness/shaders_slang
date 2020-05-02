@@ -40,8 +40,10 @@ layout(std140, set = 0, binding = 0) uniform UBO
 	float hmss_screen_edge_sharpness;
 	float hmss_tube_black_edge_thickness;
 	float hmss_tube_black_edge_curvature_scale;
+	float hmss_screen_vignette;
 
 	float hmss_negative_crop_brightness;
+	float hmss_afterglow_amount;
 
 	float hmss_pre_crt_black_level;
 	float hmss_pre_crt_gamma;
@@ -52,9 +54,8 @@ layout(std140, set = 0, binding = 0) uniform UBO
 	float hmbz_background_image_scale_mode;
 	float hmbz_background_image_aspect_ratio;
 	float hmbz_background_image_tube_height;
-
 	float hmbz_tube_glass_image_opacity;
-	float hmbz_tube_vignette;
+	
 	float hmbz_tube_edge_shadow;
 
 	// Generated Bezel
@@ -67,12 +68,11 @@ layout(std140, set = 0, binding = 0) uniform UBO
 	float hmbz_bezel_highlight;
 	float hmbz_bezel_width;
 	float hmbz_bezel_height;
-	float hmbz_bezel_inner_edge_thickness;
 	float hmbz_bezel_inner_corner_radius_scale;
 	float hmbz_bezel_outer_corner_radius_scale;
 	float hbr_corner_inner_spread;
 	float hbr_corner_outer_spread;
-	float hbr_corner_spread_falloff; // TODO Need to keep this?
+	float HBR_CORNER_SPREAD_FALLOFF; // TODO Need to keep this?
 	float hmbz_bezel_noise;
 
 	// Generated Frame
@@ -151,7 +151,7 @@ void main()
 	
 	vec2 tube_curved_coord = HMSS_GetCurvedCoord(tubeCoord, global.hmss_tube_black_edge_curvature_scale);
 
-	vec2 edge_mask_coord = (tube_curved_coord - 0.5) * (1 - (global.hmbz_bezel_inner_edge_thickness / 100 / vec2(screen_aspect, 1))) + 0.5;
+	vec2 edge_mask_coord = (tube_curved_coord - 0.5) * (1 - (HMBZ_BEZEL_INNER_EDGE_THICKNESS / 100 / vec2(screen_aspect, 1))) + 0.5;
 	float edge_sharpness = 0.9;
 
 	// If this is used in the glass preset adjust the smoothness of the edge of the glass 

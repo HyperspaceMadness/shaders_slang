@@ -460,15 +460,9 @@ void main()
 	// HSM Modification
 	// HSM Added
 	float TATE = HMSS_GetUseVerticalScanlines();
-	vec2 texcoord  = HMSS_GetScreenVTexCoord(vTexCoord);
-	
-	// End Addition
 
-   	// HSM Added
-	vec2 screen_coord = texcoord.xy;
-	vec2 pos = vec2(0, 0);
-
-	pos = HMSS_GetWrappedCurvedCoord(HMSS_GetScreenVTexCoord(vTexCoord), 1);
+	vec2 screen_coord = HMSS_GetCurvedCoord(HMSS_GetScreenVTexCoord(vTexCoord), 1);
+	vec2 pos = HMSS_GetMirrorWrappedCoord(screen_coord);
 
 	vec2 coffset = vec2(0.5, 0.5);
 	bool interb = (interm > 0.5 && interm < 2.5 && inter <= mix(SourceSize.y, SourceSize.x, TATE));
@@ -714,11 +708,13 @@ void main()
 	// Don't apply the corner mask here, do it later in the shader chain
 	// Addition
 	// Gamma
+	
+	// Add Vignette inside the tube
 	color = pow(color, 1.0 / vec3(global.hmss_post_crt_gamma));
 	color = pow(color, vec3(1.0/gamma_out));
 
 	#ifdef NO_BEZEL
-		color *= HMSS_GetCornerMask(pos, global.hmss_corner_radius, global.hmss_screen_edge_sharpness);
+		color *= HMSS_GetCornerMask(screen_coord, global.hmss_corner_radius, global.hmss_screen_edge_sharpness);
 	#endif
 
 	FragColor = vec4(color, 1);

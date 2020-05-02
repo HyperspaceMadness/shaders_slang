@@ -172,8 +172,8 @@ layout(location = 5) in vec3 global_to_local_row0;
 layout(location = 6) in vec3 global_to_local_row1;
 layout(location = 7) in vec3 global_to_local_row2;
 layout(location = 0) out vec4 FragColor;
-layout(set = 0, binding = 2) uniform sampler2D Source;
-#define input_texture Source
+layout(set = 0, binding = 2) uniform sampler2D BR_CrtPass;
+#define input_texture BR_CrtPass
 
 void main()
 {
@@ -206,6 +206,7 @@ void main()
     vec2 screen_scale = HMSS_GetScreenScale();
     // Get the sub-section of the screen with the image on it and map this into a 0-1 space
     vec2 scaled_flat_video_uv = HMSS_GetScreenVTexCoord(flat_video_uv);
+    vec2 scaled_curved_uv = vec2(0);
     if(geom_mode > 0.5)
     {
         // video_uv_no_geom_overscan =
@@ -216,7 +217,7 @@ void main()
         float screen_aspect = HMSS_GetScreenAspect();
         vec2 extra_curvature_mult = HMSS_GetCurvatureValues() / 2 * 50 + 1;
 
-        vec2 scaled_curved_uv = HRG_GetGeomCurvedCoord(scaled_flat_video_uv, 
+        scaled_curved_uv = HRG_GetGeomCurvedCoord(scaled_flat_video_uv, 
                                                         global.hmss_curvature_mode, 
                                                         global.hmss_curvature_3D_radius, 
                                                         global.hmss_curvature_3D_view_dist, 
@@ -227,14 +228,12 @@ void main()
                                                         pixel_to_video_uv);
         scaled_curved_uv = HMSS_GetPostCurvatureScaledCoord(scaled_curved_uv);
         video_uv_no_geom_overscan = (scaled_curved_uv - 0.5) * screen_scale + 0.5 + HMSS_GetPositionOffset();
-
     }
     else
     {
-        // vec2 scaled_curved_uv = HMSS_GetCurvedCoord(scaled_flat_video_uv, 1);
-        // video_uv_no_geom_overscan = (scaled_curved_uv - 0.5) * screen_scale + 0.5 + HMSS_GetPositionOffset();
+        scaled_curved_uv = HMSS_GetCurvedCoord(scaled_flat_video_uv, 1);
+        video_uv_no_geom_overscan = (scaled_curved_uv - 0.5) * screen_scale + 0.5 + HMSS_GetPositionOffset();
         
-        video_uv_no_geom_overscan = flat_video_uv;
         pixel_to_video_uv = float2x2(
             output_size_inv.x, 0.0, 0.0, output_size_inv.y);
     }
@@ -294,4 +293,18 @@ void main()
     #endif
     // vec3 final_color = color;
     FragColor = encode_output(float4(final_color, 1.0));
+
+    #ifdef POST_CRT_PREP
+        FragColor = HHLP_Linearize(FragColor);
+
+	    float vignette_factor = HMSS_GetVignetteFactor(HMSS_GetMirrorWrappedCoord(scaled_curved_uv), global.hmss_screen_vignette);
+
+        // If this is called from the glass preset we don't want the vignette to affect mirrored area
+        #ifdef GLASS_PRESET
+            float tube_mask = HMSS_GetCornerMask((scaled_curved_uv - 0.5) * 0.999 + 0.5, global.hmss_corner_radius, 0.9);
+            vignette_factor = 1 - ((1 - vignette_factor) * tube_mask);
+        #endif
+
+        FragColor *= vignette_factor;
+    #endif
 }

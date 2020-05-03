@@ -29,13 +29,6 @@ shader7 = ../stock.slang
 // filter_linear7 = true
 // float_framebuffer7 = true
 
-// // GTU Signal
-// shader6 = ../crt/shaders/HyperspaceMadness/hsm-gtu/hsm-gtu-pass1.slang
-// float_framebuffer6 = true
-
-// shader7 = ../crt/shaders/HyperspaceMadness/hsm-gtu/hsm-gtu-pass2.slang
-// filter_linear7 = true
-// float_framebuffer7 = true
 
 // NTSC passes added here so you can swap out with GTU
 // shader6 = ../crt/shaders/HyperspaceMadness/hsm-ntsc-adaptive/hsm-ntsc-pass1.slang
@@ -46,7 +39,7 @@ shader7 = ../stock.slang
 
 // shader7 = ../crt/shaders/HyperspaceMadness/hsm-ntsc-adaptive/hsm-ntsc-pass2.slang
 // scale_type7 = source
-// scale_x7 = 0.5
+// scale_x7 = 0.25
 // filter_linear7 = false
 
 shader8 = ../stock.slang

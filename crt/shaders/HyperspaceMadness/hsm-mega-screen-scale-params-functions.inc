@@ -7,13 +7,11 @@ Description:
 	-Parameters to be used by Mega Screen Scale and Mega Bezel
 */
 
-//#define TELMO_TEST
-
 #include "hsm-royale-geometry-functions.inc"
 #include "hsm-helper-functions.inc"
 
 // Screen Scale Required Parameters
-#pragma parameter hmss_mega_screen_scale_on				"___HSM MEGA BEZEL__ V.2020-05-03-1 -SCREEN SCALE ON" 1 0 1 1
+#pragma parameter hmss_mega_screen_scale_on				"___HSM MEGA BEZEL__ V.2020-05-03-2 -SCREEN SCALE ON" 1 0 1 1
 #pragma parameter hmss_screen_scale_debug				"[SCREEN SCALE]  Screen Scale Debug" 0 0 1 1
 
 #pragma parameter hmss_rotate_crt_image					"[SCALING]  Rotate CRT Image"  0 0 1 1

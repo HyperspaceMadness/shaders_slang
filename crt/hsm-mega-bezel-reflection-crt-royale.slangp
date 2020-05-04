@@ -1,21 +1,3 @@
-// IMPORTANT:
-// Shader passes need to know details about the image in the mask_texture LUT
-// files, so set the following constants in user-preset-constants.h accordingly:
-// 1.) mask_triads_per_tile = (number of horizontal triads in mask texture LUT's)
-// 2.) mask_texture_small_size = (texture size of mask*texture_small LUT's)
-// 3.) mask_texture_large_size = (texture size of mask*texture_large LUT's)
-// 4.) mask_grille_avg_color = (avg. brightness of mask_grille_texture* LUT's, in [0, 1])
-// 5.) mask_slot_avg_color = (avg. brightness of mask_slot_texture* LUT's, in [0, 1])
-// 6.) mask_shadow_avg_color = (avg. brightness of mask_shadow_texture* LUT's, in [0, 1])
-// Shader passes also need to know certain scales set in this preset, but their
-// compilation model doesn't currently allow the preset file to tell them.  Make
-// sure to set the following constants in user-preset-constants.h accordingly too:
-// 1.) bloom_approx_scale_x = scale_x2
-// 2.) mask_resize_viewport_scale = vec2(scale_x6, scale_y5)
-// Finally, shader passes need to know the value of geom_max_aspect_ratio used to
-// calculate scale_y5 (among other values):
-// 1.) geom_max_aspect_ratio = (geom_max_aspect_ratio used to calculate scale_y5)
-
 // Add Mega Screen Scale Params & Initial Prep
 //      Add the mega-screen-scale parameters at the beginning of the list for easy access
 //      Add Afterglow, Black Level & Gamma
@@ -38,20 +20,42 @@ scale6 = 1.0
 float_framebuffer6 = true
 
 shader7 = ../crt/shaders/HyperspaceMadness/hsm-gtu/hsm-gtu-pass2.slang
-scale_type_x7 = viewport
+scale_type_x7 = source
 scale_x7 = 1.0
 scale_type_y7 = source
 scale_y7 = 1.0
 filter_linear7 = true
 float_framebuffer7 = true
 
-
-// NTSC passes added here so you can swap out with GTU
+// //NTSC passes added here so you can swap out with GTU
 // shader6 = ../crt/shaders/HyperspaceMadness/hsm-ntsc-adaptive/hsm-ntsc-pass1.slang
 // scale_type6 = source
 // scale_x6 = 4.0
 // filter_linear6 = false
 // float_framebuffer6 = true
+
+// shader7 = ../crt/shaders/HyperspaceMadness/hsm-ntsc-adaptive/hsm-ntsc-pass2.slang
+// scale_type7 = source
+// scale_x7 = 0.25
+// filter_linear7 = false
+
+// IMPORTANT:
+// Shader passes need to know details about the image in the mask_texture LUT
+// files, so set the following constants in user-preset-constants.h accordingly:
+// 1.) mask_triads_per_tile = (number of horizontal triads in mask texture LUT's)
+// 2.) mask_texture_small_size = (texture size of mask*texture_small LUT's)
+// 3.) mask_texture_large_size = (texture size of mask*texture_large LUT's)
+// 4.) mask_grille_avg_color = (avg. brightness of mask_grille_texture* LUT's, in [0, 1])
+// 5.) mask_slot_avg_color = (avg. brightness of mask_slot_texture* LUT's, in [0, 1])
+// 6.) mask_shadow_avg_color = (avg. brightness of mask_shadow_texture* LUT's, in [0, 1])
+// Shader passes also need to know certain scales set in this preset, but their
+// compilation model doesn't currently allow the preset file to tell them.  Make
+// sure to set the following constants in user-preset-constants.h accordingly too:
+// 1.) bloom_approx_scale_x = scale_x2
+// 2.) mask_resize_viewport_scale = vec2(scale_x6, scale_y5)
+// Finally, shader passes need to know the value of geom_max_aspect_ratio used to
+// calculate scale_y5 (among other values):
+// 1.) geom_max_aspect_ratio = (geom_max_aspect_ratio used to calculate scale_y5)
 
 // Linearize the input based on CRT gamma and bob interlaced fields.
 // (Bobbing ensures we can immediately blur without getting artifacts.)

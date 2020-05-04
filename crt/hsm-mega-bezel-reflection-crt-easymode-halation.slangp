@@ -20,15 +20,14 @@ scale6 = 1.0
 float_framebuffer6 = true
 
 shader7 = ../crt/shaders/HyperspaceMadness/hsm-gtu/hsm-gtu-pass2.slang
-scale_type_x7 = viewport
+scale_type_x7 = source
 scale_x7 = 1.0
 scale_type_y7 = source
 scale_y7 = 1.0
 filter_linear7 = true
 float_framebuffer7 = true
 
-
-// NTSC passes added here so you can swap out with GTU
+// //NTSC passes added here so you can swap out with GTU
 // shader6 = ../crt/shaders/HyperspaceMadness/hsm-ntsc-adaptive/hsm-ntsc-pass1.slang
 // scale_type6 = source
 // scale_x6 = 4.0

@@ -1,7 +1,3 @@
-# This shader supports Vertical games.
-# Auto rotation must be turned OFF in Core Options.
-# Per-game presets can be saved, so it should work out OK.
-
 // Add Mega Screen Scale Params & Initial Prep
 //      Add the mega-screen-scale parameters at the beginning of the list for easy access
 //      Add Afterglow, Black Level & Gamma
@@ -24,15 +20,14 @@ scale6 = 1.0
 float_framebuffer6 = true
 
 shader7 = ../crt/shaders/HyperspaceMadness/hsm-gtu/hsm-gtu-pass2.slang
-scale_type_x7 = viewport
+scale_type_x7 = source
 scale_x7 = 1.0
 scale_type_y7 = source
 scale_y7 = 1.0
 filter_linear7 = true
 float_framebuffer7 = true
 
-
-// NTSC passes added here so you can swap out with GTU
+// //NTSC passes added here so you can swap out with GTU
 // shader6 = ../crt/shaders/HyperspaceMadness/hsm-ntsc-adaptive/hsm-ntsc-pass1.slang
 // scale_type6 = source
 // scale_x6 = 4.0
@@ -47,6 +42,10 @@ float_framebuffer7 = true
 shader8 = ../stock.slang
 shader9 = ../stock.slang
 shader10 = ../stock.slang
+
+// This shader supports Vertical games.
+// Auto rotation must be turned OFF in Core Options.
+// Per-game presets can be saved, so it should work out OK.
 
 shader11 = ../crt/shaders/guest/crt-sm/d65-d50-sm.slang
 filter_linear11 = true

@@ -89,7 +89,7 @@ scale_type16 = viewport
 // Extra passes to treat the screen and reflection can be added here, E.G. Resolution Independent Scanlines
 shader17 = ../stock.slang
 float_framebuffer17 = true
-alias17 = BR_CrtPass
+alias17 = BR_CRTPass
 
 // Tube Scale Curvature Mapping
 // Write mapping into the pass, of the 4 channels, x & y are tube warped coord and z & w are outside tube mask and edge mask
@@ -100,7 +100,7 @@ scale_type18 = viewport
 float_framebuffer18 = true
 alias18 = BR_MappingPass
 
-// Linearize the output from the CRT Shader (BR_CrtPass) and do prep like adding the screen vignette
+// Linearize the output from the CRT Shader (BR_CRTPass) and do prep like adding the screen vignette
 shader19 = ../crt/shaders/HyperspaceMadness/hsm-prep-post-crt-linearize.slang
 mipmap_input19 = true
 filter_linear19 = true
@@ -124,6 +124,7 @@ float_framebuffer20 = true
 scale_x20 = 800
 scale_y20 = 600
 float_framebuffer20 = true
+alias20 = BR_MirrorLowResPass
 
 // Add Blur for the Reflection (Horizontal) ----------------------------------------------------------------
 shader21 = ../crt/shaders/HyperspaceMadness/hsm-blur-outside-screen-horiz.slang
@@ -169,7 +170,7 @@ alias24 = BR_MirrorFullscreenGlowPass
 
 // Bezel Generation & Reflection ----------------------------------------------------------------
 //      Uses these previous passes:
-//          BR_CrtPass
+//          BR_CRTPass
 //          BR_MirrorBlurredPass
 //          BR_MirrorReflectionDiffusedPass
 //          BR_MirrorFullscreenGlowPass

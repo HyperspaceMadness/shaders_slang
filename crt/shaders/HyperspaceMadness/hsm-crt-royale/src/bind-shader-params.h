@@ -32,11 +32,11 @@ layout(std140, set = 0, binding = 0) uniform UBO
 	uint FrameCount;
 
 	float hmss_mega_screen_scale_on;
-	// float hmss_screen_scale_only;
-	float hmss_screen_scale_debug;
-	
+
+    float hmss_screen_scale_debug;
+
 	float hmss_rotate_crt_image;
-	float hmss_aspect_ratio_mode;
+    float hmss_aspect_ratio_mode;
 	float hmss_screen_aspect_ratio;
 	float hmss_scanline_direction;
 	float hmss_integer_scale_mode;
@@ -58,21 +58,88 @@ layout(std140, set = 0, binding = 0) uniform UBO
 	float hmss_curvature_3D_tilt_angle_y;
 	float hmss_curvature_2D_long_axis;
 	float hmss_curvature_2D_short_axis;
-    float hmss_curvature_post_scale_x;
-    float hmss_curvature_post_scale_y;
-
+	float hmss_curvature_post_scale_x;
+	float hmss_curvature_post_scale_y;
+	
 	float hmss_corner_radius;
 	float hmss_screen_edge_sharpness;
-    float hmss_screen_vignette;
+	float hmss_screen_vignette;
 
 	float hmss_pre_crt_black_level;
 	float hmss_pre_crt_gamma;
 	float hmss_post_crt_gamma;
-
+	
 	float hmss_negative_crop_brightness;
 	float hmss_afterglow_amount;
 
 	float hmss_tube_black_edge_thickness;
+	float hmss_tube_black_edge_curvature_scale;
+
+	float hmbz_tube_glass_image_opacity;
+	float hmbz_tube_edge_shadow;
+
+	// Image Bezel
+	float hmbz_background_image_opacity;
+	float hmbz_background_image_scale_mode;
+	float hmbz_background_image_aspect_ratio;
+	float hmbz_background_image_tube_height;
+	float hmbz_background_image_vignette_opacity;
+
+
+	// Generated Bezel
+	float hmbz_bezel_opacity;
+	float hmbz_bezel_color_hue;
+	float hmbz_bezel_color_saturation;
+	float hmbz_bezel_color_value;
+	float hmbz_bezel_color_blend_with_image;
+	float hmbz_bezel_brightness;
+	float hmbz_bezel_highlight;
+	float hmbz_bezel_width;
+	float hmbz_bezel_height;
+	float hmbz_bezel_inner_corner_radius_scale;
+	float hmbz_bezel_outer_corner_radius_scale;
+	float hmbz_bezel_noise;
+
+	// Generated Frame
+	float hmbz_frame_opacity;
+	float hmbz_frame_thickness;
+	float hmbz_frame_inner_edge_thickness;
+	float hmbz_frame_outer_corner_radius;
+	float hmbz_frame_pos_y_offset;
+	float hmbz_frame_shadow_opacity;
+	float hmbz_frame_shadow_width;
+	
+	// Blur Stuff
+	float hbl_blur_num_samples;
+	float hbl_blur_min;
+	float hbl_blur_max;
+
+	// Reflection
+	float hbr_global_amount;
+	float hbr_global_gamma_adjust;
+
+	float hbr_inner_edge_reflection;
+	float hbr_inner_edge_fullscreen_glow;
+	float hbr_direct_reflection;
+	float hbr_diffused_reflection;
+	float hbr_fullscreen_glow;
+	float hbr_fullscreen_glow_gamma;
+
+	float hbr_fade_amount;
+	float hbr_radial_fade_width;
+	float hbr_radial_fade_height;
+
+	float hbr_lateral_outer_fade_position;
+	float hbr_lateral_outer_fade_distance;
+
+	float hbr_corner_fade;
+	float hbr_corner_inner_spread;
+	float hbr_corner_outer_spread;
+	float hbr_corner_fade_distance;
+
+	float hbr_noise_amount;
+	float hbr_noise_samples;
+	float hbr_noise_sample_distance;
     
 	float crt_gamma;
 	float lcd_gamma;

@@ -97,6 +97,7 @@ layout(std140, set = 0, binding = 0) uniform UBO
 	float hmbz_bezel_highlight;
 	float hmbz_bezel_width;
 	float hmbz_bezel_height;
+	float hmbz_bezel_inner_edge_thickness;
 	float hmbz_bezel_inner_corner_radius_scale;
 	float hmbz_bezel_outer_corner_radius_scale;
 	float hmbz_bezel_noise;
@@ -141,6 +142,7 @@ layout(std140, set = 0, binding = 0) uniform UBO
 	float hbr_noise_amount;
 	float hbr_noise_samples;
 	float hbr_noise_sample_distance;
+	float hbr_corner_spread_falloff;
 } global;
 
 /////////////// IMPORTS ///////////////
@@ -282,7 +284,7 @@ void main()
 	float outside_tube_mask = 0;
 	float edge_mask = 0;
 	HMSS_GetCachedCurvedValues(BR_MappingPass, viewportCoord.xy, tube_coord_warped, outside_tube_mask, edge_mask);
-
+	
 	vec2 tube_warped_coord_ctr = tube_coord_warped - 0.5;
 
 	float avg_lum_mult = smoothstep(0.01, 0.5, pow(texture(AvgLumPass, viewportCoord).a, 1.3));
@@ -292,6 +294,11 @@ void main()
 	//----------------------------------------------------
 	// Get the CRT pass and make it in linear space & mask the area outside the screen
 	vec4 frag_color_linear = texture(BR_CRTPreppedLinearPass, viewportCoord.xy);
+
+	#ifdef ROYALE_PRESET
+		frag_color_linear = HHLP_Linearize(frag_color_linear);
+	#endif
+
 	// Shrink the mask by 0.001 to clip off outer edge
 	frag_color_linear *= HMSS_GetCornerMask(((HMSS_GetCurvedCoord(screenCoord, 1) - 0.5) * 1.001) + 0.5, global.hmss_corner_radius, global.hmss_screen_edge_sharpness);
 
@@ -495,7 +502,7 @@ void main()
 		vec4 tube_glass_image = HHLP_Linearize(texture(TubeGlassImage, tube_warped_coord_ctr * 0.97 + 0.5 ).rgba);
 		frag_color_linear	= frag_color_linear + global.hmbz_tube_glass_image_opacity / 100 * tube_glass_image.a * (1 - outside_tube_mask) * tube_glass_image;
 	}
-	
+
 	// ----------------------------------------------------
 	// Generated Bezel - Applied ON TOP of the Image Bezel, BELOW the reflection
 	// ----------------------------------------------------
@@ -616,7 +623,7 @@ void main()
 
 	// Add Bezel, Frame & Shadow color to the screen color
 	frag_color_linear = mix(frag_color_linear, bezel_and_frame_color_v4, final_mask);
-	
+
 
 	//----------------------------------------------------
 	// Reflection - Applied ON TOP of the Bezel

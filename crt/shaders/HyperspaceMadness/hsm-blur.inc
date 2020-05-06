@@ -32,8 +32,9 @@ layout(location = 0) in vec2 vTexCoord;
 layout(location = 1) in vec2 viewportCoord;
 layout(location = 0) out vec4 FragColor;
 layout(set = 0, binding = 2) uniform sampler2D Source;
+layout(set = 0, binding = 3) uniform sampler2D BR_MirrorLowResPass;
+
 layout(set = 0, binding = 4) uniform sampler2D BR_MappingPass;
-layout(set = 0, binding = 5) uniform sampler2D BR_CRTPreppedLinearPass;
 
 #define COMPAT_TEXTURE(c,d) texture(c,d)
 
@@ -172,7 +173,7 @@ void main()
 		vec4 blurred_color = vec4(col / k_total, 1.0);
 		float blend_with_unblurred = smoothstep(-0.3, 0.3, HHLP_QuadraticBezier(blur_ratio, vec2(0.5, 0.5)));
 		
-		vec4 unblurred_color = COMPAT_TEXTURE(BR_CRTPreppedLinearPass, vTexCoord);
+		vec4 unblurred_color = COMPAT_TEXTURE(BR_MirrorLowResPass, vTexCoord);
 		FragColor = mix(unblurred_color, blurred_color, blend_with_unblurred);
 
 		// Add the color for the debug Stuff

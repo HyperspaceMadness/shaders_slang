@@ -101,45 +101,52 @@ scale16 = 1.0
 float_framebuffer16 = true
 wrap_mode16 = mirrored_repeat
 
+// Extra passes to treat the screen and reflection can be added here, E.G. Resolution Independent Scanlines
 shader17 = ../stock.slang
 float_framebuffer17 = true
-
-// An extra pass to treat the screen and reflection can be added here, E.G. Resolution Independent Scanlines
-shader18 = ../stock.slang
-float_framebuffer18 = true
-alias18 = BR_CrtPass
+alias17 = BR_CRTPass
 
 // Tube Scale Curvature Mapping
 // Write mapping into the pass, of the 4 channels, x & y are tube warped coord and z & w are outside tube mask and edge mask
-shader19 = ../crt/shaders/HyperspaceMadness/hsm-curvature-mapping-glass.slang
+shader18 = ../crt/shaders/HyperspaceMadness/hsm-curvature-mapping-glass.slang
+mipmap_input18 = true
+filter_linear18 = true
+scale_type18 = viewport
+float_framebuffer18 = true
+alias18 = BR_MappingPass
+
+// Linearize the output from the CRT Shader (BR_CRTPass) and do prep like adding the screen vignette
+shader19 = ../crt/shaders/HyperspaceMadness/hsm-prep-post-crt-linearize.slang
 mipmap_input19 = true
 filter_linear19 = true
-scale_type19 = viewport
 float_framebuffer19 = true
-alias19 = BR_MappingPass
+wrap_mode19 = mirrored_repeat
+alias19 = BR_CRTPreppedLinearPass
 
-// Linearize the output from the CRT Shader (BR_CrtPass) and do prep like adding the screen vignette
-shader20 = ../crt/shaders/HyperspaceMadness/hsm-prep-post-crt-linearize.slang
-mipmap_input20 = true
-float_framebuffer20 = true
-wrap_mode20 = mirrored_repeat
-alias20 = BR_CRTPreppedLinearPass
-
-// Reduce Resolution and add Horizontal Blur ----------------------------------------------------------------
+// Reduce Resolution  ----------------------------------------------------------------
 //      Reduce the resolution to a small static size regardless of final resolution
 //      Allows consistent look and faster at different final resolutions for blur
 //      Mipmap option allows downscaling without artifacts
+shader20 = ../stock.slang
+mipmap_input20 = true
+filter_linear20 = true
+scale_type20 = absolute
+float_framebuffer20 = true
+// scale_x20 = 480
+// scale_y20 = 270
+// scale_x20 = 960
+// scale_y20 = 540
+scale_x20 = 800
+scale_y20 = 600
+float_framebuffer20 = true
+alias20 = BR_MirrorLowResPass
+
+// Add Blur for the Reflection (Horizontal) ----------------------------------------------------------------
 shader21 = ../crt/shaders/HyperspaceMadness/hsm-blur-outside-screen-horiz-glass.slang
 mipmap_input21 = true
 filter_linear21 = true
-scale_type21 = absolute
 float_framebuffer21 = true
-// scale_x21 = 480
-// scale_y21 = 270
-// scale_x21 = 960
-// scale_y21 = 540
-scale_x21 = 800
-scale_y21 = 600
+scale_type22 = source
 wrap_mode21 = mirrored_repeat
 
 // Add Blur for the Reflection (Vertical) ----------------------------------------------------------------
@@ -178,7 +185,7 @@ alias24 = BR_MirrorFullscreenGlowPass
 
 // Bezel Generation & Reflection ----------------------------------------------------------------
 //      Uses these previous passes:
-//          BR_CrtPass
+//          BR_CRTPass
 //          BR_MirrorBlurredPass
 //          BR_MirrorReflectionDiffusedPass
 //          BR_MirrorFullscreenGlowPass
@@ -215,7 +222,7 @@ TubeGlassImage = ../crt/shaders/HyperspaceMadness/textures/TubeGlassOverlayImage
 OverlayImage = ../crt/shaders/HyperspaceMadness/textures/OverlayImage_OverReflection_3840x2160.png
 OverlayVertImage = ../crt/shaders/HyperspaceMadness/textures/OverlayImage_OverReflection_3840x2160.png
 
-parameters = "hmss_mega_screen_scale_on;hmss_screen_aspect_ratio;hmss_integer_scale_mode;hmss_int_scale_multiple_offset;hmss_non_integer_scale;hmss_int_scale_border_min_height;hmss_scanline_direction;hmss_curvature_mode;hmss_curvature_2D_long_axis;hmss_curvature_2D_short_axis;hmss_curvature_3D_radius;hmss_curvature_3D_view_dist;hmss_curvature_3D_tilt_angle_x;hmss_curvature_3D_tilt_angle_y;hmss_corner_radius;hmss_tube_black_edge_thickness;hmss_screen_edge_sharpness;hmbz_tube_glass_image_opacity;hmbz_tube_edge_shadow;hmbz_background_image_aspect_ratio;hmbz_background_image_tube_height;hmbz_background_image_vignette_opacity;hmbz_bezel_inner_corner_radius_scale;hmbz_background_image_opacity;hmbz_bezel_opacity;hmbz_bezel_width;hmbz_bezel_height;hmbz_bezel_color_hue;hmbz_bezel_color_saturation;hmbz_bezel_color_value;hmbz_bezel_color_blend_with_image;hmbz_bezel_brightness;hmbz_bezel_highlight;hmbz_bezel_noise;hmbz_frame_opacity;hmbz_frame_thickness;hmbz_frame_inner_edge_thickness;hmbz_background_image_scale_mode;hmss_crop_overscan_top;hmss_crop_overscan_bottom;hmss_crop_overscan_left;hmss_crop_overscan_right;hmss_pre_crt_black_level;hbl_blur_min;hbl_blur_max;hbr_global_amount;hbr_global_gamma_adjust;hbr_inner_edge_reflection;hbr_inner_edge_fullscreen_glow;hbr_diffused_reflection;hbr_fullscreen_glow;hbr_fullscreen_glow_gamma;hag_afterglow_persistence;hbr_noise_samples;hbr_noise_amount;hbr_noise_sample_distance;hbr_fade_amount;hbr_radial_fade_width;hbr_radial_fade_height;hbr_lateral_outer_fade_position;hbr_lateral_outer_fade_distance;hbr_corner_fade;hbr_corner_inner_spread;hbr_corner_outer_spread"
+parameters = "hmss_mega_screen_scale_on;hmss_screen_aspect_ratio;hmss_integer_scale_mode;hmss_int_scale_multiple_offset;hmss_non_integer_scale;hmss_int_scale_border_min_height;hmss_scanline_direction;hmss_curvature_mode;hmss_curvature_2D_long_axis;hmss_curvature_2D_short_axis;hmss_curvature_3D_radius;hmss_curvature_3D_view_dist;hmss_curvature_3D_tilt_angle_x;hmss_curvature_3D_tilt_angle_y;hmss_corner_radius;hmss_tube_black_edge_thickness;hmss_screen_edge_sharpness;hmbz_tube_glass_image_opacity;hmbz_tube_edge_shadow;hmbz_background_image_aspect_ratio;hmbz_background_image_tube_height;hmbz_background_image_vignette_opacity;hmbz_bezel_inner_corner_radius_scale;hmbz_background_image_opacity;hmbz_bezel_opacity;hmbz_bezel_width;hmbz_bezel_height;hmbz_bezel_inner_edge_thickness;hmbz_bezel_color_hue;hmbz_bezel_color_saturation;hmbz_bezel_color_value;hmbz_bezel_color_blend_with_image;hmbz_bezel_brightness;hmbz_bezel_highlight;hmbz_bezel_noise;hmbz_frame_opacity;hmbz_frame_thickness;hmbz_frame_inner_edge_thickness;hmbz_background_image_scale_mode;hmss_crop_overscan_top;hmss_crop_overscan_bottom;hmss_crop_overscan_left;hmss_crop_overscan_right;hmss_pre_crt_black_level;hbl_blur_min;hbl_blur_max;hbr_global_amount;hbr_global_gamma_adjust;hbr_inner_edge_reflection;hbr_inner_edge_fullscreen_glow;hbr_diffused_reflection;hbr_fullscreen_glow;hbr_fullscreen_glow_gamma;hag_afterglow_persistence;hbr_noise_samples;hbr_noise_amount;hbr_noise_sample_distance;hbr_fade_amount;hbr_radial_fade_width;hbr_radial_fade_height;hbr_lateral_outer_fade_position;hbr_lateral_outer_fade_distance;hbr_corner_fade;hbr_corner_inner_spread;hbr_corner_outer_spread"
 
 hmss_mega_screen_scale_on = 1
 // hmss_screen_aspect_ratio = 1.5
@@ -238,6 +245,7 @@ hmss_corner_radius = 10
 hmss_tube_black_edge_thickness = -0.2
 hmbz_bezel_width = 200
 hmbz_bezel_height = 200
+hmbz_bezel_inner_edge_thickness = 2.5
 
 hmbz_background_image_opacity = 0
 hmbz_bezel_opacity = 0
@@ -245,7 +253,6 @@ hmbz_bezel_color_hue = 0
 hmbz_bezel_color_saturation = 0
 hmbz_bezel_color_value = 0
 hmbz_bezel_color_blend_with_image = 1
-
 hmbz_bezel_brightness = 40
 hmbz_bezel_highlight = 50
 hmbz_bezel_noise = 0

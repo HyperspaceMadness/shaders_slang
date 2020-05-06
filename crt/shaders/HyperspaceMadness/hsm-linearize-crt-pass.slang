@@ -27,9 +27,9 @@ void main()
 #pragma stage fragment
 layout(location = 0) in vec2 vTexCoord;
 layout(location = 0) out vec4 FragColor;
-layout(set = 0, binding = 2) uniform sampler2D BR_CrtPass;
+layout(set = 0, binding = 2) uniform sampler2D BR_CRTPreppedLinearPass;
 
 void main()
 {
-   FragColor = pow(vec4(texture(BR_CrtPass, vTexCoord).rgb, 1.0), vec4(2.4));
+   FragColor = texture(BR_CRTPreppedLinearPass, vTexCoord);
 }

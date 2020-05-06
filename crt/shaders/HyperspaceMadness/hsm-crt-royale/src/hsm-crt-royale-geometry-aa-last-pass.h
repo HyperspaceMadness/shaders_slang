@@ -172,8 +172,8 @@ layout(location = 5) in vec3 global_to_local_row0;
 layout(location = 6) in vec3 global_to_local_row1;
 layout(location = 7) in vec3 global_to_local_row2;
 layout(location = 0) out vec4 FragColor;
-layout(set = 0, binding = 2) uniform sampler2D BR_CrtPass;
-#define input_texture BR_CrtPass
+layout(set = 0, binding = 2) uniform sampler2D Source;
+#define input_texture Source
 
 void main()
 {
@@ -196,11 +196,13 @@ void main()
         static const float geom_mode = geom_mode_static;
     #endif
 
+     
+
     //  Get flat and curved texture coords for the current fragment point sample
     //  and a pixel_to_tangent_video_uv matrix for transforming pixel offsets:
     //  video_uv = relative position in video frame, mapped to [0.0, 1.0] range
     //  tex_uv = relative position in padded texture, mapped to [0.0, 1.0] range
-    const float2 flat_video_uv = tex_uv * (IN.texture_size * video_size_inv);
+    float2 flat_video_uv = tex_uv * (IN.texture_size * video_size_inv);
     float2x2 pixel_to_video_uv;
     float2 video_uv_no_geom_overscan;
     vec2 screen_scale = HMSS_GetScreenScale();
@@ -245,6 +247,7 @@ void main()
     const float2 video_uv =
         (video_uv_no_geom_overscan - float2(0.5, 0.5))/geom_overscan + float2(0.5, 0.5);
     const float2 tex_uv = video_uv * (IN.video_size * texture_size_inv);
+    //tex_uv = HMSS_GetMirrorWrappedCoord(tex_uv);
 
     //  Get a matrix transforming pixel vectors to tex_uv vectors:
     const float2x2 pixel_to_tex_uv =

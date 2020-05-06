@@ -15,13 +15,13 @@ void main()
 #pragma stage fragment
 layout(location = 0) in vec2 vTexCoord;
 layout(location = 0) out vec4 FragColor;
-layout(set = 0, binding = 2) uniform sampler2D BR_CrtPass;
+layout(set = 0, binding = 2) uniform sampler2D BR_CRTPass;
 layout(set = 0, binding = 3) uniform sampler2D BR_MappingPass;
 layout(set = 0, binding = 10) uniform sampler2D TubeGlassImage;
 
 void main()
 {
-	FragColor = HHLP_Linearize(texture(BR_CrtPass, vTexCoord));
+	FragColor = HHLP_Linearize(texture(BR_CRTPass, vTexCoord));
 	
 	vec2 tube_coord_warped = vec2(0, 0);
 	float outside_tube_mask = 0;

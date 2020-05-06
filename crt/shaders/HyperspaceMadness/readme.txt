@@ -34,7 +34,7 @@ How the shader chain works:
 -----------------------------------------------------------------------------------------------------------
 Shader chain shaders in order
 
--BR_CrtPass
+-BR_CRTPass
 	hsm-crt-guest-dr-venom-with-scaling.slang (Or any CRT shader which integrates the mega-screen-scale scaling)
 -hsm-blur-scanlines.slang - If necessary turn on to blurs scanlines to avoid moire ringing artifacts
 -hsm-blur-outside-screen-horiz.slang - adds blur which is used by the reflection pass

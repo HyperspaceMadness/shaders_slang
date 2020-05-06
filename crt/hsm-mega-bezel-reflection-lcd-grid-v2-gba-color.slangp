@@ -54,9 +54,9 @@ scale15 = "1.0"
 
 shader16 = ../handheld/shaders/color/gba-color.slang
 mipmap_input16 = true
-filter_linear16 = false
-scale_type16 = "source"
-scale16 = "1.0"
+filter_linear16 = true
+scale_type16 = viewport
+scale16 = 1.0
 float_framebuffer16 = true
 wrap_mode16 = mirrored_repeat
 

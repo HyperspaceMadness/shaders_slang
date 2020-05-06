@@ -138,6 +138,7 @@ float_framebuffer20 = true
 // scale_y20 = 540
 scale_x20 = 800
 scale_y20 = 600
+wrap_mode20 = mirrored_repeat
 float_framebuffer20 = true
 alias20 = BR_MirrorLowResPass
 
@@ -206,6 +207,7 @@ float_framebuffer25 = false
 
 // Define how many shaders will be used from this list
 shaders = 26
+
 
 // Define textures to be used by the different passes
 textures = "SamplerLUT1;SamplerLUT2;SamplerLUT3;BackgroundImage;BackgroundVertImage;TubeGlassImage;OverlayImage;OverlayVertImage;"

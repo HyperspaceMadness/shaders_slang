@@ -82,9 +82,15 @@ scale_type15 = source
 scale15 = 1.0
 
 // Guest's Awesome Shader!!! Guest-SM (Scanline Mask)
+//      Guest's Awesome Shader!!!
+//      Has been slightly altered to use the same scaling as the rest of the shders for the bezel & reflection
 shader16 = ../crt/shaders/HyperspaceMadness/hsm-guest/hsm-crt-guest-sm-with-scaling.slang
+mipmap_input16 = true
 filter_linear16 = true
 scale_type16 = viewport
+scale16 = 1.0
+float_framebuffer16 = true
+wrap_mode16 = mirrored_repeat
 
 // Extra passes to treat the screen and reflection can be added here, E.G. Resolution Independent Scanlines
 shader17 = ../stock.slang
@@ -191,6 +197,7 @@ float_framebuffer25 = false
 
 // Define how many shaders will be used from this list
 shaders = 26
+
 
 // Define textures to be used by the different passes
 textures = "BackgroundImage;BackgroundVertImage;TubeGlassImage;OverlayImage;OverlayVertImage;"

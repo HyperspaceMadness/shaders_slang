@@ -82,7 +82,7 @@ scale_type15 = source
 scale15 = 1.0
 
 // Guest's Awesome Shader!!! Guest-SM (Scanline Mask)
-shader16 = ../crt/shaders/HyperspaceMadness/hsm-crt-guest-sm-with-scaling.slang
+shader16 = ../crt/shaders/HyperspaceMadness/hsm-guest/hsm-crt-guest-sm-with-scaling.slang
 filter_linear16 = true
 scale_type16 = viewport
 

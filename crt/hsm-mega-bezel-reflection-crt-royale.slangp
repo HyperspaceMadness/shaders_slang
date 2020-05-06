@@ -22,22 +22,12 @@
 shader0 = ../crt/shaders/hyperspacemadness/hsm-prep-initial-debug-avgluma-afterglow.slang
 alias0 = AvgLumPass
 
-// Calculate Average Luminance  ----------------------------------------------------------------
-shader1 = ../stock.slang
-filter_linear1 = true
-mipmap_input1 = true
-float_framebuffer1 = true
-
-// NOTE: desired put De-Dithering or TV Signal effects here in 1, 2 & 3, e.g. GTU, NTSC, CBOD
-
-// CBOD De-Dithering Pass 1
-shader2 = ../stock.slang
-
-// CBOD De-Dithering Pass 2
-shader3 = ../stock.slang
-shader4 = ../stock.slang
-shader5 = ../stock.slang
-
+// De-Dithering - Mdapt
+shader1 = ../crt/shaders/HyperspaceMadness/hsm-mdapt/hsm-mdapt-pass0.slang
+shader2 = ../crt/shaders/HyperspaceMadness/hsm-mdapt/hsm-mdapt-pass1.slang
+shader3 = ../crt/shaders/HyperspaceMadness/hsm-mdapt/hsm-mdapt-pass2.slang
+shader4 = ../crt/shaders/HyperspaceMadness/hsm-mdapt/hsm-mdapt-pass3.slang
+shader5 = ../crt/shaders/HyperspaceMadness/hsm-mdapt/hsm-mdapt-pass4.slang
 
 // GTU TV Processing
 shader6 = ../crt/shaders/HyperspaceMadness/hsm-gtu/hsm-gtu-pass1.slang

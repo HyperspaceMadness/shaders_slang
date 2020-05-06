@@ -47,7 +47,7 @@ shader12 = ../stock.slang
 shader13 = ../stock.slang
 shader14 = ../stock.slang
 
-shader15 = ../crt/shaders/HyperspaceMadness/hsm-lcd-grid-v2.slang
+shader15 = ../crt/shaders/HyperspaceMadness/hsm-lcd-cgwg/hsm-lcd-grid-v2.slang
 filter_linear15 = "false"
 scale_type15 = "viewport"
 scale15 = "1.0"

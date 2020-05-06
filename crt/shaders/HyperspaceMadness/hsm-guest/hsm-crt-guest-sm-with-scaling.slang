@@ -48,7 +48,7 @@ Uses a red/magenta/cyan/green pattern for even spacing of the LCD subpixels.
 
 // Modifications from hsm-mega-screen-scale.inc integration
 // HSM Added
-#include "hsm-mega-screen-scale.inc"
+#include "../hsm-mega-screen-scale.inc"
 // End Addition
 
 layout(push_constant) uniform Push

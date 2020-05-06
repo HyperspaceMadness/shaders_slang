@@ -25,7 +25,7 @@
 
 // HSM Modification
 // HSM Added
-#include "hsm-mega-screen-scale.inc"
+#include "../hsm-mega-screen-scale.inc"
 // End Addition
 
 layout(push_constant) uniform Push

@@ -69,14 +69,14 @@ float_framebuffer12 = true
 alias12 = LinearizePass
 
 // Guest-Venom Pass ----------------------------------------------------------------
-shader13 = ../crt/shaders/HyperspaceMadness/hsm-guest-blur_horiz.slang
+shader13 = ../crt/shaders/HyperspaceMadness/hsm-guest/hsm-guest-blur_horiz.slang
 filter_linear13 = false
 scale_type13 = source
 scale13 = 1.0
 float_framebuffer13 = true
 
 // Guest-Venom Pass ----------------------------------------------------------------
-shader14 = ../crt/shaders/HyperspaceMadness/hsm-guest-blur_vert.slang
+shader14 = ../crt/shaders/HyperspaceMadness/hsm-guest/hsm-guest-blur_vert.slang
 filter_linear14 = false
 scale_type14 = source
 scale14 = 1.0
@@ -84,7 +84,7 @@ float_framebuffer14 = true
 alias14 = GlowPass
 
 // Guest-Venom Pass ----------------------------------------------------------------
-shader15 = ../crt/shaders/HyperspaceMadness/hsm-guest-linearize_scanlines.slang
+shader15 = ../crt/shaders/HyperspaceMadness/hsm-guest/hsm-guest-linearize_scanlines.slang
 filter_linear15 = true
 scale_type15 = source
 scale15 = 1.0
@@ -93,7 +93,7 @@ float_framebuffer15 = true
 // CRT Shader - Guest-Venom ----------------------------------------------------------------
 //      Guest's Awesome Shader!!!
 //      Has been slightly altered to use the same scaling as the rest of the shders for the bezel & reflection
-shader16 = ../crt/shaders/HyperspaceMadness/hsm-crt-guest-dr-venom-with-scaling.slang
+shader16 = ../crt/shaders/HyperspaceMadness/hsm-guest/hsm-crt-guest-dr-venom-with-scaling.slang
 mipmap_input16 = true
 filter_linear16 = true
 scale_type16 = viewport

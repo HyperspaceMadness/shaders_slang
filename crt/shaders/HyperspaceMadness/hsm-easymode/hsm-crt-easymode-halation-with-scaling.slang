@@ -10,7 +10,7 @@ Addition of hsm-mega-screen-scale by HyperspaceMadness remimcgill@hotmail.com
 // HSM Modification
 // HSM Added
 // Import Screen Scale Functions and global structure
-#include "hsm-mega-screen-scale.inc"
+#include "../hsm-mega-screen-scale.inc"
 // End Addition
 
 layout(push_constant) uniform Push

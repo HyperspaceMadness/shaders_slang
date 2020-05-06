@@ -1,7 +1,7 @@
 #version 450
 
 // Import Screen Scale Functions and global structure
-#include "hsm-mega-screen-scale.inc"
+#include "../hsm-mega-screen-scale.inc"
 
 layout(push_constant) uniform Push
 {

@@ -25,15 +25,13 @@
 #pragma parameter hmbz_bezel_outer_corner_radius_scale 	"[BEZEL]  Outer Corner Radius Scale" 1 0 10 0.1
 #pragma parameter hmbz_bezel_inner_edge_thickness		"[BEZEL]  Inner Edge Thickness" 0.5 0 5 0.1
 #pragma parameter hmbz_bezel_brightness 				"[BEZEL]  Brightness" 40 0 300 2
-#pragma parameter hmbz_bezel_highlight 					"[BEZEL]  Highlight" 2 0 100 0.2
+#pragma parameter hmbz_bezel_highlight 					"[BEZEL]  Highlight" 1 0 100 0.2
 #pragma parameter hmbz_bezel_noise 						"[BEZEL]  Noise" 30 0 100 1
 
 // Frame
 #pragma parameter hmbz_frame_opacity 					"[FRAME]   Opacity" 1 0 1 0.05
-// #pragma parameter hmbz_frame_brightness 				"[FRAME]   Brightness" 100 0 300 2
 #pragma parameter hmbz_frame_thickness 					"[FRAME]   Thickness" 8 0 200 0.2
 #pragma parameter hmbz_frame_outer_corner_radius 		"[FRAME]   Outer Corner Radius" 5 0 70 0.05
-#pragma parameter hmbz_frame_inner_edge_thickness		"[FRAME]   Inner Edge Thickness" 2 0 50 0.01
 #pragma parameter hmbz_frame_pos_y_offset 				"[FRAME]   Pos Y Offset" 0 -25 25 0.05
 #pragma parameter hmbz_frame_shadow_opacity				"[FRAME SHADOW]   Shadow Opacity" 1 0 3 0.01
 #pragma parameter hmbz_frame_shadow_width				"[FRAME SHADOW]   Shadow Width" 10 0 50 0.1

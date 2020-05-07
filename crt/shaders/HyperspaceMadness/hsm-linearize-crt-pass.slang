@@ -1,5 +1,7 @@
 #version 450
 
+#include "hsm-helper-functions.inc"
+
 layout(push_constant) uniform Push
 {
 	vec4 SourceSize;
@@ -31,5 +33,5 @@ layout(set = 0, binding = 2) uniform sampler2D BR_CRTPreppedLinearPass;
 
 void main()
 {
-   FragColor = texture(BR_CRTPreppedLinearPass, vTexCoord);
+   FragColor = HHLP_Linearize(texture(BR_CRTPreppedLinearPass, vTexCoord));
 }

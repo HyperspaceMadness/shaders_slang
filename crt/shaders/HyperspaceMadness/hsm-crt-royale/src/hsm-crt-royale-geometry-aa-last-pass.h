@@ -279,35 +279,23 @@ void main()
     {
         color = tex2D_linearize(input_texture, tex_uv).rgb;
     }
+    
+    FragColor = encode_output(float4(color, 1.0));
 
-    //  Dim borders and output the final result:
+    // #pragma parameter border_size "Border - Size" 0.015 0.0000001 0.5 0.005
+    // #define border_size global.border_size
+    // #pragma parameter border_darkness "Border - Darkness" 2.0 0.0 16.0 0.0625
+    // #define border_darkness global.border_darkness
+    // #pragma parameter border_compress "Border - Compression" 2.5 1.0 64.0 0.0625
+    // #define border_compress global.border_compress
+    // HRG_GetBorderDimFactor(HMSS_GetScreenVTexCoord(video_uv), output_aspect_vec, border_size, border_darkness, border_compress);
+    float vignette_factor = HMSS_GetVignetteFactor(HMSS_GetMirrorWrappedCoord(scaled_curved_uv), global.hmss_screen_vignette);
 
-    // const float border_dim_factor = get_border_dim_factor(video_uv, geom_aspect);
-    // const float3 final_color = color * border_dim_factor;
-
-    // HSM Added
-    #ifdef DIM_BORDER
-        vec2 output_aspect_vec = geom_overscan.xy;
-        const float border_dim_factor = HRG_GetBorderDimFactor(HMSS_GetScreenVTexCoord(video_uv), output_aspect_vec, border_size, border_darkness, border_compress);
-
-        const float3 final_color = color * border_dim_factor;
-    #else
-        const float3 final_color = color;
+    // If this is called from the glass preset we don't want the vignette to affect mirrored area
+    #ifdef GLASS_PRESET
+        float tube_mask = HMSS_GetCornerMask((scaled_curved_uv - 0.5) * 0.999 + 0.5, global.hmss_corner_radius, 0.9);
+        vignette_factor = 1 - ((1 - vignette_factor) * tube_mask);
     #endif
-    // vec3 final_color = color;
-    FragColor = encode_output(float4(final_color, 1.0));
 
-    #ifdef POST_CRT_PREP
-        FragColor = HHLP_Linearize(FragColor);
-
-	    float vignette_factor = HMSS_GetVignetteFactor(HMSS_GetMirrorWrappedCoord(scaled_curved_uv), global.hmss_screen_vignette);
-
-        // If this is called from the glass preset we don't want the vignette to affect mirrored area
-        #ifdef GLASS_PRESET
-            float tube_mask = HMSS_GetCornerMask((scaled_curved_uv - 0.5) * 0.999 + 0.5, global.hmss_corner_radius, 0.9);
-            vignette_factor = 1 - ((1 - vignette_factor) * tube_mask);
-        #endif
-
-        FragColor *= vignette_factor;
-    #endif
+    FragColor *= vignette_factor;
 }

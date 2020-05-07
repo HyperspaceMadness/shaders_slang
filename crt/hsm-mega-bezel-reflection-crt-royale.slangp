@@ -39,8 +39,8 @@ float_framebuffer7 = true
 // scale_x7 = 0.25
 // filter_linear7 = false
 
-# Linearize the input based on CRT gamma and bob interlaced fields.
-# (Bobbing ensures we can immediately blur without getting artifacts.)
+// Linearize the input based on CRT gamma and bob interlaced fields.
+// (Bobbing ensures we can immediately blur without getting artifacts.)
 shader8 = "../crt/shaders/HyperspaceMadness/hsm-crt-royale/src/crt-royale-first-pass-linearize-crt-gamma-bob-fields.slang"
 alias8 = "ORIG_LINEARIZED"
 filter_linear8 = "false"
@@ -48,7 +48,7 @@ scale_type8 = "source"
 scale8 = "1.0"
 srgb_framebuffer8 = "true"
 
-# Resample interlaced (and misconverged) scanlines vertically.
+// Resample interlaced (and misconverged) scanlines vertically.
 shader9 = "../crt/shaders/HyperspaceMadness/hsm-crt-royale/src/crt-royale-scanlines-vertical-interlacing.slang"
 alias9 = "VERTICAL_SCANLINES"
 filter_linear9 = "true"
@@ -58,7 +58,7 @@ scale_type_y9 = "viewport"
 scale_y9 = "1.0"
 srgb_framebuffer9 = "true"
 
-# Do a small resize blur of ORIG_LINEARIZED at an absolute size
+// Do a small resize blur of ORIG_LINEARIZED at an absolute size
 shader10 = "../crt/shaders/HyperspaceMadness/hsm-crt-royale/src/crt-royale-bloom-approx.slang"
 alias10 = "BLOOM_APPROX"
 filter_linear10 = "true"
@@ -67,8 +67,8 @@ scale_x10 = "320"
 scale_y10 = "240"
 srgb_framebuffer10 = "true"
 
-# Blur the input for halation and refractive diffusion.
-# Note: Using a one-pass 9x9 blur is about 1% slower.
+// Blur the input for halation and refractive diffusion.
+// Note: Using a one-pass 9x9 blur is about 1% slower.
 shader11 = "../blurs/blur9x9.slang"
 alias11 = "HALATION_BLUR"
 filter_linear11 = "true"
@@ -76,16 +76,16 @@ scale_type11 = "source"
 scale11 = "1.0"
 srgb_framebuffer11 = "true"
 
-# Lanczos-resize the phosphor mask vertically.
+// Lanczos-resize the phosphor mask vertically.
 shader12 = "../crt/shaders/HyperspaceMadness/hsm-crt-royale/src/crt-royale-mask-resize-vertical.slang"
 filter_linear12 = "true"
 scale_type_x12 = "absolute"
 scale_x12 = "64"
 scale_type_y12 = "viewport"
-scale_y12 = "0.0625" # Safe for >= 341.333 horizontal triads at viewport size
-#srgb_framebuffer12 = "false" # mask_texture is already assumed linear
+scale_y12 = "0.0625" // Safe for >= 341.333 horizontal triads at viewport size
+#srgb_framebuffer12 = "false" // mask_texture is already assumed linear
 
-# Lanczos-resize the phosphor mask horizontally.  scale_x13 = scale_y9.
+// Lanczos-resize the phosphor mask horizontally.  scale_x13 = scale_y9.
 shader13 = "../crt/shaders/HyperspaceMadness/hsm-crt-royale/src/crt-royale-mask-resize-horizontal.slang"
 alias13 = "MASK_RESIZE"
 filter_linear13 = "false"
@@ -94,31 +94,31 @@ scale_x13 = "0.0625"
 scale_type_y13 = "source"
 scale_y13 = "1.0"
 
-# Pass14: Resample (misconverged) scanlines horizontally, apply halation, and
-# apply the phosphor mask.
+// Resample (misconverged) scanlines horizontally, apply halation, and
+// apply the phosphor mask.
 shader14 = "../crt/shaders/HyperspaceMadness/hsm-crt-royale/src/crt-royale-scanlines-horizontal-apply-mask.slang"
 alias14 = "MASKED_SCANLINES"
-filter_linear14 = "true" # This could just as easily be nearest neighbor.
+filter_linear14 = "true" // This could just as easily be nearest neighbor.
 scale_type14 = "viewport"
 scale14 = "1.0"
 srgb_framebuffer14 = "true"
 
-# Pass 15: Compute a brightpass.  This will require reading the final mask.
+// Compute a brightpass.  This will require reading the final mask.
 shader15 = "../crt/shaders/HyperspaceMadness/hsm-crt-royale/src/crt-royale-brightpass.slang"
 alias15 = "BRIGHTPASS"
-filter_linear15 = "true" # This could just as easily be nearest neighbor.
+filter_linear15 = "true" // This could just as easily be nearest neighbor.
 scale_type15 = "viewport"
 scale15 = "1.0"
 srgb_framebuffer15 = "true"
 
-# Pass 16: Blur the brightpass vertically
+// Blur the brightpass vertically
 shader16 = "../crt/shaders/HyperspaceMadness/hsm-crt-royale/src/crt-royale-bloom-vertical.slang"
-filter_linear16 = "true" # This could just as easily be nearest neighbor.
+filter_linear16 = "true" // This could just as easily be nearest neighbor.
 scale_type16 = "source"
 scale16 = "1.0"
 srgb_framebuffer16 = "true"
 
-# Pass 17: Blur the brightpass horizontally and combine it with the dimpass:
+// Blur the brightpass horizontally and combine it with the dimpass:
 shader17 = "../crt/shaders/HyperspaceMadness/hsm-crt-royale/src/crt-royale-bloom-horizontal-reconstitute.slang"
 filter_linear17 = "true"
 scale_type17 = "source"
@@ -126,7 +126,11 @@ scale17 = "1.0"
 srgb_framebuffer17 = "true"
 wrap_mode17 = mirrored_repeat
 
-# Pass 18: Compute curvature/AA:
+
+// Compute curvature/AA:
+// This pass CANNOT be set to floatframebuffer, if it is the output from the last pass turns black or shows garbage
+// Because of this this pass outputs gamma encoded color, this is then linearized in the mega bezel reflection shader
+// If we try to set it to linear here then we get banding
 shader18 = "../crt/shaders/HyperspaceMadness/hsm-crt-royale/src/hsm-crt-royale-geometry-aa-last-pass.slang"
 filter_linear18 = "true"
 scale_type18 = "viewport"
@@ -251,12 +255,12 @@ mask_slot_texture_small_linear = "true"
 // mask_slot_texture_large_linear = "true"
 mask_shadow_texture_small_linear = "true"
 // mask_shadow_texture_large_linear = "true"
-mask_grille_texture_small_mipmap = "false"  # Mipmapping causes artifacts with manually resized masks without tex2Dlod
-// mask_grille_texture_large_mipmap = "true"   # Essential for hardware-resized masks
-mask_slot_texture_small_mipmap = "false"    # Mipmapping causes artifacts with manually resized masks without tex2Dlod
-// mask_slot_texture_large_mipmap = "true"     # Essential for hardware-resized masks
-mask_shadow_texture_small_mipmap = "false"  # Mipmapping causes artifacts with manually resized masks without tex2Dlod
-// mask_shadow_texture_large_mipmap = "true"   # Essential for hardware-resized masks
+mask_grille_texture_small_mipmap = "false"  // Mipmapping causes artifacts with manually resized masks without tex2Dlod
+// mask_grille_texture_large_mipmap = "true"   // Essential for hardware-resized masks
+mask_slot_texture_small_mipmap = "false"    // Mipmapping causes artifacts with manually resized masks without tex2Dlod
+// mask_slot_texture_large_mipmap = "true"     // Essential for hardware-resized masks
+mask_shadow_texture_small_mipmap = "false"  // Mipmapping causes artifacts with manually resized masks without tex2Dlod
+// mask_shadow_texture_large_mipmap = "true"   // Essential for hardware-resized masks
 
 BackgroundImage = ../crt/shaders/HyperspaceMadness/textures/BackgroundImage_3840x2160.png
 BackgroundVertImage = ../crt/shaders/HyperspaceMadness/textures/BackgroundImage_3840x2160.png
@@ -308,7 +312,6 @@ hmss_corner_radius = 10
 // hmbz_tube_glass_image_opacity = 5
 // hmbz_frame_opacity = 0
 // hmbz_frame_thickness = 7;
-// hmbz_frame_inner_edge_thickness = 0.15
 
 // hmbz_background_image_scale_mode = 0
 // hmbz_background_image_aspect_ratio = 1.75

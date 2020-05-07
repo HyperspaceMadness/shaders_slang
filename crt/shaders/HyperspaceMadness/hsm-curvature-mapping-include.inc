@@ -79,7 +79,6 @@ layout(std140, set = 0, binding = 0) uniform UBO
 	float hmbz_frame_opacity;
 	// float hmbz_frame_brightness;
 	float hmbz_frame_thickness;
-	float hmbz_frame_inner_edge_thickness;
 	float hmbz_frame_outer_corner_radius;
 	float hmbz_frame_pos_y_offset;
 	float hmbz_frame_shadow_opacity;

@@ -103,7 +103,6 @@ layout(std140, set = 0, binding = 0) uniform UBO
 	// Generated Frame
 	float hmbz_frame_opacity;
 	float hmbz_frame_thickness;
-	float hmbz_frame_inner_edge_thickness;
 	float hmbz_frame_outer_corner_radius;
 	float hmbz_frame_pos_y_offset;
 	float hmbz_frame_shadow_opacity;
@@ -351,12 +350,11 @@ static const float gba_gamma = 3.5; //  Irrelevant but necessary to define.
 #define geom_overscan_x global.geom_overscan_x
 #pragma parameter geom_overscan_y "Geometry - Overscan Y" 1.0 0.004 4.0 0.001
 #define geom_overscan_y global.geom_overscan_y
-#pragma parameter border_size "Border - Size" 0.015 0.0000001 0.5 0.005
-#define border_size global.border_size
-#pragma parameter border_darkness "Border - Darkness" 2.0 0.0 16.0 0.0625
-#define border_darkness global.border_darkness
-#pragma parameter border_compress "Border - Compression" 2.5 1.0 64.0 0.0625
-#define border_compress global.border_compress
+
+#define border_size 0.015
+#define border_darkness 2
+#define border_compress 2.5
+
 #pragma parameter interlace_detect_toggle "Interlacing - Toggle" 1.0 0.0 1.0 1.0
 bool interlace_detect = bool(global.interlace_detect_toggle);
 #pragma parameter interlace_bff "Interlacing - Bottom Field First" 0.0 0.0 1.0 1.0

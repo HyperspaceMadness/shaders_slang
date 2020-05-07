@@ -105,7 +105,6 @@ layout(std140, set = 0, binding = 0) uniform UBO
 	// Generated Frame
 	float hmbz_frame_opacity;
 	float hmbz_frame_thickness;
-	float hmbz_frame_inner_edge_thickness;
 	float hmbz_frame_outer_corner_radius;
 	float hmbz_frame_pos_y_offset;
 	float hmbz_frame_shadow_opacity;
@@ -437,7 +436,7 @@ void main()
 	top_corner_mask = corner_mask * top_half_mask;
 	bottom_corner_mask = corner_mask * (1 - top_half_mask);
 
-	float frame_inner_edge_mask = (global.hmbz_frame_inner_edge_thickness == 0) ? 0 : 1 - HMSS_GetCornerMask(frame_coord_ctr * (1 + (global.hmbz_frame_inner_edge_thickness / 1000 / vec2(screen_aspect, 1))) + 0.5, global.hmbz_bezel_outer_corner_radius_scale * global.hmss_corner_radius, 0.9);
+	float frame_inner_edge_mask = (HMBZ_FRAME_INNER_EDGE_THICKNESS == 0) ? 0 : 1 - HMSS_GetCornerMask(frame_coord_ctr * (1 + (HMBZ_FRAME_INNER_EDGE_THICKNESS / 1000 / vec2(screen_aspect, 1))) + 0.5, global.hmbz_bezel_outer_corner_radius_scale * global.hmss_corner_radius, 0.9);
 
 	noise_mask = clamp(fract(sin(dot(outermap_warped_coord_ctr + vec2(0.5, 0.5) + 1, vec2(12.9898, 78.233))) * 43758.5453), 0, 1);
 	

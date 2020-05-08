@@ -7,11 +7,8 @@ Description:
 	-Parameters to be used by Mega Screen Scale and Mega Bezel
 */
 
-#include "hsm-royale-geometry-functions.inc"
-#include "hsm-helper-functions.inc"
-
 // Screen Scale Required Parameters
-#pragma parameter hmss_mega_screen_scale_on				"___HSM MEGA BEZEL__ V.2020-05-03-2 -SCREEN SCALE ON" 1 0 1 1
+#pragma parameter hmss_mega_screen_scale_on				"___HSM MEGA BEZEL__ V.2020-05-08-0 -SCREEN SCALE ON" 1 0 1 1
 #pragma parameter hmss_screen_scale_debug				"[SCREEN SCALE]  Screen Scale Debug" 0 0 1 1
 
 #pragma parameter hmss_rotate_crt_image					"[SCALING]  Rotate CRT Image"  0 0 1 1
@@ -51,7 +48,7 @@ Description:
 #pragma parameter hmss_screen_vignette                  "[SCREEN EDGE]  Screen Vignette" 0 0 1 0.01
 
 #pragma parameter hmss_pre_crt_black_level 				"[COLOR]  Pre-CRT Black Level" 0 -30 30 0.05-
-#pragma parameter hmss_pre_crt_gamma					"[COLOR]  Pre-CRT Gamma" 2.4 0.01 8 0.01
+#pragma parameter hmss_pre_crt_gamma					"[COLOR]  Pre-CRT Gamma" 2.2 0.01 8 0.01
 #pragma parameter hmss_post_crt_gamma					"[COLOR]  Post-CRT Gamma" 1 0.01 2 0.01
 #pragma parameter hmss_negative_crop_brightness			"[COLOR]  Negative Crop Brightness" 0 0 20 0.02
 
@@ -60,9 +57,14 @@ Description:
 #pragma parameter hmss_tube_black_edge_thickness 		"[TUBE]  Black Edge Thickness" 1.2 -2 8 0.05
 #pragma parameter hmss_tube_black_edge_curvature_scale 	"[TUBE]  Black Edge Curvature Scale" 1 0 4 0.1
 
+const float HMSS_DEFAULT_GAMMA = 2.2;
+
 // Macros.
 #define FIX(c) max(abs(c), 1e-5)
 #define PI 3.141592653589
+
+#include "hsm-helper-functions.inc"
+#include "hsm-royale-geometry-functions.inc"
 
 vec2 HMSS_GetRotatedOriginalSize()
 {
@@ -432,6 +434,8 @@ vec2 HMSS_GetCurvedCoord(vec2 in_coord, float curvature_multiplier)
 												global.hmss_curvature_3D_tilt_angle_y,
 												screen_aspect,
 												extra_curvature_mult,
+												global.SourceSize.xy,
+												global.OutputSize.xy,
 												pixel_to_video_uv);
 	}
 	else
@@ -554,27 +558,43 @@ vec3 HMSS_HSVtoRGB(vec3 c)
     return c.z * mix(K.xxx, clamp(p - K.xxx, 0.0, 1.0), c.y);
 }
 
+vec4 HMSS_ApplyGamma(vec4 in_color, float in_gamma)
+{
+	return pow(in_color, vec4(1 / in_gamma));
+}
+
+vec4 HMSS_Linearize(vec4 in_color)
+{
+	return HMSS_ApplyGamma(in_color, 1 / HMSS_DEFAULT_GAMMA);
+}
+
+vec4 HMSS_Delinearize(vec4 in_color)
+{
+	return HMSS_ApplyGamma(in_color, HMSS_DEFAULT_GAMMA);
+}
+
 vec4 HMSS_ApplyBlackLevelGamma(vec4 in_color, float color_is_linear)
 {
+	vec4 out_color = in_color;
+
 	if (color_is_linear == 0)
 	{
-		in_color = HHLP_Linearize(in_color);
+		out_color = HMSS_Linearize(out_color);
 	}
 
-	vec3 rgb_color = in_color.rgb;
 	// Black Level Adjustment
-	rgb_color -= vec3(global.hmss_pre_crt_black_level / 100);
-	rgb_color *= vec3(1.0) / vec3(1.0 - global.hmss_pre_crt_black_level / 100);
+	out_color -= vec4(global.hmss_pre_crt_black_level / 100);
+	out_color *= vec4(1.0) / vec4(1.0 - global.hmss_pre_crt_black_level / 100);
 
 	// Gamma
-	rgb_color = pow(rgb_color, 1.0 / vec3(global.hmss_pre_crt_gamma / 2.4));
-
-	vec4 out_color = vec4(rgb_color, 1);
+	out_color = HMSS_ApplyGamma(out_color, global.hmss_pre_crt_gamma / HMSS_DEFAULT_GAMMA);
 
 	if (color_is_linear == 0)
 	{
-		out_color = HHLP_Delinearize(out_color);
+		out_color = HMSS_Delinearize(out_color);
 	}
+
+	out_color.w = in_color.w;
 
 	return out_color;
 }
@@ -667,4 +687,45 @@ float HMSS_GetVignetteFactor(vec2 coord, float amount)
 
 	float vignette_multiplier = smoothstep(0, 0.05, amount);
 	return 1 - vignette_multiplier + vignette * vignette_multiplier;
+}
+
+vec4 HMSS_GetPostCrtPreppedColor(vec2 screen_curved_coord, vec4 in_color, float encoded_input_gamma, float output_gamma)
+{
+	vec4 out_color = in_color;
+	
+	// Put the color in linear space by correcting for the encoded gamma
+	if (encoded_input_gamma != 1)
+	{
+		out_color = HMSS_ApplyGamma(in_color, encoded_input_gamma);
+	}
+
+	vec2 mirrored_screen_coord = HMSS_GetMirrorWrappedCoord(screen_curved_coord);
+	float vignette_factor = HMSS_GetVignetteFactor(mirrored_screen_coord, global.hmss_screen_vignette);
+	
+	// TODO Screen Edge Sharpness should be applied here instead of in the mega bezel shader
+	// HMSS_GetCornerMask(screen_curved_coord, global.hmss_corner_radius, global.hmss_screen_edge_sharpness);
+
+	// If this is called from the glass preset we don't want the vignette to affect mirrored area
+	#ifdef GLASS_PRESET
+		float screen_mask = HMSS_GetCornerMask((screen_curved_coord - 0.5) * 0.999 + 0.5, global.hmss_corner_radius, 0.9);
+		vignette_factor = 1 - ((1 - vignette_factor) * screen_mask);
+	#endif
+
+	// If we are not using this with the bezel we want
+	#ifdef MASK_OUTSIDE_SCREEN
+		float screen_mask = HMSS_GetCornerMask((screen_curved_coord - 0.5) * 0.999 + 0.5, global.hmss_corner_radius, 0.9);
+		vignette_factor = vignette_factor * screen_mask;
+	#endif
+
+	out_color = HMSS_ApplyGamma(out_color, global.hmss_post_crt_gamma);
+
+	out_color *= vignette_factor;
+
+	// Apply the final Gamma
+	if (output_gamma != 1)
+	{
+		out_color = HMSS_ApplyGamma(out_color, output_gamma);
+	}
+
+	return out_color;
 }

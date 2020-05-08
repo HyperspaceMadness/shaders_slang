@@ -1,5 +1,5 @@
 #version 450
 
-#define NO_BEZEL
+#define MASK_OUTSIDE_SCREEN
 
 #include "hsm-crt-guest-dr-venom-with-scaling.inc"

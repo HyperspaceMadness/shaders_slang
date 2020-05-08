@@ -40,94 +40,84 @@ float_framebuffer7 = true
 // filter_linear7 = false
 
 shader8 = ../stock.slang
+shader9 = ../stock.slang
+shader10 = ../stock.slang
 
 // Guest-Venom Pass ----------------------------------------------------------------
-shader9 = ../crt/shaders/guest/lut/lut.slang
-filter_linear9 = false
-scale_type9 = source
-scale9 = 1.0
-
-// Guest-Venom Pass ----------------------------------------------------------------
-shader10 = ../crt/shaders/guest/color-profiles.slang
-filter_linear10 = true
-scale_type10 = source
-scale10 = 1.0
-
-// Guest-Venom Pass ----------------------------------------------------------------
-shader11 = ../crt/shaders/guest/d65-d50.slang
-filter_linear11 = true
+shader11 = ../crt/shaders/guest/lut/lut.slang
+filter_linear11 = false
 scale_type11 = source
 scale11 = 1.0
-alias11 = WhitePointPass
 
-// Linearize Color ----------------------------------------------------------------
-shader12 = ../crt/shaders/HyperspaceMadness/linearize.slang
-filter_linear12 = false
+// Guest-Venom Pass ----------------------------------------------------------------
+shader12 = ../crt/shaders/guest/color-profiles.slang
+filter_linear12 = true
 scale_type12 = source
 scale12 = 1.0
-float_framebuffer12 = true
-alias12 = LinearizePass
 
 // Guest-Venom Pass ----------------------------------------------------------------
-shader13 = ../crt/shaders/HyperspaceMadness/hsm-guest/hsm-guest-blur_horiz.slang
-filter_linear13 = false
+shader13 = ../crt/shaders/guest/d65-d50.slang
+filter_linear13 = true
 scale_type13 = source
 scale13 = 1.0
-float_framebuffer13 = true
+alias13 = WhitePointPass
 
-// Guest-Venom Pass ----------------------------------------------------------------
-shader14 = ../crt/shaders/HyperspaceMadness/hsm-guest/hsm-guest-blur_vert.slang
+// Linearize Color ----------------------------------------------------------------
+shader14 = ../crt/shaders/HyperspaceMadness/hsm-guest/hsm-guest-linearize.slang
 filter_linear14 = false
 scale_type14 = source
 scale14 = 1.0
 float_framebuffer14 = true
-alias14 = GlowPass
+alias14 = LinearizePass
 
 // Guest-Venom Pass ----------------------------------------------------------------
-shader15 = ../crt/shaders/HyperspaceMadness/hsm-guest/hsm-guest-linearize_scanlines.slang
-filter_linear15 = true
+shader15 = ../crt/shaders/HyperspaceMadness/hsm-guest/hsm-guest-blur_horiz.slang
+filter_linear15 = false
 scale_type15 = source
 scale15 = 1.0
 float_framebuffer15 = true
 
+// Guest-Venom Pass ----------------------------------------------------------------
+shader16 = ../crt/shaders/HyperspaceMadness/hsm-guest/hsm-guest-blur_vert.slang
+filter_linear16 = false
+scale_type16 = source
+scale16 = 1.0
+float_framebuffer16 = true
+alias16 = GlowPass
+
+// Guest-Venom Pass ----------------------------------------------------------------
+shader17 = ../crt/shaders/HyperspaceMadness/hsm-guest/hsm-guest-linearize_scanlines.slang
+filter_linear17 = true
+scale_type17 = source
+scale17 = 1.0
+float_framebuffer17 = true
+
 // CRT Shader - Guest-Venom ----------------------------------------------------------------
 //      Guest's Awesome Shader!!!
 //      Has been slightly altered to use the same scaling as the rest of the shders for the bezel & reflection
-shader16 = ../crt/shaders/HyperspaceMadness/hsm-guest/hsm-crt-guest-dr-venom-with-scaling.slang
-mipmap_input16 = true
-filter_linear16 = true
-scale_type16 = viewport
-scale16 = 1.0
-float_framebuffer16 = true
-wrap_mode16 = mirrored_repeat
-
-// Extra passes to treat the screen and reflection can be added here, E.G. Resolution Independent Scanlines
-shader17 = ../stock.slang
-float_framebuffer17 = true
-alias17 = BR_CRTPass
-
-// Tube Scale Curvature Mapping
-// Write mapping into the pass, of the 4 channels, x & y are tube warped coord and z & w are outside tube mask and edge mask
-shader18 = ../crt/shaders/HyperspaceMadness/hsm-curvature-mapping-glass.slang
+shader18 = ../crt/shaders/HyperspaceMadness/hsm-guest/hsm-crt-guest-dr-venom-with-scaling-glass.slang
 mipmap_input18 = true
 filter_linear18 = true
 scale_type18 = viewport
+scale18 = 1.0
 float_framebuffer18 = true
-alias18 = BR_MappingPass
+wrap_mode18 = mirrored_repeat
+alias18 = BR_CRTPass
 
-// Linearize the output from the CRT Shader (BR_CRTPass) and do prep like adding the screen vignette
-shader19 = ../crt/shaders/HyperspaceMadness/hsm-prep-post-crt-linearize.slang
+// Tube Scale Curvature Mapping
+// Write mapping into the pass, of the 4 channels, x & y are tube warped coord and z & w are outside tube mask and edge mask
+shader19 = ../crt/shaders/HyperspaceMadness/hsm-curvature-mapping.slang
 mipmap_input19 = true
 filter_linear19 = true
+scale_type19 = viewport
 float_framebuffer19 = true
-wrap_mode19 = mirrored_repeat
-alias19 = BR_CRTPreppedLinearPass
+alias19 = BR_MappingPass
 
 // Reduce Resolution  ----------------------------------------------------------------
 //      Reduce the resolution to a small static size regardless of final resolution
 //      Allows consistent look and faster at different final resolutions for blur
 //      Mipmap option allows downscaling without artifacts
-shader20 = ../stock.slang
+shader20 = ../crt/shaders/HyperspaceMadness/hsm-linearize-crt.slang
 mipmap_input20 = true
 filter_linear20 = true
 scale_type20 = absolute
@@ -138,6 +128,7 @@ float_framebuffer20 = true
 // scale_y20 = 540
 scale_x20 = 800
 scale_y20 = 600
+wrap_mode20 = mirrored_repeat
 float_framebuffer20 = true
 alias20 = BR_MirrorLowResPass
 

@@ -6,7 +6,6 @@ License: GPL
 Description:
 
 */
-float PI = 3.1415;
 
 float HHLP_GetMaskCenteredOnValue(float in_value, float value_to_match, float threshold)
 {
@@ -67,15 +66,5 @@ float HHLP_GetDistanceToLine(float x1, float y1, float a, float b, float c)
     float d = abs((a * x1 + b * y1 + c)) /  
               (sqrt(a * a + b * b));
     return d; 
-}
-
-vec4 HHLP_Linearize(vec4 in_color)
-{
-	return pow(in_color, vec4(2.2));
-}
-
-vec4 HHLP_Delinearize(vec4 in_color)
-{
-	return pow(in_color, vec4(1.0 / 2.2));
 }
 

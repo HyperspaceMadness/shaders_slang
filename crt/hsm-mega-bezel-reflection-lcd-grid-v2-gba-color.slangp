@@ -46,47 +46,39 @@ shader11 = ../stock.slang
 shader12 = ../stock.slang
 shader13 = ../stock.slang
 shader14 = ../stock.slang
+shader15 = ../stock.slang
+shader16 = ../stock.slang
 
-shader15 = ../crt/shaders/HyperspaceMadness/hsm-lcd-cgwg/hsm-lcd-grid-v2.slang
-filter_linear15 = "false"
-scale_type15 = "viewport"
-scale15 = "1.0"
+shader17 = ../crt/shaders/HyperspaceMadness/hsm-lcd-cgwg/hsm-lcd-grid-v2.slang
+filter_linear17 = "false"
+scale_type17 = "viewport"
+scale17 = "1.0"
+wrap_mode17 = mirrored_repeat
+alias17 = BR_CRTPassAlternate
 
-shader16 = ../handheld/shaders/color/gba-color.slang
-mipmap_input16 = true
-filter_linear16 = true
-scale_type16 = viewport
-scale16 = 1.0
-float_framebuffer16 = true
-wrap_mode16 = mirrored_repeat
-
-// Extra passes to treat the screen and reflection can be added here, E.G. Resolution Independent Scanlines
-shader17 = ../stock.slang
-float_framebuffer17 = true
-alias17 = BR_CRTPass
-
-// Tube Scale Curvature Mapping
-// Write mapping into the pass, of the 4 channels, x & y are tube warped coord and z & w are outside tube mask and edge mask
-shader18 = ../crt/shaders/HyperspaceMadness/hsm-curvature-mapping.slang
+shader18 = ../handheld/shaders/color/gba-color.slang
 mipmap_input18 = true
 filter_linear18 = true
 scale_type18 = viewport
+scale18 = 1.0
 float_framebuffer18 = true
-alias18 = BR_MappingPass
+wrap_mode18 = mirrored_repeat
+alias18 = BR_CRTPass
 
-// Linearize the output from the CRT Shader (BR_CRTPass) and do prep like adding the screen vignette
-shader19 = ../crt/shaders/HyperspaceMadness/hsm-prep-post-crt-linearize.slang
+// Tube Scale Curvature Mapping
+// Write mapping into the pass, of the 4 channels, x & y are tube warped coord and z & w are outside tube mask and edge mask
+shader19 = ../crt/shaders/HyperspaceMadness/hsm-curvature-mapping.slang
 mipmap_input19 = true
 filter_linear19 = true
+scale_type19 = viewport
 float_framebuffer19 = true
-wrap_mode19 = mirrored_repeat
-alias19 = BR_CRTPreppedLinearPass
+alias19 = BR_MappingPass
 
 // Reduce Resolution  ----------------------------------------------------------------
 //      Reduce the resolution to a small static size regardless of final resolution
 //      Allows consistent look and faster at different final resolutions for blur
 //      Mipmap option allows downscaling without artifacts
-shader20 = ../stock.slang
+shader20 = ../crt/shaders/HyperspaceMadness/hsm-linearize-crt-alternate.slang
 mipmap_input20 = true
 filter_linear20 = true
 scale_type20 = absolute
@@ -97,6 +89,7 @@ float_framebuffer20 = true
 // scale_y20 = 540
 scale_x20 = 800
 scale_y20 = 600
+wrap_mode20 = mirrored_repeat
 float_framebuffer20 = true
 alias20 = BR_MirrorLowResPass
 
@@ -165,6 +158,7 @@ float_framebuffer25 = false
 
 // Define how many shaders will be used from this list
 shaders = 26
+
 
 // Define textures to be used by the different passes
 textures = "BackgroundImage;BackgroundVertImage;TubeGlassImage;OverlayImage;OverlayVertImage;"

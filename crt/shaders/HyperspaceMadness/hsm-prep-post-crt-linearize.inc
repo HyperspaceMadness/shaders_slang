@@ -1,5 +1,5 @@
 
-#include "hsm-mega-screen-scale.inc"
+#include "hsm-mega-screen-scale-with-globals.inc"
 
 #pragma stage vertex
 layout(location = 0) in vec4 Position;
@@ -21,7 +21,7 @@ layout(set = 0, binding = 10) uniform sampler2D TubeGlassImage;
 
 void main()
 {
-	FragColor = HHLP_Linearize(texture(BR_CRTPass, vTexCoord));
+	FragColor = HMSS_Linearize(texture(BR_CRTPass, vTexCoord));
 	
 	vec2 tube_coord_warped = vec2(0, 0);
 	float outside_tube_mask = 0;
@@ -40,6 +40,6 @@ void main()
 	FragColor *= vignette_factor;
 
 
-	// vec4 tube_glass_image = HHLP_Linearize(texture(TubeGlassImage, (tube_coord_warped - 0.5) * 0.97 + 0.5 ));
+	// vec4 tube_glass_image = HMSS_Linearize(texture(TubeGlassImage, (tube_coord_warped - 0.5) * 0.97 + 0.5 ));
 	// FragColor = FragColor + 50 / 100 * tube_glass_image.a * (1 - outside_tube_mask) * tube_glass_image;
 }

@@ -46,14 +46,13 @@ Uses a red/magenta/cyan/green pattern for even spacing of the LCD subpixels.
 
 */
 
-// Modifications from hsm-mega-screen-scale.inc integration
 // HSM Added
-#include "../hsm-mega-screen-scale.inc"
+#include "../hsm-mega-screen-scale-with-globals.inc"
 // End Addition
 
 layout(push_constant) uniform Push
 {
-	// Modifications from hsm-mega-screen-scale.inc integration
+	// Modifications from hsm-mega-screen-scale-with-globals.inc integration
 	// Removed the following
 	vec4 SourceSize;
 
@@ -63,7 +62,7 @@ layout(push_constant) uniform Push
 	float smart, brightboost1, brightboost2, stype, scanline1, scanline2, beam_min, beam_max, s_beam;
 	float h_sharp, cubic, mask, maskmode, maskdark, maskbright, masksize, gamma_out;
 
-	// Modifications from hsm-mega-screen-scale.inc integration
+	// Modifications from hsm-mega-screen-scale-with-globals.inc integration
 	// HSM Added
 	float bglow;
 	float bloom;
@@ -73,8 +72,7 @@ layout(push_constant) uniform Push
 
 } params;
 
-// Modifications from hsm-mega-screen-scale.inc integration
-// Removed the following, because the global structure is already defined in hsm-mega-screen-scale.inc
+// Removed the following, because the global structure is already defined in hsm-mega-screen-scale-with-globals.inc
 //layout(std140, set = 0, binding = 0) uniform UBO
 //{
 //	mat4 MVP;
@@ -90,7 +88,6 @@ layout(push_constant) uniform Push
 #pragma parameter bloom "Bloom" 0.40 0.0 2.0 0.05
 #pragma parameter autobrm "Automatic Brightness (Mask)" 0.5 0.0 1.0 0.1
 
-// Modifications from hsm-mega-screen-scale.inc integration
 // Removed the following
 // #pragma parameter smart "1:Smart 2:Crop 3:Overscan Y Integer Scaling" 0.0 0.0 3.0 1.0
 
@@ -111,7 +108,6 @@ layout(push_constant) uniform Push
 #pragma parameter maskbright "CRT Mask Strength Bright Pixels" 0.25 -0.5 1.0 0.05
 #pragma parameter masksize "CRT Mask Size" 1.0 1.0 2.0 1.0
 
-// Modifications from hsm-mega-screen-scale.inc integration
 // Removed the following
 // #pragma parameter warpx "Curvature X" 0.0  0.0 0.25 0.01
 // #pragma parameter warpy "Curvature Y" 0.0  0.0 0.25 0.01
@@ -119,7 +115,6 @@ layout(push_constant) uniform Push
 
 #pragma parameter gamma_out "Gamma Out" 2.50 1.0 3.5 0.05
 
-// Modifications from hsm-mega-screen-scale.inc integration
 // Removed the following
 // #define bglow global.bglow
 // #define autobrm global.autobrm
@@ -244,7 +239,6 @@ float Overscan(float pos, float dy){
 }
 
 
-// Modifications from hsm-mega-screen-scale.inc integration
 /* Removed the following
 // Distortion of scanlines, and end of screen alpha (PD CRT Lottes Curvature)
 vec2 Warp(vec2 pos)
@@ -287,7 +281,7 @@ void main()
 
 	float gamma = COMPAT_TEXTURE(LinPass, vec2(0.5,0.1)).a;
 	
-	/* Modifications from hsm-mega-screen-scale.inc integration
+	/* Modifications from hsm-mega-screen-scale-with-globals.inc integration
 	// Removed the following
 	if (smart == 1.0 || smart == 2.0 || smart == 3.0)
 	{
@@ -300,8 +294,9 @@ void main()
 	*/
 	
 	// HSM Added
-	tex = HMSS_GetScreenVTexCoord(tex/vec2(1.0,ratio))*vec2(1.0,ratio);
-	tex = HMSS_GetWrappedCurvedCoord(tex/vec2(1.0,ratio), 1)*vec2(1.0,ratio);
+	vec2 screen_coord = HMSS_GetScreenVTexCoord(tex / vec2(1.0, ratio));
+	vec2 screen_curved_coord = HMSS_GetCurvedCoord(screen_coord, 1);
+	tex = HMSS_GetMirrorWrappedCoord(screen_curved_coord) * vec2(1.0, ratio);
 	// End Addition
 	
 	vec2 OGL2Pos = tex * SourceSize1.xy - vec2(0.5,0.5);
@@ -524,13 +519,14 @@ void main()
 
 	/* Removed
 	vec3 color1g = pow(color, vec3(fgamma));
+	FragColor = vec4(color1g, 1.0);
 	*/
 
 	// Addition
-	// Gamma
-	vec3 color1g = pow(color, 1.0 / vec3(global.hmss_post_crt_gamma));
-	color1g = pow(color1g, vec3(fgamma));
+
+	// Add Vignette inside the tube
+	FragColor = vec4(color, 1.0);
+	FragColor = HMSS_GetPostCrtPreppedColor(screen_curved_coord, FragColor,  1, 1 / fgamma);
+
 	// End Addition
-	
-    FragColor = vec4(color1g, 1.0);
 }

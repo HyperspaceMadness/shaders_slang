@@ -672,14 +672,6 @@ vec2 hrg_get_aspect_vector(float geom_aspect_ratio)
     return output_aspect;
 }
 
-// Returns Diagonal Screen scale relative to the viewport height
-float GetScreenDiagonalScale(vec2 in_screen_scale)
-{
-	vec2 screen_scale = in_screen_scale;
-	float screen_scale_x_compensated = screen_scale.x / (global.FinalViewportSize.x/global.FinalViewportSize.y);
-	return sqrt(screen_scale_x_compensated * screen_scale_x_compensated + screen_scale.y * screen_scale.y);
-}
-
 vec2 HRG_GetGeomCurvedCoord(  vec2 in_coord, 
                             float in_geom_mode, 
                             float in_geom_radius, 
@@ -688,11 +680,11 @@ vec2 HRG_GetGeomCurvedCoord(  vec2 in_coord,
                             float in_geom_tilt_angle_y,
                             float in_screen_aspect,
                             vec2 in_extra_curvature_mult,
+                            vec2 in_source_size,
+                            vec2 in_output_size,
                             out mat2x2 pixel_to_video_uv)
 {
     vec2 ctr_coord = in_coord - 0.5; 
-
-    float final_viewport_aspect = global.FinalViewportSize.x / global.FinalViewportSize.y;
 
     // Kind of a Hack, Multiply the coordinate by a factor, do curvature 
     // then return it to the original scale
@@ -700,9 +692,9 @@ vec2 HRG_GetGeomCurvedCoord(  vec2 in_coord,
 
     vec2 tex_uv = ctr_coord + 0.5;
 
-    vec2 output_pixel_size = vec2(1.0, 1.0)/global.OutputSize.xy;
+    vec2 output_pixel_size = vec2(1.0, 1.0) / in_output_size;
 
-    float geom_radius_scaled = in_geom_radius;// * GetScreenDiagonalScale(in_screen_scale);
+    float geom_radius_scaled = in_geom_radius;
 
     vec2 output_aspect = hrg_get_aspect_vector(in_screen_aspect);
 
@@ -740,9 +732,9 @@ vec2 HRG_GetGeomCurvedCoord(  vec2 in_coord,
     //  and a pixel_to_tangent_video_uv matrix for transforming pixel offsets:
     //  video_uv = relative position in video frame, mapped to [0, 1] range
     //  tex_uv = relative position in padded texture, mapped to [0, 1] range
-    vec4 video_and_texture_size_inv = vec4(1.0, 1.0, 1.0, 1.0) / vec4(global.SourceSize.xy, global.SourceSize.xy);
+    vec4 video_and_texture_size_inv = vec4(1.0, 1.0, 1.0, 1.0) / vec4(in_source_size, in_source_size);
     vec2 video_size_inv = video_and_texture_size_inv.xy;
-    vec2 flat_video_uv = tex_uv * (global.SourceSize.xy * video_size_inv);
+    vec2 flat_video_uv = tex_uv * (in_source_size * video_size_inv);
     vec2 video_uv_no_geom_overscan;
     if(in_geom_mode > 0.5)
     {
@@ -764,11 +756,7 @@ vec2 HRG_GetGeomCurvedCoord(  vec2 in_coord,
     }
 
     vec2 ctr_curved_coord = video_uv_no_geom_overscan - 0.5;
-    // Scale the coordinate back down in X
-    // if (final_viewport_aspect > 1)
-    // {
-    //     ctr_curved_coord.x /= global.FinalViewportSize.x / global.FinalViewportSize.y;
-    // }
+    
     ctr_curved_coord /= in_extra_curvature_mult;
 
     video_uv_no_geom_overscan = ctr_curved_coord + 0.5;

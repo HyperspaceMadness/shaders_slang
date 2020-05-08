@@ -7,10 +7,9 @@ License: GPL
 Addition of hsm-mega-screen-scale by HyperspaceMadness remimcgill@hotmail.com
 */
 
-// HSM Modification
 // HSM Added
 // Import Screen Scale Functions and global structure
-#include "../hsm-mega-screen-scale.inc"
+#include "../hsm-mega-screen-scale-with-globals.inc"
 // End Addition
 
 layout(push_constant) uniform Push
@@ -26,8 +25,7 @@ layout(push_constant) uniform Push
 	float SCANLINE_STRENGTH_MAX;
 	float SCANLINE_BEAM_MIN;
 	float SCANLINE_BEAM_MAX;
-    // HSM Modification
-    // Removed the following
+    // HSM Removed
 	// float GEOM_CURVATURE;
 	// float GEOM_WARP;
 	// float GEOM_CORNER_SIZE;
@@ -149,7 +147,6 @@ layout(location = 0) in vec4 Position;
 layout(location = 1) in vec2 TexCoord;
 layout(location = 0) out vec2 vTexCoord;
 
-// HSM Modification
 // HSM Added
 layout(location = 1) out vec2 screenScale;
 // End Addition
@@ -159,7 +156,6 @@ void main()
    gl_Position = global.MVP * Position;
    vTexCoord = TexCoord;
 
-    // HSM Modification
     // HSM Added
     screenScale =  HMSS_GetScreenScale();
     vTexCoord = HMSS_GetScreenVTexCoord(vTexCoord);
@@ -168,7 +164,6 @@ void main()
 #pragma stage fragment
 layout(location = 0) in vec2 vTexCoord;
 
-// HSM Modification
 // HSM Added
 layout(location = 1) in vec2 screenScale;
 // End Addition
@@ -181,8 +176,7 @@ layout(set = 0, binding = 3) uniform sampler2D ORIG_LINEARIZED;
 
 void main()
 {
-    // HSM Modification
-    /* Removed the following
+    /* HSM Removed
     vec2 tex_size = global.SourceSize.xy;
     */
 
@@ -209,8 +203,7 @@ void main()
 
     vec2 co = vTexCoord * tex_size * global.SourceSize.zw;
 
-    // HSM Modification
-    /* Removed the following
+    /* HSM Removed
     vec2 xy = curve_coordinate(co, params.GEOM_WARP);
     float corner_weight = get_corner_weight(curve_coordinate(co, params.GEOM_CURVATURE), vec2(params.GEOM_CORNER_SIZE), params.GEOM_CORNER_SMOOTH);
     Not sure why params.GEOM_WARP was used for the main coordinate and params.GEOM_CURVATURE was used for the corner
@@ -218,7 +211,8 @@ void main()
 
     // ADDED the following to add overscan crop and use different curvature from mega screen scale
     // corner_weight is also set to 1 so the corner will not be masked, and will be masked in a later pass 
-    vec2 xy = HMSS_GetWrappedCurvedCoord(co, 1);
+    vec2 screen_curved_coord = HMSS_GetCurvedCoord(co, 1);
+    vec2 xy = HMSS_GetMirrorWrappedCoord(screen_curved_coord);
     float corner_weight = 1;
     xy = HMSS_GetCropOverscanCoord(xy);
     // End Addition
@@ -259,12 +253,10 @@ void main()
 
     float rgb_max = max(col.r, max(col.g, col.b));
 
-    // HSM Modification
-    /* Removed the following
+    /* HSM Removed
     float sample_offset = (global.SourceSize.y * global.OutputSize.w) * 0.5;
     */
 
-    // HSM Modification
     // HSM Added the Following
     float sample_offset = (global.SourceSize.y * global.OutputSize.w * screenScale.y) * 0.5;
     // End Addition
@@ -295,8 +287,7 @@ void main()
     mask_stagger = mask_config.w;
     mask_dither = fract(mask_config.x) * 10.0;
 
-    // HSM Modification
-    /* Removed the following
+    /* HSM Removed
     vec2 mod_fac = floor(vTexCoord * global.OutputSize.xy * global.SourceSize.xy / (global.SourceSize.xy * vec2(params.MASK_SIZE, mask_dot_height * params.MASK_SIZE)));
     */
 
@@ -339,12 +330,14 @@ void main()
     col += diff * mask_weight * params.HALATION * vec3(corner_weight);
     col += diff * params.DIFFUSION * vec3(corner_weight);
 
-    // HSM Modification
-    // HSM Added
-    col = pow(col, 1.0 / vec3(global.hmss_post_crt_gamma));
-    // End Addition
-
+    /* HSM Removed
     col = pow(col, vec3(1.0 / params.GAMMA_OUTPUT));
+    */
 
-   FragColor = vec4(col, 1.0);
+    // HSM Added
+
+    // Add Vignette inside the tube
+    FragColor = vec4(col, 1);
+	FragColor = HMSS_GetPostCrtPreppedColor(screen_curved_coord, FragColor,  1, params.GAMMA_OUTPUT);
+    // End Addition
 }

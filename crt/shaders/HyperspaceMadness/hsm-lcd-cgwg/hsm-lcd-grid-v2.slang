@@ -1,7 +1,8 @@
 #version 450
 
-// Import Screen Scale Functions and global structure
-#include "../hsm-mega-screen-scale.inc"
+// HSM Added
+#include "../hsm-mega-screen-scale-with-globals.inc"
+// End Addition
 
 layout(push_constant) uniform Push
 {
@@ -50,7 +51,6 @@ void main()
     gl_Position = global.MVP * Position;
     vTexCoord = TexCoord;
 
-    // HSM Modification
     // HSM Added
     vTexCoord = HMSS_GetScreenVTexCoord(vTexCoord);
     // End Addition
@@ -89,9 +89,9 @@ void main()
 {
     // TODO Add Support for Cropping?
 
-    // HSM Modification
     // HSM Added
-    vec2 curved_coord = HMSS_GetWrappedCurvedCoord(vTexCoord, 1);
+	vec2 screen_curved_coord = HMSS_GetCurvedCoord(vTexCoord, 1);
+    vec2 curved_coord = HMSS_GetMirrorWrappedCoord(screen_curved_coord);
     // End Addition
 
     vec2 texelSize = global.SourceSize.zw;
@@ -135,10 +135,13 @@ void main()
 
     averageColor = mat3(cred, cgreen, cblue) * averageColor;
 
-    // HSM Modification
-    // HSM Added
-    averageColor = pow(averageColor, 1.0 / vec3(global.hmss_post_crt_gamma));
-    // End Addition
-
+    /* HSM Removed
     FragColor = vec4(pow(averageColor, vec3(1.0/outgamma)),0.0);
+    */
+
+    // HSM Added
+    FragColor = vec4(averageColor, 1);
+	FragColor = HMSS_GetPostCrtPreppedColor(screen_curved_coord, FragColor,  1, outgamma);
+    
+    // End Addition
 }

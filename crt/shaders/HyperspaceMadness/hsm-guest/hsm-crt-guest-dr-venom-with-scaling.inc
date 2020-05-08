@@ -23,15 +23,13 @@
 
 */
 
-// HSM Modification
 // HSM Added
-#include "../hsm-mega-screen-scale.inc"
+#include "../hsm-mega-screen-scale-with-globals.inc"
 // End Addition
 
 layout(push_constant) uniform Push
 {
-	// HSM Modification
-	// Removed the following
+	// HSM Removed
 	// float TATE
 	// IOS, 
 	// OS, 
@@ -48,8 +46,7 @@ layout(push_constant) uniform Push
     h_sharp, 
 	s_sharp, 
 
-	// HSM Modification
-	// Removed the following
+	// HSM Removed
 	// csize, 
 	// bsize, 
 	// warpX, 
@@ -457,12 +454,11 @@ void main()
 
 	*/
 	
-	// HSM Modification
-	// HSM Added
+	// HSM Removed
 	float TATE = HMSS_GetUseVerticalScanlines();
 
-	vec2 screen_coord = HMSS_GetCurvedCoord(HMSS_GetScreenVTexCoord(vTexCoord), 1);
-	vec2 pos = HMSS_GetMirrorWrappedCoord(screen_coord);
+	vec2 screen_curved_coord = HMSS_GetCurvedCoord(HMSS_GetScreenVTexCoord(vTexCoord), 1);
+	vec2 pos = HMSS_GetMirrorWrappedCoord(screen_curved_coord);
 
 	vec2 coffset = vec2(0.5, 0.5);
 	bool interb = (interm > 0.5 && interm < 2.5 && inter <= mix(SourceSize.y, SourceSize.x, TATE));
@@ -705,18 +701,9 @@ void main()
 	*/
 
 	// HSM Added
-	// Don't apply the corner mask here, do it later in the shader chain
-	// Addition
-	// Gamma
-	
-	// Add Vignette inside the tube
-	color = pow(color, 1.0 / vec3(global.hmss_post_crt_gamma));
-	color = pow(color, vec3(1.0/gamma_out));
 
-	#ifdef NO_BEZEL
-		color *= HMSS_GetCornerMask(screen_coord, global.hmss_corner_radius, global.hmss_screen_edge_sharpness);
-	#endif
-
+	// Add Prep after the CRT image is complete, e.g. Vignette
 	FragColor = vec4(color, 1);
+	FragColor = HMSS_GetPostCrtPreppedColor(screen_curved_coord, FragColor,  1, gamma_out);
 	// End Addition
 }

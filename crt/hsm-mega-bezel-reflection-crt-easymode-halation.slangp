@@ -43,57 +43,47 @@ shader8 = ../stock.slang
 shader9 = ../stock.slang
 shader10 = ../stock.slang
 shader11 = ../stock.slang
+shader12 = ../stock.slang
+shader13 = ../stock.slang
 
-shader12 = ../crt/shaders/crt-easymode-halation/linearize.slang
-filter_linear12 = false
-srgb_framebuffer12 = true
-alias12 = ORIG_LINEARIZED
-
-shader13 = ../crt/shaders/crt-easymode-halation/blur_horiz.slang
-filter_linear13 = false
-srgb_framebuffer13 = true
-
-shader14 = ../crt/shaders/crt-easymode-halation/blur_vert.slang
+shader14 = ../crt/shaders/crt-easymode-halation/linearize.slang
 filter_linear14 = false
 srgb_framebuffer14 = true
+alias14 = ORIG_LINEARIZED
 
-shader15 = ../crt/shaders/crt-easymode-halation/threshold.slang
+shader15 = ../crt/shaders/crt-easymode-halation/blur_horiz.slang
 filter_linear15 = false
 srgb_framebuffer15 = true
 
+shader16 = ../crt/shaders/crt-easymode-halation/blur_vert.slang
+filter_linear16 = false
+srgb_framebuffer16 = true
+
+shader17 = ../crt/shaders/crt-easymode-halation/threshold.slang
+filter_linear17 = false
+srgb_framebuffer17 = true
+
 // Easymode's Shader!
-shader16 = ../crt/shaders/HyperspaceMadness/hsm-easymode/hsm-crt-easymode-halation-with-scaling.slang
-filter_linear16 = true
-scale_type16 = viewport
-float_framebuffer16 = true
-
-// Extra passes to treat the screen and reflection can be added here, E.G. Resolution Independent Scanlines
-shader17 = ../stock.slang
-float_framebuffer17 = true
-alias17 = BR_CRTPass
-
-// Tube Scale Curvature Mapping
-// Write mapping into the pass, of the 4 channels, x & y are tube warped coord and z & w are outside tube mask and edge mask
-shader18 = ../crt/shaders/HyperspaceMadness/hsm-curvature-mapping.slang
-mipmap_input18 = true
+shader18 = ../crt/shaders/HyperspaceMadness/hsm-easymode/hsm-crt-easymode-halation-with-scaling.slang
 filter_linear18 = true
 scale_type18 = viewport
 float_framebuffer18 = true
-alias18 = BR_MappingPass
+alias18 = BR_CRTPass
 
-// Linearize the output from the CRT Shader (BR_CRTPass) and do prep like adding the screen vignette
-shader19 = ../crt/shaders/HyperspaceMadness/hsm-prep-post-crt-linearize.slang
+// Tube Scale Curvature Mapping
+// Write mapping into the pass, of the 4 channels, x & y are tube warped coord and z & w are outside tube mask and edge mask
+shader19 = ../crt/shaders/HyperspaceMadness/hsm-curvature-mapping.slang
 mipmap_input19 = true
 filter_linear19 = true
+scale_type19 = viewport
 float_framebuffer19 = true
-wrap_mode19 = mirrored_repeat
-alias19 = BR_CRTPreppedLinearPass
+alias19 = BR_MappingPass
 
 // Reduce Resolution  ----------------------------------------------------------------
 //      Reduce the resolution to a small static size regardless of final resolution
 //      Allows consistent look and faster at different final resolutions for blur
 //      Mipmap option allows downscaling without artifacts
-shader20 = ../stock.slang
+shader20 = ../crt/shaders/HyperspaceMadness/hsm-linearize-crt.slang
 mipmap_input20 = true
 filter_linear20 = true
 scale_type20 = absolute
@@ -104,6 +94,7 @@ float_framebuffer20 = true
 // scale_y20 = 540
 scale_x20 = 800
 scale_y20 = 600
+wrap_mode20 = mirrored_repeat
 float_framebuffer20 = true
 alias20 = BR_MirrorLowResPass
 

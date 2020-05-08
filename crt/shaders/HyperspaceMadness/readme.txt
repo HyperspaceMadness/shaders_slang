@@ -54,7 +54,7 @@ You will need to integrate the screen scaling in your crt so it can share the sa
 
 - In the crt shader you need to add the include like this:
 
-	#include "hsm-mega-screen-scale.inc"
+	#include "hsm-mega-screen-scale-with-globals.inc"
 
 
 - In the vertex main function you need to scale and move the initial screen coordinate, E.G.

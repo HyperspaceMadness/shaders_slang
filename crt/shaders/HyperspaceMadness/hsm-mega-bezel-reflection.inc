@@ -258,7 +258,7 @@ layout(location = 0) out vec4 FragColor;
 // Create a 2D sampler from Source and assign it to the variable name Texture
 layout(set = 0, binding = 1) uniform sampler2D Source;
 layout(set = 0, binding = 2) uniform sampler2D BR_MappingPass;
-layout(set = 0, binding = 3) uniform sampler2D BR_CRTPreppedLinearPass;
+layout(set = 0, binding = 3) uniform sampler2D BR_CRTPass;
 layout(set = 0, binding = 5) uniform sampler2D BR_MirrorBlurredPass;
 layout(set = 0, binding = 6) uniform sampler2D BR_MirrorReflectionDiffusedPass;
 layout(set = 0, binding = 7) uniform sampler2D BR_MirrorFullscreenGlowPass;
@@ -292,11 +292,10 @@ void main()
 	// CRT Pass
 	//----------------------------------------------------
 	// Get the CRT pass and make it in linear space & mask the area outside the screen
-	vec4 frag_color_linear = texture(BR_CRTPreppedLinearPass, viewportCoord.xy);
+	vec4 frag_color_linear = texture(BR_CRTPass, viewportCoord.xy);
 
-	#ifdef ROYALE_PRESET
-		frag_color_linear = HHLP_Linearize(frag_color_linear);
-	#endif
+	frag_color_linear = HMSS_Linearize(frag_color_linear);
+
 
 	// Shrink the mask by 0.001 to clip off outer edge
 	frag_color_linear *= HMSS_GetCornerMask(((HMSS_GetCurvedCoord(screenCoord, 1) - 0.5) * 1.001) + 0.5, global.hmss_corner_radius, global.hmss_screen_edge_sharpness);
@@ -460,7 +459,7 @@ void main()
 	{
 		background_image = texture(BackgroundVertImage, tiled_image_coord).rgba;
 	}
-	background_image = HHLP_Linearize(background_image);
+	background_image = HMSS_Linearize(background_image);
 
 	float vignette_shadow_mask = 0;
 	vignette_shadow_mask += 0.75 * HHLP_QuadraticBezier(1 - HMSS_GetVignetteFactor(viewportCoord, global.hmbz_background_image_vignette_opacity), vec2(1, 0.5));
@@ -498,7 +497,7 @@ void main()
 	//----------------------------------------------------
 	if (global.hmbz_tube_glass_image_opacity > 0)
 	{
-		vec4 tube_glass_image = HHLP_Linearize(texture(TubeGlassImage, tube_warped_coord_ctr * 0.97 + 0.5 ).rgba);
+		vec4 tube_glass_image = HMSS_Linearize(texture(TubeGlassImage, tube_warped_coord_ctr * 0.97 + 0.5 ).rgba);
 		frag_color_linear	= frag_color_linear + global.hmbz_tube_glass_image_opacity / 100 * tube_glass_image.a * (1 - outside_tube_mask) * tube_glass_image;
 	}
 
@@ -537,7 +536,7 @@ void main()
 	float hmbz_frame_brightness = 100;
 
 	// TODO Likely should not be linearizing here
-	vec3 orig_color = HHLP_Linearize(vec4(HMSS_HSVtoRGB(vec3(global.hmbz_bezel_color_hue / 360, global.hmbz_bezel_color_saturation / 100, global.hmbz_bezel_color_value / 100)), 1)).rgb;
+	vec3 orig_color = HMSS_Linearize(vec4(HMSS_HSVtoRGB(vec3(global.hmbz_bezel_color_hue / 360, global.hmbz_bezel_color_saturation / 100, global.hmbz_bezel_color_value / 100)), 1)).rgb;
 	vec3 base_color = mix(orig_color, background_color.rgb, global.hmbz_bezel_color_blend_with_image);
 
 	vec3 base_color_with_noise = mix(base_color, 1.5 * base_color * noise_mask, global.hmbz_bezel_noise / 100);
@@ -716,7 +715,7 @@ void main()
 		reflected_color = global.hbr_global_amount * pow(reflected_color, vec4(global.hbr_global_gamma_adjust));
 		
 		// Mask reflection to only appear inside the bezel
-		reflected_color *= reflection_area_mask;
+		reflected_color = clamp(reflected_color, 0, 1) * clamp(reflection_area_mask, 0, 1);
 
 		// Add reflection_color with mask
 		frag_color_linear += reflected_color;
@@ -736,7 +735,7 @@ void main()
 			edge_fullscreen_glow += global.hbr_inner_edge_fullscreen_glow * 0.5 * edge_highlight_mask * outside_tube_mask * diffused_reflection_color;
 		#endif
 
-		frag_color_linear += edge_fullscreen_glow;
+		frag_color_linear += clamp(edge_fullscreen_glow, 0, 1);
 	}
 	vec4 overlay_image = vec4(0);
 
@@ -749,7 +748,7 @@ void main()
 		overlay_image = texture(OverlayVertImage, imageLayerCoord).rgba;
 	}
 	
-	FragColor = mix(clamp(HHLP_Delinearize(frag_color_linear), 0, 1), overlay_image, overlay_image.a);
+	FragColor = mix(clamp(HMSS_Delinearize(frag_color_linear), 0, 1), overlay_image, overlay_image.a);
 
 	// float outside_tube_mask = 1 - HMSS_GetCornerMask(HMSS_GetCurvedCoord(tube_coord, 1) + (0.5, 0.5), global.hmbz_bezel_inner_corner_radius_scale * global.hmss_corner_radius, 0.9);
 	// FragColor = vec4(outside_tube_mask);

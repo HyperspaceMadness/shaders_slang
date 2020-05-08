@@ -1,5 +1,7 @@
 #version 450
 
+#include "hsm-mega-screen-scale-with-globals.inc"
+
 layout(push_constant) uniform Push
 {
 	vec4 SourceSize;
@@ -7,11 +9,6 @@ layout(push_constant) uniform Push
 	vec4 OutputSize;
 	uint FrameCount;
 } params;
-
-layout(std140, set = 0, binding = 0) uniform UBO
-{
-	mat4 MVP;
-} global;
 
 #pragma stage vertex
 layout(location = 0) in vec4 Position;
@@ -27,10 +24,9 @@ void main()
 #pragma stage fragment
 layout(location = 0) in vec2 vTexCoord;
 layout(location = 0) out vec4 FragColor;
-layout(set = 0, binding = 2) uniform sampler2D Source;
+layout(set = 0, binding = 2) uniform sampler2D BR_CRTPass;
 
 void main()
 {
-   FragColor = pow(vec4(texture(Source, vTexCoord).rgb, 1.0), vec4(2.4));
-   //FragColor = vec4(texture(Source, vTexCoord).rgb, 1.0);
+   FragColor = HMSS_Linearize(texture(BR_CRTPass, vTexCoord));
 }

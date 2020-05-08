@@ -1,6 +1,5 @@
 // Tube Glass & Shadow
 #pragma parameter hmbz_tube_glass_image_opacity         "[TUBE]  Tube Glass Image Opacity (Additive)" 0 0 200 0.2
-#pragma parameter hmbz_tube_vignette                    "[TUBE]  Tube Vignette" 0 0 1 0.05
 #pragma parameter hmbz_tube_edge_shadow                 "[TUBE]  Tube Edge Shadow" 0.7 0 2 0.05
 
 // Background

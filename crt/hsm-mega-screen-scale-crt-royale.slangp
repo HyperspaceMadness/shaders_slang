@@ -162,17 +162,16 @@ srgb_framebuffer10 = "true"
 scale_type10 = "source"
 scale10 = "1.0"
 wrap_mode10 = mirrored_repeat
-alias10 = BR_CRTPass
 
 // Royale does its curvature as a separate pass, 
 // Because of this and the number of max passes available passes 18 & 19 
 // are different than the standard set in all the other mega bezel presets
-shader11 = "../crt/shaders/HyperspaceMadness/hsm-crt-royale/src/hsm-crt-royale-geometry-aa-last-pass.slang"
+shader11 = "../crt/shaders/HyperspaceMadness/hsm-crt-royale/src/hsm-crt-royale-geometry-aa-last-pass-mask-outside-screen.slang"
 mipmap_input11 = true
 filter_linear11 = true
 float_framebuffer11 = true
 wrap_mode11 = mirrored_repeat
-alias11 = BR_CRTPreppedLinearPass
+alias11 = BR_CRTPass
 
 shaders = "12"
 

@@ -137,7 +137,7 @@ scale_type18 = "viewport"
 scale18 = 1
 mipmap_input18 = "true"
 wrap_mode18 = mirrored_repeat
-alias18 = BR_CRTPreppedLinearPass
+alias18 = BR_CRTPass
 
 // Screen Scale & Tube Scale Curvature Mapping
 // Write mapping into the pass, of the 4 channels, x & y are tube warped coord and z & w are outside tube mask and edge mask
@@ -153,7 +153,7 @@ alias19 = BR_MappingPass
 //      Reduce the resolution to a small static size regardless of final resolution
 //      Allows consistent look and faster at different final resolutions for blur
 //      Mipmap option allows downscaling without artifacts
-shader20 = ../crt/shaders/HyperspaceMadness/hsm-linearize-crt-pass.slang
+shader20 = ../crt/shaders/HyperspaceMadness/hsm-linearize-crt.slang
 mipmap_input20 = true
 filter_linear20 = true
 scale_type20 = absolute

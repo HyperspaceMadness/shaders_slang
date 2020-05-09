@@ -20,51 +20,31 @@ void main()
 layout(location = 0) in vec2 vTexCoord;
 layout(location = 0) out vec4 FragColor;
 layout(set = 0, binding = 2) uniform sampler2D Source;
-layout(set = 0, binding = 3) uniform sampler2D OriginalHistory1;
-layout(set = 0, binding = 4) uniform sampler2D OriginalHistory2;
-layout(set = 0, binding = 5) uniform sampler2D OriginalHistory3;
-layout(set = 0, binding = 6) uniform sampler2D OriginalHistory4;
-layout(set = 0, binding = 7) uniform sampler2D OriginalHistory5;
-layout(set = 0, binding = 8) uniform sampler2D OriginalHistory6;
-
-#define Prev1Texture OriginalHistory1
-#define Prev2Texture OriginalHistory2
-#define Prev3Texture OriginalHistory3
-#define Prev4Texture OriginalHistory4
-#define Prev5Texture OriginalHistory5
-#define Prev6Texture OriginalHistory6
+layout(set = 0, binding = 3) uniform sampler2D PassFeedback6;
 
 #define eps 1e-3
 
-vec3 afterglow(float number)
-{
-	return vec3(global.hmss_afterglow_amount) * exp2(-vec3(hag_afterglow_persistence) * vec3(number * number));
-}
+vec3 Phosphor = vec3(0.5, 0.6, 0.8);
 
 void main()
 {
    FragColor =  texture(Source, vTexCoord);
-   vec3 rgb_color = FragColor.xyz;
-   ////////// Calculate Afterglow ////////// 
-   if (global.hmss_afterglow_amount != 0)
-   {
-      vec3 glow = vec3(0);
-      glow += texture(Prev1Texture, vTexCoord).rgb * afterglow(1.0);
-      glow += texture(Prev2Texture, vTexCoord).rgb * afterglow(2.0);
-      glow += texture(Prev3Texture, vTexCoord).rgb * afterglow(3.0);
-      glow += texture(Prev4Texture, vTexCoord).rgb * afterglow(4.0);
-      glow += texture(Prev5Texture, vTexCoord).rgb * afterglow(5.0);
-      glow += texture(Prev6Texture, vTexCoord).rgb * afterglow(6.0);
 
-      glow = normalize(pow(glow + vec3(eps), vec3(hag_afterglow_saturation))) * length(glow);		
-      
-      float glow_over_threshold = (rgb_color.r + rgb_color.g + rgb_color.b) > 7.0 / 255.0 ? 0 : 1;
-      
-      rgb_color += glow_over_threshold * glow;
+   // Phosphor Persistence
+   if (global.hmss_phosphor_persistence != 0)
+   {
+      float DeltaTime = 5 - 5 * HHLP_EasePowerOut(global.hmss_phosphor_persistence, 2) + 0.1;
+      vec4 prev_color = texture(PassFeedback6, vTexCoord);
+      prev_color.r *= pow(Phosphor.r, DeltaTime);
+      prev_color.g *= pow(Phosphor.g, DeltaTime);
+      prev_color.b *= pow(Phosphor.b, DeltaTime);
+      FragColor.r = max(prev_color.r, FragColor.r);
+      FragColor.g = max(prev_color.g, FragColor.g);
+      FragColor.b = max(prev_color.b, FragColor.b);
    }
    
    // Apply black level & gamma with input as non linearized
-   FragColor = HMSS_ApplyBlackLevelGamma(vec4(rgb_color, 1), 0);
+   FragColor = HMSS_ApplyBlackLevelGamma(FragColor, 0);
 
    //////// Calculate Average Luminance ////////// 
    float m = max(log2(global.SourceSize.x), log2(global.SourceSize.y));

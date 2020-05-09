@@ -21,7 +21,7 @@
 //      Add Afterglow, Black Level & Gamma
 //      Calculate Average Luminance and put in alpha channel
 //      Debug Drawing of the resolution/screen scaling
-shader0 = ../crt/shaders/HyperspaceMadness/hsm-prep-initial-debug-avgluma-afterglow-screen-scale-only.slang
+shader0 = ../crt/shaders/HyperspaceMadness/hsm-prep-initial-screen-scale-only.slang
 alias0  = AvgLumPass
 
 // Linearize the input based on CRT gamma and bob interlaced fields.

@@ -52,7 +52,7 @@ Description:
 #pragma parameter hmss_post_crt_gamma					"[COLOR]  Post-CRT Gamma" 1 0.01 2 0.01
 #pragma parameter hmss_negative_crop_brightness			"[COLOR]  Negative Crop Brightness" 0 0 20 0.02
 
-#pragma parameter hmss_afterglow_amount                  "[AFTERGLOW]  Amount"        0.07 0.0 1.0 0.01
+#pragma parameter hmss_phosphor_persistence             "[PHOSPHOR]  Persistence" 0.00 0.0 1.0 0.05
 
 #pragma parameter hmss_tube_black_edge_thickness 		"[TUBE]  Black Edge Thickness" 1.2 -2 8 0.05
 #pragma parameter hmss_tube_black_edge_curvature_scale 	"[TUBE]  Black Edge Curvature Scale" 1 0 4 0.1

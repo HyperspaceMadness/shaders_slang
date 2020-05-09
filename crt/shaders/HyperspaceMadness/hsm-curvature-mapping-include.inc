@@ -43,7 +43,7 @@ layout(std140, set = 0, binding = 0) uniform UBO
 	float hmss_tube_black_edge_curvature_scale;
 
 	float hmss_negative_crop_brightness;
-	float hmss_afterglow_amount;
+	float hmss_phosphor_persistence;
 
 	float hmss_pre_crt_black_level;
 	float hmss_pre_crt_gamma;

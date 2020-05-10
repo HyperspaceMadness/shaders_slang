@@ -47,12 +47,12 @@ Uses a red/magenta/cyan/green pattern for even spacing of the LCD subpixels.
 */
 
 // HSM Added
-#include "../hsm-mega-screen-scale-with-globals.inc"
+#include "../hsm-screen-scale-with-globals.inc"
 // End Addition
 
 layout(push_constant) uniform Push
 {
-	// Modifications from hsm-mega-screen-scale-with-globals.inc integration
+	// Modifications from hsm-screen-scale-with-globals.inc integration
 	// Removed the following
 	vec4 SourceSize;
 
@@ -62,7 +62,7 @@ layout(push_constant) uniform Push
 	float smart, brightboost1, brightboost2, stype, scanline1, scanline2, beam_min, beam_max, s_beam;
 	float h_sharp, cubic, mask, maskmode, maskdark, maskbright, masksize, gamma_out;
 
-	// Modifications from hsm-mega-screen-scale-with-globals.inc integration
+	// Modifications from hsm-screen-scale-with-globals.inc integration
 	// HSM Added
 	float bglow;
 	float bloom;
@@ -72,7 +72,7 @@ layout(push_constant) uniform Push
 
 } params;
 
-// Removed the following, because the global structure is already defined in hsm-mega-screen-scale-with-globals.inc
+// Removed the following, because the global structure is already defined in hsm-screen-scale-with-globals.inc
 //layout(std140, set = 0, binding = 0) uniform UBO
 //{
 //	mat4 MVP;
@@ -281,7 +281,7 @@ void main()
 
 	float gamma = COMPAT_TEXTURE(LinPass, vec2(0.5,0.1)).a;
 	
-	/* Modifications from hsm-mega-screen-scale-with-globals.inc integration
+	/* Modifications from hsm-screen-scale-with-globals.inc integration
 	// Removed the following
 	if (smart == 1.0 || smart == 2.0 || smart == 3.0)
 	{

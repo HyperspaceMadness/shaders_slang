@@ -1,20 +1,7 @@
 /*   
-hsm-mega-screen-scale
+hsm-screen-scale-with-globals.inc
 
-Author: HyperspaceMadness - remimcgill@hotmail.com
-License: GPL
-Description:
-	-Include file which has supporting functions to do a managed scaling of the visible screen/tube within the full framebuffer image
-	-Developed to support scaling across multiple shaders needed for the Mega Bezel Reflection shader chain so that the scale of the 
-		screen and effects around the screen can be synchronized
-	-Useful for placement and scale of the screen when working with overlay images
-	-Supports automatically switching to vertical aspect ratio for TATE/Vertical games when the core aspect ratio is vertical
-
-	-Retroarch Video Settings:
-		-Aspect Ratio should be set to the monitor aspect ratio
-		-Integer Scale should be set to OFF
-
-	- Thanks to Torridgristle for his curvature function!
+Globals for screen scale and bezel
 */
 
 layout(std140, set = 0, binding = 0) uniform UBO
@@ -70,4 +57,4 @@ layout(std140, set = 0, binding = 0) uniform UBO
 	float hmss_tube_black_edge_curvature_scale;
 } global;
 
-#include "hsm-mega-screen-scale-params-functions.inc"
+#include "hsm-screen-scale-params-functions.inc"

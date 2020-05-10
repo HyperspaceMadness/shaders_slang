@@ -67,7 +67,7 @@ float geom_tilt_angle_y = global.hmss_curvature_3D_tilt_angle_y;
 
 // HSM Added
 ///////////////////////////////  HSM INCLUDES  ///////////////////////////////
-#include "../../hsm-mega-screen-scale-params-functions.inc"
+#include "../../hsm-screen-scale-params-functions.inc"
 
 ///////////////////////////////////  HELPERS  //////////////////////////////////
 

@@ -2,7 +2,7 @@
 //#define ShowPlacementGuide
 
 // Import Screen Scale Functions and global structure
-#include "hsm-mega-screen-scale-with-globals.inc"
+#include "hsm-screen-scale-with-globals.inc"
 
 layout(push_constant) uniform Push
 {
@@ -12,7 +12,7 @@ layout(push_constant) uniform Push
 } params;
 
 // Above variables are referenced in this include
-#include "hsm-mega-bezel-params.inc"
+#include "hsm-bezel-params.inc"
 
 #pragma stage vertex
 layout(location = 0) in vec4 Position;

@@ -1,7 +1,7 @@
 #version 450
 
 // HSM Added
-#include "../hsm-mega-screen-scale-with-globals.inc"
+#include "../hsm-screen-scale-with-globals.inc"
 // End Addition
 
 layout(push_constant) uniform Push

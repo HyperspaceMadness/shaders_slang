@@ -1,5 +1,5 @@
 
-#include "hsm-mega-screen-scale-with-globals.inc"
+#include "hsm-screen-scale-with-globals.inc"
 
 #pragma stage vertex
 layout(location = 0) in vec4 Position;

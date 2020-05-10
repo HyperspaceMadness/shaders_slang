@@ -42,66 +42,32 @@ float_framebuffer7 = true
 shader8 = ../stock.slang
 shader9 = ../stock.slang
 shader10 = ../stock.slang
+shader11 = ../stock.slang
+shader12 = ../stock.slang
+shader13 = ../stock.slang
 
-// Guest-Venom Pass ----------------------------------------------------------------
-shader11 = ../crt/shaders/guest/lut/lut.slang
-filter_linear11 = false
-scale_type11 = source
-scale11 = 1.0
-
-// Guest-Venom Pass ----------------------------------------------------------------
-shader12 = ../crt/shaders/guest/color-profiles.slang
-filter_linear12 = true
-scale_type12 = source
-scale12 = 1.0
-
-// Guest-Venom Pass ----------------------------------------------------------------
-shader13 = ../crt/shaders/guest/d65-d50.slang
-filter_linear13 = true
-scale_type13 = source
-scale13 = 1.0
-alias13 = WhitePointPass
-
-// Linearize Color ----------------------------------------------------------------
-shader14 = ../crt/shaders/HyperspaceMadness/hsm-guest/hsm-guest-linearize.slang
+shader14 = ../crt/shaders/crt-easymode-halation/linearize.slang
 filter_linear14 = false
-scale_type14 = source
-scale14 = 1.0
-float_framebuffer14 = true
-alias14 = LinearizePass
+srgb_framebuffer14 = true
+alias14 = ORIG_LINEARIZED
 
-// Guest-Venom Pass ----------------------------------------------------------------
-shader15 = ../crt/shaders/HyperspaceMadness/hsm-guest/hsm-guest-blur_horiz.slang
+shader15 = ../crt/shaders/crt-easymode-halation/blur_horiz.slang
 filter_linear15 = false
-scale_type15 = source
-scale15 = 1.0
-float_framebuffer15 = true
+srgb_framebuffer15 = true
 
-// Guest-Venom Pass ----------------------------------------------------------------
-shader16 = ../crt/shaders/HyperspaceMadness/hsm-guest/hsm-guest-blur_vert.slang
+shader16 = ../crt/shaders/crt-easymode-halation/blur_vert.slang
 filter_linear16 = false
-scale_type16 = source
-scale16 = 1.0
-float_framebuffer16 = true
-alias16 = GlowPass
+srgb_framebuffer16 = true
 
-// Guest-Venom Pass ----------------------------------------------------------------
-shader17 = ../crt/shaders/HyperspaceMadness/hsm-guest/hsm-guest-linearize_scanlines.slang
-filter_linear17 = true
-scale_type17 = source
-scale17 = 1.0
-float_framebuffer17 = true
+shader17 = ../crt/shaders/crt-easymode-halation/threshold.slang
+filter_linear17 = false
+srgb_framebuffer17 = true
 
-// CRT Shader - Guest-Venom ----------------------------------------------------------------
-//      Guest's Awesome Shader!!!
-//      Has been slightly altered to use the same scaling as the rest of the shders for the bezel & reflection
-shader18 = ../crt/shaders/HyperspaceMadness/hsm-guest/hsm-crt-guest-dr-venom-with-scaling-glass.slang
-mipmap_input18 = true
+// Easymode's Shader!
+shader18 = ../crt/shaders/HyperspaceMadness/hsm-easymode/hsm-crt-easymode-halation-with-scaling-glass.slang
 filter_linear18 = true
 scale_type18 = viewport
-scale18 = 1.0
 float_framebuffer18 = true
-wrap_mode18 = mirrored_repeat
 alias18 = BR_CRTPass
 
 // Tube Scale Curvature Mapping
@@ -289,18 +255,3 @@ hbr_lateral_outer_fade_position = 500
 hbr_corner_fade = 10
 hbr_corner_inner_spread = 0
 hbr_corner_outer_spread = 0
-
-
-// TNTC = "3" // LUT Colors
-// brightboost = "1.35"
-// gsl = "1" //Scanline Type
-// h_smart = "0.5"
-// shadowMask = "7" //CRT Mask
-// masksize = "2" //CRT Mask Size
-// vertmask = "0.25" //PVM colors
-// slotmask = "1" //Slot Mask Strength
-// slotwidth = "2" // Slot Mask Width
-// double_slot = "2" // Slot Mask Height 2x1 or 4x1
-// gamma_out = "2.4"
-
-

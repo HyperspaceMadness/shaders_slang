@@ -1,5 +1,5 @@
 /*   
-hsm-mega-screen-scale-params-functions
+hsm-screen-scale-params-functions
 
 Author: HyperspaceMadness - remimcgill@hotmail.com
 License: GPL
@@ -52,7 +52,7 @@ Description:
 #pragma parameter hmss_post_crt_gamma					"[COLOR]  Post-CRT Gamma" 1 0.01 2 0.01
 #pragma parameter hmss_negative_crop_brightness			"[COLOR]  Negative Crop Brightness" 0 0 20 0.02
 
-#pragma parameter hmss_phosphor_persistence             "[PHOSPHOR]  Persistence" 0.00 0.0 1.0 0.05
+#pragma parameter hmss_phosphor_persistence             "[PHOSPHOR]  Persistence (Pos:Blue, Neg:Red)" 0 -1 1 0.05
 
 #pragma parameter hmss_tube_black_edge_thickness 		"[TUBE]  Black Edge Thickness" 1.2 -2 8 0.05
 #pragma parameter hmss_tube_black_edge_curvature_scale 	"[TUBE]  Black Edge Curvature Scale" 1 0 4 0.1
@@ -560,7 +560,8 @@ vec3 HMSS_HSVtoRGB(vec3 c)
 
 vec4 HMSS_ApplyGamma(vec4 in_color, float in_gamma)
 {
-	return pow(in_color, vec4(1 / in_gamma));
+	vec3 out_color = pow(in_color.rgb, vec3(1 / in_gamma));
+	return vec4(out_color, in_color.a);
 }
 
 vec4 HMSS_Linearize(vec4 in_color)
@@ -575,6 +576,12 @@ vec4 HMSS_Delinearize(vec4 in_color)
 
 vec4 HMSS_ApplyBlackLevelGamma(vec4 in_color, float color_is_linear)
 {
+	// If there is no black level or gamma adjustment return without any adjustment
+	if (global.hmss_pre_crt_black_level == 0 && global.hmss_pre_crt_gamma == HMSS_DEFAULT_GAMMA)
+	{
+		return in_color;
+	}
+	
 	vec4 out_color = in_color;
 
 	if (color_is_linear == 0)

@@ -68,6 +68,10 @@
 #pragma parameter hbr_corner_outer_spread 	            "[REFLECTION CORNER FADE]  Corner Outer Spread" 160 0 1000 10
 #pragma parameter hbr_corner_spread_falloff             "[REFLECTION CORNER FADE]  Corner Spread Falloff"  50 1 200 1
 
+#pragma parameter htl_top_image_opacity                 "[TOP IMAGE LAYER]  Opacity"  0 0 100 0.1
+#pragma parameter htl_top_image_blend_mode              "[TOP IMAGE LAYER]  Blend Mode (Normal, Add, Muliply)"  0 0 2 1
+#pragma parameter htl_top_image_mask_mode               "[TOP IMAGE LAYER]  Mask Mode (0:ALL)"  0 0 6 1
+
 /////////////// CONSTANT TUNING SETTINGS ///////////////
 
 const float HBR_CORNER_SPREAD_FALLOFF = 100;

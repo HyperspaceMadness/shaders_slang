@@ -24,7 +24,7 @@ layout(set = 0, binding = 3) uniform sampler2D PassFeedback6;
 
 #define eps 1e-3
 
-vec3 Phosphor = vec3(0.5, 0.6, 0.8);
+
 
 void main()
 {
@@ -33,7 +33,9 @@ void main()
    // Phosphor Persistence
    if (global.hmss_phosphor_persistence != 0)
    {
-      float DeltaTime = 5 - 5 * HHLP_EasePowerOut(global.hmss_phosphor_persistence, 2) + 0.1;
+      vec3 Phosphor = global.hmss_phosphor_persistence > 0 ? vec3(0.5, 0.6, 0.8) : vec3(0.8, 0.2, 0.2);
+
+      float DeltaTime = 5 - 5 * HHLP_EasePowerOut(abs(global.hmss_phosphor_persistence), 2) + 0.1;
       vec4 prev_color = texture(PassFeedback6, vTexCoord);
       prev_color.r *= pow(Phosphor.r, DeltaTime);
       prev_color.g *= pow(Phosphor.g, DeltaTime);

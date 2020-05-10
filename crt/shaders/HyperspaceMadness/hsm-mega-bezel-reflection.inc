@@ -20,139 +20,37 @@ Thanks to:
 // Uncomment the following if you want to see the Placement Guide
 #define ShowPlacementGuide
 
-// Following Prefixes are used to make the parameter names unique to this shader
-// hmbz_ prefix (for Bezel)
-// hbr_ prefix (for Reflection)
-
-layout(std140, set = 0, binding = 0) uniform UBO
-{
-	mat4 MVP;
-    vec4 SourceSize;
-	vec4 OriginalSize;
-	vec4 OutputSize;
-	vec4 FinalViewportSize;
-	uint FrameCount;
-
-	// Screen Scale
-	float hmss_aspect_ratio_mode;
-	float hmss_mega_screen_scale_on;
-	float hmss_rotate_crt_image;
-	float hmss_screen_aspect_ratio;
-	float hmss_scanline_direction;
-	float hmss_integer_scale_mode;
-	float hmss_non_integer_scale;
-    float hmss_int_scale_multiple_offset;
-	float hmss_int_scale_border_min_height;
-
-	float hmss_position_offset_x;
-	float hmss_position_offset_y;
-
-	float hmss_crop_overscan_top;
-	float hmss_crop_overscan_bottom;
-	float hmss_crop_overscan_left;
-	float hmss_crop_overscan_right;
-
-	float hmss_curvature_mode;
-	float hmss_curvature_3D_radius;
-	float hmss_curvature_3D_view_dist;
-	float hmss_curvature_3D_tilt_angle_x;
-	float hmss_curvature_3D_tilt_angle_y;
-	float hmss_curvature_2D_long_axis;
-	float hmss_curvature_2D_short_axis;
-	float hmss_curvature_post_scale_x;
-	float hmss_curvature_post_scale_y;
-	
-	float hmss_corner_radius;
-	float hmss_screen_edge_sharpness;
-	float hmss_screen_vignette;
-
-	float hmss_pre_crt_black_level;
-	float hmss_pre_crt_gamma;
-	float hmss_post_crt_gamma;
-	
-	float hmss_negative_crop_brightness;
-	float hmss_phosphor_persistence;
-
-	float hmss_tube_black_edge_thickness;
-	float hmss_tube_black_edge_curvature_scale;
-
-	float hmbz_tube_glass_image_opacity;
-	float hmbz_tube_edge_shadow;
-
-	// Image Bezel
-	float hmbz_background_image_opacity;
-	float hmbz_background_image_scale_mode;
-	float hmbz_background_image_aspect_ratio;
-	float hmbz_background_image_tube_height;
-	float hmbz_background_image_vignette_opacity;
-
-
-	// Generated Bezel
-	float hmbz_bezel_opacity;
-	float hmbz_bezel_color_hue;
-	float hmbz_bezel_color_saturation;
-	float hmbz_bezel_color_value;
-	float hmbz_bezel_color_blend_with_image;
-	float hmbz_bezel_brightness;
-	float hmbz_bezel_highlight;
-	float hmbz_bezel_width;
-	float hmbz_bezel_height;
-	float hmbz_bezel_inner_edge_thickness;
-	float hmbz_bezel_inner_corner_radius_scale;
-	float hmbz_bezel_outer_corner_radius_scale;
-	float hmbz_bezel_noise;
-
-	// Generated Frame
-	float hmbz_frame_opacity;
-	float hmbz_frame_thickness;
-	float hmbz_frame_outer_corner_radius;
-	float hmbz_frame_pos_y_offset;
-	float hmbz_frame_shadow_opacity;
-	float hmbz_frame_shadow_width;
-	
-	// Blur Stuff
-	float hbl_blur_num_samples;
-	float hbl_blur_min;
-	float hbl_blur_max;
-
-	// Reflection
-	float hbr_global_amount;
-	float hbr_global_gamma_adjust;
-
-	float hbr_inner_edge_reflection;
-	float hbr_inner_edge_fullscreen_glow;
-	float hbr_direct_reflection;
-	float hbr_diffused_reflection;
-	float hbr_fullscreen_glow;
-	float hbr_fullscreen_glow_gamma;
-
-	float hbr_fade_amount;
-	float hbr_radial_fade_width;
-	float hbr_radial_fade_height;
-
-	float hbr_lateral_outer_fade_position;
-	float hbr_lateral_outer_fade_distance;
-
-	float hbr_corner_fade;
-	float hbr_corner_inner_spread;
-	float hbr_corner_outer_spread;
-	float hbr_corner_fade_distance;
-
-	float hbr_noise_amount;
-	float hbr_noise_samples;
-	float hbr_noise_sample_distance;
-	float hbr_corner_spread_falloff;
-} global;
-
 /////////////// IMPORTS ///////////////
-// There still must be an entry in the global structure (^Above^) for all these parameter names to access their values
-#include "hsm-mega-screen-scale-params-functions.inc"
-#include "hsm-mega-bezel-params.inc"
+#include "hsm-screen-scale-and-bezel-with-globals.inc"
+
+/////////////// DEFINES ///////////////
+#define BLEND_MODE_NORMAL 0
+#define BLEND_MODE_ADD 1
+#define BLEND_MODE_MULTIPLY 2
+
+#define MASK_MODE_NO_MASK 0
+#define MASK_MODE_MASK_OUTSIDE_TUBE 1
+#define MASK_MODE_MASK_OUTSIDE_BEZEL 2
+#define MASK_MODE_MASK_OUTSIDE_FRAME 3
+#define MASK_MODE_MASK_INSIDE_TUBE 4
+#define MASK_MODE_MASK_BEZEL 5
+#define MASK_MODE_MASK_FRAME 6
 
 
 /////////////// Helper Functions ///////////////
 
-vec2 HMBZ_GetImageLayerCoord(vec2 viewport_coord, vec2 position_offset)
+// Assumes Opacity is already encoded in alpha
+vec4 BlendModeLayerMix(vec4 in_color_under, vec4 in_color_over, float in_blend_mode)
+{
+	vec4 blend_color = in_color_over;
+
+	if (in_blend_mode == BLEND_MODE_ADD)  	 			blend_color = in_color_under + in_color_over;
+	else if (in_blend_mode == BLEND_MODE_MULTIPLY)  	blend_color = in_color_under * in_color_over;
+
+	return mix(in_color_under, blend_color, in_color_over.a);
+}
+
+vec2 GetImageLayerCoord(vec2 viewport_coord, vec2 position_offset)
 {
 	float output_aspect = global.OutputSize.x / global.OutputSize.y;
 	float aspect_difference = global.hmbz_background_image_aspect_ratio / output_aspect;
@@ -241,7 +139,7 @@ void main()
 	vTexCoord = HMSS_GetCoordWithPositionOffset(TexCoord * 1.0001);
 	screenCoord = HMSS_GetScreenVTexCoord(TexCoord);
 
-	imageLayerCoord = HMBZ_GetImageLayerCoord(viewportCoord, HMSS_GetPositionOffset());
+	imageLayerCoord = GetImageLayerCoord(viewportCoord, HMSS_GetPositionOffset());
 }
 
 #pragma stage fragment
@@ -266,8 +164,8 @@ layout(set = 0, binding = 7) uniform sampler2D BR_MirrorFullscreenGlowPass;
 layout(set = 0, binding = 8)  uniform sampler2D BackgroundImage;
 layout(set = 0, binding = 9)  uniform sampler2D BackgroundVertImage;
 layout(set = 0, binding = 10) uniform sampler2D TubeGlassImage;
-layout(set = 0, binding = 11) uniform sampler2D OverlayImage;
-layout(set = 0, binding = 12) uniform sampler2D OverlayVertImage;
+layout(set = 0, binding = 11) uniform sampler2D TopLayerImage;
+layout(set = 0, binding = 12) uniform sampler2D TopLayerVertImage;
 layout(set = 0, binding = 13) uniform sampler2D AvgLumPass;
 
 void main()
@@ -737,19 +635,36 @@ void main()
 
 		frag_color_linear += clamp(edge_fullscreen_glow, 0, 1);
 	}
-	vec4 overlay_image = vec4(0);
 
-	if (HMSS_GetScreenAspect() > 1)
+	if (global.htl_top_image_opacity > 0)
 	{
-		overlay_image = texture(OverlayImage, imageLayerCoord).rgba;
-	}
-	else 
-	{
-		overlay_image = texture(OverlayVertImage, imageLayerCoord).rgba;
-	}
-	
-	FragColor = mix(clamp(HMSS_Delinearize(frag_color_linear), 0, 1), overlay_image, overlay_image.a);
+		vec4 top_image = vec4(0);
+		if (HMSS_GetScreenAspect() < 1) 
+		{
+			top_image = HMSS_Linearize(texture(TopLayerVertImage, imageLayerCoord));
+		}
+		else
+		{
+			top_image = HMSS_Linearize(texture(TopLayerImage, imageLayerCoord));
+		}
+		// Get Mask for Top Layer Image
+		float top_image_mask = 1;
+		if (global.htl_top_image_mask_mode == MASK_MODE_NO_MASK) top_image_mask = 1;
+		if (global.htl_top_image_mask_mode == MASK_MODE_MASK_OUTSIDE_TUBE) top_image_mask = outside_tube_mask;
+		if (global.htl_top_image_mask_mode == MASK_MODE_MASK_BEZEL) top_image_mask = bezel_mask;
+		if (global.htl_top_image_mask_mode == MASK_MODE_MASK_FRAME) top_image_mask = frame_mask;
+		if (global.htl_top_image_mask_mode == MASK_MODE_MASK_OUTSIDE_BEZEL) top_image_mask = outside_bezel_mask;
+		if (global.htl_top_image_mask_mode == MASK_MODE_MASK_OUTSIDE_FRAME) top_image_mask = outside_frame_mask;
+		if (global.htl_top_image_mask_mode == MASK_MODE_MASK_INSIDE_TUBE) top_image_mask = 1 - outside_tube_mask;
 
+		// Apply masks and opacity to overlay image alpha
+		top_image.a *= global.htl_top_image_opacity / 100 * top_image_mask;
+
+		// Do blend mode layer mix
+		frag_color_linear = BlendModeLayerMix(frag_color_linear, top_image, global.htl_top_image_blend_mode);
+	}
+
+	FragColor = HMSS_Delinearize(clamp(frag_color_linear, 0, 1));
 	// float outside_tube_mask = 1 - HMSS_GetCornerMask(HMSS_GetCurvedCoord(tube_coord, 1) + (0.5, 0.5), global.hmbz_bezel_inner_corner_radius_scale * global.hmss_corner_radius, 0.9);
 	// FragColor = vec4(outside_tube_mask);
 

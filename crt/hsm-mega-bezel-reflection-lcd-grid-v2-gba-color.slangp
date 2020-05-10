@@ -147,8 +147,8 @@ alias24 = BR_MirrorFullscreenGlowPass
             // BackgroundImage
             // BackgroundVertImage
             // TubeGlassImage
-            // OverlayImage
-            // OverlayVertImage
+            // TopLayerImage
+            // TopLayerVertImage
 
 shader25 = ../crt/shaders/HyperspaceMadness/hsm-mega-bezel-reflection.slang
 mipmap_input25 = true
@@ -161,13 +161,13 @@ shaders = 26
 
 
 // Define textures to be used by the different passes
-textures = "BackgroundImage;BackgroundVertImage;TubeGlassImage;OverlayImage;OverlayVertImage;"
+textures = "BackgroundImage;BackgroundVertImage;TubeGlassImage;TopLayerImage;TopLayerVertImage;"
 
 BackgroundImage = ../crt/shaders/HyperspaceMadness/textures/BackgroundImage_3840x2160.png
 BackgroundVertImage = ../crt/shaders/HyperspaceMadness/textures/BackgroundImage_3840x2160.png
 TubeGlassImage = ../crt/shaders/HyperspaceMadness/textures/TubeGlassOverlayImage_3840x2160.png
-OverlayImage = ../crt/shaders/HyperspaceMadness/textures/OverlayImage_OverReflection_3840x2160.png
-OverlayVertImage = ../crt/shaders/HyperspaceMadness/textures/OverlayImage_OverReflection_3840x2160.png
+TopLayerImage = ../crt/shaders/HyperspaceMadness/textures/TopLayerImage_3840x2160.png
+TopLayerVertImage = ../crt/shaders/HyperspaceMadness/textures/TopLayerImage_3840x2160.png
 
 parameters = "RSUBPIX_R;RSUBPIX_G;RSUBPIX_B;GSUBPIX_R;GSUBPIX_G;GSUBPIX_B;BSUBPIX_R;BSUBPIX_G;BSUBPIX_B;gain;gamma;blacklevel;ambient;BGR;hmss_mega_screen_scale_on;hmss_screen_aspect_ratio;hmss_integer_scale_mode;hmss_int_scale_multiple_offset;hmss_non_integer_scale;hmss_int_scale_border_min_height;hmss_scanline_direction;hmss_curvature_mode;hmss_curvature_2D_long_axis;hmss_curvature_2D_short_axis;hmss_curvature_3D_radius;hmss_curvature_3D_view_dist;hmss_curvature_3D_tilt_angle_x;hmss_curvature_3D_tilt_angle_y;hmss_corner_radius;hmss_tube_black_edge_thickness;hmbz_frame_thickness;hmbz_bezel_width;hmbz_bezel_height;hmbz_background_image_opacity;hmbz_bezel_opacity;hmbz_bezel_brightness;hmbz_frame_opacity;hmbz_background_image_scale_mode;hmbz_background_image_aspect_ratio;hmbz_background_image_tube_height;hmss_crop_overscan_top;hmss_crop_overscan_bottom;hmss_crop_overscan_left;hmss_crop_overscan_right;hmss_pre_crt_black_level;hbl_blur_min;hbl_blur_max;hbr_global_amount;hbr_global_gamma_adjust;hbr_diffused_reflection;hbr_fullscreen_glow;hbr_fullscreen_glow_gamma;hag_afterglow_persistence"
 

@@ -63,7 +63,7 @@ const float max_viewport_size_x = 1080.0*1024.0*(4.0/3.0);
 
 // HSM Added
 ///////////////////////////////  HSM INCLUDES  ///////////////////////////////
-#include "../../hsm-mega-screen-scale-params-functions.inc"
+#include "../../hsm-screen-scale-params-functions.inc"
 
 ///////////////////////////////////  HELPERS  //////////////////////////////////
 

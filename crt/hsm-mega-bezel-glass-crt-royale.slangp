@@ -131,7 +131,7 @@ wrap_mode17 = mirrored_repeat
 // This pass CANNOT be set to floatframebuffer, if it is the output from the last pass turns black or shows garbage
 // Because of this this pass outputs gamma encoded color, this is then linearized in the mega bezel reflection shader
 // If we try to set it to linear here then we get banding
-shader18 = "../crt/shaders/HyperspaceMadness/hsm-crt-royale/src/hsm-crt-royale-geometry-aa-last-pass.slang"
+shader18 = "../crt/shaders/HyperspaceMadness/hsm-crt-royale/src/hsm-crt-royale-geometry-aa-last-pass-glass.slang"
 filter_linear18 = "true"
 scale_type18 = "viewport"
 scale18 = 1
@@ -141,7 +141,7 @@ alias18 = BR_CRTPass
 
 // Screen Scale & Tube Scale Curvature Mapping
 // Write mapping into the pass, of the 4 channels, x & y are tube warped coord and z & w are outside tube mask and edge mask
-shader19 = ../crt/shaders/HyperspaceMadness/hsm-curvature-mapping.slang
+shader19 = ../crt/shaders/HyperspaceMadness/hsm-curvature-mapping-glass.slang
 mipmap_input19 = true
 filter_linear19 = true
 scale_type19 = viewport
@@ -169,7 +169,7 @@ float_framebuffer20 = true
 alias20 = BR_MirrorLowResPass
 
 // Add Blur for the Reflection (Horizontal) ----------------------------------------------------------------
-shader21 = ../crt/shaders/HyperspaceMadness/hsm-blur-outside-screen-horiz.slang
+shader21 = ../crt/shaders/HyperspaceMadness/hsm-blur-outside-screen-horiz-glass.slang
 mipmap_input21 = true
 filter_linear21 = true
 float_framebuffer21 = true
@@ -177,7 +177,7 @@ scale_type22 = source
 wrap_mode21 = mirrored_repeat
 
 // Add Blur for the Reflection (Vertical) ----------------------------------------------------------------
-shader22 = ../crt/shaders/HyperspaceMadness/hsm-blur-outside-screen-vert.slang
+shader22 = ../crt/shaders/HyperspaceMadness/hsm-blur-outside-screen-vert-glass.slang
 filter_linear22 = false
 scale_type22 = source
 float_framebuffer22 = true
@@ -225,7 +225,7 @@ alias24 = BR_MirrorFullscreenGlowPass
             // TopLayerImage
             // TopLayerVertImage
 
-shader25 = ../crt/shaders/HyperspaceMadness/hsm-mega-bezel-reflection-royale.slang
+shader25 = ../crt/shaders/HyperspaceMadness/hsm-mega-bezel-reflection-glass.slang
 mipmap_input25 = true
 filter_linear25 = true
 scale_type25 = viewport
@@ -290,29 +290,29 @@ hmss_curvature_2D_short_axis = 0
 // hmss_curvature_3D_tilt_angle_y = 0
 
 hmss_corner_radius = 10
-// hmss_tube_black_edge_thickness = -0.2
-// hmbz_bezel_width = 200
-// hmbz_bezel_height = 200
+hmss_tube_black_edge_thickness = -0.2
+hmbz_bezel_width = 200
+hmbz_bezel_height = 200
+hmbz_bezel_inner_edge_thickness = 2.5
 
-// hmbz_background_image_opacity = 0
-// hmbz_bezel_opacity = 0
-// hmbz_bezel_color_hue = 0
-// hmbz_bezel_color_saturation = 0
-// hmbz_bezel_color_value = 0
-// hmbz_bezel_color_blend_with_image = 1
+hmbz_background_image_opacity = 0
+hmbz_bezel_opacity = 0
+hmbz_bezel_color_hue = 0
+hmbz_bezel_color_saturation = 0
+hmbz_bezel_color_value = 0
+hmbz_bezel_color_blend_with_image = 1
+hmbz_bezel_brightness = 40
+hmbz_bezel_highlight = 50
+hmbz_bezel_noise = 0
 
-// hmbz_bezel_brightness = 40
-// hmbz_bezel_highlight = 50
-// hmbz_bezel_noise = 0
-
-// hmbz_tube_glass_image_opacity = 5
-// hmbz_frame_opacity = 0
+hmbz_tube_glass_image_opacity = 5
+hmbz_frame_opacity = 0
 // hmbz_frame_thickness = 7;
 
 // hmbz_background_image_scale_mode = 0
-// hmbz_background_image_aspect_ratio = 1.75
+hmbz_background_image_aspect_ratio = 1.75
 // hmbz_background_image_tube_height = 69
-// hmbz_background_image_vignette_opacity = 0.4
+hmbz_background_image_vignette_opacity = 0.55
 
 // hmss_crop_overscan_top = 0
 // hmss_crop_overscan_bottom = 0
@@ -320,46 +320,31 @@ hmss_corner_radius = 10
 // hmss_crop_overscan_right = 0
 // hmss_pre_crt_black_level = 0
 
-// hmss_screen_edge_sharpness = 1
-// hmbz_tube_edge_shadow = 0
-// hmbz_bezel_inner_corner_radius_scale = 1
+hmss_screen_edge_sharpness = 1
+hmbz_tube_edge_shadow = 0
+hmbz_bezel_inner_corner_radius_scale = 1
 
+hbl_blur_min = 0.3
+hbl_blur_max = 0.6
 
-// hbl_blur_min = 0.3
-// hbl_blur_max = 0.6
+hbr_noise_amount = 1
+hbr_noise_samples = 4
+hbr_noise_sample_distance = 0.15
 
-// hbr_noise_amount = 1
-// hbr_noise_samples = 4
-// hbr_noise_sample_distance = 0.15
-
-// hbr_global_amount = 0.5
-// hbr_global_gamma_adjust = 0.9
-// hbr_inner_edge_reflection = 0.6
-// hbr_inner_edge_fullscreen_glow = 0.4
+hbr_global_amount = 0.5
+hbr_global_gamma_adjust = 0.9
+hbr_inner_edge_reflection = 0.6
+hbr_inner_edge_fullscreen_glow = 0.4
 // hbr_diffused_reflection = 0
-// hbr_fullscreen_glow = 30
-// hbr_fullscreen_glow_gamma = 1.5
-// hbr_fade_amount = 0.2
-// hbr_radial_fade_width = 500
-// hbr_radial_fade_height = 300
-// hbr_lateral_outer_fade_position = 500
+hbr_fullscreen_glow = 30
+hbr_fullscreen_glow_gamma = 1.5
+hbr_fade_amount = 0.2
+hbr_radial_fade_width = 500
+hbr_radial_fade_height = 300
+hbr_lateral_outer_fade_position = 500
 // hbr_lateral_outer_fade_distance = 20
-// hbr_corner_fade = 10
-// hbr_corner_inner_spread = 0
-// hbr_corner_outer_spread = 0
-// hag_afterglow_persistence = 0.2
-
-
-// TNTC = "3" // LUT Colors
-// brightboost = "1.35"
-// gsl = "1" //Scanline Type
-// h_smart = "0.5"
-// shadowMask = "7" //CRT Mask
-// masksize = "2" //CRT Mask Size
-// vertmask = "0.25" //PVM colors
-// slotmask = "1" //Slot Mask Strength
-// slotwidth = "2" // Slot Mask Width
-// double_slot = "2" // Slot Mask Height 2x1 or 4x1
-// gamma_out = "2.4"
+hbr_corner_fade = 10
+hbr_corner_inner_spread = 0
+hbr_corner_outer_spread = 0
 
 

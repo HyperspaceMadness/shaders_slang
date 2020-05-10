@@ -56,7 +56,7 @@ const float bloom_diff_thresh_ = 1.0/256.0;
 // HSM Added
 ///////////////////////////////  HSM INCLUDES  ///////////////////////////////
 
-#include "../../hsm-mega-screen-scale-params-functions.inc"
+#include "../../hsm-screen-scale-params-functions.inc"
 
 #pragma stage vertex
 layout(location = 0) in vec4 Position;

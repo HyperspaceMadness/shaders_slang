@@ -20,14 +20,14 @@ layout(push_constant) uniform Push
 layout(std140, set = 0, binding = 0) uniform UBO
 {
 	mat4 MVP;
-    float dedithering_on;
+    float mdapt_mode;
 } global;
 
-#pragma parameter dedithering_on "[DE-DITHERING]    MDAPT ON"	0 0 1 1
+#pragma parameter mdapt_mode "[DE-DITHERING]    MDAPT - OFF, Strict, Relaxed, Stripes"	0 0 3 1
 
 
 #define TEX(dx,dy)   texture(Source, vTexCoord+vec2((dx),(dy))*params.SourceSize.zw)
-#define TEXt0(dx,dy) texture(Original, vTexCoord+vec2((dx),(dy))*params.SourceSize.zw)
+#define TEXt0(dx,dy) texture(AvgLumPass, vTexCoord+vec2((dx),(dy))*params.SourceSize.zw)
 
 bool eq(vec3 A, vec3 B){
 	return (A == B);
@@ -68,7 +68,7 @@ void main()
 layout(location = 0) in vec2 vTexCoord;
 layout(location = 0) out vec4 FragColor;
 layout(set = 0, binding = 2) uniform sampler2D Source;
-layout(set = 0, binding = 3) uniform sampler2D Original;
+layout(set = 0, binding = 3) uniform sampler2D AvgLumPass;
 
 void main()
 {
@@ -78,7 +78,7 @@ void main()
 		DL D DR
 	*/
 
-	if (global.dedithering_on < 1)
+	if (global.mdapt_mode < 1)
 	{
 		FragColor = texture(Source, vTexCoord);
 		return;

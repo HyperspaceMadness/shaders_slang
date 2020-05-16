@@ -288,5 +288,14 @@ void main()
     
     // Add Vignette inside the tube
     FragColor = vec4(color, 1);
-	FragColor = HMSS_GetPostCrtPreppedColor(screen_curved_coord, FragColor,  1, HMSS_DEFAULT_GAMMA);
+
+    // Apply Prep and Output Gamma
+	// FragColor = HMSS_GetPostCrtPreppedColor(screen_curved_coord, FragColor, 0, 1);
+
+    // HSM Removed
+    FragColor = encode_output(float4(color, 1.0));
+
+    #ifdef MASK_OUTSIDE_SCREEN
+        FragColor *= HMSS_GetCornerMask(screen_curved_coord,  global.hmss_screen_corner_radius, global.hmss_screen_edge_sharpness);
+    #endif
 }

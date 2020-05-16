@@ -1,10 +1,10 @@
 // Tube Glass & Shadow
-#pragma parameter hmbz_tube_glass_image_opacity         "[TUBE]  Tube Glass Image Opacity (Additive)" 0 0 200 0.2
+#pragma parameter hmbz_tube_glass_image_opacity         "[TUBE]  Tube Glass Image Opacity (Additive)" 0.5 0 200 0.05
 #pragma parameter hmbz_tube_edge_shadow                 "[TUBE]  Tube Edge Shadow" 0.7 0 2 0.05
 
 // Background
 #pragma parameter hmbz_background_image_opacity 		"[BG IMAGE]  Opacity" 1 0 1 0.05
-#pragma parameter hmbz_background_image_scale_mode 		"[BG IMAGE]  Scale Mode - 0:Auto 1:Fullscreen 2:Fit Height" 2 0 2 1
+#pragma parameter hmbz_background_image_scale_mode 		"[BG IMAGE]  Scale Mode - Auto, Fullscreen, Fit Height" 2 0 2 1
 #pragma parameter hmbz_background_image_aspect_ratio 	"[BG IMAGE]  Aspect Ratio" 1.77 0.25 4 0.01
 // Visual height of the tube in the texture (Only used in Scale Mode 0)
 #pragma parameter hmbz_background_image_tube_height      "[BG IMAGE]  Tube Height (in Texture)" 69 10 150.0 0.1
@@ -69,8 +69,10 @@
 #pragma parameter hbr_corner_spread_falloff             "[REFLECTION CORNER FADE]  Corner Spread Falloff"  50 1 200 1
 
 #pragma parameter htl_top_image_opacity                 "[TOP IMAGE LAYER]  Opacity"  0 0 100 0.1
-#pragma parameter htl_top_image_blend_mode              "[TOP IMAGE LAYER]  Blend Mode (Normal, Add, Muliply)"  0 0 2 1
-#pragma parameter htl_top_image_mask_mode               "[TOP IMAGE LAYER]  Mask Mode (0:ALL)"  0 0 6 1
+#pragma parameter htl_top_image_blend_mode              "[TOP IMAGE LAYER]  Blend Mode - Normal, Add, Muliply"  0 0 2 1
+#pragma parameter htl_top_image_mask_mode               "[TOP IMAGE LAYER]  Mask Mode - ALL, Tube, Bezel, Frame)"  0 0 3 1
+
+#pragma parameter hmss_monitor_gamma				    "[MONITOR GAMMA]  Your Monitor Gamma" 2.2 0.01 5 0.01
 
 /////////////// CONSTANT TUNING SETTINGS ///////////////
 

@@ -20,7 +20,7 @@ layout(push_constant) uniform Push
 	float linear_gamma;
 } params;
 
-#pragma parameter VL    "[DE-DITHERING]    MDAPT Vertical Lines"	0.0 0.0 1.0 1.0
+// #pragma parameter VL    "[DE-DITHERING]    MDAPT Vertical Lines"	0.0 0.0 1.0 1.0
 // #pragma parameter CB    "MDAPT Checkerboard"	1.0 0.0 1.0 1.0
 // #pragma parameter DEBUG "MDAPT Adjust View"	0.0 0.0 1.0 1.0
 // #pragma parameter linear_gamma "MDAPT Linear Gamma Blend"	0.0 0.0 1.0 1.0
@@ -33,10 +33,10 @@ const float linear_gamma = 0;
 layout(std140, set = 0, binding = 0) uniform UBO
 {
 	mat4 MVP;
-    float dedithering_on;
+    float mdapt_mode;
 } global;
 
-#pragma parameter dedithering_on "[DE-DITHERING]    MDAPT ON"	0 0 1 1
+#pragma parameter mdapt_mode "[DE-DITHERING]    MDAPT - OFF, Strict, Relaxed, Stripes"	0 0 3 1
 
 
 #pragma stage vertex
@@ -54,10 +54,10 @@ void main()
 layout(location = 0) in vec2 vTexCoord;
 layout(location = 0) out vec4 FragColor;
 layout(set = 0, binding = 2) uniform sampler2D Source;
-layout(set = 0, binding = 3) uniform sampler2D Original;
+layout(set = 0, binding = 3) uniform sampler2D AvgLumPass;
 
 //#define TEX(dx,dy)   texture(Source, vTexCoord+vec2((dx),(dy))*params.SourceSize.zw)
-//#define TEXt0(dx,dy) texture(Original, vTexCoord+vec2((dx),(dy))*params.SourceSize.zw)
+//#define TEXt0(dx,dy) texture(AvgLumPass, vTexCoord+vec2((dx),(dy))*params.SourceSize.zw)
 
 vec4 TEX(float dx, float dy){
 	if(linear_gamma > 0.5) return pow(texture(Source, vTexCoord+vec2((dx),(dy))*params.SourceSize.zw), vec4(2.2));
@@ -65,8 +65,8 @@ vec4 TEX(float dx, float dy){
 }
 
 vec4 TEXt0(float dx, float dy){
-	if(linear_gamma > 0.5) return pow(texture(Original, vTexCoord+vec2((dx),(dy))*params.SourceSize.zw), vec4(2.2));
-	else return texture(Original, vTexCoord+vec2((dx),(dy))*params.SourceSize.zw);
+	if(linear_gamma > 0.5) return pow(texture(AvgLumPass, vTexCoord+vec2((dx),(dy))*params.SourceSize.zw), vec4(2.2));
+	else return texture(AvgLumPass, vTexCoord+vec2((dx),(dy))*params.SourceSize.zw);
 }
 
 bool eq(vec3 A, vec3 B){
@@ -105,7 +105,7 @@ void main()
 		DL D DR	
 	*/
 
-	if (global.dedithering_on < 1)
+	if (global.mdapt_mode < 1)
 	{
 		FragColor = texture(Source, vTexCoord);
 		return;
@@ -125,7 +125,7 @@ void main()
 	C.xy = or_(C.xy, and_(C.zw, or_(L.xy, R.xy, U.xy, D.xy)));
 
 
-	if(params.VL > 0.5){
+	if(global.mdapt_mode == 3){
 		float prSum = L.x + R.x;		
 
 		prVL = max(L.x, R.x);

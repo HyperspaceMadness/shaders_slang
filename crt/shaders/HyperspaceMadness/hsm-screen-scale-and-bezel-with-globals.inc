@@ -42,15 +42,19 @@ layout(std140, set = 0, binding = 0) uniform UBO
 	float hmss_curvature_post_scale_x;
 	float hmss_curvature_post_scale_y;
 	
-	float hmss_corner_radius;
+	float hmss_screen_corner_radius;
 	float hmss_screen_edge_sharpness;
 	float hmss_screen_vignette;
 
-	float hmss_pre_crt_black_level;
-	float hmss_pre_crt_gamma;
-	float hmss_post_crt_gamma;
+	float hmss_color_pre_crt_black_level;
+	float hmss_color_pre_crt_gamma_adjust;
+	float hmss_color_negative_crop_brightness;
+	float hmss_color_lut_colors_on;
+	float hmss_color_luminance;
+	float hmss_color_temperature;
+	float hmss_color_saturation;
+	float hmss_color_crt_gamma;
 
-	float hmss_negative_crop_brightness;
 	float hmss_phosphor_persistence;
 
 	float hmss_tube_black_edge_thickness;
@@ -126,6 +130,8 @@ layout(std140, set = 0, binding = 0) uniform UBO
 	float htl_top_image_opacity;
 	float htl_top_image_blend_mode;
 	float htl_top_image_mask_mode;
+	
+	float hmss_monitor_gamma;
 } global;
 
 #include "hsm-screen-scale-params-functions.inc"

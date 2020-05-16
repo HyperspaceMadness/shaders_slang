@@ -22,10 +22,10 @@ layout(push_constant) uniform Push
 layout(std140, set = 0, binding = 0) uniform UBO
 {
 	mat4 MVP;
-    float dedithering_on;
+    float mdapt_mode;
 } global;
 
-#pragma parameter dedithering_on "[DE-DITHERING]    MDAPT ON"	0 0 1 1
+#pragma parameter mdapt_mode "[DE-DITHERING]    MDAPT - OFF, Strict, Relaxed, Stripes"	0 0 3 1
 
 
 float and_(float a, float b){
@@ -68,7 +68,7 @@ void main()
 		DL D DR
 	*/
 
-	if (global.dedithering_on < 1)
+	if (global.mdapt_mode < 1)
 	{
 		FragColor = texture(Source, vTexCoord);
 		return;

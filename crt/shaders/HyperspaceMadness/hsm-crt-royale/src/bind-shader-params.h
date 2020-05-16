@@ -32,11 +32,10 @@ layout(std140, set = 0, binding = 0) uniform UBO
 	uint FrameCount;
 
 	float hmss_mega_screen_scale_on;
-
-    float hmss_screen_scale_debug;
-
+	float hmss_screen_scale_debug;
+	
 	float hmss_rotate_crt_image;
-    float hmss_aspect_ratio_mode;
+	float hmss_aspect_ratio_mode;
 	float hmss_screen_aspect_ratio;
 	float hmss_scanline_direction;
 	float hmss_integer_scale_mode;
@@ -61,15 +60,19 @@ layout(std140, set = 0, binding = 0) uniform UBO
 	float hmss_curvature_post_scale_x;
 	float hmss_curvature_post_scale_y;
 	
-	float hmss_corner_radius;
+	float hmss_screen_corner_radius;
 	float hmss_screen_edge_sharpness;
 	float hmss_screen_vignette;
 
-	float hmss_pre_crt_black_level;
-	float hmss_pre_crt_gamma;
-	float hmss_post_crt_gamma;
-	
-	float hmss_negative_crop_brightness;
+	float hmss_color_pre_crt_black_level;
+	float hmss_color_pre_crt_gamma_adjust;
+	float hmss_color_negative_crop_brightness;
+	float hmss_color_lut_colors_on;
+	float hmss_color_luminance;
+	float hmss_color_temperature;
+	float hmss_color_saturation;
+	float hmss_color_crt_gamma;
+
 	float hmss_phosphor_persistence;
 
 	float hmss_tube_black_edge_thickness;
@@ -96,6 +99,7 @@ layout(std140, set = 0, binding = 0) uniform UBO
 	float hmbz_bezel_highlight;
 	float hmbz_bezel_width;
 	float hmbz_bezel_height;
+	float hmbz_bezel_inner_edge_thickness;
 	float hmbz_bezel_inner_corner_radius_scale;
 	float hmbz_bezel_outer_corner_radius_scale;
 	float hmbz_bezel_noise;
@@ -139,9 +143,18 @@ layout(std140, set = 0, binding = 0) uniform UBO
 	float hbr_noise_amount;
 	float hbr_noise_samples;
 	float hbr_noise_sample_distance;
+	float hbr_corner_spread_falloff;
+
+	float htl_top_image_opacity;
+	float htl_top_image_blend_mode;
+	float htl_top_image_mask_mode;
+	
+	float hmss_monitor_gamma;
     
-	float crt_gamma;
-	float lcd_gamma;
+	// HSM Removed
+	// float crt_gamma;
+	// float lcd_gamma;
+
 	float levels_contrast;
 	float halation_weight;
 	float diffusion_weight;
@@ -266,10 +279,16 @@ static const float gba_gamma = 3.5; //  Irrelevant but necessary to define.
     static const float interlace_bff = float(interlace_bff_static);
     static const float interlace_1080i = float(interlace_1080i_static);
 #else
-#pragma parameter crt_gamma "Simulated CRT Gamma" 2.5 1.0 5.0 0.025
-#define crt_gamma global.crt_gamma
-#pragma parameter lcd_gamma "Your Display Gamma" 2.2 1.0 5.0 0.025
-#define lcd_gamma global.lcd_gamma
+
+// HSM Removed
+// #pragma parameter crt_gamma "Simulated CRT Gamma" 2.5 1.0 5.0 0.025
+//#define crt_gamma global.crt_gamma
+// #pragma parameter lcd_gamma "Your Display Gamma" 2.2 1.0 5.0 0.025
+//#define lcd_gamma global.lcd_gamma
+
+#define crt_gamma 2.5 //global.hmss_color_crt_gamma
+#define lcd_gamma 2.2 //global.hmss_color_crt_gamma
+
 #pragma parameter levels_contrast "Contrast" 1.0 0.0 4.0 0.015625
 #define levels_contrast global.levels_contrast
 #pragma parameter halation_weight "Halation Weight" 0.0 0.0 1.0 0.005
@@ -317,10 +336,16 @@ static const float gba_gamma = 3.5; //  Irrelevant but necessary to define.
 #define convergence_offset_y_g clamp(convergence_offsets_g_static.y, -4.0, 4.0)
 #define convergence_offset_y_b clamp(convergence_offsets_b_static.y, -4.0, 4.0)
 
-#pragma parameter mask_type "Mask - Type" 1.0 0.0 2.0 1.0
+#pragma parameter mask_type "Mask - Type - Grille, Slot, Shadow" 1.0 0.0 2.0 1.0
 #define mask_type global.mask_type
-#pragma parameter mask_sample_mode_desired "Mask - Sample Mode" 0.0 0.0 2.0 1.0   //  Consider blocking mode 2.
-#define mask_sample_mode_desired global.mask_sample_mode_desired
+
+// HSM Removed
+// #pragma parameter mask_sample_mode_desired "Mask - Sample Mode" 0.0 0.0 2.0 1.0   //  Consider blocking mode 2.
+// #define mask_sample_mode_desired global.mask_sample_mode_desired
+
+// HSM Added
+#define mask_sample_mode_desired 0
+
 #pragma parameter mask_specify_num_triads "Mask - Specify Number of Triads" 0.0 0.0 1.0 1.0
 #pragma parameter mask_triad_size_desired "Mask - Triad Size Desired" 3.0 1.0 18.0 0.125
 #pragma parameter mask_num_triads_desired "Mask - Number of Triads Desired" 480.0 342.0 1920.0 1.0

@@ -10,13 +10,14 @@ layout(std140, set = 0, binding = 0) uniform UBO
    vec4 OriginalSize;
    vec4 SourceSize;
    uint FrameCount;
-   float quality, bw;
+   float ntsc_mode;
 } global;
 
 // #pragma parameter quality "Quality (Composite = 0, Svideo = 1)" 0.0 0.0 1.0 1.0
 // #pragma parameter bw "Black and White" 0.0 0.0 1.0 1.0
 
-// #pragma parameter ntsc_on "[TV PROCESSING] NTSC ON" 0 0 1 1
+#pragma parameter ntsc_mode "[TV PROCESS NTSC ADAPTIVE]    Mode - OFF, Svideo, Composite" 0 0 2 1
+
 
 float quality = 1;
 float bw = 0;
@@ -69,16 +70,36 @@ vec3 rgb2yiq(vec3 col)
 
 void main()
 {
+   vec3 col = texture(Source, vTexCoord).rgb;
+
+	// If NTSC is off return the color from the last pass
+	if (global.ntsc_mode < 1)
+	{
+		FragColor = vec4(col, 1);
+		return;
+	}
+   
+   //* HSM Removed
+   float frame_count = global.FrameCount;
+   //*/
+   // HSM Added
+   // Removed the time based behavior with chroma phase which causes flashing sometimes
+   //float frame_count = 1;
+
+   // ntsc_mode == 1, use svideo, ntsc_mode == 2, use composite, 
+   quality = global.ntsc_mode > 1 ? 0 : 1;
+
    float CHROMA_MOD_FREQ = (phase < 2.5) ? (4.0 * PI / 15.0) : (PI / 3.0);
    float ARTIFACTING = 1.0 - quality;
    float FRINGING = 1.0 - quality;
    float SATURATION = 1.0 - bw;
    // prevent some very slight clipping that happens at 1.0
    const float BRIGHTNESS = 0.95;
-   vec3 col = texture(Source, vTexCoord).rgb;
+
+
    vec3 yiq = rgb2yiq(col);
 
-   float chroma_phase = (phase < 2.5) ? PI * (mod(pix_no.y, 2.0) + mod(global.FrameCount, 2.)) : 0.6667 * PI * (mod(pix_no.y, 3.0) + mod(global.FrameCount, 2.));
+   float chroma_phase = (phase < 2.5) ? PI * (mod(pix_no.y, 2.0) + mod(frame_count, 2.)) : 0.6667 * PI * (mod(pix_no.y, 3.0) + mod(frame_count, 2.));
 
    float mod_phase = chroma_phase + pix_no.x * CHROMA_MOD_FREQ;
 

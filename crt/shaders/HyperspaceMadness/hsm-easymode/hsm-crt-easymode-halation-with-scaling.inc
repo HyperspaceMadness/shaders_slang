@@ -12,7 +12,8 @@ Addition of hsm-mega-screen-scale by HyperspaceMadness remimcgill@hotmail.com
 
 layout(push_constant) uniform Push
 {
-	float GAMMA_OUTPUT;
+	// HSM Removed
+    // float GAMMA_OUTPUT;
 	float SHARPNESS_H;
 	float SHARPNESS_V;
 	float MASK_TYPE;
@@ -35,7 +36,8 @@ layout(push_constant) uniform Push
 } params;
 
 #pragma parameter emh_title 			"______EASYMODE HALATION______" 0 0 0 1
-#pragma parameter GAMMA_OUTPUT          "    Gamma Output" 2.2 0.1 5.0 0.01
+// HSM Removed
+// #pragma parameter GAMMA_OUTPUT          "    Gamma Output" 2.2 0.1 5.0 0.01
 #pragma parameter SHARPNESS_H           "    Sharpness Horizontal" 0.6 0.0 1.0 0.05
 #pragma parameter SHARPNESS_V           "    Sharpness Vertical" 1.0 0.0 1.0 0.05
 #pragma parameter MASK_TYPE             "    Mask Type" 4.0 0.0 7.0 1.0
@@ -336,6 +338,8 @@ void main()
 
     // Add Vignette inside the tube
     FragColor = vec4(col, 1);
-	FragColor = HMSS_GetPostCrtPreppedColor(screen_curved_coord, FragColor,  1, params.GAMMA_OUTPUT);
+
+    // Apply Prep and Output Gamma
+	FragColor = HMSS_GetPostCrtPreppedColor(screen_curved_coord, FragColor,  1, 1);
     // End Addition
 }

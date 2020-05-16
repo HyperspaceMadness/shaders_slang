@@ -18,20 +18,19 @@ layout(push_constant) uniform Push
 	float PWR;
 } params;
 
-// #pragma parameter MODE "MDAPT Monochrome Analysis"	0.0 0.0 1.0 1.0
-// #pragma parameter PWR  "MDAPT Color Metric Exp"		2.0 0.0 10.0 0.1
-
-const float MODE = 1;
-const float PWR = 2;
 
 layout(std140, set = 0, binding = 0) uniform UBO
 {
 	mat4 MVP;
-    float dedithering_on;
+    float mdapt_mode;
 } global;
 
-#pragma parameter dedithering_on "[DE-DITHERING]    MDAPT ON"	0 0 1 1
+#pragma parameter mdapt_mode "[DE-DITHERING]    MDAPT - OFF, Strict, Relaxed, Stripes"	0 0 3 1
 
+// #pragma parameter MODE "MDAPT Monochrome Analysis"	0.0 0.0 1.0 1.0
+// #pragma parameter PWR  "MDAPT Color Metric Exp"		2.0 0.0 10.0 0.1
+
+const float PWR = 2;
 
 #define dotfix(x,y) clamp(dot(x,y), 0.0, 1.0)	// NVIDIA Fix
 #define TEX(dx,dy) texture(Source, vTexCoord+vec2((dx),(dy))*params.SourceSize.zw)
@@ -75,7 +74,7 @@ void main()
 		  D	
 	*/
 
-	if (global.dedithering_on < 1)
+	if (global.mdapt_mode < 1)
 	{
 		FragColor = texture(Source, vTexCoord);
 		return;
@@ -90,7 +89,7 @@ void main()
 
 	vec3 res = vec3(0.0);
 
-	if(MODE > 0.5){
+	if(global.mdapt_mode == 1){
 		res.x = float((L == R) && (C != L));
 		res.y = float((U == D) && (C != U));
 		res.z = float(bool(res.x) && bool(res.y) && (L == U));

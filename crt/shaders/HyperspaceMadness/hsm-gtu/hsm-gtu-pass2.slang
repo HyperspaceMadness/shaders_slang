@@ -8,8 +8,7 @@ layout(push_constant) uniform Push
 	float signalResolution;
 	float signalResolutionI;
 	float signalResolutionQ;
-   float gtu_on;
-	float compositeConnection;
+   float gtu_mode;
 } params;
 
 #pragma parameter signalResolution  "[TV PROCESS GTU]  Signal Resolution Y" 256.0 16.0 1024.0 16.0
@@ -66,7 +65,7 @@ layout(set = 0, binding = 2) uniform sampler2D Source;
 void main()
 {
    // If GTU is off return the color from the last pass
-	if (params.gtu_on < 1)
+	if (params.gtu_mode < 1)
    {
 		FragColor = texture(Source, vTexCoord);
       return;
@@ -77,13 +76,13 @@ void main()
 	float	X;
 	vec3	c;
 	float range;
-	if (params.compositeConnection > 0.0)
+	if (params.gtu_mode > 1)
       range=ceil(0.5+params.SourceSize.x/min(min(params.signalResolution,signalResolutionI),signalResolutionQ));
    else
       range=ceil(0.5+params.SourceSize.x/params.signalResolution);
 	  
 	float i;
-   if(params.compositeConnection > 0.0){
+   if(params.gtu_mode > 1){
       for (i=-range;i<range+2.0;i++){
          PROCESS_composite((offset-(i)))
       }
@@ -93,7 +92,7 @@ void main()
          PROCESS((offset-(i)))
       }
    }
-   if(params.compositeConnection > 0.0)
+   if(params.gtu_mode > 1)
       tempColor=clamp(tempColor * YIQ_to_RGB,0.0,1.0);
    else
       tempColor=clamp(tempColor,0.0,1.0);

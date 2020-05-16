@@ -54,7 +54,7 @@ layout(push_constant) uniform Push
 
 	// HSM Added
 	// moved from global since global is comming from the import of mega screen scale
-	interm,
+	interlace_mode,
 	bloom,
 	// End Addition
 
@@ -71,7 +71,7 @@ layout(push_constant) uniform Push
 	CGWG, 
 	gamma_out, 
 	spike, 
-	inter,
+	interlace_res,
 	scans,
 	slotms;
 } params;
@@ -87,7 +87,7 @@ layout(std140, set = 0, binding = 0) uniform UBO
 	vec4 OutputSize;
 	uint FrameCount;
 	float bloom;
-	float interm;	
+	float interlace_mode;	
 	float scans;
 	float slotms;
 } global;
@@ -165,11 +165,11 @@ layout(std140, set = 0, binding = 0) uniform UBO
 
 #pragma parameter spike "Scanline Spike Removal" 1.0 0.0 2.0 0.10
 #define spike params.spike
-#pragma parameter inter "Interlace Trigger Resolution :" 400.0 0.0 800.0 25.0
-#define inter         params.inter     // interlace resolution
+#pragma parameter interlace_res "Interlace Trigger Resolution :" 400.0 0.0 800.0 25.0
+#define interlace_res         params.interlace_res     // interlace resolution
 // HSM Modified, Turned Interlace Mode Off, some parameters moved from global to params 
-#pragma parameter interm "Interlace Mode (0.0 = OFF):" 0 0.0 3.0 1.0
-#define interm         params.interm     // interlace mode 
+#pragma parameter interlace_mode "Interlace Mode - 0:OFF, 1:Interlace, 2: Blend 3:Sharp" 3 0 3 1
+#define interlace_mode         params.interlace_mode     // interlace mode 
 #pragma parameter bloom "Bloom Strength" 0.0 0.0 2.0 0.1
 #define bloom          params.bloom     // bloom effect
 #pragma parameter scans "Scanline 1&2 Saturation" 0.5 0.0 1.0 0.1
@@ -461,10 +461,10 @@ void main()
 	vec2 pos = HMSS_GetMirrorWrappedCoord(screen_curved_coord);
 
 	vec2 coffset = vec2(0.5, 0.5);
-	bool interb = (interm > 0.5 && interm < 2.5 && inter <= mix(SourceSize.y, SourceSize.x, TATE));
-	bool notate  = (TATE < 0.5);
+	bool use_interlace = (interlace_mode > 0.5 && interlace_mode < 2.5 && interlace_res <= mix(SourceSize.y, SourceSize.x, TATE));
+	bool screen_is_horizontal  = (TATE < 0.5);
 	
-	if (interb) coffset = ((notate) ? vec2(0.5,0.0) : vec2(0.0, 0.5));
+	if (use_interlace) coffset = (screen_is_horizontal) ? vec2(0.5, 0.0) : vec2(0.0, 0.5);
 	
 	// HSM Edited - Was SourceSize.zw
 	vec2 ps = 1 / SourceSize.xy;
@@ -482,14 +482,14 @@ void main()
 	vec2 off2 = x2;
 	vec2 offy = dy;
 	float fpx = fp.x;
-	if(!notate)
+	if(!screen_is_horizontal)
 	{
 		offx = dy;
 		off2 = y2;
 		offy = dx;
 		fpx = fp.y;
 	}
-	float  f = (notate) ? fp.y : fp.x;
+	float  f = (screen_is_horizontal) ? fp.y : fp.x;
 	
 	vec2 pC4 = floor(OGL2Pos) * ps + 0.5*ps;
 	
@@ -578,7 +578,7 @@ void main()
 	
 	vec3 color0 = color1;
 
-	if (interb)
+	if (use_interlace)
 	{
 		pC4-= 2.*offy;
 	
@@ -636,13 +636,13 @@ void main()
 	vec3 color = color1*w1 + color2*w2;
 	color = min(color, 1.0);
 	
-	if (interm > 0.5 && inter <= mix(SourceSize.y, SourceSize.x, TATE)) 
+	if (interlace_mode > 0.5 && interlace_res <= mix(SourceSize.y, SourceSize.x, TATE)) 
 	{
-		if (interm < 2.5)
+		if (interlace_mode < 2.5)
 		{
 			float line_no  = floor(mod(mix(  OGL2Pos.y,  OGL2Pos.x, TATE),2.0));		
 			float frame_no = floor(mod(float(global.FrameCount),2.0));
-			float ii = (interm > 1.5) ? 0.5 : abs(line_no-frame_no);
+			float ii = (interlace_mode > 1.5) ? 0.5 : abs(line_no-frame_no);
 			
 			vec3 icolor1 = mix(color1, color0, ii);
 			vec3 icolor2 = mix(color1, color2, ii);
@@ -661,14 +661,14 @@ void main()
 	vec3 orig1 = color; float pixbr = max(max(ctmp.r,ctmp.g),ctmp.b); vec3 orig = ctmp; w1 = w1+w2; float w3 = max(max(w1.r,w1.g),w1.b); 
 	vec3 cmask = vec3(1.0); vec3 cmask1 = cmask; vec3 one = vec3(1.0);
 	
-	cmask*= (notate) ? Mask(gl_FragCoord.xy * 1.000001,mcolor) :
+	cmask*= (screen_is_horizontal) ? Mask(gl_FragCoord.xy * 1.000001,mcolor) :
 		Mask(gl_FragCoord.yx * 1.000001,mcolor);
 	
 	color = color*cmask;
 	
 	color = min(color,1.0);
 	
-	cmask1 *= (notate) ? SlotMask(gl_FragCoord.xy * 1.000001,tmp) :
+	cmask1 *= (screen_is_horizontal) ? SlotMask(gl_FragCoord.xy * 1.000001,tmp) :
 		SlotMask(gl_FragCoord.yx * 1.000001,tmp);		
 	
 	color = color*cmask1; cmask = cmask*cmask1; cmask = min(cmask, 1.0);
@@ -688,7 +688,7 @@ void main()
 	color = color + Bloom1;
 	
 	color = min(color, 1.0);
-	if (interm < 0.5 || inter > mix(SourceSize.y, SourceSize.x, TATE)) color = declip(color, pow(w3,0.6));	
+	if (interlace_mode < 0.5 || interlace_res > mix(SourceSize.y, SourceSize.x, TATE)) color = declip(color, pow(w3,0.6));	
 	color = min(color, mix(cmask,one,0.6));
 
 	color = color + glow*Bloom;
@@ -704,6 +704,14 @@ void main()
 
 	// Add Prep after the CRT image is complete, e.g. Vignette
 	FragColor = vec4(color, 1);
-	FragColor = HMSS_GetPostCrtPreppedColor(screen_curved_coord, FragColor,  1, gamma_out);
+	
+	// Prep and add output gamma
+	FragColor = HMSS_GetPostCrtPreppedColor(screen_curved_coord, FragColor,  1, 1);
 	// End Addition
 }
+
+// HSM Renamed Params
+// interm -> interlace_mode
+// inter -> interlace_res
+// notate -> screen_is_horizontal
+// interb -> use_interlace

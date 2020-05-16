@@ -3,7 +3,7 @@
 //      Add Afterglow, Black Level & Gamma
 //      Calculate Average Luminance and put in alpha channel
 //      Debug Drawing of the resolution/screen scaling
-shader0 = ../crt/shaders/HyperspaceMadness/hsm-prep-initial.slang
+shader0 = ../crt/shaders/HyperspaceMadness/hsm-prep-initial-royale.slang
 alias0  = AvgLumPass
 
 // De-Dithering - Mdapt
@@ -225,7 +225,7 @@ alias24 = BR_MirrorFullscreenGlowPass
             // TopLayerImage
             // TopLayerVertImage
 
-shader25 = ../crt/shaders/HyperspaceMadness/hsm-mega-bezel-reflection-royale.slang
+shader25 = ../crt/shaders/HyperspaceMadness/hsm-mega-bezel-reflection.slang
 mipmap_input25 = true
 filter_linear25 = true
 scale_type25 = viewport
@@ -237,38 +237,29 @@ shaders = 26
 
 // Define textures to be used by the different passes
 textures = "mask_grille_texture_small;mask_slot_texture_small;mask_shadow_texture_small;BackgroundImage;BackgroundVertImage;TubeGlassImage;TopLayerImage;TopLayerVertImage;"
+
 mask_grille_texture_small = "../crt/shaders/HyperspaceMadness/hsm-crt-royale/TileableLinearApertureGrille15Wide8And5d5SpacingResizeTo64.png"
-// mask_grille_texture_large = "../crt/shaders/HyperspaceMadness/hsm-crt-royale/TileableLinearApertureGrille15Wide8And5d5Spacing.png"
-mask_slot_texture_small = "../crt/shaders/HyperspaceMadness/hsm-crt-royale/TileableLinearSlotMaskTall15Wide9And4d5Horizontal9d14VerticalSpacingResizeTo64.png"
-// mask_slot_texture_large = "../crt/shaders/HyperspaceMadness/hsm-crt-royale/TileableLinearSlotMaskTall15Wide9And4d5Horizontal9d14VerticalSpacing.png"
-mask_shadow_texture_small = "../crt/shaders/HyperspaceMadness/hsm-crt-royale/TileableLinearShadowMaskEDPResizeTo64.png"
-// mask_shadow_texture_large = "../crt/shaders/HyperspaceMadness/hsm-crt-royale/TileableLinearShadowMaskEDP.png"
 mask_grille_texture_small_wrap_mode = "repeat"
-// mask_grille_texture_large_wrap_mode = "repeat"
-mask_slot_texture_small_wrap_mode = "repeat"
-// mask_slot_texture_large_wrap_mode = "repeat"
-mask_shadow_texture_small_wrap_mode = "repeat"
-// mask_shadow_texture_large_wrap_mode = "repeat"
 mask_grille_texture_small_linear = "true"
-// mask_grille_texture_large_linear = "true"
-mask_slot_texture_small_linear = "true"
-// mask_slot_texture_large_linear = "true"
-mask_shadow_texture_small_linear = "true"
-// mask_shadow_texture_large_linear = "true"
 mask_grille_texture_small_mipmap = "false"  // Mipmapping causes artifacts with manually resized masks without tex2Dlod
-// mask_grille_texture_large_mipmap = "true"   // Essential for hardware-resized masks
+
+mask_slot_texture_small = "../crt/shaders/HyperspaceMadness/hsm-crt-royale/TileableLinearSlotMaskTall15Wide9And4d5Horizontal9d14VerticalSpacingResizeTo64.png"
+mask_slot_texture_small_wrap_mode = "repeat"
+mask_slot_texture_small_linear = "true"
 mask_slot_texture_small_mipmap = "false"    // Mipmapping causes artifacts with manually resized masks without tex2Dlod
-// mask_slot_texture_large_mipmap = "true"     // Essential for hardware-resized masks
+
+mask_shadow_texture_small = "../crt/shaders/HyperspaceMadness/hsm-crt-royale/TileableLinearShadowMaskEDPResizeTo64.png"
+mask_shadow_texture_small_wrap_mode = "repeat"
+mask_shadow_texture_small_linear = "true"
 mask_shadow_texture_small_mipmap = "false"  // Mipmapping causes artifacts with manually resized masks without tex2Dlod
-// mask_shadow_texture_large_mipmap = "true"   // Essential for hardware-resized masks
 
-BackgroundImage = ../crt/shaders/HyperspaceMadness/textures/BackgroundImage_3840x2160.png
-BackgroundVertImage = ../crt/shaders/HyperspaceMadness/textures/BackgroundImage_3840x2160.png
-TubeGlassImage = ../crt/shaders/HyperspaceMadness/textures/TubeGlassOverlayImage_3840x2160.png
-TopLayerImage = ../crt/shaders/HyperspaceMadness/textures/TopLayerImage_3840x2160.png
-TopLayerVertImage = ../crt/shaders/HyperspaceMadness/textures/TopLayerImage_3840x2160.png
+BackgroundImage =       ../crt/shaders/HyperspaceMadness/textures/BackgroundImage_3840x2160.png
+BackgroundVertImage =   ../crt/shaders/HyperspaceMadness/textures/BackgroundImage_3840x2160.png
+TubeGlassImage =        ../crt/shaders/HyperspaceMadness/textures/TubeGlassOverlayImage_3840x2160.png
+TopLayerImage =         ../crt/shaders/HyperspaceMadness/textures/TopLayerImage_3840x2160.png
+TopLayerVertImage =     ../crt/shaders/HyperspaceMadness/textures/TopLayerImage_3840x2160.png
 
-parameters = "interlace_detect_toggle;hmss_mega_screen_scale_on;hmss_screen_aspect_ratio;hmss_integer_scale_mode;hmss_int_scale_multiple_offset;hmss_non_integer_scale;hmss_int_scale_border_min_height;hmss_scanline_direction;hmss_curvature_mode;hmss_curvature_2D_long_axis;hmss_curvature_2D_short_axis;hmss_curvature_3D_radius;hmss_curvature_3D_view_dist;hmss_curvature_3D_tilt_angle_x;hmss_curvature_3D_tilt_angle_y;hmss_corner_radius;hmss_tube_black_edge_thickness;hmss_screen_edge_sharpness;hmbz_tube_glass_image_opacity;hmbz_tube_edge_shadow;hmbz_background_image_aspect_ratio;hmbz_background_image_tube_height;hmbz_background_image_vignette_opacity;hmbz_bezel_inner_corner_radius_scale;hmbz_background_image_opacity;hmbz_bezel_opacity;hmbz_bezel_width;hmbz_bezel_height;hmbz_bezel_inner_edge_thickness;hmbz_bezel_color_hue;hmbz_bezel_color_saturation;hmbz_bezel_color_value;hmbz_bezel_color_blend_with_image;hmbz_bezel_brightness;hmbz_bezel_highlight;hmbz_bezel_noise;hmbz_frame_opacity;hmbz_frame_thickness;hmbz_background_image_scale_mode;hmss_crop_overscan_top;hmss_crop_overscan_bottom;hmss_crop_overscan_left;hmss_crop_overscan_right;hmss_pre_crt_black_level;hbl_blur_min;hbl_blur_max;hbr_global_amount;hbr_global_gamma_adjust;hbr_inner_edge_reflection;hbr_inner_edge_fullscreen_glow;hbr_diffused_reflection;hbr_fullscreen_glow;hbr_fullscreen_glow_gamma;hag_afterglow_persistence;hbr_noise_samples;hbr_noise_amount;hbr_noise_sample_distance;hbr_fade_amount;hbr_radial_fade_width;hbr_radial_fade_height;hbr_lateral_outer_fade_position;hbr_lateral_outer_fade_distance;hbr_corner_fade;hbr_corner_inner_spread;hbr_corner_outer_spread"
+parameters = "interlace_detect_toggle;hmss_mega_screen_scale_on;hmss_screen_aspect_ratio;hmss_integer_scale_mode;hmss_int_scale_multiple_offset;hmss_non_integer_scale;hmss_int_scale_border_min_height;hmss_scanline_direction;hmss_curvature_mode;hmss_curvature_2D_long_axis;hmss_curvature_2D_short_axis;hmss_curvature_3D_radius;hmss_curvature_3D_view_dist;hmss_curvature_3D_tilt_angle_x;hmss_curvature_3D_tilt_angle_y;hmss_screen_corner_radius;hmss_tube_black_edge_thickness;hmss_screen_edge_sharpness;hmbz_tube_glass_image_opacity;hmbz_tube_edge_shadow;hmbz_background_image_aspect_ratio;hmbz_background_image_tube_height;hmbz_background_image_vignette_opacity;hmbz_bezel_inner_corner_radius_scale;hmbz_background_image_opacity;hmbz_bezel_opacity;hmbz_bezel_width;hmbz_bezel_height;hmbz_bezel_inner_edge_thickness;hmbz_bezel_color_hue;hmbz_bezel_color_saturation;hmbz_bezel_color_value;hmbz_bezel_color_blend_with_image;hmbz_bezel_brightness;hmbz_bezel_highlight;hmbz_bezel_noise;hmbz_frame_opacity;hmbz_frame_thickness;hmbz_background_image_scale_mode;hmss_crop_overscan_top;hmss_crop_overscan_bottom;hmss_crop_overscan_left;hmss_crop_overscan_right;hmss_color_pre_crt_black_level;hbl_blur_min;hbl_blur_max;hbr_global_amount;hbr_global_gamma_adjust;hbr_inner_edge_reflection;hbr_inner_edge_fullscreen_glow;hbr_diffused_reflection;hbr_fullscreen_glow;hbr_fullscreen_glow_gamma;hag_afterglow_persistence;hbr_noise_samples;hbr_noise_amount;hbr_noise_sample_distance;hbr_fade_amount;hbr_radial_fade_width;hbr_radial_fade_height;hbr_lateral_outer_fade_position;hbr_lateral_outer_fade_distance;hbr_corner_fade;hbr_corner_inner_spread;hbr_corner_outer_spread"
 
 interlace_detect_toggle = 0;
 
@@ -289,7 +280,7 @@ hmss_curvature_2D_short_axis = 0
 // hmss_curvature_3D_tilt_angle_x = 0
 // hmss_curvature_3D_tilt_angle_y = 0
 
-hmss_corner_radius = 10
+hmss_screen_corner_radius = 10
 // hmss_tube_black_edge_thickness = -0.2
 // hmbz_bezel_width = 200
 // hmbz_bezel_height = 200
@@ -310,7 +301,7 @@ hmss_corner_radius = 10
 // hmbz_frame_thickness = 7;
 
 // hmbz_background_image_scale_mode = 0
-// hmbz_background_image_aspect_ratio = 1.75
+// hmbz_background_image_aspect_ratio = 1.77
 // hmbz_background_image_tube_height = 69
 // hmbz_background_image_vignette_opacity = 0.4
 
@@ -318,7 +309,7 @@ hmss_corner_radius = 10
 // hmss_crop_overscan_bottom = 0
 // hmss_crop_overscan_left = 0
 // hmss_crop_overscan_right = 0
-// hmss_pre_crt_black_level = 0
+// hmss_color_pre_crt_black_level = 0
 
 // hmss_screen_edge_sharpness = 1
 // hmbz_tube_edge_shadow = 0

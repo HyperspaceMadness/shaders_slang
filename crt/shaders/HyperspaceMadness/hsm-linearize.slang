@@ -1,5 +1,14 @@
+#version 450
 
 #include "hsm-screen-scale-with-globals.inc"
+
+layout(push_constant) uniform Push
+{
+	vec4 SourceSize;
+	vec4 OriginalSize;
+	vec4 OutputSize;
+	uint FrameCount;
+} params;
 
 #pragma stage vertex
 layout(location = 0) in vec4 Position;
@@ -15,9 +24,9 @@ void main()
 #pragma stage fragment
 layout(location = 0) in vec2 vTexCoord;
 layout(location = 0) out vec4 FragColor;
-layout(set = 0, binding = 2) uniform sampler2D BR_CRTPass;
+layout(set = 0, binding = 2) uniform sampler2D Source;
 
 void main()
 {
-	FragColor = HMSS_Linearize(texture(BR_CRTPass, vTexCoord));
+   FragColor = HMSS_Linearize(texture(Source, vTexCoord));
 }

@@ -6,8 +6,8 @@
 shader0 = ../crt/shaders/HyperspaceMadness/hsm-prep-initial-screen-scale-only.slang
 alias0  = AvgLumPass
 
-// Guest-Venom Pass ----------------------------------------------------------------
-shader1 = ../crt/shaders/guest/lut/lut.slang
+// Empty Pass ----------------------------------------------------------------
+shader1 = ../stock.slang
 filter_linear1 = false
 scale_type1 = source
 scale1 = 1.0
@@ -73,16 +73,12 @@ alias8 = BR_CRTPass
 shaders = 9
 
 // Define textures to be used by the different passes
-textures = "SamplerLUT1;SamplerLUT2;SamplerLUT3;"
-SamplerLUT1 = ../crt/shaders/guest/lut/sony_trinitron1.png
-SamplerLUT1_linear = true 
-SamplerLUT2 = ../crt/shaders/guest/lut/sony_trinitron2.png
-SamplerLUT2_linear = true 
-SamplerLUT3 = ../crt/shaders/guest/lut/other1.png
+textures = "SamplerLUT3;"
+SamplerLUT3 = ../crt/shaders/HyperspaceMadness/textures/lut/other1.png
 SamplerLUT3_linear = true
 
 
-parameters = "hmss_mega_screen_scale_on;hmss_screen_aspect_ratio;hmss_integer_scale_mode;hmss_int_scale_multiple_offset;hmss_non_integer_scale;hmss_int_scale_border_min_height;hmss_scanline_direction;hmss_curvature_2D_long_axis;hmss_curvature_2D_short_axis;hmss_corner_radius;hmss_tube_black_edge_thickness;hmss_crop_overscan_top;hmss_crop_overscan_bottom;hmss_crop_overscan_left;hmss_crop_overscan_right;hmss_pre_crt_black_level;hag_afterglow_persistence"
+parameters = "hmss_mega_screen_scale_on;hmss_screen_aspect_ratio;hmss_integer_scale_mode;hmss_int_scale_multiple_offset;hmss_non_integer_scale;hmss_int_scale_border_min_height;hmss_scanline_direction;hmss_curvature_2D_long_axis;hmss_curvature_2D_short_axis;hmss_screen_corner_radius;hmss_tube_black_edge_thickness;hmss_crop_overscan_top;hmss_crop_overscan_bottom;hmss_crop_overscan_left;hmss_crop_overscan_right;hmss_color_pre_crt_black_level;hag_afterglow_persistence"
 
 hmss_mega_screen_scale_on = 1
 hmss_screen_scale_only = 1
@@ -95,7 +91,7 @@ hmss_int_scale_border_min_height = 5.5
 
 // hmss_curvature_2D_long_axis = 3
 // hmss_curvature_2D_short_axis = 4
-hmss_corner_radius = 10
+hmss_screen_corner_radius = 10
 // hmss_tube_black_edge_thickness = 1.6
 
 // hag_afterglow_persistence = 0.2

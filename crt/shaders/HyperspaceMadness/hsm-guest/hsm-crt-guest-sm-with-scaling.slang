@@ -52,17 +52,16 @@ Uses a red/magenta/cyan/green pattern for even spacing of the LCD subpixels.
 
 layout(push_constant) uniform Push
 {
-	// Modifications from hsm-screen-scale-with-globals.inc integration
-	// Removed the following
 	vec4 SourceSize;
-
 	vec4 OutputSize;
 
 	uint FrameCount;
 	float smart, brightboost1, brightboost2, stype, scanline1, scanline2, beam_min, beam_max, s_beam;
-	float h_sharp, cubic, mask, maskmode, maskdark, maskbright, masksize, gamma_out;
+	float h_sharp, cubic, mask, maskmode, maskdark, maskbright, masksize; 
+	
+	// HSM Removed
+	// gamma_out;
 
-	// Modifications from hsm-screen-scale-with-globals.inc integration
 	// HSM Added
 	float bglow;
 	float bloom;
@@ -111,9 +110,7 @@ layout(push_constant) uniform Push
 // Removed the following
 // #pragma parameter warpx "Curvature X" 0.0  0.0 0.25 0.01
 // #pragma parameter warpy "Curvature Y" 0.0  0.0 0.25 0.01
-
-
-#pragma parameter gamma_out "Gamma Out" 2.50 1.0 3.5 0.05
+// #pragma parameter gamma_out "Gamma Out" 2.50 1.0 3.5 0.05
 
 // Removed the following
 // #define bglow global.bglow
@@ -160,8 +157,7 @@ layout(push_constant) uniform Push
 // Removed the following
 // #define warpx global.warpx
 // #define warpy global.warpy
-
-#define gamma_out params.gamma_out
+// #define gamma_out params.gamma_out
 
 
 #define TEX0 vTexCoord
@@ -279,10 +275,9 @@ void main()
 
 	float factor = params.OutputSize.y/vertres;	
 
+	/* HSM Removed
 	float gamma = COMPAT_TEXTURE(LinPass, vec2(0.5,0.1)).a;
-	
-	/* Modifications from hsm-screen-scale-with-globals.inc integration
-	// Removed the following
+
 	if (smart == 1.0 || smart == 2.0 || smart == 3.0)
 	{
 		float intfactor = round(factor); if (smart == 2.0) intfactor = floor(factor); if (smart == 3.0) intfactor = ceil(factor);
@@ -514,19 +509,19 @@ void main()
 	color = color + bglow*Bglow;
 	color = min(color, mix(cmask,one,sclip));
 	
+
+	/* HSM Removed
 	float fgamma = 1.0/gamma_out;
 	if (stype == 1.0) fgamma = gamma;
 
-	/* Removed
 	vec3 color1g = pow(color, vec3(fgamma));
 	FragColor = vec4(color1g, 1.0);
 	*/
 
-	// Addition
-
-	// Add Vignette inside the tube
+	// // HSM Addition
 	FragColor = vec4(color, 1.0);
-	FragColor = HMSS_GetPostCrtPreppedColor(screen_curved_coord, FragColor,  1, 1 / fgamma);
+	FragColor = HMSS_GetPostCrtPreppedColor(screen_curved_coord, FragColor,  1, 1);
 
-	// End Addition
+
+	// // End Addition
 }

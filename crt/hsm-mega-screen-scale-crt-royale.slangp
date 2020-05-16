@@ -21,7 +21,7 @@
 //      Add Afterglow, Black Level & Gamma
 //      Calculate Average Luminance and put in alpha channel
 //      Debug Drawing of the resolution/screen scaling
-shader0 = ../crt/shaders/HyperspaceMadness/hsm-prep-initial-screen-scale-only.slang
+shader0 = ../crt/shaders/HyperspaceMadness/hsm-prep-initial-screen-scale-only-royale.slang
 alias0  = AvgLumPass
 
 // Linearize the input based on CRT gamma and bob interlaced fields.
@@ -176,38 +176,29 @@ alias11 = BR_CRTPass
 shaders = "12"
 
 
-# Set an identifier, filename, and sampling traits for the phosphor mask texture.
-# Load an aperture grille, slot mask, and an EDP shadow mask, and load a small
-# non-mipmapped version and a large mipmapped version.
-# TODO: Test masks in other directories.
-textures = "mask_grille_texture_small;mask_grille_texture_large;mask_slot_texture_small;mask_slot_texture_large;mask_shadow_texture_small;mask_shadow_texture_large"
+// Define textures to be used by the different passes
+textures = "mask_grille_texture_small;mask_slot_texture_small;mask_shadow_texture_small;SamplerLUT3;"
+
 mask_grille_texture_small = "../crt/shaders/HyperspaceMadness/hsm-crt-royale/TileableLinearApertureGrille15Wide8And5d5SpacingResizeTo64.png"
-mask_grille_texture_large = "../crt/shaders/HyperspaceMadness/hsm-crt-royale/TileableLinearApertureGrille15Wide8And5d5Spacing.png"
-mask_slot_texture_small = "../crt/shaders/HyperspaceMadness/hsm-crt-royale/TileableLinearSlotMaskTall15Wide9And4d5Horizontal9d14VerticalSpacingResizeTo64.png"
-mask_slot_texture_large = "../crt/shaders/HyperspaceMadness/hsm-crt-royale/TileableLinearSlotMaskTall15Wide9And4d5Horizontal9d14VerticalSpacing.png"
-mask_shadow_texture_small = "../crt/shaders/HyperspaceMadness/hsm-crt-royale/TileableLinearShadowMaskEDPResizeTo64.png"
-mask_shadow_texture_large = "../crt/shaders/HyperspaceMadness/hsm-crt-royale/TileableLinearShadowMaskEDP.png"
 mask_grille_texture_small_wrap_mode = "repeat"
-mask_grille_texture_large_wrap_mode = "repeat"
-mask_slot_texture_small_wrap_mode = "repeat"
-mask_slot_texture_large_wrap_mode = "repeat"
-mask_shadow_texture_small_wrap_mode = "repeat"
-mask_shadow_texture_large_wrap_mode = "repeat"
 mask_grille_texture_small_linear = "true"
-mask_grille_texture_large_linear = "true"
+mask_grille_texture_small_mipmap = "false"  // Mipmapping causes artifacts with manually resized masks without tex2Dlod
+
+mask_slot_texture_small = "../crt/shaders/HyperspaceMadness/hsm-crt-royale/TileableLinearSlotMaskTall15Wide9And4d5Horizontal9d14VerticalSpacingResizeTo64.png"
+mask_slot_texture_small_wrap_mode = "repeat"
 mask_slot_texture_small_linear = "true"
-mask_slot_texture_large_linear = "true"
+mask_slot_texture_small_mipmap = "false"    // Mipmapping causes artifacts with manually resized masks without tex2Dlod
+
+mask_shadow_texture_small = "../crt/shaders/HyperspaceMadness/hsm-crt-royale/TileableLinearShadowMaskEDPResizeTo64.png"
+mask_shadow_texture_small_wrap_mode = "repeat"
 mask_shadow_texture_small_linear = "true"
-mask_shadow_texture_large_linear = "true"
-mask_grille_texture_small_mipmap = "false"  # Mipmapping causes artifacts with manually resized masks without tex2Dlod
-mask_grille_texture_large_mipmap = "true"   # Essential for hardware-resized masks
-mask_slot_texture_small_mipmap = "false"    # Mipmapping causes artifacts with manually resized masks without tex2Dlod
-mask_slot_texture_large_mipmap = "true"     # Essential for hardware-resized masks
-mask_shadow_texture_small_mipmap = "false"  # Mipmapping causes artifacts with manually resized masks without tex2Dlod
-mask_shadow_texture_large_mipmap = "true"   # Essential for hardware-resized masks
+mask_shadow_texture_small_mipmap = "false"  // Mipmapping causes artifacts with manually resized masks without tex2Dlod
 
-parameters = "hmss_curvature_mode;hmss_curvature_3D_radius;hmss_curvature_3D_view_dist;hmss_curvature_3D_radius;border_size;border_compress;interlace_detect_toggle;hmss_mega_screen_scale_on;hmss_screen_aspect_ratio;hmss_integer_scale_mode;hmss_int_scale_multiple_offset;hmss_non_integer_scale;hmss_int_scale_border_min_height;hmss_scanline_direction;hmss_curvature_2D_long_axis;hmss_curvature_2D_short_axis;hmss_corner_radius;hmss_tube_black_edge_thickness;hmbz_frame_thickness;hmbz_bezel_width;hmbz_bezel_height;hmbz_background_image_opacity;hmbz_bezel_opacity;hmbz_bezel_brightness;hmbz_frame_opacity;hmbz_background_image_scale_mode;hmbz_background_image_aspect_ratio;hmbz_background_image_tube_height;hmss_crop_overscan_top;hmss_crop_overscan_bottom;hmss_crop_overscan_left;hmss_crop_overscan_right;hmss_pre_crt_black_level;hbl_blur_min;hbl_blur_max;hbr_global_amount;hbr_global_gamma_adjust;hbr_diffused_reflection;hbr_fullscreen_glow;hbr_fullscreen_glow_gamma;hag_afterglow_persistence"
+SamplerLUT3 = ../crt/shaders/HyperspaceMadness/textures/lut/other1.png
+SamplerLUT3_linear = true
 
+
+parameters = "hmss_curvature_mode;hmss_curvature_3D_radius;hmss_curvature_3D_view_dist;hmss_curvature_3D_radius;border_size;border_compress;interlace_detect_toggle;hmss_mega_screen_scale_on;hmss_screen_aspect_ratio;hmss_integer_scale_mode;hmss_int_scale_multiple_offset;hmss_non_integer_scale;hmss_int_scale_border_min_height;hmss_scanline_direction;hmss_curvature_2D_long_axis;hmss_curvature_2D_short_axis;hmss_screen_corner_radius;hmss_tube_black_edge_thickness;hmbz_frame_thickness;hmbz_bezel_width;hmbz_bezel_height;hmbz_background_image_opacity;hmbz_bezel_opacity;hmbz_bezel_brightness;hmbz_frame_opacity;hmbz_background_image_scale_mode;hmbz_background_image_aspect_ratio;hmbz_background_image_tube_height;hmss_crop_overscan_top;hmss_crop_overscan_bottom;hmss_crop_overscan_left;hmss_crop_overscan_right;hmss_color_pre_crt_black_level;hbl_blur_min;hbl_blur_max;hbr_global_amount;hbr_global_gamma_adjust;hbr_diffused_reflection;hbr_fullscreen_glow;hbr_fullscreen_glow_gamma;hag_afterglow_persistence"
 
 border_size = 0.005;
 border_compress = 5;
@@ -226,7 +217,7 @@ hmss_curvature_2D_long_axis = 0
 hmss_curvature_2D_short_axis = 0
 hmss_curvature_3D_radius = 2
 hmss_curvature_3D_view_dist = 2
-hmss_corner_radius = 10
+hmss_screen_corner_radius = 10
 
 // hmss_tube_black_edge_thickness = 1.6
 
@@ -234,7 +225,7 @@ hmss_corner_radius = 10
 // hmss_crop_overscan_bottom = 0
 // hmss_crop_overscan_left = 0
 // hmss_crop_overscan_right = 0
-// hmss_pre_crt_black_level = 0
+// hmss_color_pre_crt_black_level = 0
 
 
 // hag_afterglow_persistence = 0.2

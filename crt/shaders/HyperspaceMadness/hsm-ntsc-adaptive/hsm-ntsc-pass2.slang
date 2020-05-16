@@ -9,10 +9,10 @@ layout(std140, set = 0, binding = 0) uniform UBO
    vec4 OutputSize;
    vec4 OriginalSize;
    vec4 SourceSize;
-   float linearize;
+   float ntsc_mode;
 } global;
 
-// #pragma parameter linearize "Linearize Output Gamma" 0.0 0.0 1.0 1.0
+#pragma parameter ntsc_mode "[TV PROCESS NTSC ADAPTIVE]    Mode - OFF, Svideo, Composite" 0 0 2 1
 
 float linearize = 0;
 
@@ -184,6 +184,13 @@ const float chroma_filter_3_phase[25] = float[25](
 
 void main()
 {
+   	// If NTSC is off return the color from the last pass
+	if (global.ntsc_mode < 1)
+	{
+		FragColor = texture(Source, vTexCoord);
+		return;
+	}
+
    float phase = (global.OriginalSize.x > 300.0) ? 2.0 : 3.0;
    float one_x = global.SourceSize.z;
    vec3 signal = vec3(0.0);

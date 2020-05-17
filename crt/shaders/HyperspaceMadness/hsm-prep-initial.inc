@@ -107,19 +107,19 @@ void main()
 {
    FragColor =  texture(Source, vTexCoord);
 
-   // Phosphor Persistence
-   FragColor = HMSS_ApplyPhosphorPersistence(FragColor, PassFeedback6, vTexCoord);
-   
    // Royale can't currently is currently at the limit of number of textures so we can't add the LUT
    #ifndef ROYALE_PRESET
       FragColor = ApplyLUT(FragColor, SamplerLUT3);
    #endif
 
    // Apply black level & gamma with input as non linearized
-   FragColor = HMSS_ApplyBlackLevelGamma(FragColor, 0);
+   FragColor = HMSS_ApplyBlackLevelGammaLuma(FragColor, 0);
 
    // Add Color Temperature
    FragColor = HMSS_ApplyColorTemperature_D65_D50(FragColor);
+
+   // Phosphor Persistence
+   FragColor = HMSS_ApplyPhosphorPersistence(FragColor, PassFeedback6, vTexCoord);
 
    // Put Average Luminance in the alpha channel
    FragColor.a = GetAverageLuma();
@@ -129,5 +129,4 @@ void main()
    {
       FragColor = AddText(FragColor);
    }
-
 }

@@ -47,19 +47,22 @@ Description:
 #pragma parameter hmss_screen_edge_sharpness 			"[SCREEN EDGE]  Screen Edge Sharpness" 0.4 0 1 0.01
 #pragma parameter hmss_screen_vignette                  "[SCREEN EDGE]  Screen Vignette" 0 0 1 0.01
 
-#pragma parameter hmss_color_pre_crt_black_level 		"[COLOR]  Pre-CRT Black Level" 0 -30 30 0.05-
-#pragma parameter hmss_color_pre_crt_gamma_adjust		"[COLOR]  Pre-CRT Gamma Adjust" 1 0.01 8 0.01
-#pragma parameter hmss_color_negative_crop_brightness	"[COLOR]  Negative Crop Brightness" 0 0 20 0.02
 #pragma parameter hmss_color_lut_colors_on 				"[COLOR]  LUT Colors ON (No Royale)" 1 0 1 1
+#pragma parameter hmss_color_black_level 				"[COLOR]  Black Level" 0 -30 30 0.05-
 #pragma parameter hmss_color_luminance   				"[COLOR]  Luminance" 100 0 400 5
+#pragma parameter hmss_color_pre_crt_gamma_adjust		"[COLOR]  Gamma Adjust" 1 0.01 8 0.01
 #pragma parameter hmss_color_temperature   				"[COLOR]  Temperature" -50 -100.0 100.0 5.0
 #pragma parameter hmss_color_saturation    				"[COLOR]  Saturation" 1.0 0.0 2.0 0.05
-#pragma parameter hmss_color_crt_gamma    				"[COLOR]  CRT Gamma" 2.2 0.1 5 0.05
+#pragma parameter hmss_color_negative_crop_brightness	"[COLOR]  Negative Crop Brightness" 0 0 20 0.02
+#pragma parameter hmss_color_crt_gamma   				"[COLOR]  CRT Gamma" 2.2 0.1 5 0.05
 
 #pragma parameter hmss_phosphor_persistence             "[PHOSPHOR]  Persistence - Pos:Blue, Neg:Neutral" 0 -1 1 0.05
 
+#pragma parameter hmss_res_independent_scanline_size 	"[RES INDEPENDENT SCANLINES] Size - 0:OFF" 0 0 32 1
+
 #pragma parameter hmss_tube_black_edge_thickness 		"[TUBE]  Black Edge Thickness" 1.2 -2 8 0.05
 #pragma parameter hmss_tube_black_edge_curvature_scale 	"[TUBE]  Black Edge Curvature Scale" 1 0 4 0.1
+
 
 const float HMSS_DEFAULT_GAMMA = 2.2;
 
@@ -580,28 +583,33 @@ vec4 HMSS_Delinearize(vec4 in_color)
 	return HMSS_ApplyGamma(in_color, HMSS_DEFAULT_GAMMA);
 }
 
-vec4 HMSS_ApplyBlackLevelGamma(vec4 in_color, float color_is_linear)
+vec4 HMSS_ApplyBlackLevelGammaLuma(vec4 in_color, float color_is_linear)
 {
 	// If there is no black level or gamma adjustment return without any adjustment
-	if (global.hmss_color_pre_crt_black_level == 0 && global.hmss_color_pre_crt_gamma_adjust == 1)
+	if (global.hmss_color_black_level == 0 && global.hmss_color_pre_crt_gamma_adjust == 1)
 	{
 		return in_color;
 	}
 	
 	vec4 out_color = in_color;
 
+	// Linearize if color isn't linear
 	if (color_is_linear == 0)
 	{
 		out_color = HMSS_Linearize(out_color);
 	}
 
-	// Black Level Adjustment
-	out_color -= vec4(global.hmss_color_pre_crt_black_level / 100);
-	out_color *= vec4(1.0) / vec4(1.0 - global.hmss_color_pre_crt_black_level / 100);
+	// Black Level
+	out_color -= vec4(global.hmss_color_black_level / 100);
+	out_color *= vec4(1.0) / vec4(1.0 - global.hmss_color_black_level / 100);
+
+	// Lumanence
+	out_color *= global.hmss_color_luminance / 100;
 
 	// Gamma
 	out_color = HMSS_ApplyGamma(out_color, global.hmss_color_pre_crt_gamma_adjust);
 
+	// If color isn't linear put default gamma back on
 	if (color_is_linear == 0)
 	{
 		out_color = HMSS_Delinearize(out_color);
@@ -609,7 +617,7 @@ vec4 HMSS_ApplyBlackLevelGamma(vec4 in_color, float color_is_linear)
 
 	out_color.w = in_color.w;
 
-	return out_color;
+	return clamp(out_color, 0, 1);
 }
 
 vec2 HMSS_RotateCoordinate(vec2 in_coord, float counterclockwise_turns)
@@ -784,6 +792,23 @@ float HMSS_GetScreenVignetteFactor(vec2 coord, float amount)
 	else return vignette;
 }
 
+// Torridgristle - ScanlineSimple pass - Public domain
+vec4 HMSS_AddResIndependentScanlines(vec4 in_color, vec2 in_coord)
+{
+	if (global.hmss_res_independent_scanline_size < 0.5) return in_color;
+
+	float scanline_size = global.OutputSize.y > 1800 ? 2 * global.hmss_res_independent_scanline_size : global.hmss_res_independent_scanline_size;
+
+	float pi = 3.141592654;
+	vec2 screen_size = global.OutputSize.xy * HMSS_GetScreenScale();
+
+	float Scanline = mod(in_coord.y * screen_size.y, scanline_size) / scanline_size;
+	Scanline = 1 - abs(Scanline - 0.5) * 2.;
+	Scanline = 1 - pow(1 - Scanline, 2);
+
+	return in_color * Scanline;
+}
+
 vec4 HMSS_GetPostCrtPreppedColor(vec2 screen_curved_coord, vec4 in_color, float encoded_input_gamma, float output_with_gamma)
 {
 	vec4 out_color = in_color;
@@ -793,8 +818,6 @@ vec4 HMSS_GetPostCrtPreppedColor(vec2 screen_curved_coord, vec4 in_color, float 
 	{
 		out_color = HMSS_ApplyGamma(in_color, encoded_input_gamma);
 	}
-
-	out_color *= global.hmss_color_luminance / 100;
 
 	vec2 mirrored_screen_coord = HMSS_GetMirrorWrappedCoord(screen_curved_coord);
 	float vignette_factor = HMSS_GetScreenVignetteFactor(mirrored_screen_coord, global.hmss_screen_vignette);
@@ -813,6 +836,8 @@ vec4 HMSS_GetPostCrtPreppedColor(vec2 screen_curved_coord, vec4 in_color, float 
 		float screen_mask = HMSS_GetCornerMask((screen_curved_coord - 0.5) * 0.999 + 0.5, global.hmss_screen_corner_radius, 0.9);
 		vignette_factor = vignette_factor * screen_mask;
 	#endif
+
+	out_color = HMSS_AddResIndependentScanlines(out_color, screen_curved_coord);
 
 	out_color *= vignette_factor;
 

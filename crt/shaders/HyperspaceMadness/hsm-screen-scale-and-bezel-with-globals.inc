@@ -46,7 +46,7 @@ layout(std140, set = 0, binding = 0) uniform UBO
 	float hmss_screen_edge_sharpness;
 	float hmss_screen_vignette;
 
-	float hmss_color_pre_crt_black_level;
+	float hmss_color_black_level;
 	float hmss_color_pre_crt_gamma_adjust;
 	float hmss_color_negative_crop_brightness;
 	float hmss_color_lut_colors_on;
@@ -56,6 +56,8 @@ layout(std140, set = 0, binding = 0) uniform UBO
 	float hmss_color_crt_gamma;
 
 	float hmss_phosphor_persistence;
+
+	float hmss_res_independent_scanline_size;
 
 	float hmss_tube_black_edge_thickness;
 	float hmss_tube_black_edge_curvature_scale;

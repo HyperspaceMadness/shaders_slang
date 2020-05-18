@@ -37,11 +37,14 @@ layout(std140, set = 0, binding = 0) uniform UBO
 	float hmss_rotate_crt_image;
 	float hmss_aspect_ratio_mode;
 	float hmss_screen_aspect_ratio;
-	float hmss_scanline_direction;
 	float hmss_integer_scale_mode;
 	float hmss_non_integer_scale;
     float hmss_int_scale_multiple_offset;
 	float hmss_int_scale_border_min_height;
+
+	float hmss_scanline_direction;
+	float hmss_core_res_mult;
+
 	float hmss_position_offset_x;
 	float hmss_position_offset_y;
 
@@ -75,7 +78,7 @@ layout(std140, set = 0, binding = 0) uniform UBO
 
 	float hmss_phosphor_persistence;
 
-	float hmss_res_independent_scanline_size;
+	float hmss_post_crt_scanline_res;
 
 	float hmss_tube_black_edge_thickness;
 	float hmss_tube_black_edge_curvature_scale;

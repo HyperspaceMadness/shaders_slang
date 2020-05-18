@@ -311,7 +311,7 @@ float DrawResolutions(vec2 uv, vec2 viewport_size, vec2 screen_size, vec2 core_s
     col += GetChar(ch_5, uv);
     col += GetChar(ch_dsh, uv);
     col += GetChar(ch_1, uv);
-    col += GetChar(ch_7, uv);
+    col += GetChar(ch_8, uv);
     col += GetChar(ch_dsh, uv);
     col += GetChar(ch_0, uv);
 

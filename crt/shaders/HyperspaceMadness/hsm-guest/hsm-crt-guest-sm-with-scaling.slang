@@ -161,7 +161,13 @@ layout(push_constant) uniform Push
 
 
 #define TEX0 vTexCoord
-#define COMPAT_TEXTURE(c,d) texture(c,d)
+
+// HSM Removed
+// #define COMPAT_TEXTURE(c,d) texture(c,d)
+
+// HSM Added
+#define COMPAT_TEXTURE(c,d) HMSS_GetCroppedTexSample(c,d)
+
 #define Texture Source
 #define InputSize SourceSize
 #define gl_FragCoord (vTexCoord * params.OutputSize.xy)
@@ -264,10 +270,21 @@ void main()
 	vec2 tex = TEX0.xy * 1.00001;
 
 
+
+	
+	/* HSM Removed
 	float sm_tate = COMPAT_TEXTURE(WpPass, vec2(0.5)).a;
 	float ratio = COMPAT_TEXTURE(RotPass, vec2(0.5, 0.1)).a;
-	
 	vec4 SourceSize1 = params.SourceSize;
+	*/ 
+
+	// HSM Added
+	float sm_tate = 0;
+	float ratio = 1;
+
+	vec2 cropped_orig_size = HMSS_GetCroppedOriginalSize();
+	vec4 SourceSize1 = vec4(cropped_orig_size, 1 / cropped_orig_size);
+
 	float vertres = SourceSize1.y*ratio;
 	
 	tex.y *= ratio;
@@ -520,7 +537,7 @@ void main()
 
 	// // HSM Addition
 	FragColor = vec4(color, 1.0);
-	FragColor = HMSS_GetPostCrtPreppedColor(screen_curved_coord, FragColor,  1, 1);
+	FragColor = HMSS_GetPostCrtPreppedColor(screen_curved_coord, screen_coord, FragColor,  1, 1);
 
 
 	// // End Addition

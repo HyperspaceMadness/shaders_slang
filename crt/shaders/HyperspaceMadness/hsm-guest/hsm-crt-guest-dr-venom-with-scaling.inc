@@ -168,7 +168,7 @@ layout(std140, set = 0, binding = 0) uniform UBO
 #pragma parameter interlace_res "Interlace Trigger Resolution :" 400.0 0.0 800.0 25.0
 #define interlace_res         params.interlace_res     // interlace resolution
 // HSM Modified, Turned Interlace Mode Off, some parameters moved from global to params 
-#pragma parameter interlace_mode "Interlace Mode - 0:OFF, 1:Interlace, 2: Blend 3:Sharp" 3 0 3 1
+#pragma parameter interlace_mode "Interlace Mode - 0:OFF, 1:Interlace, 2: Blend 3:Sharp" 0 0 3 1
 #define interlace_mode         params.interlace_mode     // interlace mode 
 #pragma parameter bloom "Bloom Strength" 0.0 0.0 2.0 0.1
 #define bloom          params.bloom     // bloom effect
@@ -176,7 +176,7 @@ layout(std140, set = 0, binding = 0) uniform UBO
 #define scans         	params.scans     // scanline saturation
 // End HSM Modified
 
-#define COMPAT_TEXTURE(c,d) HMSS_COMPAT_TEXTURE(c,d)
+#define COMPAT_TEXTURE(c,d) HMSS_GetCroppedTexSample(c,d)
 #define TEX0 vTexCoord
 #define InputSize SourceSize
 #define TextureSize SourceSize
@@ -457,7 +457,8 @@ void main()
 	// HSM Removed
 	float TATE = HMSS_GetUseVerticalScanlines();
 
-	vec2 screen_curved_coord = HMSS_GetCurvedCoord(HMSS_GetScreenVTexCoord(vTexCoord), 1);
+	vec2 screen_coord = HMSS_GetScreenVTexCoord(vTexCoord);
+	vec2 screen_curved_coord = HMSS_GetCurvedCoord(screen_coord, 1);
 	vec2 pos = HMSS_GetMirrorWrappedCoord(screen_curved_coord);
 
 	vec2 coffset = vec2(0.5, 0.5);
@@ -706,7 +707,7 @@ void main()
 	FragColor = vec4(color, 1);
 	
 	// Prep and add output gamma
-	FragColor = HMSS_GetPostCrtPreppedColor(screen_curved_coord, FragColor,  1, 1);
+	FragColor = HMSS_GetPostCrtPreppedColor(screen_curved_coord, screen_coord, FragColor,  1, 1);
 	// End Addition
 }
 

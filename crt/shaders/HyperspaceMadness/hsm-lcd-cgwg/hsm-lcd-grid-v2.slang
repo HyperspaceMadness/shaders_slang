@@ -88,14 +88,19 @@ float intsmear(float x, float dx, float d, float coeffs[7])
 void main()
 {
     // TODO Add Support for Cropping?
+    /* HSM Removed
+    vec2 texelSize = global.SourceSize.zw;
+    float2 range = IN.video_size / (IN.output_size * IN.texture_size);
+    */
 
     // HSM Added
-	vec2 screen_curved_coord = HMSS_GetCurvedCoord(vTexCoord, 1);
+    vec2 screen_coord = vTexCoord;
+	vec2 screen_curved_coord = HMSS_GetCurvedCoord(screen_coord, 1);
     vec2 curved_coord = HMSS_GetMirrorWrappedCoord(screen_curved_coord);
+    vec2 cropped_size = HMSS_GetCroppedOriginalSize();
+    vec2 texelSize = 1 / cropped_size;
     // End Addition
 
-    vec2 texelSize = global.SourceSize.zw;
-    /* float2 range = IN.video_size / (IN.output_size * IN.texture_size); */
     vec2 range = global.OutputSize.zw;
 
     vec3 cred   = pow(vec3(param.RSUBPIX_R, param.RSUBPIX_G, param.RSUBPIX_B), vec3(outgamma));
@@ -141,7 +146,7 @@ void main()
 
     // HSM Added
     FragColor = vec4(averageColor, 1);
-	FragColor = HMSS_GetPostCrtPreppedColor(screen_curved_coord, FragColor,  1, outgamma);
+	FragColor = HMSS_GetPostCrtPreppedColor(screen_curved_coord, screen_coord, FragColor,  1, outgamma);
     
     // End Addition
 }

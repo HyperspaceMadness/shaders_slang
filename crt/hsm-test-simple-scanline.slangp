@@ -1,0 +1,71 @@
+// Add Mega Screen Scale Params & Initial Prep
+//      Add the mega-screen-scale parameters at the beginning of the list for easy access
+//      Add Afterglow, Black Level & Gamma
+//      Calculate Average Luminance and put in alpha channel
+//      Debug Drawing of the resolution/screen scaling
+shader0 = ../crt/shaders/HyperspaceMadness/hsm-prep-initial.slang
+alias0  = AvgLumPass
+
+// De-Dithering - Mdapt
+shader1 = ../crt/shaders/HyperspaceMadness/hsm-mdapt/hsm-mdapt-pass0.slang
+shader2 = ../crt/shaders/HyperspaceMadness/hsm-mdapt/hsm-mdapt-pass1.slang
+shader3 = ../crt/shaders/HyperspaceMadness/hsm-mdapt/hsm-mdapt-pass2.slang
+shader4 = ../crt/shaders/HyperspaceMadness/hsm-mdapt/hsm-mdapt-pass3.slang
+shader5 = ../crt/shaders/HyperspaceMadness/hsm-mdapt/hsm-mdapt-pass4.slang
+
+// GTU TV Processing
+shader6 = ../crt/shaders/HyperspaceMadness/hsm-gtu/hsm-gtu-pass1.slang
+scale_type6 = source
+scale6 = 1.0
+float_framebuffer6 = true
+
+shader7 = ../crt/shaders/HyperspaceMadness/hsm-gtu/hsm-gtu-pass2.slang
+scale_type_x7 = source
+scale_x7 = 1.0
+scale_type_y7 = source
+scale_y7 = 1.0
+filter_linear7 = true
+float_framebuffer7 = true
+
+// //NTSC passes added here so you can swap out with GTU
+// shader6 = ../crt/shaders/HyperspaceMadness/hsm-ntsc-adaptive/hsm-ntsc-pass1.slang
+// scale_type6 = source
+// scale_x6 = 4.0
+// filter_linear6 = false
+// float_framebuffer6 = true
+
+// shader7 = ../crt/shaders/HyperspaceMadness/hsm-ntsc-adaptive/hsm-ntsc-pass2.slang
+// scale_type7 = source
+// scale_x7 = 0.25
+// filter_linear7 = false
+
+shader8 = ../stock.slang
+shader9 = ../stock.slang
+shader10 = ../stock.slang
+shader11 = ../stock.slang
+shader12 = ../stock.slang
+shader13 = ../stock.slang
+shader14 = ../stock.slang
+shader15 = ../stock.slang
+shader16 = ../stock.slang
+shader17 = ../stock.slang
+
+// Simple Scanline Shader
+shader18 = ../crt/shaders/HyperspaceMadness/hsm-test-simple-scanline.slang
+filter_linear18 = true
+scale_type18 = viewport
+float_framebuffer18 = true
+
+// Define how many shaders will be used from this list
+shaders = 19
+
+// Define textures to be used by the different passes
+textures = "SamplerLUT3;BackgroundImage;BackgroundVertImage;TubeGlassImage;TopLayerImage;TopLayerVertImage;"
+SamplerLUT3 = ../crt/shaders/guest/lut/other1.png
+SamplerLUT3_linear = true
+
+BackgroundImage = ../crt/shaders/HyperspaceMadness/textures/BackgroundImage_3840x2160.png
+BackgroundVertImage = ../crt/shaders/HyperspaceMadness/textures/BackgroundImage_3840x2160.png
+TubeGlassImage = ../crt/shaders/HyperspaceMadness/textures/TubeGlassOverlayImage_3840x2160.png
+TopLayerImage = ../crt/shaders/HyperspaceMadness/textures/TopLayerImage_3840x2160.png
+TopLayerVertImage = ../crt/shaders/HyperspaceMadness/textures/TopLayerImage_3840x2160.png

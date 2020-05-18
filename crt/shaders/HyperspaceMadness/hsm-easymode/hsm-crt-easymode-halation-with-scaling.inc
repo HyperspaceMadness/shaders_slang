@@ -6,7 +6,6 @@ Addition of hsm-mega-screen-scale by HyperspaceMadness remimcgill@hotmail.com
 */
 
 // HSM Added
-// Import Screen Scale Functions and global structure
 #include "../hsm-screen-scale-with-globals.inc"
 // End Addition
 
@@ -82,7 +81,12 @@ layout(std140, set = 0, binding = 0) uniform UBO
 
 #define FIX(c) max(abs(c), 1e-5)
 #define PI 3.141592653589
-#define TEX2D(c) texture(tex, c)
+
+// HSM Removed
+// #define TEX2D(c) texture(tex, c)
+
+// HSM Added
+#define TEX2D(c) HMSS_GetCroppedTexSample(tex, c)
 
 float curve_distance(float x, float sharp)
 {
@@ -182,14 +186,17 @@ void main()
 
     // TODO implement Cropping
     // HSM Added
-    vec2 tex_size = global.SourceSize.xy;
+    vec2 tex_size = HMSS_GetCroppedOriginalSize();
     // End Addition
 
     vec2 midpoint = vec2(0.5, 0.5);
     float scan_offset = 0.0;
     float timer = vec2(global.FrameCount, global.FrameCount).x;
 
-    if (params.INTERLACING_TOGGLE > 0.5 && global.SourceSize.y >= 400)
+    // HSM Removed
+    // if (params.INTERLACING_TOGGLE > 0.5 && global.SourceSize.y >= 400)
+
+    if (params.INTERLACING_TOGGLE > 0.5 && tex_size.y >= 400)
     {
         tex_size.y *= 0.5;
 
@@ -201,23 +208,24 @@ void main()
         else midpoint.y = 0.25;
     }
 
-    vec2 co = vTexCoord * tex_size * global.SourceSize.zw;
+    
 
     /* HSM Removed
+    vec2 co = vTexCoord * tex_size * global.SourceSize.zw;
     vec2 xy = curve_coordinate(co, params.GEOM_WARP);
     float corner_weight = get_corner_weight(curve_coordinate(co, params.GEOM_CURVATURE), vec2(params.GEOM_CORNER_SIZE), params.GEOM_CORNER_SMOOTH);
     Not sure why params.GEOM_WARP was used for the main coordinate and params.GEOM_CURVATURE was used for the corner
     */
 
-    // ADDED the following to add overscan crop and use different curvature from mega screen scale
+    // HSM Added
     // corner_weight is also set to 1 so the corner will not be masked, and will be masked in a later pass 
-    vec2 screen_curved_coord = HMSS_GetCurvedCoord(co, 1);
+    vec2 co = vTexCoord;
+    vec2 screen_coord = co;
+    vec2 screen_curved_coord = HMSS_GetCurvedCoord(screen_coord, 1);
     vec2 xy = HMSS_GetMirrorWrappedCoord(screen_curved_coord);
-    float corner_weight = 1;
-    xy = HMSS_GetCropOverscanCoord(xy);
-    // End Addition
 
-    xy *= global.SourceSize.xy / tex_size;
+    // HSM Removed
+    // float corner_weight = 1;
 
     vec2 dx = vec2(1.0 / tex_size.x, 0.0);
     vec2 dy = vec2(0.0, 1.0 / tex_size.y);
@@ -249,7 +257,7 @@ void main()
     color_matrix[3] = filter_lanczos(coeffs_x, get_color_matrix(ORIG_LINEARIZED, tex_co + 2.0 * dy, dx));
 
     col = filter_lanczos(coeffs_y, color_matrix).rgb;
-    diff = texture(Source, xy).rgb;
+    diff = HMSS_GetCroppedTexSample(Source, xy).rgb;
 
     float rgb_max = max(col.r, max(col.g, col.b));
 
@@ -258,7 +266,7 @@ void main()
     */
 
     // HSM Added the Following
-    float sample_offset = (global.SourceSize.y * global.OutputSize.w * screenScale.y) * 0.5;
+    float sample_offset = (tex_size.y * global.OutputSize.w * screenScale.y) * 0.5;
     // End Addition
 
     float scan_pos = xy.y * tex_size.y + scan_offset;
@@ -292,7 +300,7 @@ void main()
     */
 
     // HSM Added
-    vec2 mod_fac = floor(vTexCoord * global.OutputSize.xy * screenScale * global.SourceSize.xy / (global.SourceSize.xy * vec2(params.MASK_SIZE, mask_dot_height * params.MASK_SIZE)));
+    vec2 mod_fac = floor(vTexCoord * global.OutputSize.xy * screenScale * tex_size.xy / (tex_size.xy * vec2(params.MASK_SIZE, mask_dot_height * params.MASK_SIZE)));
     // End Addition
 
     int dot_no = int(mod((mod_fac.x + mod(mod_fac.y, 2.0) * mask_stagger) / mask_dot_width, mask_colors));
@@ -326,20 +334,21 @@ void main()
     col += clamp(col2 * scan_weight, 0.0, 1.0);
     col /= 3.0;
 
+    /* HSM Removed
     col *= vec3(corner_weight);
     col += diff * mask_weight * params.HALATION * vec3(corner_weight);
     col += diff * params.DIFFUSION * vec3(corner_weight);
-
-    /* HSM Removed
     col = pow(col, vec3(1.0 / params.GAMMA_OUTPUT));
     */
 
     // HSM Added
+    col += diff * mask_weight * params.HALATION;
+    col += diff * params.DIFFUSION;
+    
 
-    // Add Vignette inside the tube
     FragColor = vec4(col, 1);
 
     // Apply Prep and Output Gamma
-	FragColor = HMSS_GetPostCrtPreppedColor(screen_curved_coord, FragColor,  1, 1);
+	FragColor = HMSS_GetPostCrtPreppedColor(screen_curved_coord, screen_coord, FragColor,  1, 1);
     // End Addition
 }

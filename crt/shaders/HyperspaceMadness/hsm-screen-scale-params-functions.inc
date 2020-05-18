@@ -8,7 +8,7 @@ Description:
 */
 
 // Screen Scale Required Parameters
-#pragma parameter hmss_mega_screen_scale_on				"___HSM MEGA BEZEL__ V.2020-05-17-0 -SCREEN SCALE ON" 1 0 1 1
+#pragma parameter hmss_mega_screen_scale_on				"___HSM MEGA BEZEL__ V.2020-05-18-0 -SCREEN SCALE ON" 1 0 1 1
 #pragma parameter hmss_screen_scale_debug				"[SCREEN SCALE]  Screen Scale Debug" 0 0 1 1
 
 #pragma parameter hmss_rotate_crt_image					"[SCALING]  Rotate CRT Image"  0 0 1 1
@@ -24,6 +24,7 @@ Description:
 #pragma parameter hmss_int_scale_border_min_height 		"[SCALING]  Int Scale Border Min Height %" 5.5 -20 20 0.5
 
 #pragma parameter hmss_scanline_direction 				"[SCANLINES]  Scanline Dir Guest-Venom - Auto, Horiz, Vert"  0 0 2 1
+#pragma parameter hmss_core_res_mult					"[SCANLINES]  Core Res Mult (Inv)"  1 1 16 1
 
 #pragma parameter hmss_position_offset_x 				"[POSITION]  Position Offset X" 0 -100 100 0.1
 #pragma parameter hmss_position_offset_y 				"[POSITION]  Position Offset Y" 0 -100 100 0.1
@@ -49,16 +50,16 @@ Description:
 
 #pragma parameter hmss_color_lut_colors_on 				"[COLOR]  LUT Colors ON (No Royale)" 1 0 1 1
 #pragma parameter hmss_color_black_level 				"[COLOR]  Black Level" 0 -30 30 0.05-
+#pragma parameter hmss_color_negative_crop_brightness	"[COLOR]  Negative Crop Brightness" 0 0 20 0.02
 #pragma parameter hmss_color_luminance   				"[COLOR]  Luminance" 100 0 400 5
 #pragma parameter hmss_color_pre_crt_gamma_adjust		"[COLOR]  Gamma Adjust" 1 0.01 8 0.01
 #pragma parameter hmss_color_temperature   				"[COLOR]  Temperature" -50 -100.0 100.0 5.0
 #pragma parameter hmss_color_saturation    				"[COLOR]  Saturation" 1.0 0.0 2.0 0.05
-#pragma parameter hmss_color_negative_crop_brightness	"[COLOR]  Negative Crop Brightness" 0 0 20 0.02
 #pragma parameter hmss_color_crt_gamma   				"[COLOR]  CRT Gamma" 2.2 0.1 5 0.05
 
 #pragma parameter hmss_phosphor_persistence             "[PHOSPHOR]  Persistence - Pos:Blue, Neg:Neutral" 0 -1 1 0.05
 
-#pragma parameter hmss_res_independent_scanline_size 	"[RES INDEPENDENT SCANLINES] Size - 0:OFF" 0 0 32 1
+#pragma parameter hmss_post_crt_scanline_res 			"[POST CRT SCANLINES] Simulated Resolution - 0:OFF" 0 0 480 20
 
 #pragma parameter hmss_tube_black_edge_thickness 		"[TUBE]  Black Edge Thickness" 1.2 -2 8 0.05
 #pragma parameter hmss_tube_black_edge_curvature_scale 	"[TUBE]  Black Edge Curvature Scale" 1 0 4 0.1
@@ -73,15 +74,21 @@ const float HMSS_DEFAULT_GAMMA = 2.2;
 #include "hsm-helper-functions.inc"
 #include "hsm-royale-geometry-functions.inc"
 
+vec2 HMSS_GetOriginalSize()
+{
+	return vec2(global.OriginalSize.x, floor(1 / global.hmss_core_res_mult * global.OriginalSize.y));
+}
+
 vec2 HMSS_GetRotatedOriginalSize()
 {
+	vec2 orig_size = HMSS_GetOriginalSize();
 	if (global.hmss_rotate_crt_image == 1 || global.hmss_rotate_crt_image == 3)
 	{
-		return global.OriginalSize.yx;
+		return orig_size.yx;
 	}
 	else
 	{
-		return global.OriginalSize.xy;
+		return orig_size.xy;
 	}
 }
 
@@ -93,7 +100,7 @@ vec2 HMSS_GetCroppedSize(vec2 in_size){
 	else
 	{
 		return vec2(in_size.x - global.hmss_crop_overscan_right - global.hmss_crop_overscan_left,
-					in_size.y - global.hmss_crop_overscan_top + global.hmss_crop_overscan_bottom);
+					in_size.y - global.hmss_crop_overscan_top - global.hmss_crop_overscan_bottom);
 	}
 }
 
@@ -600,8 +607,9 @@ vec4 HMSS_ApplyBlackLevelGammaLuma(vec4 in_color, float color_is_linear)
 	}
 
 	// Black Level
-	out_color -= vec4(global.hmss_color_black_level / 100);
-	out_color *= vec4(1.0) / vec4(1.0 - global.hmss_color_black_level / 100);
+	out_color -= global.hmss_color_black_level / 100;
+	out_color *= 1 / vec4(1.0 - global.hmss_color_black_level / 100);
+	out_color = clamp(out_color, 0, 2);
 
 	// Lumanence
 	out_color *= global.hmss_color_luminance / 100;
@@ -638,21 +646,6 @@ vec2 HMSS_RotateCoordinate(vec2 in_coord, float counterclockwise_turns)
 	return ctr_coord + 0.5;
 }
 
-vec2 HMSS_GetCropOverscanCoord(vec2 in_coord){
-	vec2 rotated_original_size = HMSS_GetRotatedOriginalSize();
-	float ratio_crop_right = global.hmss_crop_overscan_right / rotated_original_size.x;
-	float ratio_crop_left = global.hmss_crop_overscan_left / rotated_original_size.x;
-	float ratio_crop_top = global.hmss_crop_overscan_top / rotated_original_size.y;
-	float ratio_crop_bottom = global.hmss_crop_overscan_bottom / rotated_original_size.y;
-
-	float cropped_range_x = (1.0 - ratio_crop_right) - (0.0 + ratio_crop_left);
-	float cropped_range_y = (1.0 - ratio_crop_bottom) - (0.0 + ratio_crop_top);
-	vec2 crop_coord = vec2(ratio_crop_left + in_coord.x * cropped_range_x, 
-							ratio_crop_top + in_coord.y * cropped_range_y);
-	crop_coord = HMSS_RotateCoordinate(crop_coord, global.hmss_rotate_crt_image);
-	return crop_coord;
-}
-
 vec2 HMSS_GetMirrorWrapCoord(vec2 in_coord)
 {
 	vec2 ctr_coord = in_coord - 0.5;
@@ -679,19 +672,22 @@ float HMSS_IsInNegativeCropArea(vec2 in_coord)
 	return clamp(result, 0, 1);
 }
 
-// Texture Sampler function which implements cropping the source image
-vec4 HMSS_COMPAT_TEXTURE(sampler2D in_sampler, vec2 in_coord)
+// TODO need to fully integrate global.hmss_core_res_mult
+// Texture Sampler function which takes a coordinate in the cropped coordinate space
+vec4 HMSS_GetCroppedTexSample(sampler2D in_sampler, vec2 in_cropped_coord)
 {
-	vec2 ctr_coord = in_coord - 0.5;
-	ctr_coord = clamp(ctr_coord, -0.49999, 0.49999);
+	vec2 orig_size = HMSS_GetRotatedOriginalSize();
+	vec2 cropped_size = HMSS_GetCroppedOriginalSize();
 
-	vec2 sample_coord = HMSS_GetCropOverscanCoord(ctr_coord + 0.5);
+	vec2 sample_coord = (vec2(global.hmss_crop_overscan_left, global.hmss_crop_overscan_top) + in_cropped_coord * cropped_size) / orig_size;
+	sample_coord =  HMSS_RotateCoordinate(sample_coord, global.hmss_rotate_crt_image);
 	vec4 sampled_color = texture(in_sampler, sample_coord);
+
 	vec4 negative_crop_color = vec4(global.hmss_color_negative_crop_brightness / 100, global.hmss_color_negative_crop_brightness / 100, global.hmss_color_negative_crop_brightness / 100, 1);
 
 	float negative_crop = HMSS_IsInNegativeCropArea(sample_coord);
 
-	return negative_crop * negative_crop_color + (1 - negative_crop) * sampled_color;
+	return HMSS_IsInNegativeCropArea(sample_coord) * negative_crop_color + (1 - negative_crop) * sampled_color;
 }
 
 vec4 HMSS_ApplyPhosphorPersistence(vec4 in_color, sampler2D in_feedback_pass, vec2 in_coord)
@@ -793,23 +789,37 @@ float HMSS_GetScreenVignetteFactor(vec2 coord, float amount)
 }
 
 // Torridgristle - ScanlineSimple pass - Public domain
-vec4 HMSS_AddResIndependentScanlines(vec4 in_color, vec2 in_coord)
+float HMSS_GetScanlineMask(vec2 in_coord)
 {
-	if (global.hmss_res_independent_scanline_size < 0.5) return in_color;
-
-	float scanline_size = global.OutputSize.y > 1800 ? 2 * global.hmss_res_independent_scanline_size : global.hmss_res_independent_scanline_size;
+	if (global.hmss_post_crt_scanline_res < 0.5) return 1;
 
 	float pi = 3.141592654;
+
+	float distance_scan_axis = 0;
+	float screen_size_scan_axis = 0;
 	vec2 screen_size = global.OutputSize.xy * HMSS_GetScreenScale();
 
-	float Scanline = mod(in_coord.y * screen_size.y, scanline_size) / scanline_size;
-	Scanline = 1 - abs(Scanline - 0.5) * 2.;
-	Scanline = 1 - pow(1 - Scanline, 2);
+	if (HMSS_GetUseVerticalScanlines() > 0.5)
+	{
+		screen_size_scan_axis = screen_size.x;
+		distance_scan_axis = in_coord.x;
+	}
+	else
+	{
+		screen_size_scan_axis = screen_size.y;
+		distance_scan_axis = in_coord.y;
+	}
+	
+	float scanline_size = floor(screen_size_scan_axis / global.hmss_post_crt_scanline_res);
 
-	return in_color * Scanline;
+	float scanline_mask = mod(distance_scan_axis * screen_size_scan_axis, scanline_size) / scanline_size;
+	scanline_mask = 1 - abs(scanline_mask - 0.5) * 2.;
+	scanline_mask = 1 - pow(1 - scanline_mask, 2);
+
+	return scanline_mask;
 }
 
-vec4 HMSS_GetPostCrtPreppedColor(vec2 screen_curved_coord, vec4 in_color, float encoded_input_gamma, float output_with_gamma)
+vec4 HMSS_GetPostCrtPreppedColor(vec2 screen_curved_coord, vec2 screen_coord, vec4 in_color, float encoded_input_gamma, float output_with_gamma)
 {
 	vec4 out_color = in_color;
 	
@@ -818,28 +828,38 @@ vec4 HMSS_GetPostCrtPreppedColor(vec2 screen_curved_coord, vec4 in_color, float 
 	{
 		out_color = HMSS_ApplyGamma(in_color, encoded_input_gamma);
 	}
+	float screen_mask = HMSS_GetCornerMask((screen_curved_coord - 0.5) * 0.999 + 0.5, global.hmss_screen_corner_radius, 0.9);
 
 	vec2 mirrored_screen_coord = HMSS_GetMirrorWrappedCoord(screen_curved_coord);
-	float vignette_factor = HMSS_GetScreenVignetteFactor(mirrored_screen_coord, global.hmss_screen_vignette);
+
 	
 	// TODO Screen Edge Sharpness should be applied here instead of in the mega bezel shader
-	HMSS_GetCornerMask(screen_curved_coord, global.hmss_screen_corner_radius, global.hmss_screen_edge_sharpness);
+	float screen_edge_mask = HMSS_GetCornerMask(screen_curved_coord, global.hmss_screen_corner_radius, global.hmss_screen_edge_sharpness);
+	screen_edge_mask = 1 - ((1 - screen_edge_mask) * screen_mask);
+
+	out_color *= screen_edge_mask;
+
+	float vignette_factor = HMSS_GetScreenVignetteFactor(mirrored_screen_coord, global.hmss_screen_vignette);
 
 	// If this is called from the glass preset we don't want the vignette to affect mirrored area
 	#ifdef GLASS_PRESET
-		float screen_mask = HMSS_GetCornerMask((screen_curved_coord - 0.5) * 0.999 + 0.5, global.hmss_screen_corner_radius, 0.9);
 		vignette_factor = 1 - ((1 - vignette_factor) * screen_mask);
 	#endif
 
+	out_color *= vignette_factor;
+
+	if (global.hmss_post_crt_scanline_res > 0.5)
+	{
+		float scanline_mask = HMSS_GetScanlineMask(screen_coord);
+		scanline_mask = 1 - ((1 - scanline_mask) * screen_mask);
+		// Increase brightness to compensate for the mask
+		out_color *= scanline_mask * 1.5;
+	}
+
 	// If we are not using this with the bezel we want
 	#ifdef MASK_OUTSIDE_SCREEN
-		float screen_mask = HMSS_GetCornerMask((screen_curved_coord - 0.5) * 0.999 + 0.5, global.hmss_screen_corner_radius, 0.9);
-		vignette_factor = vignette_factor * screen_mask;
+		out_color *= screen_mask;
 	#endif
-
-	out_color = HMSS_AddResIndependentScanlines(out_color, screen_curved_coord);
-
-	out_color *= vignette_factor;
 
 	// Apply the final Gamma
 	if (output_with_gamma > 0.5)

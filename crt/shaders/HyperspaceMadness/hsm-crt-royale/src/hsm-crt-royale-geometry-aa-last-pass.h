@@ -207,7 +207,7 @@ void main()
     float2 video_uv_no_geom_overscan;
     vec2 screen_scale = HMSS_GetScreenScale();
     // Get the sub-section of the screen with the image on it and map this into a 0-1 space
-    vec2 scaled_flat_video_uv = HMSS_GetScreenVTexCoord(flat_video_uv);
+    vec2 screen_coord = HMSS_GetScreenVTexCoord(flat_video_uv);
     vec2 scaled_curved_uv = vec2(0);
     vec2 screen_curved_coord = vec2(0, 0);
     if(geom_mode > 0.5)
@@ -220,7 +220,7 @@ void main()
         
         vec2 extra_curvature_mult = HMSS_GetCurvatureValues() / 2 * 50 + 1;
 
-        scaled_curved_uv = HRG_GetGeomCurvedCoord(scaled_flat_video_uv, 
+        scaled_curved_uv = HRG_GetGeomCurvedCoord(screen_coord, 
                                                         global.hmss_curvature_mode, 
                                                         global.hmss_curvature_3D_radius, 
                                                         global.hmss_curvature_3D_view_dist, 
@@ -237,7 +237,7 @@ void main()
     }
     else
     {
-        scaled_curved_uv = HMSS_GetCurvedCoord(scaled_flat_video_uv, 1);
+        scaled_curved_uv = HMSS_GetCurvedCoord(screen_coord, 1);
         screen_curved_coord = scaled_curved_uv;
         video_uv_no_geom_overscan = (scaled_curved_uv - 0.5) * screen_scale + 0.5 + HMSS_GetPositionOffset();
         
@@ -290,7 +290,7 @@ void main()
     FragColor = vec4(color, 1);
 
     // Apply Prep and Output Gamma
-	// FragColor = HMSS_GetPostCrtPreppedColor(screen_curved_coord, FragColor, 0, 1);
+	// FragColor = HMSS_GetPostCrtPreppedColor(screen_curved_coord, screen_coord, FragColor, 0, 1);
 
     // HSM Removed
     FragColor = encode_output(float4(color, 1.0));

@@ -26,6 +26,8 @@ layout(std140, set = 0, binding = 0) uniform UBO
 
 	float hmss_scanline_direction;
 	float hmss_core_res_mult;
+	float HMSS_INTERLACE_TRIGGER_RES;
+
 
 	float hmss_position_offset_x;
 	float hmss_position_offset_y;
@@ -42,17 +44,19 @@ layout(std140, set = 0, binding = 0) uniform UBO
 	float hmss_curvature_3D_tilt_angle_y;
 	float hmss_curvature_2D_long_axis;
 	float hmss_curvature_2D_short_axis;
-	float hmss_curvature_post_scale_x;
-	float hmss_curvature_post_scale_y;
+	float HMSS_CURVATURE_POST_SCALE_X;
+	float HMSS_CURVATURE_POST_SCALE_Y;
 	
-	float hmss_screen_corner_radius;
-	float hmss_screen_edge_sharpness;
-	float hmss_screen_vignette;
+	float hmss_screenfx_corner_radius;
+	float hmss_screenfx_edge_sharpness;
+	float hmss_screenfx_vignette;
 
-	float hmss_color_black_level;
-	float hmss_color_pre_crt_gamma_adjust;
-	float hmss_color_negative_crop_brightness;
+	float hmss_color_crt_profile;
+	float hmss_color_space;
 	float hmss_color_lut_colors_on;
+	float hmss_color_black_level;
+	// float hmss_color_pre_crt_gamma_adjust;
+	float hmss_color_negative_crop_brightness;
 	float hmss_color_luminance;
 	float hmss_color_temperature;
 	float hmss_color_saturation;
@@ -60,7 +64,7 @@ layout(std140, set = 0, binding = 0) uniform UBO
 
 	float hmss_phosphor_persistence;
 
-	float hmss_post_crt_scanline_res;
+	float hmss_screenfx_fake_scanline_opacity;
 
 	float hmss_tube_black_edge_thickness;
 	float hmss_tube_black_edge_curvature_scale;

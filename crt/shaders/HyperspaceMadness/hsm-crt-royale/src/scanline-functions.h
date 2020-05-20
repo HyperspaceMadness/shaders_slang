@@ -522,7 +522,7 @@ float2 get_last_scanline_uv(const float2 tex_uv, const float2 tex_size,
 	// wtf fixme
 //	const float interlace_bff1 = 1.0;
     const float field_offset = floor(il_step_multiple.y * 0.75) *
-        fmod(frame_count + float(global.interlace_bff), 2.0);
+        fmod(frame_count + float(interlace_bff), 2.0);
     const float2 curr_texel = tex_uv * tex_size;
     //  Use under_half to fix a rounding bug right around exact texel locations.
     const float2 prev_texel_num = floor(curr_texel - float2(under_half));

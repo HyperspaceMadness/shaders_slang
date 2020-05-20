@@ -290,12 +290,12 @@ void main()
     FragColor = vec4(color, 1);
 
     // Apply Prep and Output Gamma
-	// FragColor = HMSS_GetPostCrtPreppedColor(screen_curved_coord, screen_coord, FragColor, 0, 1);
+	// FragColor = HMSS_GetPostCrtPreppedColor(FragColor, screen_curved_coord, screen_coord);
 
     // HSM Removed
     FragColor = encode_output(float4(color, 1.0));
 
     #ifdef MASK_OUTSIDE_SCREEN
-        FragColor *= HMSS_GetCornerMask(screen_curved_coord,  global.hmss_screen_corner_radius, global.hmss_screen_edge_sharpness);
+        FragColor *= HMSS_GetCornerMask(screen_curved_coord,  global.hmss_screenfx_corner_radius, global.hmss_screenfx_edge_sharpness);
     #endif
 }

@@ -103,6 +103,12 @@ layout(std140, set = 0, binding = 0) uniform UBO
 // #pragma parameter BLOOM "Raster bloom %" 0.0 0.0 20.0 1.0
 // #define BLOOM        params.BLOOM     // Bloom overscan percentage
 
+// HSM Added (Moved from the bottom)
+#pragma parameter glow "Glow Strength" 0.02 0.0 0.5 0.01
+#define glow         params.glow     // Glow Strength
+#pragma parameter bloom "Bloom Strength" 0.0 0.0 2.0 0.1
+#define bloom          params.bloom     // bloom effect
+
 #pragma parameter brightboost "Bright Boost Dark Pixels" 1.40 0.50 4.00 0.05
 #define brightboost  params.brightboost     // adjust brightness
 #pragma parameter brightboost1 "Bright Boost Bright Pixels" 1.15 0.50 3.00 0.05
@@ -119,6 +125,11 @@ layout(std140, set = 0, binding = 0) uniform UBO
 #define beam_max     params.beam_max     // bright area beam max - wide
 #pragma parameter beam_size "Increased bright scanline beam" 0.70 0.0 1.0 0.05
 #define beam_size    params.beam_size     // increased max. beam size
+
+// HSM Added (Moved From Bottom)
+#pragma parameter scans "Scanline 1 & 2 Saturation" 0.5 0.0 1.0 0.1
+#define scans         	params.scans     // scanline saturation
+
 #pragma parameter h_sharp "Horizontal sharpness" 5.25 1.0 15.0 0.25
 #define h_sharp      params.h_sharp     // pixel sharpness
 #pragma parameter s_sharp "Substractive sharpness (relative)" 0.40 0.0 1.0 0.10
@@ -132,23 +143,26 @@ layout(std140, set = 0, binding = 0) uniform UBO
 // #define warpX        params.warpX     // Curvature X
 // #pragma parameter warpY "CurvatureY (default 0.04)" 0.0 0.0 0.125 0.01
 // #define warpY        params.warpY     // Curvature Y
-#pragma parameter glow "Glow Strength" 0.02 0.0 0.5 0.01
-#define glow         params.glow     // Glow Strength
-#pragma parameter shadowMask "CRT Mask: 0:CGWG, 1-4:Lottes, 5-6:'Trinitron'" 0.0 -1.0 7.0 1.0
+
+// HSM Removed (Moved to Top)
+// #pragma parameter glow "Glow Strength" 0.02 0.0 0.5 0.01
+// #define glow         params.glow     // Glow Strength
+
+#pragma parameter shadowMask "CRT Mask - 0:CGWG, 1-4:Lottes, 5-6:Trinitron" 7 -1 7 1
 #define shadowMask   params.shadowMask     // Mask Style
-#pragma parameter masksize "CRT Mask Size (2.0 is nice in 4k)" 1.0 1.0 2.0 1.0
+#pragma parameter masksize "CRT Mask Size - 0:Auto, 1:2K, 2:4k" 0 0 2 1
 #define masksize     params.masksize     // Mask Size
 #pragma parameter vertmask "PVM Like Colors" 0.0 -0.30 0.30 0.02
 #define vertmask     params.vertmask     // Vertical mask
-#pragma parameter slotmask "Slot Mask Strength" 0.0 0.0 1.0 0.05
+#pragma parameter slotmask "Slot Mask Strength" 0.5 0.0 1.0 0.05
 #define slotmask     params.slotmask     // Slot Mask ON/OFF
 #pragma parameter slotwidth "Slot Mask Width" 2.0 1.0 6.0 0.5
 #define slotwidth    params.slotwidth     // Slot Mask Width
 #pragma parameter double_slot "Slot Mask Height: 2x1 or 4x1" 1.0 1.0 2.0 1.0
 #define double_slot  params.double_slot     // Slot Mask Height
 // HSM Modified, parameters moved from global to params 
-#pragma parameter slotms "Slot Mask Size" 1.0 1.0 2.0 1.0
-#define slotms  params.slotms     // Slot Mask Size
+#pragma parameter slotms "Slot Mask Size - 0:Auto, 1:2K, 2:4k" 0 0 2 1
+#define slotms  	params.slotms     // Slot Mask Size
 #pragma parameter mcut "Mask 5-7 cutoff" 0.25 0.0 0.5 0.05
 #define mcut         params.mcut     // Mask 5-7 cutoff
 #pragma parameter maskDark "Lottes&Trinitron maskDark" 0.5 0.0 2.0 0.05
@@ -163,18 +177,25 @@ layout(std140, set = 0, binding = 0) uniform UBO
 // HSM Added
 #define gamma_out 2.4
 
-#pragma parameter spike "Scanline Spike Removal" 1.0 0.0 2.0 0.10
-#define spike params.spike
-#pragma parameter interlace_res "Interlace Trigger Resolution :" 400.0 0.0 800.0 25.0
-#define interlace_res         params.interlace_res     // interlace resolution
+// HSM Removed
+// #pragma parameter spike "Scanline Spike Removal" 1.0 0.0 2.0 0.10
+// #define spike params.spike
+// #pragma parameter interlace_res "Interlace Trigger Resolution :" 400.0 0.0 800.0 25.0
+// #define interlace_res         params.interlace_res
+
+// HSM Added
+#define spike 1
+#define interlace_res HMSS_INTERLACE_TRIGGER_RES
+
 // HSM Modified, Turned Interlace Mode Off, some parameters moved from global to params 
-#pragma parameter interlace_mode "Interlace Mode - 0:OFF, 1:Interlace, 2: Blend 3:Sharp" 0 0 3 1
+#pragma parameter interlace_mode "Interlace Mode - 0:OFF, 1:Interlace, 2: Blend 3:Sharp" 3 0 3 1
 #define interlace_mode         params.interlace_mode     // interlace mode 
-#pragma parameter bloom "Bloom Strength" 0.0 0.0 2.0 0.1
-#define bloom          params.bloom     // bloom effect
-#pragma parameter scans "Scanline 1&2 Saturation" 0.5 0.0 1.0 0.1
-#define scans         	params.scans     // scanline saturation
-// End HSM Modified
+
+// HSM Removed (Moved it to the top)
+// #pragma parameter bloom "Bloom Strength" 0.0 0.0 2.0 0.1
+// #define bloom          params.bloom     // bloom effect
+// #pragma parameter scans "Scanline 1&2 Saturation" 0.5 0.0 1.0 0.1
+// #define scans         	params.scans     // scanline saturation
 
 #define COMPAT_TEXTURE(c,d) HMSS_GetCroppedTexSample(c,d)
 #define TEX0 vTexCoord
@@ -262,7 +283,18 @@ vec3 sw2(vec3 x, vec3 color, float scanline)
 // Shadow mask (1-4 from PD CRT Lottes shader).
 vec3 Mask(vec2 pos, vec3 c)
 {
-	pos = floor(pos/masksize);
+	// HSM Added
+	float final_mask_size = masksize;
+	// If using automatic Mask Size
+	if (masksize < 0.5)
+	{
+		final_mask_size = (global.FinalViewportSize.x + global.FinalViewportSize.y) / 3 > 1900 ? 2 : 1;
+	}
+	pos = floor(pos/final_mask_size);
+	// End HSM Added
+
+	// HSM Removed
+	// pos = floor(pos/masksize);
 	vec3 mask = vec3(maskDark, maskDark, maskDark);
 	
 	// No mask
@@ -379,7 +411,19 @@ float SlotMask(vec2 pos, vec3 c)
 {
 	if (slotmask == 0.0) return 1.0;
 	
-	pos = floor(pos/slotms);
+	// HSM Added
+	float final_mask_size = slotms;
+	// If using automatic Mask Size
+	if (slotms < 0.5)
+	{
+		final_mask_size = (global.FinalViewportSize.x + global.FinalViewportSize.y) / 3 > 1900 ? 2 : 1;
+	}
+	pos = floor(pos/final_mask_size);
+	// End HSM Added
+
+	// HSM Removed
+	// pos = floor(pos/slotms);
+
 	float mx = pow(max(max(c.r,c.g),c.b),1.33);
 	float mlen = slotwidth*2.0;
 	float px = fract(pos.x/mlen);
@@ -707,7 +751,7 @@ void main()
 	FragColor = vec4(color, 1);
 	
 	// Prep and add output gamma
-	FragColor = HMSS_GetPostCrtPreppedColor(screen_curved_coord, screen_coord, FragColor,  1, 1);
+	FragColor = HMSS_GetPostCrtPreppedColor(FragColor, screen_curved_coord, screen_coord);
 	// End Addition
 }
 

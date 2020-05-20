@@ -1,4 +1,4 @@
-// Import so all the mega bexel parameters are the first in the parameter list
+// Import so all the mega bezel parameters are the first in the parameter list
 
 #include "hsm-text.inc"
 
@@ -100,23 +100,25 @@ vec4 AddText(vec4 in_color)
    out_color = mix(out_color, vec4(0, 0, 0, 1), GetTextMask(vTexCoord + 1 * vec2(0, 1/global.OutputSize.y), global.FinalViewportSize.xy, HMSS_GetScreenSize(), HMSS_GetCroppedOriginalSize(), HMSS_GetIntegerScaleMult()));
    out_color = mix(out_color, vec4(0, 0, 0, 1), GetTextMask(vTexCoord - 1 * vec2(0, 1/global.OutputSize.y), global.FinalViewportSize.xy, HMSS_GetScreenSize(), HMSS_GetCroppedOriginalSize(), HMSS_GetIntegerScaleMult()));
    out_color = mix(out_color, vec4(1, 1, 0, 1), GetTextMask(vTexCoord,                                      global.FinalViewportSize.xy, HMSS_GetScreenSize(), HMSS_GetCroppedOriginalSize(), HMSS_GetIntegerScaleMult()));
-   return out_color;
+   return clamp(out_color, 0, 1);
 }
 
 void main()
 {
-   FragColor =  texture(Source, vTexCoord);
+   FragColor = texture(Source, vTexCoord);
+
+   FragColor = clamp(HMSS_ApplyColorSpace(FragColor), 0, 1);
 
    // Royale can't currently is currently at the limit of number of textures so we can't add the LUT
    #ifndef ROYALE_PRESET
       FragColor = ApplyLUT(FragColor, SamplerLUT3);
    #endif
 
-   // Apply black level & gamma with input as non linearized
-   FragColor = HMSS_ApplyBlackLevelGammaLuma(FragColor, 0);
-
    // Add Color Temperature
    FragColor = HMSS_ApplyColorTemperature_D65_D50(FragColor);
+
+   // Apply black level & gamma with input as non linearized
+   FragColor = HMSS_ApplyBlackLevelGammaLuma(FragColor, 0);
 
    // Phosphor Persistence
    FragColor = HMSS_ApplyPhosphorPersistence(FragColor, PassFeedback6, vTexCoord);

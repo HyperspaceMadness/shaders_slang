@@ -36,7 +36,7 @@ layout(std140, set = 0, binding = 0) uniform UBO
     float mdapt_mode;
 } global;
 
-#pragma parameter mdapt_mode "[DE-DITHERING]    MDAPT - OFF, Strict, Relaxed, Stripes"	0 0 3 1
+#pragma parameter mdapt_mode "[DE-DITHERING MDAPT]    OFF, Strict, Relaxed, Stripes"	1 0 3 1
 
 
 #pragma stage vertex

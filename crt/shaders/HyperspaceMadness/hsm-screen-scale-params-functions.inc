@@ -8,7 +8,7 @@ Description:
 */
 
 // Screen Scale Required Parameters
-#pragma parameter hmss_mega_screen_scale_on				"___HSM MEGA BEZEL__ V.2020-05-18-0 -SCREEN SCALE ON" 1 0 1 1
+#pragma parameter hmss_mega_screen_scale_on				"___HSM MEGA BEZEL__ V.2020-05-23-0 -SCREEN SCALE ON" 1 0 1 1
 #pragma parameter hmss_screen_scale_debug				"[SCREEN SCALE]  Screen Scale Debug" 0 0 1 1
 
 #pragma parameter hmss_rotate_crt_image					"[SCALING]  Rotate CRT Image"  0 0 1 1
@@ -17,14 +17,17 @@ Description:
 #pragma parameter hmss_screen_aspect_ratio				"[SCALING]  Screen Aspect Ratio"  1.3333 0 3 0.002
 
 #pragma parameter hmss_integer_scale_mode 				"[SCALING]  Integer Scale Mode - OFF, ShortAxis, BothAxes" 0 0 2 1
+#pragma parameter hmss_int_scale_multiple_offset 		"[SCALING]  Int Scale Multiple Offset" 0 -20 20 1
+#pragma parameter hmss_int_scale_border_min_height 		"[SCALING]  Int Scale Border Min Height %" 5.5 -20 20 0.5
 // Non integer scale is set to 82.97 so that cores which output 224px will have integer scale by default
 // This is 8x integer scale at 3840x2160 and 6x integer scale at 1920x1080
 #pragma parameter hmss_non_integer_scale 				"[SCALING]  Non-Integer Scale %" 82.97 1 200 0.2
-#pragma parameter hmss_int_scale_multiple_offset 		"[SCALING]  Int Scale Multiple Offset" 0 -20 20 1
-#pragma parameter hmss_int_scale_border_min_height 		"[SCALING]  Int Scale Border Min Height %" 5.5 -20 20 0.5
 
 #pragma parameter hmss_scanline_direction 				"[SCANLINES]  Scanline Dir Guest-Venom - Auto, Horiz, Vert"  0 0 2 1
-#pragma parameter hmss_core_res_mult					"[SCANLINES]  Core Res Mult (Inv)"  1 1 16 1
+#pragma parameter hmss_core_res_mult					"[SCANLINES]  Core Y Res Mult (Inv)"  1 1 16 1
+
+#pragma parameter HMSS_INTERLACE_TRIGGER_RES 			"[SCANLINES]  Interlace Trigger Res (Also Fake Scanlines)" 600.0 0.0 800.0 25.0
+#define HMSS_INTERLACE_TRIGGER_RES global.HMSS_INTERLACE_TRIGGER_RES
 
 #pragma parameter hmss_position_offset_x 				"[POSITION]  Position Offset X" 0 -100 100 0.1
 #pragma parameter hmss_position_offset_y 				"[POSITION]  Position Offset Y" 0 -100 100 0.1
@@ -34,38 +37,47 @@ Description:
 #pragma parameter hmss_crop_overscan_left 				"[CROPPING]  Crop Overscan Left" 0 -256 256 1
 #pragma parameter hmss_crop_overscan_right 				"[CROPPING]  Crop Overscan Right" 0 -256 256 1
 
-#pragma parameter hmss_curvature_mode 					"[CURVATURE MODE]  Curvature Mode - 0:2D 1-2:3D Sphere, 3:3D Cyl" 0 0 3 1
-#pragma parameter hmss_curvature_3D_radius 				"[CURVATURE 3D]  3D Radius" 2 0.16 1024 0.01
-#pragma parameter hmss_curvature_3D_view_dist 			"[CURVATURE 3D]  3D View Distance" 2 0.5 1024 0.05
-#pragma parameter hmss_curvature_3D_tilt_angle_x 		"[CURVATURE 3D]  3D Tilt Angle X" 0 -3.1415 3.1415 0.01745
-#pragma parameter hmss_curvature_3D_tilt_angle_y 		"[CURVATURE 3D]  3D Tilt Angle Y" 0 -3.1415 3.1415 0.01745
-#pragma parameter hmss_curvature_2D_long_axis 			"[CURVATURE 2D]  2D/Extra3D Curvature on Long Axis - Def 2" 2 0 100 0.2
-#pragma parameter hmss_curvature_2D_short_axis 			"[CURVATURE 2D]  2D/Extra3D Curvature on Short Axis - Def 3" 3 0 100 0.2
-#pragma parameter hmss_curvature_post_scale_x 			"[CURVATURE POST SCALE]  Scale X" 100 70 130 0.2
-#pragma parameter hmss_curvature_post_scale_y 			"[CURVATURE POST SCALE]  Scale Y" 100 70 130 0.2
+#pragma parameter hmss_curvature_mode 					"[CURVATURE]  Curvature Mode - 0:2D 1-2:3D Sphere, 3:3D Cyl" 0 0 3 1
+#pragma parameter hmss_curvature_3D_radius 				"[CURVATURE]  3D Radius" 2 0.16 1024 0.01
+#pragma parameter hmss_curvature_3D_view_dist 			"[CURVATURE]  3D View Distance" 2 0.5 1024 0.05
+#pragma parameter hmss_curvature_3D_tilt_angle_x 		"[CURVATURE]  3D Tilt Angle X" 0 -3.1415 3.1415 0.01745
+#pragma parameter hmss_curvature_3D_tilt_angle_y 		"[CURVATURE]  3D Tilt Angle Y" 0 -3.1415 3.1415 0.01745
+#pragma parameter hmss_curvature_2D_long_axis 			"[CURVATURE]  2D Curvature on Long Axis - Def 2" 2 0 100 0.2
+#pragma parameter hmss_curvature_2D_short_axis 			"[CURVATURE]  2D Curvature on Short Axis - Def 3" 3 0 100 0.2
 
-#pragma parameter hmss_screen_corner_radius 			"[SCREEN EDGE]  Screen Corner Radius - Default 10" 0 0 70 1
-#pragma parameter hmss_screen_edge_sharpness 			"[SCREEN EDGE]  Screen Edge Sharpness" 0.4 0 1 0.01
-#pragma parameter hmss_screen_vignette                  "[SCREEN EDGE]  Screen Vignette" 0 0 1 0.01
+#define HMSS_CURVATURE_3D_EXTRA_X 0
+#define HMSS_CURVATURE_3D_EXTRA_Y 0
 
+// #pragma parameter HMSS_CURVATURE_POST_SCALE_X 			"[CURVATURE POST SCALE]  Scale X" 100 70 130 0.2
+#define HMSS_CURVATURE_POST_SCALE_X 100
+
+// #pragma parameter HMSS_CURVATURE_POST_SCALE_Y 			"[CURVATURE POST SCALE]  Scale Y" 100 70 130 0.2
+#define HMSS_CURVATURE_POST_SCALE_Y 100
+
+#pragma parameter hmss_color_crt_profile 				"[COLOR]  CRT Profile: sRGB,BVM,P22,SMPTE-C,Philips,Trinitron" 0 -1 5 1
+#pragma parameter hmss_color_space 						"[COLOR]  Color Space: sRGB, DCI, Adobe, Rec.2020" 0 0 3 1
 #pragma parameter hmss_color_lut_colors_on 				"[COLOR]  LUT Colors ON (No Royale)" 1 0 1 1
-#pragma parameter hmss_color_black_level 				"[COLOR]  Black Level" 0 -30 30 0.05-
-#pragma parameter hmss_color_negative_crop_brightness	"[COLOR]  Negative Crop Brightness" 0 0 20 0.02
-#pragma parameter hmss_color_luminance   				"[COLOR]  Luminance" 100 0 400 5
-#pragma parameter hmss_color_pre_crt_gamma_adjust		"[COLOR]  Gamma Adjust" 1 0.01 8 0.01
-#pragma parameter hmss_color_temperature   				"[COLOR]  Temperature" -50 -100.0 100.0 5.0
+#pragma parameter hmss_color_temperature   				"[COLOR]  Temperature - Def -50" -50 -100 100 5
 #pragma parameter hmss_color_saturation    				"[COLOR]  Saturation" 1.0 0.0 2.0 0.05
-#pragma parameter hmss_color_crt_gamma   				"[COLOR]  CRT Gamma" 2.2 0.1 5 0.05
+#pragma parameter hmss_color_black_level 				"[COLOR]  Black Level - Def -0.07" -0.07 -30 30 0.01
+// #pragma parameter hmss_color_pre_crt_gamma_adjust		"[COLOR]  Gamma Adjust" 1 0.01 8 0.01
+#pragma parameter hmss_color_luminance   				"[COLOR]  Luminance" 100 0 400 5
+#pragma parameter hmss_color_negative_crop_brightness	"[COLOR]  Negative Crop Brightness -  Def 0.06" 0.06 0 20 0.02
+#pragma parameter hmss_color_crt_gamma   				"[COLOR]  CRT Gamma - Def 2.4" 2.4 0.1 5 0.05
 
-#pragma parameter hmss_phosphor_persistence             "[PHOSPHOR]  Persistence - Pos:Blue, Neg:Neutral" 0 -1 1 0.05
+#pragma parameter hmss_phosphor_persistence             "[PHOSPHOR PERSISTENCE]  Amount - Pos:Blue, Neg:Neutral" 0 -1 1 0.05
 
-#pragma parameter hmss_post_crt_scanline_res 			"[POST CRT SCANLINES] Simulated Resolution - 0:OFF" 0 0 480 20
+#pragma parameter hmss_screenfx_corner_radius 			"[SCREEN FX]  Screen Corner Radius - Def 10" 0 0 70 1
+#pragma parameter hmss_screenfx_edge_sharpness 			"[SCREEN FX]  Screen Edge Sharpness - Def 0.4" 0.4 0 1 0.01
+#pragma parameter hmss_screenfx_vignette                "[SCREEN FX]  Screen Vignette" 0 0 1 0.01
+#pragma parameter hmss_screenfx_fake_scanline_opacity 	"[SCREEN FX]  Fake 240p Scanline Opacity - Def 0.7" 0.7 0 8 0.05
 
 #pragma parameter hmss_tube_black_edge_thickness 		"[TUBE]  Black Edge Thickness" 1.2 -2 8 0.05
 #pragma parameter hmss_tube_black_edge_curvature_scale 	"[TUBE]  Black Edge Curvature Scale" 1 0 4 0.1
 
-
-const float HMSS_DEFAULT_GAMMA = 2.2;
+const float HMSS_SCREENFX_SCANLINE_RES = 240;
+const float HMSS_DEFAULT_CRT_GAMMA = 2.4;
+const float HMSS_DEFAULT_SRGB_GAMMA = 2.2;
 
 // Macros.
 #define FIX(c) max(abs(c), 1e-5)
@@ -427,7 +439,7 @@ vec2 HMSS_Get2DCurvedCoord(vec2 in_coord, float curvature_multiplier)
 
 vec2 HMSS_GetPostCurvatureScaledCoord(vec2 in_curved_coord)
 {
-	return (in_curved_coord - 0.5) / vec2(global.hmss_curvature_post_scale_x / 100, global.hmss_curvature_post_scale_y / 100) + 0.5;
+	return (in_curved_coord - 0.5) / vec2(HMSS_CURVATURE_POST_SCALE_X / 100, HMSS_CURVATURE_POST_SCALE_Y / 100) + 0.5;
 }
 
 vec2 HMSS_GetCurvedCoord(vec2 in_coord, float curvature_multiplier)
@@ -438,7 +450,7 @@ vec2 HMSS_GetCurvedCoord(vec2 in_coord, float curvature_multiplier)
 		float epsilon = 0.001;
 		float geom_radius_with_mult = global.hmss_curvature_3D_radius * (1 / (curvature_multiplier + epsilon));
         float screen_aspect = HMSS_GetScreenAspect();
-        vec2 extra_curvature_mult = HMSS_GetCurvatureValues() / 2 * 50 + 1;
+        vec2 extra_curvature_mult = vec2(HMSS_CURVATURE_3D_EXTRA_X, HMSS_CURVATURE_3D_EXTRA_Y) / 2 * 50 + 1;
 		mat2x2 pixel_to_video_uv;
 		curved_coord = HRG_GetGeomCurvedCoord(	in_coord, 
 												global.hmss_curvature_mode, 
@@ -548,7 +560,7 @@ float HMSS_GetCornerMask(vec2 in_coord, float corner_radius, float edge_sharpnes
 {
 	//(0.5 - abs(in_coord - 0.5)) * 2
 	vec2 new_coord = min(in_coord, vec2(1.0) - in_coord) * vec2(HMSS_GetScreenAspect(), 1);
-	vec2 corner_distance = vec2(max(corner_radius / 1000.0, (1.0 - global.hmss_screen_edge_sharpness * edge_sharpness) * 0.01));
+	vec2 corner_distance = vec2(max(corner_radius / 1000.0, (1.0 - global.hmss_screenfx_edge_sharpness * edge_sharpness) * 0.01));
 	new_coord = (corner_distance - min(new_coord, corner_distance));
 	float distance = sqrt(dot(new_coord, new_coord));
 
@@ -580,20 +592,20 @@ vec4 HMSS_ApplyGamma(vec4 in_color, float in_gamma)
 	return vec4(out_color, in_color.a);
 }
 
-vec4 HMSS_Linearize(vec4 in_color)
+vec4 HMSS_Linearize(vec4 in_color, float encoded_gamma)
 {
-	return HMSS_ApplyGamma(in_color, 1 / HMSS_DEFAULT_GAMMA);
+	return HMSS_ApplyGamma(in_color, 1 / encoded_gamma);
 }
 
-vec4 HMSS_Delinearize(vec4 in_color)
+vec4 HMSS_Delinearize(vec4 in_color, float in_gamma)
 {
-	return HMSS_ApplyGamma(in_color, HMSS_DEFAULT_GAMMA);
+	return HMSS_ApplyGamma(in_color, in_gamma);
 }
 
 vec4 HMSS_ApplyBlackLevelGammaLuma(vec4 in_color, float color_is_linear)
 {
 	// If there is no black level or gamma adjustment return without any adjustment
-	if (global.hmss_color_black_level == 0 && global.hmss_color_pre_crt_gamma_adjust == 1)
+	if (global.hmss_color_black_level == 0 && global.hmss_color_luminance == 100)
 	{
 		return in_color;
 	}
@@ -603,7 +615,7 @@ vec4 HMSS_ApplyBlackLevelGammaLuma(vec4 in_color, float color_is_linear)
 	// Linearize if color isn't linear
 	if (color_is_linear == 0)
 	{
-		out_color = HMSS_Linearize(out_color);
+		out_color = HMSS_Linearize(out_color, HMSS_DEFAULT_CRT_GAMMA);
 	}
 
 	// Black Level
@@ -614,13 +626,13 @@ vec4 HMSS_ApplyBlackLevelGammaLuma(vec4 in_color, float color_is_linear)
 	// Lumanence
 	out_color *= global.hmss_color_luminance / 100;
 
-	// Gamma
-	out_color = HMSS_ApplyGamma(out_color, global.hmss_color_pre_crt_gamma_adjust);
+	// // Gamma
+	// out_color = HMSS_ApplyGamma(out_color, global.hmss_color_pre_crt_gamma_adjust);
 
 	// If color isn't linear put default gamma back on
 	if (color_is_linear == 0)
 	{
-		out_color = HMSS_Delinearize(out_color);
+		out_color = HMSS_Delinearize(out_color, HMSS_DEFAULT_CRT_GAMMA);
 	}
 
 	out_color.w = in_color.w;
@@ -710,7 +722,7 @@ vec4 HMSS_ApplyPhosphorPersistence(vec4 in_color, sampler2D in_feedback_pass, ve
 	return out_color;
 }
 
-// Matrices
+// Guest-Venom d65-d50 Matrices
 const mat3 D65_to_XYZ = mat3 (
            0.4306190,  0.2220379,  0.0201853,
            0.3415419,  0.7066384,  0.1295504,
@@ -759,6 +771,111 @@ vec4 HMSS_ApplyColorTemperature_D65_D50(vec4 in_color)
 	return vec4(color, 1.0);
 }
 
+// Guest-Venom Color Spaces
+const mat3 Profile0 = 
+mat3(
+ 0.412391,  0.212639,  0.019331,
+ 0.357584,  0.715169,  0.119195,
+ 0.180481,  0.072192,  0.950532
+);
+
+const mat3 Profile1 = 
+mat3(
+ 0.430554,  0.222004,  0.020182,
+ 0.341550,  0.706655,  0.129553,
+ 0.178352,  0.071341,  0.939322
+);
+
+const mat3 Profile2 = 
+mat3(
+ 0.396686,  0.210299,  0.006131,
+ 0.372504,  0.713766,  0.115356,
+ 0.181266,  0.075936,  0.967571
+);
+
+const mat3 Profile3 = 
+mat3(
+ 0.393521,  0.212376,  0.018739,
+ 0.365258,  0.701060,  0.111934,
+ 0.191677,  0.086564,  0.958385
+);
+
+const mat3 Profile4 = 
+mat3(
+ 0.392258,  0.209410,  0.016061,
+ 0.351135,  0.725680,  0.093636,
+ 0.166603,  0.064910,  0.850324
+);
+
+const mat3 Profile5 = 
+mat3(
+ 0.377923,  0.195679,  0.010514,
+ 0.317366,  0.722319,  0.097826,
+ 0.207738,  0.082002,  1.076960
+);
+
+const mat3 ToSRGB = 
+mat3(
+ 3.240970, -0.969244,  0.055630,
+-1.537383,  1.875968, -0.203977,
+-0.498611,  0.041555,  1.056972
+);
+
+const mat3 ToDCI = 
+mat3(
+ 2.725394,  -0.795168,   0.041242,
+-1.018003,   1.689732,  -0.087639,
+-0.440163,   0.022647,   1.100929
+);
+
+const mat3 ToAdobe = 
+mat3(
+ 2.041588, -0.969244,  0.013444,
+-0.565007,  1.875968, -0.11836,
+-0.344731,  0.041555,  1.015175
+);
+
+const mat3 ToREC = 
+mat3(
+ 1.716651, -0.666684,  0.017640,
+-0.355671,  1.616481, -0.042771,
+-0.253366,  0.015769,  0.942103
+);
+
+// Guest-Venom Color Spaces
+vec4 HMSS_ApplyColorSpace(vec4 in_color)
+{
+	if (global.hmss_color_crt_profile == -1.0) return in_color;
+
+	float gamma;
+	mat3 m_out;
+	vec3 color_rgb = in_color.rgb;
+	
+	if (global.hmss_color_space == 0.0) { gamma = 2.4; m_out =  ToSRGB; } else
+	if (global.hmss_color_space == 1.0) { gamma = 2.6; m_out =  ToDCI;  } else
+	if (global.hmss_color_space == 2.0) { gamma = 2.2; m_out =  ToAdobe;} else
+	if (global.hmss_color_space == 3.0) { gamma = 2.4; m_out =  ToREC;  }
+	
+	vec3 out_color_rgb = pow(color_rgb, vec3(gamma));
+	// vec3 color_rgb = HMSS_Delinearize(in_color, gamma).rgb;
+
+	mat3 m_in = Profile0;
+	if (global.hmss_color_crt_profile == 0.0) { m_in = Profile0; } else	
+	if (global.hmss_color_crt_profile == 1.0) { m_in = Profile1; } else
+	if (global.hmss_color_crt_profile == 2.0) { m_in = Profile2; } else
+	if (global.hmss_color_crt_profile == 3.0) { m_in = Profile3; } else
+	if (global.hmss_color_crt_profile == 4.0) { m_in = Profile4; } else
+	if (global.hmss_color_crt_profile == 5.0) { m_in = Profile5; }
+	
+	out_color_rgb = m_in * out_color_rgb;
+	out_color_rgb = m_out * out_color_rgb;
+
+	out_color_rgb = pow(out_color_rgb, vec3(1 / gamma));	
+	// vec4 out_color = HMSS_Linearize(vec4(color_rgb, 1), gamma);
+	
+	return vec4(out_color_rgb, in_color.a);
+}
+
 float HMSS_GetVignetteFactor(vec2 coord, float amount)
 {
 	float orig_mamehlsl_amount = amount;
@@ -788,58 +905,75 @@ float HMSS_GetScreenVignetteFactor(vec2 coord, float amount)
 	else return vignette;
 }
 
+
+
 // Torridgristle - ScanlineSimple pass - Public domain
-float HMSS_GetScanlineMask(vec2 in_coord)
+vec4 HMSS_ApplyScanlineMask(vec4 in_color, vec2 in_coord)
 {
-	if (global.hmss_post_crt_scanline_res < 0.5) return 1;
+	if (global.hmss_screenfx_fake_scanline_opacity < 0.001 || HMSS_GetOriginalSize().y < HMSS_INTERLACE_TRIGGER_RES )
+	{
+		return in_color;
+	}
 
 	float pi = 3.141592654;
 
-	float distance_scan_axis = 0;
-	float screen_size_scan_axis = 0;
+	float scan_axis_pos = 0;
+	float scan_axis_screen_scale_res = 0;
+	float opposite_axis_pos = 0;
+
 	vec2 screen_size = global.OutputSize.xy * HMSS_GetScreenScale();
 
 	if (HMSS_GetUseVerticalScanlines() > 0.5)
 	{
-		screen_size_scan_axis = screen_size.x;
-		distance_scan_axis = in_coord.x;
+		scan_axis_screen_scale_res = screen_size.x;
+		scan_axis_pos = in_coord.x;
+		opposite_axis_pos = in_coord.y;
 	}
 	else
 	{
-		screen_size_scan_axis = screen_size.y;
-		distance_scan_axis = in_coord.y;
+		scan_axis_screen_scale_res = screen_size.y;
+		scan_axis_pos = in_coord.y;
+		opposite_axis_pos = in_coord.x;
 	}
 	
-	float scanline_size = floor(screen_size_scan_axis / global.hmss_post_crt_scanline_res);
+	float scanline_size = ceil(scan_axis_screen_scale_res / HMSS_SCREENFX_SCANLINE_RES);
 
-	float scanline_mask = mod(distance_scan_axis * screen_size_scan_axis, scanline_size) / scanline_size;
-	scanline_mask = 1 - abs(scanline_mask - 0.5) * 2.;
-	scanline_mask = 1 - pow(1 - scanline_mask, 2);
+	float scan = mod(scan_axis_pos * scan_axis_screen_scale_res, scanline_size) / scanline_size;
 
-	return scanline_mask;
+	// Alternate, modulating the scanline width depending on brightness
+	//float scanline_mask = HHLP_EasePowerOut(1 - abs(scan - 0.5) * 2, 0.5 + 2 * smoothstep(0.4, 0.9, (in_color.r + in_color.g +  in_color.b) / 3));
+	float color_brightness_modulation = HHLP_EasePowerOut(smoothstep(0.4, 0.99, (in_color.r + in_color.g +  in_color.b) / 3), 2);
+
+	float scanline_mask = 1 - abs(scan - 0.5) * 2;
+	scanline_mask = pow(1 - scanline_mask, 1);
+	scanline_mask *= (0.5 + 0.5 * (1 - color_brightness_modulation)) * scanline_mask;
+
+	float final_scanline_mask = 1 - 2 * global.hmss_screenfx_fake_scanline_opacity * scanline_mask;
+
+	vec4 masked_color = in_color;
+	masked_color *= 1 + 0.7 * global.hmss_screenfx_fake_scanline_opacity;
+	masked_color *= final_scanline_mask;
+	masked_color.w = in_color.w;
+
+	// Split Screen for debugging
+	// masked_color = opposite_axis_pos > 0.7 ? in_color : masked_color;
+
+	return clamp(masked_color, 0, 1);
 }
 
-vec4 HMSS_GetPostCrtPreppedColor(vec2 screen_curved_coord, vec2 screen_coord, vec4 in_color, float encoded_input_gamma, float output_with_gamma)
+vec4 HMSS_GetPostCrtPreppedColor(vec4 in_color_linear, vec2 screen_curved_coord, vec2 screen_coord)
 {
-	vec4 out_color = in_color;
-	
-	// Put the color in linear space by correcting for the encoded gamma
-	if (encoded_input_gamma != 1)
-	{
-		out_color = HMSS_ApplyGamma(in_color, encoded_input_gamma);
-	}
-	float screen_mask = HMSS_GetCornerMask((screen_curved_coord - 0.5) * 0.999 + 0.5, global.hmss_screen_corner_radius, 0.9);
+	float screen_mask = HMSS_GetCornerMask((screen_curved_coord - 0.5) * 0.999 + 0.5, global.hmss_screenfx_corner_radius, 0.9);
 
-	vec2 mirrored_screen_coord = HMSS_GetMirrorWrappedCoord(screen_curved_coord);
-
-	
 	// TODO Screen Edge Sharpness should be applied here instead of in the mega bezel shader
-	float screen_edge_mask = HMSS_GetCornerMask(screen_curved_coord, global.hmss_screen_corner_radius, global.hmss_screen_edge_sharpness);
+	float screen_edge_mask = HMSS_GetCornerMask(screen_curved_coord, global.hmss_screenfx_corner_radius, global.hmss_screenfx_edge_sharpness);
 	screen_edge_mask = 1 - ((1 - screen_edge_mask) * screen_mask);
 
+	vec4 out_color = in_color_linear;
 	out_color *= screen_edge_mask;
 
-	float vignette_factor = HMSS_GetScreenVignetteFactor(mirrored_screen_coord, global.hmss_screen_vignette);
+	vec2 mirrored_screen_coord = HMSS_GetMirrorWrappedCoord(screen_curved_coord);
+	float vignette_factor = HMSS_GetScreenVignetteFactor(mirrored_screen_coord, global.hmss_screenfx_vignette);
 
 	// If this is called from the glass preset we don't want the vignette to affect mirrored area
 	#ifdef GLASS_PRESET
@@ -848,12 +982,11 @@ vec4 HMSS_GetPostCrtPreppedColor(vec2 screen_curved_coord, vec2 screen_coord, ve
 
 	out_color *= vignette_factor;
 
-	if (global.hmss_post_crt_scanline_res > 0.5)
+	if (HMSS_SCREENFX_SCANLINE_RES > 0.5)
 	{
-		float scanline_mask = HMSS_GetScanlineMask(screen_coord);
-		scanline_mask = 1 - ((1 - scanline_mask) * screen_mask);
-		// Increase brightness to compensate for the mask
-		out_color *= scanline_mask * 1.5;
+		vec4 scanline_masked_color = HMSS_ApplyScanlineMask(out_color, screen_coord);
+		
+		out_color = mix(out_color, scanline_masked_color, screen_mask);
 	}
 
 	// If we are not using this with the bezel we want
@@ -862,10 +995,7 @@ vec4 HMSS_GetPostCrtPreppedColor(vec2 screen_curved_coord, vec2 screen_coord, ve
 	#endif
 
 	// Apply the final Gamma
-	if (output_with_gamma > 0.5)
-	{
-		out_color = HMSS_ApplyGamma(out_color, global.hmss_color_crt_gamma);
-	}
+	out_color = HMSS_Delinearize(out_color, global.hmss_color_crt_gamma);
 
 	return out_color;
 }

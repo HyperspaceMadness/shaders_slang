@@ -28,5 +28,5 @@ layout(set = 0, binding = 2) uniform sampler2D Source;
 
 void main()
 {
-   FragColor = HMSS_Linearize(texture(Source, vTexCoord));
+   FragColor = HMSS_Linearize(texture(Source, vTexCoord), HMSS_DEFAULT_CRT_GAMMA);
 }

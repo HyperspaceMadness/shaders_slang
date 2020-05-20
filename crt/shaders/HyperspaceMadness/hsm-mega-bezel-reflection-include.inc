@@ -58,11 +58,11 @@ layout(std140, set = 0, binding = 0) uniform UBO
 	float hmss_curvature_3D_tilt_angle_y;
 	float hmss_curvature_2D_long_axis;
 	float hmss_curvature_2D_short_axis;
-	float hmss_curvature_post_scale_x;
-	float hmss_curvature_post_scale_y;
+	float HMSS_CURVATURE_POST_SCALE_X;
+	float HMSS_CURVATURE_POST_SCALE_Y;
 	
 	float hmss_corner_radius;
-	float hmss_screen_edge_sharpness;
+	float hmss_screenfx_edge_sharpness;
 	float hmss_tube_black_edge_thickness;
 	float hmss_tube_black_edge_curvature_scale;
 
@@ -303,7 +303,7 @@ void main()
 	// Get the CRT pass and make it in linear space & mask the area outside the screen
 	vec4 frag_color_linear = HHLP_Linearize(texture(BR_CrtPass, viewportCoord.xy));
 	// Shrink the mask by 0.001 to clip off outer edge
-	frag_color_linear *= HMSS_GetCornerMask(((HMSS_GetCurvedCoord(screenCoord, 1) - 0.5) * 1.001) + 0.5, global.hmss_corner_radius, global.hmss_screen_edge_sharpness);
+	frag_color_linear *= HMSS_GetCornerMask(((HMSS_GetCurvedCoord(screenCoord, 1) - 0.5) * 1.001) + 0.5, global.hmss_corner_radius, global.hmss_screenfx_edge_sharpness);
 
 	//----------------------------------------------------
 	//  Calculate Outside mapping Coords

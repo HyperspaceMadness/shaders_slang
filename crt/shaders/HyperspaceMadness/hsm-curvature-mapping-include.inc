@@ -38,9 +38,9 @@ void main()
 		edge_sharpness = HMBZ_GLASS_INNER_EDGE_SOFTNESS;
 	#endif
 
-	float outside_tube_mask = 1 - HMSS_GetCornerMask(tube_curved_coord, global.hmbz_bezel_inner_corner_radius_scale * global.hmss_screen_corner_radius, 0.9);
+	float outside_tube_mask = 1 - HMSS_GetCornerMask(tube_curved_coord, global.hmbz_bezel_inner_corner_radius_scale * global.hmss_screenfx_corner_radius, 0.9);
 
-	float edge_mask =  HMSS_GetCornerMask(edge_mask_coord, global.hmbz_bezel_inner_corner_radius_scale * global.hmss_screen_corner_radius, edge_sharpness);
+	float edge_mask =  HMSS_GetCornerMask(edge_mask_coord, global.hmbz_bezel_inner_corner_radius_scale * global.hmss_screenfx_corner_radius, edge_sharpness);
 
 	FragColor = vec4(tube_curved_coord.x, tube_curved_coord.y, outside_tube_mask, edge_mask);
 }

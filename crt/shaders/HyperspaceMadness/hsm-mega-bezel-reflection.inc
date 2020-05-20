@@ -27,11 +27,16 @@ Thanks to:
 #define BLEND_MODE_NORMAL 0
 #define BLEND_MODE_ADD 1
 #define BLEND_MODE_MULTIPLY 2
+#define BLEND_MODE_NORMAL_UNDER 3
+#define BLEND_MODE_ADD_UNDER 4
+#define BLEND_MODE_MULTIPLY_UNDER 5
 
-#define MASK_MODE_MASK_ALL 0
-#define MASK_MODE_MASK_TUBE 1
-#define MASK_MODE_MASK_BEZEL 2
-#define MASK_MODE_MASK_FRAME 3
+#define MASK_MODE_ALL 0
+#define MASK_MODE_TUBE 1
+#define MASK_MODE_OUTSIDE_TUBE 2
+#define MASK_MODE_FRAME 3
+#define MASK_MODE_OUTSIDE_BEZEL 4
+#define MASK_MODE_OUTSIDE_FRAME 5
 
 
 /////////////// Helper Functions ///////////////
@@ -188,9 +193,10 @@ void main()
 	// CRT Pass
 	//----------------------------------------------------
 	// Get the CRT pass and make it in linear space & mask the area outside the screen
-	vec4 frag_color_linear = HMSS_Linearize(texture(BR_CRTPass, viewportCoord.xy));
+	vec4 crt_image_linear = HMSS_Linearize(texture(BR_CRTPass, viewportCoord.xy), HMSS_DEFAULT_CRT_GAMMA);
+	crt_image_linear = HMSS_ApplyGamma(crt_image_linear, HMSS_DEFAULT_CRT_GAMMA/HMSS_DEFAULT_SRGB_GAMMA);
 	// Shrink the mask by 0.001 to clip off outer edge
-	frag_color_linear *= HMSS_GetCornerMask(((HMSS_GetCurvedCoord(screenCoord, 1) - 0.5) * 1.001) + 0.5, global.hmss_screen_corner_radius, global.hmss_screen_edge_sharpness);
+	crt_image_linear *= HMSS_GetCornerMask(((HMSS_GetCurvedCoord(screenCoord, 1) - 0.5) * 1.001) + 0.5, global.hmss_screenfx_corner_radius, global.hmss_screenfx_edge_sharpness);
 
 	//----------------------------------------------------
 	//  Calculate Outside mapping Coords
@@ -238,7 +244,7 @@ void main()
 	vec2 frame_coord_ctr = HMSS_GetInverseScaledCoord(vTexCoord, outer_bezel_scale * tube_scale) - 0.5 + vec2(0, global.hmbz_frame_pos_y_offset / 100);
 
 
-	float outside_bezel_mask = 1 - HMSS_GetCornerMask(frame_coord_ctr + 0.5, global.hmbz_bezel_outer_corner_radius_scale * global.hmss_screen_corner_radius, 0.9);
+	float outside_bezel_mask = 1 - HMSS_GetCornerMask(frame_coord_ctr + 0.5, global.hmbz_bezel_outer_corner_radius_scale * global.hmss_screenfx_corner_radius, 0.9);
 
 	
 	//----------------------------------------------------
@@ -276,8 +282,8 @@ void main()
 
 	float fade_out_to_corner = HHLP_QuadraticBezier(clamp(length(outermap_warped_outside_screen_vector) / (corner_crease_length * 2), 0, 1), vec2(0.5, HBR_CORNER_SPREAD_FALLOFF / 100));
 
-	float corner_fade_width_inner = global.hbr_corner_inner_spread / 100 * (screen_scale.x + screen_scale.y) * global.hmbz_bezel_inner_corner_radius_scale * global.hmss_screen_corner_radius / 10 / 250 * 1.2;
-	float corner_fade_width_outer = global.hbr_corner_outer_spread / 100 * (screen_scale.x + screen_scale.y) * global.hmbz_bezel_outer_corner_radius_scale * global.hmss_screen_corner_radius / 10 / 250 * 1.6;
+	float corner_fade_width_inner = global.hbr_corner_inner_spread / 100 * (screen_scale.x + screen_scale.y) * global.hmbz_bezel_inner_corner_radius_scale * global.hmss_screenfx_corner_radius / 10 / 250 * 1.2;
+	float corner_fade_width_outer = global.hbr_corner_outer_spread / 100 * (screen_scale.x + screen_scale.y) * global.hmbz_bezel_outer_corner_radius_scale * global.hmss_screenfx_corner_radius / 10 / 250 * 1.6;
 	float corner_fade_width = (corner_fade_width_inner + fade_out_to_corner * (corner_fade_width_outer - corner_fade_width_inner));
 
 	// Get a vector perpendicular to the crease that we can shift the crease to blend between bottom/top and sides
@@ -303,31 +309,38 @@ void main()
 	float top_corner_mask = corner_mask * top_half_mask;
 	float bottom_corner_mask = corner_mask * (1 - top_half_mask);
 
-	float frame_inner_edge_mask = (HMBZ_FRAME_INNER_EDGE_THICKNESS == 0) ? 0 : 1 - HMSS_GetCornerMask(frame_coord_ctr * (1 + (HMBZ_FRAME_INNER_EDGE_THICKNESS / 1000 / vec2(screen_aspect, 1))) + 0.5, global.hmbz_bezel_outer_corner_radius_scale * global.hmss_screen_corner_radius, 0.9);
+	float frame_inner_edge_mask = (HMBZ_FRAME_INNER_EDGE_THICKNESS == 0) ? 0 : 1 - HMSS_GetCornerMask(frame_coord_ctr * (1 + (HMBZ_FRAME_INNER_EDGE_THICKNESS / 1000 / vec2(screen_aspect, 1))) + 0.5, global.hmbz_bezel_outer_corner_radius_scale * global.hmss_screenfx_corner_radius, 0.9);
 
 	float noise_mask = clamp(fract(sin(dot(outermap_warped_coord_ctr + vec2(0.5, 0.5) + 1, vec2(12.9898, 78.233))) * 43758.5453), 0, 1);
 	
-	// vec2 inside_tube_coord = clamp(0.5 - clamp(abs(tube_warped_coord_ctr), vec2(0), vec2(0.5)), 0, 1);
-	float tube_shadow_mask = HMSS_GetCornerMask(tube_warped_coord_ctr + 0.5, global.hmbz_bezel_inner_corner_radius_scale * global.hmss_screen_corner_radius, 0); //HHLP_EasePowerOut(smoothstep(global.hmbz_tube_edge_shadow * 0.2, 0.01, dist_inside_tube_edge), 3); //HHLP_QuadraticBezier(smoothstep(1 / 100, 0, dist_inside_tube_edge), vec2(0, 1));
+	float tube_shadow_mask = HMSS_GetCornerMask(tube_warped_coord_ctr + 0.5, global.hmbz_bezel_inner_corner_radius_scale * global.hmss_screenfx_corner_radius, 0); //HHLP_EasePowerOut(smoothstep(global.hmbz_tube_edge_shadow * 0.2, 0.01, dist_inside_tube_edge), 3); //HHLP_QuadraticBezier(smoothstep(1 / 100, 0, dist_inside_tube_edge), vec2(0, 1));
 	float tube_edge_shadow_mult = global.hmbz_tube_edge_shadow * (tube_shadow_mask) + (1 - global.hmbz_tube_edge_shadow);
-	// #ifdef ShowPlacementGuide
-	// 	placement_guide_red_alpha += 0.5*tube_shadow_mask;
-	// #endif
+	crt_image_linear *= tube_edge_shadow_mult;
 
-	frag_color_linear *= tube_edge_shadow_mult;
+	//----------------------------------------------------
+	// Tube Glass Image
+	//----------------------------------------------------
+	if (global.hmbz_tube_glass_image_opacity > 0)
+	{
+		vec4 tube_glass_color = HMSS_Linearize(texture(TubeGlassImage, tube_warped_coord_ctr * 0.97 + 0.5), HMSS_DEFAULT_SRGB_GAMMA);
+		tube_glass_color.a *= (global.hmbz_tube_glass_image_opacity / 100) * tube_mask;
+		crt_image_linear = BlendModeLayerMix(crt_image_linear, tube_glass_color, BLEND_MODE_ADD);
+	}
 
-	vec4 base_image	= frag_color_linear;
 	vec2 tiled_image_coord = mod(imageLayerCoord, 1);
-	vec4 background_image = vec4(0);
+	vec4 background_color = vec4(0);
 	if (HMSS_GetScreenAspect() > 1)
 	{
-		background_image = texture(BackgroundImage, tiled_image_coord).rgba;
+		background_color = texture(BackgroundImage, tiled_image_coord).rgba;
 	}
 	else 
 	{
-		background_image = texture(BackgroundVertImage, tiled_image_coord).rgba;
+		background_color = texture(BackgroundVertImage, tiled_image_coord).rgba;
 	}
-	background_image = HMSS_Linearize(background_image);
+	background_color = HMSS_Linearize(background_color, HMSS_DEFAULT_SRGB_GAMMA);
+
+	float outside_tube_mask_wider = 1 - HMSS_GetCornerMask(tube_warped_coord_ctr * 0.996 + 0.5, global.hmbz_bezel_inner_corner_radius_scale * global.hmss_screenfx_corner_radius, 0.9);
+	background_color *= global.hmbz_background_image_opacity * background_color.a * outside_tube_mask_wider;
 
 	float vignette_shadow_mask = 0;
 	vignette_shadow_mask += 0.75 * HHLP_QuadraticBezier(1 - HMSS_GetVignetteFactor(viewportCoord, global.hmbz_background_image_vignette_opacity), vec2(1, 0.5));
@@ -341,33 +354,14 @@ void main()
 	// vignette_shadow_mask = clamp(global.hmbz_background_image_vignette_opacity * vignette_shadow_mask, 0, 1);
 	
 	//----------------------------------------------------
-	// Background Image - Applied at the bottom
+	// Background Image - Applied Underneath Bezel
 	//----------------------------------------------------
-	// TODO The position adjustment is moving the texture twice as fast as the screen
-
-	float bezel_image_alpha = background_image.a;
 
 	// Add Background
-	float outside_tube_mask_wider = 1 - HMSS_GetCornerMask(tube_warped_coord_ctr * 0.996 + 0.5, global.hmbz_bezel_inner_corner_radius_scale * global.hmss_screen_corner_radius, 0.9);
-
-	float clipping_mask = outside_tube_mask_wider * bezel_image_alpha;
-	vec4 background_color = global.hmbz_background_image_opacity * background_image;
+	vec4 shaded_background_color = background_color;
 	if (global.hmbz_background_image_vignette_opacity > 0)
 	{
-		background_color = mix(background_color, vec4(0, 0, 0, 1), vignette_shadow_mask);
-	}
-
-	frag_color_linear	= vec4(mix(tube_edge_shadow_mult * base_image, background_color, clipping_mask));
-
-
-	//----------------------------------------------------
-	// Tube Glass Image
-	//----------------------------------------------------
-	if (global.hmbz_tube_glass_image_opacity > 0)
-	{
-		vec4 tube_glass_color = HMSS_Linearize(texture(TubeGlassImage, tube_warped_coord_ctr * 0.97 + 0.5 ).rgba);
-		tube_glass_color.a *= (global.hmbz_tube_glass_image_opacity / 100) * tube_mask;
-		frag_color_linear	= BlendModeLayerMix(frag_color_linear, tube_glass_color, BLEND_MODE_ADD);
+		shaded_background_color = mix(background_color, vec4(0, 0, 0, 1), vignette_shadow_mask);
 	}
 
 	// ----------------------------------------------------
@@ -405,7 +399,8 @@ void main()
 	float hmbz_frame_brightness = 100;
 
 	// TODO Likely should not be linearizing here
-	vec3 orig_color = HMSS_Linearize(vec4(HMSS_HSVtoRGB(vec3(global.hmbz_bezel_color_hue / 360, global.hmbz_bezel_color_saturation / 100, global.hmbz_bezel_color_value / 100)), 1)).rgb;
+	vec3 orig_color = HMSS_Linearize(vec4(HMSS_HSVtoRGB(vec3(global.hmbz_bezel_color_hue / 360, global.hmbz_bezel_color_saturation / 100, global.hmbz_bezel_color_value / 100)), 1), HMSS_DEFAULT_SRGB_GAMMA).rgb;
+	
 	vec3 base_color = mix(orig_color, background_color.rgb, global.hmbz_bezel_color_blend_with_image);
 
 	vec3 base_color_with_noise = mix(base_color, 1.5 * base_color * noise_mask, global.hmbz_bezel_noise / 100);
@@ -488,13 +483,45 @@ void main()
 	}
 	final_mask = clamp(final_mask, 0, 1) * outside_tube_mask;
 
-	// Add Bezel, Frame & Shadow color to the screen color
-	frag_color_linear = mix(frag_color_linear, bezel_and_frame_color_v4, final_mask);
+	vec4 bezel_frame_bg_color = mix(shaded_background_color, bezel_and_frame_color_v4, final_mask);
+	bezel_frame_bg_color = HMSS_ApplyGamma(bezel_frame_bg_color, global.hmss_bezel_gamma);
 
+	// Add Bezel, Frame & Shadow color to the screen color
+	vec4 frag_color_linear = mix(crt_image_linear, bezel_frame_bg_color, outside_tube_mask);
+
+	// Get the top image color and masking values if needed
+	vec4 top_image = vec4(0);
+	if (global.htl_top_image_opacity > 0)
+	{
+		top_image = HMSS_GetScreenAspect() < 1 ? texture(TopLayerVertImage, imageLayerCoord):
+												 	  texture(TopLayerImage,     imageLayerCoord);
+		top_image = HMSS_Linearize(top_image, HMSS_DEFAULT_SRGB_GAMMA);
+
+		// Get Mask for Top Layer Image
+		float top_image_mask = 1;
+		top_image_mask = 	(global.htl_top_image_mask_mode == MASK_MODE_ALL) ? 1 :
+							(global.htl_top_image_mask_mode == MASK_MODE_TUBE) ? tube_mask :
+							(global.htl_top_image_mask_mode == MASK_MODE_OUTSIDE_TUBE) ? clamp(outside_tube_mask - edge_mask, 0, 1) :
+							(global.htl_top_image_mask_mode == MASK_MODE_FRAME) ? frame_mask :
+							(global.htl_top_image_mask_mode == MASK_MODE_OUTSIDE_BEZEL) ? outside_bezel_mask :
+							(global.htl_top_image_mask_mode == MASK_MODE_OUTSIDE_FRAME) ? outside_frame_mask : 1;
+
+		// Apply masks and opacity to overlay image alpha
+		top_image.a *= global.htl_top_image_opacity / 100 * top_image_mask;
+	}
+
+	// Add the top image now if the blending needs to be applied under the reflection 
+	if (global.htl_top_image_opacity > 0 && global.htl_top_image_blend_mode > 2)
+	{
+		// Do blend mode layer mix
+		frag_color_linear = BlendModeLayerMix(frag_color_linear, top_image, mod(global.htl_top_image_blend_mode, 3));
+	}
+	
 
 	//----------------------------------------------------
 	// Reflection - Applied ON TOP of the Bezel
 	//----------------------------------------------------
+	vec4 reflected_color = vec4(0);
 	if (global.hbr_global_amount != 0)
 	{
 		// Corner Mask for Specular highlights
@@ -568,7 +595,7 @@ void main()
 
 		// Add Bezel and Edge reflection together
 
-		vec4 reflected_color = vec4(0);
+		
 		vec4 edge_reflected_color = 1.25 * global.hbr_inner_edge_reflection * (blurred_reflection_color + 0.50 * diffused_reflection_color);
 		float reflection_area_mask = (1 - outside_bezel_mask) * outside_tube_mask;
 
@@ -595,9 +622,8 @@ void main()
 		#endif
 
 		// Edge Full Screen Glow
-		vec4 edge_fullscreen_glow = vec4(0);
 		// Add Small amount of static glow on the edge (So when the screen is dark there is some highlight) as well as dynamic light
-		edge_fullscreen_glow += global.hbr_inner_edge_fullscreen_glow * edge_highlight_mask * outside_tube_mask * (vec4(0.005) + (avg_lum_mult  + 0.5) * (2 * fullscreen_glow_color + vec4(0.01)));
+		vec4 edge_fullscreen_glow = global.hbr_inner_edge_fullscreen_glow * edge_highlight_mask * outside_tube_mask * (vec4(0.005) + (avg_lum_mult  + 0.5) * (2 * fullscreen_glow_color + vec4(0.01)));
 		
 		// Add Diffused reflection on top of the glass inner edge
 		#ifdef GLASS_PRESET
@@ -607,35 +633,14 @@ void main()
 		frag_color_linear += clamp(edge_fullscreen_glow, 0, 1);
 	}
 
-	if (global.htl_top_image_opacity > 0)
+	// Add the top image now if the blending needs to be applied on top of the reflection 
+	if (global.htl_top_image_opacity > 0 && global.htl_top_image_blend_mode < 3)
 	{
-		vec4 top_image = vec4(0);
-		if (HMSS_GetScreenAspect() < 1) 
-		{
-			top_image = HMSS_Linearize(texture(TopLayerVertImage, imageLayerCoord));
-		}
-		else
-		{
-			top_image = HMSS_Linearize(texture(TopLayerImage, imageLayerCoord));
-		}
-		// Get Mask for Top Layer Image
-		float top_image_mask = 1;
-		if (global.htl_top_image_mask_mode == MASK_MODE_MASK_ALL) top_image_mask = 1;
-		if (global.htl_top_image_mask_mode == MASK_MODE_MASK_TUBE) top_image_mask = tube_mask;
-		if (global.htl_top_image_mask_mode == MASK_MODE_MASK_BEZEL) top_image_mask = clamp(bezel_mask - edge_mask, 0, 1);
-		if (global.htl_top_image_mask_mode == MASK_MODE_MASK_FRAME) top_image_mask = frame_mask;
-
-		// Apply masks and opacity to overlay image alpha
-		top_image.a *= global.htl_top_image_opacity / 100 * top_image_mask;
-
 		// Do blend mode layer mix
 		frag_color_linear = BlendModeLayerMix(frag_color_linear, top_image, global.htl_top_image_blend_mode);
 	}
 
-	FragColor = HMSS_ApplyGamma(clamp(frag_color_linear, 0, 1), global.hmss_monitor_gamma);
-	
-	// float outside_tube_mask = 1 - HMSS_GetCornerMask(HMSS_GetCurvedCoord(tube_coord, 1) + (0.5, 0.5), global.hmbz_bezel_inner_corner_radius_scale * global.hmss_screen_corner_radius, 0.9);
-	// FragColor = vec4(outside_tube_mask);
+	FragColor = HMSS_ApplyGamma(clamp(frag_color_linear, 0, 1), HMSS_DEFAULT_SRGB_GAMMA);
 
 	// Add the color for the debug Stuff
 	#ifdef ShowPlacementGuide

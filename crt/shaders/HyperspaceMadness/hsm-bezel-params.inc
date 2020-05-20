@@ -1,5 +1,5 @@
 // Tube Glass & Shadow
-#pragma parameter hmbz_tube_glass_image_opacity         "[TUBE]  Tube Glass Image Opacity (Additive)" 0.5 0 200 0.05
+#pragma parameter hmbz_tube_glass_image_opacity         "[TUBE]  Tube Glass Image Opacity (Additive)" 1.4 0 200 0.05
 #pragma parameter hmbz_tube_edge_shadow                 "[TUBE]  Tube Edge Shadow" 0.7 0 2 0.05
 
 // Background
@@ -26,6 +26,7 @@
 #pragma parameter hmbz_bezel_brightness 				"[BEZEL]  Brightness" 40 0 300 2
 #pragma parameter hmbz_bezel_highlight 					"[BEZEL]  Highlight" 1 0 100 0.2
 #pragma parameter hmbz_bezel_noise 						"[BEZEL]  Noise" 30 0 100 1
+#pragma parameter hmss_bezel_gamma				        "[BEZEL]  Bezel & BG Gamma Adjust" 1 0.01 5 0.01
 
 // Frame
 #pragma parameter hmbz_frame_opacity 					"[FRAME]   Opacity" 1 0 1 0.05
@@ -69,10 +70,9 @@
 #pragma parameter hbr_corner_spread_falloff             "[REFLECTION CORNER FADE]  Corner Spread Falloff"  50 1 200 1
 
 #pragma parameter htl_top_image_opacity                 "[TOP IMAGE LAYER]  Opacity"  0 0 100 0.1
-#pragma parameter htl_top_image_blend_mode              "[TOP IMAGE LAYER]  Blend Mode - Normal, Add, Muliply"  0 0 2 1
-#pragma parameter htl_top_image_mask_mode               "[TOP IMAGE LAYER]  Mask Mode - ALL, Tube, Bezel, Frame)"  0 0 3 1
+#pragma parameter htl_top_image_blend_mode              "[TOP IMAGE LAYER]  Blend Mode - Normal, Add, Mult, Under..."  0 0 5 1
+#pragma parameter htl_top_image_mask_mode               "[TOP IMAGE LAYER]  Mask - ALL, Tube, Bezel+, Frame+, Frame, BG"  0 0 5 1
 
-#pragma parameter hmss_monitor_gamma				    "[MONITOR GAMMA]  Your Monitor Gamma" 2.2 0.01 5 0.01
 
 /////////////// CONSTANT TUNING SETTINGS ///////////////
 

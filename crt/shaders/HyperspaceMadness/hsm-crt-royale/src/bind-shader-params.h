@@ -44,6 +44,7 @@ layout(std140, set = 0, binding = 0) uniform UBO
 
 	float hmss_scanline_direction;
 	float hmss_core_res_mult;
+	float HMSS_INTERLACE_TRIGGER_RES;
 
 	float hmss_position_offset_x;
 	float hmss_position_offset_y;
@@ -60,17 +61,19 @@ layout(std140, set = 0, binding = 0) uniform UBO
 	float hmss_curvature_3D_tilt_angle_y;
 	float hmss_curvature_2D_long_axis;
 	float hmss_curvature_2D_short_axis;
-	float hmss_curvature_post_scale_x;
-	float hmss_curvature_post_scale_y;
+	float HMSS_CURVATURE_POST_SCALE_X;
+	float HMSS_CURVATURE_POST_SCALE_Y;
 	
-	float hmss_screen_corner_radius;
-	float hmss_screen_edge_sharpness;
-	float hmss_screen_vignette;
+	float hmss_screenfx_corner_radius;
+	float hmss_screenfx_edge_sharpness;
+	float hmss_screenfx_vignette;
 
-	float hmss_color_black_level;
-	float hmss_color_pre_crt_gamma_adjust;
-	float hmss_color_negative_crop_brightness;
+	float hmss_color_crt_profile;
+	float hmss_color_space;
 	float hmss_color_lut_colors_on;
+	float hmss_color_black_level;
+	// float hmss_color_pre_crt_gamma_adjust;
+	float hmss_color_negative_crop_brightness;
 	float hmss_color_luminance;
 	float hmss_color_temperature;
 	float hmss_color_saturation;
@@ -78,7 +81,7 @@ layout(std140, set = 0, binding = 0) uniform UBO
 
 	float hmss_phosphor_persistence;
 
-	float hmss_post_crt_scanline_res;
+	float hmss_screenfx_fake_scanline_opacity;
 
 	float hmss_tube_black_edge_thickness;
 	float hmss_tube_black_edge_curvature_scale;
@@ -154,7 +157,7 @@ layout(std140, set = 0, binding = 0) uniform UBO
 	float htl_top_image_blend_mode;
 	float htl_top_image_mask_mode;
 	
-	float hmss_monitor_gamma;
+	float hmss_bezel_gamma;
     
 	// HSM Removed
 	// float crt_gamma;
@@ -294,8 +297,13 @@ static const float gba_gamma = 3.5; //  Irrelevant but necessary to define.
 #define crt_gamma 2.5 //global.hmss_color_crt_gamma
 #define lcd_gamma 2.2 //global.hmss_color_crt_gamma
 
-#pragma parameter levels_contrast "Contrast" 1.0 0.0 4.0 0.015625
-#define levels_contrast global.levels_contrast
+// HSM Removed
+// #pragma parameter levels_contrast "Contrast" 1.0 0.0 4.0 0.015625
+// #define levels_contrast global.levels_contrast
+
+// HSM Added
+#define levels_contrast 1
+
 #pragma parameter halation_weight "Halation Weight" 0.0 0.0 1.0 0.005
 #pragma parameter diffusion_weight "Diffusion Weight" 0.075 0.0 1.0 0.005
 #pragma parameter bloom_underestimate_levels "Bloom - Underestimate Levels" 0.8 0.0 5.0 0.01
@@ -354,14 +362,23 @@ static const float gba_gamma = 3.5; //  Irrelevant but necessary to define.
 #pragma parameter mask_specify_num_triads "Mask - Specify Number of Triads" 0.0 0.0 1.0 1.0
 #pragma parameter mask_triad_size_desired "Mask - Triad Size Desired" 3.0 1.0 18.0 0.125
 #pragma parameter mask_num_triads_desired "Mask - Number of Triads Desired" 480.0 342.0 1920.0 1.0
-#pragma parameter aa_subpixel_r_offset_x_runtime "AA - Subpixel R Offset X" -0.333333333 -0.333333333 0.333333333 0.333333333
-#define aa_subpixel_r_offset_x_runtime global.aa_subpixel_r_offset_x_runtime
-#pragma parameter aa_subpixel_r_offset_y_runtime "AA - Subpixel R Offset Y" 0.0 -0.333333333 0.333333333 0.333333333
-#define aa_subpixel_r_offset_y_runtime global.aa_subpixel_r_offset_y_runtime
+
+// HSM Removed
+// #pragma parameter aa_subpixel_r_offset_x_runtime "AA - Subpixel R Offset X" -0.333333333 -0.333333333 0.333333333 0.333333333
+// #define aa_subpixel_r_offset_x_runtime global.aa_subpixel_r_offset_x_runtime
+// #pragma parameter aa_subpixel_r_offset_y_runtime "AA - Subpixel R Offset Y" 0.0 -0.333333333 0.333333333 0.333333333
+// #define aa_subpixel_r_offset_y_runtime global.aa_subpixel_r_offset_y_runtime
+
+// HSM Added
+#define aa_subpixel_r_offset_x_runtime -0.333333333
+#define aa_subpixel_r_offset_y_runtime 0
+
 #pragma parameter aa_cubic_c "AA - Cubic Sharpness" 0.5 0.0 4.0 0.015625
 #define aa_cubic_c global.aa_cubic_c
 #pragma parameter aa_gauss_sigma "AA - Gaussian Sigma" 0.5 0.0625 1.0 0.015625
 #define aa_gauss_sigma global.aa_gauss_sigma
+
+// HSM Removed
 // #pragma parameter geom_mode_runtime "Geometry - Mode" 0.0 0.0 3.0 1.0
 // #define geom_mode_runtime global.geom_mode_runtime
 // #pragma parameter geom_radius "Geometry - Radius" 2.0 0.16 1024.0 0.05
@@ -372,10 +389,15 @@ static const float gba_gamma = 3.5; //  Irrelevant but necessary to define.
 // #define geom_tilt_angle_x global.geom_tilt_angle_x
 // #pragma parameter geom_tilt_angle_y "Geometry - Tilt Angle Y" 0.0 -3.14159265 3.14159265 0.017453292519943295
 // #define geom_tilt_angle_y global.geom_tilt_angle_y
-#pragma parameter geom_aspect_ratio_x "Geometry - Aspect Ratio X" 432.0 1.0 512.0 1.0
-#define geom_aspect_ratio_x global.geom_aspect_ratio_x
-#pragma parameter geom_aspect_ratio_y "Geometry - Aspect Ratio Y" 329.0 1.0 512.0 1.0
-#define geom_aspect_ratio_y global.geom_aspect_ratio_y
+// #pragma parameter geom_aspect_ratio_x "Geometry - Aspect Ratio X" 432.0 1.0 512.0 1.0
+// #define geom_aspect_ratio_x global.geom_aspect_ratio_x
+// #pragma parameter geom_aspect_ratio_y "Geometry - Aspect Ratio Y" 329.0 1.0 512.0 1.0
+// #define geom_aspect_ratio_y global.geom_aspect_ratio_y
+
+// HSM Added
+#define geom_aspect_ratio_x 432.0
+#define geom_aspect_ratio_y 329.0
+
 #pragma parameter geom_overscan_x "Geometry - Overscan X" 1.0 0.004 4.0 0.001
 #define geom_overscan_x global.geom_overscan_x
 #pragma parameter geom_overscan_y "Geometry - Overscan Y" 1.0 0.004 4.0 0.001
@@ -387,10 +409,17 @@ static const float gba_gamma = 3.5; //  Irrelevant but necessary to define.
 
 #pragma parameter interlace_detect_toggle "Interlacing - Toggle" 1.0 0.0 1.0 1.0
 bool interlace_detect = bool(global.interlace_detect_toggle);
-#pragma parameter interlace_bff "Interlacing - Bottom Field First" 0.0 0.0 1.0 1.0
-//#define interlace_bff global.interlace_bff
-#pragma parameter interlace_1080i "Interlace - Detect 1080i" 0.0 0.0 1.0 1.0
-#define interlace_1080i global.interlace_1080i
+
+// HSM Removed
+// #pragma parameter interlace_bff "Interlacing - Bottom Field First" 0.0 0.0 1.0 1.0
+// #define interlace_bff interlace_bff
+// #pragma parameter interlace_1080i "Interlace - Detect 1080i" 0.0 0.0 1.0 1.0
+// #define interlace_1080i global.interlace_1080i
+
+// HSM Added
+#define interlace_bff 0
+#define interlace_1080i 0
+
 #endif
 
 //  Provide accessors for vector constants that pack scalar uniforms:

@@ -146,7 +146,6 @@ void main()
 
     // HSM Added
     FragColor = vec4(averageColor, 1);
-	FragColor = HMSS_GetPostCrtPreppedColor(screen_curved_coord, screen_coord, FragColor,  1, outgamma);
-    
+	FragColor = HMSS_GetPostCrtPreppedColor(FragColor, screen_curved_coord, screen_coord);
     // End Addition
 }

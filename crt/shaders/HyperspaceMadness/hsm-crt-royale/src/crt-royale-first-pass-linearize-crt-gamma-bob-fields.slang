@@ -91,7 +91,7 @@ void main()
         //  If we're interlacing, determine which field curr_line is in:
         const float modulus = interlaced + 1.0;
         const float field_offset =
-            fmod(params.frame_count + global.interlace_bff, modulus);
+            fmod(params.frame_count + interlace_bff, modulus);
         const float curr_line_texel = tex_uv.y * IN.texture_size.y;
         //  Use under_half to fix a rounding bug around exact texel locations.
         const float line_num_last = floor(curr_line_texel - under_half);

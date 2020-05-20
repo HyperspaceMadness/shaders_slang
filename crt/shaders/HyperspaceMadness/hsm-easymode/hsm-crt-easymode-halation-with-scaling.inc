@@ -196,7 +196,7 @@ void main()
     // HSM Removed
     // if (params.INTERLACING_TOGGLE > 0.5 && global.SourceSize.y >= 400)
 
-    if (params.INTERLACING_TOGGLE > 0.5 && tex_size.y >= 400)
+    if (params.INTERLACING_TOGGLE > 0.5 && tex_size.y >= HMSS_INTERLACE_TRIGGER_RES)
     {
         tex_size.y *= 0.5;
 
@@ -349,6 +349,6 @@ void main()
     FragColor = vec4(col, 1);
 
     // Apply Prep and Output Gamma
-	FragColor = HMSS_GetPostCrtPreppedColor(screen_curved_coord, screen_coord, FragColor,  1, 1);
+	FragColor = HMSS_GetPostCrtPreppedColor(FragColor, screen_curved_coord, screen_coord);
     // End Addition
 }

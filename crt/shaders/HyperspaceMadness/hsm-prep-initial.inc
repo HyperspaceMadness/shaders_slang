@@ -64,8 +64,6 @@ vec4 mixfix(vec4 a, vec4 b, float c)
 // LUT is from Torridgristle
 vec4 ApplyLUT(vec4 in_color, sampler2D in_LUT)
 {
-   if (global.hmss_color_lut_colors_on < 0.5) return in_color;
-
    float LUT_Size = 32;
 
    float red = ( in_color.r * (LUT_Size - 1.0) + 0.499999 ) / (LUT_Size * LUT_Size);
@@ -94,12 +92,13 @@ vec4 ApplyLUT(vec4 in_color, sampler2D in_LUT)
 
 vec4 AddText(vec4 in_color)
 {
+   
    vec4 out_color = in_color;
-   out_color = mix(out_color, vec4(0, 0, 0, 1), GetTextMask(vTexCoord + 2 * vec2(1/global.OutputSize.x, 0), global.FinalViewportSize.xy, HMSS_GetScreenSize(), HMSS_GetCroppedOriginalSize(), HMSS_GetIntegerScaleMult()));
-   out_color = mix(out_color, vec4(0, 0, 0, 1), GetTextMask(vTexCoord - 2 * vec2(1/global.OutputSize.x, 0), global.FinalViewportSize.xy, HMSS_GetScreenSize(), HMSS_GetCroppedOriginalSize(), HMSS_GetIntegerScaleMult()));
-   out_color = mix(out_color, vec4(0, 0, 0, 1), GetTextMask(vTexCoord + 1 * vec2(0, 1/global.OutputSize.y), global.FinalViewportSize.xy, HMSS_GetScreenSize(), HMSS_GetCroppedOriginalSize(), HMSS_GetIntegerScaleMult()));
-   out_color = mix(out_color, vec4(0, 0, 0, 1), GetTextMask(vTexCoord - 1 * vec2(0, 1/global.OutputSize.y), global.FinalViewportSize.xy, HMSS_GetScreenSize(), HMSS_GetCroppedOriginalSize(), HMSS_GetIntegerScaleMult()));
-   out_color = mix(out_color, vec4(1, 1, 0, 1), GetTextMask(vTexCoord,                                      global.FinalViewportSize.xy, HMSS_GetScreenSize(), HMSS_GetCroppedOriginalSize(), HMSS_GetIntegerScaleMult()));
+   out_color = mix(out_color, vec4(0, 0, 0, 1), GetTextMask(vTexCoord + 2 * vec2(1/global.OutputSize.x, 0), global.FinalViewportSize.xy, HMSS_GetScreenSize(), HMSS_GetCroppedOriginalSize(), HMSS_GetIntegerScaleMult(), global.OriginalSize.xy));
+   out_color = mix(out_color, vec4(0, 0, 0, 1), GetTextMask(vTexCoord - 2 * vec2(1/global.OutputSize.x, 0), global.FinalViewportSize.xy, HMSS_GetScreenSize(), HMSS_GetCroppedOriginalSize(), HMSS_GetIntegerScaleMult(), global.OriginalSize.xy));
+   out_color = mix(out_color, vec4(0, 0, 0, 1), GetTextMask(vTexCoord + 1 * vec2(0, 1/global.OutputSize.y), global.FinalViewportSize.xy, HMSS_GetScreenSize(), HMSS_GetCroppedOriginalSize(), HMSS_GetIntegerScaleMult(), global.OriginalSize.xy));
+   out_color = mix(out_color, vec4(0, 0, 0, 1), GetTextMask(vTexCoord - 1 * vec2(0, 1/global.OutputSize.y), global.FinalViewportSize.xy, HMSS_GetScreenSize(), HMSS_GetCroppedOriginalSize(), HMSS_GetIntegerScaleMult(), global.OriginalSize.xy));
+   out_color = mix(out_color, vec4(1, 1, 0, 1), GetTextMask(vTexCoord,                                      global.FinalViewportSize.xy, HMSS_GetScreenSize(), HMSS_GetCroppedOriginalSize(), HMSS_GetIntegerScaleMult(), global.OriginalSize.xy));
    return clamp(out_color, 0, 1);
 }
 
@@ -111,7 +110,10 @@ void main()
 
    // Royale can't currently is currently at the limit of number of textures so we can't add the LUT
    #ifndef ROYALE_PRESET
-      FragColor = ApplyLUT(FragColor, SamplerLUT3);
+      if (global.hmss_color_crt_profile > 5)
+      {
+         FragColor = ApplyLUT(FragColor, SamplerLUT3);
+      }
    #endif
 
    // Add Color Temperature

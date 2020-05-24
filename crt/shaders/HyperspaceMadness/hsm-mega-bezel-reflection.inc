@@ -49,7 +49,7 @@ vec4 BlendModeLayerMix(vec4 in_color_under, vec4 in_color_over, float in_blend_m
 	if (in_blend_mode == BLEND_MODE_ADD)  	 			blend_color = in_color_under + in_color_over;
 	else if (in_blend_mode == BLEND_MODE_MULTIPLY)  	blend_color = in_color_under * in_color_over;
 
-	return mix(in_color_under, blend_color, in_color_over.a);
+	return clamp(mix(in_color_under, blend_color, in_color_over.a), 0, 1);
 }
 
 vec2 GetImageLayerCoord(vec2 viewport_coord, vec2 position_offset)
@@ -446,6 +446,7 @@ void main()
 	// Get color for the frame area outside of the bezel
 	vec2 frame_outside_coord_ctr = frame_coord_ctr / vec2(global.hmbz_frame_thickness / 100 / screen_aspect + 1, global.hmbz_frame_thickness / 100 + 1);
 	float outside_frame_mask = 1 - HMSS_GetCornerMask(frame_outside_coord_ctr + 0.5, global.hmbz_frame_outer_corner_radius, 1);
+	float outside_frame_mask_for_top_image = 1 - HMSS_GetCornerMask(frame_outside_coord_ctr * 0.999 + 0.5, global.hmbz_frame_outer_corner_radius, 1);
 
 	float dist_inside_outer_edge = min(0.5 - abs(frame_outside_coord_ctr.x), 0.5 - abs(frame_outside_coord_ctr.y));
 	float frame_outer_edge_width = 0.006;
@@ -467,23 +468,24 @@ void main()
 	// Get masks for shadows, from frame as well as sides and top and bottom of viewport
 	float bezel_mask = (1 - outside_bezel_mask) * outside_tube_mask;
 	float frame_mask = outside_bezel_mask * (1 - outside_frame_mask);
+	float frame_mask_for_top_image = outside_bezel_mask * (1 - outside_frame_mask_for_top_image);
 	float frame_shadow_mask = outside_frame_mask * frame_shadow_mask_0;
 
 	// Get 
-	float final_mask =  0;
+	float combined_bezel_frame_mask =  0;
 	
 	if (global.hmbz_bezel_opacity > 0.001)
 	{
-		final_mask += global.hmbz_bezel_opacity * bezel_mask;
+		combined_bezel_frame_mask += global.hmbz_bezel_opacity * bezel_mask;
 	}
 	if (global.hmbz_frame_opacity > 0.001)
 	{
-		final_mask += global.hmbz_frame_opacity * frame_mask;
-		final_mask += global.hmbz_frame_opacity * global.hmbz_frame_shadow_opacity * frame_shadow_mask;
+		combined_bezel_frame_mask += global.hmbz_frame_opacity * frame_mask;
+		combined_bezel_frame_mask += global.hmbz_frame_opacity * global.hmbz_frame_shadow_opacity * frame_shadow_mask;
 	}
-	final_mask = clamp(final_mask, 0, 1) * outside_tube_mask;
+	combined_bezel_frame_mask = clamp(combined_bezel_frame_mask, 0, 1) * outside_tube_mask;
 
-	vec4 bezel_frame_bg_color = mix(shaded_background_color, bezel_and_frame_color_v4, final_mask);
+	vec4 bezel_frame_bg_color = mix(shaded_background_color, bezel_and_frame_color_v4, combined_bezel_frame_mask);
 	bezel_frame_bg_color = HMSS_ApplyGamma(bezel_frame_bg_color, global.hmss_bezel_gamma);
 
 	// Add Bezel, Frame & Shadow color to the screen color
@@ -498,13 +500,19 @@ void main()
 		top_image = HMSS_Linearize(top_image, HMSS_DEFAULT_SRGB_GAMMA);
 
 		// Get Mask for Top Layer Image
+		float outside_tube_mask_for_top_image = outside_tube_mask;
+
+		#ifdef GLASS_PRESET
+			outside_tube_mask_for_top_image = clamp(outside_tube_mask_for_top_image - edge_mask, 0, 1);
+		#endif
+
 		float top_image_mask = 1;
 		top_image_mask = 	(global.htl_top_image_mask_mode == MASK_MODE_ALL) ? 1 :
 							(global.htl_top_image_mask_mode == MASK_MODE_TUBE) ? tube_mask :
-							(global.htl_top_image_mask_mode == MASK_MODE_OUTSIDE_TUBE) ? clamp(outside_tube_mask - edge_mask, 0, 1) :
-							(global.htl_top_image_mask_mode == MASK_MODE_FRAME) ? frame_mask :
+							(global.htl_top_image_mask_mode == MASK_MODE_OUTSIDE_TUBE) ? outside_tube_mask_for_top_image :
+							(global.htl_top_image_mask_mode == MASK_MODE_FRAME) ? frame_mask_for_top_image :
 							(global.htl_top_image_mask_mode == MASK_MODE_OUTSIDE_BEZEL) ? outside_bezel_mask :
-							(global.htl_top_image_mask_mode == MASK_MODE_OUTSIDE_FRAME) ? outside_frame_mask : 1;
+							(global.htl_top_image_mask_mode == MASK_MODE_OUTSIDE_FRAME) ? outside_frame_mask_for_top_image : 1;
 
 		// Apply masks and opacity to overlay image alpha
 		top_image.a *= global.htl_top_image_opacity / 100 * top_image_mask;
@@ -516,7 +524,6 @@ void main()
 		// Do blend mode layer mix
 		frag_color_linear = BlendModeLayerMix(frag_color_linear, top_image, mod(global.htl_top_image_blend_mode, 3));
 	}
-	
 
 	//----------------------------------------------------
 	// Reflection - Applied ON TOP of the Bezel

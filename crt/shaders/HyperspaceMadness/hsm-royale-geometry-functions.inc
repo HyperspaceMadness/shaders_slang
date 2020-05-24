@@ -673,16 +673,16 @@ vec2 hrg_get_aspect_vector(float geom_aspect_ratio)
 }
 
 vec2 HRG_GetGeomCurvedCoord(  vec2 in_coord, 
-                            float in_geom_mode, 
-                            float in_geom_radius, 
-                            float in_geom_view_dist, 
-                            float in_geom_tilt_angle_x, 
-                            float in_geom_tilt_angle_y,
-                            float in_screen_aspect,
-                            vec2 in_extra_curvature_mult,
-                            vec2 in_source_size,
-                            vec2 in_output_size,
-                            out mat2x2 pixel_to_video_uv)
+                                        float in_geom_mode, 
+                                        float in_geom_radius, 
+                                        float in_geom_view_dist, 
+                                        float in_geom_tilt_angle_x, 
+                                        float in_geom_tilt_angle_y,
+                                        float in_screen_aspect,
+                                        vec2 in_extra_curvature_mult,
+                                        vec2 in_source_size,
+                                        vec2 in_output_size,
+                                        out mat2x2 pixel_to_video_uv)
 {
     vec2 ctr_coord = in_coord - 0.5; 
 
@@ -747,6 +747,22 @@ vec2 HRG_GetGeomCurvedCoord(  vec2 in_coord,
                                                                                         in_geom_view_dist,
                                                                                         global_to_local, 
                                                                                         pixel_to_video_uv);
+        // If this is a cyndrilical projection scale the sides back out to match the original aspect ratio
+        if (in_geom_mode == 3)
+        {
+            vec2 right_curved_coord =  hrg_get_curved_video_uv_coords_and_tangent_matrix( vec2(1, 1),
+                                                                                    eye_pos_local, 
+                                                                                    output_pixel_size, 
+                                                                                    output_aspect,
+                                                                                    in_geom_mode, 
+                                                                                    geom_radius_scaled,
+                                                                                    in_geom_view_dist,
+                                                                                    global_to_local, 
+                                                                                    pixel_to_video_uv);
+            // Curvature can cause the screen to shrink so we want to scale it back out so it is the same width & height 
+            // Right Edge should end up at 1, so scale it so it hits 1
+            video_uv_no_geom_overscan.x = (video_uv_no_geom_overscan.x - 0.5) * 0.5 / (right_curved_coord.x - 0.5) + 0.5;
+        }
     }
     else
     {
@@ -763,4 +779,5 @@ vec2 HRG_GetGeomCurvedCoord(  vec2 in_coord,
 
     return video_uv_no_geom_overscan;
 }
+
 

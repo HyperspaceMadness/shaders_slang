@@ -311,7 +311,7 @@ float DrawResolutions(vec2 uv, vec2 viewport_size, vec2 screen_size, vec2 core_s
     col += GetChar(ch_5, uv);
     col += GetChar(ch_dsh, uv);
     col += GetChar(ch_2, uv);
-    col += GetChar(ch_3, uv);
+    col += GetChar(ch_4, uv);
     col += GetChar(ch_dsh, uv);
     col += GetChar(ch_0, uv);
 
@@ -486,12 +486,12 @@ float DrawResolutions(vec2 uv, vec2 viewport_size, vec2 screen_size, vec2 core_s
 }
 
 // Returns a 
-float GetTextMask(vec2 in_coord, vec2 viewport_size, vec2 screen_size, vec2 core_size, vec2 int_mult)
+float GetTextMask(vec2 in_coord, vec2 viewport_size, vec2 screen_size, vec2 core_size, vec2 int_mult, vec2 canvas_size)
 {
     in_coord = (in_coord - 0.5) * vec2(1, -1) + 0.5;
     float downscale = 1;
-    if (core_size.y > 400) downscale = 2;
-    if (core_size.y > 700) downscale = 3;
+    if (canvas_size.y > 400) downscale = 2;
+    if (canvas_size.y > 700) downscale = 3;
 
 	textCanvasResolution = global.OutputSize.xy / downscale;
     vec2 uv = global.OutputSize.xy * in_coord;

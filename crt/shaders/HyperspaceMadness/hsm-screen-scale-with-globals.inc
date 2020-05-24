@@ -25,7 +25,8 @@ layout(std140, set = 0, binding = 0) uniform UBO
 	float hmss_int_scale_border_min_height;
 
 	float hmss_scanline_direction;
-	float hmss_core_res_mult;
+	float HMSS_CORE_RES_MULT_X;
+	float HMSS_CORE_RES_MULT_Y;
 	float HMSS_INTERLACE_TRIGGER_RES;
 
 
@@ -53,7 +54,6 @@ layout(std140, set = 0, binding = 0) uniform UBO
 
 	float hmss_color_crt_profile;
 	float hmss_color_space;
-	float hmss_color_lut_colors_on;
 	float hmss_color_black_level;
 	// float hmss_color_pre_crt_gamma_adjust;
 	float hmss_color_negative_crop_brightness;

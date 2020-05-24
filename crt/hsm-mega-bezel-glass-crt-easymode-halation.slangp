@@ -169,8 +169,8 @@ textures = "SamplerLUT3;BackgroundImage;BackgroundVertImage;TubeGlassImage;TopLa
 SamplerLUT3 = ../crt/shaders/guest/lut/other1.png
 SamplerLUT3_linear = true
 
-BackgroundImage = ../crt/shaders/HyperspaceMadness/textures/BackgroundImage_3840x2160.png
-BackgroundVertImage = ../crt/shaders/HyperspaceMadness/textures/BackgroundImage_3840x2160.png
+BackgroundImage = ../crt/shaders/HyperspaceMadness/textures/BackgroundImage_Carbon_3840x2160.png
+BackgroundVertImage = ../crt/shaders/HyperspaceMadness/textures/BackgroundImage_Carbon_3840x2160.png
 TubeGlassImage = ../crt/shaders/HyperspaceMadness/textures/TubeGlassOverlayImage_3840x2160.png
 TopLayerImage = ../crt/shaders/HyperspaceMadness/textures/TopLayerImageGradient_3840x2160.png
 TopLayerVertImage = ../crt/shaders/HyperspaceMadness/textures/TopLayerImageGradient_3840x2160.png

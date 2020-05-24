@@ -8,23 +8,23 @@ Description:
 */
 
 // Screen Scale Required Parameters
-#pragma parameter hmss_mega_screen_scale_on				"___HSM MEGA BEZEL__ V.2020-05-23-0 -SCREEN SCALE ON" 1 0 1 1
-#pragma parameter hmss_screen_scale_debug				"[SCREEN SCALE]  Screen Scale Debug" 0 0 1 1
+#pragma parameter hmss_screen_scale_debug				"___HSM MEGA BEZEL__ V.2020-05-24-0 - Debug ON" 0 0 1 1
 
 #pragma parameter hmss_rotate_crt_image					"[SCALING]  Rotate CRT Image"  0 0 1 1
 //#pragma parameter hmss_flip_screen_vertical			"[SCALING]  Flip Screen Vertical"  0 0 1 1
-#pragma parameter hmss_aspect_ratio_mode 				"[SCALING]  Aspect Ratio Mode - Auto, Horizontal, Vertical"  0 0 2 1
+#pragma parameter hmss_aspect_ratio_mode 				"[SCALING]  Aspect Ratio Mode - Auto, Horizontal, Vertical, Full"  0 0 3 1
 #pragma parameter hmss_screen_aspect_ratio				"[SCALING]  Screen Aspect Ratio"  1.3333 0 3 0.002
 
-#pragma parameter hmss_integer_scale_mode 				"[SCALING]  Integer Scale Mode - OFF, ShortAxis, BothAxes" 0 0 2 1
+#pragma parameter hmss_integer_scale_mode 				"[SCALING]  Int Scale Mode - OFF, ShortAxis, BothAxes" 0 -1 2 1
 #pragma parameter hmss_int_scale_multiple_offset 		"[SCALING]  Int Scale Multiple Offset" 0 -20 20 1
 #pragma parameter hmss_int_scale_border_min_height 		"[SCALING]  Int Scale Border Min Height %" 5.5 -20 20 0.5
 // Non integer scale is set to 82.97 so that cores which output 224px will have integer scale by default
 // This is 8x integer scale at 3840x2160 and 6x integer scale at 1920x1080
-#pragma parameter hmss_non_integer_scale 				"[SCALING]  Non-Integer Scale %" 82.97 1 200 0.2
+#pragma parameter hmss_non_integer_scale 				"[SCALING]  Non-Integer Scale %" 82.97 1 200 0.2 //At one point it seemed 77.777
 
 #pragma parameter hmss_scanline_direction 				"[SCANLINES]  Scanline Dir Guest-Venom - Auto, Horiz, Vert"  0 0 2 1
-#pragma parameter hmss_core_res_mult					"[SCANLINES]  Core Y Res Mult (Inv)"  1 1 16 1
+#pragma parameter HMSS_CORE_RES_MULT_X					"[SCANLINES]  Reduce Core Res Mult X"  1 1 16 1
+#pragma parameter HMSS_CORE_RES_MULT_Y					"[SCANLINES]  Reduce Core Res Mult Y"  1 1 16 1
 
 #pragma parameter HMSS_INTERLACE_TRIGGER_RES 			"[SCANLINES]  Interlace Trigger Res (Also Fake Scanlines)" 600.0 0.0 800.0 25.0
 #define HMSS_INTERLACE_TRIGGER_RES global.HMSS_INTERLACE_TRIGGER_RES
@@ -37,6 +37,7 @@ Description:
 #pragma parameter hmss_crop_overscan_left 				"[CROPPING]  Crop Overscan Left" 0 -256 256 1
 #pragma parameter hmss_crop_overscan_right 				"[CROPPING]  Crop Overscan Right" 0 -256 256 1
 
+// TODO - need to rescale horizontal to match before curvature especially for Cylindrical
 #pragma parameter hmss_curvature_mode 					"[CURVATURE]  Curvature Mode - 0:2D 1-2:3D Sphere, 3:3D Cyl" 0 0 3 1
 #pragma parameter hmss_curvature_3D_radius 				"[CURVATURE]  3D Radius" 2 0.16 1024 0.01
 #pragma parameter hmss_curvature_3D_view_dist 			"[CURVATURE]  3D View Distance" 2 0.5 1024 0.05
@@ -49,20 +50,18 @@ Description:
 #define HMSS_CURVATURE_3D_EXTRA_Y 0
 
 // #pragma parameter HMSS_CURVATURE_POST_SCALE_X 			"[CURVATURE POST SCALE]  Scale X" 100 70 130 0.2
-#define HMSS_CURVATURE_POST_SCALE_X 100
-
 // #pragma parameter HMSS_CURVATURE_POST_SCALE_Y 			"[CURVATURE POST SCALE]  Scale Y" 100 70 130 0.2
+#define HMSS_CURVATURE_POST_SCALE_X 100
 #define HMSS_CURVATURE_POST_SCALE_Y 100
 
-#pragma parameter hmss_color_crt_profile 				"[COLOR]  CRT Profile: sRGB,BVM,P22,SMPTE-C,Philips,Trinitron" 0 -1 5 1
+// TODO - Put LUT Here at profile == 6
+#pragma parameter hmss_color_crt_profile 				"[COLOR]  CRT Profile: sRGB,BVM,P22,SMPTE-C,Philips,Trinit,LUT" 6 0 6 1
 #pragma parameter hmss_color_space 						"[COLOR]  Color Space: sRGB, DCI, Adobe, Rec.2020" 0 0 3 1
-#pragma parameter hmss_color_lut_colors_on 				"[COLOR]  LUT Colors ON (No Royale)" 1 0 1 1
 #pragma parameter hmss_color_temperature   				"[COLOR]  Temperature - Def -50" -50 -100 100 5
 #pragma parameter hmss_color_saturation    				"[COLOR]  Saturation" 1.0 0.0 2.0 0.05
-#pragma parameter hmss_color_black_level 				"[COLOR]  Black Level - Def -0.07" -0.07 -30 30 0.01
-// #pragma parameter hmss_color_pre_crt_gamma_adjust		"[COLOR]  Gamma Adjust" 1 0.01 8 0.01
+#pragma parameter hmss_color_black_level 				"[COLOR]  Black Level - Def -0.1" -0.1 -30 30 0.01
 #pragma parameter hmss_color_luminance   				"[COLOR]  Luminance" 100 0 400 5
-#pragma parameter hmss_color_negative_crop_brightness	"[COLOR]  Negative Crop Brightness -  Def 0.06" 0.06 0 20 0.02
+#pragma parameter hmss_color_negative_crop_brightness	"[COLOR]  Negative Crop Brightness - Def 0.05" 0.05 0 20 0.01
 #pragma parameter hmss_color_crt_gamma   				"[COLOR]  CRT Gamma - Def 2.4" 2.4 0.1 5 0.05
 
 #pragma parameter hmss_phosphor_persistence             "[PHOSPHOR PERSISTENCE]  Amount - Pos:Blue, Neg:Neutral" 0 -1 1 0.05
@@ -86,9 +85,14 @@ const float HMSS_DEFAULT_SRGB_GAMMA = 2.2;
 #include "hsm-helper-functions.inc"
 #include "hsm-royale-geometry-functions.inc"
 
+bool HMSS_GetUseScreenScale()
+{
+	return (global.hmss_aspect_ratio_mode > 2);
+}
+
 vec2 HMSS_GetOriginalSize()
 {
-	return vec2(global.OriginalSize.x, floor(1 / global.hmss_core_res_mult * global.OriginalSize.y));
+	return vec2(floor(1 / global.HMSS_CORE_RES_MULT_X * global.OriginalSize.x), floor(1 / global.HMSS_CORE_RES_MULT_Y * global.OriginalSize.y));
 }
 
 vec2 HMSS_GetRotatedOriginalSize()
@@ -105,7 +109,7 @@ vec2 HMSS_GetRotatedOriginalSize()
 }
 
 vec2 HMSS_GetCroppedSize(vec2 in_size){
-	if (global.hmss_mega_screen_scale_on == 0)
+	if (HMSS_GetUseScreenScale())
 	{
 		return in_size;
 	}
@@ -163,7 +167,7 @@ float HMSS_GetScreenInverseAspectRatio()
 
 vec2 HMSS_GetScreenScale()
 {
-	if (global.hmss_mega_screen_scale_on == 0)
+	if (HMSS_GetUseScreenScale())
 	{
 		return vec2(1.0, 1.0);
 	}
@@ -265,7 +269,7 @@ vec2 HMSS_GetInverseScaledCoord(vec2 in_coord, vec2 in_scale)
 
 vec2 HMSS_GetPositionOffset()
 {
-	if (global.hmss_mega_screen_scale_on == 0)
+	if (HMSS_GetUseScreenScale())
 	{
 		return vec2(0, 0);
 	}
@@ -278,7 +282,7 @@ vec2 HMSS_GetPositionOffset()
 
 vec2 HMSS_GetCoordWithPositionOffset(vec2 in_coord)
 {
-	if (global.hmss_mega_screen_scale_on == 0)
+	if (HMSS_GetUseScreenScale())
 	{
 		return in_coord;
 	}
@@ -424,19 +428,6 @@ vec2 HMSS_Get2DCurvedCoord(vec2 in_coord, float curvature_multiplier)
 	return HMSS_GetCrtPiCurvedCoord(in_coord, curvature_values);
 }
 
-// // Used to get the circular area where the 2D curved coordinates are valid
-// // Takes an uncurved coordinate
-// float HMSS_Get2DInsideRangeMask(vec2 in_coord)
-// {
-// 	vec2 ctr_coord = in_coord - 0.5;
-// 	vec2 ctr_coord_0_1 = in_coord * 2.0 - 1.0;
-// 	vec2 ctr_curved_coord = ctr_coord_0_1;
-// 	float curved_coord_distance = sqrt(ctr_curved_coord.x * ctr_curved_coord.x + ctr_curved_coord.y * ctr_curved_coord.y);
-// 	float max_curved_range = 1.40;
-
-// 	return 1 - clamp((curved_coord_distance - max_curved_range) * 10000, 0, 1);
-// }
-
 vec2 HMSS_GetPostCurvatureScaledCoord(vec2 in_curved_coord)
 {
 	return (in_curved_coord - 0.5) / vec2(HMSS_CURVATURE_POST_SCALE_X / 100, HMSS_CURVATURE_POST_SCALE_Y / 100) + 0.5;
@@ -567,7 +558,6 @@ float HMSS_GetCornerMask(vec2 in_coord, float corner_radius, float edge_sharpnes
 	return clamp((corner_distance.x - distance) * (edge_sharpness * 500 + 100), 0.0, 1.0);
 }
 
-
 vec3 HMSS_RGBtoHSV(vec3 c)
 {
     vec4 K = vec4(0.0, -1.0 / 3.0, 2.0 / 3.0, -1.0);
@@ -684,7 +674,7 @@ float HMSS_IsInNegativeCropArea(vec2 in_coord)
 	return clamp(result, 0, 1);
 }
 
-// TODO need to fully integrate global.hmss_core_res_mult
+// TODO need to fully integrate global.HMSS_CORE_RES_MULT_Y
 // Texture Sampler function which takes a coordinate in the cropped coordinate space
 vec4 HMSS_GetCroppedTexSample(sampler2D in_sampler, vec2 in_cropped_coord)
 {
@@ -722,30 +712,30 @@ vec4 HMSS_ApplyPhosphorPersistence(vec4 in_color, sampler2D in_feedback_pass, ve
 	return out_color;
 }
 
-// Guest-Venom d65-d50 Matrices
-const mat3 D65_to_XYZ = mat3 (
-           0.4306190,  0.2220379,  0.0201853,
-           0.3415419,  0.7066384,  0.1295504,
-           0.1783091,  0.0713236,  0.9390944);
-
-const mat3 XYZ_to_D65 = mat3 (
-           3.0628971, -0.9692660,  0.0678775,
-          -1.3931791,  1.8760108, -0.2288548,
-          -0.4757517,  0.0415560,  1.0693490);
-		   
-const mat3 D50_to_XYZ = mat3 (
-           0.4552773,  0.2323025,  0.0145457,
-           0.3675500,  0.7077956,  0.1049154,
-           0.1413926,  0.0599019,  0.7057489);
-		   
-const mat3 XYZ_to_D50 = mat3 (
-           2.9603944, -0.9787684,  0.0844874,
-          -1.4678519,  1.9161415, -0.2545973,
-          -0.4685105,  0.0334540,  1.4216174);
-
-// Borrowed from Guest's Guest-Venom d65-d50
+// Borrowed from Guest's Guest-DrVenom d65-d50
 vec4 HMSS_ApplyColorTemperature_D65_D50(vec4 in_color)
 {
+	// Guest-Venom d65-d50 Matrices
+	const mat3 D65_to_XYZ = mat3 (
+			0.4306190,  0.2220379,  0.0201853,
+			0.3415419,  0.7066384,  0.1295504,
+			0.1783091,  0.0713236,  0.9390944);
+
+	const mat3 XYZ_to_D65 = mat3 (
+			3.0628971, -0.9692660,  0.0678775,
+			-1.3931791,  1.8760108, -0.2288548,
+			-0.4757517,  0.0415560,  1.0693490);
+			
+	const mat3 D50_to_XYZ = mat3 (
+			0.4552773,  0.2323025,  0.0145457,
+			0.3675500,  0.7077956,  0.1049154,
+			0.1413926,  0.0599019,  0.7057489);
+			
+	const mat3 XYZ_to_D50 = mat3 (
+			2.9603944, -0.9787684,  0.0844874,
+			-1.4678519,  1.9161415, -0.2545973,
+			-0.4685105,  0.0334540,  1.4216174);
+
 	vec3 color = in_color.rgb;
    
    	color = normalize(pow(color + 1e-4, vec3(global.hmss_color_saturation)))*length(color);
@@ -772,80 +762,60 @@ vec4 HMSS_ApplyColorTemperature_D65_D50(vec4 in_color)
 }
 
 // Guest-Venom Color Spaces
-const mat3 Profile0 = 
-mat3(
- 0.412391,  0.212639,  0.019331,
- 0.357584,  0.715169,  0.119195,
- 0.180481,  0.072192,  0.950532
-);
-
-const mat3 Profile1 = 
-mat3(
- 0.430554,  0.222004,  0.020182,
- 0.341550,  0.706655,  0.129553,
- 0.178352,  0.071341,  0.939322
-);
-
-const mat3 Profile2 = 
-mat3(
- 0.396686,  0.210299,  0.006131,
- 0.372504,  0.713766,  0.115356,
- 0.181266,  0.075936,  0.967571
-);
-
-const mat3 Profile3 = 
-mat3(
- 0.393521,  0.212376,  0.018739,
- 0.365258,  0.701060,  0.111934,
- 0.191677,  0.086564,  0.958385
-);
-
-const mat3 Profile4 = 
-mat3(
- 0.392258,  0.209410,  0.016061,
- 0.351135,  0.725680,  0.093636,
- 0.166603,  0.064910,  0.850324
-);
-
-const mat3 Profile5 = 
-mat3(
- 0.377923,  0.195679,  0.010514,
- 0.317366,  0.722319,  0.097826,
- 0.207738,  0.082002,  1.076960
-);
-
-const mat3 ToSRGB = 
-mat3(
- 3.240970, -0.969244,  0.055630,
--1.537383,  1.875968, -0.203977,
--0.498611,  0.041555,  1.056972
-);
-
-const mat3 ToDCI = 
-mat3(
- 2.725394,  -0.795168,   0.041242,
--1.018003,   1.689732,  -0.087639,
--0.440163,   0.022647,   1.100929
-);
-
-const mat3 ToAdobe = 
-mat3(
- 2.041588, -0.969244,  0.013444,
--0.565007,  1.875968, -0.11836,
--0.344731,  0.041555,  1.015175
-);
-
-const mat3 ToREC = 
-mat3(
- 1.716651, -0.666684,  0.017640,
--0.355671,  1.616481, -0.042771,
--0.253366,  0.015769,  0.942103
-);
-
-// Guest-Venom Color Spaces
 vec4 HMSS_ApplyColorSpace(vec4 in_color)
 {
 	if (global.hmss_color_crt_profile == -1.0) return in_color;
+
+	// Guest-DrVenom Color Spaces
+	const mat3 Profile0 = mat3( 0.412391,  0.212639,  0.019331,
+								0.357584,  0.715169,  0.119195,
+								0.180481,  0.072192,  0.950532
+								);
+
+	const mat3 Profile1 = mat3( 0.430554,  0.222004,  0.020182,
+								0.341550,  0.706655,  0.129553,
+								0.178352,  0.071341,  0.939322
+								);
+
+	const mat3 Profile2 = mat3( 0.396686,  0.210299,  0.006131,
+								0.372504,  0.713766,  0.115356,
+								0.181266,  0.075936,  0.967571
+								);
+
+	const mat3 Profile3 = mat3(	0.393521,  0.212376,  0.018739,
+								0.365258,  0.701060,  0.111934,
+								0.191677,  0.086564,  0.958385
+								);
+
+	const mat3 Profile4 = mat3( 0.392258,  0.209410,  0.016061,
+								0.351135,  0.725680,  0.093636,
+								0.166603,  0.064910,  0.850324
+								);
+
+	const mat3 Profile5 = mat3( 0.377923,  0.195679,  0.010514,
+								0.317366,  0.722319,  0.097826,
+								0.207738,  0.082002,  1.076960
+								);
+
+	const mat3 ToSRGB =   mat3(  3.240970, -0.969244,  0.055630,
+								-1.537383,  1.875968, -0.203977,
+								-0.498611,  0.041555,  1.056972
+								);
+
+	const mat3 ToDCI =    mat3(	 2.725394,  -0.795168,   0.041242,
+								-1.018003,   1.689732,  -0.087639,
+								-0.440163,   0.022647,   1.100929
+								);
+
+	const mat3 ToAdobe =  mat3(	 2.041588, -0.969244,  0.013444,
+								-0.565007,  1.875968, -0.11836,
+								-0.344731,  0.041555,  1.015175
+								);
+
+	const mat3 ToREC =    mat3(	 1.716651, -0.666684,  0.017640,
+								-0.355671,  1.616481, -0.042771,
+								-0.253366,  0.015769,  0.942103
+								);
 
 	float gamma;
 	mat3 m_out;
@@ -904,8 +874,6 @@ float HMSS_GetScreenVignetteFactor(vec2 coord, float amount)
 	if (amount < 0.01) return 1;
 	else return vignette;
 }
-
-
 
 // Torridgristle - ScanlineSimple pass - Public domain
 vec4 HMSS_ApplyScanlineMask(vec4 in_color, vec2 in_coord)

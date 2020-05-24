@@ -252,8 +252,8 @@ mask_shadow_texture_small_wrap_mode = "repeat"
 mask_shadow_texture_small_linear = "true"
 mask_shadow_texture_small_mipmap = "false"  // Mipmapping causes artifacts with manually resized masks without tex2Dlod
 
-BackgroundImage = ../crt/shaders/HyperspaceMadness/textures/BackgroundImage_3840x2160.png
-BackgroundVertImage = ../crt/shaders/HyperspaceMadness/textures/BackgroundImage_3840x2160.png
+BackgroundImage = ../crt/shaders/HyperspaceMadness/textures/BackgroundImage_Carbon_3840x2160.png
+BackgroundVertImage = ../crt/shaders/HyperspaceMadness/textures/BackgroundImage_Carbon_3840x2160.png
 TubeGlassImage = ../crt/shaders/HyperspaceMadness/textures/TubeGlassOverlayImage_3840x2160.png
 TopLayerImage = ../crt/shaders/HyperspaceMadness/textures/TopLayerImageGradient_3840x2160.png
 TopLayerVertImage = ../crt/shaders/HyperspaceMadness/textures/TopLayerImageGradient_3840x2160.png

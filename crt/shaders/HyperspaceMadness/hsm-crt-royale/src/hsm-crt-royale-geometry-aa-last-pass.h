@@ -52,12 +52,12 @@ layout(push_constant) uniform Push
         cos_tilt.y*sin_tilt.x, -sin_tilt.y, cos_tilt.y*cos_tilt.x);
 #endif
 
-float geom_mode = global.hmss_curvature_mode;
-float geom_mode_runtime = global.hmss_curvature_mode;
-float geom_radius = global.hmss_curvature_3D_radius;
-float geom_view_dist = global.hmss_curvature_3D_view_dist;
-float geom_tilt_angle_x = global.hmss_curvature_3D_tilt_angle_x;
-float geom_tilt_angle_y = global.hmss_curvature_3D_tilt_angle_y;
+float geom_mode = global.HSS_CURVATURE_MODE;
+float geom_mode_runtime = global.HSS_CURVATURE_MODE;
+float geom_radius = global.HSS_CURVATURE_3D_RADIUS;
+float geom_view_dist = global.HSS_CURVATURE_3D_VIEW_DIST;
+float geom_tilt_angle_x = global.HSS_CURVATURE_3D_TILT_ANGLE_X;
+float geom_tilt_angle_y = global.HSS_CURVATURE_3D_TILT_ANGLE_Y;
 
 //////////////////////////////////  INCLUDES  //////////////////////////////////
 
@@ -67,7 +67,8 @@ float geom_tilt_angle_y = global.hmss_curvature_3D_tilt_angle_y;
 
 // HSM Added
 ///////////////////////////////  HSM INCLUDES  ///////////////////////////////
-#include "../../hsm-screen-scale-params-functions.inc"
+#include "../../hsm-screen-scale-params.inc"
+#include "../../hsm-screen-scale-functions.inc"
 
 ///////////////////////////////////  HELPERS  //////////////////////////////////
 
@@ -90,6 +91,11 @@ layout(location = 4) out vec4 geom_aspect_and_overscan;
 layout(location = 5) out vec3 global_to_local_row0;
 layout(location = 6) out vec3 global_to_local_row1;
 layout(location = 7) out vec3 global_to_local_row2;
+layout(location = 8) out vec2 CROPPED_ORIGINAL_SIZE;
+layout(location = 9) out float SCREEN_ASPECT;
+layout(location = 10) out vec2 SCREEN_SCALE;
+layout(location = 11) out vec2 SCREEN_COORD;
+layout(location = 12) out float USE_VERTICAL_SCANLINES;
 
 void main()
 {
@@ -160,6 +166,13 @@ void main()
     const float3 eye_pos_global =
         get_ideal_global_eye_pos(local_to_global, geom_aspect, geom_mode);
     eye_pos_local = mul(global_to_local, eye_pos_global);
+
+        // HSM Added
+    CROPPED_ORIGINAL_SIZE = HSS_GetCroppedOriginalSizeWithCoreResMult();
+	SCREEN_ASPECT = HSS_GetScreenAspect();
+	SCREEN_SCALE = HSS_GetScreenScale(SCREEN_ASPECT);
+	SCREEN_COORD = HSS_GetScreenVTexCoord(tex_uv, SCREEN_SCALE);
+	USE_VERTICAL_SCANLINES = HSS_GetUseVerticalScanlines(SCREEN_ASPECT);
 }
 
 #pragma stage fragment
@@ -171,7 +184,14 @@ layout(location = 4) in vec4 geom_aspect_and_overscan;
 layout(location = 5) in vec3 global_to_local_row0;
 layout(location = 6) in vec3 global_to_local_row1;
 layout(location = 7) in vec3 global_to_local_row2;
+layout(location = 8) in vec2 CROPPED_ORIGINAL_SIZE;
+layout(location = 9) in float SCREEN_ASPECT;
+layout(location = 10) in vec2 SCREEN_SCALE;
+layout(location = 11) in vec2 SCREEN_COORD;
+layout(location = 12) in float USE_VERTICAL_SCANLINES;
+
 layout(location = 0) out vec4 FragColor;
+
 layout(set = 0, binding = 2) uniform sampler2D Source;
 #define input_texture Source
 
@@ -185,8 +205,9 @@ void main()
 
     //const float2 output_size_inv = output_size_inv;
     #ifdef RUNTIME_GEOMETRY_TILT
-        const float3x3 global_to_local = float3x3(global_to_local_row0,
-            global_to_local_row1, global_to_local_row2);
+        const float3x3 global_to_local = float3x3(  global_to_local_row0,
+                                                    global_to_local_row1, 
+                                                    global_to_local_row2);
     #else
         static const float3x3 global_to_local = geom_global_to_local_static;
     #endif
@@ -202,12 +223,12 @@ void main()
     //  and a pixel_to_tangent_video_uv matrix for transforming pixel offsets:
     //  video_uv = relative position in video frame, mapped to [0.0, 1.0] range
     //  tex_uv = relative position in padded texture, mapped to [0.0, 1.0] range
-    float2 flat_video_uv = tex_uv * (IN.texture_size * video_size_inv);
+    // HSM Removed
+    // float2 flat_video_uv = tex_uv * (IN.texture_size * video_size_inv);
+
     float2x2 pixel_to_video_uv;
     float2 video_uv_no_geom_overscan;
-    vec2 screen_scale = HMSS_GetScreenScale();
     // Get the sub-section of the screen with the image on it and map this into a 0-1 space
-    vec2 screen_coord = HMSS_GetScreenVTexCoord(flat_video_uv);
     vec2 scaled_curved_uv = vec2(0);
     vec2 screen_curved_coord = vec2(0, 0);
     if(geom_mode > 0.5)
@@ -216,49 +237,46 @@ void main()
         //     get_curved_video_uv_coords_and_tangent_matrix(flat_video_uv,
         //         eye_pos_local, output_size_inv, geom_aspect,
         //         geom_mode, global_to_local, pixel_to_video_uv);
-        float screen_aspect = HMSS_GetScreenAspect();
         
-        vec2 extra_curvature_mult = HMSS_GetCurvatureValues() / 2 * 50 + 1;
+        vec2 extra_curvature_mult = HSS_GetCurvatureValues(SCREEN_ASPECT) / 2 * 50 + 1;
 
-        scaled_curved_uv = HRG_GetGeomCurvedCoord(screen_coord, 
-                                                        global.hmss_curvature_mode, 
-                                                        global.hmss_curvature_3D_radius, 
-                                                        global.hmss_curvature_3D_view_dist, 
-                                                        global.hmss_curvature_3D_tilt_angle_x, 
-                                                        global.hmss_curvature_3D_tilt_angle_y,
-                                                        screen_aspect,
+        scaled_curved_uv = HRG_GetGeomCurvedCoord(SCREEN_COORD, 
+                                                        global.HSS_CURVATURE_MODE, 
+                                                        global.HSS_CURVATURE_3D_RADIUS, 
+                                                        global.HSS_CURVATURE_3D_VIEW_DIST, 
+                                                        global.HSS_CURVATURE_3D_TILT_ANGLE_X, 
+                                                        global.HSS_CURVATURE_3D_TILT_ANGLE_Y,
+                                                        SCREEN_ASPECT,
                                                         extra_curvature_mult,
                                                         global.SourceSize.xy,
                                                         global.OutputSize.xy,
                                                         pixel_to_video_uv);
-        scaled_curved_uv = HMSS_GetPostCurvatureScaledCoord(scaled_curved_uv);
+        // scaled_curved_uv = HSS_GetPostCurvatureScaledCoord(scaled_curved_uv);
         screen_curved_coord = scaled_curved_uv;
-        video_uv_no_geom_overscan = (scaled_curved_uv - 0.5) * screen_scale + 0.5 + HMSS_GetPositionOffset();
+        video_uv_no_geom_overscan = (scaled_curved_uv - 0.5) * SCREEN_SCALE + 0.5 + HSS_GetPositionOffset();
     }
     else
     {
-        scaled_curved_uv = HMSS_GetCurvedCoord(screen_coord, 1);
+        scaled_curved_uv = HSS_GetCurvedCoord(SCREEN_COORD, 1, SCREEN_ASPECT);
         screen_curved_coord = scaled_curved_uv;
-        video_uv_no_geom_overscan = (scaled_curved_uv - 0.5) * screen_scale + 0.5 + HMSS_GetPositionOffset();
+        video_uv_no_geom_overscan = (scaled_curved_uv - 0.5) * SCREEN_SCALE + 0.5 + HSS_GetPositionOffset();
         
         pixel_to_video_uv = float2x2(
             output_size_inv.x, 0.0, 0.0, output_size_inv.y);
     }
 
-    // pixel_to_video_uv[0][0] /= screen_scale.x;
-    // pixel_to_video_uv[1][1] /= screen_scale.y;
+    // pixel_to_video_uv[0][0] /= SCREEN_SCALE.x;
+    // pixel_to_video_uv[1][1] /= SCREEN_SCALE.y;
 
     //  Correct for overscan here (not in curvature code):
-    const float2 video_uv =
-        (video_uv_no_geom_overscan - float2(0.5, 0.5))/geom_overscan + float2(0.5, 0.5);
+    const float2 video_uv = (video_uv_no_geom_overscan - float2(0.5, 0.5)) / geom_overscan + float2(0.5, 0.5);
     const float2 tex_uv = video_uv * (IN.video_size * texture_size_inv);
 
-    //tex_uv = HMSS_GetMirrorWrappedCoord(tex_uv);
+    //tex_uv = HSS_GetMirrorWrappedCoord(tex_uv);
 
     //  Get a matrix transforming pixel vectors to tex_uv vectors:
-    const float2x2 pixel_to_tex_uv =
-        mul_scale(IN.video_size * texture_size_inv /
-            geom_aspect_and_overscan.zw, pixel_to_video_uv);
+    const float2x2 pixel_to_tex_uv = mul_scale(IN.video_size * texture_size_inv / geom_aspect_and_overscan.zw, 
+                                                pixel_to_video_uv);
 
     //  Sample!  Skip antialiasing if aa_level < 0.5 or both of these hold:
     //  1.) Geometry/curvature isn't used
@@ -290,12 +308,13 @@ void main()
     FragColor = vec4(color, 1);
 
     // Apply Prep and Output Gamma
-	// FragColor = HMSS_GetPostCrtPreppedColor(FragColor, screen_curved_coord, screen_coord);
+	FragColor = HSS_GetPostCrtPreppedColor(FragColor, screen_curved_coord, SCREEN_COORD, SCREEN_ASPECT, SCREEN_SCALE);
 
     // HSM Removed
-    FragColor = encode_output(float4(color, 1.0));
+    // FragColor = encode_output(float4(color, 1.0));
 
     #ifdef MASK_OUTSIDE_SCREEN
-        FragColor *= HMSS_GetCornerMask(screen_curved_coord,  global.hmss_screenfx_corner_radius, global.hmss_screenfx_edge_sharpness);
+        // FragColor *= HSS_GetCornerMask(screen_curved_coord, SCREEN_ASPECT, global.HSS_SCREENFX_CORNER_RADIUS, global.HSS_SCREENFX_EDGE_SHARPNESS);
+        FragColor *= HSS_GetCornerMask(screen_curved_coord, SCREEN_ASPECT, 10, 0.4);
     #endif
 }

@@ -3,7 +3,7 @@
 layout(push_constant) uniform Push
 {
 	// HSM Addition:
-	float gtu_mode;
+	float GTU_MODE;
 	// End Addition
 } params;
 
@@ -45,13 +45,13 @@ void main()
 	vec4	c	=	texture(Source, vTexCoord);
 
 	// If GTU is off return the color from the last pass
-	if (params.gtu_mode < 1)
+	if (params.GTU_MODE < 1)
 	{
 		FragColor = c;
 		return;
 	}
 
-	if(params.gtu_mode > 1)
+	if(params.GTU_MODE > 1)
 		c.rgb	=	c.rgb * RGB_to_YIQ;
    FragColor = c;
 }

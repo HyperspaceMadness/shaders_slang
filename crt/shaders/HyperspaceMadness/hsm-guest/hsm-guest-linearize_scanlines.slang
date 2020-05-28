@@ -27,12 +27,9 @@ void main()
 #pragma stage fragment
 layout(location = 0) in vec2 vTexCoord;
 layout(location = 0) out vec4 FragColor;
-layout(set = 0, binding = 2) uniform sampler2D WhitePointPass;
-
-#define PassPrev6Texture WhitePointPass
-#define COMPAT_TEXTURE(c,d) texture(c,d)
+layout(set = 0, binding = 2) uniform sampler2D Source;
 
 void main()
 {
-   FragColor = vec4(pow(vec3(COMPAT_TEXTURE(PassPrev6Texture, vTexCoord).rgb), vec3(10.0)),1.0);
+   FragColor = vec4(pow(vec3(texture(Source, vTexCoord).rgb), vec3(10.0)),1.0);
 }

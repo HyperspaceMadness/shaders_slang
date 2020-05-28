@@ -1,8 +1,8 @@
-// Add Mega Screen Scale Params & Initial Prep
-//      Add the mega-screen-scale parameters at the beginning of the list for easy access
-//      Add Afterglow, Black Level & Gamma
+// Add Mega Bezel Params & Initial Prep
+//      Add Mega Bezel parameters at the beginning of the list for easy access
+//      Add Color Correction
 //      Calculate Average Luminance and put in alpha channel
-//      Debug Drawing of the resolution/screen scaling
+//      Debug Drawing of the resolution & screen scaling info
 shader0 = ../crt/shaders/HyperspaceMadness/hsm-prep-initial-royale.slang
 alias0  = AvgLumPass
 
@@ -259,100 +259,154 @@ TubeGlassImage =        ../crt/shaders/HyperspaceMadness/textures/TubeGlassOverl
 TopLayerImage =         ../crt/shaders/HyperspaceMadness/textures/TopLayerImage_Night_3840x2160.jpg
 TopLayerVertImage =     ../crt/shaders/HyperspaceMadness/textures/TopLayerImage_Night_3840x2160.jpg
 
-parameters = "interlace_detect_toggle;hmss_mega_screen_scale_on;hmss_screen_aspect_ratio;hmss_integer_scale_mode;hmss_int_scale_multiple_offset;hmss_non_integer_scale;hmss_int_scale_border_min_height;hmss_scanline_direction;hmss_curvature_mode;hmss_curvature_2D_long_axis;hmss_curvature_2D_short_axis;hmss_curvature_3D_radius;hmss_curvature_3D_view_dist;hmss_curvature_3D_tilt_angle_x;hmss_curvature_3D_tilt_angle_y;hmss_color_crt_profile;hmss_screenfx_corner_radius;hmss_tube_black_edge_thickness;hmss_screenfx_edge_sharpness;hmbz_tube_glass_image_opacity;hmbz_tube_edge_shadow;hmbz_background_image_aspect_ratio;hmbz_background_image_tube_height;hmbz_background_image_vignette_opacity;hmbz_bezel_inner_corner_radius_scale;hmbz_background_image_opacity;hmbz_bezel_opacity;hmbz_bezel_width;hmbz_bezel_height;hmbz_bezel_inner_edge_thickness;hmbz_bezel_color_hue;hmbz_bezel_color_saturation;hmbz_bezel_color_value;hmbz_bezel_color_blend_with_image;hmbz_bezel_brightness;hmbz_bezel_highlight;hmbz_bezel_noise;hmbz_frame_opacity;hmbz_frame_thickness;hmbz_background_image_scale_mode;hmss_crop_overscan_top;hmss_crop_overscan_bottom;hmss_crop_overscan_left;hmss_crop_overscan_right;hmss_color_black_level;hbl_blur_min;hbl_blur_max;hbr_global_amount;hbr_global_gamma_adjust;hbr_inner_edge_reflection;hbr_inner_edge_fullscreen_glow;hbr_diffused_reflection;hbr_fullscreen_glow;hbr_fullscreen_glow_gamma;hag_afterglow_persistence;hbr_noise_samples;hbr_noise_amount;hbr_noise_sample_distance;hbr_fade_amount;hbr_radial_fade_width;hbr_radial_fade_height;hbr_lateral_outer_fade_position;hbr_lateral_outer_fade_distance;hbr_corner_fade;hbr_corner_inner_spread;hbr_corner_outer_spread"
+parameters = "HSS_MEGA_BEZEL_DEBUG;HSS_FLIP_VIEWPORT_AND_CORE_VERTICAL;HSS_ROTATE_CORE_IMAGE;HSS_ASPECT_RATIO_ORIENTATION;HSS_ASPECT_RATIO_MODE;HSS_ASPECT_RATIO_EXPLICIT;HSS_INT_SCALE_MODE;HSS_INT_SCALE_MULTIPLE_OFFSET;HSS_INT_SCALE_MULTIPLE_OFFSET_LONG;HSS_INT_SCALE_BORDER_MIN_HEIGHT;HSS_NON_INTEGER_SCALE;HSS_SCANLINE_DIRECTION;HSS_CORE_RES_SAMPLING_MULT_X;HSS_CORE_RES_SAMPLING_MULT_Y;HSS_INTERLACE_TRIGGER_RES;HSS_POSITION_OFFSET_X;HSS_POSITION_OFFSET_Y;HSS_CROP_OVERSCAN_TOP;HSS_CROP_OVERSCAN_BOTTOM;HSS_CROP_OVERSCAN_LEFT;HSS_CROP_OVERSCAN_RIGHT;HSS_CURVATURE_MODE;HSS_CURVATURE_3D_RADIUS;HSS_CURVATURE_3D_VIEW_DIST;HSS_CURVATURE_3D_TILT_ANGLE_X;HSS_CURVATURE_3D_TILT_ANGLE_Y;HSS_CURVATURE_2D_LONG_AXIS;HSS_CURVATURE_2D_SHORT_AXIS;HSS_COLOR_CRT_PROFILE;HSS_COLOR_SPACE;HSS_COLOR_TEMPERATURE;HSS_COLOR_SATURATION;HSS_COLOR_LUMINANCE;HSS_COLOR_BLACK_LEVEL;HSS_COLOR_NEGATIVE_CROP_BRIGHTNESS;HSS_COLOR_CRT_GAMMA;HSS_PHOSPHOR_PERSISTENCE;HSS_SCREENFX_CORNER_RADIUS;HSS_SCREENFX_EDGE_SHARPNESS;HSS_SCREENFX_VIGNETTE;HSS_SCREENFX_FAKE_SCANLINE_OPACITY;HSS_TUBE_BLACK_EDGE_THICKNESS;HSS_TUBE_BLACK_CURVATURE_SCALE;HBZ_TUBE_GLASS_IMAGE_OPACITY;HBZ_TUBE_EDGE_SHADOW;HBZ_BACKGROUND_IMAGE_OPACITY;HBZ_BACKGROUND_IMAGE_SCALE_MODE;HBZ_BACKGROUND_IMAGE_ASPECT_RATIO;HBZ_BACKGROUND_IMAGE_TUBE_HEIGHT;HBZ_BACKGROUND_IMAGE_VIGNETTE_OPACITY;HBZ_BEZEL_COLOR_HUE;HBZ_BEZEL_COLOR_SATURATION;HBZ_BEZEL_COLOR_VALUE;HBZ_BEZEL_COLOR_BLEND_WITH_IMAGE;HBZ_BEZEL_NOISE;HBZ_BEZEL_OPACITY;HBZ_BEZEL_WIDTH;HBZ_BEZEL_HEIGHT;HBZ_BEZEL_INNER_CORNER_RADIUS_SCALE;HBZ_BEZEL_OUTER_CORNER_RADIUS_SCALE;HBZ_BEZEL_INNER_EDGE_THICKNESS;HBZ_BEZEL_BRIGHTNESS;HBZ_BEZEL_HIGHLIGHT;HBZ_BEZEL_GAMMA;HBZ_FRAME_OPACITY;HBZ_FRAME_THICKNESS;HBZ_FRAME_OUTER_CORNER_RADIUS;HBZ_FRAME_POS_Y_OFFSET;HBZ_FRAME_SHADOW_OPACITY;HBZ_FRAME_SHADOW_WIDTH;HBR_BLUR_NUM_SAMPLES;HBR_BLUR_MIN;HBR_BLUR_MAX;HBR_NOISE_AMOUNT;HBR_NOISE_SAMPLES;HBR_NOISE_SAMPLE_DISTANCE;HBR_GLOBAL_AMOUNT;HBR_GLOBAL_GAMMA_ADJUST;HBR_INNER_EDGE_REFLECTION;HBR_INNER_EDGE_FULLSCREEN_GLOW;HBR_DIRECT_REFLECTION;HBR_DIFFUSED_REFLECTION;HBR_FULLSCREEN_GLOW;HBR_FULLSCREEN_GLOW_GAMMA;HBR_FADE_AMOUNT;HBR_RADIAL_FADE_WIDTH;HBR_RADIAL_FADE_HEIGHT;HBR_LATERAL_OUTER_FADE_POSITION;HBR_LATERAL_OUTER_FADE_DISTANCE;HBR_CORNER_FADE;HBR_CORNER_FADE_DISTANCE;HBR_CORNER_INNER_SPREAD;HBR_CORNER_OUTER_SPREAD;HTI_TOP_IMAGE_OPACITY;HTI_TOP_IMAGE_BLEND_MODE;HTI_TOP_IMAGE_MASK_MODE;MDAPT_MODE;GTU_MODE;GTU_SIGNAL_RESOLUTION;halation_weight;diffusion_weight;bloom_underestimate_levels;bloom_excess;beam_min_sigma;beam_max_sigma;beam_spot_power;beam_min_shape;beam_max_shape;beam_shape_power;beam_horiz_filter;beam_horiz_sigma;beam_horiz_linear_rgb_weight;mask_type;mask_specify_num_triads;mask_triad_size_desired;mask_num_triads_desired;aa_cubic_c;aa_gauss_sigma;geom_overscan_x;geom_overscan_y;interlace_detect_toggle"
 
-interlace_detect_toggle = 0;
+// HSS_MEGA_BEZEL_DEBUG = 0
 
-hmss_mega_screen_scale_on = 1
-// hmss_screen_aspect_ratio = 1.5
-// hmss_integer_scale_mode = 1
-// hmss_int_scale_multiple_offset = 0
-// hmss_non_integer_scale = 83
-hmss_int_scale_border_min_height = 5.5
-// hmss_scanline_direction = 0
+// HSS_FLIP_VIEWPORT_AND_CORE_VERTICAL = 0
+// HSS_ROTATE_CORE_IMAGE = 0
 
-////-- Curvature --////
-hmss_curvature_mode = 1
-hmss_curvature_2D_long_axis = 0
-hmss_curvature_2D_short_axis = 0
-// hmss_curvature_3D_radius = 2
-// hmss_curvature_3D_view_dist = 2
-// hmss_curvature_3D_tilt_angle_x = 0
-// hmss_curvature_3D_tilt_angle_y = 0
+// HSS_ASPECT_RATIO_ORIENTATION = 0
+// HSS_ASPECT_RATIO_MODE = 0
+// HSS_ASPECT_RATIO_EXPLICIT = 1.3333
 
-hmss_color_crt_profile = 5
+// HSS_INT_SCALE_MODE = 0
+// HSS_INT_SCALE_MULTIPLE_OFFSET = 0
+// HSS_INT_SCALE_MULTIPLE_OFFSET_LONG = 0
+// HSS_INT_SCALE_BORDER_MIN_HEIGHT = 5.5
+// HSS_NON_INTEGER_SCALE = 82.97
 
-hmss_screenfx_corner_radius = 10
-// hmss_tube_black_edge_thickness = -0.2
-// hmbz_bezel_width = 200
-// hmbz_bezel_height = 200
+// HSS_SCANLINE_DIRECTION = 0
+// HSS_CORE_RES_SAMPLING_MULT_X = 1
+// HSS_CORE_RES_SAMPLING_MULT_Y = 1
+// HSS_INTERLACE_TRIGGER_RES = 600
 
-// hmbz_background_image_opacity = 0
-// hmbz_bezel_opacity = 0
-// hmbz_bezel_color_hue = 0
-// hmbz_bezel_color_saturation = 0
-// hmbz_bezel_color_value = 0
-// hmbz_bezel_color_blend_with_image = 1
+// HSS_POSITION_OFFSET_X = 0
+// HSS_POSITION_OFFSET_Y = 0
+// HSS_CROP_OVERSCAN_TOP = 0
+// HSS_CROP_OVERSCAN_BOTTOM = 0
+// HSS_CROP_OVERSCAN_LEFT = 0
+// HSS_CROP_OVERSCAN_RIGHT = 0
 
-// hmbz_bezel_brightness = 40
-// hmbz_bezel_highlight = 50
-// hmbz_bezel_noise = 0
+// HSS_POSITION_OFFSET_X = 0
+// HSS_POSITION_OFFSET_Y = 0
 
-// hmbz_tube_glass_image_opacity = 5
-// hmbz_frame_opacity = 0
-// hmbz_frame_thickness = 7;
+HSS_CURVATURE_MODE = 1
+// HSS_CURVATURE_3D_RADIUS = 2
+// HSS_CURVATURE_3D_VIEW_DIST = 2
+// HSS_CURVATURE_3D_TILT_ANGLE_X = 0
+// HSS_CURVATURE_3D_TILT_ANGLE_Y = 0
+HSS_CURVATURE_2D_LONG_AXIS = 0
+HSS_CURVATURE_2D_SHORT_AXIS = 0
 
-// hmbz_background_image_scale_mode = 0
-// hmbz_background_image_aspect_ratio = 1.77
-// hmbz_background_image_tube_height = 69
-// hmbz_background_image_vignette_opacity = 0.4
+HSS_COLOR_CRT_PROFILE = 3
+// HSS_COLOR_SPACE = 0
+// HSS_COLOR_TEMPERATURE = -50
+// HSS_COLOR_SATURATION = 1
+// HSS_COLOR_LUMINANCE = 100
+// HSS_COLOR_BLACK_LEVEL = -0.1
+// HSS_COLOR_NEGATIVE_CROP_BRIGHTNESS = 0.05
+// HSS_COLOR_CRT_GAMMA = 2.4
 
-// hmss_crop_overscan_top = 0
-// hmss_crop_overscan_bottom = 0
-// hmss_crop_overscan_left = 0
-// hmss_crop_overscan_right = 0
-// hmss_color_black_level = 0
+// HSS_PHOSPHOR_PERSISTENCE = 0
 
-// hmss_screenfx_edge_sharpness = 1
-// hmbz_tube_edge_shadow = 0
-// hmbz_bezel_inner_corner_radius_scale = 1
+// HSS_SCREENFX_CORNER_RADIUS = 10
+// HSS_SCREENFX_EDGE_SHARPNESS = 0.4
+// HSS_SCREENFX_VIGNETTE = 0
+// HSS_SCREENFX_FAKE_SCANLINE_OPACITY = 0.7
 
+// HSS_TUBE_BLACK_EDGE_THICKNESS = 1.2
+// HSS_TUBE_BLACK_CURVATURE_SCALE = 1
 
-// hbl_blur_min = 0.3
-// hbl_blur_max = 0.6
+// HBZ_TUBE_GLASS_IMAGE_OPACITY = 1.4
+// HBZ_TUBE_EDGE_SHADOW = 0.7
 
-// hbr_noise_amount = 1
-// hbr_noise_samples = 4
-// hbr_noise_sample_distance = 0.15
+// HBZ_BACKGROUND_IMAGE_OPACITY = 1
+// HBZ_BACKGROUND_IMAGE_SCALE_MODE = 1
+// HBZ_BACKGROUND_IMAGE_ASPECT_RATIO = 1.777
+// HBZ_BACKGROUND_IMAGE_TUBE_HEIGHT = 69
+// HBZ_BACKGROUND_IMAGE_VIGNETTE_OPACITY = 0.5
 
-// hbr_global_amount = 0.5
-// hbr_global_gamma_adjust = 0.9
-// hbr_inner_edge_reflection = 0.6
-// hbr_inner_edge_fullscreen_glow = 0.4
-// hbr_diffused_reflection = 0
-// hbr_fullscreen_glow = 30
-// hbr_fullscreen_glow_gamma = 1.5
-// hbr_fade_amount = 0.2
-// hbr_radial_fade_width = 500
-// hbr_radial_fade_height = 300
-// hbr_lateral_outer_fade_position = 500
-// hbr_lateral_outer_fade_distance = 20
-// hbr_corner_fade = 10
-// hbr_corner_inner_spread = 0
-// hbr_corner_outer_spread = 0
-// hag_afterglow_persistence = 0.2
+// HBZ_BEZEL_COLOR_HUE = 0
+// HBZ_BEZEL_COLOR_SATURATION = 0
+// HBZ_BEZEL_COLOR_VALUE = 10
+// HBZ_BEZEL_COLOR_BLEND_WITH_IMAGE = 0
+// HBZ_BEZEL_NOISE = 30
+// HBZ_BEZEL_OPACITY = 1
+// HBZ_BEZEL_WIDTH = 6.5
+// HBZ_BEZEL_HEIGHT = 5
+// HBZ_BEZEL_INNER_CORNER_RADIUS_SCALE = 0.5
+// HBZ_BEZEL_OUTER_CORNER_RADIUS_SCALE = 1
+// HBZ_BEZEL_INNER_EDGE_THICKNESS = 0.5
+// HBZ_BEZEL_BRIGHTNESS = 40
+// HBZ_BEZEL_HIGHLIGHT = 1
+// HBZ_BEZEL_GAMMA = 1
 
+// HBZ_FRAME_OPACITY = 1
+// HBZ_FRAME_THICKNESS = 8
+// HBZ_FRAME_OUTER_CORNER_RADIUS = 5
+// HBZ_FRAME_POS_Y_OFFSET = 0
+// HBZ_FRAME_SHADOW_OPACITY = 1
+// HBZ_FRAME_SHADOW_WIDTH = 10
 
-// TNTC = "3" // LUT Colors
-// brightboost = "1.35"
-// gsl = "1" //Scanline Type
-// h_smart = "0.5"
-// shadowMask = "7" //CRT Mask
-// masksize = "2" //CRT Mask Size
-// vertmask = "0.25" //PVM colors
-// slotmask = "1" //Slot Mask Strength
-// slotwidth = "2" // Slot Mask Width
-// double_slot = "2" // Slot Mask Height 2x1 or 4x1
-// gamma_out = "2.4"
+// HBR_BLUR_NUM_SAMPLES = 20
+// HBR_BLUR_MIN = 0
+// HBR_BLUR_MAX = 0.95
 
+// HBR_NOISE_AMOUNT = 0.5
+// HBR_NOISE_SAMPLES = 1
+// HBR_NOISE_SAMPLE_DISTANCE = 0.2
 
+// HBR_GLOBAL_AMOUNT = 0.4
+// HBR_GLOBAL_GAMMA_ADJUST = 1.2
+// HBR_INNER_EDGE_REFLECTION = 0.7
+// HBR_INNER_EDGE_FULLSCREEN_GLOW = 0.4
+// HBR_DIRECT_REFLECTION = 1.5
+// HBR_DIFFUSED_REFLECTION = 0.5
+// HBR_FULLSCREEN_GLOW = 75
+// HBR_FULLSCREEN_GLOW_GAMMA = 3
+
+// HBR_FADE_AMOUNT = 1
+
+// HBR_RADIAL_FADE_WIDTH = 70
+// HBR_RADIAL_FADE_HEIGHT = 100
+
+// HBR_LATERAL_OUTER_FADE_POSITION = -18
+// HBR_LATERAL_OUTER_FADE_DISTANCE = 20
+
+// HBR_CORNER_FADE = 10
+// HBR_CORNER_FADE_DISTANCE = 100
+// HBR_CORNER_INNER_SPREAD = 500
+// HBR_CORNER_OUTER_SPREAD = 160
+
+// HTI_TOP_IMAGE_OPACITY = 0
+// HTI_TOP_IMAGE_BLEND_MODE = 5
+// HTI_TOP_IMAGE_MASK_MODE = 2
+
+// MDAPT_MODE = 1
+
+// GTU_MODE = 0
+// GTU_SIGNAL_RESOLUTION = 256
+
+// halation_weight = 0
+// diffusion_weight = 0.075
+// bloom_underestimate_levels = 0.8
+// bloom_excess = 0
+// beam_min_sigma = 0.02
+// beam_max_sigma = 0.3
+// beam_spot_power = 0.33
+// beam_min_shape = 2
+// beam_max_shape = 4
+// beam_shape_power = 0.25
+// beam_horiz_filter = 0
+// beam_horiz_sigma = 0.35
+// beam_horiz_linear_rgb_weight = 1
+// mask_type = 1
+// mask_specify_num_triads = 0
+// mask_triad_size_desired = 3
+// mask_num_triads_desired = 480
+// aa_cubic_c = 0.5
+// aa_gauss_sigma = 0.5
+// geom_overscan_x = 1
+// geom_overscan_y = 1
+// interlace_detect_toggle = 0

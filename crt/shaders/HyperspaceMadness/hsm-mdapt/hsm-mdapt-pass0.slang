@@ -22,10 +22,10 @@ layout(push_constant) uniform Push
 layout(std140, set = 0, binding = 0) uniform UBO
 {
 	mat4 MVP;
-    float mdapt_mode;
+    float MDAPT_MODE;
 } global;
 
-#pragma parameter mdapt_mode "[DE-DITHERING MDAPT]    OFF, Strict, Relaxed, Stripes"	1 0 3 1
+#pragma parameter MDAPT_MODE "[DE-DITHERING MDAPT]    OFF, Strict, Relaxed, Stripes"	1 0 3 1
 
 // #pragma parameter MODE "MDAPT Monochrome Analysis"	0.0 0.0 1.0 1.0
 // #pragma parameter PWR  "MDAPT Color Metric Exp"		2.0 0.0 10.0 0.1
@@ -74,7 +74,7 @@ void main()
 		  D	
 	*/
 
-	if (global.mdapt_mode < 1)
+	if (global.MDAPT_MODE < 1)
 	{
 		FragColor = texture(Source, vTexCoord);
 		return;
@@ -89,7 +89,7 @@ void main()
 
 	vec3 res = vec3(0.0);
 
-	if(global.mdapt_mode == 1){
+	if(global.MDAPT_MODE == 1){
 		res.x = float((L == R) && (C != L));
 		res.y = float((U == D) && (C != U));
 		res.z = float(bool(res.x) && bool(res.y) && (L == U));

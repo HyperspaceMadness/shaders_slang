@@ -1,5 +1,5 @@
 /*
-   CRT - Guest - Dr. Venom - Added Integration of hsm-mega-screen-scale Scaling Functions
+   CRT - Guest - Dr. Venom - Includes changes from HyperspaceMadness to integrate the Mega Bezel
    
    Copyright (C) 2018-2020 guest(r) - guest.r@gmail.com
 
@@ -35,16 +35,16 @@ layout(push_constant) uniform Push
 	// OS, 
 	// BLOOM, 
 
-	float brightboost, 
-	brightboost1, 
-	gsl, 
-	scanline1, 
-	scanline2, 
-	beam_min, 
-	beam_max, 
-	beam_size,
-    h_sharp, 
-	s_sharp, 
+	float GDV_BRIGHT_BOOST_DARK_COLORS; 
+	float GDV_BRIGHT_BOOST_BRIGHT_COLORS; 
+	float GDV_SCANLINE_TYPE; 
+	float GDV_SCANLINE_SHAPE_EDGES_LOW; 
+	float GDV_SCANLINE_SHAPE_CENTER_HIGH; 
+	float GDV_SCANLINE_DARK_BEAM_SIZE_MIN; 
+	float GDV_SCANLINE_BRIGHT_BEAM_SIZE_MAX; 
+	float GDV_SCANLINE_OVERGROWN_BRIGHT_BEAM;
+    float GDV_HORIZONTAL_SHARPNESS; 
+	float GDV_SUBTRACTIVE_SHARPNESS;
 
 	// HSM Removed
 	// csize, 
@@ -54,26 +54,27 @@ layout(push_constant) uniform Push
 
 	// HSM Added
 	// moved from global since global is comming from the import of mega screen scale
-	interlace_mode,
-	bloom,
+	float GDV_INTERLACE_MODE;
+	float GDV_BLOOM_STRENGTH;
 	// End Addition
 
-	glow, 
-	shadowMask, 
-	masksize, 
-	vertmask,
-    slotmask, 
-	slotwidth, 
-	double_slot, 
-	mcut, 
-	maskDark, 
-	maskLight, 
-	CGWG, 
-	gamma_out, 
-	spike, 
-	interlace_res,
-	scans,
-	slotms;
+	float GDV_GLOW_STRENGTH; 
+	float GDV_MASK_TYPE; 
+	float GDV_MASK_SIZE; 
+	float GDV_PVM_LIKE_COLORS;
+    float GDV_SLOTMASK_STRENGTH; 
+	float GDV_SLOTMASK_WIDTH; 
+	float GDV_SLOTMASK_HEIGHT; 
+	float GDV_MASK_5_TO_7_CUTOFF; 
+	float GDV_MASK_4_TO_6_DARK; 
+	float GDV_MASK_4_TO_6_LIGHT; 
+	float GDV_MASK_0_7_STRENGTH; 
+	// HSM Removed
+	// gamma_out,
+	// spike,
+	// interlace_res,
+	float GDV_SCANLINE_1_2_SATURATION;
+	float GDV_SLOTMASK_SIZE;
 } params;
 
 
@@ -104,36 +105,50 @@ layout(std140, set = 0, binding = 0) uniform UBO
 // #define BLOOM        params.BLOOM     // Bloom overscan percentage
 
 // HSM Added (Moved from the bottom)
-#pragma parameter glow "Glow Strength" 0.02 0.0 0.5 0.01
-#define glow         params.glow     // Glow Strength
-#pragma parameter bloom "Bloom Strength" 0.0 0.0 2.0 0.1
-#define bloom          params.bloom     // bloom effect
+#pragma parameter GDV_GLOW_STRENGTH "[GLOW]  Glow Strength" 0.02 0.0 0.5 0.01
+#define glow         params.GDV_GLOW_STRENGTH     // Glow Strength
 
-#pragma parameter brightboost "Bright Boost Dark Pixels" 1.40 0.50 4.00 0.05
-#define brightboost  params.brightboost     // adjust brightness
-#pragma parameter brightboost1 "Bright Boost Bright Pixels" 1.15 0.50 3.00 0.05
-#define brightboost1  params.brightboost1     // adjust brightness
-#pragma parameter gsl "Scanline Type" 0.0 0.0 2.0 1.0
-#define gsl          params.gsl      // Alternate scanlines
-#pragma parameter scanline1 "Scanline beam shape low" 6.0 1.0 15.0 1.0
-#define scanline1    params.scanline1      // scanline param, vertical sharpness
-#pragma parameter scanline2 "Scanline beam shape high" 8.0 5.0 23.0 1.0 
-#define scanline2    params.scanline2      // scanline param, vertical sharpness
-#pragma parameter beam_min "Scanline dark" 1.35 0.5 2.5 0.05
-#define beam_min     params.beam_min     // dark area beam min - narrow
-#pragma parameter beam_max "Scanline bright" 1.05 0.5 2.5 0.05
-#define beam_max     params.beam_max     // bright area beam max - wide
-#pragma parameter beam_size "Increased bright scanline beam" 0.70 0.0 1.0 0.05
-#define beam_size    params.beam_size     // increased max. beam size
+// HSM Changed from default of 0 to 0.3
+#pragma parameter GDV_BLOOM_STRENGTH "[GLOW]  Bloom Strength" 0.3 0.0 2.0 0.1
+#define bloom          params.GDV_BLOOM_STRENGTH     // bloom effect
 
+#pragma parameter GDV_BRIGHT_BOOST_DARK_COLORS "[BRIGHTNESS]  Boost Dark Colors" 1.40 0.50 4.00 0.05
+#define brightboost  params.GDV_BRIGHT_BOOST_DARK_COLORS     // adjust brightness
+
+#pragma parameter GDV_BRIGHT_BOOST_BRIGHT_COLORS "[BRIGHTNESS]  Boost Bright Colors" 1.15 0.50 3.00 0.05
+#define brightboost1  params.GDV_BRIGHT_BOOST_BRIGHT_COLORS     // adjust brightness
+
+// HSM Modified, Turned Interlace Mode Off, some parameters moved from global to params 
+#pragma parameter GDV_INTERLACE_MODE "[SCANLINE]  Interlace Mode - 0:OFF,1:ON,2:Blend,3:Sharp" 3 0 3 1
+#define interlace_mode         params.GDV_INTERLACE_MODE     // interlace mode 
+
+#pragma parameter GDV_SCANLINE_TYPE "[SCANLINE]  Type" 0.0 0.0 2.0 1.0
+#define gsl          params.GDV_SCANLINE_TYPE      // Alternate scanlines
 // HSM Added (Moved From Bottom)
-#pragma parameter scans "Scanline 1 & 2 Saturation" 0.5 0.0 1.0 0.1
-#define scans         	params.scans     // scanline saturation
+#pragma parameter GDV_SCANLINE_1_2_SATURATION "[SCANLINE]  Type 1 & 2 Saturation" 0.5 0.0 1.0 0.1
+#define scans         	params.GDV_SCANLINE_1_2_SATURATION     // scanline saturation
 
-#pragma parameter h_sharp "Horizontal sharpness" 5.25 1.0 15.0 0.25
-#define h_sharp      params.h_sharp     // pixel sharpness
-#pragma parameter s_sharp "Substractive sharpness (relative)" 0.40 0.0 1.0 0.10
-#define s_sharp      params.s_sharp     // substractive sharpness
+#pragma parameter GDV_SCANLINE_SHAPE_CENTER_HIGH "[SCANLINE]  Shape Center (High)" 8.0 5.0 23.0 1.0 
+#define scanline2    params.GDV_SCANLINE_SHAPE_CENTER_HIGH      // scanline param, vertical sharpness
+
+#pragma parameter GDV_SCANLINE_SHAPE_EDGES_LOW "[SCANLINE]  Shape Edges (Low)" 6.0 1.0 15.0 1.0
+#define scanline1    params.GDV_SCANLINE_SHAPE_EDGES_LOW      // scanline param, vertical sharpness
+
+#pragma parameter GDV_SCANLINE_DARK_BEAM_SIZE_MIN "[SCANLINE]  Dark Beam Size" 1.35 0.5 2.5 0.05
+#define beam_min     params.GDV_SCANLINE_DARK_BEAM_SIZE_MIN     // dark area beam min - narrow
+
+#pragma parameter GDV_SCANLINE_BRIGHT_BEAM_SIZE_MAX "[SCANLINE]  Bright Beam Size" 1.05 0.5 2.5 0.05
+#define beam_max     params.GDV_SCANLINE_BRIGHT_BEAM_SIZE_MAX     // bright area beam max - wide
+
+#pragma parameter GDV_SCANLINE_OVERGROWN_BRIGHT_BEAM "[SCANLINE]  Overgrown Bright Beam (Increased Bright Beam)" 0.70 0.0 1.0 0.05
+#define beam_size    params.GDV_SCANLINE_OVERGROWN_BRIGHT_BEAM     // increased max. beam size
+
+#pragma parameter GDV_HORIZONTAL_SHARPNESS "[SHARPNESS]  Horizontal Sharpness" 5.25 1.0 15.0 0.25
+#define h_sharp      params.GDV_HORIZONTAL_SHARPNESS     // pixel sharpness
+
+#pragma parameter GDV_SUBTRACTIVE_SHARPNESS "[SHARPNESS]  Subtractive Sharpness (Relative)" 0.40 0.0 1.0 0.10
+#define s_sharp      params.GDV_SUBTRACTIVE_SHARPNESS     // subtractive sharpness
+
 // HSM Removed
 // #pragma parameter csize "Corner size" 0.0 0.0 0.07 0.01
 // #define csize        params.csize     // corner size
@@ -148,29 +163,43 @@ layout(std140, set = 0, binding = 0) uniform UBO
 // #pragma parameter glow "Glow Strength" 0.02 0.0 0.5 0.01
 // #define glow         params.glow     // Glow Strength
 
-#pragma parameter shadowMask "CRT Mask - 0:CGWG, 1-4:Lottes, 5-6:Trinitron" 7 -1 7 1
-#define shadowMask   params.shadowMask     // Mask Style
-#pragma parameter masksize "CRT Mask Size - 0:Auto, 1:2K, 2:4k" 0 0 2 1
-#define masksize     params.masksize     // Mask Size
-#pragma parameter vertmask "PVM Like Colors" 0.0 -0.30 0.30 0.02
-#define vertmask     params.vertmask     // Vertical mask
-#pragma parameter slotmask "Slot Mask Strength" 0.5 0.0 1.0 0.05
-#define slotmask     params.slotmask     // Slot Mask ON/OFF
-#pragma parameter slotwidth "Slot Mask Width" 2.0 1.0 6.0 0.5
-#define slotwidth    params.slotwidth     // Slot Mask Width
-#pragma parameter double_slot "Slot Mask Height: 2x1 or 4x1" 1.0 1.0 2.0 1.0
-#define double_slot  params.double_slot     // Slot Mask Height
+// Mask
+#pragma parameter GDV_PVM_LIKE_COLORS "[MASK]  PVM Like Colors" 0.0 -0.30 0.30 0.02
+#define vertmask     params.GDV_PVM_LIKE_COLORS     // Vertical mask
+
+#pragma parameter GDV_MASK_TYPE "[MASK]  Type - 0:CGWG, 1-4:Lottes, 5-6:Trinitron" 7 -1 7 1
+#define shadowMask   params.GDV_MASK_TYPE     // Mask Style
+
+#pragma parameter GDV_MASK_SIZE "[MASK]  Size - 0:Auto, 1:2K, 2:4k" 0 0 2 1
+#define masksize     params.GDV_MASK_SIZE     // Mask Size
+
+#pragma parameter GDV_MASK_4_TO_6_DARK "[MASK]  4-6 Strength Dark (Lottes & Trinitron)" 0.5 0.0 2.0 0.05
+#define maskDark     params.GDV_MASK_4_TO_6_DARK     // Dark "Phosphor"
+
+#pragma parameter GDV_MASK_4_TO_6_LIGHT "[MASK]  4-6 Strength Light (Lottes & Trinitron)" 1.5 0.0 2.0 0.05
+#define maskLight    params.GDV_MASK_4_TO_6_LIGHT     // Light "Phosphor"
+
+#pragma parameter GDV_MASK_5_TO_7_CUTOFF "[MASK]  5-7 Cutoff (Trinitron)" 0.25 0.0 0.5 0.05
+#define mcut         params.GDV_MASK_5_TO_7_CUTOFF     // Mask 5-7 cutoff
+
+#pragma parameter GDV_MASK_0_7_STRENGTH "[MASK]  0 & 7 Strength (CGWG)" 0.3 0.0 1.0 0.05
+#define CGWG         params.GDV_MASK_0_7_STRENGTH     // CGWG Mask Strength
+
+// Slotmask
+#pragma parameter GDV_SLOTMASK_STRENGTH "[SLOTMASK]  Strength" 0.5 0.0 1.0 0.05
+#define slotmask     params.GDV_SLOTMASK_STRENGTH     // Slot Mask ON/OFF
+
 // HSM Modified, parameters moved from global to params 
-#pragma parameter slotms "Slot Mask Size - 0:Auto, 1:2K, 2:4k" 0 0 2 1
-#define slotms  	params.slotms     // Slot Mask Size
-#pragma parameter mcut "Mask 5-7 cutoff" 0.25 0.0 0.5 0.05
-#define mcut         params.mcut     // Mask 5-7 cutoff
-#pragma parameter maskDark "Lottes&Trinitron maskDark" 0.5 0.0 2.0 0.05
-#define maskDark     params.maskDark     // Dark "Phosphor"
-#pragma parameter maskLight "Lottes&Trinitron maskLight" 1.5 0.0 2.0 0.05
-#define maskLight    params.maskLight     // Light "Phosphor"
-#pragma parameter CGWG "Mask 0&7 Mask Str." 0.3 0.0 1.0 0.05
-#define CGWG         params.CGWG     // CGWG Mask Strength
+#pragma parameter GDV_SLOTMASK_SIZE "[SLOTMASK]  Size - 0:Auto, 1:2K, 2:4k" 0 0 2 1
+#define slotms  	params.GDV_SLOTMASK_SIZE     // Slot Mask Size
+
+#pragma parameter GDV_SLOTMASK_WIDTH "[SLOTMASK]  Width" 2.0 1.0 6.0 0.5
+#define slotwidth    params.GDV_SLOTMASK_WIDTH     // Slot Mask Width
+
+#pragma parameter GDV_SLOTMASK_HEIGHT "[SLOTMASK]  Height: 2x1 or 4x1" 1.0 1.0 2.0 1.0
+#define double_slot  params.GDV_SLOTMASK_HEIGHT     // Slot Mask Height
+
+
 // HSM Removed
 // #pragma parameter gamma_out "Gamma out" 2.4 1.0 3.5 0.05
 // #define gamma_out    params.gamma_out     // output gamma
@@ -185,11 +214,7 @@ layout(std140, set = 0, binding = 0) uniform UBO
 
 // HSM Added
 #define spike 1
-#define interlace_res HMSS_INTERLACE_TRIGGER_RES
-
-// HSM Modified, Turned Interlace Mode Off, some parameters moved from global to params 
-#pragma parameter interlace_mode "Interlace Mode - 0:OFF, 1:Interlace, 2: Blend 3:Sharp" 3 0 3 1
-#define interlace_mode         params.interlace_mode     // interlace mode 
+#define interlace_res HSS_INTERLACE_TRIGGER_RES
 
 // HSM Removed (Moved it to the top)
 // #pragma parameter bloom "Bloom Strength" 0.0 0.0 2.0 0.1
@@ -197,15 +222,16 @@ layout(std140, set = 0, binding = 0) uniform UBO
 // #pragma parameter scans "Scanline 1&2 Saturation" 0.5 0.0 1.0 0.1
 // #define scans         	params.scans     // scanline saturation
 
-#define COMPAT_TEXTURE(c,d) HMSS_GetCroppedTexSample(c,d)
-#define TEX0 vTexCoord
-#define InputSize SourceSize
-#define TextureSize SourceSize
+#define COMPAT_TEXTURE(c,d) HSS_GetCroppedTexSample(c,d)
+// #define TEX0 vTexCoord
+// #define InputSize SourceSize
+// #define TextureSize SourceSize
 
 // HSM Removed
 // #define SourceSize global.SourceSize
 // HSM Added
-#define SourceSize HMSS_GetCroppedOriginalSize()
+#define SourceSize CROPPED_ORIGINAL_SIZE
+// #define SourceSize HSS_GetCroppedOriginalSizeWithCoreResMult()
 // End Addition
 
 #define OutputSize global.OutputSize
@@ -214,16 +240,35 @@ layout(std140, set = 0, binding = 0) uniform UBO
 #pragma stage vertex
 layout(location = 0) in vec4 Position;
 layout(location = 1) in vec2 TexCoord;
+
 layout(location = 0) out vec2 vTexCoord;
+
+layout(location = 1) out vec2 CROPPED_ORIGINAL_SIZE;
+layout(location = 2) out float SCREEN_ASPECT;
+layout(location = 3) out vec2 SCREEN_SCALE;
+layout(location = 4) out vec2 SCREEN_COORD;
+layout(location = 5) out float USE_VERTICAL_SCANLINES;
 
 void main()
 {
-   gl_Position = global.MVP * Position;
-   vTexCoord = TexCoord * 1.00001;
+	gl_Position = global.MVP * Position;
+	vTexCoord = TexCoord * 1.00001;
+
+	CROPPED_ORIGINAL_SIZE = HSS_GetCroppedOriginalSizeWithCoreResMult();
+	SCREEN_ASPECT = HSS_GetScreenAspect();
+	SCREEN_SCALE = HSS_GetScreenScale(SCREEN_ASPECT);
+	SCREEN_COORD = HSS_GetScreenVTexCoord(vTexCoord, SCREEN_SCALE);
+	USE_VERTICAL_SCANLINES = HSS_GetUseVerticalScanlines(SCREEN_ASPECT);
 }
 
 #pragma stage fragment
 layout(location = 0) in vec2 vTexCoord;
+layout(location = 1) in vec2 CROPPED_ORIGINAL_SIZE;
+layout(location = 2) in float SCREEN_ASPECT;
+layout(location = 3) in vec2 SCREEN_SCALE;
+layout(location = 4) in vec2 SCREEN_COORD;
+layout(location = 5) in float USE_VERTICAL_SCANLINES;
+
 layout(location = 0) out vec4 FragColor;
 layout(set = 0, binding = 2) uniform sampler2D Source;
 layout(set = 0, binding = 3) uniform sampler2D LinearizePass;
@@ -495,15 +540,13 @@ void main()
 	texcoord  = Overscan(texcoord*(SourceSize.xy/InputSize.xy), factor, factor)*(InputSize.xy/SourceSize.xy);
 	 vec2 pos  = Warp(texcoord*(TextureSize.xy/InputSize.xy))*(InputSize.xy/TextureSize.xy);
 	 vec2 pos0 = Warp(TEX0.xy*(TextureSize.xy/InputSize.xy))*(InputSize.xy/TextureSize.xy);
-
 	*/
 	
 	// HSM Removed
-	float TATE = HMSS_GetUseVerticalScanlines();
+	float TATE = USE_VERTICAL_SCANLINES;
 
-	vec2 screen_coord = HMSS_GetScreenVTexCoord(vTexCoord);
-	vec2 screen_curved_coord = HMSS_GetCurvedCoord(screen_coord, 1);
-	vec2 pos = HMSS_GetMirrorWrappedCoord(screen_curved_coord);
+	vec2 screen_curved_coord = HSS_GetCurvedCoord(SCREEN_COORD, 1, SCREEN_ASPECT);
+	vec2 pos = HSS_GetMirrorWrappedCoord(screen_curved_coord);
 
 	vec2 coffset = vec2(0.5, 0.5);
 	bool use_interlace = (interlace_mode > 0.5 && interlace_mode < 2.5 && interlace_res <= mix(SourceSize.y, SourceSize.x, TATE));
@@ -568,6 +611,7 @@ void main()
 	float wt  = 1.0/(wl2+wl1+wr1+wr2);
 	bool sharp = (s_sharp > 0.05);
 	
+	// HSM Comment - Do initial sample with offsets
 	vec3 l3 = COMPAT_TEXTURE(PassPrev4Texture, pC4 -off2).xyz;
 	vec3 l2 = COMPAT_TEXTURE(PassPrev4Texture, pC4 -offx).xyz;
 	vec3 l1 = COMPAT_TEXTURE(PassPrev4Texture, pC4      ).xyz;
@@ -594,6 +638,7 @@ void main()
 	scolor1 = pow(scolor1, gtmp);	vec3 mcolor1 = scolor1;
 	scolor1 = mix(color1, scolor1, spike);
 	
+	// HSM Comment - Add an additional Y offset and sample again
 	pC4+=offy;
 	
 	l3 = COMPAT_TEXTURE(PassPrev4Texture, pC4 -off2).xyz;
@@ -625,6 +670,7 @@ void main()
 
 	if (use_interlace)
 	{
+		// HSM Comment - Add a negative Y offset and sample again
 		pC4-= 2.*offy;
 	
 		l3 = COMPAT_TEXTURE(PassPrev4Texture, pC4 -off2).xyz;
@@ -751,7 +797,7 @@ void main()
 	FragColor = vec4(color, 1);
 	
 	// Prep and add output gamma
-	FragColor = HMSS_GetPostCrtPreppedColor(FragColor, screen_curved_coord, screen_coord);
+	FragColor = HSS_GetPostCrtPreppedColor(FragColor, screen_curved_coord, SCREEN_COORD, SCREEN_ASPECT, SCREEN_SCALE);
 	// End Addition
 }
 

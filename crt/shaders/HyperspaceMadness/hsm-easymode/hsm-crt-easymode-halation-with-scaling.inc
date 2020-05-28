@@ -13,55 +13,53 @@ layout(push_constant) uniform Push
 {
 	// HSM Removed
     // float GAMMA_OUTPUT;
-	float SHARPNESS_H;
-	float SHARPNESS_V;
-	float MASK_TYPE;
-	float MASK_STRENGTH_MIN;
-	float MASK_STRENGTH_MAX;
-	float MASK_SIZE;
-	float SCANLINE_STRENGTH_MIN;
-	float SCANLINE_STRENGTH_MAX;
-	float SCANLINE_BEAM_MIN;
-	float SCANLINE_BEAM_MAX;
+	float ESM_SHARPNESS_H;
+	float ESM_SHARPNESS_V;
+	float ESM_MASK_TYPE;
+	float ESM_MASK_STRENGTH_MIN;
+	float ESM_MASK_STRENGTH_MAX;
+	float ESM_MASK_SIZE;
+	float ESM_SCANLINE_STRENGTH_MIN;
+	float ESM_SCANLINE_STRENGTH_MAX;
+	float ESM_SCANLINE_BEAM_MIN;
+	float ESM_SCANLINE_BEAM_MAX;
     // HSM Removed
 	// float GEOM_CURVATURE;
 	// float GEOM_WARP;
 	// float GEOM_CORNER_SIZE;
 	// float GEOM_CORNER_SMOOTH;
-	float INTERLACING_TOGGLE;
-	float HALATION;
-	float DIFFUSION;
-	float BRIGHTNESS;
+	float ESM_INTERLACING_TOGGLE;
+	float ESM_HALATION;
+	float ESM_DIFFUSION;
+	float ESM_BRIGHTNESS;
 } params;
 
-#pragma parameter emh_title 			"______EASYMODE HALATION______" 0 0 0 1
 // HSM Removed
 // #pragma parameter GAMMA_OUTPUT          "    Gamma Output" 2.2 0.1 5.0 0.01
-#pragma parameter SHARPNESS_H           "    Sharpness Horizontal" 0.6 0.0 1.0 0.05
-#pragma parameter SHARPNESS_V           "    Sharpness Vertical" 1.0 0.0 1.0 0.05
-#pragma parameter MASK_TYPE             "    Mask Type" 4.0 0.0 7.0 1.0
-#pragma parameter MASK_STRENGTH_MIN     "    Mask Strength Min." 0.2 0.0 0.5 0.01
-#pragma parameter MASK_STRENGTH_MAX     "    Mask Strength Max." 0.2 0.0 0.5 0.01
-#pragma parameter MASK_SIZE             "    Mask Size" 1.0 1.0 100.0 1.0
-#pragma parameter SCANLINE_STRENGTH_MIN "    Scanline Strength Min." 0.2 0.0 1.0 0.05
-#pragma parameter SCANLINE_STRENGTH_MAX "    Scanline Strength Max." 0.4 0.0 1.0 0.05
-#pragma parameter SCANLINE_BEAM_MIN     "    Scanline Beam Min." 1.0 0.25 5.0 0.05
-#pragma parameter SCANLINE_BEAM_MAX     "    Scanline Beam Max." 1.0 0.25 5.0 0.05
+#pragma parameter ESM_INTERLACING_TOGGLE    "[EASYMODE SCANLINE]  Interlace ON" 0 0.0 1.0 1.0
+#pragma parameter ESM_SCANLINE_STRENGTH_MIN "[SCANLINE]  Strength Min." 0.2 0.0 1.0 0.05
+#pragma parameter ESM_SCANLINE_STRENGTH_MAX "[SCANLINE]  Strength Max." 0.4 0.0 1.0 0.05
+#pragma parameter ESM_SCANLINE_BEAM_MIN     "[SCANLINE]  Beam Min." 1.0 0.25 5.0 0.05
+#pragma parameter ESM_SCANLINE_BEAM_MAX     "[SCANLINE]  Beam Max." 1.0 0.25 5.0 0.05
+
+#pragma parameter ESM_SHARPNESS_H           "[SHARPNESS]  Horizontal" 0.6 0.0 1.0 0.05
+#pragma parameter ESM_SHARPNESS_V           "[SHARPNESS]  Vertical" 1.0 0.0 1.0 0.05
+
+#pragma parameter ESM_MASK_TYPE             "[MASK]  Type" 4.0 0.0 7.0 1.0
+#pragma parameter ESM_MASK_SIZE             "[MASK]  Size - 0:Auto, 1:2K, 2:4K" 0 0 100 1
+#pragma parameter ESM_MASK_STRENGTH_MIN     "[MASK]  Strength Min." 0.2 0.0 0.5 0.01
+#pragma parameter ESM_MASK_STRENGTH_MAX     "[MASK]  Strength Max." 0.2 0.0 0.5 0.01
+
+#pragma parameter ESM_HALATION              "[GLOW]  Halation" 0.03 0.0 1.0 0.01
+#pragma parameter ESM_DIFFUSION             "[GLOW]  Diffusion" 0.0 0.0 1.0 0.01
+#pragma parameter ESM_BRIGHTNESS            "[GLOW]  Brightness" 1.0 0.0 2.0 0.05
 
 // HSM Removed
 // #pragma parameter GEOM_CURVATURE "Geom Curvature" 0.0 0.0 0.1 0.01
 // #pragma parameter GEOM_WARP "Geom Warp" 0.0 0.0 0.1 0.01
 // #pragma parameter GEOM_CORNER_SIZE "Geom Corner Size" 0.0 0.0 0.1 0.01
 // #pragma parameter GEOM_CORNER_SMOOTH "Geom Corner Smoothness" 150.0 50.0 1000.0 25.0
-// #pragma parameter INTERLACING_TOGGLE    "    Interlacing Toggle" 1.0 0.0 1.0 1.0
-
-// HSM Added
-#pragma parameter INTERLACING_TOGGLE    "    Interlacing Toggle" 0 0.0 1.0 1.0
-// End Added
-
-#pragma parameter HALATION              "    Halation" 0.03 0.0 1.0 0.01
-#pragma parameter DIFFUSION             "    Diffusion" 0.0 0.0 1.0 0.01
-#pragma parameter BRIGHTNESS            "    Brightness" 1.0 0.0 2.0 0.05
+// #pragma parameter ESM_INTERLACING_TOGGLE    "    Interlacing Toggle" 1.0 0.0 1.0 1.0
 
 // REMOVED FOR MEGA SCREEN SCALE because MEGA SCREEN SCALE has its own globals, required variables moved to params
 /* Removed the following
@@ -86,7 +84,7 @@ layout(std140, set = 0, binding = 0) uniform UBO
 // #define TEX2D(c) texture(tex, c)
 
 // HSM Added
-#define TEX2D(c) HMSS_GetCroppedTexSample(tex, c)
+#define TEX2D(c) HSS_GetCroppedTexSample(tex, c)
 
 float curve_distance(float x, float sharp)
 {
@@ -149,11 +147,13 @@ float get_corner_weight(vec2 co, vec2 corner, float smoothfunc)
 #pragma stage vertex
 layout(location = 0) in vec4 Position;
 layout(location = 1) in vec2 TexCoord;
-layout(location = 0) out vec2 vTexCoord;
 
-// HSM Added
-layout(location = 1) out vec2 screenScale;
-// End Addition
+layout(location = 0) out vec2 vTexCoord;
+layout(location = 1) out vec2 CROPPED_ORIGINAL_SIZE;
+layout(location = 2) out float SCREEN_ASPECT;
+layout(location = 3) out vec2 SCREEN_SCALE;
+layout(location = 4) out vec2 SCREEN_COORD;
+layout(location = 5) out float USE_VERTICAL_SCANLINES;
 
 void main()
 {
@@ -161,22 +161,25 @@ void main()
    vTexCoord = TexCoord;
 
     // HSM Added
-    screenScale =  HMSS_GetScreenScale();
-    vTexCoord = HMSS_GetScreenVTexCoord(vTexCoord);
+    CROPPED_ORIGINAL_SIZE = HSS_GetCroppedOriginalSizeWithCoreResMult();
+	SCREEN_ASPECT = HSS_GetScreenAspect();
+	SCREEN_SCALE = HSS_GetScreenScale(SCREEN_ASPECT);
+	SCREEN_COORD = HSS_GetScreenVTexCoord(vTexCoord, SCREEN_SCALE);
+	USE_VERTICAL_SCANLINES = HSS_GetUseVerticalScanlines(SCREEN_ASPECT);
+    // End Addition
 }
 
 #pragma stage fragment
 layout(location = 0) in vec2 vTexCoord;
-
-// HSM Added
-layout(location = 1) in vec2 screenScale;
-// End Addition
+layout(location = 1) in vec2 CROPPED_ORIGINAL_SIZE;
+layout(location = 2) in float SCREEN_ASPECT;
+layout(location = 3) in vec2 SCREEN_SCALE;
+layout(location = 4) in vec2 SCREEN_COORD;
+layout(location = 5) in float USE_VERTICAL_SCANLINES;
 
 layout(location = 0) out vec4 FragColor;
 layout(set = 0, binding = 2) uniform sampler2D Source;
 layout(set = 0, binding = 3) uniform sampler2D ORIG_LINEARIZED;
-
-// TODO need to add Overscan Crop
 
 void main()
 {
@@ -186,7 +189,7 @@ void main()
 
     // TODO implement Cropping
     // HSM Added
-    vec2 tex_size = HMSS_GetCroppedOriginalSize();
+    vec2 tex_size = HSS_GetCroppedOriginalSizeWithCoreResMult();
     // End Addition
 
     vec2 midpoint = vec2(0.5, 0.5);
@@ -194,9 +197,9 @@ void main()
     float timer = vec2(global.FrameCount, global.FrameCount).x;
 
     // HSM Removed
-    // if (params.INTERLACING_TOGGLE > 0.5 && global.SourceSize.y >= 400)
+    // if (params.ESM_INTERLACING_TOGGLE > 0.5 && global.SourceSize.y >= 400)
 
-    if (params.INTERLACING_TOGGLE > 0.5 && tex_size.y >= HMSS_INTERLACE_TRIGGER_RES)
+    if (params.ESM_INTERLACING_TOGGLE > 0.5 && tex_size.y >= HSS_INTERLACE_TRIGGER_RES)
     {
         tex_size.y *= 0.5;
 
@@ -208,8 +211,6 @@ void main()
         else midpoint.y = 0.25;
     }
 
-    
-
     /* HSM Removed
     vec2 co = vTexCoord * tex_size * global.SourceSize.zw;
     vec2 xy = curve_coordinate(co, params.GEOM_WARP);
@@ -218,11 +219,10 @@ void main()
     */
 
     // HSM Added
-    // corner_weight is also set to 1 so the corner will not be masked, and will be masked in a later pass 
-    vec2 co = vTexCoord;
+    vec2 co = SCREEN_COORD;
     vec2 screen_coord = co;
-    vec2 screen_curved_coord = HMSS_GetCurvedCoord(screen_coord, 1);
-    vec2 xy = HMSS_GetMirrorWrappedCoord(screen_curved_coord);
+    vec2 screen_curved_coord = HSS_GetCurvedCoord(screen_coord, 1, SCREEN_ASPECT);
+    vec2 xy = HSS_GetMirrorWrappedCoord(screen_curved_coord);
 
     // HSM Removed
     // float corner_weight = 1;
@@ -235,8 +235,8 @@ void main()
     float curve_x, curve_y;
     vec3 col, col2, diff;
 
-    curve_x = curve_distance(dist.x, params.SHARPNESS_H * params.SHARPNESS_H);
-    curve_y = curve_distance(dist.y, params.SHARPNESS_V * params.SHARPNESS_V);
+    curve_x = curve_distance(dist.x, params.ESM_SHARPNESS_H * params.ESM_SHARPNESS_H);
+    curve_y = curve_distance(dist.y, params.ESM_SHARPNESS_V * params.ESM_SHARPNESS_V);
 
     vec4 coeffs_x = PI * vec4(1.0 + curve_x, curve_x, 1.0 - curve_x, 2.0 - curve_x);
     vec4 coeffs_y = PI * vec4(1.0 + curve_y, curve_y, 1.0 - curve_y, 2.0 - curve_y);
@@ -257,7 +257,7 @@ void main()
     color_matrix[3] = filter_lanczos(coeffs_x, get_color_matrix(ORIG_LINEARIZED, tex_co + 2.0 * dy, dx));
 
     col = filter_lanczos(coeffs_y, color_matrix).rgb;
-    diff = HMSS_GetCroppedTexSample(Source, xy).rgb;
+    diff = HSS_GetCroppedTexSample(Source, xy).rgb;
 
     float rgb_max = max(col.r, max(col.g, col.b));
 
@@ -266,12 +266,12 @@ void main()
     */
 
     // HSM Added the Following
-    float sample_offset = (tex_size.y * global.OutputSize.w * screenScale.y) * 0.5;
+    float sample_offset = (tex_size.y * global.OutputSize.w * SCREEN_SCALE.y) * 0.5;
     // End Addition
 
     float scan_pos = xy.y * tex_size.y + scan_offset;
-    float scan_strength = mix(params.SCANLINE_STRENGTH_MAX, params.SCANLINE_STRENGTH_MIN, rgb_max);
-    float scan_beam = clamp(rgb_max * params.SCANLINE_BEAM_MAX, params.SCANLINE_BEAM_MIN, params.SCANLINE_BEAM_MAX);
+    float scan_strength = mix(params.ESM_SCANLINE_STRENGTH_MAX, params.ESM_SCANLINE_STRENGTH_MIN, rgb_max);
+    float scan_beam = clamp(rgb_max * params.ESM_SCANLINE_BEAM_MAX, params.ESM_SCANLINE_BEAM_MIN, params.ESM_SCANLINE_BEAM_MAX);
     vec3 scan_weight = vec3(0.0);
 
     float mask_colors;
@@ -281,13 +281,13 @@ void main()
     float mask_dither;
     vec4 mask_config;
 
-    if      (params.MASK_TYPE == 1) mask_config = vec4(2.0, 1.0, 1.0, 0.0);
-    else if (params.MASK_TYPE == 2) mask_config = vec4(3.0, 1.0, 1.0, 0.0);
-    else if (params.MASK_TYPE == 3) mask_config = vec4(2.1, 1.0, 1.0, 0.0);
-    else if (params.MASK_TYPE == 4) mask_config = vec4(3.1, 1.0, 1.0, 0.0);
-    else if (params.MASK_TYPE == 5) mask_config = vec4(2.0, 1.0, 1.0, 1.0);
-    else if (params.MASK_TYPE == 6) mask_config = vec4(3.0, 2.0, 1.0, 3.0);
-    else if (params.MASK_TYPE == 7) mask_config = vec4(3.0, 2.0, 2.0, 3.0);
+    if      (params.ESM_MASK_TYPE == 1) mask_config = vec4(2.0, 1.0, 1.0, 0.0);
+    else if (params.ESM_MASK_TYPE == 2) mask_config = vec4(3.0, 1.0, 1.0, 0.0);
+    else if (params.ESM_MASK_TYPE == 3) mask_config = vec4(2.1, 1.0, 1.0, 0.0);
+    else if (params.ESM_MASK_TYPE == 4) mask_config = vec4(3.1, 1.0, 1.0, 0.0);
+    else if (params.ESM_MASK_TYPE == 5) mask_config = vec4(2.0, 1.0, 1.0, 1.0);
+    else if (params.ESM_MASK_TYPE == 6) mask_config = vec4(3.0, 2.0, 1.0, 3.0);
+    else if (params.ESM_MASK_TYPE == 7) mask_config = vec4(3.0, 2.0, 2.0, 3.0);
 
     mask_colors = floor(mask_config.x);
     mask_dot_width = mask_config.y;
@@ -296,17 +296,25 @@ void main()
     mask_dither = fract(mask_config.x) * 10.0;
 
     /* HSM Removed
-    vec2 mod_fac = floor(vTexCoord * global.OutputSize.xy * global.SourceSize.xy / (global.SourceSize.xy * vec2(params.MASK_SIZE, mask_dot_height * params.MASK_SIZE)));
+    vec2 mod_fac = floor(vTexCoord * global.OutputSize.xy * global.SourceSize.xy / (global.SourceSize.xy * vec2(params.ESM_MASK_SIZE, mask_dot_height * params.ESM_MASK_SIZE)));
     */
 
     // HSM Added
-    vec2 mod_fac = floor(vTexCoord * global.OutputSize.xy * screenScale * tex_size.xy / (tex_size.xy * vec2(params.MASK_SIZE, mask_dot_height * params.MASK_SIZE)));
+    	// HSM Added
+	float final_mask_size = params.ESM_MASK_SIZE;
+	// If using automatic Mask Size
+	if (final_mask_size < 0.5)
+	{
+		final_mask_size = (global.FinalViewportSize.x + global.FinalViewportSize.y) / 3 > 1900 ? 2 : 1;
+	}
+
+    vec2 mod_fac = floor(SCREEN_COORD * global.OutputSize.xy * SCREEN_SCALE * tex_size.xy / (tex_size.xy * vec2(final_mask_size, mask_dot_height * final_mask_size)));
     // End Addition
 
     int dot_no = int(mod((mod_fac.x + mod(mod_fac.y, 2.0) * mask_stagger) / mask_dot_width, mask_colors));
     float dither = mod(mod_fac.y + mod(floor(mod_fac.x / mask_colors), 2.0), 2.0);
 
-    float mask_strength = mix(params.MASK_STRENGTH_MAX, params.MASK_STRENGTH_MIN, rgb_max);
+    float mask_strength = mix(params.ESM_MASK_STRENGTH_MAX, params.ESM_MASK_STRENGTH_MIN, rgb_max);
     float mask_dark, mask_bright, mask_mul;
     vec3 mask_weight;
 
@@ -321,10 +329,10 @@ void main()
     else mask_mul = mask_bright;
 
     mask_weight *= mix(1.0, mask_mul, mask_dither);
-    mask_weight = mix(vec3(1.0), mask_weight, clamp(params.MASK_TYPE, 0.0, 1.0));
+    mask_weight = mix(vec3(1.0), mask_weight, clamp(params.ESM_MASK_TYPE, 0.0, 1.0));
 
     col2 = (col * mask_weight);
-    col2 *= params.BRIGHTNESS;
+    col2 *= params.ESM_BRIGHTNESS;
 
     scan_weight = get_scanline_weight(scan_pos - sample_offset, scan_beam, scan_strength);
     col = clamp(col2 * scan_weight, 0.0, 1.0);
@@ -336,19 +344,18 @@ void main()
 
     /* HSM Removed
     col *= vec3(corner_weight);
-    col += diff * mask_weight * params.HALATION * vec3(corner_weight);
-    col += diff * params.DIFFUSION * vec3(corner_weight);
+    col += diff * mask_weight * params.ESM_HALATION * vec3(corner_weight);
+    col += diff * params.ESM_DIFFUSION * vec3(corner_weight);
     col = pow(col, vec3(1.0 / params.GAMMA_OUTPUT));
     */
 
     // HSM Added
-    col += diff * mask_weight * params.HALATION;
-    col += diff * params.DIFFUSION;
+    col += diff * mask_weight * params.ESM_HALATION;
+    col += diff * params.ESM_DIFFUSION;
     
-
     FragColor = vec4(col, 1);
 
-    // Apply Prep and Output Gamma
-	FragColor = HMSS_GetPostCrtPreppedColor(FragColor, screen_curved_coord, screen_coord);
-    // End Addition
+	// Prep and add output gamma
+	FragColor = HSS_GetPostCrtPreppedColor(FragColor, screen_curved_coord, SCREEN_COORD, SCREEN_ASPECT, SCREEN_SCALE);
+	// End Addition
 }

@@ -33,10 +33,10 @@ const float linear_gamma = 0;
 layout(std140, set = 0, binding = 0) uniform UBO
 {
 	mat4 MVP;
-    float mdapt_mode;
+    float MDAPT_MODE;
 } global;
 
-#pragma parameter mdapt_mode "[DE-DITHERING MDAPT]    OFF, Strict, Relaxed, Stripes"	1 0 3 1
+#pragma parameter MDAPT_MODE "[DE-DITHERING MDAPT]    OFF, Strict, Relaxed, Stripes"	1 0 3 1
 
 
 #pragma stage vertex
@@ -105,7 +105,7 @@ void main()
 		DL D DR	
 	*/
 
-	if (global.mdapt_mode < 1)
+	if (global.MDAPT_MODE < 1)
 	{
 		FragColor = texture(Source, vTexCoord);
 		return;
@@ -125,7 +125,7 @@ void main()
 	C.xy = or_(C.xy, and_(C.zw, or_(L.xy, R.xy, U.xy, D.xy)));
 
 
-	if(global.mdapt_mode == 3){
+	if(global.MDAPT_MODE == 3){
 		float prSum = L.x + R.x;		
 
 		prVL = max(L.x, R.x);

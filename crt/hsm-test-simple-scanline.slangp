@@ -1,8 +1,8 @@
-// Add Mega Screen Scale Params & Initial Prep
-//      Add the mega-screen-scale parameters at the beginning of the list for easy access
-//      Add Afterglow, Black Level & Gamma
+// Add Mega Bezel Params & Initial Prep
+//      Add Mega Bezel parameters at the beginning of the list for easy access
+//      Add Color Correction
 //      Calculate Average Luminance and put in alpha channel
-//      Debug Drawing of the resolution/screen scaling
+//      Debug Drawing of the resolution & screen scaling info
 shader0 = ../crt/shaders/HyperspaceMadness/hsm-prep-initial.slang
 alias0  = AvgLumPass
 

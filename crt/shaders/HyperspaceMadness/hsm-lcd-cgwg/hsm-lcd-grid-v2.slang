@@ -6,58 +6,72 @@
 
 layout(push_constant) uniform Push
 {
-    float RSUBPIX_R;
-    float RSUBPIX_G;
-    float RSUBPIX_B;
-    float GSUBPIX_R;
-    float GSUBPIX_G;
-    float GSUBPIX_B;
-    float BSUBPIX_R;
-    float BSUBPIX_G;
-    float BSUBPIX_B;
-    float gain;
-    float gamma;
-    float blacklevel;
-    float ambient;
-    float BGR;
+    float LCD_RSUBPIX_R;
+    float LCD_RSUBPIX_G;
+    float LCD_RSUBPIX_B;
+    float LCD_GSUBPIX_R;
+    float LCD_GSUBPIX_G;
+    float LCD_GSUBPIX_B;
+    float LCD_BSUBPIX_R;
+    float LCD_BSUBPIX_G;
+    float LCD_BSUBPIX_B;
+    float LCD_GAIN;
+    float LCD_GAMMA;
+    float LCD_BLACK_LEVEL;
+    float LCD_AMBIENT;
+    float LCD_BGR;
 } param;
 
-#pragma parameter RSUBPIX_R  "Colour of R subpixel: R" 1.0 0.0 1.0 0.01
-#pragma parameter RSUBPIX_G  "Colour of R subpixel: G" 0.0 0.0 1.0 0.01
-#pragma parameter RSUBPIX_B  "Colour of R subpixel: B" 0.0 0.0 1.0 0.01
-#pragma parameter GSUBPIX_R  "Colour of G subpixel: R" 0.0 0.0 1.0 0.01
-#pragma parameter GSUBPIX_G  "Colour of G subpixel: G" 1.0 0.0 1.0 0.01
-#pragma parameter GSUBPIX_B  "Colour of G subpixel: B" 0.0 0.0 1.0 0.01
-#pragma parameter BSUBPIX_R  "Colour of B subpixel: R" 0.0 0.0 1.0 0.01
-#pragma parameter BSUBPIX_G  "Colour of B subpixel: G" 0.0 0.0 1.0 0.01
-#pragma parameter BSUBPIX_B  "Colour of B subpixel: B" 1.0 0.0 1.0 0.01
-#pragma parameter gain       "Gain"                    1.0 0.5 2.0 0.05
-#pragma parameter gamma      "LCD Gamma"               3.0 0.5 5.0 0.1
-#pragma parameter blacklevel "Black level"            0.05 0.0 0.5 0.01
-#pragma parameter ambient    "Ambient"                 0.0 0.0 0.5 0.01
-#pragma parameter BGR        "BGR"                     0 0 1 1
+#pragma parameter LCD_RSUBPIX_R  "[EASYMODE]  Colour of R subpixel: R" 1.0 0.0 1.0 0.01
+#pragma parameter LCD_RSUBPIX_G  "[EASYMODE]  Colour of R subpixel: G" 0.0 0.0 1.0 0.01
+#pragma parameter LCD_RSUBPIX_B  "[EASYMODE]  Colour of R subpixel: B" 0.0 0.0 1.0 0.01
+#pragma parameter LCD_GSUBPIX_R  "[EASYMODE]  Colour of G subpixel: R" 0.0 0.0 1.0 0.01
+#pragma parameter LCD_GSUBPIX_G  "[EASYMODE]  Colour of G subpixel: G" 1.0 0.0 1.0 0.01
+#pragma parameter LCD_GSUBPIX_B  "[EASYMODE]  Colour of G subpixel: B" 0.0 0.0 1.0 0.01
+#pragma parameter LCD_BSUBPIX_R  "[EASYMODE]  Colour of B subpixel: R" 0.0 0.0 1.0 0.01
+#pragma parameter LCD_BSUBPIX_G  "[EASYMODE]  Colour of B subpixel: G" 0.0 0.0 1.0 0.01
+#pragma parameter LCD_BSUBPIX_B  "[EASYMODE]  Colour of B subpixel: B" 1.0 0.0 1.0 0.01
+#pragma parameter LCD_GAIN       "[EASYMODE]  Gain"                    1.0 0.5 2.0 0.05
+#pragma parameter LCD_GAMMA      "[EASYMODE]  LCD Gamma"               3.0 0.5 5.0 0.1
+#pragma parameter LCD_BLACK_LEVEL "[EASYMODE]  Black level"            0.05 0.0 0.5 0.01
+#pragma parameter LCD_AMBIENT    "[EASYMODE]  Ambient"                 0.0 0.0 0.5 0.01
+#pragma parameter LCD_BGR        "[EASYMODE]  BGR"                     0 0 1 1
 
 #define outgamma 2.2
 
-#define fetch_offset(coord, offset) (pow(vec3(param.gain) * texelFetchOffset(Source, (coord), 0, (offset)).rgb + vec3(param.blacklevel), vec3(param.gamma)) + vec3(param.ambient))
+#define fetch_offset(coord, offset) (pow(vec3(param.LCD_GAIN) * texelFetchOffset(Source, (coord), 0, (offset)).rgb + vec3(param.LCD_BLACK_LEVEL), vec3(param.LCD_GAMMA)) + vec3(param.LCD_AMBIENT))
 
 #pragma stage vertex
 layout(location = 0) in vec4 Position;
 layout(location = 1) in vec2 TexCoord;
+
 layout(location = 0) out vec2 vTexCoord;
+layout(location = 1) out vec2 CROPPED_ORIGINAL_SIZE;
+layout(location = 2) out float SCREEN_ASPECT;
+layout(location = 3) out vec2 SCREEN_SCALE;
+layout(location = 4) out vec2 SCREEN_COORD;
+layout(location = 5) out float USE_VERTICAL_SCANLINES;
 
 void main()
 {
     gl_Position = global.MVP * Position;
     vTexCoord = TexCoord;
 
-    // HSM Added
-    vTexCoord = HMSS_GetScreenVTexCoord(vTexCoord);
-    // End Addition
+	CROPPED_ORIGINAL_SIZE = HSS_GetCroppedOriginalSizeWithCoreResMult();
+	SCREEN_ASPECT = HSS_GetScreenAspect();
+	SCREEN_SCALE = HSS_GetScreenScale(SCREEN_ASPECT);
+	SCREEN_COORD = HSS_GetScreenVTexCoord(vTexCoord, SCREEN_SCALE);
+	USE_VERTICAL_SCANLINES = HSS_GetUseVerticalScanlines(SCREEN_ASPECT);
 }
 
 #pragma stage fragment
 layout(location = 0) in vec2 vTexCoord;
+layout(location = 1) in vec2 CROPPED_ORIGINAL_SIZE;
+layout(location = 2) in float SCREEN_ASPECT;
+layout(location = 3) in vec2 SCREEN_SCALE;
+layout(location = 4) in vec2 SCREEN_COORD;
+layout(location = 5) in float USE_VERTICAL_SCANLINES;
+
 layout(location = 0) out vec4 FragColor;
 layout(set = 0, binding = 2) uniform sampler2D Source;
 
@@ -94,18 +108,16 @@ void main()
     */
 
     // HSM Added
-    vec2 screen_coord = vTexCoord;
-	vec2 screen_curved_coord = HMSS_GetCurvedCoord(screen_coord, 1);
-    vec2 curved_coord = HMSS_GetMirrorWrappedCoord(screen_curved_coord);
-    vec2 cropped_size = HMSS_GetCroppedOriginalSize();
-    vec2 texelSize = 1 / cropped_size;
+	vec2 screen_curved_coord = HSS_GetCurvedCoord(SCREEN_COORD, 1, SCREEN_ASPECT);
+    vec2 curved_coord = HSS_GetMirrorWrappedCoord(screen_curved_coord);
+    vec2 texelSize = 1 / CROPPED_ORIGINAL_SIZE;
     // End Addition
 
     vec2 range = global.OutputSize.zw;
 
-    vec3 cred   = pow(vec3(param.RSUBPIX_R, param.RSUBPIX_G, param.RSUBPIX_B), vec3(outgamma));
-    vec3 cgreen = pow(vec3(param.GSUBPIX_R, param.GSUBPIX_G, param.GSUBPIX_B), vec3(outgamma));
-    vec3 cblue  = pow(vec3(param.BSUBPIX_R, param.BSUBPIX_G, param.BSUBPIX_B), vec3(outgamma));
+    vec3 cred   = pow(vec3(param.LCD_RSUBPIX_R, param.LCD_RSUBPIX_G, param.LCD_RSUBPIX_B), vec3(outgamma));
+    vec3 cgreen = pow(vec3(param.LCD_GSUBPIX_R, param.LCD_GSUBPIX_G, param.LCD_GSUBPIX_B), vec3(outgamma));
+    vec3 cblue  = pow(vec3(param.LCD_BSUBPIX_R, param.LCD_BSUBPIX_G, param.LCD_BSUBPIX_B), vec3(outgamma));
 
     ivec2 tli = ivec2(floor(curved_coord/texelSize-vec2(0.4999)));
 
@@ -120,7 +132,7 @@ void main()
                 intsmear(subpix-3.0, rsubpix, 1.5, coeffs_x),
                 intsmear(subpix-4.0, rsubpix, 1.5, coeffs_x));
 
-    if (param.BGR > 0.5) {
+    if (param.LCD_BGR > 0.5) {
         lcol.rgb = lcol.bgr;
         rcol.rgb = rcol.bgr;
     }
@@ -146,6 +158,6 @@ void main()
 
     // HSM Added
     FragColor = vec4(averageColor, 1);
-	FragColor = HMSS_GetPostCrtPreppedColor(FragColor, screen_curved_coord, screen_coord);
+    FragColor = HSS_GetPostCrtPreppedColor(FragColor, screen_curved_coord, SCREEN_COORD, SCREEN_ASPECT, SCREEN_SCALE);
     // End Addition
 }

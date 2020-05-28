@@ -58,7 +58,8 @@ const float bloom_diff_thresh_ = 1.0/256.0;
 
 // HSM Added
 ///////////////////////////////  HSM INCLUDES  ///////////////////////////////
-#include "../../hsm-screen-scale-params-functions.inc"
+#include "../../hsm-screen-scale-params.inc"
+#include "../../hsm-screen-scale-functions.inc"
 
 #pragma stage vertex
 layout(location = 0) in vec4 Position;
@@ -105,9 +106,10 @@ void main()
     bloom_tex_uv = tex_uv;
 
     // HSM Added
-    vec2 screen_scale = HMSS_GetScreenScale();
-    vec2 position_offset = HMSS_GetPositionOffset();
-    halation_tex_uv = HMSS_GetVTexCoordWithArgs(halation_tex_uv, screen_scale, position_offset);
+    float screen_aspect = HSS_GetScreenAspect();
+    vec2 screen_scale = HSS_GetScreenScale(screen_aspect);
+    vec2 position_offset = HSS_GetPositionOffset();
+    halation_tex_uv = HSS_GetVTexCoordWithArgs(halation_tex_uv, screen_scale, position_offset);
 
     //  We're horizontally blurring the bloom input (vertically blurred
     //  brightpass).  Get the uv distance between output pixels / input texels

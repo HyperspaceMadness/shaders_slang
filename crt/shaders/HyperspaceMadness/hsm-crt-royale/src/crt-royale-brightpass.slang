@@ -56,7 +56,8 @@ const float bloom_diff_thresh_ = 1.0/256.0;
 // HSM Added
 ///////////////////////////////  HSM INCLUDES  ///////////////////////////////
 
-#include "../../hsm-screen-scale-params-functions.inc"
+#include "../../hsm-screen-scale-params.inc"
+#include "../../hsm-screen-scale-functions.inc"
 
 #pragma stage vertex
 layout(location = 0) in vec4 Position;
@@ -94,9 +95,10 @@ void main()
     blur3x3_tex_uv = video_uv * BLOOM_APPROXvideo_size / BLOOM_APPROXtexture_size;
 
     // HSM Added
-    vec2 screen_scale = HMSS_GetScreenScale();
-    vec2 position_offset = HMSS_GetPositionOffset();
-    blur3x3_tex_uv = HMSS_GetVTexCoordWithArgs(blur3x3_tex_uv, screen_scale, position_offset);
+    float screen_aspect = HSS_GetScreenAspect();
+    vec2 screen_scale = HSS_GetScreenScale(screen_aspect);
+    vec2 position_offset = HSS_GetPositionOffset();
+    blur3x3_tex_uv = HSS_GetVTexCoordWithArgs(blur3x3_tex_uv, screen_scale, position_offset);
 
     //  Calculate a runtime bloom_sigma in case it's needed:
     const float mask_tile_size_x = get_resized_mask_tile_size(

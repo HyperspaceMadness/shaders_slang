@@ -65,21 +65,21 @@ You will need to integrate the screen scaling in your crt so it can share the sa
 		vTexCoord = TexCoord;
 
 		// Add the following line
-		vTexCoord = HMSS_GetScreenVTexCoord(vTexCoord);
+		vTexCoord = HSS_GetScreenVTexCoord(vTexCoord);
 	}
 
 
 - Use the curvature function from hsm-mega-bezel-include.inc to add curvature
 
-	vec2 curved_coord = HMSS_GetCurvedCoord(vTexCoord, 1);
+	vec2 curved_coord = HSS_GetCurvedCoord(vTexCoord, 1);
 
 
 - Use screen scale to multiply OutputSize wherever it is used
 
-	screenScale =  HMSS_GetScreenScale();
+	screenScale =  HSS_GetScreenScale();
 	float sample_offset = (global.SourceSize.y * global.OutputSize.w * screenScale.y) * 0.5;
 
 
 - Use crop overscan to adjust the sampling of the image to sample the cropped range
 
-	texcoord  = HMSS_GetCropOverscanCoord(texcoord, SourceSize.xy);
+	texcoord  = HSS_GetCropOverscanCoord(texcoord, SourceSize.xy);

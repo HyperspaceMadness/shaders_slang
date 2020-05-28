@@ -36,7 +36,7 @@ void main()
    gl_Position = global.MVP * Position;
    vTexCoord = TexCoord;
 
-    screenScale =  HMSS_GetScreenScale();
+    screenScale =  HSS_GetScreenScale();
 }
 
 #pragma stage fragment
@@ -48,15 +48,15 @@ layout(set = 0, binding = 2) uniform sampler2D Source;
 
 void main()
 {
-    vec2 screen_coord = HMSS_GetScreenVTexCoord(vTexCoord);
-    vec2 tex_size = HMSS_GetCroppedOriginalSize();
+    vec2 screen_coord = HSS_GetScreenVTexCoord(vTexCoord);
+    vec2 tex_size = HSS_GetCroppedOriginalSizeWithCoreResMult();
 
-    vec2 screen_curved_coord = HMSS_GetCurvedCoord(screenCoord, 1);
-    vec2 mirror_screen_curved_coord = HMSS_GetMirrorWrappedCoord(screen_curved_coord);
+    vec2 screen_curved_coord = HSS_GetCurvedCoord(screenCoord, 1);
+    vec2 mirror_screen_curved_coord = HSS_GetMirrorWrappedCoord(screen_curved_coord);
 
     vec2 quantized_coord = (floor(mirror_screen_curved_coord * tex_size) + 0.5) / tex_size;
 
-    FragColor = HMSS_Linearize(HMSS_GetCroppedTexSample(Source, quantized_coord), HMSS_DEFAULT_CRT_GAMMA);
+    FragColor = HSS_Linearize(HSS_GetCroppedTexSample(Source, quantized_coord), HSS_DEFAULT_CRT_GAMMA);
 
-	FragColor = HMSS_GetPostCrtPreppedColor(FragColor, screen_curved_coord, screen_coord);
+	FragColor = HSS_GetPostCrtPreppedColor(FragColor, screen_curved_coord, screen_coord);
 }

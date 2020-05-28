@@ -63,7 +63,8 @@ const float max_viewport_size_x = 1080.0*1024.0*(4.0/3.0);
 
 // HSM Added
 ///////////////////////////////  HSM INCLUDES  ///////////////////////////////
-#include "../../hsm-screen-scale-params-functions.inc"
+#include "../../hsm-screen-scale-params.inc"
+#include "../../hsm-screen-scale-functions.inc"
 
 ///////////////////////////////////  HELPERS  //////////////////////////////////
 
@@ -98,7 +99,10 @@ layout(location = 3) out vec2 halation_tex_uv;
 layout(location = 4) out vec2 scanline_texture_size_inv;
 layout(location = 5) out vec4 mask_tile_start_uv_and_size;
 layout(location = 6) out vec2 mask_tiles_per_screen;
-layout(location = 7) out vec2 screenScale;
+layout(location = 7) out vec2 CROPPED_ORIGINAL_SIZE;
+layout(location = 8) out float SCREEN_ASPECT;
+layout(location = 9) out vec2 SCREEN_SCALE;
+layout(location = 10) out float USE_VERTICAL_SCANLINES;
 
 void main()
 {
@@ -120,12 +124,16 @@ void main()
     //scanline_texture_size_inv = scanline_texture_size_inv;
 
     // HSM Added
-    screenScale = HMSS_GetScreenScale();
-    vec2 position_offset = HMSS_GetPositionOffset();
+    CROPPED_ORIGINAL_SIZE = HSS_GetCroppedOriginalSizeWithCoreResMult();
+	SCREEN_ASPECT = HSS_GetScreenAspect();
+	SCREEN_SCALE = HSS_GetScreenScale(SCREEN_ASPECT);
+	// SCREEN_COORD = HSS_GetScreenVTexCoord(vTexCoord, SCREEN_SCALE);
+	USE_VERTICAL_SCANLINES = HSS_GetUseVerticalScanlines(SCREEN_ASPECT);
 
-    scanline_tex_uv = HMSS_GetVTexCoordWithArgs(scanline_tex_uv, screenScale, position_offset);
-    blur3x3_tex_uv = HMSS_GetVTexCoordWithArgs(blur3x3_tex_uv, screenScale, position_offset);
-    halation_tex_uv = HMSS_GetVTexCoordWithArgs(halation_tex_uv, screenScale, position_offset);
+    vec2 position_offset = HSS_GetPositionOffset();
+    scanline_tex_uv = HSS_GetVTexCoordWithArgs(scanline_tex_uv, SCREEN_SCALE, position_offset);
+    blur3x3_tex_uv = HSS_GetVTexCoordWithArgs(blur3x3_tex_uv, SCREEN_SCALE, position_offset);
+    halation_tex_uv = HSS_GetVTexCoordWithArgs(halation_tex_uv, SCREEN_SCALE, position_offset);
     // End Addition
 
     //  Get a consistent name for the final mask texture size.  Sample mode 0
@@ -156,7 +164,11 @@ layout(location = 3) in vec2 halation_tex_uv;
 layout(location = 4) in vec2 scanline_texture_size_inv;
 layout(location = 5) in vec4 mask_tile_start_uv_and_size;
 layout(location = 6) in vec2 mask_tiles_per_screen;
-layout(location = 7) in vec2 screenScale;
+layout(location = 7) in vec2 CROPPED_ORIGINAL_SIZE;
+layout(location = 8) in float SCREEN_ASPECT;
+layout(location = 9) in vec2 SCREEN_SCALE;
+layout(location = 10) in float USE_VERTICAL_SCANLINES;
+
 layout(location = 0) out vec4 FragColor;
 layout(set = 0, binding = 2) uniform sampler2D Source;
 
@@ -193,7 +205,7 @@ void main()
     //     VERTICAL_SCANLINEStexture_size, scanline_texture_size_inv);
 
     // HSM Added
-    vec2 scanline_tex_mirror_wrap_uv = HMSS_GetMirrorWrapCoord(scanline_tex_uv);
+    vec2 scanline_tex_mirror_wrap_uv = HSS_GetMirrorWrapCoord(scanline_tex_uv);
     const float3 scanline_color_dim = sample_rgb_scanline_horizontal(VERTICAL_SCANLINEStexture, 
                                                                     scanline_tex_mirror_wrap_uv,
                                                                     VERTICAL_SCANLINEStexture_size, 
@@ -316,7 +328,7 @@ void main()
             const float desired_triad_size = lerp(  global.mask_triad_size_desired,
                                                     IN.output_size.x / global.mask_num_triads_desired,
                                                     global.mask_specify_num_triads)
-                                                    * screenScale.y;
+                                                    * SCREEN_SCALE.y;
             
             const float bloom_sigma = get_min_sigma_to_blur_triad(desired_triad_size, bloom_diff_thresh);
             const float center_weight = get_center_weight(bloom_sigma);

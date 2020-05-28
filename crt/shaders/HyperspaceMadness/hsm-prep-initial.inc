@@ -92,13 +92,19 @@ vec4 ApplyLUT(vec4 in_color, sampler2D in_LUT)
 
 vec4 AddText(vec4 in_color)
 {
+   float screen_aspect = HSS_GetScreenAspect();
+   vec2 screen_scale = HSS_GetScreenScale(screen_aspect);
+   vec2 screen_size = HSS_GetScreenSize(screen_scale);
+   vec2 int_scale_mult = HSS_GetIntegerScaleMult(screen_size);
+   vec2 cropped_original_size = HSS_GetCroppedOriginalSizeWithCoreResMult();
+   bool flip_vertical = (HSS_FLIP_VIEWPORT_AND_CORE_VERTICAL > 0.5);
    
    vec4 out_color = in_color;
-   out_color = mix(out_color, vec4(0, 0, 0, 1), GetTextMask(vTexCoord + 2 * vec2(1/global.OutputSize.x, 0), global.FinalViewportSize.xy, HMSS_GetScreenSize(), HMSS_GetCroppedOriginalSize(), HMSS_GetIntegerScaleMult(), global.OriginalSize.xy));
-   out_color = mix(out_color, vec4(0, 0, 0, 1), GetTextMask(vTexCoord - 2 * vec2(1/global.OutputSize.x, 0), global.FinalViewportSize.xy, HMSS_GetScreenSize(), HMSS_GetCroppedOriginalSize(), HMSS_GetIntegerScaleMult(), global.OriginalSize.xy));
-   out_color = mix(out_color, vec4(0, 0, 0, 1), GetTextMask(vTexCoord + 1 * vec2(0, 1/global.OutputSize.y), global.FinalViewportSize.xy, HMSS_GetScreenSize(), HMSS_GetCroppedOriginalSize(), HMSS_GetIntegerScaleMult(), global.OriginalSize.xy));
-   out_color = mix(out_color, vec4(0, 0, 0, 1), GetTextMask(vTexCoord - 1 * vec2(0, 1/global.OutputSize.y), global.FinalViewportSize.xy, HMSS_GetScreenSize(), HMSS_GetCroppedOriginalSize(), HMSS_GetIntegerScaleMult(), global.OriginalSize.xy));
-   out_color = mix(out_color, vec4(1, 1, 0, 1), GetTextMask(vTexCoord,                                      global.FinalViewportSize.xy, HMSS_GetScreenSize(), HMSS_GetCroppedOriginalSize(), HMSS_GetIntegerScaleMult(), global.OriginalSize.xy));
+   out_color = mix(out_color, vec4(0, 0, 0, 1), GetTextMask(vTexCoord + 2 * vec2(1/global.OutputSize.x, 0), global.FinalViewportSize.xy, screen_size, cropped_original_size, int_scale_mult, global.OriginalSize.xy, flip_vertical));
+   out_color = mix(out_color, vec4(0, 0, 0, 1), GetTextMask(vTexCoord - 2 * vec2(1/global.OutputSize.x, 0), global.FinalViewportSize.xy, screen_size, cropped_original_size, int_scale_mult, global.OriginalSize.xy, flip_vertical));
+   out_color = mix(out_color, vec4(0, 0, 0, 1), GetTextMask(vTexCoord + 1 * vec2(0, 1/global.OutputSize.y), global.FinalViewportSize.xy, screen_size, cropped_original_size, int_scale_mult, global.OriginalSize.xy, flip_vertical));
+   out_color = mix(out_color, vec4(0, 0, 0, 1), GetTextMask(vTexCoord - 1 * vec2(0, 1/global.OutputSize.y), global.FinalViewportSize.xy, screen_size, cropped_original_size, int_scale_mult, global.OriginalSize.xy, flip_vertical));
+   out_color = mix(out_color, vec4(1, 1, 0, 1), GetTextMask(vTexCoord,                                      global.FinalViewportSize.xy, screen_size, cropped_original_size, int_scale_mult, global.OriginalSize.xy, flip_vertical));
    return clamp(out_color, 0, 1);
 }
 
@@ -106,30 +112,33 @@ void main()
 {
    FragColor = texture(Source, vTexCoord);
 
-   FragColor = clamp(HMSS_ApplyColorSpace(FragColor), 0, 1);
+   if (HSS_COLOR_CRT_PROFILE != -1)
+   {
+      FragColor = clamp(HSS_ApplyColorSpace(FragColor), 0, 1);
 
-   // Royale can't currently is currently at the limit of number of textures so we can't add the LUT
-   #ifndef ROYALE_PRESET
-      if (global.hmss_color_crt_profile > 5)
-      {
-         FragColor = ApplyLUT(FragColor, SamplerLUT3);
-      }
-   #endif
+      // Royale can't currently is currently at the limit of number of textures so we can't add the LUT
+      #ifndef ROYALE_PRESET
+         if (HSS_COLOR_CRT_PROFILE > 5)
+         {
+            FragColor = ApplyLUT(FragColor, SamplerLUT3);
+         }
+      #endif
+   }
 
    // Add Color Temperature
-   FragColor = HMSS_ApplyColorTemperature_D65_D50(FragColor);
+   FragColor = HSS_ApplyColorTemperature_D65_D50(FragColor);
 
    // Apply black level & gamma with input as non linearized
-   FragColor = HMSS_ApplyBlackLevelGammaLuma(FragColor, 0);
+   FragColor = HSS_ApplyLumaAndBlackLevel(FragColor, 0);
 
    // Phosphor Persistence
-   FragColor = HMSS_ApplyPhosphorPersistence(FragColor, PassFeedback6, vTexCoord);
+   FragColor = HSS_ApplyPhosphorPersistence(FragColor, PassFeedback6, vTexCoord);
 
    // Put Average Luminance in the alpha channel
    FragColor.a = GetAverageLuma();
-
+   
    //////// Draw text to show out_colorolutions ////////// 
-   if (global.hmss_screen_scale_debug == 1)
+   if (HSS_MEGA_BEZEL_DEBUG == 1)
    {
       FragColor = AddText(FragColor);
    }

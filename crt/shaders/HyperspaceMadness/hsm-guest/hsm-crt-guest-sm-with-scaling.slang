@@ -1,7 +1,7 @@
 #version 450
 
 /*
-   CRT - Guest - SM (Scanline Mask) Shader
+   CRT - Guest - SM (Scanline Mask) Shader - Includes changes from HyperspaceMadness to integrate the Mega Bezel
    
    Copyright (C) 2019-2020 guest(r) - guest.r@gmail.com
 
@@ -52,26 +52,33 @@ Uses a red/magenta/cyan/green pattern for even spacing of the LCD subpixels.
 
 layout(push_constant) uniform Push
 {
-	vec4 SourceSize;
-	vec4 OutputSize;
-
-	uint FrameCount;
-	float smart, brightboost1, brightboost2, stype, scanline1, scanline2, beam_min, beam_max, s_beam;
-	float h_sharp, cubic, mask, maskmode, maskdark, maskbright, masksize; 
-	
-	// HSM Removed
-	// gamma_out;
-
+	float GDV_BRIGHT_BOOST_DARK_COLORS; 
+	float GDV_BRIGHT_BOOST_BRIGHT_COLORS; 
+	float GDV_SCANLINE_TYPE; 
+	float GDV_SCANLINE_SHAPE_CENTER_HIGH; 
+	float GDV_SCANLINE_SHAPE_EDGES_LOW; 
+	float GDV_SCANLINE_DARK_BEAM_SIZE_MIN; 
+	float GDV_SCANLINE_BRIGHT_BEAM_SIZE_MAX; 
+	float GDV_SCANLINE_OVERGROWN_BRIGHT_BEAM; 
+	float GDV_HORIZONTAL_SHARPNESS; 
+	float GDV_SCANLINE_CUBIC_FILTERING; 
+	float GDV_MASK_TYPE; 
+	float GDV_MASK_MODE; 
+	float GDV_MASK_STRENGTH_DARK; 
+	float GDV_MASK_STRENGTH_BRIGHT; 
+	float GDV_MASK_SIZE;
 	// HSM Added
-	float bglow;
-	float bloom;
-	float autobrm;	
-	float sclip;
+	float GDV_GLOW_STRENGTH; 
+	float GDV_BLOOM_STRENGTH; 
+	float GDV_AUTO_BRIGHTNESS; 
+	float GDV_SCANLINE_MASK_CLIPPING_WITH_BLOOM;
 	// End Addition
 
+	// HSM Removed
+	// gamma_out;
 } params;
 
-// Removed the following, because the global structure is already defined in hsm-screen-scale-with-globals.inc
+// HSM Removed, because the global structure is already defined in hsm-screen-scale-with-globals.inc
 //layout(std140, set = 0, binding = 0) uniform UBO
 //{
 //	mat4 MVP;
@@ -83,113 +90,134 @@ layout(push_constant) uniform Push
 //	float autobrm;	
 //	float sclip;
 //} global;
-#pragma parameter bglow "Base Glow" 0.0 0.0 1.0 0.01
-#pragma parameter bloom "Bloom" 0.40 0.0 2.0 0.05
-#pragma parameter autobrm "Automatic Brightness (Mask)" 0.5 0.0 1.0 0.1
+#pragma parameter GDV_GLOW_STRENGTH "[GLOW]  Base Glow Strength" 0.0 0.0 1.0 0.01
+#define bglow params.GDV_GLOW_STRENGTH
 
-// Removed the following
+#pragma parameter GDV_BLOOM_STRENGTH "[GLOW]  Bloom Strength" 0.40 0.0 2.0 0.05
+#define bloom params.GDV_BLOOM_STRENGTH
+
+#pragma parameter GDV_AUTO_BRIGHTNESS "[BRIGHTNESS]  Automatic Brightness (Mask)" 0.5 0.0 1.0 0.1
+#define autobrm params.GDV_AUTO_BRIGHTNESS
+
+// HSM Removed
 // #pragma parameter smart "1:Smart 2:Crop 3:Overscan Y Integer Scaling" 0.0 0.0 3.0 1.0
+// #define smart params.smart
 
-#pragma parameter brightboost1 "Bright boost dark colors" 1.40 0.5 5.0 0.10
-#pragma parameter brightboost2 "Bright boost bright colors" 1.15 0.5 3.0 0.05
-#pragma parameter stype "Scanline Type" 1.0 0.0 3.0 1.0
-#pragma parameter scanline1 "Scanline Shape Center" 5.0 2.0 20.0 0.5
-#pragma parameter scanline2 "Scanline Shape Edges"  7.0 4.0 20.0 0.5
-#pragma parameter beam_min "Scanline dark" 1.25 0.5 3.0 0.05
-#pragma parameter beam_max "Scanline bright" 1.10 0.5 3.0 0.05
-#pragma parameter sclip "Allow Scanline/Mask Clipping With Bloom" 0.50 0.0 1.0 0.05
-#pragma parameter s_beam "Overgrown Bright Beam" 0.70 0.0 1.0 0.05
-#pragma parameter h_sharp "Horizontal sharpness" 3.0 1.0 10.0 0.10
-#pragma parameter cubic "Cubic Filtering" 1.0 0.0 1.0 0.10
-#pragma parameter mask "CRT Mask (4&5 are 4k masks)" 0.0 0.0 5.0 1.0
-#pragma parameter maskmode "CRT Mask Mode: Classic, Fine, Coarse" 0.0 0.0 2.0 1.0
-#pragma parameter maskdark "CRT Mask Strength Dark Pixels" 1.0 0.0 1.5 0.05
-#pragma parameter maskbright "CRT Mask Strength Bright Pixels" 0.25 -0.5 1.0 0.05
-#pragma parameter masksize "CRT Mask Size" 1.0 1.0 2.0 1.0
+#pragma parameter GDV_BRIGHT_BOOST_DARK_COLORS "[BRIGHTNESS]  Boost Dark Colors" 1.40 0.5 5.0 0.10
+#define brightboost1 params.GDV_BRIGHT_BOOST_DARK_COLORS
 
-// Removed the following
+#pragma parameter GDV_BRIGHT_BOOST_BRIGHT_COLORS "[BRIGHTNESS]  Boost Bright Colors" 1.15 0.5 3.0 0.05
+#define brightboost2 params.GDV_BRIGHT_BOOST_BRIGHT_COLORS
+
+#pragma parameter GDV_SCANLINE_TYPE "[SCANLINE]  Type" 1.0 0.0 3.0 1.0
+#define stype params.GDV_SCANLINE_TYPE
+
+#pragma parameter GDV_SCANLINE_SHAPE_CENTER_HIGH "[SCANLINE]  Shape Center (High)" 5.0 2.0 20.0 0.5
+#define scanline1 params.GDV_SCANLINE_SHAPE_CENTER_HIGH
+
+#pragma parameter GDV_SCANLINE_SHAPE_EDGES_LOW "[SCANLINE]  Shape Edges (Low)"  7.0 4.0 20.0 0.5
+#define scanline2 params.GDV_SCANLINE_SHAPE_EDGES_LOW
+
+#pragma parameter GDV_SCANLINE_DARK_BEAM_SIZE_MIN "[SCANLINE]  Dark Beam Size" 1.25 0.5 3.0 0.05
+#define beam_min params.GDV_SCANLINE_DARK_BEAM_SIZE_MIN
+
+#pragma parameter GDV_SCANLINE_BRIGHT_BEAM_SIZE_MAX "[SCANLINE]  Bright Beam Size" 1.10 0.5 3.0 0.05
+#define beam_max params.GDV_SCANLINE_BRIGHT_BEAM_SIZE_MAX
+
+#pragma parameter GDV_SCANLINE_MASK_CLIPPING_WITH_BLOOM "[SCANLINE]  Allow Scanline/Mask Clipping with Bloom" 0.50 0.0 1.0 0.05
+#define sclip params.GDV_SCANLINE_MASK_CLIPPING_WITH_BLOOM
+
+#pragma parameter GDV_SCANLINE_OVERGROWN_BRIGHT_BEAM "[SCANLINE]  Overgrown Bright Beam (Increased Bright Beam)" 0.70 0.0 1.0 0.05
+#define s_beam params.GDV_SCANLINE_OVERGROWN_BRIGHT_BEAM
+
+#pragma parameter GDV_HORIZONTAL_SHARPNESS "[SHARPNESS]  Horizontal Sharpness" 3.0 1.0 10.0 0.10
+#define h_sharp params.GDV_HORIZONTAL_SHARPNESS
+
+#pragma parameter GDV_SCANLINE_CUBIC_FILTERING "[SHARPNESS]  Cubic Filtering" 1.0 0.0 1.0 0.10
+#define cubic params.GDV_SCANLINE_CUBIC_FILTERING
+
+#pragma parameter GDV_MASK_TYPE "[MASK]  Type (4&5 are 4k masks)" 0.0 0.0 5.0 1.0
+#define mask params.GDV_MASK_TYPE
+
+#pragma parameter GDV_MASK_SIZE "[MASK]  Size - 0:Auto, 1:2K, 2:4K" 0 0 2 1
+#define masksize params.GDV_MASK_SIZE
+
+#pragma parameter GDV_MASK_MODE "[MASK]  Mode: Classic, Fine, Coarse" 0.0 0.0 2.0 1.0
+#define maskmode params.GDV_MASK_MODE
+
+#pragma parameter GDV_MASK_STRENGTH_DARK "[MASK]  Strength Dark Pixels" 1.0 0.0 1.5 0.05
+#define maskdark params.GDV_MASK_STRENGTH_DARK
+
+#pragma parameter GDV_MASK_STRENGTH_BRIGHT "[MASK]  Strength Bright Pixels" 0.25 -0.5 1.0 0.05
+#define maskbright params.GDV_MASK_STRENGTH_BRIGHT
+
+// HSM Removed
 // #pragma parameter warpx "Curvature X" 0.0  0.0 0.25 0.01
 // #pragma parameter warpy "Curvature Y" 0.0  0.0 0.25 0.01
 // #pragma parameter gamma_out "Gamma Out" 2.50 1.0 3.5 0.05
-
-// Removed the following
-// #define bglow global.bglow
-// #define autobrm global.autobrm
-
-// HSM Added
-#define bglow params.bglow
-#define autobrm params.autobrm
-// End Addition
-
-#define smart params.smart
-#define brightboost1 params.brightboost1
-#define brightboost2 params.brightboost2
-
-// Removed the following
-// #define bloom global.bloom
-
-// HSM Added
-#define bloom params.bloom
-// End Addition
-
-#define stype params.stype
-#define scanline1 params.scanline1
-#define scanline2 params.scanline2
-#define beam_min params.beam_min
-#define beam_max params.beam_max
-
-// Removed the following
-// #define sclip global.sclip
-
-// HSM Added
-#define sclip params.sclip
-// End Addition
-
-#define s_beam params.s_beam
-#define h_sharp params.h_sharp
-#define cubic params.cubic
-#define mask params.mask
-#define maskmode params.maskmode
-#define maskdark params.maskdark
-#define maskbright params.maskbright
-#define masksize params.masksize
-
-// Removed the following
 // #define warpx global.warpx
 // #define warpy global.warpy
 // #define gamma_out params.gamma_out
-
-
-#define TEX0 vTexCoord
+// #define TEX0 vTexCoord
 
 // HSM Removed
 // #define COMPAT_TEXTURE(c,d) texture(c,d)
 
 // HSM Added
-#define COMPAT_TEXTURE(c,d) HMSS_GetCroppedTexSample(c,d)
+#define COMPAT_TEXTURE(c,d) HSS_GetCroppedTexSample(c,d)
+// End Addition
 
-#define Texture Source
-#define InputSize SourceSize
-#define gl_FragCoord (vTexCoord * params.OutputSize.xy)
+// HSM Removed
+// #define Texture Source
+// #define InputSize SourceSize
+// #define gl_FragCoord (vTexCoord * params.OutputSize.xy)
+
+// HSM Added
+#define gl_FragCoord (vTexCoord * global.OutputSize.xy)
 
 #pragma stage vertex
 layout(location = 0) in vec4 Position;
 layout(location = 1) in vec2 TexCoord;
+
 layout(location = 0) out vec2 vTexCoord;
+layout(location = 1) out vec2 CROPPED_ORIGINAL_SIZE;
+layout(location = 2) out float SCREEN_ASPECT;
+layout(location = 3) out vec2 SCREEN_SCALE;
+layout(location = 4) out vec2 SCREEN_COORD;
+layout(location = 5) out float USE_VERTICAL_SCANLINES;
 
 void main()
 {
-   gl_Position = global.MVP * Position;
-   vTexCoord = TexCoord;
+	gl_Position = global.MVP * Position;
+	vTexCoord = TexCoord;
+
+	CROPPED_ORIGINAL_SIZE = HSS_GetCroppedOriginalSizeWithCoreResMult();
+	SCREEN_ASPECT = HSS_GetScreenAspect();
+	SCREEN_SCALE = HSS_GetScreenScale(SCREEN_ASPECT);
+	SCREEN_COORD = HSS_GetScreenVTexCoord(vTexCoord, SCREEN_SCALE);
+	USE_VERTICAL_SCANLINES = HSS_GetUseVerticalScanlines(SCREEN_ASPECT);
 }
 
 #pragma stage fragment
 layout(location = 0) in vec2 vTexCoord;
+layout(location = 1) in vec2 CROPPED_ORIGINAL_SIZE;
+layout(location = 2) in float SCREEN_ASPECT;
+layout(location = 3) in vec2 SCREEN_SCALE;
+layout(location = 4) in vec2 SCREEN_COORD;
+layout(location = 5) in float USE_VERTICAL_SCANLINES;
+
 layout(location = 0) out vec4 FragColor;
+
 layout(set = 0, binding = 2) uniform sampler2D Source;
-layout(set = 0, binding = 3) uniform sampler2D WpPass; 
-layout(set = 0, binding = 4) uniform sampler2D RotPass; 
-layout(set = 0, binding = 5) uniform sampler2D LinPass; 
+// HSM Removed
+// layout(set = 0, binding = 3) uniform sampler2D WPPass; 
+// layout(set = 0, binding = 4) uniform sampler2D RotPass; 
+// layout(set = 0, binding = 5) uniform sampler2D LinPass; 
+
+// HSM Added
+layout(set = 0, binding = 5) uniform sampler2D LinearizePass; 
+#define LinPass LinearizePass
+
 
 float st(float x)
 {
@@ -267,30 +295,24 @@ vec3 gc (vec3 c, float bd, float mb)
 
 void main()
 {
-	vec2 tex = TEX0.xy * 1.00001;
-
-
-
-	
 	/* HSM Removed
-	float sm_tate = COMPAT_TEXTURE(WpPass, vec2(0.5)).a;
+	vec2 tex = TEX0.xy * 1.00001;
+	float sm_tate = COMPAT_TEXTURE(WhitePointPass, vec2(0.5)).a;
 	float ratio = COMPAT_TEXTURE(RotPass, vec2(0.5, 0.1)).a;
 	vec4 SourceSize1 = params.SourceSize;
 	*/ 
 
 	// HSM Added
-	float sm_tate = 0;
-	float ratio = 1;
+	vec2 tex = vTexCoord.xy * 1.00001;
 
-	vec2 cropped_orig_size = HMSS_GetCroppedOriginalSize();
-	vec4 SourceSize1 = vec4(cropped_orig_size, 1 / cropped_orig_size);
+	vec4 SourceSize1 = vec4(CROPPED_ORIGINAL_SIZE, 1 / CROPPED_ORIGINAL_SIZE);
 
-	float vertres = SourceSize1.y*ratio;
-	
-	tex.y *= ratio;
-	if (sm_tate > 0.25) { tex.x = Overscan(tex.x, (1.0/3.0)*SourceSize1.y/SourceSize1.x); }
+	float factor = global.OutputSize.y / SourceSize1.y;	
 
-	float factor = params.OutputSize.y/vertres;	
+	if (USE_VERTICAL_SCANLINES > 0.5)
+	{
+		factor = global.OutputSize.x / SourceSize1.x;
+	}
 
 	/* HSM Removed
 	float gamma = COMPAT_TEXTURE(LinPass, vec2(0.5,0.1)).a;
@@ -306,12 +328,13 @@ void main()
 	*/
 	
 	// HSM Added
-	vec2 screen_coord = HMSS_GetScreenVTexCoord(tex / vec2(1.0, ratio));
-	vec2 screen_curved_coord = HMSS_GetCurvedCoord(screen_coord, 1);
-	tex = HMSS_GetMirrorWrappedCoord(screen_curved_coord) * vec2(1.0, ratio);
+	vec2 screen_curved_coord = HSS_GetCurvedCoord(SCREEN_COORD, 1, SCREEN_ASPECT);
+	tex = HSS_GetMirrorWrappedCoord(screen_curved_coord);
 	// End Addition
 	
 	vec2 OGL2Pos = tex * SourceSize1.xy - vec2(0.5,0.5);
+
+
 	vec2 fp = fract(OGL2Pos);
 
 	vec2 pC4 = (floor(OGL2Pos) + vec2(0.5)) * SourceSize1.zw;	
@@ -319,6 +342,16 @@ void main()
 	// Reading the texels
 	vec2 dx = vec2(SourceSize1.z,0.0);
 	vec2 dy = vec2(0.0,SourceSize1.w);
+
+	// HSM Added
+	if (USE_VERTICAL_SCANLINES > 0.5)
+	{
+		OGL2Pos = vec2(OGL2Pos.y, OGL2Pos.x);
+		fp = fract(OGL2Pos);
+		dx = vec2(0, SourceSize1.w);
+		dy = vec2(SourceSize1.z, 0);
+	}
+
 	vec2 x2 = dx+dx;
 	float zero = mix(0.0, exp2(-h_sharp), cubic);
 	
@@ -380,7 +413,13 @@ void main()
 	float f1 = fp.y;
 	float f2 = 1.0 - fp.y;
 	float f3 = fract(tex.y * SourceSize1.y);
-	
+
+	// HSM Added
+	if (USE_VERTICAL_SCANLINES == 1)
+	{
+		f3 = fract(tex.x * SourceSize1.x);
+	}
+
 	vec3 color;
 	float t1 = st(f1);
 	float t2 = st(f2);
@@ -451,9 +490,28 @@ void main()
 	vec3 scan3 = vec3(0.0);
 
 	float spos  = (gl_FragCoord.x);
+
+	// HSM Added
+	if (USE_VERTICAL_SCANLINES == 1) spos = (gl_FragCoord.y);
+
+	/* HSM Removed
 	float spos2 = floor(1.000001*gl_FragCoord.x/masksize) + floor(1.000001*gl_FragCoord.y/masksize);
 	
 	spos  = floor((spos  * 1.000001)/masksize); float spos1 = 0.0;
+	*/
+
+	// HSM Added
+	float final_mask_size = masksize;
+	// If using automatic Mask Size
+	if (final_mask_size < 0.5)
+	{
+		final_mask_size = (global.FinalViewportSize.x + global.FinalViewportSize.y) / 3 > 1900 ? 2 : 1;
+	}
+
+	float spos2 = floor(1.000001*gl_FragCoord.x/final_mask_size) + floor(1.000001*gl_FragCoord.y/final_mask_size);
+	
+	spos  = floor((spos  * 1.000001)/final_mask_size); float spos1 = 0.0;
+	// End Addition
 
 
 	if (mask == 0.0 || mask == 1.0)
@@ -537,6 +595,6 @@ void main()
 
 	// // HSM Addition
 	FragColor = vec4(color, 1.0);
-	FragColor = HMSS_GetPostCrtPreppedColor(FragColor, screen_curved_coord, screen_coord);
+	FragColor = HSS_GetPostCrtPreppedColor(FragColor, screen_curved_coord, SCREEN_COORD, SCREEN_ASPECT, SCREEN_SCALE);
 	// // End Addition
 }

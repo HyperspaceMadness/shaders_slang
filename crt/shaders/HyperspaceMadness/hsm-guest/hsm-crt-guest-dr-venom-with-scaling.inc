@@ -164,7 +164,7 @@ layout(std140, set = 0, binding = 0) uniform UBO
 // #define glow         params.glow     // Glow Strength
 
 // Mask
-#pragma parameter GDV_PVM_LIKE_COLORS "[MASK]  PVM Like Colors" 0.0 -0.30 0.30 0.02
+#pragma parameter GDV_PVM_LIKE_COLORS "[MASK]  PVM Like Colors - Def 0.2" 0.2 -0.3 0.3 0.02
 #define vertmask     params.GDV_PVM_LIKE_COLORS     // Vertical mask
 
 #pragma parameter GDV_MASK_TYPE "[MASK]  Type - 0:CGWG, 1-4:Lottes, 5-6:Trinitron" 7 -1 7 1
@@ -186,7 +186,7 @@ layout(std140, set = 0, binding = 0) uniform UBO
 #define CGWG         params.GDV_MASK_0_7_STRENGTH     // CGWG Mask Strength
 
 // Slotmask
-#pragma parameter GDV_SLOTMASK_STRENGTH "[SLOTMASK]  Strength" 0.5 0.0 1.0 0.05
+#pragma parameter GDV_SLOTMASK_STRENGTH "[SLOTMASK]  Strength - Def 0" 0 0.0 1.0 0.05
 #define slotmask     params.GDV_SLOTMASK_STRENGTH     // Slot Mask ON/OFF
 
 // HSM Modified, parameters moved from global to params 

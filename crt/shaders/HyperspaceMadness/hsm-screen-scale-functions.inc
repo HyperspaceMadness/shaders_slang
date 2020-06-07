@@ -860,7 +860,7 @@ float HSS_GetScreenVignetteFactor(vec2 coord, float amount)
 // Torridgristle - ScanlineSimple pass - Public domain
 vec4 HSS_ApplyScanlineMask(vec4 in_color, vec2 in_coord, vec2 screen_scale)
 {
-	if (HSS_SCREENFX_FAKE_SCANLINE_OPACITY < 0.001 || HSS_GetRotatedOriginalSize().y < HSS_INTERLACE_TRIGGER_RES )
+	if (HSS_SCREENFX_FAKE_SCANLINE_OPACITY < 0.001 || HSS_GetRotatedOriginalSizeWithCoreResMult().y < HSS_INTERLACE_TRIGGER_RES )
 	{
 		return in_color;
 	}
@@ -896,11 +896,11 @@ vec4 HSS_ApplyScanlineMask(vec4 in_color, vec2 in_coord, vec2 screen_scale)
 
 	float scanline_mask = 1 - abs(scan - 0.5) * 2;
 	scanline_mask = pow(1 - scanline_mask, 1);
-	scanline_mask *= (0.5 + 0.5 * (1 - color_brightness_modulation)) * scanline_mask;
+	// scanline_mask *= (0.5 + 0.5 * (1 - color_brightness_modulation)) * scanline_mask;
 
 	float final_scanline_mask = clamp(1 * scanline_mask, 0, 1);
 
-	color_brightness_modulation = HHLP_EasePowerOut(smoothstep(0.4, 0.6, (in_color.r + in_color.g +  in_color.b) / 3), 2);
+	color_brightness_modulation = HHLP_EasePowerOut(smoothstep(0.4, HSS_SCREENFX_FAKE_SCANLINE_BRIGHTNESS_CUTOFF + 1.5, (in_color.r + in_color.g +  in_color.b) / 3), 2);
 	final_scanline_mask = clamp(mix(1, mix(final_scanline_mask, 1, color_brightness_modulation), HSS_SCREENFX_FAKE_SCANLINE_OPACITY), 0, 1);
 
 	vec4 masked_color = in_color;

@@ -8,7 +8,7 @@ Description:
 */
 
 // Screen Scale Required Parameters
-#pragma parameter HSS_MEGA_BEZEL_DEBUG				"___HSM MEGA BEZEL__ V.2020-06-06-0 - Debug ON" 0 0 1 1
+#pragma parameter HSS_MEGA_BEZEL_DEBUG				"___HSM MEGA BEZEL__ V.2020-06-07-0 - Debug ON" 0 0 1 1
 float HSS_MEGA_BEZEL_DEBUG = global.HSS_MEGA_BEZEL_DEBUG;
 
 #pragma parameter HSS_FLIP_VIEWPORT_AND_CORE_VERTICAL	"[VERTICAL FLIP]  Flip Viewport Vertical (For Cores like MUPEN)"  0 0 1 1
@@ -46,14 +46,14 @@ float HSS_NON_INTEGER_SCALE = global.HSS_NON_INTEGER_SCALE;
 #pragma parameter HSS_SCANLINE_DIRECTION 				"[SCANLINES]  Direction Guest & Easymode - Auto, Horiz, Vert"  0 0 2 1
 float HSS_SCANLINE_DIRECTION = global.HSS_SCANLINE_DIRECTION;
 
-#pragma parameter HSS_INTERLACE_TRIGGER_RES 			"[SCANLINES]  Interlace Trigger Res (Also Fake Scanlines)" 600.0 0.0 2000.0 25.0
-#define HSS_INTERLACE_TRIGGER_RES global.HSS_INTERLACE_TRIGGER_RES
-
 #pragma parameter HSS_CORE_RES_SAMPLING_MULT_X			"[SCANLINES]  Core Res Sampling Mult X"  1 0.25 16 0.25
 float HSS_CORE_RES_SAMPLING_MULT_X = global.HSS_CORE_RES_SAMPLING_MULT_X;
 
 #pragma parameter HSS_CORE_RES_SAMPLING_MULT_Y			"[SCANLINES]  Core Res Sampling Mult Y"  1 0.25 16 0.25
 float HSS_CORE_RES_SAMPLING_MULT_Y = global.HSS_CORE_RES_SAMPLING_MULT_Y;
+
+#pragma parameter HSS_INTERLACE_TRIGGER_RES 			"[SCANLINES]  Interlace Trigger Res (Also Fake Scanlines)" 600.0 0.0 2000.0 25.0
+#define HSS_INTERLACE_TRIGGER_RES global.HSS_INTERLACE_TRIGGER_RES
 
 #pragma parameter HSS_POSITION_OFFSET_X 				"[POSITION]  Position Offset X" 0 -100 100 0.1
 float HSS_POSITION_OFFSET_X = global.HSS_POSITION_OFFSET_X;
@@ -111,7 +111,7 @@ float HSS_CURVATURE_3D_TILT_ANGLE_Y = global.HSS_CURVATURE_3D_TILT_ANGLE_Y;
 #pragma parameter HSS_COLOR_SATURATION    				"[COLOR]  Saturation" 1.0 0.0 2.0 0.01
 #define HSS_COLOR_SATURATION global.HSS_COLOR_SATURATION
 
-#pragma parameter HSS_COLOR_LUMINANCE   				"[COLOR]  Luminance" 100 0 400 5
+#pragma parameter HSS_COLOR_LUMINANCE   				"[COLOR]  Luminance" 100 0 400 1
 #define HSS_COLOR_LUMINANCE global.HSS_COLOR_LUMINANCE
 
 #pragma parameter HSS_COLOR_BLACK_LEVEL 				"[COLOR]  Black Level - Def -0.1" -0.1 -30 30 0.01
@@ -135,8 +135,11 @@ float HSS_CURVATURE_3D_TILT_ANGLE_Y = global.HSS_CURVATURE_3D_TILT_ANGLE_Y;
 #pragma parameter HSS_SCREENFX_VIGNETTE                "[SCREEN FX]  Screen Vignette" 0 0 1 0.01
 #define HSS_SCREENFX_VIGNETTE global.HSS_SCREENFX_VIGNETTE
 
-#pragma parameter HSS_SCREENFX_FAKE_SCANLINE_OPACITY 	"[SCREEN FX]  Fake 240p Scanline Opacity - Def 0.5" 0.7 0 1 0.05
+#pragma parameter HSS_SCREENFX_FAKE_SCANLINE_OPACITY 	"[SCREEN FX]  Fake 240p Scanline Opacity - Def 0.7" 0.7 0 1 0.05
 #define HSS_SCREENFX_FAKE_SCANLINE_OPACITY global.HSS_SCREENFX_FAKE_SCANLINE_OPACITY
+
+#pragma parameter HSS_SCREENFX_FAKE_SCANLINE_BRIGHTNESS_CUTOFF 	"[SCREEN FX]  Fake 240p Scanline Brightness Cutoff - Def 3" 3 0 10 0.05
+#define HSS_SCREENFX_FAKE_SCANLINE_BRIGHTNESS_CUTOFF global.HSS_SCREENFX_FAKE_SCANLINE_BRIGHTNESS_CUTOFF
 
 #pragma parameter HSS_TUBE_BLACK_EDGE_THICKNESS 		"[TUBE]  Black Edge Thickness" 1.2 -2 8 0.05
 #define HSS_TUBE_BLACK_EDGE_THICKNESS global.HSS_TUBE_BLACK_EDGE_THICKNESS

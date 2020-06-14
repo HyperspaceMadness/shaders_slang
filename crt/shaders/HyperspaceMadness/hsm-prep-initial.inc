@@ -90,7 +90,7 @@ vec4 ApplyLUT(vec4 in_color, sampler2D in_LUT)
    return out_color;
 }
 
-vec4 AddText(vec4 in_color)
+vec4 AddText(vec2 in_coord, vec4 in_color)
 {
    float screen_aspect = HSS_GetScreenAspect();
    vec2 screen_scale = HSS_GetScreenScale(screen_aspect);
@@ -99,14 +99,15 @@ vec4 AddText(vec4 in_color)
    vec2 cropped_original_size_with_core_res_mult = HSS_GetCroppedOriginalSizeWithCoreResMult();
    vec2 core_sampling_mult = vec2(HSS_CORE_RES_SAMPLING_MULT_X, HSS_CORE_RES_SAMPLING_MULT_Y);
    vec2 cropped_original_size = cropped_original_size_with_core_res_mult / core_sampling_mult;
-   bool flip_vertical = (HSS_FLIP_VIEWPORT_AND_CORE_VERTICAL > 0.5);
+   
+   if (HSS_FLIP_VIEWPORT_AND_CORE_VERTICAL > 0.5) in_coord.y = 1 - in_coord.y;
    
    vec4 out_color = in_color;
-   out_color = mix(out_color, vec4(0, 0, 0, 1), GetTextMask(vTexCoord + 2 * vec2(1/global.OutputSize.x, 0), global.FinalViewportSize.xy, screen_size, cropped_original_size, cropped_original_size_with_core_res_mult, int_scale_mult, global.OriginalSize.xy, flip_vertical));
-   out_color = mix(out_color, vec4(0, 0, 0, 1), GetTextMask(vTexCoord - 2 * vec2(1/global.OutputSize.x, 0), global.FinalViewportSize.xy, screen_size, cropped_original_size, cropped_original_size_with_core_res_mult, int_scale_mult, global.OriginalSize.xy, flip_vertical));
-   out_color = mix(out_color, vec4(0, 0, 0, 1), GetTextMask(vTexCoord + 1 * vec2(0, 1/global.OutputSize.y), global.FinalViewportSize.xy, screen_size, cropped_original_size, cropped_original_size_with_core_res_mult, int_scale_mult, global.OriginalSize.xy, flip_vertical));
-   out_color = mix(out_color, vec4(0, 0, 0, 1), GetTextMask(vTexCoord - 1 * vec2(0, 1/global.OutputSize.y), global.FinalViewportSize.xy, screen_size, cropped_original_size, cropped_original_size_with_core_res_mult, int_scale_mult, global.OriginalSize.xy, flip_vertical));
-   out_color = mix(out_color, vec4(1, 1, 0, 1), GetTextMask(vTexCoord,                                      global.FinalViewportSize.xy, screen_size, cropped_original_size, cropped_original_size_with_core_res_mult, int_scale_mult, global.OriginalSize.xy, flip_vertical));
+   out_color = mix(out_color, vec4(0, 0, 0, 1), GetTextMask(in_coord + 2 * vec2(1/global.OutputSize.x, 0), global.FinalViewportSize.xy, screen_size, cropped_original_size, cropped_original_size_with_core_res_mult, int_scale_mult, global.OriginalSize.xy));
+   out_color = mix(out_color, vec4(0, 0, 0, 1), GetTextMask(in_coord - 2 * vec2(1/global.OutputSize.x, 0), global.FinalViewportSize.xy, screen_size, cropped_original_size, cropped_original_size_with_core_res_mult, int_scale_mult, global.OriginalSize.xy));
+   out_color = mix(out_color, vec4(0, 0, 0, 1), GetTextMask(in_coord + 1 * vec2(0, 1/global.OutputSize.y), global.FinalViewportSize.xy, screen_size, cropped_original_size, cropped_original_size_with_core_res_mult, int_scale_mult, global.OriginalSize.xy));
+   out_color = mix(out_color, vec4(0, 0, 0, 1), GetTextMask(in_coord - 1 * vec2(0, 1/global.OutputSize.y), global.FinalViewportSize.xy, screen_size, cropped_original_size, cropped_original_size_with_core_res_mult, int_scale_mult, global.OriginalSize.xy));
+   out_color = mix(out_color, vec4(1, 1, 0, 1), GetTextMask(in_coord,                                      global.FinalViewportSize.xy, screen_size, cropped_original_size, cropped_original_size_with_core_res_mult, int_scale_mult, global.OriginalSize.xy));
    return clamp(out_color, 0, 1);
 }
 
@@ -142,6 +143,6 @@ void main()
    //////// Draw text to show out_colorolutions ////////// 
    if (HSS_MEGA_BEZEL_DEBUG == 1)
    {
-      FragColor = AddText(FragColor);
+      FragColor = AddText(vTexCoord, FragColor);
    }
 }

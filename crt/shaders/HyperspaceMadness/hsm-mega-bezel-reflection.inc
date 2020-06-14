@@ -38,7 +38,6 @@ Thanks to:
 #define MASK_MODE_OUTSIDE_BEZEL 4
 #define MASK_MODE_OUTSIDE_FRAME 5
 
-
 /////////////// Helper Functions ///////////////
 
 // Assumes Opacity is already encoded in alpha
@@ -97,7 +96,6 @@ float rand(inout float r)
 	return (r - 0.5) * 2.0;
 }
 
-// TODO, blend with original?
 vec4 GetStoichaicBlurredSample(sampler2D in_sampler, vec2 in_coord, float num_samples, float max_blur_size, float blur_ratio)
 {
 	
@@ -118,27 +116,35 @@ vec4 GetStoichaicBlurredSample(sampler2D in_sampler, vec2 in_coord, float num_sa
 		radius_vector.x = rand(radius);
 		radius_vector.y = rand(radius);
 		vec2 sample_coord = in_coord + radius_vector * p;
+
+		// sample_coord = HSS_GetMirrorWrappedCoord(sample_coord);
+		sample_coord = clamp(sample_coord, 0.04, 0.96);
+		// if (abs(sample_coord.y - 0.5) > 0.5) blurred_color += vec4(1, 0, 0, 0);
+
 		blurred_color += texture(in_sampler, sample_coord) / num_samples;
 	}
 
 	return blurred_color;
 }
 
+float SCREEN_ASPECT = HSS_GetScreenAspect();
+vec2 SCREEN_SCALE = HSS_GetScreenScale(SCREEN_ASPECT);
+vec2 TUBE_SCALE = HSS_GetTubeScale(SCREEN_SCALE);
+
+//////////////////////////////////////////////////////////////////////////////////////////////////
 #pragma stage vertex
 
 layout(location = 0) in vec4 Position;
 layout(location = 1) in vec2 TexCoord;
 
 layout(location = 0) out vec2 VIEWPORT_WITH_POS_OFFSET_COORD;
-layout(location = 1) out float SCREEN_ASPECT;
-layout(location = 2) out vec2 SCREEN_SCALE;
 layout(location = 3) out vec2 SCREEN_COORD;
-layout(location = 4) out vec2 TUBE_SCALE;
 layout(location = 5) out vec2 TUBE_COORD;
 layout(location = 6) out vec2 VIEWPORT_COORD;
 layout(location = 7) out vec2 IMAGE_LAYER_COORD;
 layout(location = 8) out vec3 BEZEL_FRAME_ORIGINAL_COLOR_RGB;
 
+//////////////////////////////////////////////////////////////////////////////////////////////////
 void main()
 {
 	gl_Position = global.MVP * Position;
@@ -148,10 +154,8 @@ void main()
 		vTexCoord.y =  1 - vTexCoord.y;
 
 	VIEWPORT_WITH_POS_OFFSET_COORD = HSS_GetCoordWithPositionOffset(vTexCoord * 1.0001);
-	SCREEN_ASPECT = HSS_GetScreenAspect();
-	SCREEN_SCALE = HSS_GetScreenScale(SCREEN_ASPECT);
+
 	SCREEN_COORD = HSS_GetScreenVTexCoord(vTexCoord, SCREEN_SCALE);
-	TUBE_SCALE = HSS_GetTubeScale(SCREEN_SCALE);
 	TUBE_COORD = HSS_GetTubeVTexCoord(VIEWPORT_WITH_POS_OFFSET_COORD, TUBE_SCALE);
 
 	VIEWPORT_COORD = vTexCoord * 1.0001;
@@ -161,18 +165,15 @@ void main()
 	BEZEL_FRAME_ORIGINAL_COLOR_RGB = HSS_Linearize(vec4(HSS_HSVtoRGB(vec3(HBZ_BEZEL_COLOR_HUE / 360, HBZ_BEZEL_COLOR_SATURATION / 100, HBZ_BEZEL_COLOR_VALUE / 100)), 1), HSS_DEFAULT_SRGB_GAMMA).rgb;
 }
 
+//////////////////////////////////////////////////////////////////////////////////////////////////
 #pragma stage fragment
 
 layout(location = 0) in vec2 VIEWPORT_WITH_POS_OFFSET_COORD;
-layout(location = 1) in float SCREEN_ASPECT;
-layout(location = 2) in vec2 SCREEN_SCALE;
 layout(location = 3) in vec2 SCREEN_COORD;
-layout(location = 4) in vec2 TUBE_SCALE;
 layout(location = 5) in vec2 TUBE_COORD;
 layout(location = 6) in vec2 VIEWPORT_COORD;
 layout(location = 7) in vec2 IMAGE_LAYER_COORD;
 layout(location = 8) in vec3 BEZEL_FRAME_ORIGINAL_COLOR_RGB;
-
 
 layout(location = 0) out vec4 FragColor;
 
@@ -191,6 +192,7 @@ layout(set = 0, binding = 11) uniform sampler2D TopLayerImage;
 layout(set = 0, binding = 12) uniform sampler2D TopLayerVertImage;
 layout(set = 0, binding = 13) uniform sampler2D AvgLumPass;
 
+//////////////////////////////////////////////////////////////////////////////////////////////////
 void main()
 {
 	// Stuff for debugging
@@ -217,7 +219,7 @@ void main()
 	vec4 crt_image_linear = HSS_Linearize(texture(BR_CRTPass, VIEWPORT_COORD.xy), HSS_DEFAULT_CRT_GAMMA);
 	crt_image_linear = HSS_ApplyGamma(crt_image_linear, HSS_DEFAULT_CRT_GAMMA / HSS_DEFAULT_SRGB_GAMMA);
 	// Shrink the mask by 0.001 to clip off outer edge
-	crt_image_linear *= HSS_GetCornerMask(((HSS_GetCurvedCoord(SCREEN_COORD, 1, SCREEN_ASPECT) - 0.5) * 1.001) + 0.5, SCREEN_ASPECT, HSS_SCREENFX_CORNER_RADIUS, HSS_SCREENFX_EDGE_SHARPNESS);
+	crt_image_linear *= HSS_GetCornerMask(((HSS_GetCurvedCoord(SCREEN_COORD, HSS_TUBE_CURVATURE_SCALE, 0, SCREEN_ASPECT) - 0.5) * 1.001) + 0.5, SCREEN_ASPECT, HSS_SCREENFX_CORNER_RADIUS, HSS_SCREENFX_EDGE_SHARPNESS);
 
 	//----------------------------------------------------
 	//  Calculate Outside mapping Coords
@@ -249,8 +251,10 @@ void main()
 
 	vec2 outer_bezel_scale = vec2(HBZ_BEZEL_WIDTH / 100 / SCREEN_ASPECT + 1, HBZ_BEZEL_HEIGHT / 100 + 1);
 	outer_bezel_scale = (outer_bezel_scale - 1) * screen_scale_diagonal + 1;
+	vec2 frame_scale = outer_bezel_scale * TUBE_SCALE;
 	vec2 frame_coord_ctr = HSS_GetInverseScaledCoord(VIEWPORT_WITH_POS_OFFSET_COORD, outer_bezel_scale * TUBE_SCALE) - 0.5 + vec2(0, HBZ_FRAME_POS_Y_OFFSET / 100);
-
+	frame_coord_ctr = HSS_GetCurvedCoord(frame_coord_ctr + 0.5, 0, HSS_CURVATURE_3D_BEZEL_DEPTH, frame_scale.x * global.OutputSize.x / global.OutputSize.y / frame_scale.y) - 0.5;
+	// frame_scale.x/frame_scale.y
 	float outside_bezel_mask = 1 - HSS_GetCornerMask(frame_coord_ctr + 0.5, SCREEN_ASPECT,  HBZ_BEZEL_OUTER_CORNER_RADIUS_SCALE * HSS_SCREENFX_CORNER_RADIUS, 0.9);
 
 	//----------------------------------------------------
@@ -275,11 +279,18 @@ void main()
 
 	// A hack to adjust the angle offset, because without it the corner angle isn't pointing exactly at the corner
 	// This offset is the opposite direction for vertical and horizontal aspect ratio
-	float aspect_corner_angle_offset = SCREEN_ASPECT > 1 ? 3 : 4;
+	float corner_rotation_offset = (SCREEN_COORD.y < 0.5) ? -HBR_CORNER_ROTATION_OFFSET_TOP : -HBR_CORNER_ROTATION_OFFSET_BOTTOM;
+
+	if (HSS_CURVATURE_MODE == 0)
+	{
+		// If we are using a 3d Curvature no offset is necessary
+		corner_rotation_offset += (SCREEN_ASPECT > 1) ? -5 : 8;
+	}
 
 	// Convert direction vector to an angle so we can rotate the corner crease direction
 	float corner_angle_degrees = atan(corner_crease_dir.y / corner_crease_dir.x) / (2 * pi) * 360;
-	corner_angle_degrees += aspect_corner_angle_offset;
+
+	corner_angle_degrees += corner_rotation_offset;
 	float corner_angle_radians = corner_angle_degrees / 360 * 2 * pi;
 	corner_crease_dir = vec2(cos(corner_angle_radians), sin(corner_angle_radians));
 

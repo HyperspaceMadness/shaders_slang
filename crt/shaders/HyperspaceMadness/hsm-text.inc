@@ -311,8 +311,8 @@ float DrawResolutions(vec2 uv, vec2 viewport_size, vec2 screen_size, vec2 core_s
     col += GetChar(ch_0, uv);
     col += GetChar(ch_6, uv);
     col += GetChar(ch_dsh, uv);
-    col += GetChar(ch_0, uv);
-    col += GetChar(ch_7, uv);
+    col += GetChar(ch_1, uv);
+    col += GetChar(ch_5, uv);
     col += GetChar(ch_dsh, uv);
     col += GetChar(ch_0, uv);
 
@@ -512,9 +512,8 @@ float DrawResolutions(vec2 uv, vec2 viewport_size, vec2 screen_size, vec2 core_s
 }
 
 // Returns a 
-float GetTextMask(vec2 in_coord, vec2 viewport_size, vec2 screen_size, vec2 core_size, vec2 core_sampling_res, vec2 int_mult, vec2 canvas_size, bool flip_vertical)
+float GetTextMask(vec2 in_coord, vec2 viewport_size, vec2 screen_size, vec2 core_size, vec2 core_sampling_res, vec2 int_mult, vec2 canvas_size)
 {
-    if (flip_vertical) in_coord.y = 1 - in_coord.y;
     in_coord = (in_coord - 0.5) * vec2(1, -1) + 0.5;
     float downscale = 1;
     if (canvas_size.y > 400) downscale = 2;

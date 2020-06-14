@@ -108,7 +108,7 @@ void main()
     */
 
     // HSM Added
-	vec2 screen_curved_coord = HSS_GetCurvedCoord(SCREEN_COORD, 1, SCREEN_ASPECT);
+	vec2 screen_curved_coord = HSS_GetCurvedCoord(SCREEN_COORD, 1, 0, SCREEN_ASPECT);
     vec2 curved_coord = HSS_GetMirrorWrappedCoord(screen_curved_coord);
     vec2 texelSize = 1 / CROPPED_ORIGINAL_SIZE;
     // End Addition

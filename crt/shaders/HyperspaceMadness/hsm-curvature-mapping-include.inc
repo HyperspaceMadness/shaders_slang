@@ -31,7 +31,7 @@ layout(location = 0) out vec4 FragColor;
 
 void main()
 {
-	vec2 tube_curved_coord = HSS_GetCurvedCoord(TUBE_COORD, HSS_TUBE_BLACK_CURVATURE_SCALE, SCREEN_ASPECT);
+	vec2 tube_curved_coord = HSS_GetCurvedCoord(TUBE_COORD, HSS_TUBE_CURVATURE_SCALE, 0, SCREEN_ASPECT);
 
 	vec2 edge_mask_coord = (tube_curved_coord - 0.5) * (1 - (HBZ_BEZEL_INNER_EDGE_THICKNESS / 100 / vec2(SCREEN_ASPECT, 1))) + 0.5;
 	float edge_sharpness = 0.9;

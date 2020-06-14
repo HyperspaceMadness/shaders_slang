@@ -672,26 +672,17 @@ vec2 hrg_get_aspect_vector(float geom_aspect_ratio)
     return output_aspect;
 }
 
-vec2 HRG_GetGeomCurvedCoord(  vec2 in_coord, 
-                                        float in_geom_mode, 
-                                        float in_geom_radius, 
-                                        float in_geom_view_dist, 
-                                        float in_geom_tilt_angle_x, 
-                                        float in_geom_tilt_angle_y,
-                                        float in_screen_aspect,
-                                        vec2 in_extra_curvature_mult,
-                                        vec2 in_source_size,
-                                        vec2 in_output_size,
-                                        out mat2x2 pixel_to_video_uv)
+vec2 HRG_GetGeomCurvedCoord(    vec2 in_coord, 
+                                float in_geom_mode, 
+                                float in_geom_radius, 
+                                float in_geom_view_dist,
+                                float in_geom_tilt_angle_x, 
+                                float in_geom_tilt_angle_y,
+                                float in_screen_aspect,
+                                vec2 in_source_size,
+                                vec2 in_output_size,
+                                out mat2x2 pixel_to_video_uv)
 {
-    vec2 ctr_coord = in_coord - 0.5; 
-
-    // Kind of a Hack, Multiply the coordinate by a factor, do curvature 
-    // then return it to the original scale
-    ctr_coord *= in_extra_curvature_mult;
-
-    vec2 tex_uv = ctr_coord + 0.5;
-
     vec2 output_pixel_size = vec2(1.0, 1.0) / in_output_size;
 
     float geom_radius_scaled = in_geom_radius;
@@ -728,17 +719,15 @@ vec2 HRG_GetGeomCurvedCoord(  vec2 in_coord,
                                                         in_geom_view_dist);
     vec3 eye_pos_local = eye_pos_global * global_to_local;
 
-    //  Get flat and curved texture coords for the current fragment point sample
-    //  and a pixel_to_tangent_video_uv matrix for transforming pixel offsets:
-    //  video_uv = relative position in video frame, mapped to [0, 1] range
-    //  tex_uv = relative position in padded texture, mapped to [0, 1] range
-    vec4 video_and_texture_size_inv = vec4(1.0, 1.0, 1.0, 1.0) / vec4(in_source_size, in_source_size);
-    vec2 video_size_inv = video_and_texture_size_inv.xy;
-    vec2 flat_video_uv = tex_uv * (in_source_size * video_size_inv);
-    vec2 video_uv_no_geom_overscan;
+
+    vec2 curved_coord;
+
     if(in_geom_mode > 0.5)
     {
-        video_uv_no_geom_overscan =  hrg_get_curved_video_uv_coords_and_tangent_matrix( flat_video_uv,
+        // Put in a test for the projection with a flat plane to compare 
+        // with the distorted coordinate to scale out to the edges of the flat plane
+        // Also helps with cyndrilical projection where the sides shift in towards the center
+        vec2 ctr_curved_coord =  hrg_get_curved_video_uv_coords_and_tangent_matrix( in_coord,
                                                                                         eye_pos_local, 
                                                                                         output_pixel_size, 
                                                                                         output_aspect,
@@ -746,38 +735,48 @@ vec2 HRG_GetGeomCurvedCoord(  vec2 in_coord,
                                                                                         geom_radius_scaled,
                                                                                         in_geom_view_dist,
                                                                                         global_to_local, 
-                                                                                        pixel_to_video_uv);
-        // If this is a cyndrilical projection scale the sides back out to match the original aspect ratio
-        if (in_geom_mode == 3)
+                                                                                        pixel_to_video_uv) - 0.5;
+
+        // Curvature can cause the screen to shrink so we want to scale it back out so it is the same width & height
+        // Especially helps with cylindrical projection which shrinks a lot 
+        // Right Edge should end up at 1, we scale it back out so it hits 1
+        // Only do this when not using tilt so we don't mess up what the perspective is doing
+        if (in_geom_tilt_angle_x == 0 && in_geom_tilt_angle_y == 0)
         {
-            vec2 right_curved_coord =  hrg_get_curved_video_uv_coords_and_tangent_matrix( vec2(1, 1),
-                                                                                    eye_pos_local, 
-                                                                                    output_pixel_size, 
-                                                                                    output_aspect,
-                                                                                    in_geom_mode, 
-                                                                                    geom_radius_scaled,
-                                                                                    in_geom_view_dist,
-                                                                                    global_to_local, 
-                                                                                    pixel_to_video_uv);
-            // Curvature can cause the screen to shrink so we want to scale it back out so it is the same width & height 
-            // Right Edge should end up at 1, so scale it so it hits 1
-            video_uv_no_geom_overscan.x = (video_uv_no_geom_overscan.x - 0.5) * 0.5 / (right_curved_coord.x - 0.5) + 0.5;
+            vec2 right_edge_curved_ctr_coord =  hrg_get_curved_video_uv_coords_and_tangent_matrix(vec2(1, 0.5),
+                                                                                            eye_pos_local, 
+                                                                                            output_pixel_size, 
+                                                                                            output_aspect,
+                                                                                            in_geom_mode, 
+                                                                                            geom_radius_scaled,
+                                                                                            in_geom_view_dist,
+                                                                                            global_to_local, 
+                                                                                            pixel_to_video_uv) - 0.5;
+
+            vec2 bottom_edge_curved_ctr_coord =  hrg_get_curved_video_uv_coords_and_tangent_matrix(vec2(0.5, 1),
+                                                                                            eye_pos_local, 
+                                                                                            output_pixel_size, 
+                                                                                            output_aspect,
+                                                                                            in_geom_mode, 
+                                                                                            geom_radius_scaled,
+                                                                                            in_geom_view_dist,
+                                                                                            global_to_local, 
+                                                                                            pixel_to_video_uv) - 0.5;
+
+            ctr_curved_coord.x = ctr_curved_coord.x * 0.5 / right_edge_curved_ctr_coord.x;
+            ctr_curved_coord.y = ctr_curved_coord.y * 0.5 / bottom_edge_curved_ctr_coord.y;
         }
+
+        curved_coord = ctr_curved_coord + 0.5;
     }
     else
     {
-        video_uv_no_geom_overscan = flat_video_uv;
+        curved_coord = in_coord;
         pixel_to_video_uv = mat2x2( output_pixel_size.x,    0, 
                                     0,                      output_pixel_size.y);
     }
 
-    vec2 ctr_curved_coord = video_uv_no_geom_overscan - 0.5;
-    
-    ctr_curved_coord /= in_extra_curvature_mult;
-
-    video_uv_no_geom_overscan = ctr_curved_coord + 0.5;
-
-    return video_uv_no_geom_overscan;
+    return curved_coord;
 }
 
 

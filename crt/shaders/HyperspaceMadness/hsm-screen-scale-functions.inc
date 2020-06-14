@@ -60,67 +60,69 @@ vec2 HSS_GetCroppedOriginalSizeWithCoreResMult()
 // TODO do a catch for Atari 2600
 float HSS_GetIsOriginalSizeVertical()
 {
-	vec2 rotated_original_size = HSS_GetRotatedOriginalSizeWithCoreResMult();
-	float aspect_ratio = rotated_original_size.x/rotated_original_size.y;
+	vec2 rotated_original_size = HSS_GetRotatedOriginalSize();
+	float aspect_ratio = rotated_original_size.x / rotated_original_size.y;
 	return aspect_ratio < 1 ? 1 : 0;
 }
 
-// TODO aspect ratio mode 3 isn't working
+// Snap to integer scale if within 10%
 float HSS_GetScreenAspect()
 {
 	vec2 rotated_original_size = HSS_GetRotatedOriginalSize();
 	float core_aspect_ratio = rotated_original_size.x / rotated_original_size.y;
+	float core_aspect_horizontal = (core_aspect_ratio < 1) ? 1 / core_aspect_ratio : core_aspect_ratio;
 	float horizontal_aspect = 0;
 
 	// NDS 1.33 2x 256x192, Single screen, together 256x384 - 1.5 without center
 	// 3DS 5:3 400x240 (Top) 1.33 320x240 (Bottom)
-	// Atari 2600 160x192?
 
 	// An attempt to remove ifs to improve performance, did not seem to make a difference
 	// horizontal_aspect = int(HSS_ASPECT_RATIO_MODE == 0) * 
 	// 								(
-	// 									int(global.OriginalSize.y > 600) * core_aspect_ratio +
+	// 									int(global.OriginalSize.y > 600) * core_aspect_horizontal +
 	// 									int(global.OriginalSize.y < 600) *
 	// 									(
-	// 										int(core_aspect_ratio == 1.5 && global.OriginalSize.y == 160) * 1.5 +
-	// 										int(core_aspect_ratio != 1.5 || global.OriginalSize.y != 160) *  HSS_ASPECT_RATIO_EXPLICIT
+	// 										int(core_aspect_horizontal == 1.5 && global.OriginalSize.y == 160) * 1.5 +
+	// 										int(core_aspect_horizontal != 1.5 || global.OriginalSize.y != 160) *  HSS_ASPECT_RATIO_EXPLICIT
 	// 									)
 	// 								);
 
 	if (HSS_ASPECT_RATIO_MODE == 0)
 	{
-		if (global.OriginalSize.y > 500) horizontal_aspect = core_aspect_ratio;
-		else 
-		{
-			// Catch for Game Boy Advance
-			if (core_aspect_ratio == 1.5 && global.OriginalSize.y == 160) horizontal_aspect = 1.5;
-			else horizontal_aspect = HSS_ASPECT_RATIO_EXPLICIT;
-		}
+		// If teh vertical res is larger than 500 is is probably a modern square pixel resolution
+		if (global.OriginalSize.y > 500) horizontal_aspect = core_aspect_horizontal;
+		// Catch for Nintendo DS
+		else if (global.OriginalSize.x == 256 && global.OriginalSize.y == 384) horizontal_aspect = 1.5;
+		// Catch for Gameboy Advance
+		else if (global.OriginalSize.x == 240 && global.OriginalSize.y == 160) horizontal_aspect = 1.5;
+		// Fall back to the explicit ratio
+		else horizontal_aspect = HSS_ASPECT_RATIO_EXPLICIT;
 	}
 	else 
 		if (HSS_ASPECT_RATIO_MODE == 1) horizontal_aspect = HSS_ASPECT_RATIO_EXPLICIT;
 		else if (HSS_ASPECT_RATIO_MODE == 2) horizontal_aspect = 1.3333;
 		else if (HSS_ASPECT_RATIO_MODE == 3) horizontal_aspect = 1.5;
 		else if (HSS_ASPECT_RATIO_MODE == 4) horizontal_aspect = 1.7777;
-		else if (HSS_ASPECT_RATIO_MODE == 5) horizontal_aspect = core_aspect_ratio;
+		else if (HSS_ASPECT_RATIO_MODE == 5) horizontal_aspect = core_aspect_horizontal;
 		else if (HSS_ASPECT_RATIO_MODE == 6) horizontal_aspect = global.FinalViewportSize.x / global.FinalViewportSize.y;
 		else horizontal_aspect = 1.333;
 
 	// Find what the vertical aspect would be, either the current horizontal_aspect (if it's already vertical)
 	// Or changing the horizontal aspect to vertical by taking the reciprocal
-	float vertical_aspect = (horizontal_aspect < 1) ? horizontal_aspect : 1.0 / horizontal_aspect;
-	float final_aspect_ratio = 0;
+	float vertical_aspect = 1 / horizontal_aspect;
+	float final_orientation = HSS_ASPECT_RATIO_ORIENTATION;
 
 	if (HSS_ASPECT_RATIO_ORIENTATION < 0.5)
 	{
 		// Catch for Atari 2600 - Stella Emulator which would otherwise show up as a vertical aspect ratio
-		if (global.OriginalSize.x == 160 && global.OriginalSize.y == 228) final_aspect_ratio = horizontal_aspect;
+		if (global.OriginalSize.x == 160 && global.OriginalSize.y == 228) final_orientation = 1;
 		else
 		{
-			final_aspect_ratio = (HSS_GetIsOriginalSizeVertical() > 0.5) ? vertical_aspect : horizontal_aspect;
+			final_orientation = (HSS_GetIsOriginalSizeVertical() > 0.5) ? 2 : 1;
 		}
 	}
-	else final_aspect_ratio = (HSS_ASPECT_RATIO_ORIENTATION < 1.5) ? horizontal_aspect : vertical_aspect;
+	
+	float final_aspect_ratio = (final_orientation < 1.5) ? horizontal_aspect : vertical_aspect;
 
 	return final_aspect_ratio;
 }
@@ -145,6 +147,7 @@ float HSS_GetScreenInverseAspectRatio()
 	return HSS_ASPECT_RATIO_ORIENTATION < 1 ? auto_screen_aspect_ratio : (HSS_ASPECT_RATIO_ORIENTATION < 2 ? horizontal_aspect : vertical_aspect);
 }
 
+// HSS_SNAP_TO_INT_SCALE_TOLERANCE
 vec2 HSS_GetScreenScale(float screen_aspect)
 {
 	if (HSS_ASPECT_RATIO_MODE > 5.5)
@@ -162,21 +165,30 @@ vec2 HSS_GetScreenScale(float screen_aspect)
 		bool viewport_is_vertical = (global.FinalViewportSize.x < global.FinalViewportSize.y);
 
 		// If we are using non-integer scale return
+		float screen_height = HSS_NON_INTEGER_SCALE / 100;
 		if (HSS_INT_SCALE_MODE == 0)
 		{
-			float screen_height = HSS_NON_INTEGER_SCALE / 100;
 			if (viewport_is_vertical)
 			{
 				float diagonal_length = HSS_NON_INTEGER_SCALE / 100 * output_aspect_ratio;
 				screen_height = (diagonal_length * 1) / sqrt(screen_aspect * screen_aspect + 1 * 1);
-				
-				// return vec2(1, 1 / screen_aspect * output_aspect_ratio) * HSS_NON_INTEGER_SCALE / 100;
+			}
+
+			// If the integer tolerance is greater than zero see if we can snap to the nearest integer multiple
+			if (HSS_SNAP_TO_INT_SCALE_TOLERANCE > 0)
+			{
+				float integer_scale_multiple_vert = screen_height * global.FinalViewportSize.y / cropped_original_size.y;
+				float int_scale_remainder = fract(integer_scale_multiple_vert);
+				int_scale_remainder = (int_scale_remainder < 1 - int_scale_remainder) ? int_scale_remainder : 1 - int_scale_remainder;
+				float remainder_percent_of_screen_height = (int_scale_remainder * cropped_original_size.y) / (screen_height * global.FinalViewportSize.y);
+				if (remainder_percent_of_screen_height < HSS_SNAP_TO_INT_SCALE_TOLERANCE)
+				{
+					integer_scale_multiple_vert = round(integer_scale_multiple_vert);
+					screen_height = integer_scale_multiple_vert * cropped_original_size.y / global.FinalViewportSize.y;
+				}
 			}
 
 			return vec2(screen_aspect / output_aspect_ratio, 1) * screen_height;
-
-			// float non_int_scale = viewport_is_vertical ? (HSS_NON_INTEGER_SCALE / 100) * output_aspect_ratio : HSS_NON_INTEGER_SCALE / 100;
-			// return vec2(screen_aspect / output_aspect_ratio, 1) * non_int_scale;
 		}
 
 		// Get the maximum height that the integer scale needs to fit into
@@ -299,15 +311,18 @@ vec2 HSS_GetTubeVTexCoord(vec2 in_coord, vec2 in_tube_scale)
 	return HSS_GetVTexCoordWithArgs(in_coord, in_tube_scale, HSS_GetPositionOffset());
 }
 
-vec2 HSS_GetLongShortAxisCurvatureValues()
+vec2 HSS_GetCurvatureScales(float screen_aspect)
 {
-	return vec2(HSS_CURVATURE_2D_LONG_AXIS / 100, HSS_CURVATURE_2D_SHORT_AXIS / 100);
+	vec2 curvature_scales = screen_aspect < 1 ? vec2(HSS_CURVATURE_2D_SCALE_SHORT_AXIS, HSS_CURVATURE_2D_SCALE_LONG_AXIS)
+											  : vec2(HSS_CURVATURE_2D_SCALE_LONG_AXIS,  HSS_CURVATURE_2D_SCALE_SHORT_AXIS);
+	curvature_scales = (clamp(curvature_scales, 1, 5) - 1) + 1;
+	return curvature_scales;
 }
-
 vec2 HSS_GetCurvatureValues(float screen_aspect)
 {
-	vec2 curvature_values = screen_aspect < 1 ? vec2(HSS_CURVATURE_2D_SHORT_AXIS / 100, HSS_CURVATURE_2D_LONG_AXIS / 100 ) 
-														: vec2(HSS_CURVATURE_2D_LONG_AXIS / 100, HSS_CURVATURE_2D_SHORT_AXIS / 100 );
+	vec2 curvature_values = screen_aspect < 1 ? vec2(HSS_CURVATURE_2D_SCALE_SHORT_AXIS * 2 / 100, HSS_CURVATURE_2D_SCALE_LONG_AXIS * 3 / 100)
+											  : vec2(HSS_CURVATURE_2D_SCALE_LONG_AXIS * 3 / 100, HSS_CURVATURE_2D_SCALE_SHORT_AXIS * 2 / 100);
+
 	return curvature_values;
 }
 
@@ -407,26 +422,26 @@ vec2 HSS_GetTorridGristleCurvedCoord(vec2 in_coord, vec2 curvature_values)
 // Torridgristle's curvature
 vec2 HSS_Get2DCurvedCoord(vec2 in_coord, vec2 curvature_values)
 {
+	
 	return HSS_GetCrtPiCurvedCoord(in_coord, curvature_values);
 }
 
-vec2 HSS_GetCurvedCoord(vec2 in_coord, float curvature_multiplier, float screen_aspect)
+vec2 HSS_GetCurvedCoord(vec2 in_coord, float curvature_multiplier, float dist_offset, float screen_aspect)
 {
 	vec2 curved_coord = vec2(0, 0);
 	if (HSS_CURVATURE_MODE > 0.5)
 	{
 		float epsilon = 0.001;
 		float geom_radius_with_mult = HSS_CURVATURE_3D_RADIUS * (1 / (curvature_multiplier + epsilon));
-        vec2 extra_curvature_mult = vec2(HSS_CURVATURE_2D_LONG_AXIS/100, HSS_CURVATURE_2D_SHORT_AXIS/100) / 2 * 50 + 1;
+        vec2 extra_curvature_mult = HSS_GetCurvatureScales(screen_aspect);
 		mat2x2 pixel_to_video_uv;
 		curved_coord = HRG_GetGeomCurvedCoord(	in_coord, 
 												HSS_CURVATURE_MODE, 
 												geom_radius_with_mult,
-												HSS_CURVATURE_3D_VIEW_DIST,
+												HSS_CURVATURE_3D_VIEW_DIST + dist_offset,
 												HSS_CURVATURE_3D_TILT_ANGLE_X,
 												HSS_CURVATURE_3D_TILT_ANGLE_Y,
 												screen_aspect,
-												extra_curvature_mult,
 												global.SourceSize.xy,
 												global.OutputSize.xy,
 												pixel_to_video_uv);
@@ -667,7 +682,7 @@ vec4 HSS_GetCroppedTexSample(sampler2D in_sampler, vec2 in_cropped_coord)
 	sample_coord =  HSS_RotateCoordinate(sample_coord, HSS_ROTATE_CORE_IMAGE);
 	vec4 sampled_color = texture(in_sampler, sample_coord);
 
-	vec4 negative_crop_color = vec4(HSS_COLOR_NEGATIVE_CROP_BRIGHTNESS / 100, HSS_COLOR_NEGATIVE_CROP_BRIGHTNESS / 100, HSS_COLOR_NEGATIVE_CROP_BRIGHTNESS / 100, 1);
+	vec4 negative_crop_color = vec4(HSS_COLOR_NEGATIVE_CROP_BRIGHTNESS / 10000, HSS_COLOR_NEGATIVE_CROP_BRIGHTNESS / 10000, HSS_COLOR_NEGATIVE_CROP_BRIGHTNESS / 10000, 1);
 
 	float negative_crop = HSS_IsInNegativeCropArea(sample_coord);
 
@@ -678,7 +693,7 @@ vec4 HSS_ApplyPhosphorPersistence(vec4 in_color, sampler2D in_feedback_pass, vec
 {
 	if (HSS_PHOSPHOR_PERSISTENCE == 0) return in_color;
 
-	vec3 Phosphor = HSS_PHOSPHOR_PERSISTENCE > 0 ? vec3(0.5, 0.6, 0.8) : vec3(0.5, 0.5, 0.5);
+	vec3 Phosphor = HSS_PHOSPHOR_PERSISTENCE < 0 ? vec3(0.5, 0.6, 0.8) : vec3(0.5, 0.5, 0.5);
 
 	float delta_time = 5 - 5 * HHLP_EasePowerOut(abs(HSS_PHOSPHOR_PERSISTENCE), 2) + 0.1;
 	vec4 prev_color = texture(in_feedback_pass, in_coord);
@@ -719,8 +734,11 @@ vec4 HSS_ApplyColorTemperature_D65_D50(vec4 in_color)
 			-0.4685105,  0.0334540,  1.4216174);
 
 	vec3 color = in_color.rgb;
-   
-   	color = normalize(pow(color + 1e-4, vec3(HSS_COLOR_SATURATION)))*length(color);
+	
+	// If the CRT profile is set to 6 then decrease the saturation by 20% as it is over saturated
+	float saturation = HSS_COLOR_SATURATION;
+	saturation += (HSS_COLOR_CRT_PROFILE == 6) ? -0.20 : 0;
+   	color = normalize(pow(color + 1e-4, vec3(saturation)))*length(color);
    
 	float p = 2.4;
 	
@@ -918,7 +936,6 @@ vec4 HSS_GetPostCrtPreppedColor(vec4 in_color_linear, vec2 screen_curved_coord, 
 {
 	float screen_mask = HSS_GetCornerMask((screen_curved_coord - 0.5) * 0.999 + 0.5, screen_aspect, HSS_SCREENFX_CORNER_RADIUS, 0.9);
 
-	// TODO Screen Edge Sharpness should be applied here instead of in the mega bezel shader
 	float screen_edge_mask = HSS_GetCornerMask(screen_curved_coord, screen_aspect, HSS_SCREENFX_CORNER_RADIUS, HSS_SCREENFX_EDGE_SHARPNESS);
 	screen_edge_mask = 1 - ((1 - screen_edge_mask) * screen_mask);
 

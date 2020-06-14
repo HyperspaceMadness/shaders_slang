@@ -52,22 +52,25 @@ layout(push_constant) uniform Push
         cos_tilt.y*sin_tilt.x, -sin_tilt.y, cos_tilt.y*cos_tilt.x);
 #endif
 
-float geom_mode = global.HSS_CURVATURE_MODE;
-float geom_mode_runtime = global.HSS_CURVATURE_MODE;
-float geom_radius = global.HSS_CURVATURE_3D_RADIUS;
-float geom_view_dist = global.HSS_CURVATURE_3D_VIEW_DIST;
-float geom_tilt_angle_x = global.HSS_CURVATURE_3D_TILT_ANGLE_X;
-float geom_tilt_angle_y = global.HSS_CURVATURE_3D_TILT_ANGLE_Y;
+// HSM Added
+///////////////////////////////  HSM INCLUDES  ///////////////////////////////
+#include "../../hsm-screen-scale-params.inc"
+
+// These variables are to be used in geometry-functions.h
+float geom_mode = HSS_CURVATURE_MODE;
+float geom_mode_runtime = HSS_CURVATURE_MODE;
+float geom_radius = HSS_CURVATURE_3D_RADIUS;
+float geom_view_dist = HSS_CURVATURE_3D_VIEW_DIST;
+float geom_tilt_angle_x = HSS_CURVATURE_3D_TILT_ANGLE_X;
+float geom_tilt_angle_y = HSS_CURVATURE_3D_TILT_ANGLE_Y;
 
 //////////////////////////////////  INCLUDES  //////////////////////////////////
-
 #include "../../../../../include/gamma-management.h"
 #include "tex2Dantialias.h"
 #include "geometry-functions.h"
 
 // HSM Added
 ///////////////////////////////  HSM INCLUDES  ///////////////////////////////
-#include "../../hsm-screen-scale-params.inc"
 #include "../../hsm-screen-scale-functions.inc"
 
 ///////////////////////////////////  HELPERS  //////////////////////////////////
@@ -237,17 +240,14 @@ void main()
         //     get_curved_video_uv_coords_and_tangent_matrix(flat_video_uv,
         //         eye_pos_local, output_size_inv, geom_aspect,
         //         geom_mode, global_to_local, pixel_to_video_uv);
-        
-        vec2 extra_curvature_mult = HSS_GetCurvatureValues(SCREEN_ASPECT) / 2 * 50 + 1;
 
         scaled_curved_uv = HRG_GetGeomCurvedCoord(SCREEN_COORD, 
-                                                        global.HSS_CURVATURE_MODE, 
-                                                        global.HSS_CURVATURE_3D_RADIUS, 
-                                                        global.HSS_CURVATURE_3D_VIEW_DIST, 
-                                                        global.HSS_CURVATURE_3D_TILT_ANGLE_X, 
-                                                        global.HSS_CURVATURE_3D_TILT_ANGLE_Y,
+                                                        HSS_CURVATURE_MODE, 
+                                                        HSS_CURVATURE_3D_RADIUS, 
+                                                        HSS_CURVATURE_3D_VIEW_DIST,
+                                                        HSS_CURVATURE_3D_TILT_ANGLE_X, 
+                                                        HSS_CURVATURE_3D_TILT_ANGLE_Y,
                                                         SCREEN_ASPECT,
-                                                        extra_curvature_mult,
                                                         global.SourceSize.xy,
                                                         global.OutputSize.xy,
                                                         pixel_to_video_uv);
@@ -257,7 +257,7 @@ void main()
     }
     else
     {
-        scaled_curved_uv = HSS_GetCurvedCoord(SCREEN_COORD, 1, SCREEN_ASPECT);
+        scaled_curved_uv = HSS_GetCurvedCoord(SCREEN_COORD, 1, 0, SCREEN_ASPECT);
         screen_curved_coord = scaled_curved_uv;
         video_uv_no_geom_overscan = (scaled_curved_uv - 0.5) * SCREEN_SCALE + 0.5 + HSS_GetPositionOffset();
         

@@ -108,8 +108,8 @@ layout(std140, set = 0, binding = 0) uniform UBO
 #pragma parameter GDV_GLOW_STRENGTH "[GLOW]  Glow Strength" 0.02 0.0 0.5 0.01
 #define glow         params.GDV_GLOW_STRENGTH     // Glow Strength
 
-// HSM Changed from default of 0 to 0.3
-#pragma parameter GDV_BLOOM_STRENGTH "[GLOW]  Bloom Strength" 0.3 0.0 2.0 0.1
+// HSM Changed from default of 0 to 0.1
+#pragma parameter GDV_BLOOM_STRENGTH "[GLOW]  Bloom Strength" 0.1 0 2 0.05
 #define bloom          params.GDV_BLOOM_STRENGTH     // bloom effect
 
 #pragma parameter GDV_BRIGHT_BOOST_DARK_COLORS "[BRIGHTNESS]  Boost Dark Colors" 1.40 0.50 4.00 0.05
@@ -237,39 +237,35 @@ layout(std140, set = 0, binding = 0) uniform UBO
 #define OutputSize global.OutputSize
 #define gl_FragCoord (vTexCoord * OutputSize.xy)
 
+// Calculate values for fragment stage
+vec2 CROPPED_ORIGINAL_SIZE = HSS_GetCroppedOriginalSizeWithCoreResMult();
+float SCREEN_ASPECT = HSS_GetScreenAspect();
+vec2 SCREEN_SCALE = HSS_GetScreenScale(SCREEN_ASPECT);
+float USE_VERTICAL_SCANLINES = HSS_GetUseVerticalScanlines(SCREEN_ASPECT);
+
+
 #pragma stage vertex
+
 layout(location = 0) in vec4 Position;
 layout(location = 1) in vec2 TexCoord;
 
 layout(location = 0) out vec2 vTexCoord;
-
-layout(location = 1) out vec2 CROPPED_ORIGINAL_SIZE;
-layout(location = 2) out float SCREEN_ASPECT;
-layout(location = 3) out vec2 SCREEN_SCALE;
 layout(location = 4) out vec2 SCREEN_COORD;
-layout(location = 5) out float USE_VERTICAL_SCANLINES;
 
 void main()
 {
 	gl_Position = global.MVP * Position;
 	vTexCoord = TexCoord * 1.00001;
-
-	CROPPED_ORIGINAL_SIZE = HSS_GetCroppedOriginalSizeWithCoreResMult();
-	SCREEN_ASPECT = HSS_GetScreenAspect();
-	SCREEN_SCALE = HSS_GetScreenScale(SCREEN_ASPECT);
 	SCREEN_COORD = HSS_GetScreenVTexCoord(vTexCoord, SCREEN_SCALE);
-	USE_VERTICAL_SCANLINES = HSS_GetUseVerticalScanlines(SCREEN_ASPECT);
 }
 
 #pragma stage fragment
+
 layout(location = 0) in vec2 vTexCoord;
-layout(location = 1) in vec2 CROPPED_ORIGINAL_SIZE;
-layout(location = 2) in float SCREEN_ASPECT;
-layout(location = 3) in vec2 SCREEN_SCALE;
 layout(location = 4) in vec2 SCREEN_COORD;
-layout(location = 5) in float USE_VERTICAL_SCANLINES;
 
 layout(location = 0) out vec4 FragColor;
+
 layout(set = 0, binding = 2) uniform sampler2D Source;
 layout(set = 0, binding = 3) uniform sampler2D LinearizePass;
 
@@ -545,7 +541,7 @@ void main()
 	// HSM Removed
 	float TATE = USE_VERTICAL_SCANLINES;
 
-	vec2 screen_curved_coord = HSS_GetCurvedCoord(SCREEN_COORD, 1, SCREEN_ASPECT);
+	vec2 screen_curved_coord = HSS_GetCurvedCoord(SCREEN_COORD, 1, 0, SCREEN_ASPECT);
 	vec2 pos = HSS_GetMirrorWrappedCoord(screen_curved_coord);
 
 	vec2 coffset = vec2(0.5, 0.5);

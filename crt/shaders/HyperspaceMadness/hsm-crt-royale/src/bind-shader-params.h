@@ -40,6 +40,7 @@ layout(std140, set = 0, binding = 0) uniform UBO
 	float HSS_ASPECT_RATIO_EXPLICIT;
 	float HSS_INT_SCALE_MODE;
 	float HSS_NON_INTEGER_SCALE;
+	float HSS_SNAP_TO_INT_SCALE_TOLERANCE;
     float HSS_INT_SCALE_MULTIPLE_OFFSET;
 	float HSS_INT_SCALE_MULTIPLE_OFFSET_LONG;
 	float HSS_INT_SCALE_BORDER_MIN_HEIGHT;
@@ -62,8 +63,8 @@ layout(std140, set = 0, binding = 0) uniform UBO
 	float HSS_CURVATURE_3D_VIEW_DIST;
 	float HSS_CURVATURE_3D_TILT_ANGLE_X;
 	float HSS_CURVATURE_3D_TILT_ANGLE_Y;
-	float HSS_CURVATURE_2D_LONG_AXIS;
-	float HSS_CURVATURE_2D_SHORT_AXIS;
+	float HSS_CURVATURE_2D_SCALE_LONG_AXIS;
+	float HSS_CURVATURE_2D_SCALE_SHORT_AXIS;
 	float HSS_CURVATURE_POST_SCALE_X;
 	float HSS_CURVATURE_POST_SCALE_Y;
 	
@@ -84,10 +85,10 @@ layout(std140, set = 0, binding = 0) uniform UBO
 	float HSS_PHOSPHOR_PERSISTENCE;
 
 	float HSS_SCREENFX_FAKE_SCANLINE_OPACITY;
-float HSS_SCREENFX_FAKE_SCANLINE_BRIGHTNESS_CUTOFF;
+	float HSS_SCREENFX_FAKE_SCANLINE_BRIGHTNESS_CUTOFF;
 
 	float HSS_TUBE_BLACK_EDGE_THICKNESS;
-	float HSS_TUBE_BLACK_CURVATURE_SCALE;
+	float HSS_TUBE_CURVATURE_SCALE;
 
 	float HBZ_TUBE_GLASS_IMAGE_OPACITY;
 	float HBZ_TUBE_EDGE_SHADOW;
@@ -110,6 +111,7 @@ float HSS_SCREENFX_FAKE_SCANLINE_BRIGHTNESS_CUTOFF;
 	float HBZ_BEZEL_HIGHLIGHT;
 	float HBZ_BEZEL_WIDTH;
 	float HBZ_BEZEL_HEIGHT;
+float HSS_CURVATURE_3D_BEZEL_DEPTH;
 	float HBZ_BEZEL_INNER_EDGE_THICKNESS;
 	float HBZ_BEZEL_INNER_CORNER_RADIUS_SCALE;
 	float HBZ_BEZEL_OUTER_CORNER_RADIUS_SCALE;
@@ -149,6 +151,8 @@ float HSS_SCREENFX_FAKE_SCANLINE_BRIGHTNESS_CUTOFF;
 	float HBR_CORNER_FADE;
 	float HBR_CORNER_INNER_SPREAD;
 	float HBR_CORNER_OUTER_SPREAD;
+float HBR_CORNER_ROTATION_OFFSET_TOP;
+float HBR_CORNER_ROTATION_OFFSET_BOTTOM;
 	float HBR_CORNER_FADE_DISTANCE;
 
 	float HBR_NOISE_AMOUNT;
@@ -308,7 +312,7 @@ static const float gba_gamma = 3.5; //  Irrelevant but necessary to define.
 #define levels_contrast 1
 
 #pragma parameter halation_weight 				"[ROYALE GLOW]  Halation Weight" 0.0 0.0 1.0 0.005
-#pragma parameter diffusion_weight 				"[GLOW]  Diffusion Weight" 0.075 0.0 1.0 0.005
+#pragma parameter diffusion_weight 				"[GLOW]  Diffusion Weight" 0.04 0.0 1.0 0.005
 #pragma parameter bloom_underestimate_levels 	"[GLOW]  Bloom - Underestimate Levels" 0.8 0.0 5.0 0.01
 #define bloom_underestimate_levels global.bloom_underestimate_levels
 #pragma parameter bloom_excess 					"[GLOW]  Bloom - Excess" 0.0 0.0 1.0 0.005

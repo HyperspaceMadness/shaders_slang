@@ -29,9 +29,12 @@ layout(std140, set = 0, binding = 0) uniform UBO
 	float HSS_INT_SCALE_BORDER_MIN_HEIGHT;
 
 	float HSS_SCANLINE_DIRECTION;
-	float HSS_CORE_RES_SAMPLING_MULT_X;
-	float HSS_CORE_RES_SAMPLING_MULT_Y;
+	float HSS_CORE_RES_SAMPLING_MULT_SCANLINE_DIR;
+	float HSS_CORE_RES_SAMPLING_MULT_OPPOSITE_DIR;
 	float HSS_INTERLACE_TRIGGER_RES;
+	float HSS_SPLIT_SCREEN_AMOUNT;
+float HSS_SPLIT_SCREEN_CENTER_FILL_MODE;
+
 
 	float HSS_POSITION_OFFSET_X;
 	float HSS_POSITION_OFFSET_Y;
@@ -58,7 +61,6 @@ layout(std140, set = 0, binding = 0) uniform UBO
 	float HSS_COLOR_CRT_PROFILE;
 	float HSS_COLOR_SPACE;
 	float HSS_COLOR_BLACK_LEVEL;
-	// float hmss_color_pre_crt_gamma_adjust;
 	float HSS_COLOR_NEGATIVE_CROP_BRIGHTNESS;
 	float HSS_COLOR_LUMINANCE;
 	float HSS_COLOR_TEMPERATURE;
@@ -74,6 +76,7 @@ layout(std140, set = 0, binding = 0) uniform UBO
 	float HSS_TUBE_CURVATURE_SCALE;
 
 	float HBZ_TUBE_GLASS_IMAGE_OPACITY;
+	float HBZ_TUBE_GLASS_IMAGE_SCALE;
 	float HBZ_TUBE_EDGE_SHADOW;
 
 	// Image Bezel

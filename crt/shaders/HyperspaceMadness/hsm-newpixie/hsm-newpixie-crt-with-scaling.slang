@@ -59,12 +59,14 @@ layout(push_constant) uniform Push
 	uint FrameCount;
 	float use_frame;
 	float curvature;
+    float wiggle_toggle;
 } params;
 
 // HSM Removed
 // #pragma parameter use_frame "Use Frame Image" 0.0 0.0 1.0 1.0
 // #define use_frame params.use_frame
 // #pragma parameter curvature "Curvature" 2.0 0.0001 4.0 0.25
+#pragma parameter wiggle_toggle "[NEWPIXIE]   Interference" 0.0 0.0 1.0 1.0
 
 #define gl_FragCoord (vTexCoord.xy * global.OutputSize.xy)
 #define backbuffer accum1
@@ -74,7 +76,7 @@ layout(push_constant) uniform Push
 // #define frametexture frametexture
 
 // Calculate values for fragment stage
-vec2 CROPPED_ORIGINAL_SIZE = HSS_GetCroppedOriginalSizeWithCoreResMult();
+vec2 CROPPED_ORIGINAL_SIZE = HSS_GetCroppedRotatedOriginalSizeWithCoreResMult();
 float SCREEN_ASPECT = HSS_GetScreenAspect();
 vec2 SCREEN_SCALE = HSS_GetScreenScale(SCREEN_ASPECT);
 float USE_VERTICAL_SCANLINES = HSS_GetUseVerticalScanlines(SCREEN_ASPECT);
@@ -157,7 +159,7 @@ void main()
     // HSM Removed
     // vec2 curved_uv = mix( curve( uv ), uv, 0.4 );
 
-    vec2 screen_curved_coord = HSS_GetCurvedCoord(uv, 1, 0, SCREEN_ASPECT);
+    vec2 screen_curved_coord = HSS_GetCurvedCoord(uv, 1, SCREEN_ASPECT);
     vec2 curved_uv = HSS_GetMirrorWrappedCoord(screen_curved_coord);
     // vec2 screen_curved_coord = curve(uv);
     // vec2 curved_uv = mix( screen_curved_coord, uv, 0.4 );
@@ -174,7 +176,7 @@ void main()
 		
     /* Main color, Bleed */
     vec3 col;
-    float x =  sin(0.1*time+curved_uv.y*13.0)*sin(0.23*time+curved_uv.y*19.0)*sin(0.3+0.11*time+curved_uv.y*23.0)*0.0012;
+    float x = params.wiggle_toggle * sin(0.1*time+curved_uv.y*13.0)*sin(0.23*time+curved_uv.y*19.0)*sin(0.3+0.11*time+curved_uv.y*23.0)*0.0012;
     float o = sin(gl_FragCoord.y*1.5)/resolution.x;
     x+=o*0.25;
 

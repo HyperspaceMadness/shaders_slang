@@ -57,7 +57,7 @@ void main()
     gl_Position = global.MVP * Position;
     vTexCoord = TexCoord;
 
-	CROPPED_ORIGINAL_SIZE = HSS_GetCroppedOriginalSizeWithCoreResMult();
+	CROPPED_ORIGINAL_SIZE = HSS_GetCroppedRotatedOriginalSizeWithCoreResMult();
 	SCREEN_ASPECT = HSS_GetScreenAspect();
 	SCREEN_SCALE = HSS_GetScreenScale(SCREEN_ASPECT);
 	SCREEN_COORD = HSS_GetScreenVTexCoord(vTexCoord, SCREEN_SCALE);
@@ -108,7 +108,7 @@ void main()
     */
 
     // HSM Added
-	vec2 screen_curved_coord = HSS_GetCurvedCoord(SCREEN_COORD, 1, 0, SCREEN_ASPECT);
+	vec2 screen_curved_coord = HSS_GetCurvedCoord(SCREEN_COORD, 1, SCREEN_ASPECT);
     vec2 curved_coord = HSS_GetMirrorWrappedCoord(screen_curved_coord);
     vec2 texelSize = 1 / CROPPED_ORIGINAL_SIZE;
     // End Addition

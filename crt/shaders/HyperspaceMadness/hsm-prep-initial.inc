@@ -96,18 +96,18 @@ vec4 AddText(vec2 in_coord, vec4 in_color)
    vec2 screen_scale = HSS_GetScreenScale(screen_aspect);
    vec2 screen_size = HSS_GetScreenSize(screen_scale);
    vec2 int_scale_mult = HSS_GetIntegerScaleMult(screen_size);
-   vec2 cropped_original_size_with_core_res_mult = HSS_GetCroppedOriginalSizeWithCoreResMult();
-   vec2 core_sampling_mult = vec2(HSS_CORE_RES_SAMPLING_MULT_X, HSS_CORE_RES_SAMPLING_MULT_Y);
-   vec2 cropped_original_size = cropped_original_size_with_core_res_mult / core_sampling_mult;
+   vec2 original_size = HSS_GetRotatedRawOriginalSize();
+   vec2 cropped_original_size = HSS_GetCroppedRotatedOriginalSize();
+   vec2 cropped_original_size_with_core_res_mult = HSS_GetCroppedRotatedOriginalSizeWithCoreResMult();
    
    if (HSS_FLIP_VIEWPORT_AND_CORE_VERTICAL > 0.5) in_coord.y = 1 - in_coord.y;
    
    vec4 out_color = in_color;
-   out_color = mix(out_color, vec4(0, 0, 0, 1), GetTextMask(in_coord + 2 * vec2(1/global.OutputSize.x, 0), global.FinalViewportSize.xy, screen_size, cropped_original_size, cropped_original_size_with_core_res_mult, int_scale_mult, global.OriginalSize.xy));
-   out_color = mix(out_color, vec4(0, 0, 0, 1), GetTextMask(in_coord - 2 * vec2(1/global.OutputSize.x, 0), global.FinalViewportSize.xy, screen_size, cropped_original_size, cropped_original_size_with_core_res_mult, int_scale_mult, global.OriginalSize.xy));
-   out_color = mix(out_color, vec4(0, 0, 0, 1), GetTextMask(in_coord + 1 * vec2(0, 1/global.OutputSize.y), global.FinalViewportSize.xy, screen_size, cropped_original_size, cropped_original_size_with_core_res_mult, int_scale_mult, global.OriginalSize.xy));
-   out_color = mix(out_color, vec4(0, 0, 0, 1), GetTextMask(in_coord - 1 * vec2(0, 1/global.OutputSize.y), global.FinalViewportSize.xy, screen_size, cropped_original_size, cropped_original_size_with_core_res_mult, int_scale_mult, global.OriginalSize.xy));
-   out_color = mix(out_color, vec4(1, 1, 0, 1), GetTextMask(in_coord,                                      global.FinalViewportSize.xy, screen_size, cropped_original_size, cropped_original_size_with_core_res_mult, int_scale_mult, global.OriginalSize.xy));
+   out_color = mix(out_color, vec4(0, 0, 0, 1), GetTextMask(in_coord + 2 * vec2(1/global.OutputSize.x, 0), global.FinalViewportSize.xy, screen_size, original_size, cropped_original_size, cropped_original_size_with_core_res_mult, int_scale_mult, global.OriginalSize.xy));
+   out_color = mix(out_color, vec4(0, 0, 0, 1), GetTextMask(in_coord - 2 * vec2(1/global.OutputSize.x, 0), global.FinalViewportSize.xy, screen_size, original_size, cropped_original_size, cropped_original_size_with_core_res_mult, int_scale_mult, global.OriginalSize.xy));
+   out_color = mix(out_color, vec4(0, 0, 0, 1), GetTextMask(in_coord + 1 * vec2(0, 1/global.OutputSize.y), global.FinalViewportSize.xy, screen_size, original_size, cropped_original_size, cropped_original_size_with_core_res_mult, int_scale_mult, global.OriginalSize.xy));
+   out_color = mix(out_color, vec4(0, 0, 0, 1), GetTextMask(in_coord - 1 * vec2(0, 1/global.OutputSize.y), global.FinalViewportSize.xy, screen_size, original_size, cropped_original_size, cropped_original_size_with_core_res_mult, int_scale_mult, global.OriginalSize.xy));
+   out_color = mix(out_color, vec4(1, 1, 0, 1), GetTextMask(in_coord,                                      global.FinalViewportSize.xy, screen_size, original_size, cropped_original_size, cropped_original_size_with_core_res_mult, int_scale_mult, global.OriginalSize.xy));
    return clamp(out_color, 0, 1);
 }
 
@@ -129,7 +129,12 @@ void main()
    }
 
    // Add Color Temperature
-   FragColor = HSS_ApplyColorTemperature_D65_D50(FragColor);
+   // FragColor = HSS_ApplyColorTemperature_D65_D50(FragColor);
+   // vec3 color_rgb = vec3(FragColor); 
+   // vec3 color_hsv = HSS_RGBtoHSV(color_rgb);
+   // // color_rgb = HSS_HSVtoRGB(vec3(color_hsv.x, color_hsv.y * (HSS_COLOR_SATURATION + 100) / 100, color_hsv.x));
+   // color_rgb = HSS_HSVtoRGB(color_hsv);
+   // FragColor = vec4(color_rgb, FragColor.w);
 
    // Apply black level & gamma with input as non linearized
    FragColor = HSS_ApplyLumaAndBlackLevel(FragColor, 0);

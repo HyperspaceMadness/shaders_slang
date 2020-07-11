@@ -72,6 +72,12 @@ void main()
 		float blur_midpoint = 0.12;
 		float hbl_sharpness_falloff_speed = 1;
 		blur_ratio = HHLP_QuadraticBezier (clamp_0_1(blur_ratio - blur_midpoint), vec2(0.05, hbl_sharpness_falloff_speed));
+
+		#ifdef HSM_SPLIT_SCREEN_PRESET
+			float in_split_screen_area = HSS_GetSplitScreenAreaGradient(tube_coord_warped, 1.5, 0);
+			blur_ratio = (1 - outside_tube_mask) * HHLP_EasePowerInOut(0.5 + HSS_GetSplitScreenAreaGradient(tube_coord_warped, 0.2, 1.5), 2) + outside_tube_mask * blur_ratio;
+		#endif
+
 		blur_ratio = HBR_BLUR_MIN + blur_ratio * (HBR_BLUR_MAX - HBR_BLUR_MIN);
 
 		vec3 col = vec3(0.0);
@@ -94,15 +100,7 @@ void main()
 								min_blur_range * smoothstep(last_blur_ratio_blend_point, 0, blur_ratio)
 								) / 100;
 
-
-		// Stuff for debugging the mapping space
-		#ifdef ShowPlacementGuide
-			float placement_guide_red_alpha = 0;
-			float placement_guide_green_alpha = 0;
-			float placement_guide_blue_alpha = 0;
-
-			//placement_guide_red_alpha += HHLP_GetMaskCenteredOnValue(blur_falloff, 0.01, 0.001);
-		#endif
+		float blend_with_unblurred = smoothstep(-0.3, 0.3, HHLP_QuadraticBezier(blur_ratio, vec2(0.5, 0.5)));
 
 		float k_total = 0.;
 		for (float i = -HBR_BLUR_NUM_SAMPLES; i <= HBR_BLUR_NUM_SAMPLES; i++)
@@ -116,19 +114,14 @@ void main()
 			col += k * sampled_color.rgb;
 		}
 		vec4 blurred_color = vec4(col / k_total, 1.0);
-		float blend_with_unblurred = smoothstep(-0.3, 0.3, HHLP_QuadraticBezier(blur_ratio, vec2(0.5, 0.5)));
-		
+
+		// If this is used in a split screen preset and blending of the center area is requested add that to the 
+		#ifdef HSM_SPLIT_SCREEN_PRESET
+			blend_with_unblurred = clamp(blend_with_unblurred + in_split_screen_area, 0, 1);
+		#endif
+
 		vec4 unblurred_color = texture(BR_MirrorLowResPass, vTexCoord);
 		FragColor = mix(unblurred_color, blurred_color, blend_with_unblurred);
-
-		// Add the color for the debug Stuff
-		// #ifdef ShowPlacementGuide
-		// 	FragColor += vec4(1, 0, 0, 1) * placement_guide_red_alpha;
-		// 	FragColor += vec4(0, 1, 0, 1) * placement_guide_green_alpha;
-		// 	FragColor += vec4(0, 0, 1, 1) * placement_guide_blue_alpha;
-		// 	FragColor = clamp(FragColor - HHLP_GetMaskCenteredOnValue(blur_ratio, 0.995, 0.002), 0, 1);
-		// 	FragColor = clamp(FragColor - HHLP_GetMaskCenteredOnValue(blur_ratio, 0.5, 0.002), 0, 1);
-		// #endif
 	}
 	else
 	{

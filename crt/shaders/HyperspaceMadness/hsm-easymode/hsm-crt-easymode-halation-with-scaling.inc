@@ -161,7 +161,7 @@ void main()
    vTexCoord = TexCoord;
 
     // HSM Added
-    CROPPED_ORIGINAL_SIZE = HSS_GetCroppedOriginalSizeWithCoreResMult();
+    CROPPED_ORIGINAL_SIZE = HSS_GetCroppedRotatedOriginalSizeWithCoreResMult();
 	SCREEN_ASPECT = HSS_GetScreenAspect();
 	SCREEN_SCALE = HSS_GetScreenScale(SCREEN_ASPECT);
 	SCREEN_COORD = HSS_GetScreenVTexCoord(vTexCoord, SCREEN_SCALE);
@@ -189,7 +189,7 @@ void main()
 
     // TODO implement Cropping
     // HSM Added
-    vec2 tex_size = HSS_GetCroppedOriginalSizeWithCoreResMult();
+    vec2 tex_size = HSS_GetCroppedRotatedOriginalSizeWithCoreResMult();
     // End Addition
 
     vec2 midpoint = vec2(0.5, 0.5);
@@ -221,7 +221,7 @@ void main()
     // HSM Added
     vec2 co = SCREEN_COORD;
     vec2 screen_coord = co;
-    vec2 screen_curved_coord = HSS_GetCurvedCoord(screen_coord, 1, 0, SCREEN_ASPECT);
+    vec2 screen_curved_coord = HSS_GetCurvedCoord(screen_coord, 1, SCREEN_ASPECT);
     vec2 xy = HSS_GetMirrorWrappedCoord(screen_curved_coord);
 
     // HSM Removed

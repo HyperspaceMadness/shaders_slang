@@ -164,7 +164,7 @@ layout(std140, set = 0, binding = 0) uniform UBO
 // #define glow         params.glow     // Glow Strength
 
 // Mask
-#pragma parameter GDV_PVM_LIKE_COLORS "[MASK]  PVM Like Colors - Def 0.2" 0.2 -0.3 0.3 0.02
+#pragma parameter GDV_PVM_LIKE_COLORS "[MASK]  PVM Like Colors - Def 0.08" 0.08 -0.3 0.3 0.02
 #define vertmask     params.GDV_PVM_LIKE_COLORS     // Vertical mask
 
 #pragma parameter GDV_MASK_TYPE "[MASK]  Type - 0:CGWG, 1-4:Lottes, 5-6:Trinitron" 7 -1 7 1
@@ -231,14 +231,14 @@ layout(std140, set = 0, binding = 0) uniform UBO
 // #define SourceSize global.SourceSize
 // HSM Added
 #define SourceSize CROPPED_ORIGINAL_SIZE
-// #define SourceSize HSS_GetCroppedOriginalSizeWithCoreResMult()
+// #define SourceSize HSS_GetCroppedRotatedOriginalSizeWithCoreResMult()
 // End Addition
 
 #define OutputSize global.OutputSize
 #define gl_FragCoord (vTexCoord * OutputSize.xy)
 
 // Calculate values for fragment stage
-vec2 CROPPED_ORIGINAL_SIZE = HSS_GetCroppedOriginalSizeWithCoreResMult();
+vec2 CROPPED_ORIGINAL_SIZE = HSS_GetCroppedRotatedOriginalSizeWithCoreResMult();
 float SCREEN_ASPECT = HSS_GetScreenAspect();
 vec2 SCREEN_SCALE = HSS_GetScreenScale(SCREEN_ASPECT);
 float USE_VERTICAL_SCANLINES = HSS_GetUseVerticalScanlines(SCREEN_ASPECT);
@@ -541,7 +541,7 @@ void main()
 	// HSM Removed
 	float TATE = USE_VERTICAL_SCANLINES;
 
-	vec2 screen_curved_coord = HSS_GetCurvedCoord(SCREEN_COORD, 1, 0, SCREEN_ASPECT);
+	vec2 screen_curved_coord = HSS_GetCurvedCoord(SCREEN_COORD, 1, SCREEN_ASPECT);
 	vec2 pos = HSS_GetMirrorWrappedCoord(screen_curved_coord);
 
 	vec2 coffset = vec2(0.5, 0.5);

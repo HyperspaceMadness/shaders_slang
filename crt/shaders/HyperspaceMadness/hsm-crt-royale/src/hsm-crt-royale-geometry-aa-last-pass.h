@@ -171,7 +171,7 @@ void main()
     eye_pos_local = mul(global_to_local, eye_pos_global);
 
         // HSM Added
-    CROPPED_ORIGINAL_SIZE = HSS_GetCroppedOriginalSizeWithCoreResMult();
+    CROPPED_ORIGINAL_SIZE = HSS_GetCroppedRotatedOriginalSizeWithCoreResMult();
 	SCREEN_ASPECT = HSS_GetScreenAspect();
 	SCREEN_SCALE = HSS_GetScreenScale(SCREEN_ASPECT);
 	SCREEN_COORD = HSS_GetScreenVTexCoord(tex_uv, SCREEN_SCALE);
@@ -241,6 +241,9 @@ void main()
         //         eye_pos_local, output_size_inv, geom_aspect,
         //         geom_mode, global_to_local, pixel_to_video_uv);
 
+        // For Split Screen, not set up with this shader yet
+        float pin_inner_edge = 0;
+
         scaled_curved_uv = HRG_GetGeomCurvedCoord(SCREEN_COORD, 
                                                         HSS_CURVATURE_MODE, 
                                                         HSS_CURVATURE_3D_RADIUS, 
@@ -248,6 +251,7 @@ void main()
                                                         HSS_CURVATURE_3D_TILT_ANGLE_X, 
                                                         HSS_CURVATURE_3D_TILT_ANGLE_Y,
                                                         SCREEN_ASPECT,
+                                                        pin_inner_edge,
                                                         global.SourceSize.xy,
                                                         global.OutputSize.xy,
                                                         pixel_to_video_uv);
@@ -257,7 +261,7 @@ void main()
     }
     else
     {
-        scaled_curved_uv = HSS_GetCurvedCoord(SCREEN_COORD, 1, 0, SCREEN_ASPECT);
+        scaled_curved_uv = HSS_GetCurvedCoord(SCREEN_COORD, 1, SCREEN_ASPECT);
         screen_curved_coord = scaled_curved_uv;
         video_uv_no_geom_overscan = (scaled_curved_uv - 0.5) * SCREEN_SCALE + 0.5 + HSS_GetPositionOffset();
         

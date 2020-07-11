@@ -679,6 +679,7 @@ vec2 HRG_GetGeomCurvedCoord(    vec2 in_coord,
                                 float in_geom_tilt_angle_x, 
                                 float in_geom_tilt_angle_y,
                                 float in_screen_aspect,
+                                float pin_inner_edge,
                                 vec2 in_source_size,
                                 vec2 in_output_size,
                                 out mat2x2 pixel_to_video_uv)
@@ -765,6 +766,35 @@ vec2 HRG_GetGeomCurvedCoord(    vec2 in_coord,
 
             ctr_curved_coord.x = ctr_curved_coord.x * 0.5 / right_edge_curved_ctr_coord.x;
             ctr_curved_coord.y = ctr_curved_coord.y * 0.5 / bottom_edge_curved_ctr_coord.y;
+        }
+        if (pin_inner_edge == 1)
+        {
+            if (in_geom_tilt_angle_y != 0)
+            {
+                vec2 top_edge_curved_ctr_coord =  hrg_get_curved_video_uv_coords_and_tangent_matrix(vec2(0.5, 0),
+                                                                                                    eye_pos_local, 
+                                                                                                    output_pixel_size, 
+                                                                                                    output_aspect,
+                                                                                                    in_geom_mode, 
+                                                                                                    geom_radius_scaled,
+                                                                                                    in_geom_view_dist,
+                                                                                                    global_to_local, 
+                                                                                                    pixel_to_video_uv);
+                ctr_curved_coord.y = ctr_curved_coord.y - top_edge_curved_ctr_coord.y;
+            }
+            if (in_geom_tilt_angle_x != 0)
+            {
+                vec2 left_edge_curved_ctr_coord =  hrg_get_curved_video_uv_coords_and_tangent_matrix(vec2(0, 0.5),
+                                                                                                    eye_pos_local, 
+                                                                                                    output_pixel_size, 
+                                                                                                    output_aspect,
+                                                                                                    in_geom_mode, 
+                                                                                                    geom_radius_scaled,
+                                                                                                    in_geom_view_dist,
+                                                                                                    global_to_local, 
+                                                                                                    pixel_to_video_uv);
+                ctr_curved_coord.x = ctr_curved_coord.x - left_edge_curved_ctr_coord.x;
+            }
         }
 
         curved_coord = ctr_curved_coord + 0.5;

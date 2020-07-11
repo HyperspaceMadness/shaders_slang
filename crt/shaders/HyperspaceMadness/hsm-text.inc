@@ -278,7 +278,7 @@ float print_integer(float number, int zeros, vec2 uv)
     return result;
 }
 
-float DrawResolutions(vec2 uv, vec2 viewport_size, vec2 screen_size, vec2 core_size, vec2 core_sampling_res, vec2 int_mult)
+float DrawResolutions(vec2 uv, vec2 viewport_size, vec2 screen_size, vec2 original_size, vec2 cropped_original_size, vec2 sampling_res, vec2 int_mult)
 {
     float col = 0.0;
     
@@ -309,15 +309,15 @@ float DrawResolutions(vec2 uv, vec2 viewport_size, vec2 screen_size, vec2 core_s
     col += GetChar(ch_0, uv);
     col += GetChar(ch_dsh, uv);
     col += GetChar(ch_0, uv);
-    col += GetChar(ch_6, uv);
+    col += GetChar(ch_7, uv);
     col += GetChar(ch_dsh, uv);
     col += GetChar(ch_1, uv);
-    col += GetChar(ch_5, uv);
+    col += GetChar(ch_1, uv);
     col += GetChar(ch_dsh, uv);
     col += GetChar(ch_0, uv);
 
     //Viewport Resolution
-    printPos = vec2(2, 2.0 + STRHEIGHT(8));
+    printPos = vec2(2, 2.0 + STRHEIGHT(9));
     
     TEXT_MODE = NORMAL;  
 
@@ -344,7 +344,7 @@ float DrawResolutions(vec2 uv, vec2 viewport_size, vec2 screen_size, vec2 core_s
     col += print_integer(viewport_size.y,0, uv); 
 
     //Screen Resolution
-    printPos = vec2(2, 2.0 + STRHEIGHT(7));
+    printPos = vec2(2, 2.0 + STRHEIGHT(8));
 
     col += GetChar(ch_spc, uv);
     col += GetChar(ch_S, uv);
@@ -369,7 +369,7 @@ float DrawResolutions(vec2 uv, vec2 viewport_size, vec2 screen_size, vec2 core_s
     col += print_integer(screen_size.y,0, uv);
 
     //Core Resolution
-    printPos = vec2(2, 2.0 + STRHEIGHT(6));
+    printPos = vec2(2, 2.0 + STRHEIGHT(7));
     
     col += GetChar(ch_spc, uv);
     col += GetChar(ch_C, uv);
@@ -388,11 +388,38 @@ float DrawResolutions(vec2 uv, vec2 viewport_size, vec2 screen_size, vec2 core_s
     col += GetChar(ch_dsh, uv);
 
     col += GetChar(ch_spc, uv);
-    col += print_integer(core_size.x,0, uv);
+    col += print_integer(original_size.x,0, uv);
     col += GetChar(ch_spc, uv);
     col += GetChar(ch_x, uv);
     col += GetChar(ch_spc, uv);
-    col += print_integer(core_size.y,0, uv);
+    col += print_integer(original_size.y,0, uv);
+
+    //Core Resolution Cropped
+    printPos = vec2(2, 2.0 + STRHEIGHT(6));
+    
+    col += GetChar(ch_spc, uv);
+    col += GetChar(ch_C, uv);
+    col += GetChar(ch_o, uv);
+    col += GetChar(ch_r, uv);
+    col += GetChar(ch_e, uv);
+    col += GetChar(ch_spc, uv);
+    col += GetChar(ch_C, uv);
+    col += GetChar(ch_r, uv);
+    col += GetChar(ch_o, uv);
+    col += GetChar(ch_p, uv);
+    col += GetChar(ch_p, uv);
+    col += GetChar(ch_e, uv);
+    col += GetChar(ch_d, uv);
+    col += GetChar(ch_dsh, uv);
+    col += GetChar(ch_dsh, uv);
+
+    col += GetChar(ch_spc, uv);
+    col += print_integer(cropped_original_size.x,0, uv);
+    col += GetChar(ch_spc, uv);
+    col += GetChar(ch_x, uv);
+    col += GetChar(ch_spc, uv);
+    col += print_integer(cropped_original_size.y,0, uv);
+
 
     //Sampling Resolution
     printPos = vec2(2, 2.0 + STRHEIGHT(5));
@@ -414,11 +441,11 @@ float DrawResolutions(vec2 uv, vec2 viewport_size, vec2 screen_size, vec2 core_s
     col += GetChar(ch_dsh, uv);
 
     col += GetChar(ch_spc, uv);
-    col += print_integer(core_sampling_res.x,0, uv);
+    col += print_integer(sampling_res.x,0, uv);
     col += GetChar(ch_spc, uv);
     col += GetChar(ch_x, uv);
     col += GetChar(ch_spc, uv);
-    col += print_integer(core_sampling_res.y,0, uv);
+    col += print_integer(sampling_res.y,0, uv);
 
     //Int Scale Horizontal
     printPos = vec2(2, 2.0 + STRHEIGHT(4));
@@ -512,7 +539,7 @@ float DrawResolutions(vec2 uv, vec2 viewport_size, vec2 screen_size, vec2 core_s
 }
 
 // Returns a 
-float GetTextMask(vec2 in_coord, vec2 viewport_size, vec2 screen_size, vec2 core_size, vec2 core_sampling_res, vec2 int_mult, vec2 canvas_size)
+float GetTextMask(vec2 in_coord, vec2 viewport_size, vec2 screen_size, vec2 original_size, vec2 cropped_original_size, vec2 sampling_res, vec2 int_mult, vec2 canvas_size)
 {
     in_coord = (in_coord - 0.5) * vec2(1, -1) + 0.5;
     float downscale = 1;
@@ -523,7 +550,7 @@ float GetTextMask(vec2 in_coord, vec2 viewport_size, vec2 screen_size, vec2 core
     vec2 uv = global.OutputSize.xy * in_coord;
 	vec2 downscaled_uv = floor(global.OutputSize.xy * in_coord / downscale);
     
-	float pixel = DrawResolutions(downscaled_uv, viewport_size, screen_size, core_size, core_sampling_res, int_mult);
+	float pixel = DrawResolutions(downscaled_uv, viewport_size, screen_size, original_size, cropped_original_size, sampling_res, int_mult);
     
     vec3 col = vec3(1);
     pixel *= (1 - distance(mod(uv, vec2(1.0)), vec2(0.65))) * 1.2;

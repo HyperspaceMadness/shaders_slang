@@ -124,7 +124,7 @@ void main()
     //scanline_texture_size_inv = scanline_texture_size_inv;
 
     // HSM Added
-    CROPPED_ORIGINAL_SIZE = HSS_GetCroppedOriginalSizeWithCoreResMult();
+    CROPPED_ORIGINAL_SIZE = HSS_GetCroppedRotatedOriginalSizeWithCoreResMult();
 	SCREEN_ASPECT = HSS_GetScreenAspect();
 	SCREEN_SCALE = HSS_GetScreenScale(SCREEN_ASPECT);
 	// SCREEN_COORD = HSS_GetScreenVTexCoord(vTexCoord, SCREEN_SCALE);

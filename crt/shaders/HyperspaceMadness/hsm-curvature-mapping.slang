@@ -1,3 +1,3 @@
 #version 450
 
-#include "hsm-curvature-mapping-include.inc"
+#include "hsm-curvature-mapping.inc"

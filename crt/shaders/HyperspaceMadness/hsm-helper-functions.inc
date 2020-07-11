@@ -1,5 +1,4 @@
 /*   
-hsm-mega-screen-scale
 
 Author: HyperspaceMadness - remimcgill@hotmail.com
 License: GPL
@@ -21,7 +20,8 @@ float HHLP_GetMaskCenteredOnValue(float in_value, float value_to_match, float th
 
 // Quadratic Bezier allows us to have a controlled falloff between 0 and 1 
 // One use is to avoid the perception of discontinuity at the outer edge experienced with a linear gradients
-float HHLP_QuadraticBezier (float x, vec2 a){
+float HHLP_QuadraticBezier (float x, vec2 a)
+{
   // Originally adapted by @kyndinfo from BEZMATH.PS (1993) by Don Lancaster
   // http://www.tinaja.com/text/bezmath.html
   
@@ -39,17 +39,20 @@ float HHLP_QuadraticBezier (float x, vec2 a){
   return y;
 }
 
-float HHLP_EasePowerIn(float x, float in_exponent) {
+float HHLP_EasePowerIn(float x, float in_exponent) 
+{
   x = max(0, min(x, 1));
   return pow(x, in_exponent);
 }
 
-float HHLP_EasePowerOut(float x, float in_exponent) {
+float HHLP_EasePowerOut(float x, float in_exponent) 
+{
   x = 1.0 - max(0, min(x, 1));
   return 1.0 - pow(x, in_exponent);
 }
 
-float HHLP_EasePowerInOut(float x, float in_exponent) {
+float HHLP_EasePowerInOut(float x, float in_exponent) 
+{
   x = max(0, min(x, 1));
   if (x < 0.5) 
   {
@@ -61,10 +64,31 @@ float HHLP_EasePowerInOut(float x, float in_exponent) {
   }
 }
 
-float HHLP_GetDistanceToLine(float x1, float y1, float a, float b, float c) 
+float HHLP_GetDistanceToLine(float x1, float y1, float a, float b, float c)
 {
     float d = abs((a * x1 + b * y1 + c)) /  
               (sqrt(a * a + b * b));
     return d; 
+}
+
+// Returns 1 if in_value < compare_value
+// Useful when ifs are bad for performance
+float HHLP_IsUnderValue(float in_value, float compare_value)
+{
+	return clamp((compare_value - in_value) * 100000, 0, 1);
+}
+
+// Returns 1 if in_value > compare_value
+// Useful when ifs are bad for performance
+float HHLP_IsOverValue(float in_value, float compare_value)
+{
+	return clamp(-1 * (compare_value - in_value) * 100000, 0, 1);
+}
+
+// Returns 1 if in_value == compare_value within the epsilon value provided
+// Useful when ifs are bad for performance
+float HHLP_EqualsValue(float in_value, float compare_value, float epsilon)
+{
+	return HHLP_IsUnderValue(in_value, compare_value + epsilon) * HHLP_IsOverValue(in_value, compare_value - epsilon);
 }
 

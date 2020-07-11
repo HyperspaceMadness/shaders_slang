@@ -2,9 +2,6 @@
 
 // license:BSD-3-Clause
 // copyright-holders:Ryan Holtz,ImJezze
-//-----------------------------------------------------------------------------
-// Shadowmask Effect
-//-----------------------------------------------------------------------------
 
 layout(push_constant) uniform Push
 {
@@ -12,41 +9,25 @@ layout(push_constant) uniform Push
 	vec4 OriginalSize;
 	vec4 OutputSize;
 	uint FrameCount;
+   vec4 FinalViewportSize;
 } params;
 
 #include "mame_parameters.inc"
 
-#define TargetDims params.OutputSize.xy
-#define SourceDims params.OriginalSize.xy
-float TargetScale = 1.0;//max(TargetDims.x / SourceDims.x, TargetDims.y / SourceDims.y);
-
-float HumBarAlpha = global.humbaralpha;
-float TimeMilliseconds = float(mod(params.FrameCount, 1000));
-vec3 BackColor = vec3(global.backcolor_r, global.backcolor_g, global.backcolor_b);
-int ShadowTileMode = int(global.shadowtilemode); // 0 based on screen (quad) dimension, 1 based on source dimension
-float ShadowAlpha = global.shadowalpha;
-vec2 ShadowCount = vec2(global.shadowcount_x, global.shadowcount_y);
-vec2 ShadowUV = vec2(global.shadowuv_x, global.shadowuv_y);
-vec2 ShadowDims = vec2(global.mask_width, global.mask_height);
-vec2 ShadowUVOffset = vec2(global.mask_offset_x, global.mask_offset_y);
-int ChromaMode = int(global.chromamode);
-vec3 ConversionGain = vec3(global.conversiongain_x, global.conversiongain_y, global.conversiongain_z);
-vec3 Power = vec3(global.power_r, global.power_g, global.power_b);
-vec3 Floor = vec3(global.floor_r, global.floor_g, global.floor_b);
-bool PrepareBloom = bool(global.preparebloom);
-
-#define MONOCHROME 1
-#define DICHROME 2
-#define TRICHROME 3
+vec4 u_shadow_tile_mode = vec4(global.shadowtilemode);
+vec4 u_shadow_alpha = vec4(global.shadowalpha);
+vec4 u_shadow_count = vec4(global.shadowcount_x, global.shadowcount_y, 0., 0.);
+vec4 u_shadow_uv = vec4(global.shadowuv_x, global.shadowuv_y, 0., 0.);
+vec4 u_shadow_uv_offset = vec4(global.mask_offset_x, global.mask_offset_y, 0., 0.);
+vec4 u_humbar_hertz_rate = vec4(global.humbar_hertz_rate);
+// ^^difference between the 59.94 Hz field rate and 60 Hz line frequency (NTSC)
+vec4 u_humbar_alpha = vec4(global.humbaralpha);
+vec4 u_power = vec4(global.power_r, global.power_g, global.power_b, 0.);
+vec4 u_floor = vec4(global.floor_r, global.floor_g, global.floor_b, 0.);
 
 //-----------------------------------------------------------------------------
-// Constants
+// Shadowmask Pixel Shader
 //-----------------------------------------------------------------------------
-
-const float PI = 3.1415927;
-const float HalfPI = PI * 0.5;
-
-float HumBarDesync = 60.0 / 59.94 - 1.0; // difference between the 59.94 Hz field rate and 60 Hz line frequency (NTSC)
 
 vec2 GetAdjustedCoords(vec2 coord)
 {
@@ -54,43 +35,42 @@ vec2 GetAdjustedCoords(vec2 coord)
 	coord -= 0.5;
 
 	// apply screen scale
-	coord *= ScreenScale;
+	coord *= u_screen_scale.xy;
 
 	// un-center coordinates
 	coord += 0.5;
 
 	// apply screen offset
-	coord += ScreenOffset;
+	coord += u_screen_offset.xy;
 
 	return coord;
 }
 
 vec2 GetShadowCoord(vec2 TargetCoord, vec2 SourceCoord)
 {
-	// base-target dimensions (without oversampling)
-	vec2 BaseTargetDims = TargetDims / TargetScale;
-	BaseTargetDims = SwapXY
+	// base-target dimensions (remove oversampling)
+	vec2 BaseTargetDims = u_target_dims.xy / u_target_scale.xy;
+	BaseTargetDims = u_swap_xy.x > 0.0
 		? BaseTargetDims.yx
 		: BaseTargetDims.xy;
 
-	vec2 canvasCoord = ShadowTileMode == 0
-		? TargetCoord + ShadowUVOffset / BaseTargetDims
-		: SourceCoord + ShadowUVOffset / SourceDims;
-	vec2 canvasTexelDims = ShadowTileMode == 0
-		? 1.0 / BaseTargetDims
-		: 1.0 / SourceDims;
+	vec2 canvasCoord = u_shadow_tile_mode.x == 0.0
+		? TargetCoord + u_shadow_uv_offset.xy / BaseTargetDims
+		: SourceCoord + u_shadow_uv_offset.xy / u_source_dims.xy;
+	vec2 canvasTexelDims = u_shadow_tile_mode.x == 0.0
+		? vec2(1.0, 1.0) / BaseTargetDims
+		: vec2(1.0, 1.0) / u_source_dims.xy;
 
-	vec2 shadowDims = ShadowDims;
-	vec2 shadowUV = ShadowUV;
-	vec2 shadowCount = ShadowCount;
+	vec2 shadowUV = u_shadow_uv.xy;
+	vec2 shadowCount = u_shadow_count.xy;
 
 	// swap x/y in screen mode (not source mode)
-	canvasCoord = ShadowTileMode == 0 && SwapXY
+	canvasCoord = u_shadow_tile_mode.x == 0.0 && u_swap_xy.x > 0.0
 		? canvasCoord.yx
 		: canvasCoord.xy;
 
 	// swap x/y in screen mode (not source mode)
-	shadowCount = ShadowTileMode == 0 && SwapXY
+	shadowCount = u_shadow_tile_mode.x == 0.0 && u_swap_xy.x > 0.0
 		? shadowCount.yx
 		: shadowCount.xy;
 
@@ -99,14 +79,11 @@ vec2 GetShadowCoord(vec2 TargetCoord, vec2 SourceCoord)
 	vec2 shadowFrac = fract(canvasCoord / shadowTile);
 
 	// swap x/y in screen mode (not source mode)
-	shadowFrac = ShadowTileMode == 0 && SwapXY
+	shadowFrac = u_shadow_tile_mode.x == 0.0 && u_swap_xy.x > 0.0
 		? shadowFrac.yx
 		: shadowFrac.xy;
 
 	vec2 shadowCoord = (shadowFrac * shadowUV);
-	shadowCoord += ShadowTileMode == 0
-		? vec2(0.5) * (vec2(1.0) / shadowDims) // fix half texel offset (DX9)
-		: vec2(0.0);
 
 	return shadowCoord;
 }
@@ -114,84 +91,74 @@ vec2 GetShadowCoord(vec2 TargetCoord, vec2 SourceCoord)
 #pragma stage vertex
 layout(location = 0) in vec4 Position;
 layout(location = 1) in vec2 TexCoord;
-layout(location = 0) out vec2 vTexCoord;
+layout(location = 0) out vec2 v_texcoord0;
 
 void main()
 {
    gl_Position = global.MVP * Position;
-   vTexCoord = TexCoord;
+   v_texcoord0 = TexCoord;
 }
 
 #pragma stage fragment
-layout(location = 0) in vec2 vTexCoord;
+layout(location = 0) in vec2 v_texcoord0;
 layout(location = 0) out vec4 FragColor;
 layout(set = 0, binding = 2) uniform sampler2D Source;
 layout(set = 0, binding = 3) uniform sampler2D MaskTexture;
 
-#define DiffuseSampler Source
-#define ShadowSampler MaskTexture
+#define s_tex Source
+#define s_shadow MaskTexture
 //#define ScreenCoord vTexCoord
+#define v_color0 vec4(1.,1.,1.,1.)
 
 void main()
 {
-	vec2 ScreenCoord = vTexCoord;
-	vec2 BaseCoord = GetAdjustedCoords(ScreenCoord);
+	vec2 BaseCoord = GetAdjustedCoords(v_texcoord0);
 
 	// Color
-	vec4 BaseColor = texture(DiffuseSampler, BaseCoord);
-	BaseColor.a = 1.0;
-/*
-	// clip border
-	if (BaseCoord.x < 0.0 || BaseCoord.y < 0.0 ||
-		BaseCoord.x > 1.0 || BaseCoord.y > 1.0)
+	vec4 BaseColor = texture(s_tex, BaseCoord);
+
+	// Clamp
+	if (BaseCoord.x < 0.0 || BaseCoord.y < 0.0 || BaseCoord.x > 1.0 || BaseCoord.y > 1.0)
 	{
-		// we don't use the clip function, because we don't clear the render target before
-		return vec4(0.0, 0.0, 0.0, 1.0);
+		FragColor = vec4(0.0, 0.0, 0.0, 0.0);
 	}
-*/
-	// Color Compression (may not affect bloom)
-	if (!PrepareBloom)
+	else
 	{
+		// Mask Simulation
+		if (u_shadow_alpha.x > 0.0)
+		{
+			vec2 ShadowCoord = GetShadowCoord(v_texcoord0.xy, BaseCoord.xy);
+
+			vec4 ShadowColor = texture(s_shadow, ShadowCoord);
+			vec3 ShadowMaskColor = mix(vec3(1.0, 1.0, 1.0), ShadowColor.rgb, u_shadow_alpha.xxx);
+
+			// apply shadow mask color
+			BaseColor.rgb *= ShadowMaskColor;
+
+			// // TODO
+			// vec3 ShadowMaskClear = (1.0f - ShadowColor.a) * u_shadow_alpha.xxx;
+
+			// // clear shadow mask by background color
+			// BaseColor.rgb = mix(BaseColor.rgb, u_back_color.rgb, ShadowMaskClear);
+		}
+
+		// Color Compression
 		// increasing the floor of the signal without affecting the ceiling
-		BaseColor.rgb = Floor + (1.0f - Floor) * BaseColor.rgb;
+		BaseColor.rgb = u_floor.rgb + (vec3(1.0, 1.0, 1.0) - u_floor.rgb) * BaseColor.rgb;
+
+		// Color Power
+		BaseColor.r = pow(BaseColor.r, u_power.r);
+		BaseColor.g = pow(BaseColor.g, u_power.g);
+		BaseColor.b = pow(BaseColor.b, u_power.b);
+
+		// Hum Bar Simulation
+		if (u_humbar_alpha.x > 0.0f)
+		{
+			float HumTimeStep = fract(u_time.x * u_humbar_hertz_rate.x);
+			float HumBrightness = 1.0 - fract(BaseCoord.y + HumTimeStep) * u_humbar_alpha.x;
+			BaseColor.rgb *= HumBrightness;
+		}
+
+		FragColor = vec4(BaseColor.rgb * v_color0.rgb, BaseColor.a);
 	}
-
-	// Color Power (may affect bloom)
-	BaseColor.r = pow(BaseColor.r, Power.r);
-	BaseColor.g = pow(BaseColor.g, Power.g);
-	BaseColor.b = pow(BaseColor.b, Power.b);
-
-	// Hum Bar Simulation (may not affect vector screen)
-	if (!PrepareBloom && !VectorScreen && HumBarAlpha > 0.0)
-	{
-		float HumBarStep = fract(TimeMilliseconds * HumBarDesync);
-		float HumBarBrightness = 1.0 - fract(BaseCoord.y + HumBarStep) * HumBarAlpha;
-		BaseColor.rgb *= HumBarBrightness;
-	}
-
-	// Mask Simulation (may not affect bloom)
-	if (!PrepareBloom && ShadowAlpha > 0.0)
-	{
-		vec2 ShadowCoord = GetShadowCoord(ScreenCoord, BaseCoord);
-
-		vec4 ShadowColor = texture(ShadowSampler, ShadowCoord);
-		vec3 ShadowMaskColor = mix(vec3(1.0), ShadowColor.rgb, ShadowAlpha);
-		float ShadowMaskClear = (1.0 - ShadowColor.a) * ShadowAlpha;
-
-		// apply shadow mask color
-		BaseColor.rgb *= ShadowMaskColor;
-		// clear shadow mask by background color
-		BaseColor.rgb = mix(BaseColor.rgb, BackColor, ShadowMaskClear);
-	}
-
-	// Preparation for phosphor color conversion
-	if (ChromaMode == MONOCHROME) {
-		BaseColor.r = dot(ConversionGain, BaseColor.rgb);
-		BaseColor.gb = vec2(BaseColor.r, BaseColor.r);
-	} else if (ChromaMode == DICHROME) {
-		BaseColor.r = dot(ConversionGain.rg, BaseColor.rg);
-		BaseColor.g = BaseColor.r;
-	}
-
-   FragColor = BaseColor;
 }

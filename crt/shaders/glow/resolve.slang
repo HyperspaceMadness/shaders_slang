@@ -8,20 +8,27 @@ layout(push_constant) uniform Push
    float BLOOM_STRENGTH;
    float OUTPUT_GAMMA;
    float CURVATURE;
-   float moire_mitigation;
    float warpX;
    float warpY;
    float shadowMask;
    float maskDark;
    float maskLight;
+   float cornersize;
+   float cornersmooth;
+   float noise_amt;
 } params;
  
 #pragma parameter BLOOM_STRENGTH "Glow Strength" 0.45 0.0 0.8 0.05
 #pragma parameter OUTPUT_GAMMA "Monitor Gamma" 2.2 1.8 2.6 0.02
 #pragma parameter CURVATURE "Curvature" 0.0 0.0 1.0 1.0
-#pragma parameter moire_mitigation "Moire:Noise Tradeoff" 4.0 1.0 10.0 1.0
 #pragma parameter warpX "Curvature X-Axis" 0.031 0.0 0.125 0.01
 #pragma parameter warpY "Curvature Y-Axis" 0.041 0.0 0.125 0.01
+vec2 Distortion = vec2(params.warpX, params.warpY) * 15.;
+#pragma parameter cornersize "Corner Size" 0.01 0.001 1.0 0.005
+#define cornersize params.cornersize
+#pragma parameter cornersmooth "Corner Smoothness" 1000.0 80.0 2000.0 100.0
+#define cornersmooth params.cornersmooth
+#pragma parameter noise_amt "Noise Amount" 1.0 0.0 5.0 0.25
 #pragma parameter shadowMask "Mask Effect" 0.0 0.0 4.0 1.0
 #pragma parameter maskDark "maskDark" 0.5 0.0 2.0 0.1
 #pragma parameter maskLight "maskLight" 1.5 0.0 2.0 0.1
@@ -69,166 +76,49 @@ vec4 Srgb(vec4 c){return pow(c, vec4(1.0 / 2.2));}
 //float Linear(float c){return(c<=0.04045)?c/12.92:pow((c+0.055)/1.055,2.4);}
 float Linear(float c){return pow(c, 2.2);}
  
-//
-// Semi-Poor Quality Temporal Noise
-//
- 
-// Base.
-// Ripped ad modified from: https://www.shadertoy.com/view/4djSRW
-float Noise(vec2 p,float x){p+=x;
- vec3 p3=fract(vec3(p.xyx)*10.1031);
- p3+=dot(p3,p3.yzx+19.19);
- return (fract((p3.x+p3.y)*p3.z)*2.0-1.0) / pow(2.0, 11.0 - params.moire_mitigation);}
- 
-// Step 1 in generation of the dither source texture.
-float Noise1(vec2 uv,float n){
- float a=1.0,b=2.0,c=-12.0,t=1.0;  
- return (1.0/max(a*4.0+b*4.0,-c))*(
-  Noise(uv+vec2(-1.0,-1.0)*t,n)*a+
-  Noise(uv+vec2( 0.0,-1.0)*t,n)*b+
-  Noise(uv+vec2( 1.0,-1.0)*t,n)*a+
-  Noise(uv+vec2(-1.0, 0.0)*t,n)*b+
-  Noise(uv+vec2( 0.0, 0.0)*t,n)*c+
-  Noise(uv+vec2( 1.0, 0.0)*t,n)*b+
-  Noise(uv+vec2(-1.0, 1.0)*t,n)*a+
-  Noise(uv+vec2( 0.0, 1.0)*t,n)*b+
-  Noise(uv+vec2( 1.0, 1.0)*t,n)*a+
- 0.0);}
-   
-// Step 2 in generation of the dither source texture.
-float Noise2(vec2 uv,float n){
- float a=1.0,b=2.0,c=-2.0,t=1.0;  
- return (1.0/(a*4.0+b*4.0))*(
-  Noise1(uv+vec2(-1.0,-1.0)*t,n)*a+
-  Noise1(uv+vec2( 0.0,-1.0)*t,n)*b+
-  Noise1(uv+vec2( 1.0,-1.0)*t,n)*a+
-  Noise1(uv+vec2(-1.0, 0.0)*t,n)*b+
-  Noise1(uv+vec2( 0.0, 0.0)*t,n)*c+
-  Noise1(uv+vec2( 1.0, 0.0)*t,n)*b+
-  Noise1(uv+vec2(-1.0, 1.0)*t,n)*a+
-  Noise1(uv+vec2( 0.0, 1.0)*t,n)*b+
-  Noise1(uv+vec2( 1.0, 1.0)*t,n)*a+
- 0.0);}
- 
-// Compute temporal dither from integer pixel position uv.
-float Noise3(vec2 uv){return Noise2(uv,fract(iTime));}    
- 
-// Energy preserving dither, for {int pixel pos,color,amount}.
-vec2 Noise4(vec2 uv,vec2 c,float a){
- // Grain value {-1 to 1}.
- vec2 g=vec2(Noise3(uv)*2.0);
- // Step size for black in non-linear space.
- float rcpStep=1.0/(256.0-1.0);
- // Estimate amount negative which still quantizes to zero.
- vec2 black=vec2(0.5*Linear(rcpStep));
- // Estimate amount above 1.0 which still quantizes to 1.0.
- vec2 white=vec2(2.0-Linear(1.0-rcpStep));
- // Add grain.
- return vec2(clamp(c+g*min(c+black,min(white-c,a)),0.0,1.0));}
- 
-//
-// Pattern
-//
- 
-// 4xMSAA pattern for quad given integer coordinates.
-//
-//  . x . . | < pixel
-//  . . . x |
-//  x . . .
-//  . . x .
-//
-//  01
-//  23
-//
-vec2 Quad4(vec2 pp){
- int q=(int(pp.x)&1)+((int(pp.y)&1)<<1);
- if(q==0)return pp+vec2( 0.25,-0.25);
- if(q==1)return pp+vec2( 0.25, 0.25);
- if(q==2)return pp+vec2(-0.25,-0.25);
-         return pp+vec2(-0.25, 0.25);}
- 
-// Rotate {0.0,r} by a {-1.0 to 1.0}.
-vec2 Rot(float r,float a){return vec2(r*cos(a*3.14159),r*sin(a*3.14159));}
- 
-//
-// POOR QUALITY JITTERED
-//
- 
-// Jittered position.
-vec2 Jit(vec2 pp){
- // Start with better baseline pattern.
- pp=Quad4(pp);
- // Very poor quality (clumping) move in disc around pixel.
- float n=Noise(pp,fract(iTime));    
- float m=Noise(pp,fract(iTime*0.333))*0.5+0.5;
- m = sqrt(m) / 4.0;
- return pp+Rot(0.707*0.5*m,n);}
- 
-//
-// POOR QUALITY JITTERED 4x
-//
- 
-// Gaussian filtered jittered tap.
-void JitGaus4(inout vec2 sumC,inout vec2 sumW,vec2 pp,vec2 mm){
- vec2 jj=Jit(pp);
- vec2 c=jj;
- vec2 vv=mm-jj;
- float w=exp2(-1.0*dot(vv,vv));    
- sumC+=c*vec2(w); sumW+=vec2(w);}  
- 
-// Many tap gaussian from poor quality jittered 4/sample per pixel
-//
-//  . x x x .
-//  x x x x x
-//  x x x x x
-//  x x x x x
-//  . x x x .
-//
-vec2 ResolveJitGaus4(vec2 pp){
- vec2 ppp=(pp);
- vec2 sumC=vec2(0.0);
- vec2 sumW=vec2(0.0);
- JitGaus4(sumC,sumW,ppp+vec2(-1.0,-2.0),pp);
- JitGaus4(sumC,sumW,ppp+vec2( 0.0,-2.0),pp);
- JitGaus4(sumC,sumW,ppp+vec2( 1.0,-2.0),pp);
- JitGaus4(sumC,sumW,ppp+vec2(-2.0,-1.0),pp);
- JitGaus4(sumC,sumW,ppp+vec2(-1.0,-1.0),pp);
- JitGaus4(sumC,sumW,ppp+vec2( 0.0,-1.0),pp);
- JitGaus4(sumC,sumW,ppp+vec2( 1.0,-1.0),pp);
- JitGaus4(sumC,sumW,ppp+vec2( 2.0,-1.0),pp);
- JitGaus4(sumC,sumW,ppp+vec2(-2.0, 0.0),pp);
- JitGaus4(sumC,sumW,ppp+vec2(-1.0, 0.0),pp);
- JitGaus4(sumC,sumW,ppp+vec2( 0.0, 0.0),pp);
- JitGaus4(sumC,sumW,ppp+vec2( 1.0, 0.0),pp);
- JitGaus4(sumC,sumW,ppp+vec2( 2.0, 0.0),pp);
- JitGaus4(sumC,sumW,ppp+vec2(-2.0, 1.0),pp);
- JitGaus4(sumC,sumW,ppp+vec2(-1.0, 1.0),pp);
- JitGaus4(sumC,sumW,ppp+vec2( 0.0, 1.0),pp);
- JitGaus4(sumC,sumW,ppp+vec2( 1.0, 1.0),pp);
- JitGaus4(sumC,sumW,ppp+vec2( 2.0, 1.0),pp);
- JitGaus4(sumC,sumW,ppp+vec2(-1.0, 2.0),pp);
- JitGaus4(sumC,sumW,ppp+vec2( 0.0, 2.0),pp);
- JitGaus4(sumC,sumW,ppp+vec2( 1.0, 2.0),pp);
- return sumC/sumW;}
- 
-vec2 moire_resolve(vec2 coord){
-   vec2 pp = coord;
-   vec2 cc = vec2(0.0, 0.0);
-   
-   cc = ResolveJitGaus4(pp);
-   cc = Noise4(pp, cc, 1.0 / 32.0);
-   cc = (params.CURVATURE < 0.5) ? pp : cc + vec2(0.0105, 0.015);
-   
-   return cc;
+float rand(vec2 n) { 
+	return fract(sin(dot(n, vec2(12.9898, 4.1414))) * 43758.5453);
 }
- 
-// Distortion of scanlines, and end of screen alpha.
-vec2 Warp(vec2 pos)
+
+float noise(vec2 p){
+	vec2 ip = floor(p);
+	vec2 u = fract(p);
+	u = u*u*(3.0-2.0*u);
+	
+	float res = mix(
+		mix(rand(ip),rand(ip+vec2(1.0,0.0)),u.x),
+		mix(rand(ip+vec2(0.0,1.0)),rand(ip+vec2(1.0,1.0)),u.x),u.y);
+	return res*res;
+}
+
+const vec2 corner_aspect   = vec2(1.0,  0.75);
+
+float corner(vec2 coord)
 {
-    pos  = pos*2.0-1.0;    
-    pos *= vec2(1.0 + (pos.y*pos.y)*params.warpX, 1.0 + (pos.x*pos.x)*params.warpY);
-   
-    return pos*0.5 + 0.5;
+    coord = (coord - vec2(0.5)) + vec2(0.5, 0.5);
+    coord = min(coord, vec2(1.0) - coord) * corner_aspect;
+    vec2 cdist = vec2(cornersize);
+    coord = (cdist - min(coord, cdist));
+    float dist = sqrt(dot(coord, coord));
+    
+    return clamp((cdist.x - dist)*cornersmooth, 0.0, 1.0);
+}
+
+vec2 Warp(vec2 texCoord){
+  float offset_x = noise(sin(gl_FragCoord.xy) * float(mod(global.FrameCount, 361.)));
+  float offset_y = noise(cos(gl_FragCoord.yx) * float(mod(global.FrameCount, 873.)));
+  vec2 noisecoord = texCoord + vec2(offset_x, offset_y) * 0.001 * params.noise_amt;
+  vec2 curvedCoords = noisecoord * 2.0 - 1.0;
+  float curvedCoordsDistance = sqrt(curvedCoords.x*curvedCoords.x+curvedCoords.y*curvedCoords.y);
+
+  curvedCoords = curvedCoords / curvedCoordsDistance;
+
+  curvedCoords = curvedCoords * (1.0-pow(vec2(1.0-(curvedCoordsDistance/1.4142135623730950488016887242097)),(1.0/(1.0+Distortion*0.2))));
+
+  curvedCoords = curvedCoords / (1.0-pow(vec2(0.29289321881345247559915563789515),(1.0/(vec2(1.0)+Distortion*0.2))));
+
+  curvedCoords = curvedCoords * 0.5 + 0.5;
+  return curvedCoords;
 }
  
 // Shadow mask.
@@ -291,7 +181,7 @@ vec3 Mask(vec2 pos)
  
 void main()
 {
-   vec2 pp = moire_resolve(vTexCoord.xy);
+   vec2 pp = vTexCoord.xy;
    pp = (params.CURVATURE > 0.5) ? Warp(pp) : pp;
    
 #if BLOOM_ONLY
@@ -304,10 +194,11 @@ void main()
 #endif
     FragColor = vec4(pow(clamp(source, 0.0, 1.0), vec3(1.0 / params.OUTPUT_GAMMA)), 1.0);
      /* TODO/FIXME - hacky clamp fix */
-    if ( pp.x > 0.0106 && pp.x < 0.9999 && pp.y > 0.016 && pp.y < 0.9999)
+    if ( pp.x > 0.0001 && pp.x < 0.9999 && pp.y > 0.0001 && pp.y < 0.9999)
         FragColor.rgb = FragColor.rgb;
     else
 FragColor.rgb = vec3(0.0);
+FragColor.rgb *= (params.CURVATURE > 0.5) ? corner(pp) : 1.0;
 if (params.shadowMask > 0.0)
         FragColor.rgb = pow(pow(FragColor.rgb, vec3(2.2)) * Mask(vTexCoord.xy * global.OutputSize.xy * 1.000001), vec3(1.0 / 2.2));
 }

@@ -2,9 +2,6 @@
 
 layout(push_constant) uniform Push
 {
-	vec4 OutputSize;
-	vec4 OriginalSize;
-	vec4 SourceSize;
 	uint FrameCount;
 	float CRTgamma;
 	float monitorgamma;
@@ -22,12 +19,14 @@ layout(push_constant) uniform Push
 	float CURVATURE;
 	float interlace_detect;
    float lum;
+   float xsize, ysize;
 } registers;
 
 layout(std140, set = 0, binding = 0) uniform UBO
 {
     mat4 MVP;
 	vec4 OutputSize;
+	vec4 SourceSize;
 } global;
 
 #pragma parameter CRTgamma "CRTGeom Target Gamma" 2.4 0.1 5.0 0.1
@@ -46,6 +45,13 @@ layout(std140, set = 0, binding = 0) uniform UBO
 #pragma parameter scanline_weight "CRTGeom Scanline Weight" 0.3 0.1 0.5 0.05
 #pragma parameter lum "CRTGeom Luminance" 0.0 0.0 1.0 0.01
 #pragma parameter interlace_detect "CRTGeom Interlacing Simulation" 1.0 0.0 1.0 1.0
+
+#pragma parameter xsize "Simulated Width (0==Auto)" 0.0 0.0 1920.0 16.0
+#pragma parameter ysize "Simulated Height (0==Auto)" 0.0 0.0 1080.0 16.0
+
+vec2 height = (registers.ysize > 0.001) ? vec2(registers.ysize, 1./registers.ysize) : global.SourceSize.yw;
+vec2 width = (registers.xsize > 0.001) ? vec2(registers.xsize, 1./registers.xsize) : global.SourceSize.xz;
+vec4 SourceSize = vec4(width.x, height.x, width.y, height.y);
 
 /*
     CRT-interlaced
@@ -166,15 +172,15 @@ void main()
     sinangle    = sin(vec2(registers.x_tilt, registers.y_tilt));
     cosangle    = cos(vec2(registers.x_tilt, registers.y_tilt));
     stretch     = maxscale();
-    TextureSize = vec2(registers.SHARPER * registers.SourceSize.x, registers.SourceSize.y);
+    TextureSize = vec2(registers.SHARPER * SourceSize.x, SourceSize.y);
     
-    ilfac = vec2(1.0, clamp(floor(registers.SourceSize.y/200.0),  1.0, 2.0));
+    ilfac = vec2(1.0, clamp(floor(SourceSize.y/200.0),  1.0, 2.0));
 
     // The size of one texel, in texture-coordinates.
     one = ilfac / TextureSize;
 
     // Resulting X pixel-coordinate of the pixel we're drawing.
-    mod_factor = vTexCoord.x * registers.SourceSize.x * registers.OutputSize.x / registers.SourceSize.x;
+    mod_factor = vTexCoord.x * SourceSize.x * global.OutputSize.x / SourceSize.x;
 }
 
 #pragma stage fragment
@@ -393,7 +399,7 @@ void main()
     vec3 dotMaskWeights = mix(
         vec3(1.0, 1.0 - registers.DOTMASK, 1.0),
         vec3(1.0 - registers.DOTMASK, 1.0, 1.0 - registers.DOTMASK),
-        floor(mod(mod_factor, 2.0))
+        floor(mod(gl_FragCoord.x, 2.0))
     );
       
     mul_res *= dotMaskWeights;

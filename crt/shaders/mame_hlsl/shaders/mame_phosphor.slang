@@ -12,45 +12,40 @@ layout(push_constant) uniform Push
 	vec4 OriginalSize;
 	vec4 OutputSize;
 	uint FrameCount;
+   vec4 FinalViewportSize;
 } params;
 
 #include "mame_parameters.inc"
 
-float DeltaTime = global.deltatime;
-vec3 Phosphor = vec3(global.phosphor_r, global.phosphor_g, global.phosphor_b);
-
-const float F = 1.0;
+vec4 u_passthrough = vec4(1.0 - global.phosphortoggle);
+vec4 u_phosphor = vec4(global.phosphor_r, global.phosphor_g, global.phosphor_b, 0.0);
 
 #pragma stage vertex
 layout(location = 0) in vec4 Position;
 layout(location = 1) in vec2 TexCoord;
-layout(location = 0) out vec2 vTexCoord;
+layout(location = 0) out vec2 v_texcoord0;
 
 void main()
 {
    gl_Position = global.MVP * Position;
-   vTexCoord = TexCoord;
+   v_texcoord0 = TexCoord;
 }
 
 #pragma stage fragment
-layout(location = 0) in vec2 vTexCoord;
+layout(location = 0) in vec2 v_texcoord0;
 layout(location = 0) out vec4 FragColor;
 layout(set = 0, binding = 2) uniform sampler2D Source;
-layout(set = 0, binding = 3) uniform sampler2D PassFeedback6;
+layout(set = 0, binding = 3) uniform sampler2D PassFeedback8;
 
-#define DiffuseSampler Source
-#define PreviousSampler PassFeedback6
+#define s_tex Source
+#define s_prev PassFeedback8
 
 void main()
 {
-	vec4 CurrY = texture(DiffuseSampler, vTexCoord);
-	vec3 PrevY = texture(PreviousSampler, vTexCoord).rgb;
+	vec4 curr = texture(s_tex, v_texcoord0);
+	vec3 prev = texture(s_prev, v_texcoord0).rgb * u_phosphor.rgb;
 
-	PrevY[0] *= (Phosphor[0] == 0.0) ? 0.0 : pow(Phosphor[0], F * DeltaTime);
-	PrevY[1] *= (Phosphor[1] == 0.0) ? 0.0 : pow(Phosphor[1], F * DeltaTime);
-	PrevY[2] *= (Phosphor[2] == 0.0) ? 0.0 : pow(Phosphor[2], F * DeltaTime);
-	float a = max(PrevY[0], CurrY[0]);
-	float b = max(PrevY[1], CurrY[1]);
-	float c = max(PrevY[2], CurrY[2]);
-   FragColor = Passthrough ? CurrY : vec4(a, b, c, CurrY.a);
+	vec3 maxed = max(curr.rgb, prev);
+
+	FragColor = u_passthrough.x > 0.0 ? curr : vec4(maxed, curr.a);
 }

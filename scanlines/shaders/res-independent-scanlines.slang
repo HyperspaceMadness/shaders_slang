@@ -1,9 +1,12 @@
 #version 450
 
 /*
-   based on scanline shader by:
-   Author: Themaister
-   License: Public domain
+    Resolution-Independent Scanlines
+    based on
+    Scanlines Sine Absolute Value
+    An ultra light scanline shader
+    by RiskyJumps
+	license: public domain
 */
 
 layout(push_constant) uniform Push
@@ -12,16 +15,25 @@ layout(push_constant) uniform Push
 	vec4 OriginalSize;
 	vec4 OutputSize;
 	uint FrameCount;
-   vec4 FinalViewportSize;
-	float SCANLINE_SINE_COMP_B;
-   float scanline_size;
+	float amp;
+	float phase;
+	float lines_black;
+	float lines_white;
+	float mask, mask_weight, imageSize;
 } params;
 
-#pragma parameter SCANLINE_SINE_COMP_B "Scanline Sine Comp B" 0.25 0.0 1.0 0.05
-#pragma parameter scanline_size "Scanline Scale" 4.0 2.0 10.0 0.5
+#pragma parameter amp          "Amplitude"      1.2500  0.000 2.000 0.05
+#pragma parameter phase        "Phase"          0.5000  0.000 2.000 0.05
+#pragma parameter lines_black  "Lines Blacks"   0.0000  0.000 1.000 0.05
+#pragma parameter lines_white  "Lines Whites"   1.0000  0.000 2.000 0.05
 
-#define SCANLINE_SINE_COMP_B params.SCANLINE_SINE_COMP_B
-#define scanline_size params.scanline_size
+#pragma parameter mask "Mask Layout" 0.0 0.0 19.0 1.0
+#pragma parameter mask_weight "Mask Weight" 0.5 0.0 1.0 0.01
+#pragma parameter imageSize "Simulated Image Height" 224.0 144.0 260.0 1.0
+
+#define freq             0.500000
+#define offset           0.000000
+#define pi               3.141592654
 
 layout(std140, set = 0, binding = 0) uniform UBO
 {
@@ -29,32 +41,45 @@ layout(std140, set = 0, binding = 0) uniform UBO
 } global;
 
 #define pi 3.141592654
+#include "../../include/subpixel_masks.h"
 
 #pragma stage vertex
 layout(location = 0) in vec4 Position;
 layout(location = 1) in vec2 TexCoord;
 layout(location = 0) out vec2 vTexCoord;
-layout(location = 1) out vec2 omega;
+layout(location = 1) out float omega;
 
 void main()
 {
    gl_Position = global.MVP * Position;
    vTexCoord = TexCoord;
    
-   omega = vec2(pi * params.OutputSize.x, 2.0 * pi * params.SourceSize.y);
+   omega = 2.0 * pi * freq;              // Angular frequency
 }
 
 #pragma stage fragment
 layout(location = 0) in vec2 vTexCoord;
-layout(location = 1) in vec2 omega;
+layout(location = 1) in float omega;
 layout(location = 0) out vec4 FragColor;
 layout(set = 0, binding = 2) uniform sampler2D Source;
 
 void main()
 {
-   vec2 sine_comp = vec2(0.0, SCANLINE_SINE_COMP_B);
-   vec3 res = texture(Source, vTexCoord).xyz;
-   vec2 fragcoord = fract(floor(vTexCoord.xy * params.OutputSize.xy * 1.0001) / scanline_size);
-   vec3 scanline = (fragcoord.y > 0.3333)? res : vec3(SCANLINE_SINE_COMP_B * res);//res * ((1. - 0.75 * SCANLINE_SINE_COMP_B) + dot(sine_comp * sin((fragcoord / scanline_size) * omega), vec2(1.0, 1.0)));
-   FragColor = vec4(scanline.x, scanline.y, scanline.z, 1.0);
+    float angle = (gl_FragCoord.y * params.OutputSize.w) * omega * params.imageSize + params.phase;
+    vec3 color = texture(Source, vTexCoord).xyz;
+    float grid;
+ 
+    float lines;
+ 
+    lines = sin(angle);
+    lines *= params.amp;
+    lines += offset;
+    lines = abs(lines);
+    lines *= params.lines_white - params.lines_black;
+    lines += params.lines_black;
+    color *= lines;
+ 
+    FragColor = vec4(color.xyz, 1.0);
+   FragColor.rgb *= mask_weights(gl_FragCoord.xy, params.mask_weight, int(params.mask));
 }
+

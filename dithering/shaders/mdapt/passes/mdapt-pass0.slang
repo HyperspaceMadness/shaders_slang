@@ -14,12 +14,12 @@ layout(push_constant) uniform Push
 	vec4 OriginalSize;
 	vec4 OutputSize;
 	uint FrameCount;
-	float MODE;
-	float PWR;
+	float MDAPTMODE;
+	float MDAPTPWR;
 } params;
 
-#pragma parameter MODE "MDAPT Monochrome Analysis"	0.0 0.0 1.0 1.0
-#pragma parameter PWR  "MDAPT Color Metric Exp"		2.0 0.0 10.0 0.1
+#pragma parameter MDAPTMODE "MDAPT Monochrome Analysis"	0.0 0.0 1.0 1.0
+#pragma parameter MDAPTPWR  "MDAPT Color Metric Exp"		2.0 0.0 10.0 0.1
 
 layout(std140, set = 0, binding = 0) uniform UBO
 {
@@ -37,7 +37,7 @@ float eq(vec3 A, vec3 B)
 
 	diff *= diff * vec3(2.0 + ravg, 4.0, 3.0 - ravg);
 	
-	return pow( smoothstep(3.0, 0.0, sqrt(diff.x + diff.y + diff.z)), params.PWR );
+	return pow( smoothstep(3.0, 0.0, sqrt(diff.x + diff.y + diff.z)), params.MDAPTPWR );
 }
 
 float and_(float a, float b, float c, float d, float e, float f){
@@ -77,7 +77,7 @@ void main()
 
 	vec3 res = vec3(0.0);
 
-	if(params.MODE > 0.5){
+	if(params.MDAPTMODE > 0.5){
 		res.x = float((L == R) && (C != L));
 		res.y = float((U == D) && (C != U));
 		res.z = float(bool(res.x) && bool(res.y) && (L == U));

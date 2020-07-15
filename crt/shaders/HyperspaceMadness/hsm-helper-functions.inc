@@ -92,3 +92,9 @@ float HHLP_EqualsValue(float in_value, float compare_value, float epsilon)
 	return HHLP_IsUnderValue(in_value, compare_value + epsilon) * HHLP_IsOverValue(in_value, compare_value - epsilon);
 }
 
+float HHLP_EqualsResolution(vec2 in_res, vec2 test_res)
+{
+  float hardcoded_epsilon = 0.001;
+  return  HHLP_EqualsValue(in_res.x, test_res.x, hardcoded_epsilon) * 
+          HHLP_EqualsValue(in_res.y, test_res.y, hardcoded_epsilon);
+}

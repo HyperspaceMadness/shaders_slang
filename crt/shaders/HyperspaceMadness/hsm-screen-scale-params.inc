@@ -8,7 +8,7 @@ Description:
 */
 
 // Screen Scale Required Parameters
-#pragma parameter HSS_MEGA_BEZEL_DEBUG					"___HSM MEGA BEZEL__ V.2020-07-11-0 - Debug ON" 0 0 1 1
+#pragma parameter HSS_MEGA_BEZEL_DEBUG					"___HSM MEGA BEZEL__ V.2020-07-14-0 - Debug ON" 0 0 1 1
 float HSS_MEGA_BEZEL_DEBUG = global.HSS_MEGA_BEZEL_DEBUG;
 
 #pragma parameter HSS_FLIP_VIEWPORT_AND_CORE_VERTICAL	"[VERTICAL FLIP]  Flip Viewport Vertical - For Some 3D Cores"  0 0 1 1
@@ -72,6 +72,8 @@ float HSS_CORE_RES_SAMPLING_MULT_OPPOSITE_DIR = global.HSS_CORE_RES_SAMPLING_MUL
 
 #pragma parameter HSS_SPLIT_SCREEN_AMOUNT				"[SPLIT SCREEN]  Split Thickness - SPLIT SCREEN PRESET ONLY" 0 0 256 2
 float HSS_SPLIT_SCREEN_AMOUNT = global.HSS_SPLIT_SCREEN_AMOUNT;
+
+// TODO add Split Position, also auto set position, catches for 3DS
 
 #pragma parameter HSS_SPLIT_SCREEN_CENTER_FILL_MODE		"[SPLIT SCREEN]  Center Fill - 1:Bezel 2:Reflect 3:Blend 4:Fade" 0 0 6 1
 float HSS_SPLIT_SCREEN_CENTER_FILL_MODE = global.HSS_SPLIT_SCREEN_CENTER_FILL_MODE;

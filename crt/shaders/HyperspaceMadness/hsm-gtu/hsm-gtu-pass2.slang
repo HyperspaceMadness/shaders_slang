@@ -29,6 +29,8 @@ layout(std140, set = 0, binding = 0) uniform UBO
 // License: GPLv3
 ////////////////////////////////////////////////////////
 
+// TODO need to respect scanline direction
+
 #include "config.h"
 
 #define YIQ_to_RGB 	mat3x3( 1.0   , 1.0      , 1.0      ,	0.9563   , -0.2721   , -1.1070   ,		0.6210   , -0.6474   , 1.7046   )

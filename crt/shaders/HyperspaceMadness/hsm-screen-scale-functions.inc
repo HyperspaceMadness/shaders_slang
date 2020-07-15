@@ -74,38 +74,42 @@ float HSS_GetIsOriginalSizeVertical()
 	return aspect_ratio < 1 ? 1 : 0;
 }
 
+bool HSS_MatchResolution(vec2 in_res, vec2 match_res)
+{
+	return (in_res == match_res);
+}
+
 // Snap to integer scale if within 10%
 float HSS_GetScreenAspect()
 {
+	float epsilon = 0.002;
 	vec2 raw_original_size = HSS_GetRawOriginalSize();
 	vec2 rotated_original_size = HSS_GetRotatedOriginalSize();
 	float core_aspect_ratio = rotated_original_size.x / rotated_original_size.y;
 	float core_aspect_horizontal = (core_aspect_ratio < 1) ? 1 / core_aspect_ratio : core_aspect_ratio;
 	float horizontal_aspect = 0;
 
-	// NDS 1.33 2x 256x192, Single screen, together 256x384 - 1.5 without center
-	// 3DS 5:3 400x240 (Top) 1.33 320x240 (Bottom)
-
-	// An attempt to remove ifs to improve performance, did not seem to make a difference
-	// horizontal_aspect = int(HSS_ASPECT_RATIO_MODE == 0) * 
-	// 								(
-	// 									int(raw_original_size.y > 600) * core_aspect_horizontal +
-	// 									int(raw_original_size.y < 600) *
-	// 									(
-	// 										int(core_aspect_horizontal == 1.5 && raw_original_size.y == 160) * 1.5 +
-	// 										int(core_aspect_horizontal != 1.5 || raw_original_size.y != 160) *  HSS_ASPECT_RATIO_EXPLICIT
-	// 									)
-	// 								);
-
+	vec2 nintendo_gameboy_advance_res = 	vec2(240, 160);
+	vec2 nintendo_gameboy_res = 			vec2(160, 144);
+	vec2 nintendo_ds_top_bottom_res = 		vec2(256, 384);
+	vec2 nintendo_ds_side_by_side_res = 	vec2(512, 192);
+	vec2 nintendo_3ds_top_bottom_res = 		vec2(400, 480);
+	vec2 nintendo_3ds_side_by_side_res = 	vec2(720, 240);
+	vec2 atari_lynx_res = 					vec2(160, 102);
+	vec2 atari_2600_res = 					vec2(160, 228);
+	
 	if (HSS_ASPECT_RATIO_MODE == 0)
 	{
-		// If teh vertical res is larger than 500 is is probably a modern square pixel resolution
+		// If the vertical res is larger than 500 is is probably a modern square pixel resolution
 		if (raw_original_size.y > 500) horizontal_aspect = core_aspect_horizontal;
-		// Catch for Nintendo DS
-		else if (raw_original_size.x == 256 && raw_original_size.y == 384) horizontal_aspect = 1.5;
-		else if (raw_original_size.y < 200) horizontal_aspect = raw_original_size.x / raw_original_size.y;
-		// Catch for Gameboy Advance
-		// else if (raw_original_size.x == 240 && raw_original_size.y == 160) horizontal_aspect = 1.5;
+		else if (HSS_MatchResolution(nintendo_gameboy_advance_res, 	raw_original_size)) horizontal_aspect = core_aspect_horizontal;
+		else if (HSS_MatchResolution(nintendo_gameboy_res, 			raw_original_size)) horizontal_aspect = core_aspect_horizontal;
+		else if (HSS_MatchResolution(nintendo_ds_top_bottom_res, 	raw_original_size)) horizontal_aspect = core_aspect_horizontal;
+		else if (HSS_MatchResolution(nintendo_ds_side_by_side_res, 	raw_original_size)) horizontal_aspect = core_aspect_horizontal;
+		else if (HSS_MatchResolution(nintendo_3ds_top_bottom_res, 	raw_original_size)) horizontal_aspect = core_aspect_horizontal;
+		else if (HSS_MatchResolution(nintendo_3ds_side_by_side_res, raw_original_size)) horizontal_aspect = core_aspect_horizontal;
+		else if (HSS_MatchResolution(atari_lynx_res, 				raw_original_size)) horizontal_aspect = core_aspect_horizontal;
+		else if (HSS_MatchResolution(atari_2600_res, 				raw_original_size)) horizontal_aspect = core_aspect_horizontal;
 		// Fall back to the explicit ratio
 		else horizontal_aspect = HSS_ASPECT_RATIO_EXPLICIT;
 	}
@@ -117,6 +121,26 @@ float HSS_GetScreenAspect()
 		else if (HSS_ASPECT_RATIO_MODE == 5) horizontal_aspect = core_aspect_horizontal;
 		else if (HSS_ASPECT_RATIO_MODE == 6) horizontal_aspect = global.FinalViewportSize.x / global.FinalViewportSize.y;
 		else horizontal_aspect = 1.333;
+
+	// // Version of the above as straight computation to test performance, makes the whole shader go from 160fps to 150fps
+	// // If the vertical res is larger than 500 is is probably a modern square pixel resolution
+	// float is_square_pixel_res = 	HHLP_IsOverValue(raw_original_size.y, 500) +
+	// 								HHLP_EqualsResolution(nintendo_gameboy_advance_res, raw_original_size) +
+	// 								HHLP_EqualsResolution(nintendo_gameboy_res, raw_original_size) +
+	// 								HHLP_EqualsResolution(nintendo_ds_top_bottom_res, raw_original_size) +
+	// 								HHLP_EqualsResolution(nintendo_ds_side_by_side_res, raw_original_size) +
+	// 								HHLP_EqualsResolution(nintendo_3ds_top_bottom_res, raw_original_size) +
+	// 								HHLP_EqualsResolution(nintendo_3ds_side_by_side_res, raw_original_size) +
+	// 								HHLP_EqualsResolution(atari_lynx_res, raw_original_size);
+    //
+	// horizontal_aspect = HHLP_EqualsValue(HSS_ASPECT_RATIO_MODE, 0, epsilon) * (is_square_pixel_res * core_aspect_horizontal + 
+	// 																			(1 - is_square_pixel_res) * HSS_ASPECT_RATIO_EXPLICIT) +
+	// 					HHLP_EqualsValue(HSS_ASPECT_RATIO_MODE, 1, epsilon) * HSS_ASPECT_RATIO_EXPLICIT +
+	// 					HHLP_EqualsValue(HSS_ASPECT_RATIO_MODE, 2, epsilon) * 1.3333 +
+	// 					HHLP_EqualsValue(HSS_ASPECT_RATIO_MODE, 3, epsilon) * 1.5 +
+	// 					HHLP_EqualsValue(HSS_ASPECT_RATIO_MODE, 4, epsilon) * 1.7777 +
+	// 					HHLP_EqualsValue(HSS_ASPECT_RATIO_MODE, 5, epsilon) * core_aspect_horizontal +
+	// 					HHLP_EqualsValue(HSS_ASPECT_RATIO_MODE, 6, epsilon) * global.FinalViewportSize.x / global.FinalViewportSize.y;
 
 	// Find what the vertical aspect would be, either the current horizontal_aspect (if it's already vertical)
 	// Or changing the horizontal aspect to vertical by taking the reciprocal
@@ -557,6 +581,7 @@ float HSS_GetSplitScreenAreaGradient(vec2 in_cropped_coord, float center_thickne
 
 vec2 HSS_GetCurvedCoord(vec2 in_coord, float curvature_multiplier, float screen_aspect)
 {
+	float epsilon = 0.002;
 	vec2 original_size = HSS_GetRotatedRawOriginalSize();
 
 	vec2 adjusted_coord = in_coord;
@@ -597,7 +622,6 @@ vec2 HSS_GetCurvedCoord(vec2 in_coord, float curvature_multiplier, float screen_
 	vec2 curved_coord = vec2(0);
 	if (HSS_CURVATURE_MODE > 0.5)
 	{
-		float epsilon = 0.001;
 		float geom_radius_with_mult = HSS_CURVATURE_3D_RADIUS;
 		if (HSS_CURVATURE_MODE == 1) geom_radius_with_mult -= 0.40;
 		if (HSS_CURVATURE_MODE == 3) geom_radius_with_mult -= 1;

@@ -122,7 +122,7 @@ float HSS_GetScreenAspect()
 		else if (HSS_ASPECT_RATIO_MODE == 6) horizontal_aspect = global.FinalViewportSize.x / global.FinalViewportSize.y;
 		else horizontal_aspect = 1.333;
 
-	// // Version of the above as straight computation to test performance, makes the whole shader go from 160fps to 150fps
+	// // Version of the above as straight computation to test performance, but actually reduces performance from 160fps to 150fps
 	// // If the vertical res is larger than 500 is is probably a modern square pixel resolution
 	// float is_square_pixel_res = 	HHLP_IsOverValue(raw_original_size.y, 500) +
 	// 								HHLP_EqualsResolution(nintendo_gameboy_advance_res, raw_original_size) +
@@ -176,13 +176,12 @@ float HSS_GetUseVerticalScanlines(float screen_aspect)
 	return HSS_SCANLINE_DIRECTION < 1 ? auto_use_vert_scanlines : (HSS_SCANLINE_DIRECTION < 2 ? 0 : 1);
 }
 
-// TODO Need to use Scanline Direction for better general use
 vec2 HSS_GetCoreSamplingResMult()
 {
 	vec2 original_size = HSS_GetRotatedRawOriginalSize();
-	float scanlines_are_horiz = HHLP_IsUnderValue(HSS_GetUseVerticalScanlines(original_size.x/original_size.y), 0.5);
-	vec2 sampling_mult = scanlines_are_horiz * vec2(HSS_CORE_RES_SAMPLING_MULT_SCANLINE_DIR, HSS_CORE_RES_SAMPLING_MULT_OPPOSITE_DIR) + 
-							 (1 - scanlines_are_horiz) * vec2(HSS_CORE_RES_SAMPLING_MULT_OPPOSITE_DIR, HSS_CORE_RES_SAMPLING_MULT_SCANLINE_DIR);
+	float use_vert_scanlines = HSS_GetUseVerticalScanlines(original_size.x/original_size.y);
+	vec2 sampling_mult = (1 - use_vert_scanlines) * vec2(HSS_CORE_RES_SAMPLING_MULT_SCANLINE_DIR, HSS_CORE_RES_SAMPLING_MULT_OPPOSITE_DIR) + 
+							  use_vert_scanlines *  vec2(HSS_CORE_RES_SAMPLING_MULT_OPPOSITE_DIR, HSS_CORE_RES_SAMPLING_MULT_SCANLINE_DIR);
 	return sampling_mult;
 }
 
@@ -1104,44 +1103,40 @@ float HSS_GetScreenVignetteFactor(vec2 coord, float amount)
 }
 
 // Torridgristle - ScanlineSimple pass - Public domain
+// TODO - Get the resolution of the axis opposite to scanline direction
+// TODO - Auto Scanline direction for split screen should be horizontal
 vec4 HSS_ApplyScanlineMask(vec4 in_color, vec2 in_coord, vec2 screen_scale)
 {
-	if (HSS_SCREENFX_FAKE_SCANLINE_OPACITY < 0.001 || HSS_GetRotatedOriginalSizeWithCoreResMult().y < HSS_INTERLACE_TRIGGER_RES )
+	vec2 original_size = HSS_GetRotatedOriginalSize();
+	float use_vert_scanlines = HSS_GetUseVerticalScanlines(original_size.x / original_size.y);
+	vec2 sampling_res = HSS_GetRotatedOriginalSizeWithCoreResMult();
+	float scan_axis_pos = use_vert_scanlines * in_coord.x + (1 - use_vert_scanlines) * in_coord.y;
+	float scan_axis_res = use_vert_scanlines * sampling_res.x + (1 - use_vert_scanlines) * sampling_res.y;
+
+	if (HSS_SCREENFX_FAKE_SCANLINE_OPACITY < 0.001 || scan_axis_res < HSS_INTERLACE_TRIGGER_RES )
 	{
 		return in_color;
 	}
 
 	float pi = 3.141592654;
 
-	float scan_axis_pos = 0;
-	float scan_axis_screen_scale_res = 0;
-	float opposite_axis_pos = 0;
-
 	vec2 screen_size = global.OutputSize.xy * screen_scale;
-
-	// if (HSS_GetUseVerticalScanlines() > 0.5)
-	// {
-	// 	scan_axis_screen_scale_res = screen_size.x;
-	// 	scan_axis_pos = in_coord.x;
-	// 	opposite_axis_pos = in_coord.y;
-	// }
-	// else
-	// {
-		scan_axis_screen_scale_res = screen_size.y;
-		scan_axis_pos = in_coord.y;
-		opposite_axis_pos = in_coord.x;
-	// }
+	float scan_axis_screen_scale_res = use_vert_scanlines * screen_size.x + (1 - use_vert_scanlines) * screen_size.y;
 	
-	float scanline_res = HSS_SCREENFX_SCANLINE_RES;
+	float simulated_scanline_res = HSS_SCREENFX_SCANLINE_RES;
 
 	#ifdef HSM_SPLIT_SCREEN_PRESET
-		if (screen_scale.x / screen_scale.y < 1 )
+		if (use_vert_scanlines == 0 && screen_scale.x / screen_scale.y < 1 )
 		{
-			scanline_res = HSS_SCREENFX_SCANLINE_RES * 2;
+			simulated_scanline_res = HSS_SCREENFX_SCANLINE_RES * 2;
+		}
+		if (use_vert_scanlines == 1 && screen_scale.x / screen_scale.y > 1 )
+		{
+			simulated_scanline_res = HSS_SCREENFX_SCANLINE_RES * 2;
 		}
 	#endif
 
-	float scanline_size = ceil(scan_axis_screen_scale_res / scanline_res);
+	float scanline_size = ceil(scan_axis_screen_scale_res / simulated_scanline_res);
 
 	float scan = mod(scan_axis_pos * scan_axis_screen_scale_res, scanline_size) / scanline_size;
 
@@ -1164,7 +1159,7 @@ vec4 HSS_ApplyScanlineMask(vec4 in_color, vec2 in_coord, vec2 screen_scale)
 	masked_color.w = in_color.w;
 
 	// Split Screen for debugging
-	// masked_color = opposite_axis_pos > 0.7 ? in_color : masked_color;
+	// masked_color = scan_opposite_axis_pos > 0.7 ? in_color : masked_color;
 
 	return clamp(masked_color, 0, 1);
 }

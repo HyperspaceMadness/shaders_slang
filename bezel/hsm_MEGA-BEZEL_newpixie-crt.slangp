@@ -3,48 +3,75 @@
 //      Add Color Correction
 //      Calculate Average Luminance and put in alpha channel
 //      Debug Drawing of the resolution & screen scaling info
-shader0 = ../crt/shaders/HyperspaceMadness/hsm-prep-initial.slang
+shader0 = ../bezel/shaders/HyperspaceMadness/hsm-prep-initial.slang
 float_framebuffer0 = true
 alias0  = AvgLumPass
 
 // De-Dithering - Mdapt
-shader1 = ../crt/shaders/HyperspaceMadness/hsm-mdapt/hsm-mdapt-pass0.slang
-shader2 = ../crt/shaders/HyperspaceMadness/hsm-mdapt/hsm-mdapt-pass1.slang
-shader3 = ../crt/shaders/HyperspaceMadness/hsm-mdapt/hsm-mdapt-pass2.slang
-shader4 = ../crt/shaders/HyperspaceMadness/hsm-mdapt/hsm-mdapt-pass3.slang
-shader5 = ../crt/shaders/HyperspaceMadness/hsm-mdapt/hsm-mdapt-pass4.slang
+shader1 = ../bezel/shaders/HyperspaceMadness/hsm-mdapt/hsm-mdapt-pass0.slang
+shader2 = ../bezel/shaders/HyperspaceMadness/hsm-mdapt/hsm-mdapt-pass1.slang
+shader3 = ../bezel/shaders/HyperspaceMadness/hsm-mdapt/hsm-mdapt-pass2.slang
+shader4 = ../bezel/shaders/HyperspaceMadness/hsm-mdapt/hsm-mdapt-pass3.slang
+shader5 = ../bezel/shaders/HyperspaceMadness/hsm-mdapt/hsm-mdapt-pass4.slang
+alias5 = refpass
 
 shader6 = ../stock.slang
 shader7 = ../stock.slang
 shader8 = ../stock.slang
 shader9 = ../stock.slang
 shader10 = ../stock.slang
-shader11 = ../stock.slang
-shader12 = ../stock.slang
+
+// GTU TV Processing
+shader11 = ../bezel/shaders/HyperspaceMadness/hsm-gtu/hsm-gtu-pass1.slang
+scale_type11 = source
+scale11 = 1.0
+float_framebuffer11 = true
+
+shader12 = ../bezel/shaders/HyperspaceMadness/hsm-gtu/hsm-gtu-pass2.slang
+scale_type_x12 = source
+scale_x12 = 1.0
+scale_type_y12 = source
+scale_y12 = 1.0
+filter_linear12 = false
+float_framebuffer12 = true
+
+// //NTSC passes added here so you can swap out with GTU
+// shader12 = ../bezel/shaders/HyperspaceMadness/hsm-ntsc-adaptive/hsm-ntsc-pass1.slang
+// scale_type12 = source
+// scale_x12 = 4.0
+// filter_linear12 = false
+// float_framebuffer12 = true
+
+// shader13 = ../bezel/shaders/HyperspaceMadness/hsm-ntsc-adaptive/hsm-ntsc-pass2.slang
+// scale_type13 = source
+// scale_x13 = 0.25
+// filter_linear13 = false
+
 shader13 = ../stock.slang
 shader14 = ../stock.slang
-shader15 = ../stock.slang
-shader16 = ../stock.slang
 
-shader17 = ../crt/shaders/HyperspaceMadness/hsm-lcd-cgwg/hsm-lcd-grid-v2.slang
-filter_linear17 = "false"
-scale_type17 = "viewport"
-scale17 = "1.0"
-wrap_mode17 = mirrored_repeat
-alias17 = BR_CRTPassAlternate
+shader15 = ../bezel/shaders/HyperspaceMadness/hsm-newpixie/hsm-newpixie-accumulate.slang
+filter_linear15 = true
+alias15 = accum1
 
-shader18 = ../crt/shaders/HyperspaceMadness/hsm-lcd-cgwg/hsm-gba-color.slang
-mipmap_input18 = true
+shader16 = ../bezel/shaders/HyperspaceMadness/hsm-newpixie/hsm-newpixie-blur-horiz.slang
+filter_linear16 = true
+alias16 = blur1
+
+shader17 = ../bezel/shaders/HyperspaceMadness/hsm-newpixie/hsm-newpixie-blur-vert.slang
+filter_linear17 = true
+alias17 = blur2
+
+// Easymode's Shader!
+shader18 = ../bezel/shaders/HyperspaceMadness/hsm-newpixie/hsm-newpixie-crt-with-scaling.slang
 filter_linear18 = true
 scale_type18 = viewport
-scale18 = 1.0
 float_framebuffer18 = true
-wrap_mode18 = mirrored_repeat
 alias18 = BR_CRTPass
 
 // Tube Scale Curvature Mapping
 // Write mapping into the pass, of the 4 channels, x & y are tube warped coord and z & w are outside tube mask and edge mask
-shader19 = ../crt/shaders/HyperspaceMadness/hsm-curvature-mapping.slang
+shader19 = ../bezel/shaders/HyperspaceMadness/hsm-curvature-mapping.slang
 mipmap_input19 = true
 filter_linear19 = true
 scale_type19 = viewport
@@ -55,7 +82,7 @@ alias19 = BR_MappingPass
 //      Reduce the resolution to a small static size regardless of final resolution
 //      Allows consistent look and faster at different final resolutions for blur
 //      Mipmap option allows downscaling without artifacts
-shader20 = ../crt/shaders/HyperspaceMadness/hsm-linearize-crt-alternate.slang
+shader20 = ../bezel/shaders/HyperspaceMadness/hsm-linearize-crt.slang
 mipmap_input20 = true
 filter_linear20 = true
 scale_type20 = absolute
@@ -71,7 +98,7 @@ float_framebuffer20 = true
 alias20 = BR_MirrorLowResPass
 
 // Add Blur for the Reflection (Horizontal) ----------------------------------------------------------------
-shader21 = ../crt/shaders/HyperspaceMadness/hsm-blur-outside-screen-horiz.slang
+shader21 = ../bezel/shaders/HyperspaceMadness/hsm-blur-outside-screen-horiz.slang
 mipmap_input21 = true
 filter_linear21 = true
 float_framebuffer21 = true
@@ -79,7 +106,7 @@ scale_type22 = source
 wrap_mode21 = mirrored_repeat
 
 // Add Blur for the Reflection (Vertical) ----------------------------------------------------------------
-shader22 = ../crt/shaders/HyperspaceMadness/hsm-blur-outside-screen-vert.slang
+shader22 = ../bezel/shaders/HyperspaceMadness/hsm-blur-outside-screen-vert.slang
 filter_linear22 = false
 scale_type22 = source
 float_framebuffer22 = true
@@ -127,7 +154,7 @@ alias24 = BR_MirrorFullscreenGlowPass
             // TopLayerImage
             // TopLayerVertImage
 
-shader25 = ../crt/shaders/HyperspaceMadness/hsm-mega-bezel-reflection.slang
+shader25 = ../bezel/shaders/HyperspaceMadness/hsm-mega-bezel-reflection.slang
 mipmap_input25 = true
 filter_linear25 = true
 scale_type25 = viewport
@@ -136,20 +163,19 @@ float_framebuffer25 = false
 // Define how many shaders will be used from this list
 shaders = 26
 
-
 // Define textures to be used by the different passes
 textures = "SamplerLUT3;BackgroundImage;BackgroundVertImage;TubeGlassImage;TopLayerImage;TopLayerVertImage;"
 
-SamplerLUT3 = ../crt/shaders/guest/lut/other1.png
+SamplerLUT3 = ../bezel/shaders/HyperspaceMadness/textures/lut/other1.png
 SamplerLUT3_linear = true
 
-BackgroundImage = ../crt/shaders/HyperspaceMadness/textures/BackgroundImage_Carbon_3840x2160.png
-BackgroundVertImage = ../crt/shaders/HyperspaceMadness/textures/BackgroundImage_Carbon_3840x2160.png
-TubeGlassImage = ../crt/shaders/HyperspaceMadness/textures/TubeGlassOverlayImage_3840x2160.png
-TopLayerImage = ../crt/shaders/HyperspaceMadness/textures/TopLayerImage_Night_3840x2160.jpg
-TopLayerVertImage = ../crt/shaders/HyperspaceMadness/textures/TopLayerImage_Night_3840x2160.jpg
+BackgroundImage = ../bezel/shaders/HyperspaceMadness/textures/BackgroundImage_Carbon_3840x2160.png
+BackgroundVertImage = ../bezel/shaders/HyperspaceMadness/textures/BackgroundImage_Carbon_3840x2160.png
+TubeGlassImage = ../bezel/shaders/HyperspaceMadness/textures/TubeGlassOverlayImage_3840x2160.png
+TopLayerImage = ../bezel/shaders/HyperspaceMadness/textures/TopLayerImage_Night_3840x2160.jpg
+TopLayerVertImage = ../bezel/shaders/HyperspaceMadness/textures/TopLayerImage_Night_3840x2160.jpg
 
-parameters = "HSS_MEGA_BEZEL_DEBUG;HSS_FLIP_VIEWPORT_AND_CORE_VERTICAL;HSS_ROTATE_CORE_IMAGE;HSS_ASPECT_RATIO_ORIENTATION;HSS_ASPECT_RATIO_MODE;HSS_ASPECT_RATIO_EXPLICIT;HSS_INT_SCALE_MODE;HSS_INT_SCALE_MULTIPLE_OFFSET;HSS_INT_SCALE_MULTIPLE_OFFSET_LONG;HSS_INT_SCALE_BORDER_MIN_HEIGHT;HSS_NON_INTEGER_SCALE;HSS_SCANLINE_DIRECTION;HSS_CORE_RES_SAMPLING_MULT_SCANLINE_DIR;HSS_CORE_RES_SAMPLING_MULT_OPPOSITE_DIR;HSS_INTERLACE_TRIGGER_RES;HSS_POSITION_OFFSET_X;HSS_POSITION_OFFSET_Y;HSS_CROP_OVERSCAN_TOP;HSS_CROP_OVERSCAN_BOTTOM;HSS_CROP_OVERSCAN_LEFT;HSS_CROP_OVERSCAN_RIGHT;HSS_CURVATURE_MODE;HSS_CURVATURE_3D_RADIUS;HSS_CURVATURE_3D_VIEW_DIST;HSS_CURVATURE_3D_TILT_ANGLE_X;HSS_CURVATURE_3D_TILT_ANGLE_Y;HSS_CURVATURE_2D_SCALE_LONG_AXIS;HSS_CURVATURE_2D_SCALE_SHORT_AXIS;HSS_COLOR_CRT_PROFILE;HSS_COLOR_SPACE;HSS_COLOR_TEMPERATURE;HSS_COLOR_SATURATION;HSS_COLOR_LUMINANCE;HSS_COLOR_BLACK_LEVEL;HSS_COLOR_NEGATIVE_CROP_BRIGHTNESS;HSS_COLOR_CRT_GAMMA;HSS_PHOSPHOR_PERSISTENCE;HSS_SCREENFX_CORNER_RADIUS;HSS_SCREENFX_EDGE_SHARPNESS;HSS_SCREENFX_VIGNETTE;HSS_SCREENFX_FAKE_SCANLINE_OPACITY;HSS_TUBE_BLACK_EDGE_THICKNESS;HSS_TUBE_CURVATURE_SCALE;HBZ_TUBE_GLASS_IMAGE_OPACITY;HBZ_TUBE_EDGE_SHADOW;HBZ_BACKGROUND_IMAGE_OPACITY;HBZ_BACKGROUND_IMAGE_SCALE_MODE;HBZ_BACKGROUND_IMAGE_ASPECT_RATIO;HBZ_BACKGROUND_IMAGE_TUBE_HEIGHT;HBZ_BACKGROUND_IMAGE_VIGNETTE_OPACITY;HBZ_BEZEL_COLOR_HUE;HBZ_BEZEL_COLOR_SATURATION;HBZ_BEZEL_COLOR_VALUE;HBZ_BEZEL_COLOR_BLEND_WITH_IMAGE;HBZ_BEZEL_NOISE;HBZ_BEZEL_OPACITY;HBZ_BEZEL_WIDTH;HBZ_BEZEL_HEIGHT;HBZ_BEZEL_INNER_CORNER_RADIUS_SCALE;HBZ_BEZEL_OUTER_CORNER_RADIUS_SCALE;HBZ_BEZEL_INNER_EDGE_THICKNESS;HBZ_BEZEL_BRIGHTNESS;HBZ_BEZEL_HIGHLIGHT;HBZ_BEZEL_GAMMA;HBZ_FRAME_OPACITY;HBZ_FRAME_THICKNESS;HBZ_FRAME_OUTER_CORNER_RADIUS;HBZ_FRAME_POS_Y_OFFSET;HBZ_FRAME_SHADOW_OPACITY;HBZ_FRAME_SHADOW_WIDTH;HBR_BLUR_NUM_SAMPLES;HBR_BLUR_MIN;HBR_BLUR_MAX;HBR_NOISE_AMOUNT;HBR_NOISE_SAMPLES;HBR_NOISE_SAMPLE_DISTANCE;HBR_GLOBAL_AMOUNT;HBR_GLOBAL_GAMMA_ADJUST;HBR_INNER_EDGE_REFLECTION;HBR_INNER_EDGE_FULLSCREEN_GLOW;HBR_DIRECT_REFLECTION;HBR_DIFFUSED_REFLECTION;HBR_FULLSCREEN_GLOW;HBR_FULLSCREEN_GLOW_GAMMA;HBR_FADE_AMOUNT;HBR_RADIAL_FADE_WIDTH;HBR_RADIAL_FADE_HEIGHT;HBR_LATERAL_OUTER_FADE_POSITION;HBR_LATERAL_OUTER_FADE_DISTANCE;HBR_CORNER_FADE;HBR_CORNER_FADE_DISTANCE;HBR_CORNER_INNER_SPREAD;HBR_CORNER_OUTER_SPREAD;HTI_TOP_IMAGE_OPACITY;HTI_TOP_IMAGE_BLEND_MODE;HTI_TOP_IMAGE_MASK_MODE;MDAPT_MODE;GTU_MODE;GTU_SIGNAL_RESOLUTION;HSS_SCALEFX_ON;LCD_RSUBPIX_R;LCD_RSUBPIX_G;LCD_RSUBPIX_B;LCD_GSUBPIX_R;LCD_GSUBPIX_G;LCD_GSUBPIX_B;LCD_BSUBPIX_R;LCD_BSUBPIX_G;LCD_BSUBPIX_B;LCD_GAIN;LCD_GAMMA;LCD_BLACK_LEVEL;LCD_AMBIENT;LCD_BGR"
+parameters = "HSS_MEGA_BEZEL_DEBUG;HSS_FLIP_VIEWPORT_AND_CORE_VERTICAL;HSS_ROTATE_CORE_IMAGE;HSS_ASPECT_RATIO_ORIENTATION;HSS_ASPECT_RATIO_MODE;HSS_ASPECT_RATIO_EXPLICIT;HSS_INT_SCALE_MODE;HSS_INT_SCALE_MULTIPLE_OFFSET;HSS_INT_SCALE_MULTIPLE_OFFSET_LONG;HSS_INT_SCALE_BORDER_MIN_HEIGHT;HSS_NON_INTEGER_SCALE;HSS_SCANLINE_DIRECTION;HSS_CORE_RES_SAMPLING_MULT_SCANLINE_DIR;HSS_CORE_RES_SAMPLING_MULT_OPPOSITE_DIR;HSS_INTERLACE_TRIGGER_RES;HSS_POSITION_OFFSET_X;HSS_POSITION_OFFSET_Y;HSS_CROP_OVERSCAN_TOP;HSS_CROP_OVERSCAN_BOTTOM;HSS_CROP_OVERSCAN_LEFT;HSS_CROP_OVERSCAN_RIGHT;HSS_CURVATURE_MODE;HSS_CURVATURE_3D_RADIUS;HSS_CURVATURE_3D_VIEW_DIST;HSS_CURVATURE_3D_TILT_ANGLE_X;HSS_CURVATURE_3D_TILT_ANGLE_Y;HSS_CURVATURE_2D_SCALE_LONG_AXIS;HSS_CURVATURE_2D_SCALE_SHORT_AXIS;HSS_COLOR_CRT_PROFILE;HSS_COLOR_SPACE;HSS_COLOR_TEMPERATURE;HSS_COLOR_SATURATION;HSS_COLOR_LUMINANCE;HSS_COLOR_BLACK_LEVEL;HSS_COLOR_NEGATIVE_CROP_BRIGHTNESS;HSS_COLOR_CRT_GAMMA;HSS_PHOSPHOR_PERSISTENCE;HSS_SCREENFX_CORNER_RADIUS;HSS_SCREENFX_EDGE_SHARPNESS;HSS_SCREENFX_VIGNETTE;HSS_SCREENFX_FAKE_SCANLINE_OPACITY;HSS_TUBE_BLACK_EDGE_THICKNESS;HSS_TUBE_CURVATURE_SCALE;HBZ_TUBE_GLASS_IMAGE_OPACITY;HBZ_TUBE_EDGE_SHADOW;HBZ_BACKGROUND_IMAGE_OPACITY;HBZ_BACKGROUND_IMAGE_SCALE_MODE;HBZ_BACKGROUND_IMAGE_ASPECT_RATIO;HBZ_BACKGROUND_IMAGE_TUBE_HEIGHT;HBZ_BACKGROUND_IMAGE_VIGNETTE_OPACITY;HBZ_BEZEL_COLOR_HUE;HBZ_BEZEL_COLOR_SATURATION;HBZ_BEZEL_COLOR_VALUE;HBZ_BEZEL_COLOR_BLEND_WITH_IMAGE;HBZ_BEZEL_NOISE;HBZ_BEZEL_OPACITY;HBZ_BEZEL_WIDTH;HBZ_BEZEL_HEIGHT;HBZ_BEZEL_INNER_CORNER_RADIUS_SCALE;HBZ_BEZEL_OUTER_CORNER_RADIUS_SCALE;HBZ_BEZEL_INNER_EDGE_THICKNESS;HBZ_BEZEL_BRIGHTNESS;HBZ_BEZEL_HIGHLIGHT;HBZ_BEZEL_GAMMA;HBZ_FRAME_OPACITY;HBZ_FRAME_THICKNESS;HBZ_FRAME_OUTER_CORNER_RADIUS;HBZ_FRAME_POS_Y_OFFSET;HBZ_FRAME_SHADOW_OPACITY;HBZ_FRAME_SHADOW_WIDTH;HBR_BLUR_NUM_SAMPLES;HBR_BLUR_MIN;HBR_BLUR_MAX;HBR_NOISE_AMOUNT;HBR_NOISE_SAMPLES;HBR_NOISE_SAMPLE_DISTANCE;HBR_GLOBAL_AMOUNT;HBR_GLOBAL_GAMMA_ADJUST;HBR_INNER_EDGE_REFLECTION;HBR_INNER_EDGE_FULLSCREEN_GLOW;HBR_DIRECT_REFLECTION;HBR_DIFFUSED_REFLECTION;HBR_FULLSCREEN_GLOW;HBR_FULLSCREEN_GLOW_GAMMA;HBR_FADE_AMOUNT;HBR_RADIAL_FADE_WIDTH;HBR_RADIAL_FADE_HEIGHT;HBR_LATERAL_OUTER_FADE_POSITION;HBR_LATERAL_OUTER_FADE_DISTANCE;HBR_CORNER_FADE;HBR_CORNER_FADE_DISTANCE;HBR_CORNER_INNER_SPREAD;HBR_CORNER_OUTER_SPREAD;HTI_TOP_IMAGE_OPACITY;HTI_TOP_IMAGE_BLEND_MODE;HTI_TOP_IMAGE_MASK_MODE;MDAPT_MODE;GTU_MODE;GTU_SIGNAL_RESOLUTION;HSS_SCALEFX_ON;NPX_ACCUMULATE_MODULATION;NPX_BLUR_HORIZ;NPX_BLUR_VERT"
 
 // HSS_MEGA_BEZEL_DEBUG = 0
 
@@ -158,9 +184,11 @@ parameters = "HSS_MEGA_BEZEL_DEBUG;HSS_FLIP_VIEWPORT_AND_CORE_VERTICAL;HSS_ROTAT
 
 // HSS_ASPECT_RATIO_ORIENTATION = 0
 // HSS_ASPECT_RATIO_MODE = 0
-HSS_ASPECT_RATIO_EXPLICIT = 1.5
+// HSS_ASPECT_RATIO_EXPLICIT = 1.3333
+// HSS_CORE_RES_SAMPLING_MULT_SCANLINE_DIR = 1
+// HSS_CORE_RES_SAMPLING_MULT_OPPOSITE_DIR = 1
 
-HSS_INT_SCALE_MODE = 2
+// HSS_INT_SCALE_MODE = 0
 // HSS_INT_SCALE_MULTIPLE_OFFSET = 0
 // HSS_INT_SCALE_MULTIPLE_OFFSET_LONG = 0
 // HSS_INT_SCALE_BORDER_MIN_HEIGHT = 5.5
@@ -168,8 +196,6 @@ HSS_INT_SCALE_MODE = 2
 // HSS_SNAP_TO_INT_SCALE_TOLERANCE = 0.1
 
 // HSS_SCANLINE_DIRECTION = 0
-// HSS_CORE_RES_SAMPLING_MULT_SCANLINE_DIR = 1
-// HSS_CORE_RES_SAMPLING_MULT_OPPOSITE_DIR = 1
 // HSS_INTERLACE_TRIGGER_RES = 600
 
 // HSS_CROP_OVERSCAN_TOP = 0
@@ -177,18 +203,18 @@ HSS_INT_SCALE_MODE = 2
 // HSS_CROP_OVERSCAN_LEFT = 0
 // HSS_CROP_OVERSCAN_RIGHT = 0
 
-// HSS_POSITION_OFFSET_X = 0
-// HSS_POSITION_OFFSET_Y = 0
-
-HSS_CURVATURE_MODE = 0
+// HSS_CURVATURE_MODE = 0
+// HSS_CURVATURE_2D_SCALE_LONG_AXIS = 1
+// HSS_CURVATURE_2D_SCALE_SHORT_AXIS = 1
 // HSS_CURVATURE_3D_RADIUS = 2
 // HSS_CURVATURE_3D_VIEW_DIST = 2
 // HSS_CURVATURE_3D_TILT_ANGLE_X = 0
 // HSS_CURVATURE_3D_TILT_ANGLE_Y = 0
-HSS_CURVATURE_2D_SCALE_LONG_AXIS = 0
-HSS_CURVATURE_2D_SCALE_SHORT_AXIS = 0
 
-HSS_COLOR_CRT_PROFILE = 0
+// HSS_POSITION_OFFSET_X = 0
+// HSS_POSITION_OFFSET_Y = 0
+
+// HSS_COLOR_CRT_PROFILE = 6
 // HSS_COLOR_SPACE = 0
 // HSS_COLOR_TEMPERATURE = -50
 // HSS_COLOR_SATURATION = 1
@@ -204,7 +230,7 @@ HSS_COLOR_CRT_PROFILE = 0
 // HSS_SCREENFX_VIGNETTE = 0
 // HSS_SCREENFX_FAKE_SCANLINE_OPACITY = 0.7
 
-HSS_TUBE_BLACK_EDGE_THICKNESS = 1.6
+// HSS_TUBE_BLACK_EDGE_THICKNESS = 1.2
 // HSS_TUBE_CURVATURE_SCALE = 1
 // HBZ_TUBE_GLASS_IMAGE_OPACITY = 1.4
 // HBZ_TUBE_EDGE_SHADOW = 0.7
@@ -217,8 +243,8 @@ HSS_TUBE_BLACK_EDGE_THICKNESS = 1.6
 // HBZ_BEZEL_COLOR_BLEND_WITH_IMAGE = 0
 // HBZ_BEZEL_NOISE = 30
 // HBZ_BEZEL_OPACITY = 1
-HBZ_BEZEL_WIDTH = 7.5
-HBZ_BEZEL_HEIGHT = 6
+// HBZ_BEZEL_WIDTH = 6.5
+// HBZ_BEZEL_HEIGHT = 5
 // HBZ_BEZEL_INNER_CORNER_RADIUS_SCALE = 0.5
 // HBZ_BEZEL_OUTER_CORNER_RADIUS_SCALE = 1
 // HBZ_BEZEL_INNER_EDGE_THICKNESS = 0.5
@@ -227,7 +253,7 @@ HBZ_BEZEL_HEIGHT = 6
 // HBZ_BEZEL_GAMMA = 1
 
 // HBZ_FRAME_OPACITY = 1
-HBZ_FRAME_THICKNESS = 7
+// HBZ_FRAME_THICKNESS = 8
 // HBZ_FRAME_OUTER_CORNER_RADIUS = 5
 // HBZ_FRAME_POS_Y_OFFSET = 0
 // HBZ_FRAME_SHADOW_OPACITY = 1
@@ -274,17 +300,6 @@ HBZ_FRAME_THICKNESS = 7
 
 // HSS_SCALEFX_ON = 0
 
-LCD_RSUBPIX_R = 0.75
-// LCD_RSUBPIX_G = 0
-// LCD_RSUBPIX_B = 0
-// LCD_GSUBPIX_R = 0
-LCD_GSUBPIX_G = 0.75
-// LCD_GSUBPIX_B = 0
-// LCD_BSUBPIX_R = 0
-// LCD_BSUBPIX_G = 0
-LCD_BSUBPIX_B = 0.75
-LCD_GAIN = 1.5
-LCD_GAMMA = 2.2
-LCD_BLACK_LEVEL = 0
-// LCD_AMBIENT = 0
-LCD_BGR = 1
+// NPX_ACCUMULATE_MODULATION = 0.65
+// NPX_BLUR_HORIZ = 1
+// NPX_BLUR_VERT = 1

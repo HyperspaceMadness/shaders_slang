@@ -375,7 +375,14 @@ void main()
 
 	if (HSS_SPLIT_SCREEN_CENTER_FILL_MODE == 1)
 	{
-		corner_rotation_offset += 13;
+		if (SCREEN_ASPECT < 1) 
+		{
+			corner_rotation_offset += 13;
+		}
+		else
+		{
+			corner_rotation_offset += -13;
+		}
 	}
 	else
 	{

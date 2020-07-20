@@ -3,11 +3,11 @@
 //      Add Color Correction
 //      Calculate Average Luminance and put in alpha channel
 //      Debug Drawing of the resolution & screen scaling info
-shader0 = ../crt/shaders/HyperspaceMadness/hsm-prep-initial-screen-scale-only-royale.slang
+shader0 = ../bezel/shaders/HyperspaceMadness/hsm-prep-initial-screen-scale-only-royale.slang
 alias0  = AvgLumPass
 
 // Linearize the input based on CRT gamma and bob interlaced fields.
-shader1 = "../crt/shaders/HyperspaceMadness/hsm-crt-royale/src/crt-royale-first-pass-linearize-crt-gamma-bob-fields.slang"
+shader1 = "../bezel/shaders/HyperspaceMadness/hsm-crt-royale/src/crt-royale-first-pass-linearize-crt-gamma-bob-fields.slang"
 alias1 = "ORIG_LINEARIZED"
 filter_linear1 = "false"
 scale_type1 = "source"
@@ -15,7 +15,7 @@ scale1 = "1.0"
 srgb_framebuffer1 = "true"
 
 // Resample interlaced (and misconverged) scanlines vertically.
-shader2 = "../crt/shaders/HyperspaceMadness/hsm-crt-royale/src/crt-royale-scanlines-vertical-interlacing.slang"
+shader2 = "../bezel/shaders/HyperspaceMadness/hsm-crt-royale/src/crt-royale-scanlines-vertical-interlacing.slang"
 alias2 = "VERTICAL_SCANLINES"
 filter_linear2 = "true"
 scale_type_x2 = "source"
@@ -26,7 +26,7 @@ srgb_framebuffer2 = "true"
 
 // Do a small resize blur of ORIG_LINEARIZED at an absolute size, and
 // account for convergence offsets.
-shader3 = "../crt/shaders/HyperspaceMadness/hsm-crt-royale/src/crt-royale-bloom-approx.slang"
+shader3 = "../bezel/shaders/HyperspaceMadness/hsm-crt-royale/src/crt-royale-bloom-approx.slang"
 alias3 = "BLOOM_APPROX"
 filter_linear3 = "true"
 scale_type3 = "absolute"
@@ -43,7 +43,7 @@ scale4 = "1.0"
 srgb_framebuffer4 = "true"
 
 // Lanczos-resize the phosphor mask vertically.
-shader5 = "../crt/shaders/HyperspaceMadness/hsm-crt-royale/src/crt-royale-mask-resize-vertical.slang"
+shader5 = "../bezel/shaders/HyperspaceMadness/hsm-crt-royale/src/crt-royale-mask-resize-vertical.slang"
 filter_linear5 = "true"
 scale_type_x5 = "absolute"
 scale_x5 = "64"
@@ -52,7 +52,7 @@ scale_y5 = "0.0625" // Safe for >= 341.333 horizontal triads at viewport size
 #srgb_framebuffer5 = "false" // mask_texture is already assumed linear
 
 // Lanczos-resize the phosphor mask horizontally.
-shader6 = "../crt/shaders/HyperspaceMadness/hsm-crt-royale/src/crt-royale-mask-resize-horizontal.slang"
+shader6 = "../bezel/shaders/HyperspaceMadness/hsm-crt-royale/src/crt-royale-mask-resize-horizontal.slang"
 filter_linear6 = "false"
 scale_type_x6 = "viewport"
 scale_x6 = "0.0625"
@@ -63,7 +63,7 @@ alias6 = "MASK_RESIZE"
 
 // Resample (misconverged) scanlines horizontally, apply halation, and
 // apply the phosphor mask.
-shader7 = "../crt/shaders/HyperspaceMadness/hsm-crt-royale/src/crt-royale-scanlines-horizontal-apply-mask.slang"
+shader7 = "../bezel/shaders/HyperspaceMadness/hsm-crt-royale/src/crt-royale-scanlines-horizontal-apply-mask.slang"
 filter_linear7 = "true" // This could just as easily be nearest neighbor.
 scale_type7 = "viewport"
 scale7 = "1.0"
@@ -71,7 +71,7 @@ srgb_framebuffer7 = "true"
 alias7 = "MASKED_SCANLINES"
 
 // Compute a brightpass.  This will require reading the final mask.
-shader8 = "../crt/shaders/HyperspaceMadness/hsm-crt-royale/src/crt-royale-brightpass.slang"
+shader8 = "../bezel/shaders/HyperspaceMadness/hsm-crt-royale/src/crt-royale-brightpass.slang"
 filter_linear8 = "true" // This could just as easily be nearest neighbor.
 scale_type8 = "viewport"
 scale8 = "1.0"
@@ -79,14 +79,14 @@ srgb_framebuffer8 = "true"
 alias8 = "BRIGHTPASS"
 
 // Blur the brightpass vertically
-shader9 = "../crt/shaders/HyperspaceMadness/hsm-crt-royale/src/crt-royale-bloom-vertical.slang"
+shader9 = "../bezel/shaders/HyperspaceMadness/hsm-crt-royale/src/crt-royale-bloom-vertical.slang"
 filter_linear9 = "true" // This could just as easily be nearest neighbor.
 scale_type9 = "source"
 scale9 = "1.0"
 srgb_framebuffer9 = "true"
 
 // Blur the brightpass horizontally and combine it with the dimpass:
-shader10 = "../crt/shaders/HyperspaceMadness/hsm-crt-royale/src/crt-royale-bloom-horizontal-reconstitute.slang"
+shader10 = "../bezel/shaders/HyperspaceMadness/hsm-crt-royale/src/crt-royale-bloom-horizontal-reconstitute.slang"
 filter_linear10 = "true"
 srgb_framebuffer10 = "true"
 scale_type10 = "source"
@@ -94,7 +94,7 @@ scale10 = "1.0"
 wrap_mode10 = mirrored_repeat
 
 // Curvature
-shader11 = "../crt/shaders/HyperspaceMadness/hsm-crt-royale/src/hsm-crt-royale-geometry-aa-last-pass-mask-outside-screen.slang"
+shader11 = "../bezel/shaders/HyperspaceMadness/hsm-crt-royale/src/hsm-crt-royale-geometry-aa-last-pass-mask-outside-screen.slang"
 mipmap_input11 = true
 filter_linear11 = true
 float_framebuffer11 = true
@@ -107,22 +107,22 @@ shaders = "12"
 // Define textures to be used by the different passes
 textures = "mask_grille_texture_small;mask_slot_texture_small;mask_shadow_texture_small;SamplerLUT3;"
 
-mask_grille_texture_small = "../crt/shaders/HyperspaceMadness/hsm-crt-royale/TileableLinearApertureGrille15Wide8And5d5SpacingResizeTo64.png"
+mask_grille_texture_small = "../bezel/shaders/HyperspaceMadness/hsm-crt-royale/TileableLinearApertureGrille15Wide8And5d5SpacingResizeTo64.png"
 mask_grille_texture_small_wrap_mode = "repeat"
 mask_grille_texture_small_linear = "true"
 mask_grille_texture_small_mipmap = "false"  // Mipmapping causes artifacts with manually resized masks without tex2Dlod
 
-mask_slot_texture_small = "../crt/shaders/HyperspaceMadness/hsm-crt-royale/TileableLinearSlotMaskTall15Wide9And4d5Horizontal9d14VerticalSpacingResizeTo64.png"
+mask_slot_texture_small = "../bezel/shaders/HyperspaceMadness/hsm-crt-royale/TileableLinearSlotMaskTall15Wide9And4d5Horizontal9d14VerticalSpacingResizeTo64.png"
 mask_slot_texture_small_wrap_mode = "repeat"
 mask_slot_texture_small_linear = "true"
 mask_slot_texture_small_mipmap = "false"    // Mipmapping causes artifacts with manually resized masks without tex2Dlod
 
-mask_shadow_texture_small = "../crt/shaders/HyperspaceMadness/hsm-crt-royale/TileableLinearShadowMaskEDPResizeTo64.png"
+mask_shadow_texture_small = "../bezel/shaders/HyperspaceMadness/hsm-crt-royale/TileableLinearShadowMaskEDPResizeTo64.png"
 mask_shadow_texture_small_wrap_mode = "repeat"
 mask_shadow_texture_small_linear = "true"
 mask_shadow_texture_small_mipmap = "false"  // Mipmapping causes artifacts with manually resized masks without tex2Dlod
 
-SamplerLUT3 = ../crt/shaders/HyperspaceMadness/textures/lut/other1.png
+SamplerLUT3 = ../bezel/shaders/HyperspaceMadness/textures/lut/other1.png
 SamplerLUT3_linear = true
 
 

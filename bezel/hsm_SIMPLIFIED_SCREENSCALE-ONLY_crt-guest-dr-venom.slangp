@@ -3,11 +3,11 @@
 //      Add Color Correction
 //      Calculate Average Luminance and put in alpha channel
 //      Debug Drawing of the resolution & screen scaling info
-shader0 = ../crt/shaders/HyperspaceMadness/hsm-prep-initial-screen-scale-only.slang
+shader0 = ../bezel/shaders/HyperspaceMadness/hsm-prep-initial-screen-scale-only.slang
 alias0 = WhitePointPass
 
 // Linearize Color ----------------------------------------------------------------
-shader1 = ../crt/shaders/HyperspaceMadness/hsm-guest/hsm-guest-linearize.slang
+shader1 = ../bezel/shaders/HyperspaceMadness/hsm-guest/hsm-guest-linearize.slang
 filter_linear1 = false
 scale_type1 = source
 scale1 = 1.0
@@ -15,14 +15,14 @@ float_framebuffer1 = true
 alias1 = LinearizePass
 
 // Guest-Venom Pass ----------------------------------------------------------------
-shader2 = ../crt/shaders/HyperspaceMadness/hsm-guest/hsm-guest-linearize_scanlines.slang
+shader2 = ../bezel/shaders/HyperspaceMadness/hsm-guest/hsm-guest-linearize_scanlines.slang
 filter_linear2 = true
 scale_type2 = source
 scale2 = 1
 float_framebuffer2 = true
 
 // Reduce resolution to a small consistent size so blur is consistent between different core resolutions
-shader3 = ../crt/shaders/HyperspaceMadness/hsm-guest/hsm-get-linearize-pass.slang
+shader3 = ../bezel/shaders/HyperspaceMadness/hsm-guest/hsm-get-linearize-pass.slang
 filter_linear3 = true
 mipmap_input3 = true
 scale_type3 = absolute
@@ -30,7 +30,7 @@ scale_x3 = 320
 scale_y3 = 320
 
 // Guest-Venom Pass ----------------------------------------------------------------
-shader4 = ../crt/shaders/HyperspaceMadness/hsm-guest/hsm-guest-blur_horiz.slang
+shader4 = ../bezel/shaders/HyperspaceMadness/hsm-guest/hsm-guest-blur_horiz.slang
 // mipmap_input4 = true // This is commented out on purpose, was causing small white dots appearing on final image
 filter_linear4 = true
 scale_type4 = source
@@ -38,7 +38,7 @@ scale4 = 1
 float_framebuffer4 = true
 
 // Guest-Venom Pass ----------------------------------------------------------------
-shader5 = ../crt/shaders/HyperspaceMadness/hsm-guest/hsm-guest-blur_vert.slang
+shader5 = ../bezel/shaders/HyperspaceMadness/hsm-guest/hsm-guest-blur_vert.slang
 mipmap_input5 = true
 filter_linear5 = true
 scale_type5 = source
@@ -49,7 +49,7 @@ alias5 = GlowPass
 // CRT Shader - Guest-Venom ----------------------------------------------------------------
 //      Guest's Awesome Shader!!!
 //      Has been slightly altered to use the same scaling as the rest of the shders for the bezel & reflection
-shader6 = ../crt/shaders/HyperspaceMadness/hsm-guest/hsm-crt-guest-dr-venom-with-scaling-mask-outside-screen.slang
+shader6 = ../bezel/shaders/HyperspaceMadness/hsm-guest/hsm-crt-guest-dr-venom-with-scaling-mask-outside-screen.slang
 mipmap_input6 = true
 filter_linear6 = true
 scale_type6 = viewport
@@ -62,7 +62,7 @@ shaders = 7
 
 // Define textures to be used by the different passes
 textures = "SamplerLUT3;"
-SamplerLUT3 = ../crt/shaders/HyperspaceMadness/textures/lut/other1.png
+SamplerLUT3 = ../bezel/shaders/HyperspaceMadness/textures/lut/other1.png
 SamplerLUT3_linear = true
 
 

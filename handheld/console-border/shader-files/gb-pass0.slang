@@ -26,7 +26,7 @@ layout(std140, set = 0, binding = 0) uniform UBO
 #pragma parameter baseline_alpha "Baseline Alpha" 0.05 0.0 1.0 0.01
 
 // Fine-tune the balance between the different shades of grey
-#pragma parameter grey_balance "Grey Balance" 2.6 2.0 4.0 0.1
+#pragma parameter grey_balance "Grey Balance" 2.7 2.0 4.0 0.1
 
 // Simulate response time
 // Higher values result in longer color transition periods - [0, 1]

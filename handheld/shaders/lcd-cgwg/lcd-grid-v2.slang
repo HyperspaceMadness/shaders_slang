@@ -16,7 +16,7 @@ layout(push_constant) uniform Push
     float blacklevel;
     float ambient;
     float BGR;
-} param;
+} params;
 
 #pragma parameter RSUBPIX_R  "Colour of R subpixel: R" 1.0 0.0 1.0 0.01
 #pragma parameter RSUBPIX_G  "Colour of R subpixel: G" 0.0 0.0 1.0 0.01
@@ -43,7 +43,7 @@ layout(std140, set = 0, binding = 0) uniform UBO
 
 #define outgamma 2.2
 
-#define fetch_offset(coord, offset) (pow(vec3(param.gain) * texelFetchOffset(Source, (coord), 0, (offset)).rgb + vec3(param.blacklevel), vec3(param.gamma)) + vec3(param.ambient))
+#define fetch_offset(coord, offset) (pow(vec3(params.gain) * texelFetchOffset(Source, (coord), 0, (offset)).rgb + vec3(params.blacklevel), vec3(params.gamma)) + vec3(params.ambient))
 
 #pragma stage vertex
 layout(location = 0) in vec4 Position;
@@ -91,9 +91,9 @@ void main()
     /* float2 range = IN.video_size / (IN.output_size * IN.texture_size); */
     vec2 range = global.OutputSize.zw;
 
-    vec3 cred   = pow(vec3(param.RSUBPIX_R, param.RSUBPIX_G, param.RSUBPIX_B), vec3(outgamma));
-    vec3 cgreen = pow(vec3(param.GSUBPIX_R, param.GSUBPIX_G, param.GSUBPIX_B), vec3(outgamma));
-    vec3 cblue  = pow(vec3(param.BSUBPIX_R, param.BSUBPIX_G, param.BSUBPIX_B), vec3(outgamma));
+    vec3 cred   = pow(vec3(params.RSUBPIX_R, params.RSUBPIX_G, params.RSUBPIX_B), vec3(outgamma));
+    vec3 cgreen = pow(vec3(params.GSUBPIX_R, params.GSUBPIX_G, params.GSUBPIX_B), vec3(outgamma));
+    vec3 cblue  = pow(vec3(params.BSUBPIX_R, params.BSUBPIX_G, params.BSUBPIX_B), vec3(outgamma));
 
     ivec2 tli = ivec2(floor(vTexCoord/texelSize-vec2(0.4999)));
 
@@ -108,7 +108,7 @@ void main()
                 intsmear(subpix-3.0, rsubpix, 1.5, coeffs_x),
                 intsmear(subpix-4.0, rsubpix, 1.5, coeffs_x));
 
-    if (param.BGR > 0.5) {
+    if (params.BGR > 0.5) {
         lcol.rgb = lcol.bgr;
         rcol.rgb = rcol.bgr;
     }

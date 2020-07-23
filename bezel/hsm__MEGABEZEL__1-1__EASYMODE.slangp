@@ -76,15 +76,15 @@ filter_linear14 = false
 srgb_framebuffer14 = true
 alias14 = ORIG_LINEARIZED
 
-shader15 = ../bezel/shaders/crt-easymode-halation/blur_horiz.slang
+shader15 = ../bezel/shaders/HyperspaceMadness/hsm-easymode/hsm-crt-easymode-blur_horiz.slang
 filter_linear15 = false
 srgb_framebuffer15 = true
 
-shader16 = ../bezel/shaders/crt-easymode-halation/blur_vert.slang
+shader16 = ../bezel/shaders/HyperspaceMadness/hsm-easymode/hsm-crt-easymode-blur_vert.slang
 filter_linear16 = false
 srgb_framebuffer16 = true
 
-shader17 = ../bezel/shaders/crt-easymode-halation/threshold.slang
+shader17 = ../bezel/shaders/HyperspaceMadness/hsm-easymode/hsm-crt-easymode-threshold.slang
 filter_linear17 = false
 srgb_framebuffer17 = true
 

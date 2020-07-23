@@ -144,7 +144,7 @@ alias12 = BR_MirrorFullscreenGlowPass
             // TopLayerImage
             // TopLayerVertImage
 
-shader13 = ../bezel/shaders/HyperspaceMadness/hsm-mega-bezel-reflection-reflection-only.slang
+shader13 = ../bezel/shaders/HyperspaceMadness/hsm-mega-bezel-reflection.slang
 mipmap_input13 = true
 filter_linear13 = true
 scale_type13 = viewport

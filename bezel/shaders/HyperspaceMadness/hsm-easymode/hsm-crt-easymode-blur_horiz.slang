@@ -13,6 +13,10 @@ layout(std140, set = 0, binding = 0) uniform UBO
 	mat4 MVP;
 } global;
 
+#include "hsm-crt-easymode-blur_params.inc"
+
+#define kernel(x) exp(-GLOW_FALLOFF * (x) * (x))
+
 #pragma stage vertex
 layout(location = 0) in vec4 Position;
 layout(location = 1) in vec2 TexCoord;
@@ -28,10 +32,18 @@ void main()
 layout(location = 0) in vec2 vTexCoord;
 layout(location = 0) out vec4 FragColor;
 layout(set = 0, binding = 2) uniform sampler2D Source;
-layout(set = 0, binding = 3) uniform sampler2D LOW_RES_LINEARIZED;
 
 void main()
 {
-vec3 diff = clamp(texture(Source, vTexCoord).rgb - texture(LOW_RES_LINEARIZED, vTexCoord).rgb, 0.0, 1.0);
-   FragColor = vec4(diff, 1.0);
+	vec3 col = vec3(0.0);
+	float dx = params.SourceSize.z;
+
+	float k_total = 0.0;
+	for (int i = -TAPS; i <= TAPS; i++)
+		{
+		float k = kernel(i);
+		k_total += k;
+		col += k * texture(Source, vTexCoord + vec2(float(i) * dx, 0.0)).rgb;
+		}
+   FragColor = vec4(col / k_total, 1.0);
 }

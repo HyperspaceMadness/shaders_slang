@@ -1,11 +1,9 @@
 // Tube Glass & Shadow
-#pragma parameter HBZ_TUBE_GLASS_IMAGE_OPACITY         "[TUBE]  Tube Glass Image Opacity (Additive)" 1.4 0 200 0.05
+#pragma parameter HBZ_TUBE_GLASS_IMAGE_OPACITY         "[TUBE]  Tube Glass Image Opacity (Additive)" 1.4 0.01 200 0.05
 float HBZ_TUBE_GLASS_IMAGE_OPACITY = global.HBZ_TUBE_GLASS_IMAGE_OPACITY;
 
-// #pragma parameter HBZ_TUBE_GLASS_IMAGE_SCALE         "[TUBE]  Tube Glass Image Scale" 1.05 0.1 5 0.01
-#ifndef HBZ_TUBE_GLASS_IMAGE_SCALE
-    #define HBZ_TUBE_GLASS_IMAGE_SCALE 1.05
-#endif
+#pragma parameter HBZ_TUBE_GLASS_IMAGE_SCALE         "[TUBE]  Tube Glass Image Scale" 1.05 0.1 5 0.01
+float HBZ_TUBE_GLASS_IMAGE_SCALE = global.HBZ_TUBE_GLASS_IMAGE_SCALE;
 
 #pragma parameter HBZ_TUBE_EDGE_SHADOW                 "[TUBE]  Tube Edge Shadow" 0.7 0 2 0.05
 float HBZ_TUBE_EDGE_SHADOW = global.HBZ_TUBE_EDGE_SHADOW;
@@ -20,7 +18,6 @@ float HBZ_TUBE_EDGE_SHADOW = global.HBZ_TUBE_EDGE_SHADOW;
 #ifndef HBZ_BACKGROUND_IMAGE_SCALE_MODE
     #define HBZ_BACKGROUND_IMAGE_SCALE_MODE 1
 #endif
-
 
 // #pragma parameter HBZ_BACKGROUND_IMAGE_ASPECT_RATIO 	"[BG IMAGE]  Aspect Ratio" 1.77 0.25 4 0.01
 #ifndef HBZ_BACKGROUND_IMAGE_ASPECT_RATIO
@@ -109,7 +106,6 @@ float HBR_BLUR_MIN = global.HBR_BLUR_MIN;
 #pragma parameter HBR_BLUR_MAX 							"[REFLECTION BLUR]  Max" 	0.95 0 1 0.01
 float HBR_BLUR_MAX = global.HBR_BLUR_MAX;
 
-
 // Reflection Noise
 #pragma parameter HBR_NOISE_AMOUNT 						"[REFLECTION NOISE]   Amount" 0.5 0 1 0.1
 float HBR_NOISE_AMOUNT = global.HBR_NOISE_AMOUNT;
@@ -128,7 +124,7 @@ float HBR_GLOBAL_AMOUNT = global.HBR_GLOBAL_AMOUNT;
 #pragma parameter HBR_GLOBAL_GAMMA_ADJUST 				"[REFLECTION GLOBAL]  Global Gamma Adjust" 1.2 0.25 3 0.05
 float HBR_GLOBAL_GAMMA_ADJUST = global.HBR_GLOBAL_GAMMA_ADJUST;
 
-#pragma parameter HBR_INNER_EDGE_REFLECTION 			"[REFLECTION AMOUNT]  Inner Edge" 0.7 0 3 0.02
+#pragma parameter HBR_INNER_EDGE_REFLECTION 			"[REFLECTION AMOUNT]  Inner Edge Amount" 0.7 0 3 0.02
 float HBR_INNER_EDGE_REFLECTION = global.HBR_INNER_EDGE_REFLECTION;
 
 #pragma parameter HBR_INNER_EDGE_FULLSCREEN_GLOW 		"[REFLECTION AMOUNT]  Inner Edge Fullscreen Glow" 0.4 0 10 0.02

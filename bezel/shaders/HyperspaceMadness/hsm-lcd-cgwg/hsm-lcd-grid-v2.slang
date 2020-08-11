@@ -99,6 +99,15 @@ float intsmear(float x, float dx, float d, float coeffs[7])
     return d * ( intsmear_func(zh,coeffs) - intsmear_func(zl,coeffs) )/dx;
 }
 
+// TODO this is not working yet
+// vec3 fetch_offset(vec2 coord, vec2 pixel_offset)
+// {
+//     vec2 offset = pixel_offset * 1/global.SourceSize.xy;
+//     vec3 color = texelFetchOffset(Source, (coord), 0, (pixel_offset)).rgb;
+//     // vec3 color = HSS_GetCroppedTexSample(Source, coord + offset).rgb;
+//     return pow(vec3(param.LCD_GAIN) * color + vec3(param.LCD_BLACK_LEVEL), vec3(param.LCD_GAMMA)) + vec3(param.LCD_AMBIENT);
+// }
+
 void main()
 {
     // TODO Add Support for Cropping?

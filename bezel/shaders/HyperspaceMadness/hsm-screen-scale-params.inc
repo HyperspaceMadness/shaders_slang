@@ -8,7 +8,7 @@ Description:
 */
 
 // Screen Scale Required Parameters
-#pragma parameter HSS_MEGA_BEZEL_DEBUG					"___HSM MEGA BEZEL__ V.2020-07-22-0 - Debug ON" 0 0 1 1
+#pragma parameter HSS_MEGA_BEZEL_DEBUG					"___HSM MEGA BEZEL__ V.2020-08-10-0 - Debug ON" 0 0 1 1
 float HSS_MEGA_BEZEL_DEBUG = global.HSS_MEGA_BEZEL_DEBUG;
 
 #pragma parameter HSS_FLIP_VIEWPORT_AND_CORE_VERTICAL	"[VERTICAL FLIP]  Flip Viewport Vertical - For Some 3D Cores"  0 0 1 1
@@ -94,42 +94,17 @@ float HSS_CURVATURE_3D_RADIUS = global.HSS_CURVATURE_3D_RADIUS;
 #pragma parameter HSS_CURVATURE_3D_VIEW_DIST 			"[3D CURVATURE]  View Distance - Def 1.5" 1.5 0.5 1024 0.05
 float HSS_CURVATURE_3D_VIEW_DIST = global.HSS_CURVATURE_3D_VIEW_DIST;
 
-// #pragma parameter HSS_CURVATURE_3D_TILT_ANGLE_X 		"[3D CURVATURE]  Tilt Angle X" 0 -1.5 1.5 0.01
-#ifndef HSS_CURVATURE_3D_TILT_ANGLE_X
-	#define HSS_CURVATURE_3D_TILT_ANGLE_X 0
-#endif
+#pragma parameter HSS_CURVATURE_3D_TILT_ANGLE_X 		"[3D CURVATURE]  Tilt Angle X" 0 -1.5 1.5 0.01
+float HSS_CURVATURE_3D_TILT_ANGLE_X = global.HSS_CURVATURE_3D_TILT_ANGLE_X;
 
 #pragma parameter HSS_CURVATURE_3D_TILT_ANGLE_Y 		"[3D CURVATURE]  Tilt Angle Y" 0 -1.5 1.5 0.01
 float HSS_CURVATURE_3D_TILT_ANGLE_Y = global.HSS_CURVATURE_3D_TILT_ANGLE_Y;
-
-// #pragma parameter HSS_CURVATURE_3D_BEZEL_DEPTH 			"[3D CURVATURE]  Bezel Depth - Def 0" 0 -2 2 0.05
-#ifndef HSS_CURVATURE_3D_BEZEL_DEPTH
-	#define HSS_CURVATURE_3D_BEZEL_DEPTH 0
-#endif
 
 #pragma parameter HSS_POSITION_OFFSET_X 				"[POSITION]  Position Offset X" 0 -100 100 0.1
 float HSS_POSITION_OFFSET_X = global.HSS_POSITION_OFFSET_X;
 
 #pragma parameter HSS_POSITION_OFFSET_Y 				"[POSITION]  Position Offset Y" 0 -100 100 0.1
 float HSS_POSITION_OFFSET_Y = global.HSS_POSITION_OFFSET_Y;
-
-#pragma parameter HSS_COLOR_CRT_PROFILE 				"[COLOR]  CRT Profile: sRGB,BVM,P22,SMPTE-C,Philips,Trinit,LUT" 3 -1 6 1
-#define HSS_COLOR_CRT_PROFILE global.HSS_COLOR_CRT_PROFILE
-
-#pragma parameter HSS_COLOR_SPACE 						"[COLOR]  Color Space: sRGB, DCI, Adobe, Rec.2020" 0 0 3 1
-#define HSS_COLOR_SPACE global.HSS_COLOR_SPACE
-
-// TODO disabled for the moment because the d65 code is turning things magenta in everything but crt profile 3 (SMPTE-C)
-// #pragma parameter HSS_COLOR_TEMPERATURE   				"[COLOR]  Temperature - Def -50" -50 -100 100 5
-// #define HSS_COLOR_TEMPERATURE global.HSS_COLOR_TEMPERATURE
-#define HSS_COLOR_TEMPERATURE 0
-
-// #pragma parameter HSS_COLOR_SATURATION    				"[COLOR]  Saturation" 1 0.0 2.0 0.01
-// #define HSS_COLOR_SATURATION global.HSS_COLOR_SATURATION
-#define HSS_COLOR_SATURATION 1
-
-#pragma parameter HSS_COLOR_LUMINANCE   				"[COLOR]  Luminance - Def 105" 105 0 400 1
-#define HSS_COLOR_LUMINANCE global.HSS_COLOR_LUMINANCE
 
 #pragma parameter HSS_COLOR_BLACK_LEVEL 				"[COLOR]  Black Level - Def -0.04" -0.04 -1 1 0.01
 #define HSS_COLOR_BLACK_LEVEL global.HSS_COLOR_BLACK_LEVEL

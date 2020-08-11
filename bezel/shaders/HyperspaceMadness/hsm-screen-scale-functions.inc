@@ -676,61 +676,6 @@ vec2 HSS_GetMirrorWrappedCoord(vec2 in_coord)
 	return ctr_mirror_coord + 0.5;
 }
 
-// // TODO to get a better blend at the corners we need to guess the offset from the curved corner will be then blend using this
-// vec2 HSS_GetWrappedCurvedCoord(vec2 in_coord, float curvature_multiplier, float screen_aspect)
-// {
-// 	return HSS_GetMirrorWrappedCoord(HSS_GetCurvedCoord(in_coord, curvature_multiplier, screen_aspect));
-
-// 	// Old version of reflection coord which is actually goes straight out from the side instead of being curved
-// 	// if (curved_coord_distance > 1.41)
-// 	// {
-// 	// 	if (abs(ctr_coord.x) > 0.5)
-// 	// 	{
-// 	// 		ctr_mirror_coord.x = ctr_screen_edge_coord.x - global.hmss_reflection_mirror_stretch * vector_outside.x + sign(ctr_screen_edge_coord.x) * global.hmss_reflection_mirror_offset / aspect_ratio / 100;
-// 	// 	}
-// 	// 	if (abs(ctr_coord.y) > 0.5)
-// 	// 	{
-// 	// 		ctr_mirror_coord.y = ctr_screen_edge_coord.y - global.hmss_reflection_mirror_stretch * vector_outside.y + sign(ctr_screen_edge_coord.x) * global.hmss_reflection_mirror_offset / 100;
-// 	// 	}
-		
-// 	// 	return ctr_mirror_coord + 0.5;
-// 	// }
-
-// 	// vec2 ctr_curved_coord = HSS_GetCurvedCoord(in_coord, curvature_multiplier) - 0.5;
-// 	// vec2 ctr_blended_coord = ctr_curved_coord;
-
-// 	// // TODO need to repeat edge when we are in the black edge area
-// 	// 	if ((abs(ctr_curved_coord.x) > 0.5 && abs(ctr_curved_coord.y) > 0.5))
-// 	// 	{
-// 	// 		return ctr_mirror_coord + 0.5;
-// 	// 	}
-
-// 	// 	if (abs(ctr_curved_coord.x) + HSS_TUBE_BLACK_EDGE_THICKNESS / 100 / aspect_ratio > 0.5)
-// 	// 	{
-// 	// 		vec2 ctr_curved_screen_edge_coord = HSS_GetCurvedCoord(vec2(ctr_screen_edge_coord.x, ctr_coord.y) + 0.5, curvature_multiplier) - 0.5;
-// 	// 		float curved_offset = ctr_curved_screen_edge_coord.x - ctr_screen_edge_coord.x;
-// 	// 		ctr_mirror_coord.x = ctr_screen_edge_coord.x - global.hmss_reflection_mirror_stretch * vector_outside.x - 2 * curved_offset + sign(ctr_screen_edge_coord.x) * (2 * HSS_TUBE_BLACK_EDGE_THICKNESS + global.hmss_reflection_mirror_offset) / 100 / aspect_ratio;
-// 	// 		ctr_mirror_coord.x = clamp(ctr_mirror_coord.x, -0.49999, 0.49999);
-// 	// 	}
-// 	// 	if (abs(ctr_curved_coord.y) + HSS_TUBE_BLACK_EDGE_THICKNESS / 100 > 0.5)
-// 	// 	{
-// 	// 		vec2 ctr_curved_screen_edge_coord = HSS_GetCurvedCoord(vec2(ctr_coord.x, ctr_screen_edge_coord.y) + 0.5, curvature_multiplier) - 0.5;
-// 	// 		float curved_offset = ctr_curved_screen_edge_coord.y - ctr_screen_edge_coord.y;
-// 	// 		ctr_mirror_coord.y = ctr_screen_edge_coord.y - global.hmss_reflection_mirror_stretch * vector_outside.y - 2 * curved_offset + sign(ctr_screen_edge_coord.y) * (2 * HSS_TUBE_BLACK_EDGE_THICKNESS + global.hmss_reflection_mirror_offset) / 100;
-// 	// 		ctr_mirror_coord.y = clamp(ctr_mirror_coord.y, -0.49999, 0.49999);
-// 	// 	}
-// 	// 	if (abs(ctr_curved_coord.x) > 0.5 || abs(ctr_curved_coord.y) > 0.5)
-// 	// 	{
-// 	// 		ctr_blended_coord = HSS_GetCurvedCoord(ctr_mirror_coord + 0.5, curvature_multiplier) - 0.5;
-// 	// 	}
-// 	// 	if (abs(ctr_curved_coord.x) > 0.5 && abs(ctr_curved_coord.y) > 0.5)
-// 	// 	{
-// 	// 		ctr_blended_coord = ctr_mirror_coord + 0.5;
-// 	// 	}
-	
-// 	//return ctr_blended_coord + 0.5;
-// }
-
 // Returns curved coordinates for the coordinate supplied
 // Cached coordinate comes from the mapping pass texture supplied
 // x & y are the curved tube coordinates
@@ -792,14 +737,8 @@ vec4 HSS_Delinearize(vec4 in_color, float in_gamma)
 	return HSS_ApplyGamma(in_color, in_gamma);
 }
 
-vec4 HSS_ApplyLumaAndBlackLevel(vec4 in_color, float color_is_linear)
+vec4 HSS_ApplyBlackLevel(vec4 in_color, float color_is_linear)
 {
-	// If there is no black level or gamma adjustment return without any adjustment
-	if (HSS_COLOR_BLACK_LEVEL == 0 && HSS_COLOR_LUMINANCE == 100)
-	{
-		return in_color;
-	}
-	
 	vec4 out_color = in_color;
 
 	// Linearize if color isn't linear
@@ -807,9 +746,6 @@ vec4 HSS_ApplyLumaAndBlackLevel(vec4 in_color, float color_is_linear)
 	{
 		out_color = HSS_Linearize(out_color, HSS_DEFAULT_CRT_GAMMA);
 	}
-
-	// Luminance
-	out_color *= HSS_COLOR_LUMINANCE / 100;
 
 	// Black Level
 	out_color -= HSS_COLOR_BLACK_LEVEL / 100;
@@ -934,143 +870,6 @@ vec4 HSS_ApplyPhosphorPersistence(vec4 in_color, sampler2D in_feedback_pass, vec
 	out_color.b = max(prev_color.b, out_color.b);
 
 	return out_color;
-}
-
-// Borrowed from Guest's Guest-DrVenom d65-d50
-vec4 HSS_ApplyColorTemperature_D65_D50(vec4 in_color)
-{
-	// Guest-Venom d65-d50 Matrices
-	const mat3 D65_to_XYZ = mat3 (
-			0.4306190,  0.2220379,  0.0201853,
-			0.3415419,  0.7066384,  0.1295504,
-			0.1783091,  0.0713236,  0.9390944);
-
-	const mat3 XYZ_to_D65 = mat3 (
-			3.0628971, -0.9692660,  0.0678775,
-			-1.3931791,  1.8760108, -0.2288548,
-			-0.4757517,  0.0415560,  1.0693490);
-			
-	const mat3 D50_to_XYZ = mat3 (
-			0.4552773,  0.2323025,  0.0145457,
-			0.3675500,  0.7077956,  0.1049154,
-			0.1413926,  0.0599019,  0.7057489);
-			
-	const mat3 XYZ_to_D50 = mat3 (
-			2.9603944, -0.9787684,  0.0844874,
-			-1.4678519,  1.9161415, -0.2545973,
-			-0.4685105,  0.0334540,  1.4216174);
-
-	vec3 color = in_color.rgb;
-	
-	// If the CRT profile is set to 6 then decrease the saturation by 20% as it is over saturated
-	float saturation = HSS_COLOR_SATURATION;
-	saturation += (HSS_COLOR_CRT_PROFILE == 6) ? -0.20 : 0;
-   	color = normalize(pow(color + 1e-4, vec3(saturation)))*length(color);
-   
-	float p = 2.4;
-	
-	color = pow(color, vec3(p));
-	
-	vec3 warmer = D50_to_XYZ*color;
-	warmer = XYZ_to_D65*warmer;
-	
-	vec3 cooler = D65_to_XYZ*color;
-	cooler = XYZ_to_D50*cooler;
-	
-	float m = abs(HSS_COLOR_TEMPERATURE)/100.0;
-	
-	vec3 comp = (HSS_COLOR_TEMPERATURE < 0.0) ? cooler : warmer;
-	
-	color = mix(color, comp, m);
-
-	color = pow(color, vec3(1.0/p));	
-	
-	return vec4(color, 1.0);
-}
-
-// Guest-Venom Color Spaces
-vec4 HSS_ApplyColorSpace(vec4 in_color)
-{
-	if (HSS_COLOR_CRT_PROFILE == -1.0) return in_color;
-
-	// Guest-DrVenom Color Spaces
-	const mat3 Profile0 = mat3( 0.412391,  0.212639,  0.019331,
-								0.357584,  0.715169,  0.119195,
-								0.180481,  0.072192,  0.950532
-								);
-
-	const mat3 Profile1 = mat3( 0.430554,  0.222004,  0.020182,
-								0.341550,  0.706655,  0.129553,
-								0.178352,  0.071341,  0.939322
-								);
-
-	const mat3 Profile2 = mat3( 0.396686,  0.210299,  0.006131,
-								0.372504,  0.713766,  0.115356,
-								0.181266,  0.075936,  0.967571
-								);
-
-	const mat3 Profile3 = mat3(	0.393521,  0.212376,  0.018739,
-								0.365258,  0.701060,  0.111934,
-								0.191677,  0.086564,  0.958385
-								);
-
-	const mat3 Profile4 = mat3( 0.392258,  0.209410,  0.016061,
-								0.351135,  0.725680,  0.093636,
-								0.166603,  0.064910,  0.850324
-								);
-
-	const mat3 Profile5 = mat3( 0.377923,  0.195679,  0.010514,
-								0.317366,  0.722319,  0.097826,
-								0.207738,  0.082002,  1.076960
-								);
-
-	const mat3 ToSRGB =   mat3(  3.240970, -0.969244,  0.055630,
-								-1.537383,  1.875968, -0.203977,
-								-0.498611,  0.041555,  1.056972
-								);
-
-	const mat3 ToDCI =    mat3(	 2.725394,  -0.795168,   0.041242,
-								-1.018003,   1.689732,  -0.087639,
-								-0.440163,   0.022647,   1.100929
-								);
-
-	const mat3 ToAdobe =  mat3(	 2.041588, -0.969244,  0.013444,
-								-0.565007,  1.875968, -0.11836,
-								-0.344731,  0.041555,  1.015175
-								);
-
-	const mat3 ToREC =    mat3(	 1.716651, -0.666684,  0.017640,
-								-0.355671,  1.616481, -0.042771,
-								-0.253366,  0.015769,  0.942103
-								);
-
-	float gamma;
-	mat3 m_out;
-	vec3 color_rgb = in_color.rgb;
-	
-	if (HSS_COLOR_SPACE == 0.0) { gamma = 2.4; m_out =  ToSRGB; } else
-	if (HSS_COLOR_SPACE == 1.0) { gamma = 2.6; m_out =  ToDCI;  } else
-	if (HSS_COLOR_SPACE == 2.0) { gamma = 2.2; m_out =  ToAdobe;} else
-	if (HSS_COLOR_SPACE == 3.0) { gamma = 2.4; m_out =  ToREC;  }
-	
-	vec3 out_color_rgb = pow(color_rgb, vec3(gamma));
-	// vec3 color_rgb = HSS_Delinearize(in_color, gamma).rgb;
-
-	mat3 m_in = Profile0;
-	if (HSS_COLOR_CRT_PROFILE == 0.0) { m_in = Profile0; } else	
-	if (HSS_COLOR_CRT_PROFILE == 1.0) { m_in = Profile1; } else
-	if (HSS_COLOR_CRT_PROFILE == 2.0) { m_in = Profile2; } else
-	if (HSS_COLOR_CRT_PROFILE == 3.0) { m_in = Profile3; } else
-	if (HSS_COLOR_CRT_PROFILE == 4.0) { m_in = Profile4; } else
-	if (HSS_COLOR_CRT_PROFILE == 5.0) { m_in = Profile5; }
-	
-	out_color_rgb = m_in * out_color_rgb;
-	out_color_rgb = m_out * out_color_rgb;
-
-	out_color_rgb = pow(out_color_rgb, vec3(1 / gamma));	
-	// vec4 out_color = HSS_Linearize(vec4(color_rgb, 1), gamma);
-	
-	return vec4(out_color_rgb, in_color.a);
 }
 
 float HSS_GetVignetteFactor(vec2 coord, float amount)

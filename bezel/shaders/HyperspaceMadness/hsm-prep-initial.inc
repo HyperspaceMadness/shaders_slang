@@ -115,29 +115,8 @@ void main()
 {
    FragColor = texture(Source, vTexCoord);
 
-   if (HSS_COLOR_CRT_PROFILE != -1)
-   {
-      FragColor = clamp(HSS_ApplyColorSpace(FragColor), 0, 1);
-
-      // Royale can't currently is currently at the limit of number of textures so we can't add the LUT
-      #ifndef ROYALE_PRESET
-         if (HSS_COLOR_CRT_PROFILE > 5)
-         {
-            FragColor = ApplyLUT(FragColor, SamplerLUT3);
-         }
-      #endif
-   }
-
-   // Add Color Temperature
-   // FragColor = HSS_ApplyColorTemperature_D65_D50(FragColor);
-   // vec3 color_rgb = vec3(FragColor); 
-   // vec3 color_hsv = HSS_RGBtoHSV(color_rgb);
-   // // color_rgb = HSS_HSVtoRGB(vec3(color_hsv.x, color_hsv.y * (HSS_COLOR_SATURATION + 100) / 100, color_hsv.x));
-   // color_rgb = HSS_HSVtoRGB(color_hsv);
-   // FragColor = vec4(color_rgb, FragColor.w);
-
    // Apply black level & gamma with input as non linearized
-   FragColor = HSS_ApplyLumaAndBlackLevel(FragColor, 0);
+   FragColor = HSS_ApplyBlackLevel(FragColor, 0);
 
    // Phosphor Persistence
    FragColor = HSS_ApplyPhosphorPersistence(FragColor, PassFeedback6, vTexCoord);

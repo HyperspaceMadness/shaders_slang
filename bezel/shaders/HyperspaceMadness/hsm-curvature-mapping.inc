@@ -92,7 +92,7 @@ void main()
 	// 	}
 	// #endif
 
-	vec2 edge_mask_coord = (tube_curved_coord - 0.5) * (1 - (HBZ_BEZEL_INNER_EDGE_THICKNESS / 100 / vec2(SCREEN_ASPECT, 1))) + 0.5;
+	vec2 edge_mask_coord = (tube_curved_coord - 0.5) * (1 - (HBZ_BEZEL_INNER_EDGE_THICKNESS / vec2(SCREEN_ASPECT, 1))) + 0.5;
 	float edge_sharpness = 0.99;
 
 	// If this is used in the glass preset adjust the smoothness of the edge of the glass 

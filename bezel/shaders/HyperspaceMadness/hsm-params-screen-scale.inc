@@ -8,7 +8,7 @@ Description:
 */
 
 // Screen Scale Required Parameters
-#pragma parameter HSS_MEGA_BEZEL_DEBUG					"___HSM MEGA BEZEL__ V.2020-08-10-0 - Debug ON" 0 0 1 1
+#pragma parameter HSS_MEGA_BEZEL_DEBUG					"___HSM MEGA BEZEL__ V.2020-08-15-0 - Debug ON" 0 0 1 1
 float HSS_MEGA_BEZEL_DEBUG = global.HSS_MEGA_BEZEL_DEBUG;
 
 #pragma parameter HSS_FLIP_VIEWPORT_AND_CORE_VERTICAL	"[VERTICAL FLIP]  Flip Viewport Vertical - For Some 3D Cores"  0 0 1 1

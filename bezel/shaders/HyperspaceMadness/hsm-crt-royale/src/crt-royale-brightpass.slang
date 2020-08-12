@@ -56,7 +56,7 @@ const float bloom_diff_thresh_ = 1.0/256.0;
 // HSM Added
 ///////////////////////////////  HSM INCLUDES  ///////////////////////////////
 
-#include "../../hsm-screen-scale-params.inc"
+#include "../../hsm-params-screen-scale.inc"
 #include "../../hsm-screen-scale-functions.inc"
 
 #pragma stage vertex

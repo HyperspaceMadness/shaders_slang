@@ -1,5 +1,6 @@
 #version 450
 
+#include "../hsm-param-globals.inc"
 #include "hsm-geom-deluxe-params.inc"
 
 #define tex_size0 global.SourceSize
@@ -22,9 +23,9 @@ void main()
 layout(location = 0) in vec2 v_texCoord;
 layout(location = 1) in vec4 v_coeffs;
 layout(location = 0) out vec4 FragColor;
-layout(set = 0, binding = 2) uniform sampler2D internal1;
+layout(set = 0, binding = 2) uniform sampler2D Source;
 
-#define TEX2D(v) pow(texture(internal1, v).rgb, vec3(gamma))
+#define TEX2D(v) pow(texture(Source, v).rgb, vec3(gamma))
 
 void main()
 {

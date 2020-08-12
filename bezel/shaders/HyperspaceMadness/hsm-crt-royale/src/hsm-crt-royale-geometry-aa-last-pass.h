@@ -54,7 +54,7 @@ layout(push_constant) uniform Push
 
 // HSM Added
 ///////////////////////////////  HSM INCLUDES  ///////////////////////////////
-#include "../../hsm-screen-scale-params.inc"
+#include "../../hsm-params-screen-scale.inc"
 
 // These variables are to be used in geometry-functions.h
 float geom_mode = HSS_CURVATURE_MODE;

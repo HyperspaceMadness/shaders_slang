@@ -9,13 +9,10 @@
  *  Software Foundation; either version 2 of the License, or (at your option)
  *  any later version.
  */
-// HSM Added
-#include "../hsm-screen-scale-with-globals.inc"
-// End Addition
+ 
+#include "geom-deluxe-params.inc"
 
-#include "hsm-geom-deluxe-params.inc"
-
-#include "../../../../include/subpixel_masks.h"
+#include "../../../include/subpixel_masks.h"
 
 #define u_tex_size0 global.SourceSize.xy
 #define u_tex_size1 global.internal1Size.xy
@@ -44,93 +41,79 @@ layout(location = 3) out vec3 v_stretch;
 layout(location = 4) out vec2 v_one;
 layout(location = 5) out vec2 ilfac;
 layout(location = 6) out vec2 TextureSize;
-layout(location = 7) out vec2 CROPPED_ORIGINAL_SIZE;
-layout(location = 8) out float SCREEN_ASPECT;
-layout(location = 9) out vec2 SCREEN_SCALE;
-layout(location = 10) out vec2 SCREEN_COORD;
-layout(location = 11) out float USE_VERTICAL_SCANLINES;
 
-// float intersect(vec2 xy , vec2 sinangle, vec2 cosangle)
-// {
-//   float A = dot(xy,xy)+d.x*d.x;
-//   float B = 2.0*(params.R.x*(dot(xy,sinangle)-d.x*cosangle.x*cosangle.y)-d.x*d.x);
-//   float C = d.x*d.x + 2.0*params.R.x*d.x*cosangle.x*cosangle.y;
-//   return (-B-sqrt(B*B-4.0*A*C))/(2.0*A);
-// }
+float intersect(vec2 xy , vec2 sinangle, vec2 cosangle)
+{
+  float A = dot(xy,xy)+d.x*d.x;
+  float B = 2.0*(params.R.x*(dot(xy,sinangle)-d.x*cosangle.x*cosangle.y)-d.x*d.x);
+  float C = d.x*d.x + 2.0*params.R.x*d.x*cosangle.x*cosangle.y;
+  return (-B-sqrt(B*B-4.0*A*C))/(2.0*A);
+}
 
-// vec2 bkwtrans(vec2 xy, vec2 sinangle, vec2 cosangle)
-// {
-//   float c = intersect(xy, sinangle, cosangle);
-//   vec2 pt = vec2(c)*xy;
-//   pt -= vec2(-params.R.x)*sinangle;
-//   pt /= vec2(params.R.x);
-//   vec2 tang = sinangle/cosangle;
-//   vec2 poc = pt/cosangle;
-//   float A = dot(tang,tang)+1.0;
-//   float B = -2.0*dot(poc,tang);
-//   float C = dot(poc,poc)-1.0;
-//   float a = (-B+sqrt(B*B-4.0*A*C))/(2.0*A);
-//   vec2 uv = (pt-a*sinangle)/cosangle;
-//   float r = FIX(params.R.x*acos(a));
-//   return uv*r/sin(r/params.R.x);
-// }
+vec2 bkwtrans(vec2 xy, vec2 sinangle, vec2 cosangle)
+{
+  float c = intersect(xy, sinangle, cosangle);
+  vec2 pt = vec2(c)*xy;
+  pt -= vec2(-params.R.x)*sinangle;
+  pt /= vec2(params.R.x);
+  vec2 tang = sinangle/cosangle;
+  vec2 poc = pt/cosangle;
+  float A = dot(tang,tang)+1.0;
+  float B = -2.0*dot(poc,tang);
+  float C = dot(poc,poc)-1.0;
+  float a = (-B+sqrt(B*B-4.0*A*C))/(2.0*A);
+  vec2 uv = (pt-a*sinangle)/cosangle;
+  float r = FIX(params.R.x*acos(a));
+  return uv*r/sin(r/params.R.x);
+}
 
-// vec2 fwtrans(vec2 uv, vec2 sinangle, vec2 cosangle)
-// {
-//   float r = FIX(sqrt(dot(uv,uv)));
-//   uv *= sin(r/params.R.x)/r;
-//   float x = 1.0-cos(r/params.R.x);
-//   float D = d.x/params.R.x + x*cosangle.x*cosangle.y+dot(uv,sinangle);
-//   return d.x*(uv*cosangle-x*sinangle)/D;
-// }
+vec2 fwtrans(vec2 uv, vec2 sinangle, vec2 cosangle)
+{
+  float r = FIX(sqrt(dot(uv,uv)));
+  uv *= sin(r/params.R.x)/r;
+  float x = 1.0-cos(r/params.R.x);
+  float D = d.x/params.R.x + x*cosangle.x*cosangle.y+dot(uv,sinangle);
+  return d.x*(uv*cosangle-x*sinangle)/D;
+}
 
-// vec3 maxscale(vec2 sinangle, vec2 cosangle, vec2 aspect)
-// {
-//   vec2 c = bkwtrans(-params.R.x * sinangle / (1.0 + params.R.x/d.x*cosangle.x*cosangle.y), sinangle, cosangle);
-//   vec2 a = vec2(0.5,0.5)*aspect.xy;
-//   vec2 lo = vec2(fwtrans(vec2(-a.x,c.y), sinangle, cosangle).x,
-// 		 fwtrans(vec2(c.x,-a.y), sinangle, cosangle).y)/aspect.xy;
-//   vec2 hi = vec2(fwtrans(vec2(+a.x,c.y), sinangle, cosangle).x,
-// 		 fwtrans(vec2(c.x,+a.y), sinangle, cosangle).y)/aspect.xy;
-//   return vec3((hi+lo)*aspect.xy*0.5,max(hi.x-lo.x,hi.y-lo.y));
-// }
+vec3 maxscale(vec2 sinangle, vec2 cosangle)
+{
+  vec2 c = bkwtrans(-params.R.x * sinangle / (1.0 + params.R.x/d.x*cosangle.x*cosangle.y), sinangle, cosangle);
+  vec2 a = vec2(0.5,0.5)*aspect.xy;
+  vec2 lo = vec2(fwtrans(vec2(-a.x,c.y), sinangle, cosangle).x,
+		 fwtrans(vec2(c.x,-a.y), sinangle, cosangle).y)/aspect.xy;
+  vec2 hi = vec2(fwtrans(vec2(+a.x,c.y), sinangle, cosangle).x,
+		 fwtrans(vec2(c.x,+a.y), sinangle, cosangle).y)/aspect.xy;
+  return vec3((hi+lo)*aspect.xy*0.5,max(hi.x-lo.x,hi.y-lo.y));
+}
 
 void main()
 {
    gl_Position = global.MVP * Position;
    v_texCoord = TexCoord;
-  
-  // HSM Added
-  CROPPED_ORIGINAL_SIZE = HSS_GetCroppedRotatedOriginalSizeWithCoreResMult();
-	SCREEN_ASPECT = HSS_GetScreenAspect();
-	SCREEN_SCALE = HSS_GetScreenScale(SCREEN_ASPECT);
-	SCREEN_COORD = HSS_GetScreenVTexCoord(v_texCoord, SCREEN_SCALE);
-	USE_VERTICAL_SCANLINES = HSS_GetUseVerticalScanlines(SCREEN_ASPECT);
-    // End Addition
 
-  // // Precalculate a bunch of useful values we'll need in the fragment
-  // // shader.
-  // vec2 ang = angle.xy;
-  // v_sinangle = sin(ang);
-  // v_cosangle = cos(ang);
-  // // TODO aspect arg should be 1.0, 0.75
-  // float aspect_ratio = global.OutputSize.x / global.OutputSize.y;
-  // v_stretch = maxscale(v_sinangle, v_cosangle, vec2(1, 1/aspect_ratio));
+  // Precalculate a bunch of useful values we'll need in the fragment
+  // shader.
+  vec2 ang;
+  // if (u_rotation_type.x < 0.5)
+  //   ang = vec2(0.0,angle.x);
+  // else if (u_rotation_type.x < 1.5)
+  //   ang = vec2(angle.x,0.0);
+  // else if (u_rotation_type.x < 2.5)
+  //   ang = vec2(0.0,-angle.x);
+  // else
+  //   ang = vec2(-angle.x,0.0);
+  ang = angle.xy;
+  v_sinangle = sin(ang);
+  v_cosangle = cos(ang);
+  v_stretch = maxscale(v_sinangle, v_cosangle);
   
-  // HSM Removed
-  // TextureSize = global.SourceSize.xy;
-  // ilfac = vec2(1.0, clamp(floor(global.SourceSize.y/200.0),  1.0, 2.0));
-
-  // HSM Added
-  TextureSize = CROPPED_ORIGINAL_SIZE;
+  TextureSize = global.SourceSize.xy;
   
-  // ilfac = vec2(1.0, clamp(floor(TextureSize.y/200.0),  1.0, 2.0));
-  ilfac = vec2(1.0, clamp(floor(TextureSize.y/200.0),  1.0, 2.0));
+  ilfac = vec2(1.0, clamp(floor(global.SourceSize.y/200.0),  1.0, 2.0));
 
   // The size of one texel, in texture-coordinates.
   v_one = ilfac / TextureSize.xy;
-
-
 }
 
 #pragma stage fragment
@@ -142,14 +125,8 @@ layout(location = 4) in vec2 v_one;
 layout(location = 5) in vec2 ilfac;
 layout(location = 6) in vec2 TextureSize;
 layout(location = 0) out vec4 FragColor;
-layout(location = 7) in vec2 CROPPED_ORIGINAL_SIZE;
-layout(location = 8) in float SCREEN_ASPECT;
-layout(location = 9) in vec2 SCREEN_SCALE;
-layout(location = 10) in vec2 SCREEN_COORD;
-layout(location = 11) in float USE_VERTICAL_SCANLINES;
-
 layout(set = 0, binding = 2) uniform sampler2D blur;
-layout(set = 0, binding = 3) uniform sampler2D PreCRTPass;
+layout(set = 0, binding = 3) uniform sampler2D internal1;
 // comment these out, as we're using generated masks instead of LUTs
 //layout(set = 0, binding = 4) uniform sampler2D aperture;
 //layout(set = 0, binding = 5) uniform sampler2D slot;
@@ -157,60 +134,52 @@ layout(set = 0, binding = 3) uniform sampler2D PreCRTPass;
 
 #define blur_texture blur
 
-// HSM Removed
-// #ifdef LINEAR_PROCESSING
-// #       define TEX2D(c) pow(texture(internal1, (c)), vec4(CRTgamma))
-// #else
-// #       define TEX2D(c) texture(internal1, (c))
-// #endif
-
-// HSM Added
 #ifdef LINEAR_PROCESSING
-#       define TEX2D(c) pow(HSS_GetCroppedTexSample(PreCRTPass, (c)), vec4(CRTgamma))
+#       define TEX2D(c) pow(texture(internal1, (c)), vec4(CRTgamma))
 #else
-#       define TEX2D(c) HSS_GetCroppedTexSample(PreCRTPass, (c))
+#       define TEX2D(c) texture(internal1, (c))
 #endif
 
-// float intersect(vec2 xy , vec2 sinangle, vec2 cosangle)
-// {
-//   float A = dot(xy,xy)+d.x*d.x;
-//   float B = 2.0*(params.R.x*(dot(xy,sinangle)-d.x*cosangle.x*cosangle.y)-d.x*d.x);
-//   float C = d.x*d.x + 2.0*params.R.x*d.x*cosangle.x*cosangle.y;
-//   return (-B-sqrt(B*B-4.0*A*C))/(2.0*A);
-// }
+float intersect(vec2 xy , vec2 sinangle, vec2 cosangle)
+{
+  float A = dot(xy,xy)+d.x*d.x;
+  float B = 2.0*(params.R.x*(dot(xy,sinangle)-d.x*cosangle.x*cosangle.y)-d.x*d.x);
+  float C = d.x*d.x + 2.0*params.R.x*d.x*cosangle.x*cosangle.y;
+  return (-B-sqrt(B*B-4.0*A*C))/(2.0*A);
+}
 
-// vec2 bkwtrans(vec2 xy, vec2 sinangle, vec2 cosangle)
-// {
-//   float c = intersect(xy, sinangle, cosangle);
-//   vec2 pt = vec2(c)*xy;
-//   pt -= vec2(-params.R.x)*sinangle;
-//   pt /= vec2(params.R.x);
-//   vec2 tang = sinangle/cosangle;
-//   vec2 poc = pt/cosangle;
-//   float A = dot(tang,tang)+1.0;
-//   float B = -2.0*dot(poc,tang);
-//   float C = dot(poc,poc)-1.0;
-//   float a = (-B+sqrt(B*B-4.0*A*C))/(2.0*A);
-//   vec2 uv = (pt-a*sinangle)/cosangle;
-//   float r = FIX(params.R.x*acos(a));
-//   return uv*r/sin(r/params.R.x);
-// }
+vec2 bkwtrans(vec2 xy, vec2 sinangle, vec2 cosangle)
+{
+  float c = intersect(xy, sinangle, cosangle);
+  vec2 pt = vec2(c)*xy;
+  pt -= vec2(-params.R.x)*sinangle;
+  pt /= vec2(params.R.x);
+  vec2 tang = sinangle/cosangle;
+  vec2 poc = pt/cosangle;
+  float A = dot(tang,tang)+1.0;
+  float B = -2.0*dot(poc,tang);
+  float C = dot(poc,poc)-1.0;
+  float a = (-B+sqrt(B*B-4.0*A*C))/(2.0*A);
+  vec2 uv = (pt-a*sinangle)/cosangle;
+  float r = FIX(params.R.x*acos(a));
+  return uv*r/sin(r/params.R.x);
+}
 
-// vec2 transform(vec2 coord, vec3 stretch, vec2 sinangle, vec2 cosangle)
-// {
-//   coord = (coord-vec2(0.5))*aspect.xy*stretch.z+stretch.xy;
-//   return (bkwtrans(coord, sinangle, cosangle)/overscan.xy/aspect.xy+vec2(0.5));
-// }
+vec2 transform(vec2 coord, vec3 stretch, vec2 sinangle, vec2 cosangle)
+{
+  coord = (coord-vec2(0.5))*aspect.xy*stretch.z+stretch.xy;
+  return (bkwtrans(coord, sinangle, cosangle)/overscan.xy/aspect.xy+vec2(0.5));
+}
 
-// float corner(vec2 coord)
-// {
-//   coord = (coord - vec2(0.5)) * overscan.xy + vec2(0.5);
-//   coord = min(coord, vec2(1.0)-coord) * aspect.xy;
-//   vec2 cdist = vec2(cornersize.x);
-//   coord = (cdist - min(coord,cdist));
-//   float dist = sqrt(dot(coord,coord));
-//   return clamp((max(cdist.x,1e-3)-dist)*cornersmooth.x,0.0, 1.0);
-// }
+float corner(vec2 coord)
+{
+  coord = (coord - vec2(0.5)) * overscan.xy + vec2(0.5);
+  coord = min(coord, vec2(1.0)-coord) * aspect.xy;
+  vec2 cdist = vec2(cornersize.x);
+  coord = (cdist - min(coord,cdist));
+  float dist = sqrt(dot(coord,coord));
+  return clamp((max(cdist.x,1e-3)-dist)*cornersmooth.x,0.0, 1.0);
+}
 
 // Calculate the influence of a scanline on the current pixel.
 //
@@ -266,26 +235,16 @@ void main()
 
   // Texture coordinates of the texel containing the active pixel.
   vec2 xy;
-
-  // // HSM Removed
-  // if (curvature.x > 0.5)
-  //   xy = transform(v_texCoord, v_stretch, v_sinangle, v_cosangle);
-  // else
-  //   xy = (v_texCoord-vec2(0.5))/overscan.xy+vec2(0.5);
-  // vec2 xy0 = xy;
-  // float cval = corner(xy);
-
-// HSM Added
-	vec2 screen_curved_coord = HSS_GetCurvedCoord(SCREEN_COORD, 1, SCREEN_ASPECT);
-  xy = HSS_GetMirrorWrappedCoord(screen_curved_coord);
+  if (curvature.x > 0.5)
+    xy = transform(v_texCoord, v_stretch, v_sinangle, v_cosangle);
+  else
+    xy = (v_texCoord-vec2(0.5))/overscan.xy+vec2(0.5);
   vec2 xy0 = xy;
-  // End Addition
+  float cval = corner(xy);
 
   // Of all the pixels that are mapped onto the texel we are
   // currently rendering, which pixel are we currently rendering?
     
-  // vec2 ilvec = vec2(0.0, ilfac.y * interlace_detect > 1.5 ? mod(float(global.FrameCount), 2.0) : 0.0);
-
   vec2 ilvec = vec2(0.0, ilfac.y * interlace_detect > 1.5 ? mod(float(global.FrameCount), 2.0) : 0.0);
 
   vec2 ratio_scale = (xy * TextureSize - vec2(0.5, 0.5) + ilvec) / ilfac;
@@ -346,28 +305,20 @@ void main()
   vec3 mul_res  = (col * weights + col2 * weights2).rgb;
 
   // halation and corners
-  vec3 blur = pow(HSS_GetCroppedTexSample(blur_texture,xy0).rgb, vec3(CRTgamma.x));
-  // HSM Removed
-  // mul_res = mix(mul_res, blur, halation.x) * vec3(cval);
-  // HSM Added
-  mul_res = mix(mul_res, blur, halation.x);
+  vec3 blur = pow(texture(blur_texture,xy0).rgb, vec3(CRTgamma.x));
+  mul_res = mix(mul_res, blur, halation.x) * vec3(cval);
   
   // Convert the image gamma for display on our output device.
   mul_res = pow(mul_res, vec3(1.0 / monitorgamma.x));
 
+  // Shadow mask
+  // original code; just makes a giant phosphor here
+  // xy = v_texCoord.xy * u_quad_dims.xy / u_tex_size1.xy;
+  
   // gl_FragCoord; tied to physical pixel size
-  // HSM Removed
   xy = v_texCoord.xy * global.OutputSize.xy;
-
-  // HSM Added
-  // xy = SCREEN_COORD.xy * SCREEN_SCALE * global.OutputSize.xy;
 
   vec3 mask = mask_weights(xy, aperture_strength.x, mask_picker);
   
   FragColor = vec4(mul_res*mask, col.a);
-
-  // HSM Added Prep and add output gamma
-  FragColor = HSS_Linearize(FragColor, HSS_DEFAULT_SRGB_GAMMA);
-	FragColor = HSS_GetPostCrtPreppedColor(FragColor, screen_curved_coord, SCREEN_COORD, SCREEN_ASPECT, SCREEN_SCALE);
-	// End Addition
 }

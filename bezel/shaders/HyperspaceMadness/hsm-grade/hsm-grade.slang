@@ -97,18 +97,18 @@ layout(std140, set = 0, binding = 0) uniform UBO
 #pragma parameter GRADE_PHOSPHOR_CRT_GAMUT          "[COLOR SPACE]  Phosphor CRT GAMUT (1:NTSC-U 2:NTSC-J 3:PAL)"      2 -4 3 1
 #pragma parameter GRADE_DISPLAY_COLOR_SPACE         "[COLOR SPACE]  Display -1:709 0:sRGB 1:DCI 2:2020, 3:Adobe"       0 -1 3 1
 
-#pragma parameter GRADE_I_SHIFT                     "[SIGNAL PROCESS]  I/U Shift"                   0 -0.2 0.2 0.01
-#pragma parameter GRADE_Q_SHIFT                     "[SIGNAL PROCESS]  Q/V Shift"                   0 -0.2 0.2 0.01
-#pragma parameter GRADE_I_MULTIPLIER                "[SIGNAL PROCESS]  I/U Multiplier"              1  0 2 0.01
-#pragma parameter GRADE_Q_MULTIPLIER                "[SIGNAL PROCESS]  Q/V Multiplier"              1  0 2 0.01
-#pragma parameter GRADE_VIGNETTE_ON                 "[VIGNETTE]  Vignette ON"                       0  0 1 1
-#pragma parameter GRADE_VIGNETTE_STRENGTH           "[VIGNETTE]  Vignette Strength"                 40 0 50 1
-#pragma parameter GRADE_VIGNETTE_POWER              "[VIGNETTE]  Vignette Power"                    0.20 0 0.5 0.01
-#pragma parameter GRADE_SEGA_LUMA_FIX               "[BRIGHTNESS/CONTRAST]  Sega Luma Fix"          0  0 1 1
-#pragma parameter GRADE_BRIGHTNESS                  "[BRIGHTNESS/CONTRAST]  Brightness"             0 -0.5 1 0.01
-#pragma parameter GRADE_BLACK_LEVEL                 "[BRIGHTNESS/CONTRAST]  Black Level"            0 -0.5 0.5 0.01
-#pragma parameter GRADE_CONTRAST                    "[BRIGHTNESS/CONTRAST]  Contrast"               0 -1 1 0.05
-#pragma parameter GRADE_CONTRAST_PIVOT              "[BRIGHTNESS/CONTRAST]  Contrast Pivot"         0.5  0 1 0.01
+#pragma parameter GRADE_I_SHIFT                     "[COLOR SIGNAL PROCESS]  I/U Shift"                   0 -0.2 0.2 0.01
+#pragma parameter GRADE_Q_SHIFT                     "[COLOR SIGNAL PROCESS]  Q/V Shift"                   0 -0.2 0.2 0.01
+#pragma parameter GRADE_I_MULTIPLIER                "[COLOR SIGNAL PROCESS]  I/U Multiplier"              1  0 2 0.01
+#pragma parameter GRADE_Q_MULTIPLIER                "[COLOR SIGNAL PROCESS]  Q/V Multiplier"              1  0 2 0.01
+#pragma parameter GRADE_VIGNETTE_ON                 "[DARKENING VIGNETTE]  ON"                            0  0 1 1
+#pragma parameter GRADE_VIGNETTE_STRENGTH           "[DARKENING VIGNETTE]  Strength (Center Brightness)"  40 0 50 1
+#pragma parameter GRADE_VIGNETTE_POWER              "[DARKENING VIGNETTE]  Power (Edge Darkening)"        0.20 0 0.5 0.01
+#pragma parameter GRADE_SEGA_LUMA_FIX               "[BRIGHTNESS]  Sega Luma Fix"                   0  0 1 1
+#pragma parameter GRADE_BRIGHTNESS                  "[BRIGHTNESS]  Brightness"                      0 -0.5 1 0.01
+#pragma parameter GRADE_BLACK_LEVEL                 "[BRIGHTNESS]  Black Level"                     0 -0.5 0.5 0.01
+#pragma parameter GRADE_CONTRAST                    "[CONTRAST]  Contrast"                          0 -1 1 0.05
+#pragma parameter GRADE_CONTRAST_PIVOT              "[CONTRAST]  Contrast Pivot"                    0.5  0 1 0.01
 #pragma parameter GRADE_WHITE_POINT_TEMP            "[COLOR]  White Point Temp"                     6504 5004 12004 100
 #pragma parameter GRADE_SATURATION                  "[COLOR]  Saturation"                           0 -1 2 0.01
 #pragma parameter GRADE_VIBRANCE                    "[COLOR]  Dullness/Vibrance"                    0 -1 1 0.05

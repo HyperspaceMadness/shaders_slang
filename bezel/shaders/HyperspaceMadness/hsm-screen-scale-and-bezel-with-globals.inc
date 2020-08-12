@@ -1,4 +1,4 @@
-#include "hsm-mega-bezel-globals.inc"
-#include "hsm-screen-scale-params.inc"
-#include "hsm-bezel-params.inc"
+#include "hsm-param-globals.inc"
+#include "hsm-params-screen-scale.inc"
+#include "hsm-params-mega-bezel.inc"
 #include "hsm-screen-scale-functions.inc"

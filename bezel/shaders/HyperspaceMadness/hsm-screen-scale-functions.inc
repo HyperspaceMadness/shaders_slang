@@ -902,8 +902,6 @@ float HSS_GetScreenVignetteFactor(vec2 coord, float amount)
 }
 
 // Torridgristle - ScanlineSimple pass - Public domain
-// TODO - Get the resolution of the axis opposite to scanline direction
-// TODO - Auto Scanline direction for split screen should be horizontal
 vec4 HSS_ApplyScanlineMask(vec4 in_color, vec2 in_coord, vec2 screen_scale)
 {
 	vec2 original_size = HSS_GetRotatedOriginalSize();
@@ -945,7 +943,6 @@ vec4 HSS_ApplyScanlineMask(vec4 in_color, vec2 in_coord, vec2 screen_scale)
 
 	float scanline_mask = 1 - abs(scan - 0.5) * 2;
 	scanline_mask = pow(1 - scanline_mask, 1);
-	// scanline_mask *= (0.5 + 0.5 * (1 - color_brightness_modulation)) * scanline_mask;
 
 	float final_scanline_mask = clamp(1 * scanline_mask, 0, 1);
 

@@ -97,6 +97,7 @@ float HSS_GetScreenAspect()
 	vec2 nintendo_3ds_side_by_side_res = 	vec2(720, 240);
 	vec2 atari_lynx_res = 					vec2(160, 102);
 	vec2 atari_2600_res = 					vec2(160, 228);
+	vec2 atari_2600_crop_res = 				vec2(152, 228);
 	
 	if (HSS_ASPECT_RATIO_MODE == 0)
 	{
@@ -109,7 +110,8 @@ float HSS_GetScreenAspect()
 		else if (HSS_MatchResolution(nintendo_3ds_top_bottom_res, 	raw_original_size)) horizontal_aspect = core_aspect_horizontal;
 		else if (HSS_MatchResolution(nintendo_3ds_side_by_side_res, raw_original_size)) horizontal_aspect = core_aspect_horizontal;
 		else if (HSS_MatchResolution(atari_lynx_res, 				raw_original_size)) horizontal_aspect = core_aspect_horizontal;
-		else if (HSS_MatchResolution(atari_2600_res, 				raw_original_size)) horizontal_aspect = core_aspect_horizontal;
+		else if (HSS_MatchResolution(atari_2600_res, 				raw_original_size)) horizontal_aspect = 1.333;
+		else if (HSS_MatchResolution(atari_2600_crop_res, 			raw_original_size)) horizontal_aspect = 1.333;
 		// Fall back to the explicit ratio
 		else horizontal_aspect = HSS_ASPECT_RATIO_EXPLICIT;
 	}
@@ -150,7 +152,7 @@ float HSS_GetScreenAspect()
 	if (HSS_ASPECT_RATIO_ORIENTATION < 0.5)
 	{
 		// Catch for Atari 2600 - Stella Emulator which would otherwise show up as a vertical aspect ratio
-		if (raw_original_size.x == 160 && raw_original_size.y == 228) final_orientation = 1;
+		if (HSS_MatchResolution(atari_2600_res, raw_original_size) || (HSS_MatchResolution(atari_2600_crop_res, raw_original_size))) final_orientation = 1;
 		else
 		{
 			final_orientation = (HSS_GetIsOriginalSizeVertical() > 0.5) ? 2 : 1;
@@ -904,6 +906,16 @@ float HSS_GetScreenVignetteFactor(vec2 coord, float amount)
 // Torridgristle - ScanlineSimple pass - Public domain
 vec4 HSS_ApplyScanlineMask(vec4 in_color, vec2 in_coord, vec2 screen_scale)
 {
+	//   Stuff to try implementing
+	//   Parameter for simulated line count
+    //   Option to try to match a integer division of the core resolution
+    //   Option for integer "perfect" scanlines
+    //   Offset on scan axis
+    //   Curvature Multiplier
+    //   Try mame hlsl darkening
+    //   Check Lottes tone mapping
+    //   Crawl
+
 	vec2 original_size = HSS_GetRotatedOriginalSize();
 	float use_vert_scanlines = HSS_GetUseVerticalScanlines(original_size.x / original_size.y);
 	vec2 sampling_res = HSS_GetRotatedOriginalSizeWithCoreResMult();

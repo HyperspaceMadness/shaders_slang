@@ -35,6 +35,10 @@ Thanks to:
 #define MASK_MODE_OUTSIDE_BEZEL 4
 #define MASK_MODE_OUTSIDE_FRAME 5
 
+#define IMAGE_SCALE_MODE_AUTO 0
+#define IMAGE_SCALE_MODE_FULL_VIEWPORT 1
+#define IMAGE_SCALE_MODE_FIT_VERTICAL 2
+
 /////////////// Helper Functions ///////////////
 
 // Assumes Opacity is already encoded in alpha
@@ -48,27 +52,27 @@ vec4 BlendModeLayerMix(vec4 in_color_under, vec4 in_color_over, float in_blend_m
 	return clamp(mix(in_color_under, blend_color, in_color_over.a), 0, 1);
 }
 
-vec2 GetImageLayerCoord(vec2 viewport_coord, vec2 position_offset, vec2 tube_scale)
+vec2 GetImageLayerCoord(vec2 viewport_coord, vec2 position_offset, vec2 tube_scale, float image_scale_mode)
 {
 	float output_aspect = global.OutputSize.x / global.OutputSize.y;
 	float aspect_difference = HBZ_BACKGROUND_IMAGE_ASPECT_RATIO / output_aspect;
 	vec2 fit_height_scale = vec2(aspect_difference, 1);
 
 	// If the texture is supposed to be fit to the screen
-	if (HBZ_BACKGROUND_IMAGE_SCALE_MODE == 1)
+	if (image_scale_mode == 1)
 		return viewport_coord;
 
 	// If the texture is supposed to fit vertically
-	if (HBZ_BACKGROUND_IMAGE_SCALE_MODE == 2)
-		return (viewport_coord - 0.5) / fit_height_scale + 0.5;
+	if (image_scale_mode == 2)
+		return ((viewport_coord) - 0.5) / fit_height_scale + 0.5;
 
 	// Otherwise use Auto Scaling with Position offset
 	else
 	{
 		// If using auto scale mode and apply the position adjustment from mega screen scale
-		vec2 screen_height_match_scale =  fit_height_scale * tube_scale.y / (HBZ_BACKGROUND_IMAGE_TUBE_HEIGHT / 100);
+		vec2 screen_height_match_scale =  fit_height_scale * tube_scale.y / (HBZ_BACKGROUND_IMAGE_TUBE_HEIGHT);
 		vec2 scale = screen_height_match_scale;
-		return HSS_GetInverseScaledCoord(HSS_GetCoordWithPositionOffset(viewport_coord), scale);
+		return HSS_GetInverseScaledCoord(viewport_coord + position_offset, scale);
 	}
 }
 
@@ -153,7 +157,7 @@ void main()
 	SCREEN_COORD = HSS_GetScreenVTexCoord(vTexCoord, SCREEN_SCALE);
 
 	VIEWPORT_COORD = vTexCoord * 1.0001;
-	IMAGE_LAYER_COORD = GetImageLayerCoord(VIEWPORT_COORD, HSS_GetPositionOffset(), TUBE_SCALE);
+	IMAGE_LAYER_COORD = GetImageLayerCoord(VIEWPORT_COORD, HSS_GetPositionOffset(), TUBE_SCALE, HBZ_BACKGROUND_IMAGE_SCALE_MODE);
 
 	// Not sure why we need linearize this but it seems to have a smoother range this way
 	BEZEL_FRAME_ORIGINAL_COLOR_RGB = HSS_Linearize(vec4(HSS_HSVtoRGB(vec3(HBZ_BEZEL_COLOR_HUE, HBZ_BEZEL_COLOR_SATURATION, HBZ_BEZEL_COLOR_VALUE)), 1), HSS_DEFAULT_SRGB_GAMMA).rgb;
@@ -184,8 +188,8 @@ layout(set = 0, binding = 7) uniform sampler2D TubeGlassImage;
 layout(set = 0, binding = 8) uniform sampler2D BackgroundImage;
 layout(set = 0, binding = 9) uniform sampler2D BackgroundVertImage;
 layout(set = 0, binding = 10) uniform sampler2D DecalImage;
-layout(set = 0, binding = 11) uniform sampler2D NightModeImage;
-layout(set = 0, binding = 12) uniform sampler2D LightsImage;
+layout(set = 0, binding = 11) uniform sampler2D NightLightingImage;
+layout(set = 0, binding = 12) uniform sampler2D LEDImage;
 layout(set = 0, binding = 13) uniform sampler2D TopLayerImage;
 layout(set = 0, binding = 14) uniform sampler2D TopLayerVertImage;
 #endif
@@ -337,7 +341,9 @@ void main()
 
 	bezel_outside_coord = HSS_GetInverseScaledCoord(bezel_outside_coord, black_edge_scale_offset * outer_bezel_scale) + vec2(0, HBZ_FRAME_POS_Y_OFFSET / 100);
 	vec2 frame_outside_coord = (bezel_outside_coord - 0.5) / vec2(frame_thickness/ (sub_screen_scale.x / sub_screen_scale.y * output_aspect) + 1, frame_thickness + 1) + 0.5;
-	
+
+	vec2 frame_outside_scale = screen_scale * black_edge_scale_offset * outer_bezel_scale;
+
 	#ifndef REFLECTION_ONLY_PRESET
 	if (HSS_BEZEL_OUTER_CURVATURE_SCALE > 0)
 	{
@@ -348,7 +354,7 @@ void main()
 	}
 	#endif
 
-	float outside_bezel_mask = 1 - HSS_GetCornerMask(bezel_outside_coord, SCREEN_ASPECT,  HBZ_FRAME_INNER_CORNER_RADIUS_SCALE * HBZ_BEZEL_OUTER_CORNER_RADIUS_SCALE * HSS_SCREENFX_CORNER_RADIUS, 0.9);
+	float outside_bezel_mask = 1 - HSS_GetCornerMask(bezel_outside_coord, SCREEN_ASPECT, HBZ_FRAME_INNER_CORNER_RADIUS_SCALE * HBZ_BEZEL_OUTER_CORNER_RADIUS_SCALE * HSS_SCREENFX_CORNER_RADIUS, 0.9);
 
 	// vec2 frame_scale = vec2(HBZ_BEZEL_WIDTH / SCREEN_ASPECT + 1, HBZ_BEZEL_HEIGHT / 100 + 1);
 	// frame_scale = (outer_bezel_scale - 1) * screen_scale_diagonal + 1;
@@ -597,13 +603,13 @@ void main()
 		// Get masks on side of frame to multiply together to get a shadow around the frame
 		// Get vector from the screen edge outward
 		float dist_outside_frame = length(clamp(abs(frame_outside_coord_ctr) - frame_edge, 0, 1) * vec2(SCREEN_ASPECT, 1));
-		float frame_shadow_mask_0 = HHLP_QuadraticBezier(smoothstep(HBZ_FRAME_SHADOW_WIDTH / 100, 0, dist_outside_frame), vec2(1, 0));
+		float frame_shadow_mask = HHLP_QuadraticBezier(smoothstep(HBZ_FRAME_SHADOW_WIDTH / 100, 0, dist_outside_frame), vec2(1, 0));
 
 		// Get masks for shadows, from frame as well as sides and top and bottom of viewport
 		float bezel_mask = (1 - outside_bezel_mask) * outside_tube_mask;
 		float frame_mask = outside_bezel_mask * (1 - outside_frame_mask);
 		float frame_mask_for_top_image = outside_bezel_mask * (1 - outside_frame_mask_for_top_image);
-		float frame_shadow_mask = outside_frame_mask * frame_shadow_mask_0;
+		frame_shadow_mask *= outside_frame_mask;
 
 		// Get 
 		float combined_bezel_frame_mask =  0;
@@ -655,12 +661,18 @@ void main()
 			top_image.a *= HTI_TOP_IMAGE_OPACITY * top_image_mask;
 		}
 
-		if (HIL_DECAL_IMAGE_OPACITY > 0)
+		if (HBZ_FRAME_DECAL_IMAGE_OPACITY > 0)
 		{
-			vec4 decal_image = texture(DecalImage, IMAGE_LAYER_COORD);
+			vec2 frame_size = frame_outside_scale * global.OutputSize.xy;
+			float frame_aspect = frame_size.x / frame_size.y;
+			float aspect_difference = output_aspect / frame_aspect;
+
+			vec2 decal_coord = HSS_GetInverseScaledCoord(VIEWPORT_COORD, 1.05989 * frame_outside_scale * (frame_thickness / 2 + 1) * vec2((HBZ_FRAME_DECAL_IMAGE_SCALE) * aspect_difference, HBZ_FRAME_DECAL_IMAGE_SCALE));
+			decal_coord += vec2(0, HBZ_FRAME_DECAL_IMAGE_POS_Y);
+			vec4 decal_image = texture(DecalImage, decal_coord);
 			decal_image = HSS_Linearize(decal_image, HSS_DEFAULT_SRGB_GAMMA);
 			// Apply masks and opacity to overlay image alpha
-			decal_image.a *= HIL_DECAL_IMAGE_OPACITY;
+			decal_image.a *= HBZ_FRAME_DECAL_IMAGE_OPACITY;
 			frag_color_linear = BlendModeLayerMix(frag_color_linear, decal_image, BLEND_MODE_NORMAL);
 		}
 
@@ -670,22 +682,22 @@ void main()
 			// Do blend mode layer mix
 			frag_color_linear = BlendModeLayerMix(frag_color_linear, top_image, mod(HTI_TOP_IMAGE_BLEND_MODE, 3));
 		}
-		// Night Mode - Add Multiplied Image for Darkening
-		if (HIL_NIGHTMODE_IMAGE_OPACITY > 0)
+		// Night Lighting - Add Multiplied Image for Darkening
+		if (HBZ_NIGHTLIGHTING_IMAGE_OPACITY > 0)
 		{
-			vec4 nightmode_image = texture(NightModeImage, IMAGE_LAYER_COORD);
-			nightmode_image = HSS_Linearize(nightmode_image, HSS_DEFAULT_SRGB_GAMMA);
+			vec4 night_lighting_image = texture(NightLightingImage, IMAGE_LAYER_COORD);
+			night_lighting_image = HSS_Linearize(night_lighting_image, HSS_DEFAULT_SRGB_GAMMA);
 			// Apply masks and opacity to overlay image alpha
-			nightmode_image.a *= HIL_NIGHTMODE_IMAGE_OPACITY * outside_tube_mask_for_top_image;
-			frag_color_linear = BlendModeLayerMix(frag_color_linear, nightmode_image, BLEND_MODE_MULTIPLY);
+			night_lighting_image.a *= HBZ_NIGHTLIGHTING_IMAGE_OPACITY * outside_tube_mask_for_top_image;
+			frag_color_linear = BlendModeLayerMix(frag_color_linear, night_lighting_image, BLEND_MODE_MULTIPLY);
 		}
 		// Lights - Add small lights on top of night image
-		if (HIL_LIGHTS_IMAGE_OPACITY > 0)
+		if (HBZ_LED_IMAGE_OPACITY > 0)
 		{
-			vec4 lights_image = texture(LightsImage, IMAGE_LAYER_COORD);
+			vec4 lights_image = texture(LEDImage, IMAGE_LAYER_COORD);
 			lights_image = HSS_Linearize(lights_image, HSS_DEFAULT_SRGB_GAMMA);
 			// Apply masks and opacity to overlay image alpha
-			lights_image.a *= HIL_LIGHTS_IMAGE_OPACITY;
+			lights_image.a *= HBZ_LED_IMAGE_OPACITY * outside_frame_mask_for_top_image;
 			frag_color_linear = BlendModeLayerMix(frag_color_linear, lights_image, BLEND_MODE_ADD);
 		}
 	#endif

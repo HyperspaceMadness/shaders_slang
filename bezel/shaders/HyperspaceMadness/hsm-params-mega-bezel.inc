@@ -27,7 +27,7 @@ float HBZ_TUBE_EDGE_SHADOW = global.HBZ_TUBE_EDGE_SHADOW;
 // Visual height of the tube in the texture (Only used in Scale Mode 0)
 // #pragma parameter HBZ_BACKGROUND_IMAGE_TUBE_HEIGHT      "[BG IMAGE]  Tube Height in Texture (Scale Mode 0)" 69 10 150.0 0.1
 #ifndef HBZ_BACKGROUND_IMAGE_TUBE_HEIGHT
-    #define HBZ_BACKGROUND_IMAGE_TUBE_HEIGHT 69
+    #define HBZ_BACKGROUND_IMAGE_TUBE_HEIGHT 0.82962
 #endif
  
 #pragma parameter HBZ_BACKGROUND_IMAGE_VIGNETTE_OPACITY "[BG IMAGE]  Vignette Opacity" 0.5 0 2 0.02
@@ -77,9 +77,6 @@ float HBZ_BEZEL_BRIGHTNESS = global.HBZ_BEZEL_BRIGHTNESS;
 #pragma parameter HBZ_BEZEL_HIGHLIGHT 					"[BEZEL]  Highlight" 1 0 100 0.2
 float HBZ_BEZEL_HIGHLIGHT = global.HBZ_BEZEL_HIGHLIGHT;
 
-#pragma parameter HBZ_BEZEL_GAMMA				        "[BEZEL]  Bezel & BG Gamma Adjust" 1 0.01 5 0.01
-float HBZ_BEZEL_GAMMA = global.HBZ_BEZEL_GAMMA;
-
 // Frame
 #pragma parameter HBZ_FRAME_OPACITY 					"[FRAME]   Opacity" 1 0 1 0.05
 float HBZ_FRAME_OPACITY = global.HBZ_FRAME_OPACITY;
@@ -113,6 +110,24 @@ float HBZ_FRAME_SHADOW_OPACITY = global.HBZ_FRAME_SHADOW_OPACITY;
 
 #pragma parameter HBZ_FRAME_SHADOW_WIDTH				"[FRAME]   Shadow Width" 10 0 50 0.1
 float HBZ_FRAME_SHADOW_WIDTH = global.HBZ_FRAME_SHADOW_WIDTH;
+
+#pragma parameter HBZ_FRAME_DECAL_IMAGE_OPACITY               "[FRAME DECAL IMAGE]  Opacity"  0 0 100 5
+float HBZ_FRAME_DECAL_IMAGE_OPACITY = global.HBZ_FRAME_DECAL_IMAGE_OPACITY / 100;
+
+#pragma parameter HBZ_FRAME_DECAL_IMAGE_SCALE                "[FRAME DECAL IMAGE]  Scale"  100 50 150 0.1
+float HBZ_FRAME_DECAL_IMAGE_SCALE = global.HBZ_FRAME_DECAL_IMAGE_SCALE / 100;
+
+#pragma parameter HBZ_FRAME_DECAL_IMAGE_POS_Y                 "[FRAME DECAL IMAGE]  Pos Y"  0 -100 100 0.1
+float HBZ_FRAME_DECAL_IMAGE_POS_Y = global.HBZ_FRAME_DECAL_IMAGE_POS_Y / 100;
+
+#pragma parameter HBZ_BEZEL_GAMMA				        "[STATIC LIGHTING]  Gamma Adjust" 1 0.01 5 0.01
+float HBZ_BEZEL_GAMMA = global.HBZ_BEZEL_GAMMA;
+
+#pragma parameter HBZ_NIGHTLIGHTING_IMAGE_OPACITY       "[STATIC LIGHTING]  Night Lighting Opacity"  0 0 100 1
+float HBZ_NIGHTLIGHTING_IMAGE_OPACITY = global.HBZ_NIGHTLIGHTING_IMAGE_OPACITY / 100;
+
+#pragma parameter HBZ_LED_IMAGE_OPACITY                 "[STATIC LIGHTING]  LED Image Opacity"  0 0 100 1
+float HBZ_LED_IMAGE_OPACITY = global.HBZ_LED_IMAGE_OPACITY / 100;
 
 // Reflection Blur
 #pragma parameter HBR_BLUR_NUM_SAMPLES 					"[REFLECTION BLUR]  Num Samples - 0 for OFF" 20 0 40 1
@@ -196,22 +211,13 @@ float HBR_CORNER_ROTATION_OFFSET_BOTTOM = global.HBR_CORNER_ROTATION_OFFSET_BOTT
 // #pragma parameter HBR_CORNER_SPREAD_FALLOFF             "[REFLECTION CORNER FADE]  Corner Spread Falloff"  50 1 200 1
 // float HBR_CORNER_SPREAD_FALLOFF = global.HBR_CORNER_SPREAD_FALLOFF;
 
-#pragma parameter HIL_DECAL_IMAGE_OPACITY              "[DECAL IMAGE]  Opacity"  0 0 100 1
-float HIL_DECAL_IMAGE_OPACITY = global.HIL_DECAL_IMAGE_OPACITY / 100;
-
-#pragma parameter HIL_NIGHTMODE_IMAGE_OPACITY              "[NIGHT MODE]  Opacity"  0 0 100 1
-float HIL_NIGHTMODE_IMAGE_OPACITY = global.HIL_NIGHTMODE_IMAGE_OPACITY / 100;
-
-#pragma parameter HIL_LIGHTS_IMAGE_OPACITY                 "[LIGHTS IMAGE LAYER]  Opacity"  0 0 100 1
-float HIL_LIGHTS_IMAGE_OPACITY = global.HIL_LIGHTS_IMAGE_OPACITY / 100;
-
-#pragma parameter HTI_TOP_IMAGE_OPACITY                 "[TOP IMAGE LAYER]  Opacity"  0 0 100 0.1
+#pragma parameter HTI_TOP_IMAGE_OPACITY                 "[TOP IMAGE]  Opacity"  0 0 100 0.1
 float HTI_TOP_IMAGE_OPACITY = global.HTI_TOP_IMAGE_OPACITY / 100;
 
-#pragma parameter HTI_TOP_IMAGE_BLEND_MODE              "[TOP IMAGE LAYER]  Blend Mode - Normal, Add, Mult, Under..."  0 0 5 1
+#pragma parameter HTI_TOP_IMAGE_BLEND_MODE              "[TOP IMAGE]  Blend Mode - Normal, Add, Mult, Under..."  0 0 5 1
 float HTI_TOP_IMAGE_BLEND_MODE = global.HTI_TOP_IMAGE_BLEND_MODE;
 
-#pragma parameter HTI_TOP_IMAGE_MASK_MODE               "[TOP IMAGE LAYER]  Mask - ALL, Tube, Bezel+, Frame+, Frame, BG"  0 0 5 1
+#pragma parameter HTI_TOP_IMAGE_MASK_MODE               "[TOP IMAGE]  Mask - ALL, Tube, Bezel+, Frame+, Frame, BG"  0 0 5 1
 float HTI_TOP_IMAGE_MASK_MODE = global.HTI_TOP_IMAGE_MASK_MODE;
 
 

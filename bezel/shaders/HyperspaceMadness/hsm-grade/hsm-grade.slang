@@ -101,14 +101,17 @@ layout(std140, set = 0, binding = 0) uniform UBO
 #pragma parameter GRADE_Q_SHIFT                     "[COLOR SIGNAL PROCESS]  Q/V Shift"                   0 -0.2 0.2 0.01
 #pragma parameter GRADE_I_MULTIPLIER                "[COLOR SIGNAL PROCESS]  I/U Multiplier"              1  0 2 0.01
 #pragma parameter GRADE_Q_MULTIPLIER                "[COLOR SIGNAL PROCESS]  Q/V Multiplier"              1  0 2 0.01
+
 #pragma parameter GRADE_VIGNETTE_ON                 "[DARKENING VIGNETTE]  ON"                            0  0 1 1
-#pragma parameter GRADE_VIGNETTE_STRENGTH           "[DARKENING VIGNETTE]  Strength (Center Brightness)"  40 0 50 1
-#pragma parameter GRADE_VIGNETTE_POWER              "[DARKENING VIGNETTE]  Power (Edge Darkening)"        0.20 0 0.5 0.01
+#pragma parameter GRADE_VIGNETTE_STRENGTH           "[DARKENING VIGNETTE]  Center Brightness (AKA Strength)"  40 0 50 1
+#pragma parameter GRADE_VIGNETTE_POWER              "[DARKENING VIGNETTE]  Edge Darkening (AKA Power)"        0.20 0 0.5 0.01
+
 #pragma parameter GRADE_SEGA_LUMA_FIX               "[BRIGHTNESS]  Sega Luma Fix"                   0  0 1 1
 #pragma parameter GRADE_BRIGHTNESS                  "[BRIGHTNESS]  Brightness"                      0 -0.5 1 0.01
 #pragma parameter GRADE_BLACK_LEVEL                 "[BRIGHTNESS]  Black Level"                     0 -0.5 0.5 0.01
 #pragma parameter GRADE_CONTRAST                    "[CONTRAST]  Contrast"                          0 -1 1 0.05
 #pragma parameter GRADE_CONTRAST_PIVOT              "[CONTRAST]  Contrast Pivot"                    0.5  0 1 0.01
+
 #pragma parameter GRADE_WHITE_POINT_TEMP            "[COLOR]  White Point Temp"                     6504 5004 12004 100
 #pragma parameter GRADE_SATURATION                  "[COLOR]  Saturation"                           0 -1 2 0.01
 #pragma parameter GRADE_VIBRANCE                    "[COLOR]  Dullness/Vibrance"                    0 -1 1 0.05

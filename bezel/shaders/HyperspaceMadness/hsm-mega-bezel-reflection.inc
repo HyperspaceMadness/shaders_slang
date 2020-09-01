@@ -70,7 +70,7 @@ vec2 GetImageLayerCoord(vec2 viewport_coord, vec2 position_offset, vec2 tube_sca
 	else
 	{
 		// If using auto scale mode and apply the position adjustment from mega screen scale
-		vec2 screen_height_match_scale =  fit_height_scale * tube_scale.y / (HBZ_BACKGROUND_IMAGE_TUBE_HEIGHT);
+		vec2 screen_height_match_scale =  fit_height_scale * tube_scale.y / (HBZ_IMAGE_LAYER_HORZ_VIEWPORT_TUBE_HEIGHT);
 		vec2 scale = screen_height_match_scale;
 		return HSS_GetInverseScaledCoord(viewport_coord + position_offset, scale);
 	}
@@ -192,6 +192,7 @@ layout(set = 0, binding = 11) uniform sampler2D NightLightingImage;
 layout(set = 0, binding = 12) uniform sampler2D LEDImage;
 layout(set = 0, binding = 13) uniform sampler2D TopLayerImage;
 layout(set = 0, binding = 14) uniform sampler2D TopLayerVertImage;
+layout(set = 0, binding = 15) uniform sampler2D BezelImage;
 #endif
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
@@ -476,18 +477,19 @@ void main()
 
 	#ifndef REFLECTION_ONLY_PRESET
 		if (SCREEN_ASPECT > 1)
-		{
 			background_color = texture(BackgroundImage, tiled_image_coord).rgba;
-		}
 		else 
-		{
 			background_color = texture(BackgroundVertImage, tiled_image_coord).rgba;
-		}
-		background_color = HSS_Linearize(background_color, HSS_DEFAULT_SRGB_GAMMA);
 
+		background_color = HSS_Linearize(background_color, HSS_DEFAULT_SRGB_GAMMA)
+						   * HBZ_BACKGROUND_IMAGE_OPACITY 
+						   * background_color.a 
+						   * HBZ_BACKGROUND_IMAGE_BRIGHTNESS;
 
 		float outside_tube_mask_wider = 1 - HSS_GetCornerMask(tube_warped_coord_ctr * 0.996 + 0.5, SCREEN_ASPECT, HBZ_BEZEL_INNER_CORNER_RADIUS_SCALE * HSS_SCREENFX_CORNER_RADIUS, 0.9);
-		background_color *= HBZ_BACKGROUND_IMAGE_OPACITY * background_color.a * outside_tube_mask_wider;
+
+		if (HBZ_BACKGROUND_IMAGE_USE_AS_BACKGROUND == 0)
+			background_color *= outside_tube_mask_wider;
 
 		float vignette_shadow_mask = 0;
 		vignette_shadow_mask += 0.75 * HHLP_QuadraticBezier(1 - HSS_GetVignetteFactor(VIEWPORT_COORD, HBZ_BACKGROUND_IMAGE_VIGNETTE_OPACITY), vec2(1, 0.5));
@@ -626,10 +628,23 @@ void main()
 		combined_bezel_frame_mask = clamp(combined_bezel_frame_mask, 0, 1) * outside_tube_mask;
 
 		vec4 bezel_frame_bg_color = mix(shaded_background_color, bezel_and_frame_color_v4, combined_bezel_frame_mask);
+
+		if (HBZ_BACKGROUND_IMAGE_USE_AS_BACKGROUND == 1)
+			bezel_frame_bg_color = shaded_background_color;
+
 		bezel_frame_bg_color = HSS_ApplyGamma(bezel_frame_bg_color, HBZ_BEZEL_GAMMA);
 
+		vec4 frag_color_linear = vec4(0);
+
 		// Add Bezel, Frame & Shadow color to the screen color
-		vec4 frag_color_linear = mix(crt_image_linear, bezel_frame_bg_color, outside_tube_mask);
+		if (HBZ_BACKGROUND_IMAGE_USE_AS_BACKGROUND == 1)
+		{
+			frag_color_linear = clamp(crt_image_linear * tube_mask, 0, 1) + bezel_frame_bg_color;
+		}
+		else
+			frag_color_linear = mix(crt_image_linear, bezel_frame_bg_color, outside_tube_mask);
+
+
 	#else
 		vec4 frag_color_linear = mix(crt_image_linear, vec4(bezel_color, 1), outside_tube_mask);
 	#endif
@@ -641,26 +656,27 @@ void main()
 			float outside_tube_mask_for_top_image = 1 - HSS_GetCornerMask((tube_coord_warped - 0.5) * 1.003 + 0.5, SCREEN_ASPECT, HBZ_FRAME_OUTER_CORNER_RADIUS, 1);
 		#endif
 
-		// Get the top image color and masking values if needed
-		vec4 top_image = vec4(0);
-		if (HTI_TOP_IMAGE_OPACITY > 0)
+		//----------------------------------------------------
+		// Bezel Image
+		//----------------------------------------------------
+		if (HBZ_BEZEL_IMAGE_ON > 0)
 		{
-			top_image = SCREEN_ASPECT < 1 ? texture(TopLayerVertImage, IMAGE_LAYER_COORD):
-											texture(TopLayerImage,     IMAGE_LAYER_COORD);
-			top_image = HSS_Linearize(top_image, HSS_DEFAULT_SRGB_GAMMA);
+			vec2 tube_size = TUBE_SCALE * global.OutputSize.xy;
+			float tube_aspect = tube_size.x / tube_size.y;
+			float aspect_difference = output_aspect / tube_aspect;
 
-			float top_image_mask = 1;
-			top_image_mask = 	(HTI_TOP_IMAGE_MASK_MODE == MASK_MODE_ALL) ? 1 :
-								(HTI_TOP_IMAGE_MASK_MODE == MASK_MODE_TUBE) ? tube_mask :
-								(HTI_TOP_IMAGE_MASK_MODE == MASK_MODE_OUTSIDE_TUBE) ? outside_tube_mask_for_top_image :
-								(HTI_TOP_IMAGE_MASK_MODE == MASK_MODE_FRAME) ? frame_mask_for_top_image :
-								(HTI_TOP_IMAGE_MASK_MODE == MASK_MODE_OUTSIDE_BEZEL) ? outside_bezel_mask :
-								(HTI_TOP_IMAGE_MASK_MODE == MASK_MODE_OUTSIDE_FRAME) ? outside_frame_mask_for_top_image : 1;
-
+			vec2 tube_coord = HSS_GetInverseScaledCoord(VIEWPORT_COORD, TUBE_SCALE / HBZ_IMAGE_LAYER_HORZ_VIEWPORT_TUBE_HEIGHT * vec2(HBZ_BEZEL_IMAGE_SCALE * aspect_difference, HBZ_BEZEL_IMAGE_SCALE));
+			tube_coord += vec2(-HSS_POSITION_OFFSET_X, HBZ_BEZEL_IMAGE_POS_Y + HSS_POSITION_OFFSET_Y);
+			vec4 bezel_image = texture(BezelImage, tube_coord);
+			bezel_image = HSS_Linearize(bezel_image, HSS_DEFAULT_SRGB_GAMMA);
 			// Apply masks and opacity to overlay image alpha
-			top_image.a *= HTI_TOP_IMAGE_OPACITY * top_image_mask;
+			bezel_image.a *= HBZ_BEZEL_IMAGE_ON;
+			frag_color_linear = BlendModeLayerMix(frag_color_linear, bezel_image, BLEND_MODE_NORMAL);
 		}
 
+		//----------------------------------------------------
+		// Frame Decal Image
+		//----------------------------------------------------
 		if (HBZ_FRAME_DECAL_IMAGE_OPACITY > 0)
 		{
 			vec2 frame_size = frame_outside_scale * global.OutputSize.xy;
@@ -676,13 +692,41 @@ void main()
 			frag_color_linear = BlendModeLayerMix(frag_color_linear, decal_image, BLEND_MODE_NORMAL);
 		}
 
-		// Add the top image now if the blending needs to be applied under the reflection 
-		if (HTI_TOP_IMAGE_OPACITY > 0 && HTI_TOP_IMAGE_BLEND_MODE > 2)
+		//----------------------------------------------------
+		// Top Image
+		//----------------------------------------------------
+		// TODO - Default Tube Height in horizontal = 0.8297
+		vec4 top_image = vec4(0);
+		if (HTI_TOP_IMAGE_OPACITY > 0)
 		{
-			// Do blend mode layer mix
-			frag_color_linear = BlendModeLayerMix(frag_color_linear, top_image, mod(HTI_TOP_IMAGE_BLEND_MODE, 3));
+			// Get the top image color and masking values if needed
+			top_image = SCREEN_ASPECT < 1 ? texture(TopLayerVertImage, IMAGE_LAYER_COORD):
+											texture(TopLayerImage,     IMAGE_LAYER_COORD);
+			top_image = HSS_Linearize(top_image, HSS_DEFAULT_SRGB_GAMMA);
+
+			float top_image_mask = 1;
+			top_image_mask = 	(HTI_TOP_IMAGE_MASK_MODE == MASK_MODE_ALL) ? 1 :
+								(HTI_TOP_IMAGE_MASK_MODE == MASK_MODE_TUBE) ? tube_mask :
+								(HTI_TOP_IMAGE_MASK_MODE == MASK_MODE_OUTSIDE_TUBE) ? outside_tube_mask_for_top_image :
+								(HTI_TOP_IMAGE_MASK_MODE == MASK_MODE_FRAME) ? frame_mask_for_top_image :
+								(HTI_TOP_IMAGE_MASK_MODE == MASK_MODE_OUTSIDE_BEZEL) ? outside_bezel_mask :
+								(HTI_TOP_IMAGE_MASK_MODE == MASK_MODE_OUTSIDE_FRAME) ? outside_frame_mask_for_top_image : 1;
+
+			// Apply masks and opacity to overlay image alpha
+			top_image.a *= HTI_TOP_IMAGE_OPACITY * top_image_mask;
+
+			// Add the top image now if the blending needs to be applied under the reflection 
+			if (HTI_TOP_IMAGE_BLEND_MODE > 2)
+			{
+				// Do blend mode layer mix
+				frag_color_linear = BlendModeLayerMix(frag_color_linear, top_image, mod(HTI_TOP_IMAGE_BLEND_MODE, 3));
+			}
 		}
-		// Night Lighting - Add Multiplied Image for Darkening
+
+		//----------------------------------------------------
+		// Night Lighting Image
+		//----------------------------------------------------
+		// Add Multiplied Image for Darkening
 		if (HBZ_NIGHTLIGHTING_IMAGE_OPACITY > 0)
 		{
 			vec4 night_lighting_image = texture(NightLightingImage, IMAGE_LAYER_COORD);
@@ -691,7 +735,11 @@ void main()
 			night_lighting_image.a *= HBZ_NIGHTLIGHTING_IMAGE_OPACITY * outside_tube_mask_for_top_image;
 			frag_color_linear = BlendModeLayerMix(frag_color_linear, night_lighting_image, BLEND_MODE_MULTIPLY);
 		}
-		// Lights - Add small lights on top of night image
+		
+		//----------------------------------------------------
+		// LED Image
+		//----------------------------------------------------
+		// Lights - Add small self illuminated lights on top of night image
 		if (HBZ_LED_IMAGE_OPACITY > 0)
 		{
 			vec4 lights_image = texture(LEDImage, IMAGE_LAYER_COORD);

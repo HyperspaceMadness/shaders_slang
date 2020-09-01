@@ -349,7 +349,7 @@ vec2 HSS_GetInverseScaledCoord(vec2 in_coord, vec2 in_scale)
 vec2 HSS_GetPositionOffset()
 {
 	float output_aspect_ratio = global.FinalViewportSize.x / global.FinalViewportSize.y;
-	vec2 pos_offset = vec2(HSS_POSITION_OFFSET_X / 100 / output_aspect_ratio, -HSS_POSITION_OFFSET_Y / 100);
+	vec2 pos_offset = vec2(HSS_POSITION_OFFSET_X / output_aspect_ratio, -HSS_POSITION_OFFSET_Y);
 	return pos_offset;
 }
 

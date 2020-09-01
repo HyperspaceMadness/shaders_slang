@@ -8,7 +8,9 @@ Description:
 */
 
 // Screen Scale Required Parameters
-#pragma parameter HSS_MEGA_BEZEL_DEBUG					"___HSM MEGA BEZEL__ V.2020-08-24-0 - Debug ON" 0 0 1 1
+#pragma parameter HSS_MEGA_BEZEL_TITLE					"___HSM MEGA BEZEL__ V.2020-08-24-0" 0 0 0 0
+
+#pragma parameter HSS_MEGA_BEZEL_DEBUG					"[DEBUG]  Debug ON" 0 0 1 1
 float HSS_MEGA_BEZEL_DEBUG = global.HSS_MEGA_BEZEL_DEBUG;
 
 #pragma parameter HSS_FLIP_VIEWPORT_AND_CORE_VERTICAL	"[VERTICAL FLIP]  Flip Viewport Vertical - For Some 3D Cores"  0 0 1 1
@@ -16,6 +18,10 @@ float HSS_FLIP_VIEWPORT_AND_CORE_VERTICAL = global.HSS_FLIP_VIEWPORT_AND_CORE_VE
 
 #pragma parameter HSS_ROTATE_CORE_IMAGE					"[ROTATE]  Rotate CRT Tube"  0 0 1 1
 float HSS_ROTATE_CORE_IMAGE = global.HSS_ROTATE_CORE_IMAGE;
+
+
+
+#pragma parameter HSS_ASPECT_TITLE "------[ASPECT RATIO - MEGA BEZEL]------------------------------" 0 0 0 1
 
 #pragma parameter HSS_ASPECT_RATIO_ORIENTATION 			"[ASPECT]  Orientation - Auto, Horizontal, Vertical"  0 0 2 1
 float HSS_ASPECT_RATIO_ORIENTATION = global.HSS_ASPECT_RATIO_ORIENTATION;
@@ -25,6 +31,10 @@ float HSS_ASPECT_RATIO_MODE = global.HSS_ASPECT_RATIO_MODE;
 
 #pragma parameter HSS_ASPECT_RATIO_EXPLICIT				"[ASPECT]  Explicit Aspect Ratio (Also Auto Ratio Fallback)"  1.3333 0 3 0.002
 float HSS_ASPECT_RATIO_EXPLICIT = global.HSS_ASPECT_RATIO_EXPLICIT;
+
+
+
+#pragma parameter HSS_SCALING_TITLE "------[SCALING - MEGA BEZEL]-----------------------------------" 0 0 0 1
 
 #pragma parameter HSS_INT_SCALE_MODE 					"[SCALING]  Int Scale Mode - OFF, ShortAxis, BothAxes" 0 0 2 1
 #define HSS_INT_SCALE_MODE global.HSS_INT_SCALE_MODE
@@ -46,6 +56,16 @@ float HSS_NON_INTEGER_SCALE = global.HSS_NON_INTEGER_SCALE;
 #pragma parameter HSS_SNAP_TO_INT_SCALE_TOLERANCE 		"[SCALING]  Snap To Int-Scale Tolerance - Suggested 0.1" 0 0 3 0.01
 float HSS_SNAP_TO_INT_SCALE_TOLERANCE = global.HSS_SNAP_TO_INT_SCALE_TOLERANCE;
 
+#pragma parameter HSS_POSITION_OFFSET_X 				"[POSITION]  Position Offset X" 0 -100 100 0.1
+float HSS_POSITION_OFFSET_X = global.HSS_POSITION_OFFSET_X / 100;
+
+#pragma parameter HSS_POSITION_OFFSET_Y 				"[POSITION]  Position Offset Y" 0 -100 100 0.1
+float HSS_POSITION_OFFSET_Y = global.HSS_POSITION_OFFSET_Y / 100;
+
+
+
+#pragma parameter HSS_CROPPING_TITLE "------[CROPPING - MEGA BEZEL]----------------------------------" 0 0 0 1
+
 #pragma parameter HSS_CROP_OVERSCAN_TOP 				"[CROPPING]  Crop Overscan Top" 0 -256 256 1
 float HSS_CROP_OVERSCAN_TOP = global.HSS_CROP_OVERSCAN_TOP;
 
@@ -57,6 +77,10 @@ float HSS_CROP_OVERSCAN_LEFT = global.HSS_CROP_OVERSCAN_LEFT;
 
 #pragma parameter HSS_CROP_OVERSCAN_RIGHT 				"[CROPPING]  Crop Overscan Right" 0 -256 256 1
 float HSS_CROP_OVERSCAN_RIGHT = global.HSS_CROP_OVERSCAN_RIGHT;
+
+
+
+#pragma parameter HSS_SCANLINES_TITLE "------[SCANLINES & SAMPLING - MEGA BEZEL]----------------------" 0 0 0 1
 
 #pragma parameter HSS_SCANLINE_DIRECTION 				"[SCANLINE DIRECTION]  Guest & Easymode - Auto, Horiz, Vert"  0 0 2 1
 float HSS_SCANLINE_DIRECTION = global.HSS_SCANLINE_DIRECTION;
@@ -70,6 +94,10 @@ float HSS_CORE_RES_SAMPLING_MULT_OPPOSITE_DIR = global.HSS_CORE_RES_SAMPLING_MUL
 #pragma parameter HSS_INTERLACE_TRIGGER_RES 			"[INTERLACE]  Trigger Res (Also Fake Scanlines)" 600.0 0.0 2000.0 25.0
 #define HSS_INTERLACE_TRIGGER_RES global.HSS_INTERLACE_TRIGGER_RES
 
+
+
+#pragma parameter HBZ_SPLITSCREEN_TITLE "------[SPLIT SCREEN - MEGA BEZEL]------------------------------" 0 0 0 1
+
 #pragma parameter HSS_SPLIT_SCREEN_AMOUNT				"[SPLIT SCREEN]  Split Thickness - SPLIT SCREEN PRESET ONLY" 0 0 256 2
 float HSS_SPLIT_SCREEN_AMOUNT = global.HSS_SPLIT_SCREEN_AMOUNT;
 
@@ -78,6 +106,9 @@ float HSS_SPLIT_SCREEN_AMOUNT = global.HSS_SPLIT_SCREEN_AMOUNT;
 #pragma parameter HSS_SPLIT_SCREEN_CENTER_FILL_MODE		"[SPLIT SCREEN]  Center Fill - 1:Bezel 2:Reflect 3:Blend 4:Fade" 0 0 6 1
 float HSS_SPLIT_SCREEN_CENTER_FILL_MODE = global.HSS_SPLIT_SCREEN_CENTER_FILL_MODE;
 
+
+
+#pragma parameter HBZ_CURVATURE_TITLE "------[CURVATURE - MEGA BEZEL]---------------------------------" 0 0 0 1
 
 #pragma parameter HSS_CURVATURE_MODE 					"[CURVATURE MODE]  0:2D 1-2:3D Sphere, 3:3D Cylinder" 0 0 3 1
 float HSS_CURVATURE_MODE = global.HSS_CURVATURE_MODE;
@@ -100,11 +131,9 @@ float HSS_CURVATURE_3D_TILT_ANGLE_X = global.HSS_CURVATURE_3D_TILT_ANGLE_X;
 #pragma parameter HSS_CURVATURE_3D_TILT_ANGLE_Y 		"[3D CURVATURE]  Tilt Angle Y" 0 -1.5 1.5 0.01
 float HSS_CURVATURE_3D_TILT_ANGLE_Y = global.HSS_CURVATURE_3D_TILT_ANGLE_Y;
 
-#pragma parameter HSS_POSITION_OFFSET_X 				"[POSITION]  Position Offset X" 0 -100 100 0.1
-float HSS_POSITION_OFFSET_X = global.HSS_POSITION_OFFSET_X;
 
-#pragma parameter HSS_POSITION_OFFSET_Y 				"[POSITION]  Position Offset Y" 0 -100 100 0.1
-float HSS_POSITION_OFFSET_Y = global.HSS_POSITION_OFFSET_Y;
+
+#pragma parameter HBZ_COLOR_TITLE "------[COLOR & SCREEN FX - MEGA BEZEL]-------------------------" 0 0 0 1
 
 #pragma parameter HSS_COLOR_BLACK_LEVEL 				"[COLOR]  Black Level - Def -0.04" -0.04 -1 1 0.01
 #define HSS_COLOR_BLACK_LEVEL global.HSS_COLOR_BLACK_LEVEL
@@ -134,6 +163,10 @@ float HSS_POSITION_OFFSET_Y = global.HSS_POSITION_OFFSET_Y;
 #ifndef HSS_SCREENFX_FAKE_SCANLINE_BRIGHTNESS_CUTOFF
 	#define HSS_SCREENFX_FAKE_SCANLINE_BRIGHTNESS_CUTOFF 3
 #endif
+
+
+
+#pragma parameter HSS_TUBE_TITLE "------[TUBE - MEGA BEZEL]-----------------------------------" 0 0 0 1
 
 #pragma parameter HSS_TUBE_BLACK_EDGE_THICKNESS 		"[TUBE]  Black Edge Thickness - Def 1" 1 -2 8 0.05
 #define HSS_TUBE_BLACK_EDGE_THICKNESS global.HSS_TUBE_BLACK_EDGE_THICKNESS

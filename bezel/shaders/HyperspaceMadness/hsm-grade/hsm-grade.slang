@@ -90,8 +90,9 @@ layout(std140, set = 0, binding = 0) uniform UBO
     ##########################################################################################
 */
 
+#pragma parameter GRADE_TITLE "------[COLOR CORRECTION - GRADE]--------------------------" 0 0 0 1
 
-#pragma parameter GRADE_GAMMA_IN                    "[COLOR CORRECTION GRADE]  CRT Gamma"                              2.4 1.8 3 0.05
+#pragma parameter GRADE_GAMMA_IN                    "[GAMMA]  CRT Gamma"                              2.4 1.8 3 0.05
 #pragma parameter GRADE_SIGNAL_TYPE                 "[SIGNAL]  Signal Type (0:RGB 1:Composite)"                        1 0 1 1
 #pragma parameter GRADE_SIGNAL_GAMMA_TYPE           "[SIGNAL]  Signal Gamma Type (0:sRGB 1:SMPTE-C)"                   1 0 1 1
 #pragma parameter GRADE_PHOSPHOR_CRT_GAMUT          "[COLOR SPACE]  Phosphor CRT GAMUT (1:NTSC-U 2:NTSC-J 3:PAL)"      2 -4 3 1

@@ -43,6 +43,8 @@ layout(push_constant) uniform Push
 	float GDV_SCANLINE_DARK_BEAM_SIZE_MIN; 
 	float GDV_SCANLINE_BRIGHT_BEAM_SIZE_MAX; 
 	float GDV_SCANLINE_OVERGROWN_BRIGHT_BEAM;
+	float GDV_SCANLINE_SPIKE_REMOVAL; 
+
     float GDV_HORIZONTAL_SHARPNESS; 
 	float GDV_SUBTRACTIVE_SHARPNESS;
 
@@ -71,7 +73,6 @@ layout(push_constant) uniform Push
 	float GDV_MASK_0_7_STRENGTH; 
 	// HSM Removed
 	// gamma_out,
-	// spike,
 	// interlace_res,
 	float GDV_SCANLINE_1_2_SATURATION;
 	float GDV_SLOTMASK_SIZE;
@@ -105,6 +106,7 @@ layout(std140, set = 0, binding = 0) uniform UBO
 // #define BLOOM        params.BLOOM     // Bloom overscan percentage
 
 // HSM Added (Moved from the bottom)
+
 #pragma parameter GDV_GLOW_STRENGTH "[GLOW]  Glow Strength" 0.02 0.0 0.5 0.01
 #define glow         params.GDV_GLOW_STRENGTH     // Glow Strength
 
@@ -134,14 +136,17 @@ layout(std140, set = 0, binding = 0) uniform UBO
 #pragma parameter GDV_SCANLINE_SHAPE_EDGES_LOW "[SCANLINE]  Shape Edges (Low)" 6.0 1.0 15.0 1.0
 #define scanline1    params.GDV_SCANLINE_SHAPE_EDGES_LOW      // scanline param, vertical sharpness
 
-#pragma parameter GDV_SCANLINE_DARK_BEAM_SIZE_MIN "[SCANLINE]  Dark Beam Size" 1.35 0.5 2.5 0.05
+#pragma parameter GDV_SCANLINE_DARK_BEAM_SIZE_MIN "[SCANLINE]  Dark Beam Thinness (Higher = Thinner)" 1.35 0.5 2.5 0.05
 #define beam_min     params.GDV_SCANLINE_DARK_BEAM_SIZE_MIN     // dark area beam min - narrow
 
-#pragma parameter GDV_SCANLINE_BRIGHT_BEAM_SIZE_MAX "[SCANLINE]  Bright Beam Size" 1.05 0.5 2.5 0.05
+#pragma parameter GDV_SCANLINE_BRIGHT_BEAM_SIZE_MAX "[SCANLINE]  Bright Beam Thickness" 1.05 0.5 2.5 0.05
 #define beam_max     params.GDV_SCANLINE_BRIGHT_BEAM_SIZE_MAX     // bright area beam max - wide
 
 #pragma parameter GDV_SCANLINE_OVERGROWN_BRIGHT_BEAM "[SCANLINE]  Overgrown Bright Beam (Increased Bright Beam)" 0.70 0.0 1.0 0.05
 #define beam_size    params.GDV_SCANLINE_OVERGROWN_BRIGHT_BEAM     // increased max. beam size
+
+#pragma parameter GDV_SCANLINE_SPIKE_REMOVAL "[SCANLINE]  Spike Removal (E.G. White pixel next to black)" 1.0 0.0 2.0 0.10
+#define spike params.GDV_SCANLINE_SPIKE_REMOVAL
 
 #pragma parameter GDV_HORIZONTAL_SHARPNESS "[SHARPNESS]  Horizontal Sharpness" 5.25 1.0 15.0 0.25
 #define h_sharp      params.GDV_HORIZONTAL_SHARPNESS     // pixel sharpness
@@ -207,13 +212,10 @@ layout(std140, set = 0, binding = 0) uniform UBO
 #define gamma_out 2.4
 
 // HSM Removed
-// #pragma parameter spike "Scanline Spike Removal" 1.0 0.0 2.0 0.10
-// #define spike params.spike
 // #pragma parameter interlace_res "Interlace Trigger Resolution :" 400.0 0.0 800.0 25.0
 // #define interlace_res         params.interlace_res
 
 // HSM Added
-#define spike 1
 #define interlace_res HSS_INTERLACE_TRIGGER_RES
 
 // HSM Removed (Moved it to the top)

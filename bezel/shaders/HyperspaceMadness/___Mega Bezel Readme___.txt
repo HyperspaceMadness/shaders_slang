@@ -77,7 +77,7 @@ HyperspaceMadness Mega Bezel Shader Readme
         Logging - Logging Verbosity - ON
             Frontend Logging - 1(Info)
             Log to File - Off 
-        These settings will cause a log window to come up when you launch, and you should see any retrarch errors
+        These settings will cause a log window to come up when you launch, and you should see any retroarch errors
 
 
 

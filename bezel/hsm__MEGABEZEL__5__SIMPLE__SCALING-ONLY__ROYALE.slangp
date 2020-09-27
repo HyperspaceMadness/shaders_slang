@@ -122,7 +122,7 @@ mask_shadow_texture_small_wrap_mode = "repeat"
 mask_shadow_texture_small_linear = "true"
 mask_shadow_texture_small_mipmap = "false"  // Mipmapping causes artifacts with manually resized masks without tex2Dlod
 
-SamplerLUT3 = ../bezel/shaders/HyperspaceMadness/textures/lut/other1.png
+SamplerLUT3 = ../bezel/shaders/HyperspaceMadness/textures/lut/other1_32.png
 SamplerLUT3_linear = true
 
 

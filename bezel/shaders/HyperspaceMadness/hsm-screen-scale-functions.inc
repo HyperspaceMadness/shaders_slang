@@ -349,7 +349,7 @@ vec2 HSS_GetInverseScaledCoord(vec2 in_coord, vec2 in_scale)
 vec2 HSS_GetPositionOffset()
 {
 	float output_aspect_ratio = global.FinalViewportSize.x / global.FinalViewportSize.y;
-	vec2 pos_offset = vec2(HSS_POSITION_OFFSET_X / output_aspect_ratio, -HSS_POSITION_OFFSET_Y);
+	vec2 pos_offset = vec2(HSS_POSITION_OFFSET_X / output_aspect_ratio, HSS_POSITION_OFFSET_Y);
 	return pos_offset;
 }
 
@@ -986,9 +986,8 @@ vec4 HSS_GetPostCrtPreppedColor(vec4 in_color_linear, vec2 screen_curved_coord, 
 	float vignette_factor = HSS_GetScreenVignetteFactor(mirrored_screen_coord, HSS_SCREENFX_VIGNETTE);
 
 	// If this is called from the glass preset we don't want the vignette to affect mirrored area
-	#ifdef GLASS_PRESET
+	if (HGL_GLASSBORDER_ON == 1)
 		vignette_factor = 1 - ((1 - vignette_factor) * screen_mask);
-	#endif
 
 	out_color *= vignette_factor;
 

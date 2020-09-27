@@ -72,7 +72,7 @@ SamplerLUT1 = ../bezel/shaders/HyperspaceMadness/textures/lut/16.png
 SamplerLUT1_linear = true
 SamplerLUT2 = ../bezel/shaders/HyperspaceMadness/textures/lut/64.png
 SamplerLUT2_linear = true
-SamplerLUT3 = ../bezel/shaders/HyperspaceMadness/textures/lut/other1.png
+SamplerLUT3 = ../bezel/shaders/HyperspaceMadness/textures/lut/other1_32.png
 SamplerLUT3_linear = true
 
 

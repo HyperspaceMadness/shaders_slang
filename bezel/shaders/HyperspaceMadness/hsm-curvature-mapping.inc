@@ -96,9 +96,8 @@ void main()
 	float edge_sharpness = 0.99;
 
 	// If this is used in the glass preset adjust the smoothness of the edge of the glass 
-	#ifdef GLASS_PRESET
+	if (HGL_GLASSBORDER_ON == 1)
 		edge_sharpness = HBZ_GLASS_INNER_EDGE_SOFTNESS;
-	#endif
 
 	float outside_tube_mask = 1 - HSS_GetCornerMask(tube_curved_coord, SCREEN_ASPECT, HBZ_BEZEL_INNER_CORNER_RADIUS_SCALE * HSS_SCREENFX_CORNER_RADIUS, 0.99);
 

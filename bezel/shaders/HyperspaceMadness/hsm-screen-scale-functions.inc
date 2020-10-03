@@ -919,8 +919,8 @@ vec4 HSS_ApplyScanlineMask(vec4 in_color, vec2 in_coord, vec2 screen_scale)
 	vec2 original_size = HSS_GetRotatedOriginalSize();
 	float use_vert_scanlines = HSS_GetUseVerticalScanlines(original_size.x / original_size.y);
 	vec2 sampling_res = HSS_GetRotatedOriginalSizeWithCoreResMult();
-	float scan_axis_pos = use_vert_scanlines * in_coord.x + (1 - use_vert_scanlines) * in_coord.y;
 	float scan_axis_res = use_vert_scanlines * sampling_res.x + (1 - use_vert_scanlines) * sampling_res.y;
+	float scan_axis_pos = use_vert_scanlines * in_coord.x + (1 - use_vert_scanlines) * in_coord.y;
 
 	if (HSS_SCREENFX_FAKE_SCANLINE_OPACITY < 0.001 || scan_axis_res < HSS_INTERLACE_TRIGGER_RES )
 	{
@@ -972,14 +972,15 @@ vec4 HSS_ApplyScanlineMask(vec4 in_color, vec2 in_coord, vec2 screen_scale)
 	return clamp(masked_color, 0, 1);
 }
 
-vec4 HSS_GetPostCrtPreppedColor(vec4 in_color_linear, vec2 screen_curved_coord, vec2 screen_coord, float screen_aspect, vec2 screen_scale)
+vec4 HSS_GetPostCrtPreppedColor(vec4 in_color_linear, vec2 screen_curved_coord, vec2 screen_coord, float screen_aspect, vec2 screen_scale, in sampler2D gel_image_sampler)
 {
+	vec4 out_color = in_color_linear;
+
 	float screen_mask = HSS_GetCornerMask((screen_curved_coord - 0.5) * 0.999 + 0.5, screen_aspect, HSS_SCREENFX_CORNER_RADIUS, 0.9);
 
 	float screen_edge_mask = HSS_GetCornerMask(screen_curved_coord, screen_aspect, HSS_SCREENFX_CORNER_RADIUS, HSS_SCREENFX_EDGE_SHARPNESS);
 	screen_edge_mask = 1 - ((1 - screen_edge_mask) * screen_mask);
 
-	vec4 out_color = in_color_linear;
 	out_color *= screen_edge_mask;
 
 	vec2 mirrored_screen_coord = HSS_GetMirrorWrappedCoord(screen_curved_coord);
@@ -991,11 +992,25 @@ vec4 HSS_GetPostCrtPreppedColor(vec4 in_color_linear, vec2 screen_curved_coord, 
 
 	out_color *= vignette_factor;
 
-	if (HSS_SCREENFX_SCANLINE_RES > 0.5)
+	if (HSS_SCREENFX_FAKE_SCANLINE_OPACITY > 0)
 	{
 		vec4 scanline_masked_color = HSS_ApplyScanlineMask(out_color, screen_coord, screen_scale);
 		
 		out_color = mix(out_color, scanline_masked_color, screen_mask);
+	}
+
+	// Add a Colored Gel image on top of the screen, this is what colors games like space invaders or battlezone
+	if (HSS_SCREENFX_GEL_IMAGE_MULTIPLY_AMOUNT > 0 || HSS_SCREENFX_GEL_IMAGE_ADDITIVE_AMOUNT > 0)
+	{
+		vec4 gel_image = texture(gel_image_sampler, mirrored_screen_coord);
+
+		if (HSS_SCREENFX_GEL_IMAGE_MULTIPLY_AMOUNT > 0)
+			out_color = mix(out_color, out_color * gel_image, gel_image.a * HSS_SCREENFX_GEL_IMAGE_MULTIPLY_AMOUNT);
+
+		if (HSS_SCREENFX_GEL_IMAGE_ADDITIVE_AMOUNT > 0)
+			out_color = mix(out_color, out_color + gel_image, gel_image.a * HSS_SCREENFX_GEL_IMAGE_ADDITIVE_AMOUNT);
+
+		out_color.a = in_color_linear.a;
 	}
 
 	// If we are not using this with the bezel we want

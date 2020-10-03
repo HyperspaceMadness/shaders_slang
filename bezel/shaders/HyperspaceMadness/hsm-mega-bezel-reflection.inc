@@ -35,8 +35,8 @@ Thanks to:
 #define MASK_MODE_OUTSIDE_FRAME 7
 
 #define IMAGE_SCALE_MODE_VIEWPORT 0
-#define IMAGE_SCALE_MODE_TUBE 1
-#define IMAGE_SCALE_MODE_BEZEL 2
+#define IMAGE_SCALE_MODE_SCREEN 1
+#define IMAGE_SCALE_MODE_FRAME 2
 #define IMAGE_SCALE_MODE_BG 3
 
 /////////////// Helper Functions ///////////////
@@ -66,65 +66,50 @@ vec4 PreMultAlphaBlend(vec4 color_under, vec4 color_over)
 
 // Takes a viewport coordinate and gives a new coordinate scaled by the specific scale mode
 // Takes into account the default sizes of each scale mode
-vec2 GetScaledCoord(vec2 viewport_coord, vec2 scale_offset, vec2 pos_offset, float scale_mode, float keep_aspect)
+vec2 GetScaledCoord(vec2 viewport_coord, vec2 background_coord, vec2 screen_coord, vec2 bezel_outside_coord, vec2 scale_offset, vec2 pos_offset, float scale_mode, float keep_aspect)
 {
-	// vec2 destination_scale = (scale_mode == IMAGE_SCALE_MODE_VIEWPORT) 	? vec2(1, 1) :
-	// 						 (scale_mode == IMAGE_SCALE_MODE_TUBE) 		? TUBE_SCALE :
-	// 						 (scale_mode == IMAGE_SCALE_MODE_BEZEL) 	? FRAME_SCALE :
-	// 						 (scale_mode == IMAGE_SCALE_MODE_BG) 	? BACKGROUND_SCALE :
-	// 						 vec2(0.5, 0.5);
-
-	// /* Add a scaling offset to get the image to cover the full viewport 
-	//  * when tube & frame are a default size */
-	// destination_scale *= (scale_mode == IMAGE_SCALE_MODE_VIEWPORT) 	? 1 :
-	// 					(scale_mode == IMAGE_SCALE_MODE_TUBE) 		? 1.1877 :
-	// 					(scale_mode == IMAGE_SCALE_MODE_BEZEL) 		? 1.09698 :
-	// 					(scale_mode == IMAGE_SCALE_MODE_BG) 		? 1 :
-	// 					0.5;
-
 	vec2 destination_scale = vec2(0.5);
 	vec2 destination_pos_offset = pos_offset;
+	vec2 destination_coord = viewport_coord / 0.5;
+	float destination_aspect = 0.2;
 	if (scale_mode == IMAGE_SCALE_MODE_VIEWPORT)
 	{
+		destination_coord = viewport_coord;
 		destination_scale = vec2(1, 1);
+		destination_aspect = global.OutputSize.x / global.OutputSize.y;
 	}
-	else if (scale_mode == IMAGE_SCALE_MODE_TUBE)
+	else if (scale_mode == IMAGE_SCALE_MODE_SCREEN)
 	{
-		destination_scale = TUBE_SCALE * 1.1877;
+		destination_coord = screen_coord;
+		destination_scale = vec2(1, 1) * 1.205;
 		destination_pos_offset += vec2(0, HSS_POSITION_OFFSET_Y);
+		destination_aspect = (SCREEN_SCALE.x * global.OutputSize.x) / (SCREEN_SCALE.y * global.OutputSize.y);
 	}
-	else if (scale_mode == IMAGE_SCALE_MODE_BEZEL)
+	else if (scale_mode == IMAGE_SCALE_MODE_FRAME)
 	{
-		destination_scale = FRAME_SCALE * 1.09698;
-		destination_pos_offset += vec2(0, HSS_POSITION_OFFSET_Y - HBZ_FRAME_POS_Y_OFFSET);
+		destination_coord = bezel_outside_coord;
+		destination_scale = vec2(1, 1) * 1.09698;
+		destination_pos_offset += vec2(0, HSS_POSITION_OFFSET_Y + HBZ_FRAME_POS_Y_OFFSET);
+		destination_aspect = (FRAME_SCALE.x * global.OutputSize.x) / (FRAME_SCALE.y * global.OutputSize.y);
 	}
 	else if (scale_mode == IMAGE_SCALE_MODE_BG)
 	{
-		destination_scale = BACKGROUND_SCALE;
-		destination_pos_offset += vec2(0, HLY_BG_IMAGE_POS_Y);
-	}
-	// If no scale mode is matched then this is viewport scale
-	else
-	{
+		destination_coord = background_coord;
 		destination_scale = vec2(1, 1);
+		destination_pos_offset += vec2(0, HLY_BG_IMAGE_POS_Y);
+		destination_aspect = global.OutputSize.x / global.OutputSize.y;
 	}
 
 	// Find the aspect difference so the image can be shown without distortion
 	vec2 destination_size = destination_scale * global.OutputSize.xy;
-	float aspect_difference = (global.OutputSize.x / global.OutputSize.y) / (destination_size.x / destination_size.y);
+	float aspect_difference = (global.OutputSize.x / global.OutputSize.y) / destination_aspect;
 
 	destination_scale *= (keep_aspect == 1) ? vec2(aspect_difference, 1) : vec2(1);
 	destination_scale *= scale_offset;
 
-	vec2 out_coord = HSS_GetInverseScaledCoord(viewport_coord, destination_scale);
+	vec2 out_coord = HSS_GetInverseScaledCoord(destination_coord, destination_scale);
 	out_coord += vec2(destination_pos_offset.x, destination_pos_offset.y);
 
-		// vec2 frame_size = FRAME_SCALE * global.OutputSize.xy;
-		// float frame_aspect = frame_size.x / frame_size.y;
-		// float aspect_difference = output_aspect / frame_aspect;
-	// vec2 decal_coord = HSS_GetInverseScaledCoord(VIEWPORT_COORD, 
-	// 												1.05989 * FRAME_SCALE * (frame_thickness / 2 + 1) 
-	// 												* vec2(HLY_DECAL_IMAGE_SCALE * HLY_DECAL_IMAGE_SCALE_X * aspect_difference, HLY_DECAL_IMAGE_SCALE));
 	return out_coord;
 }
 
@@ -208,11 +193,8 @@ vec4 GetStoichaicBlurredSample(sampler2D in_sampler, vec2 in_coord, float num_sa
 
 		blurred_color += texture(in_sampler, sample_coord) / num_samples;
 	}
-
 	return blurred_color;
 }
-
-
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
 #pragma stage vertex
@@ -380,7 +362,7 @@ void main()
 	vec2 frame_pos_offset = vec2(0, HBZ_FRAME_POS_Y_OFFSET / 100);
 
 	// Need to put this before screen_scale_diagonal?
-	vec2 screen_coord = HSS_GetScreenVTexCoord(VIEWPORT_COORD, SCREEN_SCALE);
+	vec2 screen_coord = SCREEN_COORD; //HSS_GetScreenVTexCoord(VIEWPORT_COORD, SCREEN_SCALE);
 	vec2 screen_scale = SCREEN_SCALE;
 	vec2 sub_screen_scale = SCREEN_SCALE;
 	float frame_thickness = HBZ_FRAME_THICKNESS / 100;
@@ -521,17 +503,20 @@ void main()
 	float tube_edge_shadow_mult = HLY_TUBE_EDGE_SHADOW * (tube_shadow_mask) + (1 - HLY_TUBE_EDGE_SHADOW);
 	crt_image_linear *= tube_edge_shadow_mult;
 	crt_image_linear *= (1 - outside_tube_mask_wider);
+	crt_image_linear.a = (1 - outside_tube_mask_wider);
 
 	vec4 background_color = vec4(0);
 
 	#ifndef REFLECTION_ONLY_PRESET
-		vec2 background_coord = GetScaledCoord(VIEWPORT_COORD, 
-												vec2(HLY_BG_IMAGE_SCALE * HLY_BG_IMAGE_SCALE_X, HLY_BG_IMAGE_SCALE), 
-												vec2(0, HLY_BG_IMAGE_POS_Y), 
-												HLY_BG_IMAGE_SCALE_MODE, 
-												HLY_BG_IMAGE_SCALE_KEEP_ASPECT);
+		vec2 background_coord_no_mirror = VIEWPORT_COORD;
+		background_coord_no_mirror = GetScaledCoord(VIEWPORT_COORD, background_coord_no_mirror, screen_coord, bezel_outside_coord, 
+										vec2(HLY_BG_IMAGE_SCALE * HLY_BG_IMAGE_SCALE_X, HLY_BG_IMAGE_SCALE), 
+										vec2(0, HLY_BG_IMAGE_POS_Y), 
+										HLY_BG_IMAGE_SCALE_MODE, 
+										HLY_BG_IMAGE_SCALE_KEEP_ASPECT);
 
-		
+		vec2 background_coord = background_coord_no_mirror;
+
 		if (HLY_BG_IMAGE_MIRROR_WRAP == 1)
 			background_coord = HSS_GetMirrorWrapCoord(background_coord);
 
@@ -822,16 +807,6 @@ void main()
 		reflected_color.a = 1;
 	}
 
-	//----------------------------------------------------
-	// Tube Glass Image
-	//----------------------------------------------------
-	vec4 tube_reflection_image = vec4(0);
-	if (HLY_TUBE_REFLECTION_IMAGE_OPACITY > 0)
-	{
-		tube_reflection_image = texture(TubeGlassImage, tube_warped_coord_ctr * 0.97 * 1 / HLY_TUBE_REFLECTION_IMAGE_SCALE + 0.5);
-		tube_reflection_image = HSS_Linearize(tube_reflection_image, HSS_DEFAULT_SRGB_GAMMA);
-	}
-
 #ifndef REFLECTION_ONLY_PRESET
 
 	if (HGL_GLASSBORDER_ON == 1)
@@ -853,15 +828,14 @@ void main()
 	// Bezel Image
 	//----------------------------------------------------
 	vec4 bezel_image = vec4(0);
+	vec2 bezel_image_coord = GetScaledCoord(VIEWPORT_COORD, background_coord_no_mirror, screen_coord, bezel_outside_coord, 
+											vec2(HLY_BEZEL_IMAGE_SCALE * HLY_BEZEL_IMAGE_SCALE_X, HLY_BEZEL_IMAGE_SCALE), 
+											vec2(0, HLY_BEZEL_IMAGE_POS_Y), 
+											HLY_BEZEL_IMAGE_SCALE_MODE, 
+											HLY_BEZEL_IMAGE_SCALE_KEEP_ASPECT);
 	if (HLY_BEZEL_IMAGE_OPACITY > 0)
 	{
-		vec2 bezel_coord = GetScaledCoord(VIEWPORT_COORD, 
-							vec2(HLY_BEZEL_IMAGE_SCALE * HLY_BEZEL_IMAGE_SCALE_X, HLY_BEZEL_IMAGE_SCALE), 
-							vec2(0, HLY_BEZEL_IMAGE_POS_Y), 
-							HLY_BEZEL_IMAGE_SCALE_MODE, 
-							HLY_BEZEL_IMAGE_SCALE_KEEP_ASPECT);
-
-		bezel_image = texture(BezelImage, bezel_coord);
+		bezel_image = texture(BezelImage, bezel_image_coord);
 		bezel_image = HSS_Linearize(bezel_image, HSS_DEFAULT_SRGB_GAMMA);
 	}
 
@@ -869,60 +843,58 @@ void main()
 	// Frame Decal Image
 	//----------------------------------------------------
 	vec4 decal_image = vec4(0);
+	vec2 decal_coord = GetScaledCoord(VIEWPORT_COORD, background_coord_no_mirror, screen_coord, bezel_outside_coord, 
+										vec2(HLY_DECAL_IMAGE_SCALE * HLY_DECAL_IMAGE_SCALE_X, HLY_DECAL_IMAGE_SCALE), 
+										vec2(0, HLY_DECAL_IMAGE_POS_Y), 
+										HLY_DECAL_IMAGE_SCALE_MODE, 
+										HLY_DECAL_IMAGE_SCALE_KEEP_ASPECT);
 	if (HLY_DECAL_IMAGE_OPACITY > 0)
 	{
-		vec2 frame_size = FRAME_SCALE * global.OutputSize.xy;
-		float frame_aspect = frame_size.x / frame_size.y;
-		float aspect_difference = output_aspect / frame_aspect;
-
-		// vec2 decal_coord = HSS_GetInverseScaledCoord(VIEWPORT_COORD, 
-		// 											 1.05989 * FRAME_SCALE * (frame_thickness / 2 + 1) 
-		// 											 * vec2(HLY_DECAL_IMAGE_SCALE * HLY_DECAL_IMAGE_SCALE_X * aspect_difference, HLY_DECAL_IMAGE_SCALE));
-		// decal_coord += vec2(0, HLY_DECAL_IMAGE_POS_Y);
-
-		vec2 decal_coord = GetScaledCoord(VIEWPORT_COORD, 
-										  vec2(HLY_DECAL_IMAGE_SCALE * HLY_DECAL_IMAGE_SCALE_X, HLY_DECAL_IMAGE_SCALE), 
-										  vec2(0, HLY_DECAL_IMAGE_POS_Y), 
-										  HLY_DECAL_IMAGE_SCALE_MODE, 
-										  HLY_DECAL_IMAGE_SCALE_KEEP_ASPECT);
-
 		decal_image = texture(DecalImage, decal_coord);
 		decal_image = HSS_Linearize(decal_image, HSS_DEFAULT_SRGB_GAMMA);
 		decal_image.rgb *= decal_image.a;
 	}
-
-	//----------------------------------------------------
-	// Top Image
-	//----------------------------------------------------
-	// TODO - Default Tube Height in horizontal = 0.8297
 	
-	//----------------------------------------------------
+	//-----------------------------------------------------------------------------------------
 	// Night Lighting Image
-	//----------------------------------------------------
+	//-----------------------------------------------------------------------------------------
 	// Add Multiplied Image for Darkening
+	// Sample the image and do some color correction
 	vec4 night_lighting_image = vec4(0);
 	if (HLY_NIGHTLIGHTING_IMAGE_OPACITY > 0)
 	{
-		night_lighting_image = texture(NightLightingImage, VIEWPORT_COORD);
-		night_lighting_image = HSS_Linearize(night_lighting_image, HSS_DEFAULT_SRGB_GAMMA);
-		vec3 night_lighting_image_hsv = HSS_RGBtoHSV(night_lighting_image.rgb);
-		vec3 hsv_adjust = vec3(1, HLY_NIGHTLIGHTING_IMAGE_SATURATION, 1);
+		vec2 night_lighting_coord = VIEWPORT_COORD;
 
-		if (HLY_NIGHTLIGHTING_IMAGE_SATURATION != 1)
-			night_lighting_image = vec4(HSS_HSVtoRGB(night_lighting_image_hsv * hsv_adjust), night_lighting_image.a);
+		if (HLY_NIGHTLIGHTING_IMAGE_MIRROR_HORZ == 1)
+			night_lighting_coord.x = (night_lighting_coord.x - 0.5) * -1 + 0.5;
+		// if (HLY_NIGHTLIGHTING_IMAGE_MIRROR_VERT == 1)
+		// 	night_lighting_coord.y = (night_lighting_coord.y - 0.5) * -1 + 0.5;
+
+		night_lighting_image = texture(NightLightingImage, night_lighting_coord);
+		night_lighting_image = HSS_Linearize(night_lighting_image, HSS_DEFAULT_SRGB_GAMMA);
+		
+		// Do HSV alterations on the night lighting image
+		if (HLY_NIGHTLIGHTING_IMAGE_HUE != 0 || HLY_NIGHTLIGHTING_IMAGE_SATURATION != 1 || HLY_NIGHTLIGHTING_IMAGE_VALUE != 1)
+		{
+			vec3 night_lighting_image_hsv = HSS_RGBtoHSV(night_lighting_image.rgb);
+			night_lighting_image_hsv.x += HLY_NIGHTLIGHTING_IMAGE_HUE;
+			night_lighting_image_hsv.y *= HLY_NIGHTLIGHTING_IMAGE_SATURATION;
+			night_lighting_image_hsv.z *= HLY_NIGHTLIGHTING_IMAGE_VALUE;
+			night_lighting_image = vec4(HSS_HSVtoRGB(night_lighting_image_hsv), night_lighting_image.a);
+		}
 	}
 
 	vec4 top_image = vec4(0);
+	vec2 top_image_coord = GetScaledCoord(VIEWPORT_COORD, background_coord_no_mirror, screen_coord, bezel_outside_coord, 
+						vec2(HLY_TOP_IMAGE_SCALE * HLY_TOP_IMAGE_SCALE_X, HLY_TOP_IMAGE_SCALE), 
+						vec2(0, HLY_TOP_IMAGE_POS_Y), 
+						HLY_TOP_IMAGE_SCALE_MODE, 
+						HLY_TOP_IMAGE_SCALE_KEEP_ASPECT);
+	if (HLY_TOP_IMAGE_MIRROR_WRAP == 1)
+		top_image_coord = HSS_GetMirrorWrapCoord(top_image_coord);
 	if (HLY_TOP_IMAGE_OPACITY > 0)
 	{
-		vec2 top_image_coord = GetScaledCoord(VIEWPORT_COORD, 
-							vec2(HLY_TOP_IMAGE_SCALE * HLY_TOP_IMAGE_SCALE_X, HLY_TOP_IMAGE_SCALE), 
-							vec2(0, HLY_TOP_IMAGE_POS_Y), 
-							HLY_TOP_IMAGE_SCALE_MODE, 
-							HLY_TOP_IMAGE_SCALE_KEEP_ASPECT);
 
-		if (HLY_BG_IMAGE_MIRROR_WRAP == 1)
-			top_image_coord = HSS_GetMirrorWrapCoord(top_image_coord);
 
 		// Get the top image color and masking values if needed
 		top_image = SCREEN_ASPECT < 1 ? texture(TopLayerVertImage, top_image_coord):
@@ -932,43 +904,140 @@ void main()
 	}
 	
 	//----------------------------------------------------
-	// LED Image
+	// Tube Glass Image
 	//----------------------------------------------------
+	vec4 glass_image = vec4(0);
+	if (HLY_GLASS_IMAGE_OPACITY > 0)
+	{
+		vec2 glass_coord = VIEWPORT_COORD * 2;
+
+		if (HLY_GLASS_IMAGE_SCALE_MODE == 0)
+			glass_coord = VIEWPORT_COORD;
+		else if (HLY_GLASS_IMAGE_SCALE_MODE == 1)
+			glass_coord = background_coord_no_mirror;
+		else if (HLY_GLASS_IMAGE_SCALE_MODE == 2)
+			glass_coord = tube_warped_coord_ctr * 0.97 + 0.5;
+		else if (HLY_GLASS_IMAGE_SCALE_MODE == 3)
+			glass_coord = bezel_image_coord;
+		else if (HLY_GLASS_IMAGE_SCALE_MODE == 4)
+			glass_coord = decal_coord;
+		else if (HLY_GLASS_IMAGE_SCALE_MODE == 5)
+			glass_coord = top_image_coord;
+
+		// Add Scaling
+		glass_coord = (glass_coord - 0.5) * 1 / HLY_GLASS_IMAGE_SCALE + 0.5;
+
+		// Dithering for the glass reflection if needed to reduce banding
+		float blur_max_size = 1;
+		float blur_amount = 0.2;
+		if (HLY_GLASS_IMAGE_DITHERING_SAMPLES > 0)
+			glass_image = GetStoichaicBlurredSample(TubeGlassImage, glass_coord.xy, HLY_GLASS_IMAGE_DITHERING_SAMPLES, blur_max_size, blur_amount);
+		else
+			glass_image = texture(TubeGlassImage, glass_coord);
+
+		glass_image = HSS_Linearize(glass_image, HSS_DEFAULT_SRGB_GAMMA);
+	}
+
+	//-----------------------------------------------------------------------------------------
+	// LED Image
+	//-----------------------------------------------------------------------------------------
 	// Lights - Add small self illuminated lights on top of night image
 	vec4 led_image = vec4(0);
 	if (HLY_LED_IMAGE_OPACITY > 0)
 	{
-		vec2 led_coord = HLY_LED_IMAGE_SCALE_MODE == 1 ? background_coord : VIEWPORT_COORD;
+		//0:Full Screen 1:BG 2:BEZEL 3:Top Image
+		
+		vec2 led_coord = VIEWPORT_COORD * 2;
+
+		if (HLY_LED_IMAGE_SCALE_MODE == 0)
+			led_coord = VIEWPORT_COORD;
+		else if (HLY_LED_IMAGE_SCALE_MODE == 1)
+			led_coord = background_coord_no_mirror;
+		else if (HLY_LED_IMAGE_SCALE_MODE == 2)
+			led_coord = bezel_image_coord;
+		else if (HLY_LED_IMAGE_SCALE_MODE == 3)
+			led_coord = decal_coord;
+		else if (HLY_LED_IMAGE_SCALE_MODE == 4)
+			led_coord = top_image_coord;
+
 		led_image = texture(LEDImage, led_coord);
 		led_image = HSS_Linearize(led_image, HSS_DEFAULT_SRGB_GAMMA);
 		led_image.rgb *= led_image.a;
 	}
 
-	//------------------------------------------------------
+	//-----------------------------------------------------------------------------------------
 	// COMPOSITE LAYERS
-	//------------------------------------------------------
+	//-----------------------------------------------------------------------------------------
 
-	//---------------------------------------------
+	//-----------------------------------------------------------------------------------------
 	// Bottom Combined Layer - All the elements which go under the bezel
-	//---------------------------------------------
+	//-----------------------------------------------------------------------------------------
 	vec4 bottom_combined_layer = background_color;
 
-	if (HLY_STATIC_ELEMENTS_GAMMA != 1)
+	// If it's a backdrop then only apply the gamma and night lighting to the bezel 
+	// then apply the bezel on top of the background
+	if (HLY_BG_IMAGE_IS_BACKDROP == 1)
 	{
-		// GAMMA ADJUST STATIC ELEMENTS
-		bottom_combined_layer.rgb /= bottom_combined_layer.a;
-		bottom_combined_layer.rgb = mix(bottom_combined_layer.rgb, HSS_ApplyGamma(bottom_combined_layer, HLY_STATIC_ELEMENTS_GAMMA).rgb, 
-									OUTSIDE_TUBE_MASK_FOR_IMAGE);
-		bottom_combined_layer.rgb *= bottom_combined_layer.a;
-	}
+		// BEZEL IMAGE UNDER GENERATED BEZEL
+		if (HLY_BEZEL_IMAGE_OPACITY > 0)
+			if (HLY_BEZEL_IMAGE_DEPTH_ORDER == 0)
+			{
+				if (HLY_STATIC_LAYERS_GAMMA != 1)
+				{
+					// GAMMA ADJUST STATIC ELEMENTS
+					bezel_image.rgb /= bezel_image.a;
+					bezel_image.rgb = mix(bezel_image.rgb, 
+											HSS_ApplyGamma(bezel_image, HLY_STATIC_LAYERS_GAMMA).rgb, 
+											OUTSIDE_TUBE_MASK_FOR_IMAGE);
+					bezel_image.rgb *= bezel_image.a;
+				}
 
-	// NIGHT LIGHTING
-	if (HLY_NIGHTLIGHTING_IMAGE_OPACITY > 0)
-		bottom_combined_layer = BlendModeLayerMix(bottom_combined_layer, 
-												night_lighting_image, 
-												BLEND_MODE_MULTIPLY, 
-												MASK_MODE_OUTSIDE_TUBE, 
-												HLY_NIGHTLIGHTING_IMAGE_OPACITY);
+				// NIGHT LIGHTING
+				if (HLY_NIGHTLIGHTING_IMAGE_OPACITY > 0)
+					bezel_image = BlendModeLayerMix(bezel_image, 
+													night_lighting_image, 
+													BLEND_MODE_MULTIPLY, 
+													MASK_MODE_ALL, 
+													HLY_NIGHTLIGHTING_IMAGE_OPACITY);
+
+				bottom_combined_layer = BlendModeLayerMix(bottom_combined_layer, 
+														bezel_image, 
+														HLY_BEZEL_IMAGE_BLEND_MODE, 
+														HLY_BEZEL_IMAGE_MASK_MODE, 
+														HLY_BEZEL_IMAGE_OPACITY);
+			}
+	}
+	// If it's not a backdrop then apply the bezel on top of the background
+	// then apply the gamma and night lighting to the result
+	else
+	{
+		if (HLY_BEZEL_IMAGE_OPACITY > 0)
+			if (HLY_BEZEL_IMAGE_DEPTH_ORDER == 0)
+				bottom_combined_layer = BlendModeLayerMix(bottom_combined_layer, 
+								bezel_image, 
+								HLY_BEZEL_IMAGE_BLEND_MODE, 
+								HLY_BEZEL_IMAGE_MASK_MODE, 
+								HLY_BEZEL_IMAGE_OPACITY);
+
+		if (HLY_STATIC_LAYERS_GAMMA != 1)
+		{
+			// GAMMA ADJUST
+			bottom_combined_layer.rgb /= bottom_combined_layer.a;
+			bottom_combined_layer.rgb = mix(bottom_combined_layer.rgb, 
+										HSS_ApplyGamma(bottom_combined_layer, 
+										HLY_STATIC_LAYERS_GAMMA).rgb, 
+										OUTSIDE_TUBE_MASK_FOR_IMAGE);
+			bottom_combined_layer.rgb *= bottom_combined_layer.a;
+		}
+
+		// NIGHT LIGHTING
+		if (HLY_NIGHTLIGHTING_IMAGE_OPACITY > 0)
+			bottom_combined_layer = BlendModeLayerMix(bottom_combined_layer, 
+													night_lighting_image, 
+													BLEND_MODE_MULTIPLY, 
+													MASK_MODE_ALL,
+													HLY_NIGHTLIGHTING_IMAGE_OPACITY);
+	}
 
 	// ADD CRT
 	bottom_combined_layer = BlendModeLayerMix(bottom_combined_layer, 
@@ -977,23 +1046,25 @@ void main()
 												MASK_MODE_ALL, 
 												1);
 
-	// ADD TUBE REFLECTION
-	bottom_combined_layer = BlendModeLayerMix(bottom_combined_layer, 
-												tube_reflection_image, 
-												BLEND_MODE_ADD, 
-												MASK_MODE_TUBE, 
-												HLY_TUBE_REFLECTION_IMAGE_OPACITY);
+	// ADD GLASS REFLECTION
+	if (HLY_GLASS_IMAGE_OPACITY > 0)
+		if (HLY_GLASS_IMAGE_DEPTH_ORDER == 0)
+			bottom_combined_layer = BlendModeLayerMix(bottom_combined_layer, 
+														glass_image, 
+														BLEND_MODE_ADD, 
+														HLY_GLASS_IMAGE_MASK_MODE, 
+														HLY_GLASS_IMAGE_OPACITY);
 
-	//---------------------------------------------
+	//-----------------------------------------------------------------------------------------
 	// Mid Combined Layer - All the elements which go on top of the tube
 	//						These are all affected by the Night Lighting Image
-	//---------------------------------------------
+	//-----------------------------------------------------------------------------------------
 	vec4 mid_combined_layer = vec4(0);
 
 
 	// BEZEL IMAGE UNDER GENERATED BEZEL
 	if (HLY_BEZEL_IMAGE_OPACITY > 0)
-		if (HLY_BEZEL_IMAGE_DEPTH_ORDER == 0)
+		if (HLY_BEZEL_IMAGE_DEPTH_ORDER == 1)
 			mid_combined_layer = BlendModeLayerMix(mid_combined_layer, 
 													bezel_image, 
 													HLY_BEZEL_IMAGE_BLEND_MODE, 
@@ -1029,7 +1100,7 @@ void main()
 
 	// BEZEL IMAGE OVER GENERATED BEZEL
 	if (HLY_BEZEL_IMAGE_OPACITY > 0)
-		if (HLY_BEZEL_IMAGE_DEPTH_ORDER == 1)
+		if (HLY_BEZEL_IMAGE_DEPTH_ORDER == 2)
 			mid_combined_layer = BlendModeLayerMix(mid_combined_layer, 
 													bezel_image, 
 													HLY_BEZEL_IMAGE_BLEND_MODE, 
@@ -1045,14 +1116,14 @@ void main()
 												HLY_DECAL_IMAGE_OPACITY);
 
 	// GAMMA ADJUST STATIC ELEMENTS
-	if (HLY_STATIC_ELEMENTS_GAMMA != 1)
+	if (HLY_STATIC_LAYERS_GAMMA != 1)
 	{
 		mid_combined_layer.rgb /= mid_combined_layer.a;
-		mid_combined_layer.rgb = HSS_ApplyGamma(mid_combined_layer, HLY_STATIC_ELEMENTS_GAMMA).rgb;
+		mid_combined_layer.rgb = HSS_ApplyGamma(mid_combined_layer, HLY_STATIC_LAYERS_GAMMA).rgb;
 		mid_combined_layer.rgb *= mid_combined_layer.a;
 	}
 
-	// NIGHT LIGHTING
+	// NIGHT LIGHTING for MIDDLE COMBINED LAYER
 	if (HLY_NIGHTLIGHTING_IMAGE_OPACITY > 0)
 	{
 		mid_combined_layer = BlendModeLayerMix(mid_combined_layer, 
@@ -1062,9 +1133,9 @@ void main()
 												HLY_NIGHTLIGHTING_IMAGE_OPACITY);
 	}
 
-	//---------------------------------------------
+	//-----------------------------------------------------------------------------------------
 	// Mid Additive Combined Layer
-	//---------------------------------------------
+	//-----------------------------------------------------------------------------------------
 	vec4 mid_additive_combined_layer = vec4(0);
 
 	// LED IMAGE
@@ -1083,14 +1154,22 @@ void main()
 														HLY_REFLECTION_MASK_MODE, 
 														1);
 
+	// ADD GLASS REFLECTION
+	if (HLY_GLASS_IMAGE_OPACITY > 0)
+		if (HLY_GLASS_IMAGE_DEPTH_ORDER == 1)
+			mid_additive_combined_layer = BlendModeLayerMix(mid_additive_combined_layer, 
+															glass_image, 
+															BLEND_MODE_ADD, 
+															HLY_GLASS_IMAGE_MASK_MODE, 
+															HLY_GLASS_IMAGE_OPACITY);
 	// Composite all combined layers
 	vec4 frag_color_linear = vec4(0);
 	frag_color_linear = PreMultAlphaBlend(bottom_combined_layer, mid_combined_layer);
 	frag_color_linear = PreMultAlphaBlend(frag_color_linear, mid_additive_combined_layer);
 
-	//---------------------------------------------
+	//-----------------------------------------------------------------------------------------
 	// Top Combined Layer
-	//---------------------------------------------
+	//-----------------------------------------------------------------------------------------
 	if (HLY_TOP_IMAGE_OPACITY > 0)
 		if (HLY_TOP_IMAGE_DEPTH_ORDER == 1)
 		{
@@ -1098,10 +1177,10 @@ void main()
 			if (HLY_TOP_IMAGE_BLEND_MODE == BLEND_MODE_NORMAL)
 			{
 				// Gamma Adjust top image
-				if (HLY_STATIC_ELEMENTS_GAMMA != 1)
+				if (HLY_STATIC_LAYERS_GAMMA != 1)
 				{
 					top_image.rgb /= top_image.a;
-					top_image.rgb = HSS_ApplyGamma(top_image, HLY_STATIC_ELEMENTS_GAMMA).rgb;
+					top_image.rgb = HSS_ApplyGamma(top_image, HLY_STATIC_LAYERS_GAMMA).rgb;
 					top_image.rgb *= top_image.a;
 				}
 
@@ -1120,7 +1199,9 @@ void main()
 													HLY_TOP_IMAGE_MASK_MODE, 
 													HLY_TOP_IMAGE_OPACITY);
 		}
-	
+	//-----------------------------------------------------------------------------------------
+	// MASK DEBUG DISPLAY
+	//-----------------------------------------------------------------------------------------
 	// Show a red overlay on the screen showing the mask for each mask mode
 	if (HLY_LAYERING_DEBUG_MASK_MODE > -1)
 	{
@@ -1133,8 +1214,8 @@ void main()
 		// CRT
 		vec4 frag_color_linear = BlendModeLayerMix(frag_color_linear, crt_image_linear * outside_tube_mask_wider, HLY_CRT_SCREEN_BLEND_MODE, 1);
 		// TUBE REFLECTION
-		if (HLY_TUBE_REFLECTION_IMAGE_OPACITY > 0)
-			frag_color_linear = BlendModeLayerMix(frag_color_linear, tube_reflection_image, MASK_MODE_ADD, HLY_TUBE_REFLECTION_IMAGE_OPACITY);
+		if (HLY_GLASS_IMAGE_OPACITY > 0)
+			frag_color_linear = BlendModeLayerMix(frag_color_linear, glass_image, MASK_MODE_ADD, HLY_GLASS_IMAGE_OPACITY);
 		// REFLECTION
 		frag_color_linear = BlendModeLayerMix(frag_color_linear, reflected_color, BLEND_MODE_ADD, HLY_REFLECTION_MASK_MODE, 1);
 #endif

@@ -270,6 +270,7 @@ layout(location = 0) out vec4 FragColor;
 
 layout(set = 0, binding = 2) uniform sampler2D Source;
 layout(set = 0, binding = 3) uniform sampler2D LinearizePass;
+layout(set = 0, binding = 4) uniform sampler2D ColoredGelImage;
 
 // HSM Removed
 // layout(set = 0, binding = 4) uniform sampler2D AvgLumPass;
@@ -795,7 +796,7 @@ void main()
 	FragColor = vec4(color, 1);
 	
 	// Prep and add output gamma
-	FragColor = HSS_GetPostCrtPreppedColor(FragColor, screen_curved_coord, SCREEN_COORD, SCREEN_ASPECT, SCREEN_SCALE);
+	FragColor = HSS_GetPostCrtPreppedColor(FragColor, screen_curved_coord, SCREEN_COORD, SCREEN_ASPECT, SCREEN_SCALE, ColoredGelImage);
 	// End Addition
 }
 

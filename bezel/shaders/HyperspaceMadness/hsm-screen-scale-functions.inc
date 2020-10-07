@@ -582,6 +582,9 @@ float HSS_GetSplitScreenAreaGradient(vec2 in_cropped_coord, float center_thickne
 
 vec2 HSS_GetCurvedCoord(vec2 in_coord, float curvature_multiplier, float screen_aspect)
 {
+	if (HSS_CURVATURE_MODE == -1)
+		return in_coord;
+	
 	float epsilon = 0.002;
 	vec2 original_size = HSS_GetRotatedRawOriginalSize();
 

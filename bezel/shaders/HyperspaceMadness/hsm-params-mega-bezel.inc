@@ -247,6 +247,9 @@ float HLY_CRT_SCREEN_BLEND_MODE = global.HLY_CRT_SCREEN_BLEND_MODE;
 #pragma parameter HLY_GLASS_IMAGE_OPACITY           "[ GLASS ]  Opacity" 1.4 0 100 0.05
 float HLY_GLASS_IMAGE_OPACITY = global.HLY_GLASS_IMAGE_OPACITY / 100;
 
+#pragma parameter HLY_GLASS_IMAGE_BLEND_MODE            "[ GLASS ]  Blend Mode -  -1:Off 0:Normal, 1:Add, 2:Multiply"  1 -1 2 1
+float HLY_GLASS_IMAGE_BLEND_MODE = global.HLY_GLASS_IMAGE_BLEND_MODE;
+
 #pragma parameter HLY_GLASS_IMAGE_MASK_MODE         "[ GLASS ]  Mask - ALL, Tube, Bz-, Bz, Bz+, Fram, Fram+, BG" 1 0 7 1
 float HLY_GLASS_IMAGE_MASK_MODE = global.HLY_GLASS_IMAGE_MASK_MODE;
 
@@ -267,6 +270,9 @@ float HLY_GLASS_IMAGE_DITHERING_SAMPLES = global.HLY_GLASS_IMAGE_DITHERING_SAMPL
 //---------------------------------------------------------------------------------------------------
 #pragma parameter HLY_BEZEL_IMAGE_OPACITY               "[ BEZEL IMG ]  Opacity" 0 0 100 1
 float HLY_BEZEL_IMAGE_OPACITY = global.HLY_BEZEL_IMAGE_OPACITY / 100;
+
+#pragma parameter HLY_BEZEL_IMAGE_BRIGHTNESS               "[ BEZEL IMG ]  Brightness" 100 0 200 1
+float HLY_BEZEL_IMAGE_BRIGHTNESS = global.HLY_BEZEL_IMAGE_BRIGHTNESS / 100;
 
 #pragma parameter HLY_BEZEL_IMAGE_BLEND_MODE            "[ BEZEL IMG ]  Blend Mode -  -1:Off 0:Normal, 1:Add, 2:Multiply"  0 -1 2 1
 float HLY_BEZEL_IMAGE_BLEND_MODE = global.HLY_BEZEL_IMAGE_BLEND_MODE;
@@ -337,9 +343,6 @@ float HLY_NIGHTLIGHTING_IMAGE_OPACITY = global.HLY_NIGHTLIGHTING_IMAGE_OPACITY /
 #pragma parameter HLY_NIGHTLIGHTING_IMAGE_MIRROR_HORZ       "[ NIGHT LIGHTING ]  Mirror H"  0 0 1 1
 float HLY_NIGHTLIGHTING_IMAGE_MIRROR_HORZ = global.HLY_NIGHTLIGHTING_IMAGE_MIRROR_HORZ;
 
-// #pragma parameter HLY_NIGHTLIGHTING_IMAGE_MIRROR_VERT       "[ NIGHT LIGHTING ]  Mirror V"  0 0 1 1
-// float HLY_NIGHTLIGHTING_IMAGE_MIRROR_VERT = global.HLY_NIGHTLIGHTING_IMAGE_MIRROR_VERT;
-
 #pragma parameter HLY_NIGHTLIGHTING_IMAGE_SATURATION    "[ NIGHT LIGHTING ]  Saturation"  100 0 300 1
 float HLY_NIGHTLIGHTING_IMAGE_SATURATION = global.HLY_NIGHTLIGHTING_IMAGE_SATURATION / 100;
 
@@ -368,6 +371,9 @@ float HLY_REFLECTION_MASK_MODE = global.HLY_REFLECTION_MASK_MODE;
 #pragma parameter HLY_LED_IMAGE_OPACITY                 "[ LED ]  Image Opacity"  0 0 100 1
 float HLY_LED_IMAGE_OPACITY = global.HLY_LED_IMAGE_OPACITY / 100;
 
+#pragma parameter HLY_LED_IMAGE_BLEND_MODE            "[ LED ]  Blend Mode -  -1:Off 0:Normal, 1:Add, 2:Multiply"  1 -1 2 1
+float HLY_LED_IMAGE_BLEND_MODE = global.HLY_LED_IMAGE_BLEND_MODE;
+
 #pragma parameter HLY_LED_IMAGE_MASK_MODE               "[ LED ]  Mask - ALL, Tube, Bz-, Bz, Bz+, Fram, Fram+, BG"   7 0 7 1
 float HLY_LED_IMAGE_MASK_MODE = global.HLY_LED_IMAGE_MASK_MODE;
 
@@ -390,7 +396,7 @@ float HLY_TOP_IMAGE_MASK_MODE = global.HLY_TOP_IMAGE_MASK_MODE;
 #pragma parameter HLY_TOP_IMAGE_DEPTH_ORDER             "[ TOP ]  Depth Order - 0:Under Frame 1:Top"  1 0 1 1
 float HLY_TOP_IMAGE_DEPTH_ORDER = global.HLY_TOP_IMAGE_DEPTH_ORDER;
 
-#pragma parameter HLY_TOP_IMAGE_SCALE_MODE              "[ TOP ]  Scale Mode - FullScrn, Tube, Bezel, BG, Bzl Img, Decal"  3 0 5 1
+#pragma parameter HLY_TOP_IMAGE_SCALE_MODE              "[ TOP ]  Scale Mode - FullScrn, Tube, Bezel, BG, Bzl Img, Decal"  0 0 5 1
 float HLY_TOP_IMAGE_SCALE_MODE = global.HLY_TOP_IMAGE_SCALE_MODE;
 
 #pragma parameter HLY_TOP_IMAGE_SCALE_KEEP_ASPECT       "[ TOP ]  Scale Keep Aspect"  1 0 1 1

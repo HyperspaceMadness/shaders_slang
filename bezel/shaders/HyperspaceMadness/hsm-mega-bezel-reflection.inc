@@ -854,6 +854,7 @@ void main()
 	{
 		bezel_image = texture(BezelImage, bezel_image_coord);
 		bezel_image = HSS_Linearize(bezel_image, HSS_DEFAULT_SRGB_GAMMA);
+		bezel_image.rgb *= HLY_BEZEL_IMAGE_BRIGHTNESS;
 	}
 
 	//----------------------------------------------------
@@ -1065,7 +1066,7 @@ void main()
 		if (HLY_GLASS_IMAGE_DEPTH_ORDER == 0)
 			bottom_combined_layer = BlendModeLayerMix(bottom_combined_layer, 
 														glass_image, 
-														BLEND_MODE_ADD, 
+														HLY_GLASS_IMAGE_BLEND_MODE, 
 														HLY_GLASS_IMAGE_MASK_MODE, 
 														HLY_GLASS_IMAGE_OPACITY);
 
@@ -1156,7 +1157,7 @@ void main()
 	if (HLY_LED_IMAGE_OPACITY > 0)
 		mid_additive_combined_layer = BlendModeLayerMix(mid_additive_combined_layer, 
 														led_image, 
-														BLEND_MODE_ADD, 
+														HLY_LED_IMAGE_BLEND_MODE, 
 														HLY_LED_IMAGE_MASK_MODE, 
 														HLY_LED_IMAGE_OPACITY);
 
@@ -1174,7 +1175,7 @@ void main()
 		if (HLY_GLASS_IMAGE_DEPTH_ORDER == 1)
 			mid_additive_combined_layer = BlendModeLayerMix(mid_additive_combined_layer, 
 															glass_image, 
-															BLEND_MODE_ADD, 
+															HLY_GLASS_IMAGE_BLEND_MODE, 
 															HLY_GLASS_IMAGE_MASK_MODE, 
 															HLY_GLASS_IMAGE_OPACITY);
 	// Composite all combined layers

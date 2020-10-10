@@ -197,6 +197,7 @@ layout(location = 0) out vec4 FragColor;
 
 layout(set = 0, binding = 2) uniform sampler2D Source;
 #define input_texture Source
+layout(set = 0, binding = 4) uniform sampler2D ColoredGelImage;
 
 void main()
 {
@@ -312,7 +313,7 @@ void main()
     FragColor = vec4(color, 1);
 
     // Apply Prep and Output Gamma
-	FragColor = HSS_GetPostCrtPreppedColor(FragColor, screen_curved_coord, SCREEN_COORD, SCREEN_ASPECT, SCREEN_SCALE);
+	FragColor = HSS_GetPostCrtPreppedColor(FragColor, screen_curved_coord, SCREEN_COORD, SCREEN_ASPECT, SCREEN_SCALE, ColoredGelImage);
 
     // HSM Removed
     // FragColor = encode_output(float4(color, 1.0));

@@ -103,8 +103,9 @@ layout(location = 4) in vec2 SCREEN_COORD;
 
 layout(location = 0) out vec4 FragColor;
 
-layout(set = 0, binding = 3) uniform sampler2D accum1;
-layout(set = 0, binding = 4) uniform sampler2D blur2;
+layout(set = 0, binding = 1) uniform sampler2D accum1;
+layout(set = 0, binding = 2) uniform sampler2D blur2;
+layout(set = 0, binding = 4) uniform sampler2D ColoredGelImage;
 
 vec3 tsample( sampler2D samp, vec2 tc, float offs, vec2 resolution )
     {
@@ -274,5 +275,5 @@ void main()
     // HSM Added
     FragColor = clamp(FragColor, 0, 1);
     FragColor = HSS_Linearize(FragColor, HSS_DEFAULT_CRT_GAMMA);
-    FragColor = HSS_GetPostCrtPreppedColor(FragColor, screen_curved_coord, SCREEN_COORD, SCREEN_ASPECT, SCREEN_SCALE);
+    FragColor = HSS_GetPostCrtPreppedColor(FragColor, screen_curved_coord, SCREEN_COORD, SCREEN_ASPECT, SCREEN_SCALE, ColoredGelImage);
 }

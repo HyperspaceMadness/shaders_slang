@@ -215,8 +215,10 @@ layout(set = 0, binding = 2) uniform sampler2D Source;
 // layout(set = 0, binding = 5) uniform sampler2D LinPass; 
 
 // HSM Added
-layout(set = 0, binding = 5) uniform sampler2D LinearizePass; 
+layout(set = 0, binding = 3) uniform sampler2D LinearizePass; 
 #define LinPass LinearizePass
+
+layout(set = 0, binding = 4) uniform sampler2D ColoredGelImage;
 
 
 float st(float x)
@@ -595,6 +597,6 @@ void main()
 
 	// // HSM Addition
 	FragColor = vec4(color, 1.0);
-	FragColor = HSS_GetPostCrtPreppedColor(FragColor, screen_curved_coord, SCREEN_COORD, SCREEN_ASPECT, SCREEN_SCALE);
+	FragColor = HSS_GetPostCrtPreppedColor(FragColor, screen_curved_coord, SCREEN_COORD, SCREEN_ASPECT, SCREEN_SCALE, ColoredGelImage);
 	// // End Addition
 }

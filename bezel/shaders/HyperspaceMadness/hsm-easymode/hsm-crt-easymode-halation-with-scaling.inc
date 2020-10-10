@@ -180,6 +180,7 @@ layout(location = 5) in float USE_VERTICAL_SCANLINES;
 layout(location = 0) out vec4 FragColor;
 layout(set = 0, binding = 2) uniform sampler2D Source;
 layout(set = 0, binding = 3) uniform sampler2D ORIG_LINEARIZED;
+layout(set = 0, binding = 4) uniform sampler2D ColoredGelImage;
 
 void main()
 {
@@ -356,6 +357,6 @@ void main()
     FragColor = vec4(col, 1);
 
 	// HSM Added Prep and add output gamma
-	FragColor = HSS_GetPostCrtPreppedColor(FragColor, screen_curved_coord, SCREEN_COORD, SCREEN_ASPECT, SCREEN_SCALE);
+	FragColor = HSS_GetPostCrtPreppedColor(FragColor, screen_curved_coord, SCREEN_COORD, SCREEN_ASPECT, SCREEN_SCALE, ColoredGelImage);
 	// End Addition
 }

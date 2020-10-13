@@ -113,6 +113,9 @@ float HSS_CORE_RES_SAMPLING_MULT_OPPOSITE_DIR = global.HSS_CORE_RES_SAMPLING_MUL
 //---------------------------------------------------------------------------------------------------
 #pragma parameter HBZ_SPLITSCREEN_TITLE "-----[ SPLIT SCREEN ]------------------------------------------" 0 0 0 1
 
+#pragma parameter HSS_SPLIT_SCREEN_ON					"[ SPLIT SCREEN ]  Split ON - SPLIT SCREEN PRESET ONLY" 0 0 1 1
+float HSS_SPLIT_SCREEN_ON = global.HSS_SPLIT_SCREEN_ON;
+
 #pragma parameter HSS_SPLIT_SCREEN_AMOUNT				"[ SPLIT SCREEN ]  Split Thickness - SPLIT SCREEN PRESET ONLY" 0 0 256 2
 float HSS_SPLIT_SCREEN_AMOUNT = global.HSS_SPLIT_SCREEN_AMOUNT;
 

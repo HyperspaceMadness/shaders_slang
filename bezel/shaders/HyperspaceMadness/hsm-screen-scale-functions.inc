@@ -699,11 +699,61 @@ float HSS_GetCornerMask(vec2 in_coord, float screen_aspect, float corner_radius,
 {
 	//(0.5 - abs(in_coord - 0.5)) * 2
 	vec2 new_coord = min(in_coord, vec2(1.0) - in_coord) * vec2(screen_aspect, 1);
-	vec2 corner_distance = vec2(max(corner_radius / 1000.0, (1.0 - HSS_SCREENFX_EDGE_SHARPNESS * edge_sharpness) * 0.01));
+	vec2 corner_distance = vec2(max(corner_radius / 1000.0, (1.0 - HSS_SCREEN_EDGE_SHARPNESS * edge_sharpness) * 0.01));
 	new_coord = (corner_distance - min(new_coord, corner_distance));
 	float distance = sqrt(dot(new_coord, new_coord));
 
 	return clamp((corner_distance.x - distance) * (edge_sharpness * 500 + 100), 0.0, 1.0);
+}
+
+vec2 HSS_GetTubeCurvedCoord(vec2 screen_coord, vec2 screen_scale, float screen_aspect)
+{
+	float flip_tilt = 0;
+
+	#ifdef HSM_SPLIT_SCREEN_PRESET
+		float split_pos_1 = 0;
+		float split_pos_2 = 0;
+		float split_dist = 0;
+		float split_axis_is_horizontal = 0;
+		HSS_GetSplitInfo(split_pos_1, split_pos_2, split_dist, split_axis_is_horizontal);
+
+		float coord_1D = HSS_GetSplitAxisCoord1D(screen_coord, split_axis_is_horizontal);
+		
+		// check if we are on the first screen and therfore need to flip the tilt
+		flip_tilt = HHLP_IsUnderValue(coord_1D, 0.5);
+
+		if (HSS_SPLIT_SCREEN_CENTER_FILL_MODE == 1)
+		{
+			// Get the screen scale for each sub-screen, this helps calculate the correct black edge offset
+			screen_scale = split_axis_is_horizontal * vec2(split_pos_1 * screen_scale.x, screen_scale.y) + (1 - split_axis_is_horizontal) * vec2(SCREEN_SCALE.x, (1 - split_pos_2) * screen_scale.y);
+
+			// If this was on the first screen then flip it so we get the opposite tilt
+			// screen_coord = flip_tilt * HSS_GetFlippedCoordOnSplitAxis(screen_coord, SCREEN_ASPECT) + (1 - flip_tilt) * screen_coord;
+		}
+	#endif
+
+	vec2 black_edge_scale_offset = HSS_GetTubeScale(screen_scale) / screen_scale;
+
+	// Get the tube coord with the black edge added
+	// vec2 tube_coord = HSS_GetInverseScaledCoord(screen_coord, black_edge_scale_offset);
+
+	// Get the curved coordinate, setting allow_split_screen to off (0)
+	vec2 tube_curved_coord = HSS_GetCurvedCoord(screen_coord, HSS_TUBE_CURVATURE_SCALE, screen_aspect);
+
+	#ifdef HSM_SPLIT_SCREEN_PRESET
+		if (HSS_SPLIT_SCREEN_CENTER_FILL_MODE == 1)
+		{
+			// Take the sub-screen area and re-map it to 0-1
+			tube_curved_coord = HSS_Get0To1CoordFromSplitArea(tube_curved_coord, split_pos_1, split_pos_2, split_dist, split_axis_is_horizontal);
+
+			// If this was flipped then flip it back
+			// tube_curved_coord = flip_tilt * HSS_GetFlippedCoordOnSplitAxis(tube_curved_coord, SCREEN_ASPECT) + (1 - flip_tilt) * tube_curved_coord;
+		}
+	#endif
+
+	tube_curved_coord = HSS_GetInverseScaledCoord(tube_curved_coord, black_edge_scale_offset);
+
+	return tube_curved_coord;
 }
 
 vec3 HSS_RGBtoHSV(vec3 c)
@@ -975,16 +1025,14 @@ vec4 HSS_ApplyScanlineMask(vec4 in_color, vec2 in_coord, vec2 screen_scale)
 	return clamp(masked_color, 0, 1);
 }
 
-vec4 HSS_GetPostCrtPreppedColor(vec4 in_color_linear, vec2 screen_curved_coord, vec2 screen_coord, float screen_aspect, vec2 screen_scale, in sampler2D gel_image_sampler)
+vec4 HSS_GetPostCrtPreppedColor(vec4 in_color_linear, vec2 screen_curved_coord, vec2 screen_coord, float screen_aspect, vec2 screen_scale, in sampler2D gel_image_sampler, in sampler2D tube_highlight_image_sampler)
 {
 	vec4 out_color = in_color_linear;
-
-	float screen_mask = HSS_GetCornerMask((screen_curved_coord - 0.5) * 0.999 + 0.5, screen_aspect, HSS_SCREENFX_CORNER_RADIUS, 0.9);
-
-	float screen_edge_mask = HSS_GetCornerMask(screen_curved_coord, screen_aspect, HSS_SCREENFX_CORNER_RADIUS, HSS_SCREENFX_EDGE_SHARPNESS);
+	float screen_mask = HSS_GetCornerMask((screen_curved_coord - 0.5) * 0.999 + 0.5, screen_aspect, HSS_SCREEN_CORNER_RADIUS, 0.9);
+	float screen_edge_mask = HSS_GetCornerMask(screen_curved_coord, screen_aspect, HSS_SCREEN_CORNER_RADIUS, HSS_SCREEN_EDGE_SHARPNESS);
 	screen_edge_mask = 1 - ((1 - screen_edge_mask) * screen_mask);
 
-	out_color *= screen_edge_mask;
+	// out_color *= screen_edge_mask;
 
 	vec2 mirrored_screen_coord = HSS_GetMirrorWrappedCoord(screen_curved_coord);
 	float vignette_factor = HSS_GetScreenVignetteFactor(mirrored_screen_coord, HSS_SCREENFX_VIGNETTE);
@@ -998,23 +1046,37 @@ vec4 HSS_GetPostCrtPreppedColor(vec4 in_color_linear, vec2 screen_curved_coord, 
 	if (HSS_SCREENFX_FAKE_SCANLINE_OPACITY > 0)
 	{
 		vec4 scanline_masked_color = HSS_ApplyScanlineMask(out_color, screen_coord, screen_scale);
-		
-		out_color = mix(out_color, scanline_masked_color, screen_mask);
+		// out_color = mix(out_color, scanline_masked_color, screen_mask);
+		out_color = scanline_masked_color;
 	}
+
+	vec2 tube_curved_coord = HSS_GetTubeCurvedCoord(screen_coord, screen_scale, screen_aspect);
+	vec2 mirrored_tube_coord = HSS_GetMirrorWrappedCoord(tube_curved_coord);
 
 	// Add a Colored Gel image on top of the screen, this is what colors games like space invaders or battlezone
-	if (HSS_SCREENFX_GEL_IMAGE_MULTIPLY_AMOUNT > 0 || HSS_SCREENFX_GEL_IMAGE_ADDITIVE_AMOUNT > 0)
+	if (HSS_TUBE_COLORED_GEL_IMAGE_MULTIPLY_AMOUNT > 0 || HSS_TUBE_COLORED_GEL_IMAGE_ADDITIVE_AMOUNT > 0)
 	{
-		vec4 gel_image = texture(gel_image_sampler, mirrored_screen_coord);
+		vec4 gel_image = texture(gel_image_sampler, mirrored_tube_coord);
+		gel_image = HSS_Linearize(gel_image, HSS_DEFAULT_SRGB_GAMMA);
 
-		if (HSS_SCREENFX_GEL_IMAGE_MULTIPLY_AMOUNT > 0)
-			out_color = mix(out_color, out_color * gel_image, gel_image.a * HSS_SCREENFX_GEL_IMAGE_MULTIPLY_AMOUNT);
+		if (HSS_TUBE_COLORED_GEL_IMAGE_MULTIPLY_AMOUNT > 0)
+			out_color = mix(out_color, out_color * gel_image, gel_image.a * HSS_TUBE_COLORED_GEL_IMAGE_MULTIPLY_AMOUNT);
 
-		if (HSS_SCREENFX_GEL_IMAGE_ADDITIVE_AMOUNT > 0)
-			out_color = mix(out_color, out_color + gel_image, gel_image.a * HSS_SCREENFX_GEL_IMAGE_ADDITIVE_AMOUNT);
-
-		out_color.a = in_color_linear.a;
+		if (HSS_TUBE_COLORED_GEL_IMAGE_ADDITIVE_AMOUNT > 0)
+			out_color = mix(out_color, out_color + gel_image, gel_image.a * HSS_TUBE_COLORED_GEL_IMAGE_ADDITIVE_AMOUNT);
 	}
+
+	if (HSS_TUBE_HIGHLIGHT_IMAGE_OPACITY > 0)
+	{
+		vec2 tube_highlight_coord = (mirrored_tube_coord - 0.5) / HSS_TUBE_HIGHLIGHT_IMAGE_SCALE + 0.5;
+		vec4 tube_highlight_image = texture(tube_highlight_image_sampler, tube_highlight_coord);
+		tube_highlight_image = HSS_Linearize(tube_highlight_image, HSS_DEFAULT_SRGB_GAMMA);
+
+		out_color.rgb += HSS_TUBE_HIGHLIGHT_IMAGE_OPACITY * tube_highlight_image.a * tube_highlight_image.rgb;
+	}
+
+	out_color.a = in_color_linear.a;
+
 
 	// If we are not using this with the bezel we want
 	#ifdef MASK_OUTSIDE_SCREEN

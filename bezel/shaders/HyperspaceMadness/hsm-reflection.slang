@@ -110,12 +110,14 @@ layout(location = 0) out vec4 FragColor;
 layout(set = 0, binding = 1) uniform sampler2D BR_MappingPass;
 
 layout(set = 0, binding = 2) uniform sampler2D BR_CRTPass;
-layout(set = 0, binding = 3) uniform sampler2D BR_MirrorBlurredPass;
-layout(set = 0, binding = 4) uniform sampler2D BR_MirrorReflectionDiffusedPass;
-layout(set = 0, binding = 5) uniform sampler2D BR_MirrorFullscreenGlowPass;
-layout(set = 0, binding = 6) uniform sampler2D AvgLumPass;
-layout(set = 0, binding = 7) uniform sampler2D GlassImage;
 
+layout(set = 0, binding = 5) uniform sampler2D TubeHighlightImage;
+layout(set = 0, binding = 6) uniform sampler2D ColoredGelImage;
+
+layout(set = 0, binding = 7) uniform sampler2D BR_MirrorBlurredPass;
+layout(set = 0, binding = 8) uniform sampler2D BR_MirrorReflectionDiffusedPass;
+layout(set = 0, binding = 9) uniform sampler2D BR_MirrorFullscreenGlowPass;
+layout(set = 0, binding = 10) uniform sampler2D AvgLumPass;
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
 void main()
@@ -142,7 +144,7 @@ void main()
 	vec2 screen_curved_coord = HSS_GetCurvedCoord(SCREEN_COORD, 1, SCREEN_ASPECT);
 
 	// Shrink the mask by 0.001 to clip off outer edge
-	float screen_mask = HSS_GetCornerMask(((screen_curved_coord - 0.5) * 1.001) + 0.5, SCREEN_ASPECT, HSS_SCREENFX_CORNER_RADIUS, HSS_SCREENFX_EDGE_SHARPNESS);
+	float screen_mask = HSS_GetCornerMask(((screen_curved_coord - 0.5) * 1.001) + 0.5, SCREEN_ASPECT, HSS_SCREEN_CORNER_RADIUS, HSS_SCREEN_EDGE_SHARPNESS);
 
 	//----------------------------------------------------
 	//  Calculate Outside mapping Coords
@@ -176,7 +178,7 @@ void main()
 	const float pi = 3.1415;
 
 	// Get amount to shift the point at the outer corner to match the overall position offset
-	vec2 pos_shift_offset = vec2(0, HBZ_FRAME_POS_Y_OFFSET / 100) * SCREEN_SCALE.y / outermap_scale;
+	vec2 pos_shift_offset = vec2(0, HBZ_BEZEL_OUTER_POS_Y_OFFSET / 100) * SCREEN_SCALE.y / outermap_scale;
 	pos_shift_offset *= outermap_coord.y > 0.5 ? 1 : -1;
 
 	// Get the direction vector from the inner corner of the bezel pointing at the outer corner 
@@ -191,10 +193,8 @@ void main()
 	float corner_rotation_offset = (SCREEN_COORD.y < 0.5) ? -HBR_CORNER_ROTATION_OFFSET_TOP : -HBR_CORNER_ROTATION_OFFSET_BOTTOM;
 
     if (HSS_CURVATURE_MODE == 0)
-    {
         // If we are using a 3d Curvature no offset is necessary
         corner_rotation_offset += (SCREEN_ASPECT > 1) ? 2 : 3;
-    }
 
 	// Convert direction vector to an angle so we can rotate the corner crease direction
 	float corner_angle_degrees = atan(corner_crease_dir.y / corner_crease_dir.x) / (2 * pi) * 360;
@@ -208,8 +208,8 @@ void main()
 
 	float fade_out_to_corner = HHLP_QuadraticBezier(clamp(length(outermap_warped_outside_screen_vector) / (corner_crease_length * 2), 0, 1), vec2(0.5, HBR_CORNER_SPREAD_FALLOFF / 100));
 
-	float corner_fade_width_inner = HBR_CORNER_INNER_SPREAD / 100 * (SCREEN_SCALE.x + SCREEN_SCALE.y) * HBZ_BEZEL_INNER_CORNER_RADIUS_SCALE * HSS_SCREENFX_CORNER_RADIUS / 10 / 250 * 1.2;
-	float corner_fade_width_outer = HBR_CORNER_OUTER_SPREAD / 100 * (SCREEN_SCALE.x + SCREEN_SCALE.y) * HBZ_BEZEL_OUTER_CORNER_RADIUS_SCALE * HSS_SCREENFX_CORNER_RADIUS / 10 / 250 * 1.6;
+	float corner_fade_width_inner = HBR_CORNER_INNER_SPREAD / 100 * (SCREEN_SCALE.x + SCREEN_SCALE.y) * HBZ_BEZEL_INNER_CORNER_RADIUS_SCALE * HSS_SCREEN_CORNER_RADIUS / 10 / 250 * 1.2;
+	float corner_fade_width_outer = HBR_CORNER_OUTER_SPREAD / 100 * (SCREEN_SCALE.x + SCREEN_SCALE.y) * HBZ_BEZEL_OUTER_CORNER_RADIUS_SCALE * HSS_SCREEN_CORNER_RADIUS / 10 / 250 * 1.6;
 	float corner_fade_width = (corner_fade_width_inner + fade_out_to_corner * (corner_fade_width_outer - corner_fade_width_inner));
 
 	// Get a vector perpendicular to the crease that we can shift the crease to blend between bottom/top and sides
@@ -235,9 +235,9 @@ void main()
 	float top_corner_mask = corner_mask * top_half_mask;
 	float bottom_corner_mask = corner_mask * (1 - top_half_mask);
 
-	float outside_tube_mask_wider = 1 - HSS_GetCornerMask(tube_warped_coord_ctr * 0.996 + 0.5, SCREEN_ASPECT, HBZ_BEZEL_INNER_CORNER_RADIUS_SCALE * HSS_SCREENFX_CORNER_RADIUS, 0.9);
-	float tube_shadow_mask = HSS_GetCornerMask(tube_warped_coord_ctr + 0.5, SCREEN_ASPECT, HBZ_BEZEL_INNER_CORNER_RADIUS_SCALE * HSS_SCREENFX_CORNER_RADIUS, 0);
-	float tube_edge_shadow_mult = HBZ_TUBE_EDGE_SHADOW * (tube_shadow_mask) + (1 - HBZ_TUBE_EDGE_SHADOW);
+	float outside_tube_mask_wider = 1 - HSS_GetCornerMask(tube_warped_coord_ctr * 0.996 + 0.5, SCREEN_ASPECT, HBZ_BEZEL_INNER_CORNER_RADIUS_SCALE * HSS_SCREEN_CORNER_RADIUS, 0.9);
+	float tube_shadow_mask = HSS_GetCornerMask(tube_warped_coord_ctr + 0.5, SCREEN_ASPECT, HBZ_BEZEL_INNER_CORNER_RADIUS_SCALE * HSS_SCREEN_CORNER_RADIUS, 0);
+	float tube_edge_shadow_mult = HBZ_BEZEL_INNER_EDGE_SHADOW * (tube_shadow_mask) + (1 - HBZ_BEZEL_INNER_EDGE_SHADOW);
 
 	crt_image_linear.rgb *= tube_edge_shadow_mult * (1 - outside_tube_mask_wider);
 	crt_image_linear.a = (1 - outside_tube_mask_wider);
@@ -373,8 +373,10 @@ void main()
 		reflected_color = clamp(reflected_color, 0, 1) * clamp(reflection_area_mask, 0, 1);
 
 		if (HGL_GLASSBORDER_ON == 1)
+		{
 			glass_border_edge_color = HBR_GLOBAL_AMOUNT * pow(edge_reflected_color, vec4(HBR_GLOBAL_GAMMA_ADJUST));
-
+			reflected_color = mix(reflected_color, glass_border_edge_color, edge_mask * outside_tube_mask);
+		}
 		// Edge Full Screen Glow
 		// Add Small amount of static glow on the edge (So when the screen is dark there is some highlight) as well as dynamic light
 		edge_fullscreen_glow = HBR_INNER_EDGE_FULLSCREEN_GLOW * edge_highlight_mask * outside_tube_mask * (vec4(0.005) 
@@ -384,22 +386,60 @@ void main()
 		if (HGL_GLASSBORDER_ON == 1)
 			edge_fullscreen_glow += HBR_INNER_EDGE_FULLSCREEN_GLOW * 0.5 * edge_highlight_mask * outside_tube_mask * diffused_reflection_color;
 
-		// reflected_color += clamp(edge_fullscreen_glow, 0, 1);
+		reflected_color += clamp(edge_fullscreen_glow, 0, 1);
 		reflected_color.a = 1;
+
+		// vec4 frag_color_linear = vec4(0);
+		// if (VIEWPORT_COORD.x < 0.5 && VIEWPORT_COORD.y < 0.5)
+		// frag_color_linear = edge_highlight_mask * vec4(1);
+		// if (VIEWPORT_COORD.x > 0.5 && VIEWPORT_COORD.y < 0.5)
+		// frag_color_linear = edge_fullscreen_glow;
+		// // if (VIEWPORT_COORD.x < 0.5 && VIEWPORT_COORD.y > 0.5)
+		// // frag_color_linear = glass_border_edge_color * edge_mask * outside_tube_mask + edge_fullscreen_glow;
+		// // if (VIEWPORT_COORD.x > 0.5 && VIEWPORT_COORD.y > 0.5)
+		// // frag_color_linear = glass_border_edge_color * edge_mask * outside_tube_mask;
+
+		// FragColor = HSS_ApplyGamma(clamp(frag_color_linear, 0, 1), HSS_DEFAULT_SRGB_GAMMA);
+		// return;
 	}
 
     // CRT
-	if (HBR_REFLECTION_IS_LAST_PASS == 1)
-		crt_image_linear *= screen_mask;
+	// if (HBR_REFLECTION_IS_LAST_PASS == 1)
+	crt_image_linear *= screen_mask;
 
     vec4 frag_color_linear = crt_image_linear;
     
-    // TUBE REFLECTION
-    if (HLY_GLASS_IMAGE_OPACITY > 0)
+	float black_edge_mask = TUBE_MASK * (1 - screen_mask);
+
+	// Add a Colored Gel image on top of the screen, this is what colors games like space invaders or battlezone
+	if (HSS_TUBE_COLORED_GEL_IMAGE_ADDITIVE_AMOUNT > 0)
+	{
+		vec4 gel_image = texture(ColoredGelImage, tube_coord_warped);
+		gel_image = HSS_Linearize(gel_image, HSS_DEFAULT_SRGB_GAMMA);
+
+		if (HSS_TUBE_COLORED_GEL_IMAGE_ADDITIVE_AMOUNT > 0)
+			frag_color_linear += black_edge_mask * gel_image * gel_image.a * HSS_TUBE_COLORED_GEL_IMAGE_ADDITIVE_AMOUNT;
+	}
+
+	// TUBE HIGHLIGHT
+    if (HSS_TUBE_HIGHLIGHT_IMAGE_OPACITY > 0)
     {
-        vec4 glass_image = HSS_Linearize(texture(GlassImage, tube_coord_warped), HSS_DEFAULT_SRGB_GAMMA);
-        frag_color_linear += HLY_GLASS_IMAGE_OPACITY * glass_image * glass_image.a;
-    }
+		vec2 tube_highlight_coord = (tube_coord_warped - 0.5) / HSS_TUBE_HIGHLIGHT_IMAGE_SCALE + 0.5;
+        vec4 tube_highlight_image = texture(TubeHighlightImage, tube_highlight_coord);
+		tube_highlight_image = HSS_Linearize(tube_highlight_image, HSS_DEFAULT_SRGB_GAMMA);
+
+        // Since the tube highlight has already been applied in the crt pass and we've already masked it to the screen
+		// We just need to add the tube highlight on the black screen area
+		frag_color_linear += black_edge_mask * HSS_TUBE_HIGHLIGHT_IMAGE_OPACITY * tube_highlight_image * tube_highlight_image.a;
+	}
+
+
+
+    // frag_color_linear +=  (1 - screen_mask) * vec4(0.8, 0, 0, 1);
+
+	// frag_color_linear += tube_highlight_image;
+
+
     // // REFLECTION
 	// if (HGL_GLASSBORDER_ON == 1)
 	// 	frag_color_linear = mix(frag_color_linear, reflected_color, screen_mask);
@@ -415,44 +455,3 @@ void main()
 		FragColor = frag_color_linear;
 	
 }
-
-		// // Add Fullscreen Glow
-		// bezel_reflected_color += HBR_FULLSCREEN_GLOW / 100 * 1.5 * fullscreen_glow_color * radial_inner_fade_mask * lateral_fade_outer_mask_for_glow;
-
-		// // Add Bezel and Edge reflection together
-		// vec4 edge_reflected_color = 1.25 * HBR_INNER_EDGE_REFLECTION * (blurred_reflection_color + 0.50 * diffused_reflection_color);
-		// float reflection_area_mask = (1 - outside_bezel_mask) * outside_tube_mask;
-
-		// // Edge Reflection
-		// #ifdef GLASS_PRESET
-		// 	reflected_color += (1 - vignette_shadow_mask) * bezel_reflected_color;
-		// 	reflection_area_mask *= outside_tube_mask_wider;
-		// #else
-		// 	reflected_color += (1 - edge_mask) * bezel_reflected_color;
-		// 	reflected_color += edge_mask * (edge_reflected_color + HHLP_EasePowerIn(corner_mask, 1) * corner_reflection_color);
-		// #endif
-
-		// reflected_color = HBR_GLOBAL_AMOUNT * pow(reflected_color, vec4(HBR_GLOBAL_GAMMA_ADJUST));
-		
-		// // Mask reflection to only appear inside the bezel
-		// reflected_color = clamp(reflected_color, 0, 1) * clamp(reflection_area_mask, 0, 1);
-
-
-		// // Add reflection_color with mask
-		// frag_color_linear += reflected_color;
-
-		// #ifdef GLASS_PRESET
-		// 	vec4 edge_color = HBR_GLOBAL_AMOUNT * pow(edge_reflected_color, vec4(HBR_GLOBAL_GAMMA_ADJUST));
-		// 	frag_color_linear = mix(frag_color_linear, edge_color, edge_mask * outside_tube_mask);
-		// #endif
-
-		// // Edge Full Screen Glow
-		// // Add Small amount of static glow on the edge (So when the screen is dark there is some highlight) as well as dynamic light
-		// vec4 edge_fullscreen_glow = HBR_INNER_EDGE_FULLSCREEN_GLOW * edge_highlight_mask * outside_tube_mask * (vec4(0.005) + (avg_lum_mult  + 0.5) * (2 * fullscreen_glow_color + vec4(0.01)));
-		
-		// // Add Diffused reflection on top of the glass inner edge
-		// #ifdef GLASS_PRESET
-		// 	edge_fullscreen_glow += HBR_INNER_EDGE_FULLSCREEN_GLOW * 0.5 * edge_highlight_mask * outside_tube_mask * diffused_reflection_color;
-		// #endif
-
-		// frag_color_linear += clamp(edge_fullscreen_glow, 0, 1);

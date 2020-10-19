@@ -28,7 +28,7 @@ layout(push_constant) uniform Push
 // HSM Added
 #pragma parameter GDV_TITLE "------[GUEST-DrVENOM]-----------------------------------" 0 0 0 1
 
-#pragma parameter GSM_GLOW_GRADE "[GUEST GLOW]  Glow Grade" 0.30 0.00 1.0 0.01 
+#pragma parameter GSM_GLOW_GRADE "[ GLOW ]  Glow Grade" 0.30 0.00 1.0 0.01 
 #define GLOW_FALLOFF_H params.GSM_GLOW_GRADE
 
 layout(std140, set = 0, binding = 0) uniform UBO

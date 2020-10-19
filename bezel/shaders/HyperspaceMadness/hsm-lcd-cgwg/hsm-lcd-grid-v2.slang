@@ -72,7 +72,8 @@ layout(location = 3) in vec2 SCREEN_SCALE;
 layout(location = 4) in vec2 SCREEN_COORD;
 layout(location = 5) in float USE_VERTICAL_SCANLINES;
 
-layout(set = 0, binding = 4) uniform sampler2D ColoredGelImage;
+layout(set = 0, binding = 5) uniform sampler2D ColoredGelImage;
+layout(set = 0, binding = 6) uniform sampler2D TubeHighlightImage;
 
 layout(location = 0) out vec4 FragColor;
 layout(set = 0, binding = 2) uniform sampler2D Source;
@@ -169,6 +170,6 @@ void main()
 
     // HSM Added
     FragColor = vec4(averageColor, 1);
-    FragColor = HSS_GetPostCrtPreppedColor(FragColor, screen_curved_coord, SCREEN_COORD, SCREEN_ASPECT, SCREEN_SCALE, ColoredGelImage);
+    FragColor = HSS_GetPostCrtPreppedColor(FragColor, screen_curved_coord, SCREEN_COORD, SCREEN_ASPECT, SCREEN_SCALE, ColoredGelImage, TubeHighlightImage);
     // End Addition
 }

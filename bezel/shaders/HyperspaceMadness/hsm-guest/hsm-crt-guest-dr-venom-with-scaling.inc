@@ -107,24 +107,20 @@ layout(std140, set = 0, binding = 0) uniform UBO
 
 // HSM Added (Moved from the bottom)
 
-#pragma parameter GDV_GLOW_STRENGTH "[GLOW]  Glow Strength" 0.02 0.0 0.5 0.01
+#pragma parameter GDV_GLOW_STRENGTH "[ GLOW ]  Glow Strength" 0.02 0.0 0.5 0.01
 #define glow         params.GDV_GLOW_STRENGTH     // Glow Strength
 
 // HSM Changed from default of 0 to 0.1
-#pragma parameter GDV_BLOOM_STRENGTH "[GLOW]  Bloom Strength" 0.1 0 2 0.05
+#pragma parameter GDV_BLOOM_STRENGTH "[ GLOW ]  Bloom Strength" 0.1 0 2 0.05
 #define bloom          params.GDV_BLOOM_STRENGTH     // bloom effect
 
-#pragma parameter GDV_BRIGHT_BOOST_DARK_COLORS "[BRIGHTNESS]  Boost Dark Colors" 1.40 0.50 4.00 0.05
+#pragma parameter GDV_BRIGHT_BOOST_DARK_COLORS "[BRIGHTNESS]  Boost Dark Colors -------------------------------" 1.40 0.50 4.00 0.05
 #define brightboost  params.GDV_BRIGHT_BOOST_DARK_COLORS     // adjust brightness
 
 #pragma parameter GDV_BRIGHT_BOOST_BRIGHT_COLORS "[BRIGHTNESS]  Boost Bright Colors" 1.15 0.50 3.00 0.05
 #define brightboost1  params.GDV_BRIGHT_BOOST_BRIGHT_COLORS     // adjust brightness
 
-// HSM Modified, Turned Interlace Mode Off, some parameters moved from global to params 
-#pragma parameter GDV_INTERLACE_MODE "[SCANLINE]  Interlace Mode - 0:OFF,1:ON,2:Blend,3:Sharp" 3 0 3 1
-#define interlace_mode         params.GDV_INTERLACE_MODE     // interlace mode 
-
-#pragma parameter GDV_SCANLINE_TYPE "[SCANLINE]  Type" 0.0 0.0 2.0 1.0
+#pragma parameter GDV_SCANLINE_TYPE "[SCANLINE]  Type ----------------------------------------------" 0.0 0.0 2.0 1.0
 #define gsl          params.GDV_SCANLINE_TYPE      // Alternate scanlines
 // HSM Added (Moved From Bottom)
 #pragma parameter GDV_SCANLINE_1_2_SATURATION "[SCANLINE]  Type 1 & 2 Saturation" 0.5 0.0 1.0 0.1
@@ -148,11 +144,15 @@ layout(std140, set = 0, binding = 0) uniform UBO
 #pragma parameter GDV_SCANLINE_SPIKE_REMOVAL "[SCANLINE]  Spike Removal (E.G. White pixel next to black)" 1.0 0.0 2.0 0.10
 #define spike params.GDV_SCANLINE_SPIKE_REMOVAL
 
-#pragma parameter GDV_HORIZONTAL_SHARPNESS "[SHARPNESS]  Horizontal Sharpness" 5.25 1.0 15.0 0.25
+#pragma parameter GDV_HORIZONTAL_SHARPNESS "[SHARPNESS]  Horizontal Sharpness -----------------------------" 5.25 1.0 15.0 0.25
 #define h_sharp      params.GDV_HORIZONTAL_SHARPNESS     // pixel sharpness
 
 #pragma parameter GDV_SUBTRACTIVE_SHARPNESS "[SHARPNESS]  Subtractive Sharpness (Relative)" 0.40 0.0 1.0 0.10
 #define s_sharp      params.GDV_SUBTRACTIVE_SHARPNESS     // subtractive sharpness
+
+// HSM Modified, Turned Interlace Mode Off, some parameters moved from global to params 
+#pragma parameter GDV_INTERLACE_MODE "[INTERLACE MODE AT TRIGGER RES]  - 0:OFF,1:ON,2:Blend,3:Sharp" 3 0 3 1
+#define interlace_mode         params.GDV_INTERLACE_MODE     // interlace mode 
 
 // HSM Removed
 // #pragma parameter csize "Corner size" 0.0 0.0 0.07 0.01
@@ -169,7 +169,7 @@ layout(std140, set = 0, binding = 0) uniform UBO
 // #define glow         params.glow     // Glow Strength
 
 // Mask
-#pragma parameter GDV_PVM_LIKE_COLORS "[MASK]  PVM Like Colors - Def 0.08" 0.08 -0.3 0.3 0.02
+#pragma parameter GDV_PVM_LIKE_COLORS "[MASK]  PVM Like Colors - Def 0.08  ---------------------------" 0.08 -0.3 0.3 0.02
 #define vertmask     params.GDV_PVM_LIKE_COLORS     // Vertical mask
 
 #pragma parameter GDV_MASK_TYPE "[MASK]  Type - 0:CGWG, 1-4:Lottes, 5-6:Trinitron" 7 -1 7 1
@@ -191,7 +191,7 @@ layout(std140, set = 0, binding = 0) uniform UBO
 #define CGWG         params.GDV_MASK_0_7_STRENGTH     // CGWG Mask Strength
 
 // Slotmask
-#pragma parameter GDV_SLOTMASK_STRENGTH "[SLOTMASK]  Strength - Def 0" 0 0.0 1.0 0.05
+#pragma parameter GDV_SLOTMASK_STRENGTH "[SLOTMASK]  Strength - Def 0 ----------------------------------" 0 0.0 1.0 0.05
 #define slotmask     params.GDV_SLOTMASK_STRENGTH     // Slot Mask ON/OFF
 
 // HSM Modified, parameters moved from global to params 
@@ -270,12 +270,15 @@ layout(location = 0) out vec4 FragColor;
 
 layout(set = 0, binding = 2) uniform sampler2D Source;
 layout(set = 0, binding = 3) uniform sampler2D LinearizePass;
-layout(set = 0, binding = 4) uniform sampler2D ColoredGelImage;
 
 // HSM Removed
 // layout(set = 0, binding = 4) uniform sampler2D AvgLumPass;
 
-layout(set = 0, binding = 5) uniform sampler2D GlowPass;
+layout(set = 0, binding = 4) uniform sampler2D GlowPass;
+
+// HSM Added
+layout(set = 0, binding = 5) uniform sampler2D ColoredGelImage;
+layout(set = 0, binding = 6) uniform sampler2D TubeHighlightImage;
 
 #define Texture Source
 
@@ -796,7 +799,7 @@ void main()
 	FragColor = vec4(color, 1);
 	
 	// Prep and add output gamma
-	FragColor = HSS_GetPostCrtPreppedColor(FragColor, screen_curved_coord, SCREEN_COORD, SCREEN_ASPECT, SCREEN_SCALE, ColoredGelImage);
+	FragColor = HSS_GetPostCrtPreppedColor(FragColor, screen_curved_coord, SCREEN_COORD, SCREEN_ASPECT, SCREEN_SCALE, ColoredGelImage, TubeHighlightImage);
 	// End Addition
 }
 

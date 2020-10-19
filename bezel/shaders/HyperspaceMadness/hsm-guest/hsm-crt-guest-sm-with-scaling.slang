@@ -90,10 +90,10 @@ layout(push_constant) uniform Push
 //	float autobrm;	
 //	float sclip;
 //} global;
-#pragma parameter GDV_GLOW_STRENGTH "[GLOW]  Base Glow Strength" 0.0 0.0 1.0 0.01
+#pragma parameter GDV_GLOW_STRENGTH "[ GLOW ]  Base Glow Strength" 0.0 0.0 1.0 0.01
 #define bglow params.GDV_GLOW_STRENGTH
 
-#pragma parameter GDV_BLOOM_STRENGTH "[GLOW]  Bloom Strength" 0.40 0.0 2.0 0.05
+#pragma parameter GDV_BLOOM_STRENGTH "[ GLOW ]  Bloom Strength" 0.40 0.0 2.0 0.05
 #define bloom params.GDV_BLOOM_STRENGTH
 
 #pragma parameter GDV_AUTO_BRIGHTNESS "[BRIGHTNESS]  Automatic Brightness (Mask)" 0.5 0.0 1.0 0.1
@@ -218,7 +218,8 @@ layout(set = 0, binding = 2) uniform sampler2D Source;
 layout(set = 0, binding = 3) uniform sampler2D LinearizePass; 
 #define LinPass LinearizePass
 
-layout(set = 0, binding = 4) uniform sampler2D ColoredGelImage;
+layout(set = 0, binding = 5) uniform sampler2D ColoredGelImage;
+layout(set = 0, binding = 6) uniform sampler2D TubeHighlightImage;
 
 
 float st(float x)
@@ -597,6 +598,6 @@ void main()
 
 	// // HSM Addition
 	FragColor = vec4(color, 1.0);
-	FragColor = HSS_GetPostCrtPreppedColor(FragColor, screen_curved_coord, SCREEN_COORD, SCREEN_ASPECT, SCREEN_SCALE, ColoredGelImage);
+	FragColor = HSS_GetPostCrtPreppedColor(FragColor, screen_curved_coord, SCREEN_COORD, SCREEN_ASPECT, SCREEN_SCALE, ColoredGelImage, TubeHighlightImage);
 	// // End Addition
 }

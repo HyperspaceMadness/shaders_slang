@@ -48,7 +48,7 @@ layout(push_constant) uniform Push
 	float HSS_SCALEFX_ON;
 } params;
 
-#pragma parameter HSS_SCALEFX_ON 	"[SCALEFX]   ScaleFx ON - Must Incr. Core Res Sampling" 0 0 1 1
+#pragma parameter HSS_SCALEFX_ON 	"[SCALEFX]   ScaleFx ON - Must Increase Core Res Sampling ------" 0 0 1 1
 #define HSS_SCALEFX_ON params.HSS_SCALEFX_ON
 
 // #pragma parameter SFX_RAA "ScaleFX rAA Sharpness" 2.0 0.0 10.0 0.05

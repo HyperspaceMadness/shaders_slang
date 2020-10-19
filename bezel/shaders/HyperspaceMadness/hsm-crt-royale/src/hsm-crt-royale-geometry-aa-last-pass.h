@@ -197,7 +197,8 @@ layout(location = 0) out vec4 FragColor;
 
 layout(set = 0, binding = 2) uniform sampler2D Source;
 #define input_texture Source
-layout(set = 0, binding = 4) uniform sampler2D ColoredGelImage;
+layout(set = 0, binding = 5) uniform sampler2D ColoredGelImage;
+layout(set = 0, binding = 6) uniform sampler2D TubeHighlightImage;
 
 void main()
 {
@@ -313,13 +314,13 @@ void main()
     FragColor = vec4(color, 1);
 
     // Apply Prep and Output Gamma
-	FragColor = HSS_GetPostCrtPreppedColor(FragColor, screen_curved_coord, SCREEN_COORD, SCREEN_ASPECT, SCREEN_SCALE, ColoredGelImage);
+	FragColor = HSS_GetPostCrtPreppedColor(FragColor, screen_curved_coord, SCREEN_COORD, SCREEN_ASPECT, SCREEN_SCALE, ColoredGelImage, TubeHighlightImage);
 
     // HSM Removed
     // FragColor = encode_output(float4(color, 1.0));
 
     #ifdef MASK_OUTSIDE_SCREEN
-        // FragColor *= HSS_GetCornerMask(screen_curved_coord, SCREEN_ASPECT, global.HSS_SCREENFX_CORNER_RADIUS, global.HSS_SCREENFX_EDGE_SHARPNESS);
+        // FragColor *= HSS_GetCornerMask(screen_curved_coord, SCREEN_ASPECT, global.HSS_SCREEN_CORNER_RADIUS, global.HSS_SCREEN_EDGE_SHARPNESS);
         FragColor *= HSS_GetCornerMask(screen_curved_coord, SCREEN_ASPECT, 10, 0.4);
     #endif
 }

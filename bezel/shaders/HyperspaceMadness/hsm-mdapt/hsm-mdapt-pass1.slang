@@ -25,7 +25,7 @@ layout(std140, set = 0, binding = 0) uniform UBO
     float MDAPT_MODE;
 } global;
 
-#pragma parameter MDAPT_MODE "[DE-DITHERING MDAPT]    OFF, Strict, Relaxed, Stripes"	1 0 3 1
+#pragma parameter MDAPT_MODE "[DE-DITHERING MDAPT]    OFF, Strict, Relaxed, Stripes ---------"	1 0 3 1
 
 
 float and_(float a, float b){

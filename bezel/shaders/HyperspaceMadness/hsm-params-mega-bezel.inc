@@ -1,7 +1,109 @@
 //---------------------------------------------------------------------------------------------------
+//    BEZEL
+//---------------------------------------------------------------------------------------------------
+//---------------------------------------------------------------------------------------------------
+//    GENERATED BEZEL & FRAME
+//---------------------------------------------------------------------------------------------------
+// #pragma parameter HBZ_BEZEL_TITLE "-----[ GENERATED BEZEL & FRAME ]-------------------------------" 0 0 0 1
+
+#pragma parameter HLY_BEZEL_OPACITY           "[ BEZEL ]  Opacity" 100 0 100 5
+float HLY_BEZEL_OPACITY = global.HLY_BEZEL_OPACITY / 100;
+
+#pragma parameter HLY_BEZEL_BLEND_MODE        "[ BEZEL ]  Blend Mode -  -1:Off 0:Normal, 1:Add, 2:Mult"  0 -1 2 1
+float HLY_BEZEL_BLEND_MODE = global.HLY_BEZEL_BLEND_MODE;
+
+#pragma parameter HBZ_BEZEL_WIDTH 						"[ BEZEL ]  Width - Def 7.5" 7.5 -10 200 0.1
+float HBZ_BEZEL_WIDTH = global.HBZ_BEZEL_WIDTH / 100;
+
+#pragma parameter HBZ_BEZEL_HEIGHT 					    "[ BEZEL ]  Height - Def 6" 6 -10 200 0.1
+float HBZ_BEZEL_HEIGHT = global.HBZ_BEZEL_HEIGHT;
+
+#pragma parameter HBZ_BEZEL_INNER_EDGE_THICKNESS		"[ BEZEL ]  Inner Edge Thickness - Def 0.7" 0.7 0 5 0.1
+float HBZ_BEZEL_INNER_EDGE_THICKNESS = global.HBZ_BEZEL_INNER_EDGE_THICKNESS  / 100;
+
+#pragma parameter HBZ_BEZEL_INNER_CORNER_RADIUS_SCALE	"[ BEZEL ]  Inner Corner Radius Scale - Def 0.5" 0.5 0 10 0.1
+float HBZ_BEZEL_INNER_CORNER_RADIUS_SCALE = global.HBZ_BEZEL_INNER_CORNER_RADIUS_SCALE;
+
+#pragma parameter HBZ_BEZEL_OUTER_CORNER_RADIUS_SCALE 	"[ BEZEL ]  Outer Corner Radius Scale - Def 1" 1 0 10 0.1
+float HBZ_BEZEL_OUTER_CORNER_RADIUS_SCALE = global.HBZ_BEZEL_OUTER_CORNER_RADIUS_SCALE;
+
+#pragma parameter HBZ_BEZEL_OUTER_CURVATURE_SCALE 		"[ BEZEL ]   Outer Curvature Scale" 0 0 5 0.05
+float HBZ_BEZEL_OUTER_CURVATURE_SCALE = global.HBZ_BEZEL_OUTER_CURVATURE_SCALE;
+
+#pragma parameter HBZ_BEZEL_OUTER_POS_Y_OFFSET 				"[ BEZEL ]   Outer Edge Pos Y Offset" 0 -25 25 0.05
+float HBZ_BEZEL_OUTER_POS_Y_OFFSET = global.HBZ_BEZEL_OUTER_POS_Y_OFFSET;
+
+#pragma parameter HBZ_BEZEL_BRIGHTNESS 				    "[ BEZEL ]  Brightness - Def 30" 30 0 300 2
+float HBZ_BEZEL_BRIGHTNESS = global.HBZ_BEZEL_BRIGHTNESS;
+
+#pragma parameter HBZ_BEZEL_HIGHLIGHT 					"[ BEZEL ]  Highlight" 1 0 100 0.2
+float HBZ_BEZEL_HIGHLIGHT = global.HBZ_BEZEL_HIGHLIGHT;
+
+#pragma parameter HBZ_BEZEL_INNER_EDGE_SHADOW        "[ BEZEL ]  Opacity of Shadow from Bezel on Tube" 70 0 200 5
+float HBZ_BEZEL_INNER_EDGE_SHADOW = global.HBZ_BEZEL_INNER_EDGE_SHADOW / 100;
+
+
+//---------------------------------------------------------------------------------------------------
+// Bezel & Frame Color
+//---------------------------------------------------------------------------------------------------
+#pragma parameter HBZ_BEZEL_COLOR_HUE					"[ BEZEL & FRAME COLOR ]  Color Hue ____________________________" 0 0 360 1
+float HBZ_BEZEL_COLOR_HUE = global.HBZ_BEZEL_COLOR_HUE / 360;
+
+#pragma parameter HBZ_BEZEL_COLOR_SATURATION			"[ BEZEL & FRAME COLOR ]  Color Saturation" 0 0 100 1
+float HBZ_BEZEL_COLOR_SATURATION = global.HBZ_BEZEL_COLOR_SATURATION / 100;
+
+#pragma parameter HBZ_BEZEL_COLOR_VALUE				    "[ BEZEL & FRAME COLOR ]  Color Value/Brightness - Def 10" 10 0 100 0.2
+float HBZ_BEZEL_COLOR_VALUE = global.HBZ_BEZEL_COLOR_VALUE / 100;
+
+#pragma parameter HBZ_BEZEL_COLOR_BLEND_WITH_IMAGE		"[ BEZEL & FRAME COLOR ]  Blend Color with Image" 0 0 1 0.05
+float HBZ_BEZEL_COLOR_BLEND_WITH_IMAGE = global.HBZ_BEZEL_COLOR_BLEND_WITH_IMAGE;
+
+#pragma parameter HBZ_BEZEL_NOISE 						"[ BEZEL & FRAME COLOR ]  Noise - Def 30" 30 0 100 1
+float HBZ_BEZEL_NOISE = global.HBZ_BEZEL_NOISE / 100;
+
+
+//---------------------------------------------------------------------------------------------------
+//    FRAME
+//---------------------------------------------------------------------------------------------------
+
+#pragma parameter HLY_FRAME_OPACITY                     "[ FRAME ]  Opacity ____________________________________________" 100 0 100 5
+float HLY_FRAME_OPACITY = global.HLY_FRAME_OPACITY / 100;
+
+#pragma parameter HLY_FRAME_BLEND_MODE                  "[ FRAME ]  Blend Mode -  -1:Off 0:Normal, 1:Add, 2:Mult"  0 -1 2 1
+float HLY_FRAME_BLEND_MODE = global.HLY_FRAME_BLEND_MODE;
+
+#pragma parameter HBZ_FRAME_THICKNESS 					"[ FRAME ]  Thickness" 7 0 200 0.2
+float HBZ_FRAME_THICKNESS = global.HBZ_FRAME_THICKNESS;
+
+#pragma parameter HBZ_FRAME_INNER_EDGE_THICKNESS 		"[ FRAME ]  Inner Edge Thickness" 1 0 50 0.05
+float HBZ_FRAME_INNER_EDGE_THICKNESS = global.HBZ_FRAME_INNER_EDGE_THICKNESS / 1000;
+
+#pragma parameter HBZ_FRAME_INNER_CORNER_RADIUS_SCALE 	"[ FRAME ]  Inner Corner Radius Scale" 1 0 50 0.05
+float HBZ_FRAME_INNER_CORNER_RADIUS_SCALE = global.HBZ_FRAME_INNER_CORNER_RADIUS_SCALE;
+
+#pragma parameter HSS_FRAME_OUTER_CURVATURE_SCALE 		"[ FRAME ]  Outer Curvature Scale" 0 0 5 0.05
+float HSS_FRAME_OUTER_CURVATURE_SCALE = global.HSS_FRAME_OUTER_CURVATURE_SCALE;
+
+#pragma parameter HBZ_FRAME_OUTER_CORNER_RADIUS 		"[ FRAME ]  Outer Corner Radius" 5 0 70 0.05
+float HBZ_FRAME_OUTER_CORNER_RADIUS = global.HBZ_FRAME_OUTER_CORNER_RADIUS;
+
+#pragma parameter HBZ_FRAME_OUTER_EDGE_THICKNESS 		"[ FRAME ]  Outer Edge Thickness" 1 0 100 0.1
+float HBZ_FRAME_OUTER_EDGE_THICKNESS = global.HBZ_FRAME_OUTER_EDGE_THICKNESS;
+
+#pragma parameter HBZ_FRAME_OUTER_EDGE_SHADING 		    "[ FRAME ]  Outer Edge Shading" 0.5 0 1 0.05
+float HBZ_FRAME_OUTER_EDGE_SHADING = global.HBZ_FRAME_OUTER_EDGE_SHADING;
+
+#pragma parameter HBZ_FRAME_SHADOW_OPACITY	            "[ FRAME ]  Shadow Opacity" 1 0 3 0.01
+float HBZ_FRAME_SHADOW_OPACITY = global.HBZ_FRAME_SHADOW_OPACITY;
+
+#pragma parameter HBZ_FRAME_SHADOW_WIDTH                "[ FRAME ]  Shadow Width" 10 0 50 0.1
+float HBZ_FRAME_SHADOW_WIDTH = global.HBZ_FRAME_SHADOW_WIDTH;
+
+
+//---------------------------------------------------------------------------------------------------
 //    REFLECTION
 //---------------------------------------------------------------------------------------------------
-#pragma parameter HBR_GLOBAL_AMOUNT 					"[ REFLECTION AMOUNT ]  Global Amount --------------------------" 0.4 0 3 0.02
+#pragma parameter HBR_GLOBAL_AMOUNT 					"[ REFLECTION AMOUNT ]  Global Amount __________________________" 0.4 0 3 0.02
 float HBR_GLOBAL_AMOUNT = global.HBR_GLOBAL_AMOUNT;
 
 #pragma parameter HBR_GLOBAL_GAMMA_ADJUST 				"[ REFLECTION AMOUNT ]  Global Gamma Adjust" 1.2 0.25 3 0.05
@@ -29,7 +131,7 @@ float HBR_FULLSCREEN_GLOW_GAMMA = global.HBR_FULLSCREEN_GLOW_GAMMA;
 //---------------------------------------------------------------------------------------------------
 // Reflection Fading
 //---------------------------------------------------------------------------------------------------
-#pragma parameter HBR_FADE_AMOUNT 						"[ REFLECTION FADE ]  Fade Amount ------------------------------" 1 0 1 0.05
+#pragma parameter HBR_FADE_AMOUNT 						"[ REFLECTION FADE ]  Fade Amount ______________________________" 1 0 1 0.05
 float HBR_FADE_AMOUNT = global.HBR_FADE_AMOUNT;
 
 #pragma parameter HBR_RADIAL_FADE_WIDTH 				"[ REFLECTION FADE ]  Radial Fade Width" 100 0 1000 1
@@ -44,7 +146,7 @@ float HBR_LATERAL_OUTER_FADE_POSITION = global.HBR_LATERAL_OUTER_FADE_POSITION;
 #pragma parameter HBR_LATERAL_OUTER_FADE_DISTANCE 		"[ REFLECTION FADE ]  Lateral Outer Fade Distance" 20 1 400 0.5
 float HBR_LATERAL_OUTER_FADE_DISTANCE = global.HBR_LATERAL_OUTER_FADE_DISTANCE;
 
-#pragma parameter HBR_CORNER_FADE 						"[ REFLECTION CORNER FADE ]  Corner Fade -----------------------" 10 1 100 0.5
+#pragma parameter HBR_CORNER_FADE 						"[ REFLECTION CORNER FADE ]  Corner Fade _______________________" 10 1 100 0.5
 float HBR_CORNER_FADE = global.HBR_CORNER_FADE;
 
 #pragma parameter HBR_CORNER_FADE_DISTANCE 				"[ REFLECTION CORNER FADE ]  Corner Fade Distance" 100 1 100 1
@@ -65,11 +167,16 @@ float HBR_CORNER_ROTATION_OFFSET_BOTTOM = global.HBR_CORNER_ROTATION_OFFSET_BOTT
 // #pragma parameter HBR_CORNER_SPREAD_FALLOFF             "[ REFLECTION CORNER FADE ]  Corner Spread Falloff"  50 1 200 1
 // float HBR_CORNER_SPREAD_FALLOFF = global.HBR_CORNER_SPREAD_FALLOFF;
 
+#pragma parameter HLY_REFLECTION_BLEND_MODE             "[ REFLECTION ]  Blend Mode -   -1:Off 0:Normal, 1:Add _________"  1 -1 1 1
+float HLY_REFLECTION_BLEND_MODE = global.HLY_REFLECTION_BLEND_MODE;
+
+#pragma parameter HLY_REFLECTION_MASK_MODE              "[ REFLECTION ]  Mask - ALL, Tube, Bz-, Bz, Bz+, Fram, Fram+, BG"   3 0 7 1
+float HLY_REFLECTION_MASK_MODE = global.HLY_REFLECTION_MASK_MODE;
 
 //---------------------------------------------------------------------------------------------------
 // Reflection Blur
 //---------------------------------------------------------------------------------------------------
-#pragma parameter HBR_BLUR_NUM_SAMPLES 					"[ REFLECTION BLUR ]  Num Samples - 0 for OFF ------------------" 12 0 40 1
+#pragma parameter HBR_BLUR_NUM_SAMPLES 					"[ REFLECTION BLUR ]  Num Samples - 0 for OFF __________________" 12 0 40 1
 float HBR_BLUR_NUM_SAMPLES = global.HBR_BLUR_NUM_SAMPLES;
 
 #pragma parameter HBR_BLUR_MIN 							"[ REFLECTION BLUR ]  Min" 	0 0 1 0.01
@@ -79,7 +186,7 @@ float HBR_BLUR_MIN = global.HBR_BLUR_MIN;
 float HBR_BLUR_MAX = global.HBR_BLUR_MAX;
 
 // Reflection Noise
-#pragma parameter HBR_NOISE_AMOUNT 						"[ REFLECTION NOISE ]   Amount" 0.5 0 1 0.1
+#pragma parameter HBR_NOISE_AMOUNT 						"[ REFLECTION NOISE ]   Amount _________________________________" 0.5 0 1 0.1
 float HBR_NOISE_AMOUNT = global.HBR_NOISE_AMOUNT;
 
 #pragma parameter HBR_NOISE_SAMPLES 					"[ REFLECTION NOISE ]   Samples (0 for OFF)" 1 0 20 1
@@ -92,113 +199,11 @@ float HBR_NOISE_SAMPLE_DISTANCE = global.HBR_NOISE_SAMPLE_DISTANCE;
 //---------------------------------------------------------------------------------------------------
 // Reflection Is Last Pass
 //---------------------------------------------------------------------------------------------------
-#pragma parameter HBR_REFLECTION_IS_LAST_PASS "[ REFLECTION IS LAST PASS] (For Glass and Reflect Only Presets)" 0 0 1 1
+#pragma parameter HBR_REFLECTION_IS_LAST_PASS "[ REFLECTION IS LAST PASS] Glass and Reflect Only Presets" 0 0 1 1
 float HBR_REFLECTION_IS_LAST_PASS = global.HBR_REFLECTION_IS_LAST_PASS;
 
 
-//---------------------------------------------------------------------------------------------------
-//    BEZEL
-//---------------------------------------------------------------------------------------------------
-//---------------------------------------------------------------------------------------------------
-//    GENERATED BEZEL & FRAME
-//---------------------------------------------------------------------------------------------------
-// #pragma parameter HBZ_BEZEL_TITLE "-----[ GENERATED BEZEL & FRAME ]-------------------------------" 0 0 0 1
-
-#pragma parameter HLY_BEZEL_OPACITY           "[ BEZEL ]  Opacity --------------------------------------------" 100 0 100 5
-float HLY_BEZEL_OPACITY = global.HLY_BEZEL_OPACITY / 100;
-
-#pragma parameter HLY_BEZEL_BLEND_MODE        "[ BEZEL ]  Blend Mode -  -1:Off 0:Normal, 1:Add, 2:Mult"  0 -1 2 1
-float HLY_BEZEL_BLEND_MODE = global.HLY_BEZEL_BLEND_MODE;
-
-#pragma parameter HBZ_BEZEL_WIDTH 						"[ BEZEL ]  Width - Def 7.5" 7.5 -10 200 0.1
-float HBZ_BEZEL_WIDTH = global.HBZ_BEZEL_WIDTH / 100;
-
-#pragma parameter HBZ_BEZEL_HEIGHT 					    "[ BEZEL ]  Height - Def 6" 6 -10 200 0.1
-float HBZ_BEZEL_HEIGHT = global.HBZ_BEZEL_HEIGHT;
-
-#pragma parameter HBZ_BEZEL_INNER_EDGE_THICKNESS		"[ BEZEL ]  Inner Edge Thickness - Def 0.7" 0.7 0 5 0.1
-float HBZ_BEZEL_INNER_EDGE_THICKNESS = global.HBZ_BEZEL_INNER_EDGE_THICKNESS  / 100;
-
-#pragma parameter HBZ_BEZEL_INNER_CORNER_RADIUS_SCALE	"[ BEZEL ]  Inner Corner Radius Scale - Def 0.5" 0.5 0 10 0.1
-float HBZ_BEZEL_INNER_CORNER_RADIUS_SCALE = global.HBZ_BEZEL_INNER_CORNER_RADIUS_SCALE;
-
-#pragma parameter HBZ_BEZEL_OUTER_CORNER_RADIUS_SCALE 	"[ BEZEL ]  Outer Corner Radius Scale - Def 1" 1 0 10 0.1
-float HBZ_BEZEL_OUTER_CORNER_RADIUS_SCALE = global.HBZ_BEZEL_OUTER_CORNER_RADIUS_SCALE;
-
-#pragma parameter HBZ_BEZEL_OUTER_CURVATURE_SCALE 		"[ BEZEL ]   Outer Curvature Scale" 0 0 5 0.05
-float HBZ_BEZEL_OUTER_CURVATURE_SCALE = global.HBZ_BEZEL_OUTER_CURVATURE_SCALE;
-
-#pragma parameter HBZ_BEZEL_OUTER_POS_Y_OFFSET 				"[ BEZEL ]   Outer Edge Pos Y Offset" 0 -25 25 0.05
-float HBZ_BEZEL_OUTER_POS_Y_OFFSET = global.HBZ_BEZEL_OUTER_POS_Y_OFFSET;
-
-#pragma parameter HBZ_BEZEL_INNER_EDGE_SHADOW        "[ BEZEL ]  Opacity of Shadow from Bezel on Tube" 70 0 200 5
-float HBZ_BEZEL_INNER_EDGE_SHADOW = global.HBZ_BEZEL_INNER_EDGE_SHADOW / 100;
-
-
 // Params below are not needed for reflection pass
-
-//---------------------------------------------------------------------------------------------------
-// Bezel & Frame Color
-//---------------------------------------------------------------------------------------------------
-#pragma parameter HBZ_BEZEL_COLOR_HUE					"[ BEZEL & FRAME COLOR ]  Color Hue ----------------------------" 0 0 360 1
-float HBZ_BEZEL_COLOR_HUE = global.HBZ_BEZEL_COLOR_HUE / 360;
-
-#pragma parameter HBZ_BEZEL_COLOR_SATURATION			"[ BEZEL & FRAME COLOR ]  Color Saturation" 0 0 100 1
-float HBZ_BEZEL_COLOR_SATURATION = global.HBZ_BEZEL_COLOR_SATURATION / 100;
-
-#pragma parameter HBZ_BEZEL_COLOR_VALUE				    "[ BEZEL & FRAME COLOR ]  Color Value/Brightness - Def 10" 10 0 100 0.2
-float HBZ_BEZEL_COLOR_VALUE = global.HBZ_BEZEL_COLOR_VALUE / 100;
-
-#pragma parameter HBZ_BEZEL_COLOR_BLEND_WITH_IMAGE		"[ BEZEL & FRAME COLOR ]  Blend Color with Image" 0 0 1 0.05
-float HBZ_BEZEL_COLOR_BLEND_WITH_IMAGE = global.HBZ_BEZEL_COLOR_BLEND_WITH_IMAGE;
-
-#pragma parameter HBZ_BEZEL_NOISE 						"[ BEZEL & FRAME COLOR ]  Noise - Def 30" 30 0 100 1
-float HBZ_BEZEL_NOISE = global.HBZ_BEZEL_NOISE / 100;
-
-#pragma parameter HBZ_BEZEL_BRIGHTNESS 				    "[ BEZEL COLOR ]  Brightness - Def 30 --------------------------" 30 0 300 2
-float HBZ_BEZEL_BRIGHTNESS = global.HBZ_BEZEL_BRIGHTNESS;
-
-#pragma parameter HBZ_BEZEL_HIGHLIGHT 					"[ BEZEL COLOR ]  Highlight" 1 0 100 0.2
-float HBZ_BEZEL_HIGHLIGHT = global.HBZ_BEZEL_HIGHLIGHT;
-
-
-//---------------------------------------------------------------------------------------------------
-//    FRAME
-//---------------------------------------------------------------------------------------------------
-
-#pragma parameter HLY_FRAME_OPACITY                     "[ FRAME ]  Opacity --------------------------------------------" 100 0 100 5
-float HLY_FRAME_OPACITY = global.HLY_FRAME_OPACITY / 100;
-
-#pragma parameter HLY_FRAME_BLEND_MODE                  "[ FRAME ]  Blend Mode -  -1:Off 0:Normal, 1:Add, 2:Mult"  0 -1 2 1
-float HLY_FRAME_BLEND_MODE = global.HLY_FRAME_BLEND_MODE;
-
-#pragma parameter HBZ_FRAME_THICKNESS 					"[ FRAME ]   Thickness -----------------------------------------" 7 0 200 0.2
-float HBZ_FRAME_THICKNESS = global.HBZ_FRAME_THICKNESS;
-
-#pragma parameter HBZ_FRAME_INNER_EDGE_THICKNESS 		"[ FRAME ]   Inner Edge Thickness" 1 0 50 0.05
-float HBZ_FRAME_INNER_EDGE_THICKNESS = global.HBZ_FRAME_INNER_EDGE_THICKNESS / 1000;
-
-#pragma parameter HBZ_FRAME_INNER_CORNER_RADIUS_SCALE 	"[ FRAME ]   Inner Corner Radius Scale" 1 0 50 0.05
-float HBZ_FRAME_INNER_CORNER_RADIUS_SCALE = global.HBZ_FRAME_INNER_CORNER_RADIUS_SCALE;
-
-#pragma parameter HSS_FRAME_OUTER_CURVATURE_SCALE 		"[ FRAME ]   Outer Curvature Scale" 0 0 5 0.05
-float HSS_FRAME_OUTER_CURVATURE_SCALE = global.HSS_FRAME_OUTER_CURVATURE_SCALE;
-
-#pragma parameter HBZ_FRAME_OUTER_CORNER_RADIUS 		"[ FRAME ]   Outer Corner Radius" 5 0 70 0.05
-float HBZ_FRAME_OUTER_CORNER_RADIUS = global.HBZ_FRAME_OUTER_CORNER_RADIUS;
-
-#pragma parameter HBZ_FRAME_OUTER_EDGE_THICKNESS 		"[ FRAME ]   Outer Edge Thickness" 1 0 100 0.1
-float HBZ_FRAME_OUTER_EDGE_THICKNESS = global.HBZ_FRAME_OUTER_EDGE_THICKNESS;
-
-#pragma parameter HBZ_FRAME_OUTER_EDGE_SHADING 		    "[ FRAME ]   Outer Edge Shading" 0.5 0 1 0.05
-float HBZ_FRAME_OUTER_EDGE_SHADING = global.HBZ_FRAME_OUTER_EDGE_SHADING;
-
-#pragma parameter HBZ_FRAME_SHADOW_OPACITY	            "[ FRAME ]   Shadow Opacity" 1 0 3 0.01
-float HBZ_FRAME_SHADOW_OPACITY = global.HBZ_FRAME_SHADOW_OPACITY;
-
-#pragma parameter HBZ_FRAME_SHADOW_WIDTH                "[ FRAME ]   Shadow Width" 10 0 50 0.1
-float HBZ_FRAME_SHADOW_WIDTH = global.HBZ_FRAME_SHADOW_WIDTH;
-
 
 //---------------------------------------------------------------------------------------------------
 //---------------------------------------------------------------------------------------------------
@@ -208,29 +213,21 @@ float HBZ_FRAME_SHADOW_WIDTH = global.HBZ_FRAME_SHADOW_WIDTH;
 //---------------------------------------------------------------------------------------------------
 //---------------------------------------------------------------------------------------------------
 
-
-
-
 //---------------------------------------------------------------------------------------------------
-//    Reflection - Image Compositing Parameters
+//    IMAGE LAYERING START
 //---------------------------------------------------------------------------------------------------
-#pragma parameter HLY_REFLECTION_BLEND_MODE             "[ REFLECTION ]  Blend Mode -   -1:Off 0:Normal, 1:Add ---------"  1 -1 1 1
-float HLY_REFLECTION_BLEND_MODE = global.HLY_REFLECTION_BLEND_MODE;
-
-#pragma parameter HLY_REFLECTION_MASK_MODE              "[ REFLECTION ]  Mask - ALL, Tube, Bz-, Bz, Bz+, Fram, Fram+, BG"   3 0 7 1
-float HLY_REFLECTION_MASK_MODE = global.HLY_REFLECTION_MASK_MODE;
-
+#pragma parameter HLY_IMAGE_LAYERING_TITLE "_____[ GRAPHIC ELEMENTS LAYERING ]_____________________________" 0 0 0 0
 
 //---------------------------------------------------------------------------------------------------
 //    STATIC ELEMENT GAMMA
 //---------------------------------------------------------------------------------------------------
-#pragma parameter HLY_STATIC_LAYERS_GAMMA				"[ STATIC LAYERS GAMMA ]  Gamma Adjust -------------------------" 1 0.01 5 0.01
+#pragma parameter HLY_STATIC_LAYERS_GAMMA				"[ STATIC LAYERS GAMMA ]  Gamma Adjust _________________________" 1 0.01 5 0.01
 float HLY_STATIC_LAYERS_GAMMA = global.HLY_STATIC_LAYERS_GAMMA;
 
 //---------------------------------------------------------------------------------------------------
 //    NIGHT LIGHTING IMAGE
 //---------------------------------------------------------------------------------------------------
-#pragma parameter HLY_NIGHTLIGHTING_IMAGE_OPACITY       "[ NIGHT LIGHTING ]  Opacity -----------------------------------"  0 0 100 1
+#pragma parameter HLY_NIGHTLIGHTING_IMAGE_OPACITY       "[ NIGHT LIGHTING ]  Opacity ___________________________________"  0 0 100 1
 float HLY_NIGHTLIGHTING_IMAGE_OPACITY = global.HLY_NIGHTLIGHTING_IMAGE_OPACITY / 100;
 
 #pragma parameter HLY_NIGHTLIGHTING_IMAGE_MIRROR_HORZ       "[ NIGHT LIGHTING ]  Mirror H"  0 0 1 1
@@ -250,11 +247,6 @@ float HLY_NIGHTLIGHTING_IMAGE_DITHERING_SAMPLES = global.HLY_NIGHTLIGHTING_IMAGE
 
 
 //---------------------------------------------------------------------------------------------------
-//    IMAGE LAYERING START
-//---------------------------------------------------------------------------------------------------
-#pragma parameter HLY_IMAGE_LAYERING_TITLE "-----[ GRAPHIC ELEMENTS LAYERING ]-----------------------------" 0 0 0 0
-
-//---------------------------------------------------------------------------------------------------
 //    CutOut in Image Layers
 //---------------------------------------------------------------------------------------------------
 
@@ -271,15 +263,14 @@ float HLY_IMAGE_CUTOUT_CORNER_RADIUS = global.HLY_IMAGE_CUTOUT_CORNER_RADIUS;
 //---------------------------------------------------------------------------------------------------
 //    LAYERING DEBUG
 //---------------------------------------------------------------------------------------------------
-#pragma parameter HLY_LAYERING_DEBUG_MASK_MODE    "[ DEBUG ]  Mask - ALL, Tube, Bz-, Bz, Bz+, Fram, Fram+, BG  ---" -1 -1 7 1
+#pragma parameter HLY_LAYERING_DEBUG_MASK_MODE    "[ DEBUG ]  Mask - ALL, Tube, Bz-, Bz, Bz+, Fram, Fram+, BG  ___" -1 -1 7 1
 float HLY_LAYERING_DEBUG_MASK_MODE = global.HLY_LAYERING_DEBUG_MASK_MODE;
-
 
 
 //---------------------------------------------------------------------------------------------------
 //    BG IMAGE
 //---------------------------------------------------------------------------------------------------
-#pragma parameter HLY_BG_IMAGE_BRIGHTNESS "[ BACKGROUND ]  Brightness ------------------------------------" 100 0 600 0.5
+#pragma parameter HLY_BG_IMAGE_BRIGHTNESS "[ BACKGROUND ]  Brightness ____________________________________" 100 0 600 0.5
 float HLY_BG_IMAGE_BRIGHTNESS = global.HLY_BG_IMAGE_BRIGHTNESS / 100;
 
 #pragma parameter HLY_BG_IMAGE_VIGNETTE_OPACITY "[ BACKGROUND ]  Vignette Opacity" 50 0 100 2
@@ -320,7 +311,7 @@ float HLY_CRT_SCREEN_BLEND_MODE = global.HLY_CRT_SCREEN_BLEND_MODE;
 //---------------------------------------------------------------------------------------------------
 //    GLASS IMAGE
 //---------------------------------------------------------------------------------------------------
-#pragma parameter HLY_CABINET_GLASS_IMAGE_OPACITY           "[ CAB GLASS ]  Opacity -----------------------------------" 0 0 100 0.05
+#pragma parameter HLY_CABINET_GLASS_IMAGE_OPACITY           "[ CAB GLASS ]  Opacity ________________________________________" 0 0 100 0.05
 float HLY_CABINET_GLASS_IMAGE_OPACITY = global.HLY_CABINET_GLASS_IMAGE_OPACITY / 100;
 
 #pragma parameter HLY_CABINET_GLASS_IMAGE_BRIGHTNESS        "[ CAB GLASS ]  Brightness" 100 0 200 1
@@ -344,14 +335,11 @@ float HLY_CABINET_GLASS_IMAGE_SCALE_MODE = global.HLY_CABINET_GLASS_IMAGE_SCALE_
 #pragma parameter HLY_CABINET_GLASS_IMAGE_SCALE             "[ CAB GLASS ]  Scale" 120 10 500 1
 float HLY_CABINET_GLASS_IMAGE_SCALE = global.HLY_CABINET_GLASS_IMAGE_SCALE / 100;
 
-#pragma parameter HLY_CABINET_GLASS_IMAGE_DITHERING_SAMPLES  "[ CAB GLASS ]  Dithering Noise Samples (Reduces Banding)" 0 0 10 1
-float HLY_CABINET_GLASS_IMAGE_DITHERING_SAMPLES = global.HLY_CABINET_GLASS_IMAGE_DITHERING_SAMPLES;
-
 
 //---------------------------------------------------------------------------------------------------
 //    BEZEL IMAGE
 //---------------------------------------------------------------------------------------------------
-#pragma parameter HLY_BEZEL_IMAGE_OPACITY               "[ BEZEL IMG ]  Opacity ----------------------------------------" 0 0 100 1
+#pragma parameter HLY_BEZEL_IMAGE_OPACITY               "[ BEZEL IMG ]  Opacity ________________________________________" 0 0 100 1
 float HLY_BEZEL_IMAGE_OPACITY = global.HLY_BEZEL_IMAGE_OPACITY / 100;
 
 #pragma parameter HLY_BEZEL_IMAGE_HUE                   "[ BEZEL IMG ]  Hue Offset" 0 0 360 1
@@ -394,7 +382,7 @@ float HLY_BEZEL_IMAGE_USE_CURVATURE = global.HLY_BEZEL_IMAGE_USE_CURVATURE;
 //---------------------------------------------------------------------------------------------------
 //    DECAL IMAGE
 //---------------------------------------------------------------------------------------------------
-#pragma parameter HLY_DECAL_IMAGE_OPACITY               "[ DECAL ]  Opacity --------------------------------------------"  0 0 100 5
+#pragma parameter HLY_DECAL_IMAGE_OPACITY               "[ DECAL ]  Opacity ____________________________________________"  0 0 100 5
 float HLY_DECAL_IMAGE_OPACITY = global.HLY_DECAL_IMAGE_OPACITY / 100;
 
 #pragma parameter HLY_DECAL_IMAGE_BLEND_MODE            "[ DECAL ]  Blend Mode -   -1:Off 0:Normal, 1:Add, 2:Multiply"  0 -1 2 1
@@ -422,7 +410,7 @@ float HLY_DECAL_IMAGE_POS_Y = global.HLY_DECAL_IMAGE_POS_Y / 100;
 //---------------------------------------------------------------------------------------------------
 //    LED IMAGE
 //---------------------------------------------------------------------------------------------------
-#pragma parameter HLY_LED_IMAGE_OPACITY                 "[ LED ]  Image Opacity ----------------------------------------"  0 0 100 1
+#pragma parameter HLY_LED_IMAGE_OPACITY                 "[ LED ]  Opacity ______________________________________________"  0 0 100 1
 float HLY_LED_IMAGE_OPACITY = global.HLY_LED_IMAGE_OPACITY / 100;
 
 #pragma parameter HLY_LED_IMAGE_BLEND_MODE              "[ LED ]  Blend Mode -  -1:Off 0:Normal, 1:Add, 2:Multiply"  1 -1 2 1
@@ -438,7 +426,7 @@ float HLY_LED_IMAGE_SCALE_MODE = global.HLY_LED_IMAGE_SCALE_MODE;
 //---------------------------------------------------------------------------------------------------
 //    TOP IMAGE
 //---------------------------------------------------------------------------------------------------
-#pragma parameter HLY_TOP_IMAGE_OPACITY                 "[ TOP ]  Opacity ----------------------------------------------"  0 0 100 0.1
+#pragma parameter HLY_TOP_IMAGE_OPACITY                 "[ TOP ]  Opacity ______________________________________________"  0 0 100 0.1
 float HLY_TOP_IMAGE_OPACITY = global.HLY_TOP_IMAGE_OPACITY / 100;
 
 #pragma parameter HLY_TOP_IMAGE_BLEND_MODE              "[ TOP ]  Blend Mode -   -1:Off 0:Normal, 1:Add, 2:Multiply"  0 -1 2 1

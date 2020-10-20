@@ -35,46 +35,6 @@ float GetFade(float current_position, float corner_position, float fade_distance
 	return smoothstep(corner_position + fade_distance / 2, corner_position - fade_distance / 2, current_position);
 }
 
-void srand(vec2 a, out float r)
-{
-	r = sin(dot(a, vec2(1233.224, 1743.335)));
-}
-
-float rand(inout float r)
-{
-	r = fract(3712.65 * r + 0.61432);
-	return (r - 0.5) * 2.0;
-}
-
-vec4 GetStoichaicBlurredSample(sampler2D in_sampler, vec2 in_coord, float num_samples, float max_blur_size, float blur_ratio)
-{
-	if (num_samples == 0 || max_blur_size == 0 || blur_ratio == 0)
-	{
-		return texture(in_sampler, in_coord);
-	}
-
-	// Common value for max_blur_size is about 40
-	float p = blur_ratio * max_blur_size / global.SourceSize.y;
-	vec4 blurred_color = vec4(0.0);
-	float radius;
-	srand(in_coord, radius);
-	vec2 radius_vector;
-	
-	for(int i=0; i < num_samples; i++)
-	{
-		radius_vector.x = rand(radius);
-		radius_vector.y = rand(radius);
-		vec2 sample_coord = in_coord + radius_vector * p;
-
-		// sample_coord = HSS_GetMirrorWrappedCoord(sample_coord);
-		sample_coord = clamp(sample_coord, 0.04, 0.96);
-		// if (abs(sample_coord.y - 0.5) > 0.5) blurred_color += vec4(1, 0, 0, 0);
-
-		blurred_color += texture(in_sampler, sample_coord) / num_samples;
-	}
-	return blurred_color;
-}
-
 //////////////////////////////////////////////////////////////////////////////////////////////////
 #pragma stage vertex
 
@@ -319,17 +279,17 @@ void main()
 		float stoichaic_blur_max = HHLP_QuadraticBezier(outside_ratio_warped, vec2(0, noise_falloff)) * 3;
 		float stoichaic_blur_amount = HBR_NOISE_SAMPLE_DISTANCE;
 
-		vec4 fullscreen_blurred_sampled_color = GetStoichaicBlurredSample(BR_MirrorFullscreenGlowPass, VIEWPORT_COORD.xy, stoichaic_blur_samples, (1 - corner_mask) * stoichaic_blur_max * 3, stoichaic_blur_amount);
+		vec4 fullscreen_blurred_sampled_color = HSS_GetStoichaicBlurredSample(BR_MirrorFullscreenGlowPass, VIEWPORT_COORD.xy, stoichaic_blur_samples, (1 - corner_mask) * stoichaic_blur_max * 3, stoichaic_blur_amount);
 
 		vec4 corner_reflection_color = fullscreen_blurred_sampled_color;
 		
 		vec4 fullscreen_glow_color = pow(fullscreen_blurred_sampled_color, vec4(HBR_FULLSCREEN_GLOW_GAMMA));
 		
 		vec4 diffused_reflection_color = texture(BR_MirrorReflectionDiffusedPass, VIEWPORT_COORD.xy);
-		vec4 diffused_reflection_scatter_color = GetStoichaicBlurredSample(BR_MirrorReflectionDiffusedPass, VIEWPORT_COORD.xy, stoichaic_blur_samples, stoichaic_blur_max, stoichaic_blur_amount);
+		vec4 diffused_reflection_scatter_color = HSS_GetStoichaicBlurredSample(BR_MirrorReflectionDiffusedPass, VIEWPORT_COORD.xy, stoichaic_blur_samples, stoichaic_blur_max, stoichaic_blur_amount);
 		vec4 diffused_reflection_blended_color = mix(diffused_reflection_color, diffused_reflection_scatter_color, HBR_NOISE_AMOUNT);
 
-		vec4 blurred_reflection_scatter_color = GetStoichaicBlurredSample(BR_MirrorBlurredPass, VIEWPORT_COORD.xy, stoichaic_blur_samples, stoichaic_blur_max, stoichaic_blur_amount);
+		vec4 blurred_reflection_scatter_color = HSS_GetStoichaicBlurredSample(BR_MirrorBlurredPass, VIEWPORT_COORD.xy, stoichaic_blur_samples, stoichaic_blur_max, stoichaic_blur_amount);
 		vec4 blurred_reflection_blended_color = mix(blurred_reflection_color, blurred_reflection_scatter_color, HBR_NOISE_AMOUNT);
 
 		// Add Fullscreen Glow
@@ -425,7 +385,14 @@ void main()
     if (HSS_TUBE_HIGHLIGHT_IMAGE_OPACITY > 0)
     {
 		vec2 tube_highlight_coord = (tube_coord_warped - 0.5) / HSS_TUBE_HIGHLIGHT_IMAGE_SCALE + 0.5;
-        vec4 tube_highlight_image = texture(TubeHighlightImage, tube_highlight_coord);
+        // vec4 tube_highlight_image = texture(TubeHighlightImage, tube_highlight_coord);
+
+		// // Dithering for the glass reflection if needed to reduce banding
+		// float blur_max_size = 1;
+		// float blur_amount = 0.2;
+		// vec4 tube_highlight_image = HSS_GetStoichaicBlurredSample(TubeHighlightImage, tube_highlight_coord, HSS_TUBE_HIGHLIGHT_IMAGE_DITHERING_SAMPLES, blur_max_size, blur_amount);
+		
+		vec4 tube_highlight_image = texture(TubeHighlightImage, tube_highlight_coord);
 		tube_highlight_image = HSS_Linearize(tube_highlight_image, HSS_DEFAULT_SRGB_GAMMA);
 
         // Since the tube highlight has already been applied in the crt pass and we've already masked it to the screen

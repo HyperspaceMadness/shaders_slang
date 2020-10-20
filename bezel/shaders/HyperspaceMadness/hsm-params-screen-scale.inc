@@ -8,7 +8,7 @@ Description:
 */
 
 // Screen Scale Required Parameters
-#pragma parameter HSS_MEGA_BEZEL_TITLE					"-----[ HSM MEGA BEZEL  ALPHA.2020-10-06-0 ]--------------------" 0 0 0 0
+#pragma parameter HSS_MEGA_BEZEL_TITLE					"_____[ HSM MEGA BEZEL  ALPHA.2020-10-06-0 ]____________________" 0 0 0 0
 
 #pragma parameter HSS_MEGA_BEZEL_DEBUG					"[ DEBUG ]  Debug ON" 0 0 1 1
 float HSS_MEGA_BEZEL_DEBUG = global.HSS_MEGA_BEZEL_DEBUG;
@@ -16,7 +16,7 @@ float HSS_MEGA_BEZEL_DEBUG = global.HSS_MEGA_BEZEL_DEBUG;
 //---------------------------------------------------------------------------------------------------
 //    FLIP & ROTATE
 //---------------------------------------------------------------------------------------------------
-#pragma parameter HSS_FLIP_VIEWPORT_AND_CORE_VERTICAL	"[ VERTICAL FLIP ]  Flip Vertical - For 3D Cores ---------------"  0 0 1 1
+#pragma parameter HSS_FLIP_VIEWPORT_AND_CORE_VERTICAL	"[ VERTICAL FLIP ]  Flip Vertical - For 3D Cores _______________"  0 0 1 1
 float HSS_FLIP_VIEWPORT_AND_CORE_VERTICAL = global.HSS_FLIP_VIEWPORT_AND_CORE_VERTICAL;
 
 #pragma parameter HSS_ROTATE_CORE_IMAGE					"[ ROTATE ]  Rotate CRT Tube"  0 0 1 1
@@ -26,7 +26,7 @@ float HSS_ROTATE_CORE_IMAGE = global.HSS_ROTATE_CORE_IMAGE;
 //---------------------------------------------------------------------------------------------------
 //    ASPECT RATIO
 //---------------------------------------------------------------------------------------------------
-#pragma parameter HSS_ASPECT_RATIO_ORIENTATION 			"[ ASPECT ]  Orientation - Auto, Horizontal, Vertical ----------"  0 0 2 1
+#pragma parameter HSS_ASPECT_RATIO_ORIENTATION 			"[ ASPECT ]  Orientation - Auto, Horizontal, Vertical __________"  0 0 2 1
 float HSS_ASPECT_RATIO_ORIENTATION = global.HSS_ASPECT_RATIO_ORIENTATION;
 
 #pragma parameter HSS_ASPECT_RATIO_MODE 				"[ ASPECT ] Type - 0-Auto, 1-Explicit, 4:3, 3:2, 16:9, PAR, Full"  0 0 6 1
@@ -39,7 +39,7 @@ float HSS_ASPECT_RATIO_EXPLICIT = global.HSS_ASPECT_RATIO_EXPLICIT;
 //---------------------------------------------------------------------------------------------------
 //    SCALING
 //---------------------------------------------------------------------------------------------------
-#pragma parameter HSS_INT_SCALE_MODE 					"[ SCALING ]  Int Scale Mode - OFF, ShortAxis, BothAxes --------" 0 0 2 1
+#pragma parameter HSS_INT_SCALE_MODE 					"[ SCALING ]  Int Scale Mode - OFF, ShortAxis, BothAxes ________" 0 0 2 1
 #define HSS_INT_SCALE_MODE global.HSS_INT_SCALE_MODE
 
 #pragma parameter HSS_INT_SCALE_MULTIPLE_OFFSET 		"[ SCALING ]  Int Scale Multiple Offset" 0 -20 20 1
@@ -63,7 +63,7 @@ float HSS_SNAP_TO_INT_SCALE_TOLERANCE = global.HSS_SNAP_TO_INT_SCALE_TOLERANCE;
 //---------------------------------------------------------------------------------------------------
 //    CROPPING
 //---------------------------------------------------------------------------------------------------
-#pragma parameter HSS_POSITION_OFFSET_X 				"[ POSITION ]  Position Offset X -------------------------------" 0 -100 100 0.1
+#pragma parameter HSS_POSITION_OFFSET_X 				"[ POSITION ]  Position Offset X _______________________________" 0 -100 100 0.1
 float HSS_POSITION_OFFSET_X = global.HSS_POSITION_OFFSET_X / 100;
 
 #pragma parameter HSS_POSITION_OFFSET_Y 				"[ POSITION ]  Position Offset Y" 0 -100 100 0.1
@@ -73,7 +73,7 @@ float HSS_POSITION_OFFSET_Y = -1 * global.HSS_POSITION_OFFSET_Y / 100;
 //---------------------------------------------------------------------------------------------------
 //    CROPPING
 //---------------------------------------------------------------------------------------------------
-#pragma parameter HSS_CROP_OVERSCAN_TOP 				"[ CROPPING ]  Crop Overscan Top -------------------------------" 0 -256 256 1
+#pragma parameter HSS_CROP_OVERSCAN_TOP 				"[ CROPPING ]  Crop Overscan Top _______________________________" 0 -256 256 1
 float HSS_CROP_OVERSCAN_TOP = global.HSS_CROP_OVERSCAN_TOP;
 
 #pragma parameter HSS_CROP_OVERSCAN_BOTTOM 				"[ CROPPING ]  Crop Overscan Bottom" 0 -256 256 1
@@ -89,23 +89,23 @@ float HSS_CROP_OVERSCAN_RIGHT = global.HSS_CROP_OVERSCAN_RIGHT;
 //---------------------------------------------------------------------------------------------------
 //    SCANLINES & SAMPLING
 //---------------------------------------------------------------------------------------------------
-#pragma parameter HSS_SCANLINE_DIRECTION 				"[ SCANLINE DIRECTION ]  Guest & Easymode - Auto, Horiz, Vert --"  0 0 2 1
+#pragma parameter HSS_SCANLINE_DIRECTION 				"[ SCANLINE DIRECTION ]  Guest & Easymode - Auto, Horiz, Vert __"  0 0 2 1
 float HSS_SCANLINE_DIRECTION = global.HSS_SCANLINE_DIRECTION;
 
-#pragma parameter HSS_CORE_RES_SAMPLING_MULT_SCANLINE_DIR			"[ CORE RES SAMPLING ]  Scanline Dir ---------------------------"  1 0.25 16 0.25
+#pragma parameter HSS_CORE_RES_SAMPLING_MULT_SCANLINE_DIR			"[ CORE RES SAMPLING ]  Scanline Dir ___________________________"  1 0.25 16 0.25
 float HSS_CORE_RES_SAMPLING_MULT_SCANLINE_DIR = global.HSS_CORE_RES_SAMPLING_MULT_SCANLINE_DIR;
 
 #pragma parameter HSS_CORE_RES_SAMPLING_MULT_OPPOSITE_DIR			"[ CORE RES SAMPLING ]  Opposite Dir"  1 0.25 16 0.25
 float HSS_CORE_RES_SAMPLING_MULT_OPPOSITE_DIR = global.HSS_CORE_RES_SAMPLING_MULT_OPPOSITE_DIR;
 
-#pragma parameter HSS_INTERLACE_TRIGGER_RES 			"[ INTERLACE ]  Trigger Res (Also Fake Scanlines) --------------" 600.0 0.0 2000.0 25.0
+#pragma parameter HSS_INTERLACE_TRIGGER_RES 			"[ INTERLACE ]  Trigger Res (Also Fake Scanlines) ______________" 600.0 0.0 2000.0 25.0
 #define HSS_INTERLACE_TRIGGER_RES global.HSS_INTERLACE_TRIGGER_RES
 
 
 //---------------------------------------------------------------------------------------------------
 //    SPLIT SCREEN
 //---------------------------------------------------------------------------------------------------
-#pragma parameter HSS_SPLIT_SCREEN_ON					"[ SPLIT SCREEN ]  Split ON - SPLIT SCREEN PRESET ONLY ---------" 0 0 1 1
+#pragma parameter HSS_SPLIT_SCREEN_ON					"[ SPLIT SCREEN ]  Split ON - SPLIT SCREEN PRESET ONLY _________" 0 0 1 1
 float HSS_SPLIT_SCREEN_ON = global.HSS_SPLIT_SCREEN_ON;
 
 #pragma parameter HSS_SPLIT_SCREEN_AMOUNT				"[ SPLIT SCREEN ]  Split Thickness - SPLIT SCREEN PRESET ONLY" 0 0 256 2
@@ -120,7 +120,7 @@ float HSS_SPLIT_SCREEN_CENTER_FILL_MODE = global.HSS_SPLIT_SCREEN_CENTER_FILL_MO
 //---------------------------------------------------------------------------------------------------
 //    CURVATURE
 //---------------------------------------------------------------------------------------------------
-#pragma parameter HSS_CURVATURE_MODE 					"[ CURVATURE MODE ]  -1:OFF 0:2D 1-2:3D Sphere, 3:3D Cylinder --" 0 -1 3 1
+#pragma parameter HSS_CURVATURE_MODE 					"[ CURVATURE MODE ]  -1:OFF 0:2D 1-2:3D Sphere, 3:3D Cyl _______" 0 -1 3 1
 float HSS_CURVATURE_MODE = global.HSS_CURVATURE_MODE;
 
 #pragma parameter HSS_CURVATURE_2D_SCALE_LONG_AXIS 		"[ 2D CURVATURE ]  2D Curvature on Long Axis - Def 1" 1 0 4 0.05
@@ -145,13 +145,13 @@ float HSS_CURVATURE_3D_TILT_ANGLE_Y = global.HSS_CURVATURE_3D_TILT_ANGLE_Y;
 //---------------------------------------------------------------------------------------------------
 //    COLOR & Persistence
 //---------------------------------------------------------------------------------------------------
-#pragma parameter HSS_COLOR_BLACK_LEVEL 				"[ SCANLINES ON BLACK ]  Black Level - Def -0.04 ---------------" -0.04 -1 1 0.01
+#pragma parameter HSS_COLOR_BLACK_LEVEL 				"[ SCANLINES ON BLACK ]  Black Level - Def -0.04 _______________" -0.04 -1 1 0.01
 #define HSS_COLOR_BLACK_LEVEL global.HSS_COLOR_BLACK_LEVEL
 
 #pragma parameter HSS_COLOR_NEGATIVE_CROP_BRIGHTNESS	"[ SCANLINES ON BLACK ]  Negative Crop Brightness - Def 1.8" 1.8 0 100 0.2
 #define HSS_COLOR_NEGATIVE_CROP_BRIGHTNESS global.HSS_COLOR_NEGATIVE_CROP_BRIGHTNESS
 
-#pragma parameter HSS_PHOSPHOR_PERSISTENCE             "[ PHOSPHOR PERSISTENCE ]  Amount - Pos:Neutral, Neg:Blue ------" 0 -1 1 0.05
+#pragma parameter HSS_PHOSPHOR_PERSISTENCE             "[ PHOSPHOR PERSISTENCE ]  Amount - Pos:Neutral, Neg:Blue ______" 0 -1 1 0.05
 #define HSS_PHOSPHOR_PERSISTENCE global.HSS_PHOSPHOR_PERSISTENCE
 
 #pragma parameter HSS_COLOR_CRT_GAMMA   				"[ SCREEN FX ]  CRT Gamma (Linear to Gamma Space Encode) Def 2.2" 2.2 0.1 5 0.05
@@ -171,7 +171,7 @@ float HSS_CURVATURE_3D_TILT_ANGLE_Y = global.HSS_CURVATURE_3D_TILT_ANGLE_Y;
 //---------------------------------------------------------------------------------------------------
 //    TUBE
 //---------------------------------------------------------------------------------------------------
-#pragma parameter HSS_SCREEN_CORNER_RADIUS 				"[ SCREEN EDGE ]  Corner Radius - Def 10 ------------" 10 0 70 1
+#pragma parameter HSS_SCREEN_CORNER_RADIUS 				"[ SCREEN EDGE ]  Corner Radius - Def 10 _______________________" 10 0 70 1
 #define HSS_SCREEN_CORNER_RADIUS global.HSS_SCREEN_CORNER_RADIUS
 
 #pragma parameter HSS_SCREEN_EDGE_SHARPNESS 			"[ SCREEN EDGE ]  Edge Sharpness - Def 0.4" 0.4 0 1 0.01
@@ -184,17 +184,20 @@ float HSS_CURVATURE_3D_TILT_ANGLE_Y = global.HSS_CURVATURE_3D_TILT_ANGLE_Y;
 //    TUBE IMAGES
 //---------------------------------------------------------------------------------------------------
 
-#pragma parameter HSS_TUBE_COLORED_GEL_IMAGE_MULTIPLY_AMOUNT  "[ TUBE IMAGES ]  Colored Gel Multiply Amount -------------" 0 0 100 5
+#pragma parameter HSS_TUBE_COLORED_GEL_IMAGE_MULTIPLY_AMOUNT  "[ TUBE IMAGES ]   Colored Gel Multiply Amount _________________" 0 0 100 5
 float HSS_TUBE_COLORED_GEL_IMAGE_MULTIPLY_AMOUNT = global.HSS_TUBE_COLORED_GEL_IMAGE_MULTIPLY_AMOUNT / 100;
 
-#pragma parameter HSS_TUBE_COLORED_GEL_IMAGE_ADDITIVE_AMOUNT  "[ TUBE IMAGES ]  Colored Gel Additive Amount" 0 0 100 0.05
+#pragma parameter HSS_TUBE_COLORED_GEL_IMAGE_ADDITIVE_AMOUNT  "[ TUBE IMAGES ]   Colored Gel Additive Amount" 0 0 100 0.05
 float HSS_TUBE_COLORED_GEL_IMAGE_ADDITIVE_AMOUNT = global.HSS_TUBE_COLORED_GEL_IMAGE_ADDITIVE_AMOUNT / 100;
 
-#pragma parameter HSS_TUBE_HIGHLIGHT_IMAGE_OPACITY  "[ TUBE IMAGES ]  Tube Highlight Opacity" 0.6 0 100 0.1
+#pragma parameter HSS_TUBE_HIGHLIGHT_IMAGE_OPACITY  "[ TUBE IMAGES ]   Tube Highlight Opacity" 1.4 0 100 0.1
 float HSS_TUBE_HIGHLIGHT_IMAGE_OPACITY = global.HSS_TUBE_HIGHLIGHT_IMAGE_OPACITY / 100;
 
-#pragma parameter HSS_TUBE_HIGHLIGHT_IMAGE_SCALE  "[ TUBE IMAGES ]  Tube Highlight Scale" 110 0 1000 1
+#pragma parameter HSS_TUBE_HIGHLIGHT_IMAGE_SCALE  "[ TUBE IMAGES ]   Tube Highlight Scale" 110 0 1000 1
 float HSS_TUBE_HIGHLIGHT_IMAGE_SCALE = global.HSS_TUBE_HIGHLIGHT_IMAGE_SCALE / 100;
+
+// #pragma parameter HSS_TUBE_HIGHLIGHT_IMAGE_DITHERING_SAMPLES  "[ TUBE IMAGES ]   Tube Highlight Noise Samples (Reduces Banding)" 0 0 10 1
+// float HSS_TUBE_HIGHLIGHT_IMAGE_DITHERING_SAMPLES = global.HSS_TUBE_HIGHLIGHT_IMAGE_DITHERING_SAMPLES;
 
 // TODO Move dither sampling to Post CRT Prep
 // TODO Highlight is being masked to teh screen instead of the tube now
@@ -202,7 +205,7 @@ float HSS_TUBE_HIGHLIGHT_IMAGE_SCALE = global.HSS_TUBE_HIGHLIGHT_IMAGE_SCALE / 1
 //---------------------------------------------------------------------------------------------------
 //    GLASS BORDER
 //---------------------------------------------------------------------------------------------------
-#pragma parameter HGL_GLASSBORDER_ON       "[ GLASS BORDER ]  ON (Glass Preset Only) ----------------------" 0 0 1 1
+#pragma parameter HGL_GLASSBORDER_ON       "[ GLASS BORDER ]  ON (Glass Preset Only)" 0 0 1 1
 float HGL_GLASSBORDER_ON = global.HGL_GLASSBORDER_ON;
 
 
@@ -210,7 +213,7 @@ float HGL_GLASSBORDER_ON = global.HGL_GLASSBORDER_ON;
 //    Tube / Inner Bezel Curvature
 //---------------------------------------------------------------------------------------------------
 
-#pragma parameter HSS_TUBE_CURVATURE_SCALE 	"[ BEZEL ]  Inner Curvature Scale -----------------------------" 1 0 20 0.1
+#pragma parameter HSS_TUBE_CURVATURE_SCALE 	"[ BEZEL ]  Inner Curvature Scale ______________________________" 1 0 20 0.1
 #define HSS_TUBE_CURVATURE_SCALE global.HSS_TUBE_CURVATURE_SCALE
 
 #ifndef HSS_SCREENFX_SCANLINE_RES

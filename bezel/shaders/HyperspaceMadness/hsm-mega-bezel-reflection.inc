@@ -181,47 +181,6 @@ float GetFade(float current_position, float corner_position, float fade_distance
 	return smoothstep(corner_position + fade_distance / 2, corner_position - fade_distance / 2, current_position);
 }
 
-void srand(vec2 a, out float r)
-{
-	r = sin(dot(a, vec2(1233.224, 1743.335)));
-}
-
-float rand(inout float r)
-{
-	r = fract(3712.65 * r + 0.61432);
-	return (r - 0.5) * 2.0;
-}
-
-vec4 GetStoichaicBlurredSample(sampler2D in_sampler, vec2 in_coord, float num_samples, float max_blur_size, float blur_ratio)
-{
-	return texture(in_sampler, in_coord);
-	if (num_samples == 0 || max_blur_size == 0 || blur_ratio == 0)
-	{
-		return texture(in_sampler, in_coord);
-	}
-
-	// Common value for max_blur_size is about 40
-	float p = blur_ratio * max_blur_size / global.SourceSize.y;
-	vec4 blurred_color = vec4(0.0);
-	float radius;
-	srand(in_coord, radius);
-	vec2 radius_vector;
-	
-	for(int i=0; i < num_samples; i++)
-	{
-		radius_vector.x = rand(radius);
-		radius_vector.y = rand(radius);
-		vec2 sample_coord = in_coord + radius_vector * p;
-
-		// sample_coord = HSS_GetMirrorWrappedCoord(sample_coord);
-		sample_coord = clamp(sample_coord, 0.04, 0.96);
-		// if (abs(sample_coord.y - 0.5) > 0.5) blurred_color += vec4(1, 0, 0, 0);
-
-		blurred_color += texture(in_sampler, sample_coord) / num_samples;
-	}
-	return blurred_color;
-}
-
 //////////////////////////////////////////////////////////////////////////////////////////////////
 #pragma stage vertex
 
@@ -686,7 +645,7 @@ void main()
 		float blur_max_size = 1;
 		float blur_amount = 0.2;
 		
-		night_lighting_image = GetStoichaicBlurredSample(NightLightingImage, night_lighting_coord.xy, HLY_NIGHTLIGHTING_IMAGE_DITHERING_SAMPLES, blur_max_size, blur_amount);
+		night_lighting_image = HSS_GetStoichaicBlurredSample(NightLightingImage, night_lighting_coord.xy, HLY_NIGHTLIGHTING_IMAGE_DITHERING_SAMPLES, blur_max_size, blur_amount);
 		night_lighting_image = HSS_Linearize(night_lighting_image, HSS_DEFAULT_SRGB_GAMMA);
 		
 		// Do HSV alterations on the night lighting image
@@ -869,12 +828,8 @@ void main()
 
 		// Add Scaling
 		glass_coord = (glass_coord - 0.5) * 1 / HLY_CABINET_GLASS_IMAGE_SCALE + 0.5;
-
-		// Dithering for the glass reflection if needed to reduce banding
-		float blur_max_size = 1;
-		float blur_amount = 0.2;
 		
-		glass_image = GetStoichaicBlurredSample(GlassBezelImage, glass_coord.xy, HLY_CABINET_GLASS_IMAGE_DITHERING_SAMPLES, blur_max_size, blur_amount);
+		glass_image = texture(GlassBezelImage, glass_coord.xy);
 		glass_image = HSS_Linearize(glass_image, HSS_DEFAULT_SRGB_GAMMA);
 		glass_image.rgb *= HLY_CABINET_GLASS_IMAGE_BRIGHTNESS;
 

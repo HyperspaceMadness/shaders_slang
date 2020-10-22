@@ -10,7 +10,7 @@ layout(push_constant) uniform Push
    // HSM Removed
    // float GLOW_FALLOFF_H;
    // HSM Added
-   float GSM_GLOW_GRADE;
+   float GST_GLOW_GRADE;
 } params;
 
 // Higher value, more centered glow.
@@ -26,10 +26,10 @@ layout(push_constant) uniform Push
 // #define GLOW_FALLOFF_H params.GLOW_FALLOFF_H
 
 // HSM Added
-#pragma parameter GDV_TITLE "------[GUEST-DrVENOM]-----------------------------------" 0 0 0 1
+#pragma parameter GDV_TITLE "______[GUEST-DrVENOM]__________________________________________" 0 0 0 1
 
-#pragma parameter GSM_GLOW_GRADE "[ GLOW ]  Glow Grade" 0.30 0.00 1.0 0.01 
-#define GLOW_FALLOFF_H params.GSM_GLOW_GRADE
+#pragma parameter GST_GLOW_GRADE "[ GLOW ]  Glow Grade" 0.30 0.00 1.0 0.01 
+#define GLOW_FALLOFF_H params.GST_GLOW_GRADE
 
 layout(std140, set = 0, binding = 0) uniform UBO
 {

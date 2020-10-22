@@ -57,12 +57,12 @@ layout(push_constant) uniform Push
 #include "../../hsm-params-screen-scale.inc"
 
 // These variables are to be used in geometry-functions.h
-float geom_mode = HSS_CURVATURE_MODE;
-float geom_mode_runtime = HSS_CURVATURE_MODE;
-float geom_radius = HSS_CURVATURE_3D_RADIUS;
-float geom_view_dist = HSS_CURVATURE_3D_VIEW_DIST;
-float geom_tilt_angle_x = HSS_CURVATURE_3D_TILT_ANGLE_X;
-float geom_tilt_angle_y = HSS_CURVATURE_3D_TILT_ANGLE_Y;
+float geom_mode = H_CURVATURE_MODE;
+float geom_mode_runtime = H_CURVATURE_MODE;
+float geom_radius = H_CURVATURE_3D_RADIUS;
+float geom_view_dist = H_CURVATURE_3D_VIEW_DIST;
+float geom_tilt_angle_x = H_CURVATURE_3D_TILT_ANGLE_X;
+float geom_tilt_angle_y = H_CURVATURE_3D_TILT_ANGLE_Y;
 
 //////////////////////////////////  INCLUDES  //////////////////////////////////
 #include "../../../../../include/gamma-management.h"
@@ -247,11 +247,11 @@ void main()
         float pin_inner_edge = 0;
 
         scaled_curved_uv = HRG_GetGeomCurvedCoord(SCREEN_COORD, 
-                                                        HSS_CURVATURE_MODE, 
-                                                        HSS_CURVATURE_3D_RADIUS, 
-                                                        HSS_CURVATURE_3D_VIEW_DIST,
-                                                        HSS_CURVATURE_3D_TILT_ANGLE_X, 
-                                                        HSS_CURVATURE_3D_TILT_ANGLE_Y,
+                                                        H_CURVATURE_MODE, 
+                                                        H_CURVATURE_3D_RADIUS, 
+                                                        H_CURVATURE_3D_VIEW_DIST,
+                                                        H_CURVATURE_3D_TILT_ANGLE_X, 
+                                                        H_CURVATURE_3D_TILT_ANGLE_Y,
                                                         SCREEN_ASPECT,
                                                         pin_inner_edge,
                                                         global.SourceSize.xy,
@@ -320,7 +320,7 @@ void main()
     // FragColor = encode_output(float4(color, 1.0));
 
     #ifdef MASK_OUTSIDE_SCREEN
-        // FragColor *= HSS_GetCornerMask(screen_curved_coord, SCREEN_ASPECT, global.HSS_SCREEN_CORNER_RADIUS, global.HSS_SCREEN_EDGE_SHARPNESS);
+        // FragColor *= HSS_GetCornerMask(screen_curved_coord, SCREEN_ASPECT, global.H_SCREEN_CORNER_RADIUS, global.H_SCREEN_EDGE_SHARPNESS);
         FragColor *= HSS_GetCornerMask(screen_curved_coord, SCREEN_ASPECT, 10, 0.4);
     #endif
 }

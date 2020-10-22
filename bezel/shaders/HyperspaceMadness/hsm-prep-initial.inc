@@ -100,7 +100,7 @@ vec4 AddText(vec2 in_coord, vec4 in_color)
    vec2 cropped_original_size = HSS_GetCroppedRotatedOriginalSize();
    vec2 cropped_original_size_with_core_res_mult = HSS_GetCroppedRotatedOriginalSizeWithCoreResMult();
    
-   if (HSS_FLIP_VIEWPORT_AND_CORE_VERTICAL > 0.5) in_coord.y = 1 - in_coord.y;
+   if (H_FLIP_VIEWPORT_AND_CORE_VERTICAL > 0.5) in_coord.y = 1 - in_coord.y;
    
    vec4 out_color = in_color;
    out_color = mix(out_color, vec4(0, 0, 0, 1), GetTextMask(in_coord + 2 * vec2(1/global.OutputSize.x, 0), global.FinalViewportSize.xy, screen_size, original_size, cropped_original_size, cropped_original_size_with_core_res_mult, int_scale_mult, global.OriginalSize.xy));
@@ -125,7 +125,7 @@ void main()
    FragColor.a = GetAverageLuma();
    
    //////// Draw text to show out_colorolutions ////////// 
-   if (HSS_MEGA_BEZEL_DEBUG == 1)
+   if (H_MEGA_BEZEL_DEBUG == 1)
    {
       FragColor = AddText(vTexCoord, FragColor);
    }

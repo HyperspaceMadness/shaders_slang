@@ -33,7 +33,7 @@ float clamp_0_1(float in_value)
 
 void main()
 {
-	if (HBR_BLUR_NUM_SAMPLES > 0)
+	if (H_BLUR_NUM_SAMPLES > 0)
 	{
 		vec2 tube_coord_warped = vec2(0, 0);
 		float outside_tube_mask = 0;
@@ -76,7 +76,7 @@ void main()
 			blur_ratio = (1 - outside_tube_mask) * HHLP_EasePowerInOut(0.5 + HSS_GetSplitScreenAreaGradient(tube_coord_warped, 0.2, 1.5), 2) + outside_tube_mask * blur_ratio;
 		#endif
 
-		blur_ratio = HBR_BLUR_MIN + blur_ratio * (HBR_BLUR_MAX - HBR_BLUR_MIN);
+		blur_ratio = H_BLUR_MIN + blur_ratio * (H_BLUR_MAX - H_BLUR_MIN);
 
 		vec3 col = vec3(0.0);
 		
@@ -101,7 +101,7 @@ void main()
 		float blend_with_unblurred = smoothstep(-0.3, 0.3, HHLP_QuadraticBezier(blur_ratio, vec2(0.5, 0.5)));
 
 		float k_total = 0.;
-		for (float i = -HBR_BLUR_NUM_SAMPLES; i <= HBR_BLUR_NUM_SAMPLES; i++)
+		for (float i = -H_BLUR_NUM_SAMPLES; i <= H_BLUR_NUM_SAMPLES; i++)
 		{
 			float k = exp(-blur_falloff * (i) * (i));
 			k_total += k;

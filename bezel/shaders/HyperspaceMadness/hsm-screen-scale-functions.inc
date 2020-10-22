@@ -17,7 +17,7 @@ vec2 HSS_GetRawOriginalSize()
 
 vec2 HSS_GetRotatedRawOriginalSize()
 {
-	return HSS_ROTATE_CORE_IMAGE * global.OriginalSize.yx + (1 - HSS_ROTATE_CORE_IMAGE) * global.OriginalSize.xy;
+	return H_ROTATE_CORE_IMAGE * global.OriginalSize.yx + (1 - H_ROTATE_CORE_IMAGE) * global.OriginalSize.xy;
 }
 
 float HSS_GetSplitScreenAmount()
@@ -27,15 +27,15 @@ float HSS_GetSplitScreenAmount()
 		float is_horizontal = HHLP_IsOverValue(original_size.x / original_size.y, 1);
 
 		// Split screen amount should be smaller when the aspect is horizontal
-		return is_horizontal * HSS_SPLIT_SCREEN_AMOUNT / 2 + (1 - is_horizontal) * HSS_SPLIT_SCREEN_AMOUNT;
+		return is_horizontal * H_SPLIT_SCREEN_AMOUNT / 2 + (1 - is_horizontal) * H_SPLIT_SCREEN_AMOUNT;
 	#else
 		return 0;
 	#endif
 }
 
 vec2 HSS_GetCroppedSize(vec2 in_size){
-	return vec2(in_size.x - HSS_CROP_OVERSCAN_RIGHT - HSS_CROP_OVERSCAN_LEFT,
-				in_size.y - HSS_CROP_OVERSCAN_TOP - HSS_CROP_OVERSCAN_BOTTOM);
+	return vec2(in_size.x - H_CROP_OVERSCAN_RIGHT - H_CROP_OVERSCAN_LEFT,
+				in_size.y - H_CROP_OVERSCAN_TOP - H_CROP_OVERSCAN_BOTTOM);
 }
 
 // Get the original size with split area added
@@ -59,7 +59,7 @@ vec2 HSS_GetOriginalSize()
 vec2 HSS_GetRotatedOriginalSize()
 {
 	vec2 original_size = HSS_GetOriginalSize();
-	return HSS_ROTATE_CORE_IMAGE * original_size.yx + (1 - HSS_ROTATE_CORE_IMAGE) * original_size.xy;
+	return H_ROTATE_CORE_IMAGE * original_size.yx + (1 - H_ROTATE_CORE_IMAGE) * original_size.xy;
 }
 
 vec2 HSS_GetCroppedRotatedOriginalSize()
@@ -99,7 +99,7 @@ float HSS_GetScreenAspect()
 	vec2 atari_2600_res = 					vec2(160, 228);
 	vec2 atari_2600_crop_res = 				vec2(152, 228);
 	
-	if (HSS_ASPECT_RATIO_MODE == 0)
+	if (H_ASPECT_RATIO_MODE == 0)
 	{
 		// If the vertical res is larger than 500 is is probably a modern square pixel resolution
 		if (raw_original_size.y > 500) horizontal_aspect = core_aspect_horizontal;
@@ -113,15 +113,15 @@ float HSS_GetScreenAspect()
 		else if (HSS_MatchResolution(atari_2600_res, 				raw_original_size)) horizontal_aspect = 1.333;
 		else if (HSS_MatchResolution(atari_2600_crop_res, 			raw_original_size)) horizontal_aspect = 1.333;
 		// Fall back to the explicit ratio
-		else horizontal_aspect = HSS_ASPECT_RATIO_EXPLICIT;
+		else horizontal_aspect = H_ASPECT_RATIO_EXPLICIT;
 	}
 	else 
-		if (HSS_ASPECT_RATIO_MODE == 1) horizontal_aspect = HSS_ASPECT_RATIO_EXPLICIT;
-		else if (HSS_ASPECT_RATIO_MODE == 2) horizontal_aspect = 1.3333;
-		else if (HSS_ASPECT_RATIO_MODE == 3) horizontal_aspect = 1.5;
-		else if (HSS_ASPECT_RATIO_MODE == 4) horizontal_aspect = 1.7777;
-		else if (HSS_ASPECT_RATIO_MODE == 5) horizontal_aspect = core_aspect_horizontal;
-		else if (HSS_ASPECT_RATIO_MODE == 6) horizontal_aspect = global.FinalViewportSize.x / global.FinalViewportSize.y;
+		if (H_ASPECT_RATIO_MODE == 1) horizontal_aspect = H_ASPECT_RATIO_EXPLICIT;
+		else if (H_ASPECT_RATIO_MODE == 2) horizontal_aspect = 1.3333;
+		else if (H_ASPECT_RATIO_MODE == 3) horizontal_aspect = 1.5;
+		else if (H_ASPECT_RATIO_MODE == 4) horizontal_aspect = 1.7777;
+		else if (H_ASPECT_RATIO_MODE == 5) horizontal_aspect = core_aspect_horizontal;
+		else if (H_ASPECT_RATIO_MODE == 6) horizontal_aspect = global.FinalViewportSize.x / global.FinalViewportSize.y;
 		else horizontal_aspect = 1.333;
 
 	// // Version of the above as straight computation to test performance, but actually reduces performance from 160fps to 150fps
@@ -135,21 +135,21 @@ float HSS_GetScreenAspect()
 	// 								HHLP_EqualsResolution(nintendo_3ds_side_by_side_res, raw_original_size) +
 	// 								HHLP_EqualsResolution(atari_lynx_res, raw_original_size);
     //
-	// horizontal_aspect = HHLP_EqualsValue(HSS_ASPECT_RATIO_MODE, 0, epsilon) * (is_square_pixel_res * core_aspect_horizontal + 
-	// 																			(1 - is_square_pixel_res) * HSS_ASPECT_RATIO_EXPLICIT) +
-	// 					HHLP_EqualsValue(HSS_ASPECT_RATIO_MODE, 1, epsilon) * HSS_ASPECT_RATIO_EXPLICIT +
-	// 					HHLP_EqualsValue(HSS_ASPECT_RATIO_MODE, 2, epsilon) * 1.3333 +
-	// 					HHLP_EqualsValue(HSS_ASPECT_RATIO_MODE, 3, epsilon) * 1.5 +
-	// 					HHLP_EqualsValue(HSS_ASPECT_RATIO_MODE, 4, epsilon) * 1.7777 +
-	// 					HHLP_EqualsValue(HSS_ASPECT_RATIO_MODE, 5, epsilon) * core_aspect_horizontal +
-	// 					HHLP_EqualsValue(HSS_ASPECT_RATIO_MODE, 6, epsilon) * global.FinalViewportSize.x / global.FinalViewportSize.y;
+	// horizontal_aspect = HHLP_EqualsValue(H_ASPECT_RATIO_MODE, 0, epsilon) * (is_square_pixel_res * core_aspect_horizontal + 
+	// 																			(1 - is_square_pixel_res) * H_ASPECT_RATIO_EXPLICIT) +
+	// 					HHLP_EqualsValue(H_ASPECT_RATIO_MODE, 1, epsilon) * H_ASPECT_RATIO_EXPLICIT +
+	// 					HHLP_EqualsValue(H_ASPECT_RATIO_MODE, 2, epsilon) * 1.3333 +
+	// 					HHLP_EqualsValue(H_ASPECT_RATIO_MODE, 3, epsilon) * 1.5 +
+	// 					HHLP_EqualsValue(H_ASPECT_RATIO_MODE, 4, epsilon) * 1.7777 +
+	// 					HHLP_EqualsValue(H_ASPECT_RATIO_MODE, 5, epsilon) * core_aspect_horizontal +
+	// 					HHLP_EqualsValue(H_ASPECT_RATIO_MODE, 6, epsilon) * global.FinalViewportSize.x / global.FinalViewportSize.y;
 
 	// Find what the vertical aspect would be, either the current horizontal_aspect (if it's already vertical)
 	// Or changing the horizontal aspect to vertical by taking the reciprocal
 	float vertical_aspect = 1 / horizontal_aspect;
-	float final_orientation = HSS_ASPECT_RATIO_ORIENTATION;
+	float final_orientation = H_ASPECT_RATIO_ORIENTATION;
 
-	if (HSS_ASPECT_RATIO_ORIENTATION < 0.5)
+	if (H_ASPECT_RATIO_ORIENTATION < 0.5)
 	{
 		// Catch for Atari 2600 - Stella Emulator which would otherwise show up as a vertical aspect ratio
 		if (HSS_MatchResolution(atari_2600_res, raw_original_size) || (HSS_MatchResolution(atari_2600_crop_res, raw_original_size))) final_orientation = 1;
@@ -175,15 +175,15 @@ float HSS_GetUseVerticalScanlines(float screen_aspect)
 	#ifdef HSM_SPLIT_SCREEN_PRESET
 		auto_use_vert_scanlines = 0;
 	#endif
-	return HSS_SCANLINE_DIRECTION < 1 ? auto_use_vert_scanlines : (HSS_SCANLINE_DIRECTION < 2 ? 0 : 1);
+	return H_SCANLINE_DIRECTION < 1 ? auto_use_vert_scanlines : (H_SCANLINE_DIRECTION < 2 ? 0 : 1);
 }
 
 vec2 HSS_GetCoreSamplingResMult()
 {
 	vec2 original_size = HSS_GetRotatedRawOriginalSize();
 	float use_vert_scanlines = HSS_GetUseVerticalScanlines(original_size.x/original_size.y);
-	vec2 sampling_mult = (1 - use_vert_scanlines) * vec2(HSS_CORE_RES_SAMPLING_MULT_SCANLINE_DIR, HSS_CORE_RES_SAMPLING_MULT_OPPOSITE_DIR) + 
-							  use_vert_scanlines *  vec2(HSS_CORE_RES_SAMPLING_MULT_OPPOSITE_DIR, HSS_CORE_RES_SAMPLING_MULT_SCANLINE_DIR);
+	vec2 sampling_mult = (1 - use_vert_scanlines) * vec2(H_CORE_RES_SAMPLING_MULT_SCANLINE_DIR, H_CORE_RES_SAMPLING_MULT_OPPOSITE_DIR) + 
+							  use_vert_scanlines *  vec2(H_CORE_RES_SAMPLING_MULT_OPPOSITE_DIR, H_CORE_RES_SAMPLING_MULT_SCANLINE_DIR);
 	return sampling_mult;
 }
 
@@ -194,7 +194,7 @@ vec2 HSS_GetRotatedOriginalSizeWithCoreResMult()
 
 	vec2 sampling_size = vec2(floor(sampling_mult.x * original_size.x), floor(sampling_mult.y * original_size.y));
 
-	return HSS_ROTATE_CORE_IMAGE * sampling_size.yx + (1 - HSS_ROTATE_CORE_IMAGE) * sampling_size.xy;
+	return H_ROTATE_CORE_IMAGE * sampling_size.yx + (1 - H_ROTATE_CORE_IMAGE) * sampling_size.xy;
 }
 
 vec2 HSS_GetCroppedRotatedOriginalSizeWithCoreResMult()
@@ -204,17 +204,17 @@ vec2 HSS_GetCroppedRotatedOriginalSizeWithCoreResMult()
 
 float HSS_GetScreenInverseAspectRatio()
 {
-	float horizontal_aspect = HSS_ASPECT_RATIO_EXPLICIT;
-	float vertical_aspect = 1.0 / HSS_ASPECT_RATIO_EXPLICIT;
+	float horizontal_aspect = H_ASPECT_RATIO_EXPLICIT;
+	float vertical_aspect = 1.0 / H_ASPECT_RATIO_EXPLICIT;
 
 	float auto_screen_aspect_ratio = HSS_GetIsOriginalSizeVertical() > 0.5 ? vertical_aspect : horizontal_aspect;
-	return HSS_ASPECT_RATIO_ORIENTATION < 1 ? auto_screen_aspect_ratio : (HSS_ASPECT_RATIO_ORIENTATION < 2 ? horizontal_aspect : vertical_aspect);
+	return H_ASPECT_RATIO_ORIENTATION < 1 ? auto_screen_aspect_ratio : (H_ASPECT_RATIO_ORIENTATION < 2 ? horizontal_aspect : vertical_aspect);
 }
 
-// HSS_SNAP_TO_INT_SCALE_TOLERANCE
+// H_SNAP_TO_INT_SCALE_TOLERANCE
 vec2 HSS_GetScreenScale(float screen_aspect)
 {
-	if (HSS_ASPECT_RATIO_MODE > 5.5)
+	if (H_ASPECT_RATIO_MODE > 5.5)
 	{
 		return vec2(1, 1);
 	}
@@ -228,23 +228,23 @@ vec2 HSS_GetScreenScale(float screen_aspect)
 		bool viewport_is_vertical = (global.FinalViewportSize.x < global.FinalViewportSize.y);
 
 		// If we are using non-integer scale return
-		float screen_height = HSS_NON_INTEGER_SCALE / 100;
-		if (HSS_INT_SCALE_MODE == 0)
+		float screen_height = H_NON_INTEGER_SCALE / 100;
+		if (H_INT_SCALE_MODE == 0)
 		{
 			if (viewport_is_vertical || screen_aspect > output_aspect_ratio)
 			{
-				float diagonal_length = HSS_NON_INTEGER_SCALE / 100 * output_aspect_ratio;
+				float diagonal_length = H_NON_INTEGER_SCALE / 100 * output_aspect_ratio;
 				screen_height = (diagonal_length * 1) / sqrt(screen_aspect * screen_aspect + 1 * 1);
 			}
 
 			// If the integer tolerance is greater than zero see if we can snap to the nearest integer multiple
-			if (HSS_SNAP_TO_INT_SCALE_TOLERANCE > 0)
+			if (H_SNAP_TO_INT_SCALE_TOLERANCE > 0)
 			{
 				float integer_scale_multiple_vert = screen_height * global.FinalViewportSize.y / cropped_original_size.y;
 				float int_scale_remainder = fract(integer_scale_multiple_vert);
 				int_scale_remainder = (int_scale_remainder < 1 - int_scale_remainder) ? int_scale_remainder : 1 - int_scale_remainder;
 				float remainder_percent_of_screen_height = (int_scale_remainder * cropped_original_size.y) / (screen_height * global.FinalViewportSize.y);
-				if (remainder_percent_of_screen_height < HSS_SNAP_TO_INT_SCALE_TOLERANCE)
+				if (remainder_percent_of_screen_height < H_SNAP_TO_INT_SCALE_TOLERANCE)
 				{
 					integer_scale_multiple_vert = round(integer_scale_multiple_vert);
 					screen_height = integer_scale_multiple_vert * cropped_original_size.y / global.FinalViewportSize.y;
@@ -255,8 +255,8 @@ vec2 HSS_GetScreenScale(float screen_aspect)
 		}
 
 		// Get the maximum height that the integer scale needs to fit into
-		float viewport_res_y_without_border = global.FinalViewportSize.y - 2 * (HSS_INT_SCALE_BORDER_MIN_HEIGHT / 100) * global.FinalViewportSize.y;
-		float viewport_res_x_without_border = global.FinalViewportSize.x - 2 * (HSS_INT_SCALE_BORDER_MIN_HEIGHT / 100) * global.FinalViewportSize.x;
+		float viewport_res_y_without_border = global.FinalViewportSize.y - 2 * (H_INT_SCALE_BORDER_MIN_HEIGHT / 100) * global.FinalViewportSize.y;
+		float viewport_res_x_without_border = global.FinalViewportSize.x - 2 * (H_INT_SCALE_BORDER_MIN_HEIGHT / 100) * global.FinalViewportSize.x;
 
 		// If the viewport is taller than it is wide then get the height from the corresponding available width
 		if (viewport_is_vertical) viewport_res_y_without_border = viewport_res_x_without_border / screen_aspect;
@@ -264,10 +264,10 @@ vec2 HSS_GetScreenScale(float screen_aspect)
 		// If the screen is too high
 		if ((viewport_res_y_without_border * screen_aspect) > global.FinalViewportSize.x)
 		{
-			viewport_res_y_without_border = (1 - 2 * HSS_INT_SCALE_BORDER_MIN_HEIGHT / 100) * global.FinalViewportSize.x / screen_aspect; 
+			viewport_res_y_without_border = (1 - 2 * H_INT_SCALE_BORDER_MIN_HEIGHT / 100) * global.FinalViewportSize.x / screen_aspect; 
 		}
 
-		float integer_scale_multiple_vert = clamp(floor(viewport_res_y_without_border / cropped_original_size.y) + HSS_INT_SCALE_MULTIPLE_OFFSET, 1, 100);
+		float integer_scale_multiple_vert = clamp(floor(viewport_res_y_without_border / cropped_original_size.y) + H_INT_SCALE_MULTIPLE_OFFSET, 1, 100);
 		float integer_scale_vert = integer_scale_multiple_vert * cropped_original_size.y / global.FinalViewportSize.y;
 
 		// Get the horizontal scale from the vertical scale and aspect ratio
@@ -277,10 +277,10 @@ vec2 HSS_GetScreenScale(float screen_aspect)
 		float integer_scale_multiple_horz = integer_scale_horz_from_aspect * global.FinalViewportSize.x / cropped_original_size.x;
 
 		// If we are using vertical scanlines or integer scale is set to both directions make the horizontal multiple an integer
-		float final_int_scale_mode = HSS_INT_SCALE_MODE;
-		if (HSS_INT_SCALE_MODE > 0.5)
+		float final_int_scale_mode = H_INT_SCALE_MODE;
+		if (H_INT_SCALE_MODE > 0.5)
 		{
-			if (HSS_GetUseVerticalScanlines(screen_aspect) == 1 || HSS_INT_SCALE_MODE == 2)
+			if (HSS_GetUseVerticalScanlines(screen_aspect) == 1 || H_INT_SCALE_MODE == 2)
 			{
 				integer_scale_multiple_horz = round(integer_scale_multiple_horz);
 				final_int_scale_mode = 2;
@@ -288,8 +288,8 @@ vec2 HSS_GetScreenScale(float screen_aspect)
 		}
 
 		float both_axes = clamp((final_int_scale_mode - 1) * 10000, 0, 1);
-		integer_scale_multiple_vert += both_axes * abs(clamp((screen_aspect - 1) * 10000, -1, 0)) * HSS_INT_SCALE_MULTIPLE_OFFSET_LONG;
-		integer_scale_multiple_horz += both_axes * abs(clamp((screen_aspect - 1) * 10000,  0, 1)) * HSS_INT_SCALE_MULTIPLE_OFFSET_LONG;
+		integer_scale_multiple_vert += both_axes * abs(clamp((screen_aspect - 1) * 10000, -1, 0)) * H_INT_SCALE_MULTIPLE_OFFSET_LONG;
+		integer_scale_multiple_horz += both_axes * abs(clamp((screen_aspect - 1) * 10000,  0, 1)) * H_INT_SCALE_MULTIPLE_OFFSET_LONG;
 
 		integer_scale_vert = integer_scale_multiple_vert * cropped_original_size.y / global.FinalViewportSize.y;
 		float integer_scale_horz = integer_scale_multiple_horz * cropped_original_size.x / global.FinalViewportSize.x;
@@ -349,7 +349,7 @@ vec2 HSS_GetInverseScaledCoord(vec2 in_coord, vec2 in_scale)
 vec2 HSS_GetPositionOffset()
 {
 	float output_aspect_ratio = global.FinalViewportSize.x / global.FinalViewportSize.y;
-	vec2 pos_offset = vec2(HSS_POSITION_OFFSET_X / output_aspect_ratio, HSS_POSITION_OFFSET_Y);
+	vec2 pos_offset = vec2(H_POSITION_OFFSET_X / output_aspect_ratio, H_POSITION_OFFSET_Y);
 	return pos_offset;
 }
 
@@ -394,7 +394,7 @@ float HSS_GetSplitInfo(inout float split_pos_1, inout float split_pos_2, inout f
 	float cropped_size_1D = HSS_GetSplitAxisCoord1D(cropped_size, split_axis_is_horizontal);
 	float split_screen_amount = HSS_GetSplitScreenAmount();
 	float half_orig_size = HSS_GetSplitAxisCoord1D(original_size, split_axis_is_horizontal) * 0.5;
-	float edge_crop = split_axis_is_horizontal * HSS_CROP_OVERSCAN_LEFT + (1 - split_axis_is_horizontal) * HSS_CROP_OVERSCAN_TOP;
+	float edge_crop = split_axis_is_horizontal * H_CROP_OVERSCAN_LEFT + (1 - split_axis_is_horizontal) * H_CROP_OVERSCAN_TOP;
 
 	split_pos_1 = (edge_crop + half_orig_size) / cropped_size_1D;
 	split_pos_2 = (edge_crop + half_orig_size + split_screen_amount) / cropped_size_1D;
@@ -435,20 +435,20 @@ vec2 HSS_GetFlippedCoordOnSplitAxis(vec2 in_coord, float split_axis_is_horizonta
 // Used for scaling the overlay outside the black edge
 vec2 HSS_GetTubeScale(vec2 screen_scale)
 {
-	return HSS_GetScreenScaleWithEdgeHeight(1.2 * HSS_TUBE_BLACK_EDGE_THICKNESS / 100.0, screen_scale);
+	return HSS_GetScreenScaleWithEdgeHeight(1.2 * H_TUBE_BLACK_EDGE_THICKNESS / 100.0, screen_scale);
 }
 
 vec2 HSS_GetCurvatureScales(float screen_aspect)
 {
-	vec2 curvature_scales = screen_aspect < 1 ? vec2(HSS_CURVATURE_2D_SCALE_SHORT_AXIS, HSS_CURVATURE_2D_SCALE_LONG_AXIS)
-											  : vec2(HSS_CURVATURE_2D_SCALE_LONG_AXIS,  HSS_CURVATURE_2D_SCALE_SHORT_AXIS);
+	vec2 curvature_scales = screen_aspect < 1 ? vec2(H_CURVATURE_2D_SCALE_SHORT_AXIS, H_CURVATURE_2D_SCALE_LONG_AXIS)
+											  : vec2(H_CURVATURE_2D_SCALE_LONG_AXIS,  H_CURVATURE_2D_SCALE_SHORT_AXIS);
 	curvature_scales = (clamp(curvature_scales, 1, 5) - 1) + 1;
 	return curvature_scales;
 }
 vec2 HSS_GetCurvatureValues(float screen_aspect)
 {
-	vec2 curvature_values = screen_aspect < 1 ? vec2(2 * HSS_CURVATURE_2D_SCALE_SHORT_AXIS * 2 / 100, HSS_CURVATURE_2D_SCALE_LONG_AXIS * 3 / 100)
-											  : vec2(HSS_CURVATURE_2D_SCALE_LONG_AXIS * 3 / 100, 2 * HSS_CURVATURE_2D_SCALE_SHORT_AXIS * 2 / 100);
+	vec2 curvature_values = screen_aspect < 1 ? vec2(2 * H_CURVATURE_2D_SCALE_SHORT_AXIS * 2 / 100, H_CURVATURE_2D_SCALE_LONG_AXIS * 3 / 100)
+											  : vec2(H_CURVATURE_2D_SCALE_LONG_AXIS * 3 / 100, 2 * H_CURVATURE_2D_SCALE_SHORT_AXIS * 2 / 100);
 
 	return curvature_values;
 }
@@ -566,7 +566,7 @@ float HSS_GetSplitScreenAreaGradient(vec2 in_cropped_coord, float center_thickne
 
 	float px_pos = is_horizontal * px_coord.x + (1 - is_horizontal) * px_coord.y;
 	float half_orig_size = is_horizontal * original_size.x * 0.5 + (1 - is_horizontal) * original_size.y * 0.5;
-	float edge_crop = is_horizontal * HSS_CROP_OVERSCAN_LEFT + (1 - is_horizontal) * HSS_CROP_OVERSCAN_TOP;
+	float edge_crop = is_horizontal * H_CROP_OVERSCAN_LEFT + (1 - is_horizontal) * H_CROP_OVERSCAN_TOP;
 
 	float cropped_split_px_pos1 = edge_crop + half_orig_size;
 	float cropped_split_px_pos2 = edge_crop + half_orig_size + split_screen_amount;
@@ -582,15 +582,15 @@ float HSS_GetSplitScreenAreaGradient(vec2 in_cropped_coord, float center_thickne
 
 vec2 HSS_GetCurvedCoord(vec2 in_coord, float curvature_multiplier, float screen_aspect)
 {
-	if (HSS_CURVATURE_MODE == -1)
+	if (H_CURVATURE_MODE == -1)
 		return in_coord;
 	
 	float epsilon = 0.002;
 	vec2 original_size = HSS_GetRotatedRawOriginalSize();
 
 	vec2 adjusted_coord = in_coord;
-	float tilt_angle_y = HSS_CURVATURE_3D_TILT_ANGLE_Y;
-	float tilt_angle_x = HSS_CURVATURE_3D_TILT_ANGLE_X;
+	float tilt_angle_y = H_CURVATURE_3D_TILT_ANGLE_Y;
+	float tilt_angle_x = H_CURVATURE_3D_TILT_ANGLE_X;
 	float pin_inner_edge = 0;
 
 	// If this is split screen with two bezels we need to scale the subsection of the screen (top or bottom)
@@ -605,7 +605,7 @@ vec2 HSS_GetCurvedCoord(vec2 in_coord, float curvature_multiplier, float screen_
 		float in_coord_1D = HSS_GetSplitAxisCoord1D(in_coord, split_axis_is_horizontal);
 		float coord_is_on_first_half = HHLP_IsUnderValue(in_coord_1D, 0.5);
 
-		if (HSS_SPLIT_SCREEN_CENTER_FILL_MODE == 1)
+		if (H_SPLIT_SCREEN_CENTER_FILL_MODE == 1)
 		{
 			// If we are using split screen the take the coordinates from each screen and stretch them to 0-1
 			adjusted_coord = HSS_Get0To1CoordFromSplitArea(in_coord, split_pos_1, split_pos_2, split_dist, split_axis_is_horizontal);
@@ -614,29 +614,29 @@ vec2 HSS_GetCurvedCoord(vec2 in_coord, float curvature_multiplier, float screen_
 			adjusted_coord = coord_is_on_first_half * HSS_GetFlippedCoordOnSplitAxis(adjusted_coord, split_axis_is_horizontal) + (1 - coord_is_on_first_half) * adjusted_coord;
 
 			// If the screen is horizontal use the main tilt as tilt x, otherwise it's 0
-			tilt_angle_x = split_axis_is_horizontal * HSS_CURVATURE_3D_TILT_ANGLE_Y;
+			tilt_angle_x = split_axis_is_horizontal * H_CURVATURE_3D_TILT_ANGLE_Y;
 
 			// If the screen is vertical use the main tilt as tilt x, otherwise it's 0
-			tilt_angle_y = (1 - split_axis_is_horizontal) * HSS_CURVATURE_3D_TILT_ANGLE_Y;
+			tilt_angle_y = (1 - split_axis_is_horizontal) * H_CURVATURE_3D_TILT_ANGLE_Y;
 
 			pin_inner_edge = 1;
 		}
 	#endif
 
 	vec2 curved_coord = vec2(0);
-	if (HSS_CURVATURE_MODE > 0.5)
+	if (H_CURVATURE_MODE > 0.5)
 	{
-		float geom_radius_with_mult = HSS_CURVATURE_3D_RADIUS;
-		if (HSS_CURVATURE_MODE == 1) geom_radius_with_mult -= 0.40;
-		if (HSS_CURVATURE_MODE == 3) geom_radius_with_mult -= 1;
+		float geom_radius_with_mult = H_CURVATURE_3D_RADIUS;
+		if (H_CURVATURE_MODE == 1) geom_radius_with_mult -= 0.40;
+		if (H_CURVATURE_MODE == 3) geom_radius_with_mult -= 1;
 		geom_radius_with_mult *= (1 / (curvature_multiplier + epsilon));
         vec2 extra_curvature_mult = HSS_GetCurvatureScales(screen_aspect);
 		mat2x2 pixel_to_video_uv;
 		
 		curved_coord = HRG_GetGeomCurvedCoord(	adjusted_coord, 
-												HSS_CURVATURE_MODE, 
+												H_CURVATURE_MODE, 
 												geom_radius_with_mult,
-												HSS_CURVATURE_3D_VIEW_DIST,
+												H_CURVATURE_3D_VIEW_DIST,
 												tilt_angle_x,
 												tilt_angle_y,
 												screen_aspect,
@@ -653,7 +653,7 @@ vec2 HSS_GetCurvedCoord(vec2 in_coord, float curvature_multiplier, float screen_
 
 	// If this is split screen we need to scale 0-1 space back to the subsection of the screen
 	#ifdef HSM_SPLIT_SCREEN_PRESET
-		if (HSS_SPLIT_SCREEN_CENTER_FILL_MODE == 1)
+		if (H_SPLIT_SCREEN_CENTER_FILL_MODE == 1)
 		{
 			// If the coordinate was originally on the first screen then flip it back
 			curved_coord = coord_is_on_first_half * HSS_GetFlippedCoordOnSplitAxis(curved_coord, split_axis_is_horizontal) + 
@@ -699,7 +699,7 @@ float HSS_GetCornerMask(vec2 in_coord, float screen_aspect, float corner_radius,
 {
 	//(0.5 - abs(in_coord - 0.5)) * 2
 	vec2 new_coord = min(in_coord, vec2(1.0) - in_coord) * vec2(screen_aspect, 1);
-	vec2 corner_distance = vec2(max(corner_radius / 1000.0, (1.0 - HSS_SCREEN_EDGE_SHARPNESS * edge_sharpness) * 0.01));
+	vec2 corner_distance = vec2(max(corner_radius / 1000.0, (1.0 - H_SCREEN_EDGE_SHARPNESS * edge_sharpness) * 0.01));
 	new_coord = (corner_distance - min(new_coord, corner_distance));
 	float distance = sqrt(dot(new_coord, new_coord));
 
@@ -722,7 +722,7 @@ vec2 HSS_GetTubeCurvedCoord(vec2 screen_coord, vec2 screen_scale, float screen_a
 		// check if we are on the first screen and therfore need to flip the tilt
 		flip_tilt = HHLP_IsUnderValue(coord_1D, 0.5);
 
-		if (HSS_SPLIT_SCREEN_CENTER_FILL_MODE == 1)
+		if (H_SPLIT_SCREEN_CENTER_FILL_MODE == 1)
 		{
 			// Get the screen scale for each sub-screen, this helps calculate the correct black edge offset
 			screen_scale = split_axis_is_horizontal * vec2(split_pos_1 * screen_scale.x, screen_scale.y) + (1 - split_axis_is_horizontal) * vec2(SCREEN_SCALE.x, (1 - split_pos_2) * screen_scale.y);
@@ -738,10 +738,10 @@ vec2 HSS_GetTubeCurvedCoord(vec2 screen_coord, vec2 screen_scale, float screen_a
 	// vec2 tube_coord = HSS_GetInverseScaledCoord(screen_coord, black_edge_scale_offset);
 
 	// Get the curved coordinate, setting allow_split_screen to off (0)
-	vec2 tube_curved_coord = HSS_GetCurvedCoord(screen_coord, HSS_TUBE_CURVATURE_SCALE, screen_aspect);
+	vec2 tube_curved_coord = HSS_GetCurvedCoord(screen_coord, H_TUBE_CURVATURE_SCALE, screen_aspect);
 
 	#ifdef HSM_SPLIT_SCREEN_PRESET
-		if (HSS_SPLIT_SCREEN_CENTER_FILL_MODE == 1)
+		if (H_SPLIT_SCREEN_CENTER_FILL_MODE == 1)
 		{
 			// Take the sub-screen area and re-map it to 0-1
 			tube_curved_coord = HSS_Get0To1CoordFromSplitArea(tube_curved_coord, split_pos_1, split_pos_2, split_dist, split_axis_is_horizontal);
@@ -803,8 +803,8 @@ vec4 HSS_ApplyBlackLevel(vec4 in_color, float color_is_linear)
 	}
 
 	// Black Level
-	out_color -= HSS_COLOR_BLACK_LEVEL / 100;
-	out_color *= 1 / vec4(1.0 - HSS_COLOR_BLACK_LEVEL / 100);
+	out_color -= H_COLOR_BLACK_LEVEL / 100;
+	out_color *= 1 / vec4(1.0 - H_COLOR_BLACK_LEVEL / 100);
 	out_color = clamp(out_color, 0, 2);
 
 	// If color isn't linear put default gamma back on
@@ -844,10 +844,10 @@ vec2 HSS_GetMirrorWrapCoord(vec2 in_coord)
 // Check to see if we are in the negative crop area
 float HSS_IsInNegativeCropArea(vec2 in_coord)
 {
-	float result = abs(clamp(HSS_CROP_OVERSCAN_TOP, -1, 0) * clamp(in_coord.y, -1, 0)) * 100000 +
-				   abs(clamp(HSS_CROP_OVERSCAN_BOTTOM, -1, 0) * (clamp(in_coord.y, 1, 2) - 1)) * 100000 +
-				   abs(clamp(HSS_CROP_OVERSCAN_LEFT, -1, 0) * clamp(in_coord.x, -1, 0)) * 100000 +
-				   abs(clamp(HSS_CROP_OVERSCAN_RIGHT, -1, 0) * (clamp(in_coord.x, 1, 2) - 1)) * 100000;
+	float result = abs(clamp(H_CROP_OVERSCAN_TOP, -1, 0) * clamp(in_coord.y, -1, 0)) * 100000 +
+				   abs(clamp(H_CROP_OVERSCAN_BOTTOM, -1, 0) * (clamp(in_coord.y, 1, 2) - 1)) * 100000 +
+				   abs(clamp(H_CROP_OVERSCAN_LEFT, -1, 0) * clamp(in_coord.x, -1, 0)) * 100000 +
+				   abs(clamp(H_CROP_OVERSCAN_RIGHT, -1, 0) * (clamp(in_coord.x, 1, 2) - 1)) * 100000;
 	return clamp(result, 0, 1);
 }
 
@@ -896,7 +896,7 @@ vec4 HSS_GetCroppedTexSample(sampler2D in_sampler, vec2 in_cropped_coord)
 	vec2 cropped_size = HSS_GetCroppedRotatedOriginalSize();
 
 	// Flip the coordinate vertically if desired
-	in_cropped_coord.y = HSS_FLIP_VIEWPORT_AND_CORE_VERTICAL * (1 - in_cropped_coord.y) + (1 - HSS_FLIP_VIEWPORT_AND_CORE_VERTICAL) * in_cropped_coord.y;
+	in_cropped_coord.y = H_FLIP_VIEWPORT_AND_CORE_VERTICAL * (1 - in_cropped_coord.y) + (1 - H_FLIP_VIEWPORT_AND_CORE_VERTICAL) * in_cropped_coord.y;
 
 	vec2 px_coord = in_cropped_coord * cropped_size;
 
@@ -906,7 +906,7 @@ vec4 HSS_GetCroppedTexSample(sampler2D in_sampler, vec2 in_cropped_coord)
 
 		float px_pos = is_horizontal * px_coord.x + (1 - is_horizontal) * px_coord.y;
 		float half_orig_size = is_horizontal * original_size.x * 0.5 + (1 - is_horizontal) * original_size.y * 0.5;
-		float edge_crop = is_horizontal * HSS_CROP_OVERSCAN_LEFT + (1 - is_horizontal) * HSS_CROP_OVERSCAN_TOP;
+		float edge_crop = is_horizontal * H_CROP_OVERSCAN_LEFT + (1 - is_horizontal) * H_CROP_OVERSCAN_TOP;
 
 		float cropped_split_px_pos1 = edge_crop + half_orig_size;
 		float cropped_split_px_pos2 = edge_crop + half_orig_size + split_screen_amount;
@@ -922,15 +922,15 @@ vec4 HSS_GetCroppedTexSample(sampler2D in_sampler, vec2 in_cropped_coord)
 		px_coord = is_horizontal * vec2(new_px_pos, px_coord.y) + (1 - is_horizontal) * vec2(px_coord.x, new_px_pos);
 	#endif
 		
-	vec2 sample_coord = (px_coord + vec2(HSS_CROP_OVERSCAN_LEFT, HSS_CROP_OVERSCAN_TOP)) / original_size;
-	sample_coord =  HSS_RotateCoordinate(sample_coord, HSS_ROTATE_CORE_IMAGE);
+	vec2 sample_coord = (px_coord + vec2(H_CROP_OVERSCAN_LEFT, H_CROP_OVERSCAN_TOP)) / original_size;
+	sample_coord =  HSS_RotateCoordinate(sample_coord, H_ROTATE_CORE_IMAGE);
 	
 	vec4 out_color = texture(in_sampler, sample_coord);
 
-	vec4 negative_crop_color = vec4(HSS_COLOR_NEGATIVE_CROP_BRIGHTNESS / 10000, HSS_COLOR_NEGATIVE_CROP_BRIGHTNESS / 10000, HSS_COLOR_NEGATIVE_CROP_BRIGHTNESS / 10000, 1);
+	vec4 negative_crop_color = vec4(H_COLOR_NEGATIVE_CROP_BRIGHTNESS / 10000, H_COLOR_NEGATIVE_CROP_BRIGHTNESS / 10000, H_COLOR_NEGATIVE_CROP_BRIGHTNESS / 10000, 1);
 	
 	#ifdef HSM_SPLIT_SCREEN_PRESET
-		float use_neg_crop_color = HHLP_EqualsValue(HSS_SPLIT_SCREEN_CENTER_FILL_MODE, 0, 0.1) * in_split_area;
+		float use_neg_crop_color = HHLP_EqualsValue(H_SPLIT_SCREEN_CENTER_FILL_MODE, 0, 0.1) * in_split_area;
 		out_color = use_neg_crop_color * negative_crop_color + (1 - use_neg_crop_color) * out_color;
 	#endif
 
@@ -1013,7 +1013,7 @@ vec4 HSS_ApplyScanlineMask(vec4 in_color, vec2 in_coord, vec2 screen_scale)
 	float scan_axis_res = use_vert_scanlines * sampling_res.x + (1 - use_vert_scanlines) * sampling_res.y;
 	float scan_axis_pos = use_vert_scanlines * in_coord.x + (1 - use_vert_scanlines) * in_coord.y;
 
-	if (HSS_SCREENFX_FAKE_SCANLINE_OPACITY < 0.001 || scan_axis_res < HSS_INTERLACE_TRIGGER_RES )
+	if (H_SCREENFX_FAKE_SCANLINE_OPACITY < 0.001 || scan_axis_res < H_INTERLACE_TRIGGER_RES )
 	{
 		return in_color;
 	}
@@ -1023,16 +1023,16 @@ vec4 HSS_ApplyScanlineMask(vec4 in_color, vec2 in_coord, vec2 screen_scale)
 	vec2 screen_size = global.OutputSize.xy * screen_scale;
 	float scan_axis_screen_scale_res = use_vert_scanlines * screen_size.x + (1 - use_vert_scanlines) * screen_size.y;
 	
-	float simulated_scanline_res = HSS_SCREENFX_SCANLINE_RES;
+	float simulated_scanline_res = H_SCREENFX_SCANLINE_RES;
 
 	#ifdef HSM_SPLIT_SCREEN_PRESET
 		if (use_vert_scanlines == 0 && screen_scale.x / screen_scale.y < 1 )
 		{
-			simulated_scanline_res = HSS_SCREENFX_SCANLINE_RES * 2;
+			simulated_scanline_res = H_SCREENFX_SCANLINE_RES * 2;
 		}
 		if (use_vert_scanlines == 1 && screen_scale.x / screen_scale.y > 1 )
 		{
-			simulated_scanline_res = HSS_SCREENFX_SCANLINE_RES * 2;
+			simulated_scanline_res = H_SCREENFX_SCANLINE_RES * 2;
 		}
 	#endif
 
@@ -1049,11 +1049,11 @@ vec4 HSS_ApplyScanlineMask(vec4 in_color, vec2 in_coord, vec2 screen_scale)
 
 	float final_scanline_mask = clamp(1 * scanline_mask, 0, 1);
 
-	color_brightness_modulation = HHLP_EasePowerOut(smoothstep(0.4, HSS_SCREENFX_FAKE_SCANLINE_BRIGHTNESS_CUTOFF + 1.5, (in_color.r + in_color.g +  in_color.b) / 3), 2);
-	final_scanline_mask = clamp(mix(1, mix(final_scanline_mask, 1, color_brightness_modulation), HSS_SCREENFX_FAKE_SCANLINE_OPACITY), 0, 1);
+	color_brightness_modulation = HHLP_EasePowerOut(smoothstep(0.4, H_SCREENFX_FAKE_SCANLINE_BRIGHTNESS_CUTOFF + 1.5, (in_color.r + in_color.g +  in_color.b) / 3), 2);
+	final_scanline_mask = clamp(mix(1, mix(final_scanline_mask, 1, color_brightness_modulation), H_SCREENFX_FAKE_SCANLINE_OPACITY), 0, 1);
 
 	vec4 masked_color = in_color;
-	masked_color *= 1 + 0.5 * HSS_SCREENFX_FAKE_SCANLINE_OPACITY;
+	masked_color *= 1 + 0.5 * H_SCREENFX_FAKE_SCANLINE_OPACITY;
 	masked_color = clamp(final_scanline_mask * masked_color, 0, 1);
 	masked_color.w = in_color.w;
 
@@ -1066,14 +1066,14 @@ vec4 HSS_ApplyScanlineMask(vec4 in_color, vec2 in_coord, vec2 screen_scale)
 vec4 HSS_GetPostCrtPreppedColor(vec4 in_color_linear, vec2 screen_curved_coord, vec2 screen_coord, float screen_aspect, vec2 screen_scale, in sampler2D gel_image_sampler, in sampler2D tube_highlight_image_sampler)
 {
 	vec4 out_color = in_color_linear;
-	float screen_mask = HSS_GetCornerMask((screen_curved_coord - 0.5) * 0.999 + 0.5, screen_aspect, HSS_SCREEN_CORNER_RADIUS, 0.9);
-	float screen_edge_mask = HSS_GetCornerMask(screen_curved_coord, screen_aspect, HSS_SCREEN_CORNER_RADIUS, HSS_SCREEN_EDGE_SHARPNESS);
+	float screen_mask = HSS_GetCornerMask((screen_curved_coord - 0.5) * 0.999 + 0.5, screen_aspect, H_SCREEN_CORNER_RADIUS, 0.9);
+	float screen_edge_mask = HSS_GetCornerMask(screen_curved_coord, screen_aspect, H_SCREEN_CORNER_RADIUS, H_SCREEN_EDGE_SHARPNESS);
 	screen_edge_mask = 1 - ((1 - screen_edge_mask) * screen_mask);
 
 	// out_color *= screen_edge_mask;
 
 	vec2 mirrored_screen_coord = HSS_GetMirrorWrappedCoord(screen_curved_coord);
-	float vignette_factor = HSS_GetScreenVignetteFactor(mirrored_screen_coord, HSS_SCREENFX_VIGNETTE);
+	float vignette_factor = HSS_GetScreenVignetteFactor(mirrored_screen_coord, H_SCREENFX_VIGNETTE);
 
 	// If this is called from the glass preset we don't want the vignette to affect mirrored area
 	if (HGL_GLASSBORDER_ON == 1)
@@ -1081,7 +1081,7 @@ vec4 HSS_GetPostCrtPreppedColor(vec4 in_color_linear, vec2 screen_curved_coord, 
 
 	out_color *= vignette_factor;
 
-	if (HSS_SCREENFX_FAKE_SCANLINE_OPACITY > 0)
+	if (H_SCREENFX_FAKE_SCANLINE_OPACITY > 0)
 	{
 		vec4 scanline_masked_color = HSS_ApplyScanlineMask(out_color, screen_coord, screen_scale);
 		// out_color = mix(out_color, scanline_masked_color, screen_mask);
@@ -1092,31 +1092,31 @@ vec4 HSS_GetPostCrtPreppedColor(vec4 in_color_linear, vec2 screen_curved_coord, 
 	vec2 mirrored_tube_coord = HSS_GetMirrorWrappedCoord(tube_curved_coord);
 
 	// Add a Colored Gel image on top of the screen, this is what colors games like space invaders or battlezone
-	if (HSS_TUBE_COLORED_GEL_IMAGE_MULTIPLY_AMOUNT > 0 || HSS_TUBE_COLORED_GEL_IMAGE_ADDITIVE_AMOUNT > 0)
+	if (H_TUBE_COLORED_GEL_IMAGE_MULTIPLY_AMOUNT > 0 || H_TUBE_COLORED_GEL_IMAGE_ADDITIVE_AMOUNT > 0)
 	{
 		vec4 gel_image = texture(gel_image_sampler, mirrored_tube_coord);
 		gel_image = HSS_Linearize(gel_image, HSS_DEFAULT_SRGB_GAMMA);
 
-		if (HSS_TUBE_COLORED_GEL_IMAGE_MULTIPLY_AMOUNT > 0)
-			out_color = mix(out_color, out_color * gel_image, gel_image.a * HSS_TUBE_COLORED_GEL_IMAGE_MULTIPLY_AMOUNT);
+		if (H_TUBE_COLORED_GEL_IMAGE_MULTIPLY_AMOUNT > 0)
+			out_color = mix(out_color, out_color * gel_image, gel_image.a * H_TUBE_COLORED_GEL_IMAGE_MULTIPLY_AMOUNT);
 
-		if (HSS_TUBE_COLORED_GEL_IMAGE_ADDITIVE_AMOUNT > 0)
-			out_color = mix(out_color, out_color + gel_image, gel_image.a * HSS_TUBE_COLORED_GEL_IMAGE_ADDITIVE_AMOUNT);
+		if (H_TUBE_COLORED_GEL_IMAGE_ADDITIVE_AMOUNT > 0)
+			out_color = mix(out_color, out_color + gel_image, gel_image.a * H_TUBE_COLORED_GEL_IMAGE_ADDITIVE_AMOUNT);
 	}
 
-	if (HSS_TUBE_HIGHLIGHT_IMAGE_OPACITY > 0)
+	if (H_TUBE_HIGHLIGHT_IMAGE_OPACITY > 0)
 	{
-		vec2 tube_highlight_coord = (mirrored_tube_coord - 0.5) / HSS_TUBE_HIGHLIGHT_IMAGE_SCALE + 0.5;
+		vec2 tube_highlight_coord = (mirrored_tube_coord - 0.5) / H_TUBE_HIGHLIGHT_IMAGE_SCALE + 0.5;
 
 		// // Dithering for the glass reflection if needed to reduce banding
 		// float blur_max_size = 1;
 		// float blur_amount = 0.2;
-		// vec4 tube_highlight_image = HSS_GetStoichaicBlurredSample(TubeHighlightImage, tube_highlight_coord, HSS_TUBE_HIGHLIGHT_IMAGE_DITHERING_SAMPLES, blur_max_size, blur_amount);
+		// vec4 tube_highlight_image = HSS_GetStoichaicBlurredSample(TubeHighlightImage, tube_highlight_coord, H_TUBE_HIGHLIGHT_IMAGE_DITHERING_SAMPLES, blur_max_size, blur_amount);
 		
 		vec4 tube_highlight_image = texture(tube_highlight_image_sampler, tube_highlight_coord);
 		tube_highlight_image = HSS_Linearize(tube_highlight_image, HSS_DEFAULT_SRGB_GAMMA);
 
-		out_color.rgb += HSS_TUBE_HIGHLIGHT_IMAGE_OPACITY * tube_highlight_image.a * tube_highlight_image.rgb;
+		out_color.rgb += H_TUBE_HIGHLIGHT_IMAGE_OPACITY * tube_highlight_image.a * tube_highlight_image.rgb;
 	}
 
 	out_color.a = in_color_linear.a;
@@ -1128,7 +1128,7 @@ vec4 HSS_GetPostCrtPreppedColor(vec4 in_color_linear, vec2 screen_curved_coord, 
 	#endif
 
 	// Apply the final Gamma
-	out_color = HSS_Delinearize(out_color, HSS_COLOR_CRT_GAMMA);
+	out_color = HSS_Delinearize(out_color, H_COLOR_CRT_GAMMA);
 
 	return out_color;
 }

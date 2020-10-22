@@ -7,46 +7,46 @@ layout(std140, set = 0, binding = 0) uniform UBO
     vec4 OriginalSize;
     vec4 OutputSize;
     uint FrameCount;
-    float GRADE_GAMMA_IN;
-    float GRADE_SIGNAL_TYPE;
-    float GRADE_SIGNAL_GAMMA_TYPE;
-    float GRADE_PHOSPHOR_CRT_GAMUT;
-    float GRADE_DISPLAY_COLOR_SPACE;
-    float GRADE_HUE_DEGREES;
-    float GRADE_I_SHIFT;
-    float GRADE_Q_SHIFT;
-    float GRADE_I_MULTIPLIER;
-    float GRADE_Q_MULTIPLIER;
-    float GRADE_SEGA_LUMA_FIX;
-    float GRADE_VIGNETTE_ON;
-    float GRADE_VIGNETTE_STRENGTH;
-    float GRADE_VIGNETTE_POWER;
-    float GRADE_SATURATION;
-    float GRADE_VIBRANCE;
-    float GRADE_BRIGHTNESS;
-    float GRADE_CONTRAST;
-    float GRADE_CONTRAST_PIVOT;
-    float GRADE_BLACK_LEVEL;
-    float GRADE_BLACK_RED_TINT;
-    float GRADE_BLACK_GREEN_TINT;
-    float GRADE_BLACK_BLUE_TINT;
-    float GRADE_WHITE_RED_TINT;
-    float GRADE_WHITE_GREEN_TINT;
-    float GRADE_WHITE_BLUE_TINT;
-    float GRADE_RED_GREEN_TINT;
-    float GRADE_RED_BLUE_TINT;
-    float GRADE_GREEN_RED_TINT;
-    float GRADE_GREEN_BLUE_TINT;
-    float GRADE_BLUE_RED_TINT;
-    float GRADE_BLUE_GREEN_TINT;
-    float GRADE_WHITE_POINT_TEMP;
-    float GRADE_HUE_VS_SAT_RED;
-    float GRADE_HUE_VS_SAT_GREEN;
-    float GRADE_HUE_VS_SAT_BLUE;
-    float GRADE_LUT1_SIZE;
-    float GRADE_LUT1_ON;
-    float GRADE_LUT2_SIZE;
-    float GRADE_LUT2_ON;
+    float DG_GAMMA_IN;
+    float DG_SIGNAL_TYPE;
+    float DG_SIGNAL_GAMMA_TYPE;
+    float DG_PHOSPHOR_CRT_GAMUT;
+    float DG_DISPLAY_COLOR_SPACE;
+    float DG_HUE_DEGREES;
+    float DG_I_SHIFT;
+    float DG_Q_SHIFT;
+    float DG_I_MULTIPLIER;
+    float DG_Q_MULTIPLIER;
+    float DG_SEGA_LUMA_FIX;
+    float DG_VIGNETTE_ON;
+    float DG_VIGNETTE_STRENGTH;
+    float DG_VIGNETTE_POWER;
+    float DG_SATURATION;
+    float DG_VIBRANCE;
+    float DG_BRIGHTNESS;
+    float DG_CONTRAST;
+    float DG_CONTRAST_PIVOT;
+    float DG_BLACK_LEVEL;
+    float DG_BLACK_RED_TINT;
+    float DG_BLACK_GREEN_TINT;
+    float DG_BLACK_BLUE_TINT;
+    float DG_WHITE_RED_TINT;
+    float DG_WHITE_GREEN_TINT;
+    float DG_WHITE_BLUE_TINT;
+    float DG_RED_GREEN_TINT;
+    float DG_RED_BLUE_TINT;
+    float DG_GREEN_RED_TINT;
+    float DG_GREEN_BLUE_TINT;
+    float DG_BLUE_RED_TINT;
+    float DG_BLUE_GREEN_TINT;
+    float DG_WHITE_POINT_TEMP;
+    float DG_HUE_VS_SAT_RED;
+    float DG_HUE_VS_SAT_GREEN;
+    float DG_HUE_VS_SAT_BLUE;
+    float DG_LUT1_SIZE;
+    float DG_LUT1_ON;
+    float DG_LUT2_SIZE;
+    float DG_LUT2_ON;
 } global;
 
 /*
@@ -90,93 +90,93 @@ layout(std140, set = 0, binding = 0) uniform UBO
     ##########################################################################################
 */
 
-#pragma parameter GRADE_TITLE "------[COLOR CORRECTION - GRADE]--------------------------" 0 0 0 1
+#pragma parameter DG_TITLE "------[COLOR CORRECTION - GRADE]--------------------------" 0 0 0 1
 
-#pragma parameter GRADE_GAMMA_IN                    "[GAMMA]  CRT Gamma"                              2.4 1.8 3 0.05
-#pragma parameter GRADE_SIGNAL_TYPE                 "[SIGNAL]  Signal Type (0:RGB 1:Composite) ---------------------"                        1 0 1 1
-#pragma parameter GRADE_SIGNAL_GAMMA_TYPE           "[SIGNAL]  Signal Gamma Type (0:sRGB 1:SMPTE-C)"                   1 0 1 1
-#pragma parameter GRADE_PHOSPHOR_CRT_GAMUT          "[COLOR SPACE]  Phosphor CRT GAMUT (1:NTSC-U 2:NTSC-J 3:PAL) ---"      2 -4 3 1
-#pragma parameter GRADE_DISPLAY_COLOR_SPACE         "[COLOR SPACE]  Display -1:709 0:sRGB 1:DCI 2:2020, 3:Adobe"       0 -1 3 1
+#pragma parameter DG_GAMMA_IN                    "[GAMMA]  CRT Gamma"                              2.4 1.8 3 0.05
+#pragma parameter DG_SIGNAL_TYPE                 "[SIGNAL]  Signal Type (0:RGB 1:Composite) ---------------------"                        1 0 1 1
+#pragma parameter DG_SIGNAL_GAMMA_TYPE           "[SIGNAL]  Signal Gamma Type (0:sRGB 1:SMPTE-C)"                   1 0 1 1
+#pragma parameter DG_PHOSPHOR_CRT_GAMUT          "[COLOR SPACE]  Phosphor CRT GAMUT (1:NTSC-U 2:NTSC-J 3:PAL) ---"      2 -4 3 1
+#pragma parameter DG_DISPLAY_COLOR_SPACE         "[COLOR SPACE]  Display -1:709 0:sRGB 1:DCI 2:2020, 3:Adobe"       0 -1 3 1
 
-#pragma parameter GRADE_I_SHIFT                     "[COLOR SIGNAL PROCESS]  I/U Shift -----------------------------"                   0 -0.2 0.2 0.01
-#pragma parameter GRADE_Q_SHIFT                     "[COLOR SIGNAL PROCESS]  Q/V Shift"                   0 -0.2 0.2 0.01
-#pragma parameter GRADE_I_MULTIPLIER                "[COLOR SIGNAL PROCESS]  I/U Multiplier"              1  0 2 0.01
-#pragma parameter GRADE_Q_MULTIPLIER                "[COLOR SIGNAL PROCESS]  Q/V Multiplier"              1  0 2 0.01
+#pragma parameter DG_I_SHIFT                     "[COLOR SIGNAL PROCESS]  I/U Shift -----------------------------"                   0 -0.2 0.2 0.01
+#pragma parameter DG_Q_SHIFT                     "[COLOR SIGNAL PROCESS]  Q/V Shift"                   0 -0.2 0.2 0.01
+#pragma parameter DG_I_MULTIPLIER                "[COLOR SIGNAL PROCESS]  I/U Multiplier"              1  0 2 0.01
+#pragma parameter DG_Q_MULTIPLIER                "[COLOR SIGNAL PROCESS]  Q/V Multiplier"              1  0 2 0.01
 
-#pragma parameter GRADE_VIGNETTE_ON                 "[DARKENING VIGNETTE]  ON --------------------------------------"                            0  0 1 1
-#pragma parameter GRADE_VIGNETTE_STRENGTH           "[DARKENING VIGNETTE]  Center Brightness (AKA Strength)"  40 0 50 1
-#pragma parameter GRADE_VIGNETTE_POWER              "[DARKENING VIGNETTE]  Edge Darkening (AKA Power)"        0.20 0 0.5 0.01
+#pragma parameter DG_VIGNETTE_ON                 "[DARKENING VIGNETTE]  ON --------------------------------------"                            0  0 1 1
+#pragma parameter DG_VIGNETTE_STRENGTH           "[DARKENING VIGNETTE]  Center Brightness (AKA Strength)"  40 0 50 1
+#pragma parameter DG_VIGNETTE_POWER              "[DARKENING VIGNETTE]  Edge Darkening (AKA Power)"        0.20 0 0.5 0.01
 
-#pragma parameter GRADE_SEGA_LUMA_FIX               "[BRIGHTNESS]  Sega Luma Fix -----------------------------------"                   0  0 1 1
-#pragma parameter GRADE_BRIGHTNESS                  "[BRIGHTNESS]  Brightness"                      0 -0.5 1 0.01
-#pragma parameter GRADE_BLACK_LEVEL                 "[BRIGHTNESS]  Black Level"                     0 -0.5 0.5 0.01
-#pragma parameter GRADE_CONTRAST                    "[CONTRAST]  Contrast"                          0 -1 1 0.05
-#pragma parameter GRADE_CONTRAST_PIVOT              "[CONTRAST]  Contrast Pivot"                    0.5  0 1 0.01
+#pragma parameter DG_SEGA_LUMA_FIX               "[BRIGHTNESS]  Sega Luma Fix -----------------------------------"                   0  0 1 1
+#pragma parameter DG_BRIGHTNESS                  "[BRIGHTNESS]  Brightness"                      0 -0.5 1 0.01
+#pragma parameter DG_BLACK_LEVEL                 "[BRIGHTNESS]  Black Level"                     0 -0.5 0.5 0.01
+#pragma parameter DG_CONTRAST                    "[CONTRAST]  Contrast"                          0 -1 1 0.05
+#pragma parameter DG_CONTRAST_PIVOT              "[CONTRAST]  Contrast Pivot"                    0.5  0 1 0.01
 
-#pragma parameter GRADE_WHITE_POINT_TEMP            "[COLOR]  White Point Temp -------------------------------------"                     6504 5004 12004 100
-#pragma parameter GRADE_SATURATION                  "[COLOR]  Saturation"                           0 -1 2 0.01
-#pragma parameter GRADE_VIBRANCE                    "[COLOR]  Dullness/Vibrance"                    0 -1 1 0.05
-#pragma parameter GRADE_HUE_DEGREES                 "[COLOR]  Hue"                                  0 -360 360 1
-#pragma parameter GRADE_HUE_VS_SAT_RED              "[HUE VS SATURATION]  Red --------------------------------------"                      0 -1 1 0.01
-#pragma parameter GRADE_HUE_VS_SAT_GREEN            "[HUE VS SATURATION]  Green"                    0 -1 1 0.01
-#pragma parameter GRADE_HUE_VS_SAT_BLUE             "[HUE VS SATURATION]  Blue"                     0 -1 1 0.01
-#pragma parameter GRADE_BLACK_RED_TINT              "[TINT]  Black-Red Tint ----------------------------------------"                        0  0 1 0.01
-#pragma parameter GRADE_BLACK_GREEN_TINT            "[TINT]  Black-Green Tint"                      0  0 1 0.01
-#pragma parameter GRADE_BLACK_BLUE_TINT             "[TINT]  Black-Blue Tint"                       0  0 1 0.01
-#pragma parameter GRADE_WHITE_RED_TINT              "[TINT]  White-Red Tint ----------------------------------------"                        1  0 2 0.01
-#pragma parameter GRADE_WHITE_GREEN_TINT            "[TINT]  White-Green Tint"                      1  0 2 0.01
-#pragma parameter GRADE_WHITE_BLUE_TINT             "[TINT]  White-Blue Tint"                       1  0 2 0.01
-#pragma parameter GRADE_RED_GREEN_TINT              "[TINT]  Red-Green Tint ----------------------------------------"                        0 -1 1 0.005
-#pragma parameter GRADE_RED_BLUE_TINT               "[TINT]  Red-Blue Tint"                         0 -1 1 0.005
-#pragma parameter GRADE_GREEN_RED_TINT              "[TINT]  Green-Red Tint ----------------------------------------"                        0 -1 1 0.005
-#pragma parameter GRADE_GREEN_BLUE_TINT             "[TINT]  Green-Blue Tint"                       0 -1 1 0.005
-#pragma parameter GRADE_BLUE_RED_TINT               "[TINT]  Blue-Red Tint -----------------------------------------"                         0 -1 1 0.005
-#pragma parameter GRADE_BLUE_GREEN_TINT             "[TINT]  Blue-Green Tint"                       0 -1 1 0.005
-#pragma parameter GRADE_LUT1_ON                     "[LUT]  LUT 1 ON -----------------------------------------------"                               0  0 1  1
-#pragma parameter GRADE_LUT1_SIZE                   "[LUT]  LUT 1 Size"                             16 8 64 16
-#pragma parameter GRADE_LUT2_ON                     "[LUT]  LUT 2 ON"                               0  0 1  1
-#pragma parameter GRADE_LUT2_SIZE                   "[LUT]  LUT 2 Size"                             64 8 64 16
+#pragma parameter DG_WHITE_POINT_TEMP            "[COLOR]  White Point Temp -------------------------------------"                     6504 5004 12004 100
+#pragma parameter DG_SATURATION                  "[COLOR]  Saturation"                           0 -1 2 0.01
+#pragma parameter DG_VIBRANCE                    "[COLOR]  Dullness/Vibrance"                    0 -1 1 0.05
+#pragma parameter DG_HUE_DEGREES                 "[COLOR]  Hue"                                  0 -360 360 1
+#pragma parameter DG_HUE_VS_SAT_RED              "[HUE VS SATURATION]  Red --------------------------------------"                      0 -1 1 0.01
+#pragma parameter DG_HUE_VS_SAT_GREEN            "[HUE VS SATURATION]  Green"                    0 -1 1 0.01
+#pragma parameter DG_HUE_VS_SAT_BLUE             "[HUE VS SATURATION]  Blue"                     0 -1 1 0.01
+#pragma parameter DG_BLACK_RED_TINT              "[TINT]  Black-Red Tint ----------------------------------------"                        0  0 1 0.01
+#pragma parameter DG_BLACK_GREEN_TINT            "[TINT]  Black-Green Tint"                      0  0 1 0.01
+#pragma parameter DG_BLACK_BLUE_TINT             "[TINT]  Black-Blue Tint"                       0  0 1 0.01
+#pragma parameter DG_WHITE_RED_TINT              "[TINT]  White-Red Tint ----------------------------------------"                        1  0 2 0.01
+#pragma parameter DG_WHITE_GREEN_TINT            "[TINT]  White-Green Tint"                      1  0 2 0.01
+#pragma parameter DG_WHITE_BLUE_TINT             "[TINT]  White-Blue Tint"                       1  0 2 0.01
+#pragma parameter DG_RED_GREEN_TINT              "[TINT]  Red-Green Tint ----------------------------------------"                        0 -1 1 0.005
+#pragma parameter DG_RED_BLUE_TINT               "[TINT]  Red-Blue Tint"                         0 -1 1 0.005
+#pragma parameter DG_GREEN_RED_TINT              "[TINT]  Green-Red Tint ----------------------------------------"                        0 -1 1 0.005
+#pragma parameter DG_GREEN_BLUE_TINT             "[TINT]  Green-Blue Tint"                       0 -1 1 0.005
+#pragma parameter DG_BLUE_RED_TINT               "[TINT]  Blue-Red Tint -----------------------------------------"                         0 -1 1 0.005
+#pragma parameter DG_BLUE_GREEN_TINT             "[TINT]  Blue-Green Tint"                       0 -1 1 0.005
+#pragma parameter DG_LUT1_ON                     "[LUT]  LUT 1 ON -----------------------------------------------"                               0  0 1  1
+#pragma parameter DG_LUT1_SIZE                   "[LUT]  LUT 1 Size"                             16 8 64 16
+#pragma parameter DG_LUT2_ON                     "[LUT]  LUT 2 ON"                               0  0 1  1
+#pragma parameter DG_LUT2_SIZE                   "[LUT]  LUT 2 Size"                             64 8 64 16
 
 #define M_PI            3.1415926535897932384626433832795
-#define gamma_in        global.GRADE_GAMMA_IN
-#define signal          global.GRADE_SIGNAL_TYPE
-#define gamma_type      global.GRADE_SIGNAL_GAMMA_TYPE
-#define crtgamut        global.GRADE_PHOSPHOR_CRT_GAMUT
-#define SPC             global.GRADE_DISPLAY_COLOR_SPACE
-#define hue_degrees     global.GRADE_HUE_DEGREES
-#define I_SHIFT         global.GRADE_I_SHIFT
-#define Q_SHIFT         global.GRADE_Q_SHIFT
-#define I_MUL           global.GRADE_I_MULTIPLIER
-#define Q_MUL           global.GRADE_Q_MULTIPLIER
-#define lum_fix         global.GRADE_SEGA_LUMA_FIX
-#define vignette        global.GRADE_VIGNETTE_ON
-#define vstr            global.GRADE_VIGNETTE_STRENGTH
-#define vpower          global.GRADE_VIGNETTE_POWER
-#define g_sat           global.GRADE_SATURATION
-#define vibr            global.GRADE_VIBRANCE
-#define satr            global.GRADE_HUE_VS_SAT_RED
-#define satg            global.GRADE_HUE_VS_SAT_GREEN
-#define satb            global.GRADE_HUE_VS_SAT_BLUE
-#define lum             global.GRADE_BRIGHTNESS
-#define cntrst          global.GRADE_CONTRAST
-#define mid             global.GRADE_CONTRAST_PIVOT
-#define lift            global.GRADE_BLACK_LEVEL
-#define blr             global.GRADE_BLACK_RED_TINT
-#define blg             global.GRADE_BLACK_GREEN_TINT
-#define blb             global.GRADE_BLACK_BLUE_TINT
-#define wlr             global.GRADE_WHITE_RED_TINT
-#define wlg             global.GRADE_WHITE_GREEN_TINT
-#define wlb             global.GRADE_WHITE_BLUE_TINT
-#define rg              global.GRADE_RED_GREEN_TINT
-#define rb              global.GRADE_RED_BLUE_TINT
-#define gr              global.GRADE_GREEN_RED_TINT
-#define gb              global.GRADE_GREEN_BLUE_TINT
-#define br              global.GRADE_BLUE_RED_TINT
-#define bg              global.GRADE_BLUE_GREEN_TINT
-float lut1_size =       global.GRADE_LUT1_SIZE;
-float lut1_on =         global.GRADE_LUT1_ON;
-float lut2_size =       global.GRADE_LUT2_SIZE;
-float lut2_on =         global.GRADE_LUT2_ON;
+#define gamma_in        global.DG_GAMMA_IN
+#define signal          global.DG_SIGNAL_TYPE
+#define gamma_type      global.DG_SIGNAL_GAMMA_TYPE
+#define crtgamut        global.DG_PHOSPHOR_CRT_GAMUT
+#define SPC             global.DG_DISPLAY_COLOR_SPACE
+#define hue_degrees     global.DG_HUE_DEGREES
+#define I_SHIFT         global.DG_I_SHIFT
+#define Q_SHIFT         global.DG_Q_SHIFT
+#define I_MUL           global.DG_I_MULTIPLIER
+#define Q_MUL           global.DG_Q_MULTIPLIER
+#define lum_fix         global.DG_SEGA_LUMA_FIX
+#define vignette        global.DG_VIGNETTE_ON
+#define vstr            global.DG_VIGNETTE_STRENGTH
+#define vpower          global.DG_VIGNETTE_POWER
+#define g_sat           global.DG_SATURATION
+#define vibr            global.DG_VIBRANCE
+#define satr            global.DG_HUE_VS_SAT_RED
+#define satg            global.DG_HUE_VS_SAT_GREEN
+#define satb            global.DG_HUE_VS_SAT_BLUE
+#define lum             global.DG_BRIGHTNESS
+#define cntrst          global.DG_CONTRAST
+#define mid             global.DG_CONTRAST_PIVOT
+#define lift            global.DG_BLACK_LEVEL
+#define blr             global.DG_BLACK_RED_TINT
+#define blg             global.DG_BLACK_GREEN_TINT
+#define blb             global.DG_BLACK_BLUE_TINT
+#define wlr             global.DG_WHITE_RED_TINT
+#define wlg             global.DG_WHITE_GREEN_TINT
+#define wlb             global.DG_WHITE_BLUE_TINT
+#define rg              global.DG_RED_GREEN_TINT
+#define rb              global.DG_RED_BLUE_TINT
+#define gr              global.DG_GREEN_RED_TINT
+#define gb              global.DG_GREEN_BLUE_TINT
+#define br              global.DG_BLUE_RED_TINT
+#define bg              global.DG_BLUE_GREEN_TINT
+float lut1_size =       global.DG_LUT1_SIZE;
+float lut1_on =         global.DG_LUT1_ON;
+float lut2_size =       global.DG_LUT2_SIZE;
+float lut2_on =         global.DG_LUT2_ON;
 
 #pragma stage vertex
 layout(location = 0) in vec4 Position;
@@ -896,7 +896,7 @@ void main()
                                        m_in*src_h;
 
 // White Point Mapping
-    vec3 wp       = wp_adjust(global.GRADE_WHITE_POINT_TEMP - 1000.);
+    vec3 wp       = wp_adjust(global.DG_WHITE_POINT_TEMP - 1000.);
     vec3 base     = (crtgamut == 0.0) ? RGB_to_XYZ(src_h, SPC)      : gamut;
          base     = XYZtoYxy(base);
     vec3 adjusted = (crtgamut == 0.0) ? RGB_to_XYZ(src_h, SPC) * wp : gamut * wp;

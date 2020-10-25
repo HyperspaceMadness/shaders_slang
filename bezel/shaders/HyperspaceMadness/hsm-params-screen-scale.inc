@@ -8,7 +8,7 @@ Description:
 */
 
 // Screen Scale Required Parameters
-#pragma parameter H_MEGA_BEZEL_TITLE					"_____[ HSM MEGA BEZEL  ALPHA.2020-10-06-0 ]____________________" 0 0 0 0
+#pragma parameter H_MEGA_BEZEL_TITLE					"_____[ HSM MEGA BEZEL  ALPHA.2020-10-24-0 ]____________________" 0 0 0 0
 
 #pragma parameter H_MEGA_BEZEL_DEBUG					"[ DEBUG ]  Debug ON" 0 0 1 1
 float H_MEGA_BEZEL_DEBUG = global.H_MEGA_BEZEL_DEBUG;
@@ -61,13 +61,13 @@ float H_SNAP_TO_INT_SCALE_TOLERANCE = global.H_SNAP_TO_INT_SCALE_TOLERANCE;
 
 
 //---------------------------------------------------------------------------------------------------
-//    CROPPING
+//    Position
 //---------------------------------------------------------------------------------------------------
-#pragma parameter H_POSITION_OFFSET_X 				"[ POSITION ]  Position Offset X _______________________________" 0 -100 100 0.1
-float H_POSITION_OFFSET_X = global.H_POSITION_OFFSET_X / 100;
+#pragma parameter H_SCREEN_POSITION_X 				"[ POSITION ]  Position X _______________________________" 0 -100 100 0.1
+float H_SCREEN_POSITION_X = global.H_SCREEN_POSITION_X / 100;
 
-#pragma parameter H_POSITION_OFFSET_Y 				"[ POSITION ]  Position Offset Y" 0 -100 100 0.1
-float H_POSITION_OFFSET_Y = -1 * global.H_POSITION_OFFSET_Y / 100;
+#pragma parameter H_SCREEN_POSITION_Y 				"[ POSITION ]  Position Y" 0 -100 100 0.1
+float H_SCREEN_POSITION_Y = -1 * global.H_SCREEN_POSITION_Y / 100;
 
 
 //---------------------------------------------------------------------------------------------------

@@ -48,7 +48,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
 // HSM Added
-#include "../hsm-screen-scale-with-globals.inc"
+#include "../hsm-globals-and-screen-scale-params.inc"
 // End Addition
 
 // HSM Removed

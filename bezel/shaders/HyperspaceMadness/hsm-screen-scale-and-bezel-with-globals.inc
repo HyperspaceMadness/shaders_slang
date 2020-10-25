@@ -1,5 +1,0 @@
-#include "hsm-param-globals.inc"
-#include "hsm-params-screen-scale.inc"
-#include "hsm-params-bezel-reflection.inc"
-#include "hsm-params-image-layers.inc"
-#include "hsm-screen-scale-functions.inc"

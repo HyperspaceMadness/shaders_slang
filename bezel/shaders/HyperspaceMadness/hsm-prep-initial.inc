@@ -21,10 +21,7 @@ layout(location = 0) in vec2 vTexCoord;
 layout(location = 0) out vec4 FragColor;
 layout(set = 0, binding = 2) uniform sampler2D Source;
 layout(set = 0, binding = 3) uniform sampler2D PassFeedback6;
-
-#ifndef ROYALE_PRESET
-   layout(set = 0, binding = 4) uniform sampler2D SamplerLUT3;
-#endif
+layout(set = 0, binding = 4) uniform sampler2D SamplerLUT3;
 
 #define eps 1e-3
 

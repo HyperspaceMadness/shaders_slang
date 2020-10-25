@@ -5,7 +5,7 @@ Simple Scanline Shader to test cropping
 */
 
 // HSM Added
-#include "./hsm-screen-scale-with-globals.inc"
+#include "./hsm-globals-and-screen-scale-params.inc"
 // End Addition
 
 // layout(push_constant) uniform Push

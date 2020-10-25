@@ -1,6 +1,6 @@
 #version 450
 
-#include "hsm-screen-scale-with-globals.inc"
+#include "hsm-globals-and-screen-scale-params.inc"
 
 layout(push_constant) uniform Push
 {

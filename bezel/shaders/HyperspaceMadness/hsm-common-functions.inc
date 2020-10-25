@@ -349,7 +349,7 @@ vec2 HSS_GetInverseScaledCoord(vec2 in_coord, vec2 in_scale)
 vec2 HSS_GetPositionOffset()
 {
 	float output_aspect_ratio = global.FinalViewportSize.x / global.FinalViewportSize.y;
-	vec2 pos_offset = vec2(H_POSITION_OFFSET_X / output_aspect_ratio, H_POSITION_OFFSET_Y);
+	vec2 pos_offset = vec2(H_SCREEN_POSITION_X / output_aspect_ratio, H_SCREEN_POSITION_Y);
 	return pos_offset;
 }
 
@@ -708,13 +708,15 @@ float HSS_GetCornerMask(vec2 in_coord, float screen_aspect, float corner_radius,
 
 vec2 HSS_GetTubeCurvedCoord(vec2 screen_coord, vec2 screen_scale, float screen_aspect)
 {
+	// Values for split screen
 	float flip_tilt = 0;
+	float split_pos_1 = 0;
+	float split_pos_2 = 0;
+	float split_dist = 0;
+	float split_axis_is_horizontal = 0;
 
-	#ifdef HSM_SPLIT_SCREEN_PRESET
-		float split_pos_1 = 0;
-		float split_pos_2 = 0;
-		float split_dist = 0;
-		float split_axis_is_horizontal = 0;
+	if (H_SPLIT_SCREEN_ON == 1)
+	{
 		HSS_GetSplitInfo(split_pos_1, split_pos_2, split_dist, split_axis_is_horizontal);
 
 		float coord_1D = HSS_GetSplitAxisCoord1D(screen_coord, split_axis_is_horizontal);
@@ -725,12 +727,12 @@ vec2 HSS_GetTubeCurvedCoord(vec2 screen_coord, vec2 screen_scale, float screen_a
 		if (H_SPLIT_SCREEN_CENTER_FILL_MODE == 1)
 		{
 			// Get the screen scale for each sub-screen, this helps calculate the correct black edge offset
-			screen_scale = split_axis_is_horizontal * vec2(split_pos_1 * screen_scale.x, screen_scale.y) + (1 - split_axis_is_horizontal) * vec2(SCREEN_SCALE.x, (1 - split_pos_2) * screen_scale.y);
+			screen_scale = split_axis_is_horizontal * vec2(split_pos_1 * screen_scale.x, screen_scale.y) + (1 - split_axis_is_horizontal) * vec2(screen_scale.x, (1 - split_pos_2) * screen_scale.y);
 
 			// If this was on the first screen then flip it so we get the opposite tilt
 			// screen_coord = flip_tilt * HSS_GetFlippedCoordOnSplitAxis(screen_coord, SCREEN_ASPECT) + (1 - flip_tilt) * screen_coord;
 		}
-	#endif
+	}
 
 	vec2 black_edge_scale_offset = HSS_GetTubeScale(screen_scale) / screen_scale;
 
@@ -740,7 +742,8 @@ vec2 HSS_GetTubeCurvedCoord(vec2 screen_coord, vec2 screen_scale, float screen_a
 	// Get the curved coordinate, setting allow_split_screen to off (0)
 	vec2 tube_curved_coord = HSS_GetCurvedCoord(screen_coord, H_TUBE_CURVATURE_SCALE, screen_aspect);
 
-	#ifdef HSM_SPLIT_SCREEN_PRESET
+	if (H_SPLIT_SCREEN_ON == 1)
+	{
 		if (H_SPLIT_SCREEN_CENTER_FILL_MODE == 1)
 		{
 			// Take the sub-screen area and re-map it to 0-1
@@ -749,7 +752,7 @@ vec2 HSS_GetTubeCurvedCoord(vec2 screen_coord, vec2 screen_scale, float screen_a
 			// If this was flipped then flip it back
 			// tube_curved_coord = flip_tilt * HSS_GetFlippedCoordOnSplitAxis(tube_curved_coord, SCREEN_ASPECT) + (1 - flip_tilt) * tube_curved_coord;
 		}
-	#endif
+	}
 
 	tube_curved_coord = HSS_GetInverseScaledCoord(tube_curved_coord, black_edge_scale_offset);
 

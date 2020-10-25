@@ -71,7 +71,7 @@ float geom_tilt_angle_y = H_CURVATURE_3D_TILT_ANGLE_Y;
 
 // HSM Added
 ///////////////////////////////  HSM INCLUDES  ///////////////////////////////
-#include "../../hsm-screen-scale-functions.inc"
+#include "../../hsm-common-functions.inc"
 
 ///////////////////////////////////  HELPERS  //////////////////////////////////
 

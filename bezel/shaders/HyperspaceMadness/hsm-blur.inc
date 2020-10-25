@@ -1,7 +1,7 @@
 
 //#define ShowPlacementGuide
 
-#include "hsm-screen-scale-and-bezel-with-globals.inc"
+#include "hsm-globals-and-all-params.inc"
 
 #pragma stage vertex
 layout(location = 0) in vec4 Position;
@@ -71,10 +71,12 @@ void main()
 		float hbl_sharpness_falloff_speed = 1;
 		blur_ratio = HHLP_QuadraticBezier (clamp_0_1(blur_ratio - blur_midpoint), vec2(0.05, hbl_sharpness_falloff_speed));
 
-		#ifdef HSM_SPLIT_SCREEN_PRESET
-			float in_split_screen_area = HSS_GetSplitScreenAreaGradient(tube_coord_warped, 1.5, 0);
+		float in_split_screen_area = 0;
+		if (H_SPLIT_SCREEN_ON == 1)
+		{
+			in_split_screen_area = HSS_GetSplitScreenAreaGradient(tube_coord_warped, 1.5, 0);
 			blur_ratio = (1 - outside_tube_mask) * HHLP_EasePowerInOut(0.5 + HSS_GetSplitScreenAreaGradient(tube_coord_warped, 0.2, 1.5), 2) + outside_tube_mask * blur_ratio;
-		#endif
+		}
 
 		blur_ratio = H_BLUR_MIN + blur_ratio * (H_BLUR_MAX - H_BLUR_MIN);
 
@@ -114,9 +116,10 @@ void main()
 		vec4 blurred_color = vec4(col / k_total, 1.0);
 
 		// If this is used in a split screen preset and blending of the center area is requested add that to the 
-		#ifdef HSM_SPLIT_SCREEN_PRESET
+		if (H_SPLIT_SCREEN_ON == 1)
+		{
 			blend_with_unblurred = clamp(blend_with_unblurred + in_split_screen_area, 0, 1);
-		#endif
+		}
 
 		vec4 unblurred_color = texture(BR_MirrorLowResPass, vTexCoord);
 		FragColor = mix(unblurred_color, blurred_color, blend_with_unblurred);

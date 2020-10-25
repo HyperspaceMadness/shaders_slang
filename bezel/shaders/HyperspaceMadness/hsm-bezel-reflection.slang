@@ -1,7 +1,7 @@
 #version 450
 
 /*   
-hsm-mega-bezel-reflection
+hsm-image-layers
 
 Author: HyperspaceMadness - remimcgill@hotmail.com
 License: GPL
@@ -20,7 +20,7 @@ Thanks to:
 */
 
 /////////////// IMPORTS ///////////////
-#include "hsm-screen-scale-and-bezel-with-globals.inc"
+#include "hsm-globals-and-all-params.inc"
 
 /////////////// Helper Functions ///////////////
 
@@ -138,7 +138,7 @@ void main()
 	const float pi = 3.1415;
 
 	// Get amount to shift the point at the outer corner to match the overall position offset
-	vec2 pos_shift_offset = vec2(0, H_BZL_OUTER_POS_Y_OFFSET / 100) * SCREEN_SCALE.y / outermap_scale;
+	vec2 pos_shift_offset = vec2(0, H_BZL_OUTER_POSITION_Y / 100) * SCREEN_SCALE.y / outermap_scale;
 	pos_shift_offset *= outermap_coord.y > 0.5 ? 1 : -1;
 
 	// Get the direction vector from the inner corner of the bezel pointing at the outer corner 
@@ -311,8 +311,8 @@ void main()
 
 
 		float vignette_shadow_mask = 0;
-		vignette_shadow_mask += 0.75 * HHLP_QuadraticBezier(1 - HSS_GetVignetteFactor(VIEWPORT_COORD, H_BG_IMG_VIGNETTE_OPACITY), vec2(1, 0.5));
-		vignette_shadow_mask += 0.5 * H_BG_IMG_VIGNETTE_OPACITY * HHLP_QuadraticBezier(smoothstep(outside_ratio_warped, 0, 0.1), vec2(1, 0.5));
+		vignette_shadow_mask += 0.75 * HHLP_QuadraticBezier(1 - HSS_GetVignetteFactor(VIEWPORT_COORD, H_BG_VIGNETTE_OPACITY), vec2(1, 0.5));
+		vignette_shadow_mask += 0.5 * H_BG_VIGNETTE_OPACITY * HHLP_QuadraticBezier(smoothstep(outside_ratio_warped, 0, 0.1), vec2(1, 0.5));
 
 		// Edge Reflection
 		if (HGL_GLASSBORDER_ON == 1)

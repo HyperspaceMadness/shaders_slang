@@ -47,7 +47,7 @@ Uses a red/magenta/cyan/green pattern for even spacing of the LCD subpixels.
 */
 
 // HSM Added
-#include "../hsm-screen-scale-with-globals.inc"
+#include "../hsm-globals-and-screen-scale-params.inc"
 // End Addition
 
 layout(push_constant) uniform Push
@@ -78,7 +78,7 @@ layout(push_constant) uniform Push
 	// gamma_out;
 } params;
 
-// HSM Removed, because the global structure is already defined in hsm-screen-scale-with-globals.inc
+// HSM Removed, because the global structure is already defined in hsm-globals-and-screen-scale-params.inc
 //layout(std140, set = 0, binding = 0) uniform UBO
 //{
 //	mat4 MVP;

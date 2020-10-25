@@ -6,10 +6,10 @@
 //---------------------------------------------------------------------------------------------------
 // #pragma parameter H_BZL_TITLE "-----[ GENERATED BEZEL & FRAME ]-------------------------------" 0 0 0 1
 
-#pragma parameter H_BZL_OPACITY           "[ BEZEL ]  Opacity" 100 0 100 5
+#pragma parameter H_BZL_OPACITY                     "[ BEZEL ]  Opacity" 100 0 100 5
 float H_BZL_OPACITY = global.H_BZL_OPACITY / 100;
 
-#pragma parameter H_BZL_BLEND_MODE        "[ BEZEL ]  Blend Mode -  -1:Off 0:Normal, 1:Add, 2:Mult"  0 -1 2 1
+#pragma parameter H_BZL_BLEND_MODE                  "[ BEZEL ]  Blend Mode -  -1:Off 0:Normal, 1:Add, 2:Mult"  0 -1 2 1
 float H_BZL_BLEND_MODE = global.H_BZL_BLEND_MODE;
 
 #pragma parameter H_BZL_WIDTH 						"[ BEZEL ]  Width - Def 7.5" 7.5 -10 200 0.1
@@ -30,8 +30,8 @@ float H_BZL_OUTER_CORNER_RADIUS_SCALE = global.H_BZL_OUTER_CORNER_RADIUS_SCALE;
 #pragma parameter H_BZL_OUTER_CURVATURE_SCALE 		"[ BEZEL ]   Outer Curvature Scale" 0 0 5 0.05
 float H_BZL_OUTER_CURVATURE_SCALE = global.H_BZL_OUTER_CURVATURE_SCALE;
 
-#pragma parameter H_BZL_OUTER_POS_Y_OFFSET 				"[ BEZEL ]   Outer Edge Pos Y Offset" 0 -25 25 0.05
-float H_BZL_OUTER_POS_Y_OFFSET = global.H_BZL_OUTER_POS_Y_OFFSET;
+#pragma parameter H_BZL_OUTER_POSITION_Y 			"[ BEZEL ]   Outer Edge Position Y" 0 -25 25 0.05
+float H_BZL_OUTER_POSITION_Y = global.H_BZL_OUTER_POSITION_Y;
 
 #pragma parameter H_BZL_BRIGHTNESS 				    "[ BEZEL ]  Brightness - Def 30" 30 0 300 2
 float H_BZL_BRIGHTNESS = global.H_BZL_BRIGHTNESS;
@@ -73,7 +73,7 @@ float H_FRM_OPACITY = global.H_FRM_OPACITY / 100;
 float H_FRM_BLEND_MODE = global.H_FRM_BLEND_MODE;
 
 #pragma parameter H_FRM_THICKNESS 					"[ FRAME ]  Thickness" 7 0 200 0.2
-float H_FRM_THICKNESS = global.H_FRM_THICKNESS;
+float H_FRM_THICKNESS = global.H_FRM_THICKNESS / 100;
 
 #pragma parameter H_FRM_INNER_EDGE_THICKNESS 		"[ FRAME ]  Inner Edge Thickness" 1 0 50 0.05
 float H_FRM_INNER_EDGE_THICKNESS = global.H_FRM_INNER_EDGE_THICKNESS / 1000;

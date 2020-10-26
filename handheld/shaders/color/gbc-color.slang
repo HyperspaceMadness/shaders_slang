@@ -2,7 +2,7 @@
 
 layout(push_constant) uniform Push
 {
-   float brighten_screen;
+   float lighten_screen;
 } params;
 
 layout(std140, set = 0, binding = 0) uniform UBO
@@ -19,27 +19,29 @@ layout(std140, set = 0, binding = 0) uniform UBO
    Author: hunterk
    License: Public domain
 */
-// Shader that replicates the LCD dynamics from a GameBoy Advance
+// Shader that replicates the LCD dynamics from a GameBoy Color
 
-#pragma parameter brighten_screen "Brighten Screen" 0.5 -0.25 1.2 0.05
+#pragma parameter lighten_screen "Lighten Screen" 1.0 0.0 1.0 0.05
 
 #define target_gamma 2.2
 #define display_gamma 2.2
 #define sat 1.0
-#define lum 1.0
+#define lum 0.94
 #define contrast 1.0
 #define blr 0.0
 #define blg 0.0
 #define blb 0.0
-#define r 0.87
-#define g 0.66
-#define b 0.79
-#define rg 0.115
-#define rb 0.14
-#define gr 0.18
-#define gb 0.07
-#define br -0.05
-#define bg 0.225
+#define r 0.82
+#define g 0.665
+#define b 0.73
+#define rg 0.125
+#define rb 0.195
+#define gr 0.24
+#define gb 0.075
+#define br -0.06
+#define bg 0.21
+#define overscan_percent_x 0.0
+#define overscan_percent_y 0.0
 
 #pragma stage vertex
 layout(location = 0) in vec4 Position;
@@ -59,7 +61,7 @@ layout(set = 0, binding = 2) uniform sampler2D Source;
 
 void main()
 {
-   vec4 screen = pow(texture(Source, vTexCoord), vec4(target_gamma + (params.brighten_screen * -1.0))).rgba;
+   vec4 screen = pow(texture(Source, vTexCoord), vec4(target_gamma + (params.lighten_screen * -1.0))).rgba;
    vec4 avglum = vec4(0.5);
    screen = mix(screen, avglum, (1.0 - contrast));
    

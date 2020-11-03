@@ -3,15 +3,15 @@
 //      Add Color Correction
 //      Calculate Average Luminance and put in alpha channel
 //      Debug Drawing of the resolution & screen scaling info
-shader0 = ../bezel/shaders/HyperspaceMadness/hsm-prep-initial.slang
+shader0 = shaders/HyperspaceMadness/hsm-prep-initial.slang
 float_framebuffer0 = true
 
 // Color Correction with Dogway's awesome Grade shader
-shader1 = ../bezel/shaders/HyperspaceMadness/hsm-grade/hsm-grade.slang
+shader1 = shaders/HyperspaceMadness/hsm-dogway/hsm-grade.slang
 alias1  = AvgLumPass
 
 // Linearize Color ----------------------------------------------------------------
-shader2 = ../bezel/shaders/HyperspaceMadness/hsm-guest/hsm-guest-linearize.slang
+shader2 = shaders/HyperspaceMadness/hsm-guest/hsm-guest-linearize.slang
 filter_linear2 = false
 scale_type2 = source
 scale2 = 1.0
@@ -19,14 +19,14 @@ float_framebuffer2 = true
 alias2 = LinearizePass
 
 // Guest-Venom Pass ----------------------------------------------------------------
-shader3 = ../bezel/shaders/HyperspaceMadness/hsm-guest/hsm-guest-linearize_scanlines.slang
+shader3 = shaders/HyperspaceMadness/hsm-guest/hsm-guest-linearize_scanlines.slang
 filter_linear3 = true
 scale_type3 = source
 scale3 = 1
 float_framebuffer3 = true
 
 // Reduce resolution to a small consistent size so blur is consistent between different core resolutions
-shader4 = ../bezel/shaders/HyperspaceMadness/hsm-guest/hsm-get-linearize-pass.slang
+shader4 = shaders/HyperspaceMadness/hsm-guest/hsm-get-linearize-pass.slang
 filter_linear4 = true
 mipmap_input4 = true
 scale_type4 = absolute
@@ -34,7 +34,7 @@ scale_x4 = 320
 scale_y4 = 320
 
 // Guest-Venom Pass ----------------------------------------------------------------
-shader5 = ../bezel/shaders/HyperspaceMadness/hsm-guest/hsm-guest-blur_horiz.slang
+shader5 = shaders/HyperspaceMadness/hsm-guest/hsm-guest-blur_horiz.slang
 // mipmap_input5 = true // This is commented out on purpose, was causing small white dots appearing on final image
 filter_linear5 = true
 scale_type5 = source
@@ -42,7 +42,7 @@ scale5 = 1
 float_framebuffer5 = true
 
 // Guest-Venom Pass ----------------------------------------------------------------
-shader6 = ../bezel/shaders/HyperspaceMadness/hsm-guest/hsm-guest-blur_vert.slang
+shader6 = shaders/HyperspaceMadness/hsm-guest/hsm-guest-blur_vert.slang
 mipmap_input6 = true
 filter_linear6 = true
 scale_type6 = source
@@ -53,7 +53,7 @@ alias6 = GlowPass
 // CRT Shader - Guest-Venom ----------------------------------------------------------------
 //      Guest's Awesome Shader!!!
 //      Has been slightly altered to use the same scaling as the rest of the shders for the bezel & reflection
-shader7 = ../bezel/shaders/HyperspaceMadness/hsm-guest/hsm-crt-guest-dr-venom-with-scaling-mask-outside-screen.slang
+shader7 = shaders/HyperspaceMadness/hsm-guest/hsm-crt-guest-dr-venom-with-scaling-mask-outside-screen.slang
 mipmap_input7 = true
 filter_linear7 = true
 scale_type7 = viewport
@@ -68,13 +68,13 @@ shaders = 8
 // Define textures to be used by the different passes
 textures = "SamplerLUT1;SamplerLUT2;SamplerLUT3;ColoredGelImage;"
 
-SamplerLUT1 = ../bezel/shaders/HyperspaceMadness/textures/lut/16.png
+SamplerLUT1 = shaders/HyperspaceMadness/textures/lut/16.png
 SamplerLUT1_linear = true
-SamplerLUT2 = ../bezel/shaders/HyperspaceMadness/textures/lut/64.png
+SamplerLUT2 = shaders/HyperspaceMadness/textures/lut/64.png
 SamplerLUT2_linear = true
-SamplerLUT3 = ../bezel/shaders/HyperspaceMadness/textures/lut/other1_32.png
+SamplerLUT3 = shaders/HyperspaceMadness/textures/lut/other1_32.png
 SamplerLUT3_linear = true
-ColoredGelImage = ../bezel/shaders/HyperspaceMadness/textures/Transparent_DummyTexture_16x16.png
+ColoredGelImage = shaders/HyperspaceMadness/textures/Transparent_DummyTexture_16x16.png
 
 parameters = "H_MEGA_BEZEL_DEBUG;H_FLIP_VIEWPORT_AND_CORE_VERTICAL;H_ROTATE_CORE_IMAGE;H_ASPECT_RATIO_ORIENTATION;H_ASPECT_RATIO_MODE;H_ASPECT_RATIO_EXPLICIT;H_INT_SCALE_MODE;H_INT_SCALE_MULTIPLE_OFFSET;H_INT_SCALE_MULTIPLE_OFFSET_LONG;H_INT_SCALE_BORDER_MIN_HEIGHT;H_NON_INTEGER_SCALE;H_SCANLINE_DIRECTION;H_CORE_RES_SAMPLING_MULT_SCANLINE_DIR;H_CORE_RES_SAMPLING_MULT_OPPOSITE_DIR;H_INTERLACE_TRIGGER_RES;H_SCREEN_POSITION_X;H_SCREEN_POSITION_Y;H_CROP_OVERSCAN_TOP;H_CROP_OVERSCAN_BOTTOM;H_CROP_OVERSCAN_LEFT;H_CROP_OVERSCAN_RIGHT;H_CURVATURE_MODE;H_CURVATURE_3D_RADIUS;H_CURVATURE_3D_VIEW_DIST;H_CURVATURE_3D_TILT_ANGLE_X;H_CURVATURE_3D_TILT_ANGLE_X;H_CURVATURE_3D_TILT_ANGLE_Y;H_CURVATURE_2D_SCALE_LONG_AXIS;H_CURVATURE_2D_SCALE_SHORT_AXIS;H_COLOR_CRT_PROFILE;H_COLOR_SPACE;H_COLOR_TEMPERATURE;H_COLOR_SATURATION;H_COLOR_LUMINANCE;H_COLOR_BLACK_LEVEL;H_COLOR_NEGATIVE_CROP_BRIGHTNESS;H_COLOR_CRT_GAMMA;HSS_PHOSPHOR_PERSISTENCE;H_SCREEN_CORNER_RADIUS;H_SCREEN_EDGE_SHARPNESS;H_SCREENFX_VIGNETTE;H_SCREENFX_FAKE_SCANLINE_OPACITY;H_TUBE_BLACK_EDGE_THICKNESS;H_TUBE_CURVATURE_SCALE;GST_GLOW_GRADE;GDV_GLOW_STRENGTH;GDV_BLOOM_STRENGTH;GDV_BRIGHT_BOOST_DARK_COLORS;GDV_BRIGHT_BOOST_BRIGHT_COLORS;GDV_SCANLINE_TYPE;GDV_SCANLINE_SHAPE_EDGES_LOW;GDV_SCANLINE_SHAPE_CENTER_HIGH;GDV_SCANLINE_DARK_BEAM_SIZE_MIN;GDV_SCANLINE_BRIGHT_BEAM_SIZE_MAX;GDV_SCANLINE_OVERGROWN_BRIGHT_BEAM;GDV_SCANLINE_1_2_SATURATION;GDV_HORIZONTAL_SHARPNESS;GDV_SUBTRACTIVE_SHARPNESS;GDV_MASK_TYPE;GDV_MASK_SIZE;GDV_PVM_LIKE_COLORS;GDV_SLOTMASK_STRENGTH;GDV_SLOTMASK_WIDTH;GDV_SLOTMASK_HEIGHT;GDV_SLOTMASK_SIZE;GDV_MASK_5_TO_7_CUTOFF;GDV_MASK_4_TO_6_DARK;GDV_MASK_4_TO_6_LIGHT;GDV_MASK_0_7_STRENGTH;GDV_INTERLACE_MODE"
 

@@ -74,9 +74,29 @@ float H_NIGHT_DITHERING_SAMPLES = global.H_NIGHT_DITHERING_SAMPLES;
 
 
 //---------------------------------------------------------------------------------------------------
+//    CutOut in Image Layers
+//---------------------------------------------------------------------------------------------------
+
+#pragma parameter H_CUTOUT_SCALE_MODE           "[CUTOUT] Scale Mode - FullScrn, Tube, Bezel, BG, Bzl Img, Decal"  0 0 5 1
+float H_CUTOUT_SCALE_MODE = global.H_CUTOUT_SCALE_MODE;
+
+#pragma parameter H_CUTOUT_SCALE 				"[ CUTOUT ]  Scale" 100 -100 200 0.1
+float H_CUTOUT_SCALE = global.H_CUTOUT_SCALE / 100;
+
+#pragma parameter H_CUTOUT_SCALE_X 		        "[ CUTOUT ]  Scale X" 100 -100 200 0.1
+float H_CUTOUT_SCALE_X = global.H_CUTOUT_SCALE_X / 100;
+
+#pragma parameter H_CUTOUT_POS_Y 		        "[ CUTOUT ] Position Y" 0 -100 200 0.1
+float H_CUTOUT_POS_Y = global.H_CUTOUT_POS_Y / 100;
+
+#pragma parameter H_CUTOUT_CORNER_RADIUS 		"[ CUTOUT ]  Corner Radius - Def 0" 0 0 70 1
+float H_CUTOUT_CORNER_RADIUS = global.H_CUTOUT_CORNER_RADIUS;
+
+
+//---------------------------------------------------------------------------------------------------
 //    LAYERING DEBUG
 //---------------------------------------------------------------------------------------------------
-#pragma parameter H_LAYERING_DEBUG_MASK_MODE    "[ DEBUG ]  Mask - ALL, Tube, Bz-, Bz, Bz+, Fram, Fram+, BG  ___" -1 -1 7 1
+#pragma parameter H_LAYERING_DEBUG_MASK_MODE    "[ DEBUG ]  Mask - ALL, Tube, Bz-, Bz, Bz+, Fram, Fram+, BG  ___" -1 -2 7 1
 float H_LAYERING_DEBUG_MASK_MODE = global.H_LAYERING_DEBUG_MASK_MODE;
 
 
@@ -124,26 +144,32 @@ float H_CRT_SCREEN_BLEND_MODE = global.H_CRT_SCREEN_BLEND_MODE;
 //---------------------------------------------------------------------------------------------------
 //    CAB GLASS IMAGE
 //---------------------------------------------------------------------------------------------------
-#pragma parameter H_CAB_GLASS_OPACITY           "[ CAB GLASS ]  Opacity ________________________________________" 0 0 100 0.05
+#pragma parameter H_CAB_GLASS_OPACITY           "[ CAB GLASS ]  Opacity ________________________________________" 0 0 100 1
 float H_CAB_GLASS_OPACITY = global.H_CAB_GLASS_OPACITY / 100;
 
-#pragma parameter H_CAB_GLASS_BRIGHTNESS        "[ CAB GLASS ]  Brightness" 100 0 200 1
+#pragma parameter H_CAB_GLASS_BRIGHTNESS        "[ CAB GLASS ]  Brightness" 100 0 400 1
 float H_CAB_GLASS_BRIGHTNESS = global.H_CAB_GLASS_BRIGHTNESS / 100;
 
-#pragma parameter H_CAB_GLASS_BLEND_MODE        "[ CAB GLASS ]  Blend Mode  -1:Off 0:Normal, 1:Add, 2:Multiply"  1 -1 2 1
+#pragma parameter H_CAB_GLASS_BLEND_MODE        "[ CAB GLASS ]  Blend Mode  -1:Off 0:Normal, 1:Add, 2:Multiply"  0 -1 2 1
 float H_CAB_GLASS_BLEND_MODE = global.H_CAB_GLASS_BLEND_MODE;
 
-#pragma parameter H_CAB_GLASS_MASK_MODE         "[ CAB GLASS ] Mask - ALL, Tube, Bz-, Bz, Bz+, Fram, Fram+, BG" 1 0 7 1
+#pragma parameter H_CAB_GLASS_MASK_MODE         "[ CAB GLASS ] Mask - ALL, Tube, Bz-, Bz, Bz+, Fram, Fram+, BG" 0 0 7 1
 float H_CAB_GLASS_MASK_MODE = global.H_CAB_GLASS_MASK_MODE;
 
 #pragma parameter H_CAB_GLASS_CUTOUT_MODE       "[ CAB GLASS ]  Image Cutout Mode - 0:OFF 1:ON 2:Invert" 0 0 2 1
 float H_CAB_GLASS_CUTOUT_MODE = global.H_CAB_GLASS_CUTOUT_MODE;
 
-#pragma parameter H_CAB_GLASS_SCALE_MODE        "[ CAB GLASS ]  Scale Mode - Full, BG, Tube, Bzl, Decal, TopImg" 2 0 5 1
+#pragma parameter H_CAB_GLASS_SCALE_MODE        "[ CAB GLASS ]  Scale Mode - Full, BG, Tube, Bzl, Decal, TopImg" 0 0 5 1
 float H_CAB_GLASS_SCALE_MODE = global.H_CAB_GLASS_SCALE_MODE;
 
-#pragma parameter H_CAB_GLASS_SCALE             "[ CAB GLASS ]  Scale" 120 10 500 1
+#pragma parameter H_CAB_GLASS_SCALE             "[ CAB GLASS ]  Scale" 100 10 500 1
 float H_CAB_GLASS_SCALE = global.H_CAB_GLASS_SCALE / 100;
+
+#pragma parameter H_CAB_GLASS_SCALE_X             "[ CAB GLASS ]  Scale X" 100 10 500 1
+float H_CAB_GLASS_SCALE_X = global.H_CAB_GLASS_SCALE_X / 100;
+
+// #pragma parameter H_CAB_GLASS_POS_Y             "[ CAB GLASS ]  Position Y" 100 10 500 1
+// float H_CAB_GLASS_POS_Y = global.H_CAB_GLASS_POS_Y / 100;
 
 
 //---------------------------------------------------------------------------------------------------
@@ -166,6 +192,9 @@ float H_BZL_IMG_BLEND_MODE = global.H_BZL_IMG_BLEND_MODE;
 
 #pragma parameter H_BZL_IMG_MASK_MODE             "[ BEZEL IMG ]  Mask - ALL, Tube, Bz-, Bz, Bz+, Fram, Fram+, BG" 3 0 7 1
 float H_BZL_IMG_MASK_MODE = global.H_BZL_IMG_MASK_MODE;
+
+#pragma parameter H_BZL_IMG_CUTOUT_MODE           "[ BEZEL IMG ]  Cutout Mode - 0:OFF 1:ON 2:Invert" 0 0 2 1
+float H_BZL_IMG_CUTOUT_MODE = global.H_BZL_IMG_CUTOUT_MODE;
 
 #pragma parameter H_BZL_IMG_SCALE_MODE            "[ BEZEL IMG ]  Scale Mode - 0:FullScreen, 1:Tube, 2:Bezel, 3:BG"  1 0 3 1
 float H_BZL_IMG_SCALE_MODE = global.H_BZL_IMG_SCALE_MODE;
@@ -226,7 +255,7 @@ float H_LED_BLEND_MODE = global.H_LED_BLEND_MODE;
 #pragma parameter H_LED_MASK_MODE               "[ LED ]  Mask - ALL, Tube, Bz-, Bz, Bz+, Fram, Fram+, BG"   7 0 7 1
 float H_LED_MASK_MODE = global.H_LED_MASK_MODE;
 
-#pragma parameter H_LED_SCALE_MODE              "[ LED ]  Scale Mode - Full, BG, BzlImg, Decal, Top"  1 0 4 1
+#pragma parameter H_LED_SCALE_MODE              "[ LED ]  Scale Mode - FullScrn, Tube, Bezel, BG, Bzl Img, Decal"  0 0 5 1
 float H_LED_SCALE_MODE = global.H_LED_SCALE_MODE;
 
 
@@ -260,21 +289,6 @@ float H_TOP_POS_Y = global.H_TOP_POS_Y / 100;
 #pragma parameter H_TOP_MIRROR_WRAP             "[ TOP ]  Mirror Wrap" 1 0 1 1
 float H_TOP_MIRROR_WRAP = global.H_TOP_MIRROR_WRAP;
 
-//---------------------------------------------------------------------------------------------------
-//    CutOut in Image Layers
-//---------------------------------------------------------------------------------------------------
-
-#pragma parameter H_TOP_CUTOUT_MODE                 "[ TOP CUTOUT ]  Mode - 0:OFF 1:ON 2:Invert ____________________" 0 0 2 1
+#pragma parameter H_TOP_CUTOUT_MODE                 "[ TOP ]  Cutout Mode - 0:OFF 1:ON 2:Invert" 0 0 2 1
 float H_TOP_CUTOUT_MODE = global.H_TOP_CUTOUT_MODE;
 
-#pragma parameter H_IMAGE_CUTOUT_WIDTH 				"[ TOP CUTOUT ]  Width - Def 1" 1 -100 200 0.1
-float H_IMAGE_CUTOUT_WIDTH = global.H_IMAGE_CUTOUT_WIDTH / 100;
-
-#pragma parameter H_IMAGE_CUTOUT_HEIGHT 		    "[ TOP CUTOUT ]  Height - Def 1" 1 -100 200 0.1
-float H_IMAGE_CUTOUT_HEIGHT = global.H_IMAGE_CUTOUT_HEIGHT / 100;
-
-#pragma parameter H_IMAGE_CUTOUT_CORNER_RADIUS 		"[ TOP CUTOUT ]  Corner Radius - Def 0" 0 0 70 1
-float H_IMAGE_CUTOUT_CORNER_RADIUS = global.H_IMAGE_CUTOUT_CORNER_RADIUS;
-
-#pragma parameter H_IMAGE_CUTOUT_POS_Y 		        "[ TOP CUTOUT ] Position" 1 -100 200 0.1
-float H_IMAGE_CUTOUT_POS_Y = global.H_IMAGE_CUTOUT_POS_Y / 100;

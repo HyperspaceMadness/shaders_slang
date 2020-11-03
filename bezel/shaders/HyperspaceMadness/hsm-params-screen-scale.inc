@@ -8,7 +8,7 @@ Description:
 */
 
 // Screen Scale Required Parameters
-#pragma parameter H_MEGA_BEZEL_TITLE					"_____[ HSM MEGA BEZEL  ALPHA.2020-10-24-0 ]____________________" 0 0 0 0
+#pragma parameter H_MEGA_BEZEL_TITLE					"_____[ HSM MEGA BEZEL  ALPHA.2020-11-03-0 ]____________________" 0 0 0 0
 
 #pragma parameter H_MEGA_BEZEL_DEBUG					"[ DEBUG ]  Debug ON" 0 0 1 1
 float H_MEGA_BEZEL_DEBUG = global.H_MEGA_BEZEL_DEBUG;

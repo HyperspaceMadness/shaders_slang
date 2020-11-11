@@ -26,10 +26,10 @@ Thanks to:
 #define DEFAULT_BEZEL_SCALE_V 0.91159
 
 /////////////// DEFINES ///////////////
-#define BLEND_MODE_OFF -1
-#define BLEND_MODE_NORMAL 0
-#define BLEND_MODE_ADD 1
-#define BLEND_MODE_MULTIPLY 2
+#define BLEND_MODE_OFF 0
+#define BLEND_MODE_NORMAL 1
+#define BLEND_MODE_ADD 2
+#define BLEND_MODE_MULTIPLY 3
 
 #define MASK_MODE_ALL 0
 #define MASK_MODE_TUBE 1
@@ -158,6 +158,9 @@ vec4 BlendMultiply(vec4 color_under, vec4 color_over, float opacity)
 // Assumes Opacity is already encoded in alpha
 vec4 BlendModeLayerMix(vec4 color_under, vec4 color_over, float blend_mode, float mask_mode, float cutout_mode, float layer_opacity)
 {
+	if (blend_mode == 0)
+		return color_under;
+	
 	float cutout_mask = 1;
 	if (cutout_mode == 1)
 		cutout_mask = CUTOUT_MASK;
@@ -252,6 +255,21 @@ layout(set = 0, binding = 12) uniform sampler2D TopLayerVertImage;
 //////////////////////////////////////////////////////////////////////////////////////////////////
 void main()
 {
+	//----------------------------------------------------
+	// CRT Pass
+	//----------------------------------------------------
+	// Get the CRT pass and make it in linear space & mask the area outside the screen
+	vec4 crt_and_reflection_linear = texture(BR_CRTAndReflectionPass, VIEWPORT_COORD.xy); // HSS_Linearize(texture(BR_CRTAndReflectionPass, VIEWPORT_COORD.xy), HSS_DEFAULT_CRT_GAMMA);
+	crt_and_reflection_linear.a = 1;
+	vec4 crt_linear = crt_and_reflection_linear;
+
+	// If the reflection was supposed to be the last pass just return the sample for this layer
+	if (H_REFLECTION_IS_LAST_PASS == 1)
+	{
+		FragColor = crt_and_reflection_linear;
+		return;
+	}
+
 	vec2 tube_coord_warped = vec2(0, 0);
 	float outside_tube_mask = 0;
 	float edge_mask = 0;
@@ -260,16 +278,6 @@ void main()
 
 	vec2 tube_warped_coord_ctr = tube_coord_warped - 0.5;
 
-	//----------------------------------------------------
-	// CRT Pass
-	//----------------------------------------------------
-	// Get the CRT pass and make it in linear space & mask the area outside the screen
-
-
-	vec4 crt_and_reflection_linear = texture(BR_CRTAndReflectionPass, VIEWPORT_COORD.xy); // HSS_Linearize(texture(BR_CRTAndReflectionPass, VIEWPORT_COORD.xy), HSS_DEFAULT_CRT_GAMMA);
-	crt_and_reflection_linear.a = 1;
-
-	vec4 crt_linear = crt_and_reflection_linear;
 
 	vec2 screen_curved_coord = HSS_GetCurvedCoord(SCREEN_COORD, 1, SCREEN_ASPECT);
 
@@ -695,7 +703,7 @@ void main()
 
 		// NIGHT LIGHTING
 		if (H_NIGHT_OPACITY > 0)
-			if (H_BZL_IMG_BLEND_MODE != 1)
+			if (H_BZL_IMG_BLEND_MODE != BLEND_MODE_ADD)
 				bezel_and_frame_rgba = BlendMultiply(bezel_and_frame_rgba, night_lighting_image, H_NIGHT_OPACITY);
 
 		if (H_BZL_OPACITY > 0 )
@@ -746,7 +754,7 @@ void main()
 
 		// NIGHT LIGHTING
 		if (H_NIGHT_OPACITY > 0)
-			if (H_BZL_IMG_BLEND_MODE != 1)
+			if (H_BZL_IMG_BLEND_MODE != BLEND_MODE_ADD)
 				bezel_image = BlendMultiply(bezel_image, night_lighting_image, H_NIGHT_OPACITY);
 
 		// Premultiply Alpha
@@ -775,7 +783,7 @@ void main()
 
 		// NIGHT LIGHTING
 		if (H_NIGHT_OPACITY > 0)
-			if (H_DECAL_BLEND_MODE != 1)
+			if (H_DECAL_BLEND_MODE != BLEND_MODE_ADD)
 				decal_image = BlendMultiply(decal_image, night_lighting_image, H_NIGHT_OPACITY);
 
 		decal_image.rgb *= decal_image.a;
@@ -802,7 +810,7 @@ void main()
 
 		// NIGHT LIGHTING
 		if (H_NIGHT_OPACITY > 0)
-				if (H_TOP_BLEND_MODE != 1)
+				if (H_TOP_BLEND_MODE != BLEND_MODE_ADD)
 					top_image = BlendMultiply(top_image, night_lighting_image, H_NIGHT_OPACITY);
 
 		top_image.rgb *= top_image.a;
@@ -814,9 +822,6 @@ void main()
 	vec4 cab_glass_image = vec4(0);
 	if (H_CAB_GLASS_OPACITY > 0)
 	{
-		float H_CAB_GLASS_POS_Y = 0;
-		float H_CAB_GLASS_SCALE_KEEP_ASPECT = 1;
-
 		vec2 cab_glass_coord = GetScaledCoord(VIEWPORT_COORD, background_coord_no_mirror, screen_coord, bezel_outside_coord, bezel_image_coord, decal_coord,
 						vec2(H_CAB_GLASS_SCALE * H_CAB_GLASS_SCALE_X, H_CAB_GLASS_SCALE), 
 						vec2(0, H_CAB_GLASS_POS_Y), 
@@ -825,8 +830,9 @@ void main()
 
 		// Add Scaling
 		cab_glass_coord = (cab_glass_coord - 0.5) * 1 / H_CAB_GLASS_SCALE + 0.5;
-		
+
 		cab_glass_image = texture(CabinetGlassImage, cab_glass_coord.xy);
+
 		cab_glass_image = HSS_Linearize(cab_glass_image, HSS_DEFAULT_SRGB_GAMMA);
 		cab_glass_image.rgb *= H_CAB_GLASS_BRIGHTNESS;
 
@@ -836,10 +842,11 @@ void main()
 
 		// NIGHT LIGHTING
 		if (H_NIGHT_OPACITY > 0)
-			if (H_CAB_GLASS_BLEND_MODE != 1)
+			if (H_CAB_GLASS_BLEND_MODE != BLEND_MODE_ADD)
 				cab_glass_image = BlendMultiply(cab_glass_image, night_lighting_image, H_NIGHT_OPACITY);
 
-		cab_glass_image.rgb *= cab_glass_image.a;
+		
+		// cab_glass_image.rgb *= cab_glass_image.a;
 	}
 
 	//-----------------------------------------------------------------------------------------
@@ -849,11 +856,6 @@ void main()
 	vec4 led_image = vec4(0);
 	if (H_LED_OPACITY > 0)
 	{
-		float H_LED_SCALE_KEEP_ASPECT = 0;
-		float H_LED_SCALE = 1;
-		float H_LED_SCALE_X = 1;
-		float H_LED_POS_Y = 0;
-
 		vec2 led_coord = GetScaledCoord(VIEWPORT_COORD, background_coord_no_mirror, screen_coord, bezel_outside_coord, bezel_image_coord, decal_coord,
 						vec2(H_LED_SCALE * H_LED_SCALE_X, H_LED_SCALE), 
 						vec2(0, H_LED_POS_Y), 
@@ -939,10 +941,10 @@ void main()
 		if (H_BG_LAYER_ORDER == i)
 			frag_color_linear = BlendModeLayerMix(frag_color_linear, 
 													background_color, 
-													BLEND_MODE_NORMAL, 
+													H_BG_BLEND_MODE, 
 													H_BG_MASK_MODE, 
-													0,
-													1);
+													H_BG_CUTOUT_MODE,
+													H_BG_OPACITY);
 
 		// CRT SCREEN
 		if (H_CRT_LAYER_ORDER == i)
@@ -962,16 +964,6 @@ void main()
 														H_BZL_IMG_MASK_MODE, 
 														H_BZL_IMG_CUTOUT_MODE, 
 														H_BZL_IMG_OPACITY);
-
-		// CABINET GLASS
-		if (H_CAB_GLASS_LAYER_ORDER == i)
-			if (H_CAB_GLASS_OPACITY > 0)
-				frag_color_linear = BlendModeLayerMix(frag_color_linear, 
-														cab_glass_image, 
-														H_CAB_GLASS_BLEND_MODE, 
-														H_CAB_GLASS_MASK_MODE, 
-														H_CAB_GLASS_CUTOUT_MODE, 
-														H_CAB_GLASS_OPACITY);
 
 		// GENERATED BEZEL LAYER
 		if (H_BZL_LAYER_ORDER == i)
@@ -1005,6 +997,16 @@ void main()
 														H_FRM_OPACITY);
 			}
 
+		// CABINET GLASS
+		if (H_CAB_GLASS_LAYER_ORDER == i)
+			if (H_CAB_GLASS_OPACITY > 0)
+				frag_color_linear = BlendModeLayerMix(frag_color_linear, 
+														cab_glass_image, 
+														H_CAB_GLASS_BLEND_MODE, 
+														H_CAB_GLASS_MASK_MODE, 
+														H_CAB_GLASS_CUTOUT_MODE, 
+														H_CAB_GLASS_OPACITY);
+
 		// DECAL IMAGE
 		if (H_DECAL_LAYER_ORDER == i)
 			if (H_DECAL_OPACITY > 0)
@@ -1012,7 +1014,7 @@ void main()
 														decal_image, 
 														H_DECAL_BLEND_MODE, 
 														H_DECAL_MASK_MODE, 
-														0, 
+														H_DECAL_CUTOUT_MODE, 
 														H_DECAL_OPACITY);
 
 		// LED IMAGE
@@ -1022,7 +1024,7 @@ void main()
 														led_image, 
 														H_LED_BLEND_MODE, 
 														H_LED_MASK_MODE, 
-														0, 
+														H_LED_CUTOUT_MODE, 
 														H_LED_OPACITY);
 
 		// REFLECTION

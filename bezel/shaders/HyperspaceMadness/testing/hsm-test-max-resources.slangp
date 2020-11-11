@@ -386,20 +386,20 @@ shaders = 64
 
 // Define textures to be used by the different passes
 textures = "PresetTex_1;PresetTex_2;PresetTex_3;PresetTex_4;PresetTex_5;PresetTex_6;PresetTex_7;PresetTex_8;PresetTex_9;PresetTex_10;PresetTex_11;PresetTex_12;PresetTex_13;PresetTex_14;PresetTex_15;PresetTex_16;"
-PresetTex_1  = ./textures/resource_testing/PresetTex_1.png
-PresetTex_2  = ./textures/resource_testing/PresetTex_2.png
-PresetTex_3  = ./textures/resource_testing/PresetTex_3.png
-PresetTex_4  = ./textures/resource_testing/PresetTex_4.png
-PresetTex_5  = ./textures/resource_testing/PresetTex_5.png
-PresetTex_6  = ./textures/resource_testing/PresetTex_6.png
-PresetTex_7  = ./textures/resource_testing/PresetTex_7.png
-PresetTex_8  = ./textures/resource_testing/PresetTex_8.png
-PresetTex_9  = ./textures/resource_testing/PresetTex_9.png
-PresetTex_10 = ./textures/resource_testing/PresetTex_10.png
-PresetTex_11 = ./textures/resource_testing/PresetTex_11.png
-PresetTex_12 = ./textures/resource_testing/PresetTex_12.png
-PresetTex_13 = ./textures/resource_testing/PresetTex_13.png
-PresetTex_14 = ./textures/resource_testing/PresetTex_14.png
-PresetTex_15 = ./textures/resource_testing/PresetTex_15.png
-PresetTex_16 = ./textures/resource_testing/PresetTex_16.png
+PresetTex_1  = ./textures/PresetTex_1.png
+PresetTex_2  = ./textures/PresetTex_2.png
+PresetTex_3  = ./textures/PresetTex_3.png
+PresetTex_4  = ./textures/PresetTex_4.png
+PresetTex_5  = ./textures/PresetTex_5.png
+PresetTex_6  = ./textures/PresetTex_6.png
+PresetTex_7  = ./textures/PresetTex_7.png
+PresetTex_8  = ./textures/PresetTex_8.png
+PresetTex_9  = ./textures/PresetTex_9.png
+PresetTex_10 = ./textures/PresetTex_10.png
+PresetTex_11 = ./textures/PresetTex_11.png
+PresetTex_12 = ./textures/PresetTex_12.png
+PresetTex_13 = ./textures/PresetTex_13.png
+PresetTex_14 = ./textures/PresetTex_14.png
+PresetTex_15 = ./textures/PresetTex_15.png
+PresetTex_16 = ./textures/PresetTex_16.png
 

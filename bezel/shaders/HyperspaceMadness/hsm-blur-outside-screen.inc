@@ -1,7 +1,7 @@
 
 //#define ShowPlacementGuide
 
-#include "hsm-globals-and-all-params.inc"
+#include "hsm-globals-and-reflection-params.inc"
 
 #pragma stage vertex
 layout(location = 0) in vec4 Position;

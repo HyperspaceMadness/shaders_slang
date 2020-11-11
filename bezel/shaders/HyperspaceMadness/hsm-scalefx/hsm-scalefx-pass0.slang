@@ -52,7 +52,8 @@ layout(set = 0, binding = 0, std140) uniform UBO
    mat4 MVP;
 } global;
 
-#pragma parameter HSS_SCALEFX_ON 	"[SCALEFX]   ScaleFx ON - Must Increase Core Res Sampling ------" 0 0 1 1
+#pragma parameter H_SCALEFX_TITLE	"_____[ SCALEFX ]_______________________________________________" 0 0 0 0
+#pragma parameter HSS_SCALEFX_ON 	"[ SCALEFX ]   ScaleFx ON - Must Increase Core Res Sampling" 0 0 1 1
 #define HSS_SCALEFX_ON params.HSS_SCALEFX_ON
 
 #pragma stage vertex

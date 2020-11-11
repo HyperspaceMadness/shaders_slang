@@ -64,6 +64,7 @@ layout(std140, set = 0, binding = 0) uniform UBO
 
 	float H_SCREEN_CORNER_RADIUS;
 	float H_SCREEN_EDGE_SHARPNESS;
+float H_SCREEN_MASK_OUTSIDE_SCREEN;
 	float H_SCREENFX_VIGNETTE;
 	float H_SCREENFX_FAKE_SCANLINE_OPACITY;
 	float H_SCREENFX_FAKE_SCANLINE_BRIGHTNESS_CUTOFF;
@@ -149,14 +150,18 @@ layout(std140, set = 0, binding = 0) uniform UBO
 	float H_BZL_LAYER_ORDER;
 	float H_FRM_LAYER_ORDER;
 	float H_DECAL_LAYER_ORDER;
-float H_REFLECTION_LAYER_ORDER;
+	float H_REFLECTION_LAYER_ORDER;
 	float H_LED_LAYER_ORDER;
 	float H_TOP_LAYER_ORDER;
+
 	// Image Background
-	float H_BG_BRIGHTNESS;
+	float H_BG_OPACITY;
+float H_BG_BRIGHTNESS;
 	float H_BG_VIGNETTE_OPACITY;
 	float H_BG_APPLY_ADJUSTMENT;
+float H_BG_BLEND_MODE;
 	float H_BG_MASK_MODE;
+	float H_BG_CUTOUT_MODE;
 	float H_BG_SCALE_MODE;
 	float H_BG_SCALE_KEEP_ASPECT;
 	float H_BG_SCALE;
@@ -194,7 +199,7 @@ float H_REFLECTION_LAYER_ORDER;
 	float H_BZL_IMG_SCALE;
 	float H_BZL_IMG_SCALE_X;
 	float H_BZL_IMG_POS_Y;
-float H_BZL_IMG_USE_CURVATURE;
+	float H_BZL_IMG_USE_CURVATURE;
 
 
 	// Generated Bezel & Frame
@@ -206,10 +211,10 @@ float H_BZL_IMG_USE_CURVATURE;
 	// Reflection
 	float H_REFLECTION_MASK_MODE;
 	float H_CUTOUT_SCALE_MODE;
-float H_CUTOUT_SCALE;
+	float H_CUTOUT_SCALE;
 	float H_CUTOUT_SCALE_X;
 	float H_CUTOUT_CORNER_RADIUS;
-float H_CUTOUT_POS_Y;
+	float H_CUTOUT_POS_Y;
 	float H_REFLECTION_BLEND_MODE;
 
 	// Decal
@@ -221,6 +226,7 @@ float H_CUTOUT_POS_Y;
 	float H_DECAL_SCALE;
 	float H_DECAL_SCALE_X;
 	float H_DECAL_POS_Y;
+	float H_DECAL_CUTOUT_MODE;
 	
 	// Night Lighting
 	float H_NIGHT_OPACITY;
@@ -235,7 +241,13 @@ float H_CUTOUT_POS_Y;
 	float H_LED_OPACITY;
 	float H_LED_BLEND_MODE;
 	float H_LED_MASK_MODE;
+	float H_LED_CUTOUT_MODE;
 	float H_LED_SCALE_MODE;
+	float H_LED_SCALE_KEEP_ASPECT;
+	float H_LED_SCALE;
+	float H_LED_SCALE_X;
+	float H_LED_POS_Y;
+
 
 	// Top Image
 	float H_TOP_OPACITY;

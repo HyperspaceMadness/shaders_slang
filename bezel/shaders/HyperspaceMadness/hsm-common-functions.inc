@@ -1124,11 +1124,9 @@ vec4 HSS_GetPostCrtPreppedColor(vec4 in_color_linear, vec2 screen_curved_coord, 
 
 	out_color.a = in_color_linear.a;
 
-
 	// If we are not using this with the bezel we want
-	#ifdef MASK_OUTSIDE_SCREEN
+	if (H_SCREEN_MASK_OUTSIDE_SCREEN == 1)
 		out_color *= screen_mask;
-	#endif
 
 	// Apply the final Gamma
 	out_color = HSS_Delinearize(out_color, H_COLOR_CRT_GAMMA);

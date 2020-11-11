@@ -81,6 +81,7 @@ float H_SPLIT_SCREEN_AMOUNT;
 
 	float H_SCREEN_CORNER_RADIUS;
 	float H_SCREEN_EDGE_SHARPNESS;
+float H_SCREEN_MASK_OUTSIDE_SCREEN;
 	float H_SCREENFX_VIGNETTE;
 	float H_SCREENFX_FAKE_SCANLINE_OPACITY;
 	float H_SCREENFX_FAKE_SCANLINE_BRIGHTNESS_CUTOFF;
@@ -172,15 +173,18 @@ float H_REFLECTION_LAYER_ORDER;
 	float H_LED_LAYER_ORDER;
 	float H_TOP_LAYER_ORDER;
 	// Image Background
-	float H_BG_BRIGHTNESS;
+	float H_BG_OPACITY;
+float H_BG_BRIGHTNESS;
 	float H_BG_VIGNETTE_OPACITY;
 	float H_BG_APPLY_ADJUSTMENT;
+float H_BG_BLEND_MODE;
 float H_BG_MASK_MODE;
 	float H_BG_SCALE_MODE;
 	float H_BG_SCALE_KEEP_ASPECT;
 	float H_BG_SCALE;
 	float H_BG_SCALE_X;
 	float H_BG_POS_Y;
+float H_BG_CUTOUT_MODE;
 	float H_BG_MIRROR_WRAP;
 
 	// CRT Screen
@@ -197,6 +201,7 @@ float H_CAB_GLASS_CUTOUT_MODE;
 	float H_CAB_GLASS_SCALE;
 	float H_CAB_GLASS_SCALE_X;
 	float H_CAB_GLASS_POS_Y;
+float H_CAB_GLASS_CUTOUT_MODE;
 	float H_BZL_INNER_EDGE_SHADOW;
 
 
@@ -213,6 +218,7 @@ float H_BZL_IMG_CUTOUT_MODE;
 	float H_BZL_IMG_SCALE_X;
 	float H_BZL_IMG_POS_Y;
 float H_BZL_IMG_USE_CURVATURE;
+float H_BZL_IMG_CUTOUT_MODE;
 
 
 	// Generated Bezel & Frame
@@ -239,6 +245,7 @@ float H_CUTOUT_POS_Y;
 	float H_DECAL_SCALE;
 	float H_DECAL_SCALE_X;
 	float H_DECAL_POS_Y;
+float H_DECAL_CUTOUT_MODE;
 	
 	// Night Lighting
 	float H_NIGHT_OPACITY;
@@ -254,6 +261,11 @@ float H_CUTOUT_POS_Y;
 	float H_LED_BLEND_MODE;
 	float H_LED_MASK_MODE;
 	float H_LED_SCALE_MODE;
+float H_LED_SCALE_KEEP_ASPECT;
+float H_LED_SCALE;
+float H_LED_SCALE_X;
+float H_LED_POS_Y;
+
 
 	// Top Image
 	float H_TOP_OPACITY;

@@ -84,7 +84,7 @@ layout(std140, set = 0, binding = 0) uniform UBO
 // #define TEX2D(c) texture(tex, c)
 
 // HSM Added
-#define TEX2D(c) HSS_GetCroppedTexSample(tex, c)
+#define TEX2D(c) HSM_GetCroppedTexSample(tex, c)
 
 float curve_distance(float x, float sharp)
 {
@@ -161,11 +161,11 @@ void main()
    vTexCoord = TexCoord;
 
     // HSM Added
-    CROPPED_ORIGINAL_SIZE = HSS_GetCroppedRotatedOriginalSizeWithCoreResMult();
-	SCREEN_ASPECT = HSS_GetScreenAspect();
-	SCREEN_SCALE = HSS_GetScreenScale(SCREEN_ASPECT);
-	SCREEN_COORD = HSS_GetScreenVTexCoord(vTexCoord, SCREEN_SCALE);
-	USE_VERTICAL_SCANLINES = HSS_GetUseVerticalScanlines(SCREEN_ASPECT);
+    CROPPED_ORIGINAL_SIZE = HSM_GetCroppedRotatedOriginalSizeWithCoreResMult();
+	SCREEN_ASPECT = HSM_GetScreenAspect();
+	SCREEN_SCALE = HSM_GetScreenScale(SCREEN_ASPECT);
+	SCREEN_COORD = HSM_GetScreenVTexCoord(vTexCoord, SCREEN_SCALE);
+	USE_VERTICAL_SCANLINES = HSM_GetUseVerticalScanlines(SCREEN_ASPECT);
     // End Addition
 }
 
@@ -191,7 +191,7 @@ void main()
 
     // TODO implement Cropping
     // HSM Added
-    vec2 tex_size = HSS_GetCroppedRotatedOriginalSizeWithCoreResMult();
+    vec2 tex_size = HSM_GetCroppedRotatedOriginalSizeWithCoreResMult();
     // End Addition
 
     vec2 midpoint = vec2(0.5, 0.5);
@@ -201,7 +201,7 @@ void main()
     // HSM Removed
     // if (params.ESM_INTERLACING_TOGGLE > 0.5 && global.SourceSize.y >= 400)
 
-    if (params.ESM_INTERLACING_TOGGLE > 0.5 && tex_size.y >= H_SCANLINE_INTERLACE_TRIGGER_RES)
+    if (params.ESM_INTERLACING_TOGGLE > 0.5 && tex_size.y >= HSM_SCANLINE_INTERLACE_TRIGGER_RES)
     {
         tex_size.y *= 0.5;
 
@@ -223,8 +223,8 @@ void main()
     // HSM Added
     vec2 co = SCREEN_COORD;
     vec2 screen_coord = co;
-    vec2 screen_curved_coord = HSS_GetCurvedCoord(screen_coord, 1, SCREEN_ASPECT);
-    vec2 xy = HSS_GetMirrorWrappedCoord(screen_curved_coord);
+    vec2 screen_curved_coord = HSM_GetCurvedCoord(screen_coord, 1, SCREEN_ASPECT);
+    vec2 xy = HSM_GetMirrorWrappedCoord(screen_curved_coord);
 
     // HSM Removed
     // float corner_weight = 1;
@@ -259,7 +259,7 @@ void main()
     color_matrix[3] = filter_lanczos(coeffs_x, get_color_matrix(ORIG_LINEARIZED, tex_co + 2.0 * dy, dx));
 
     col = filter_lanczos(coeffs_y, color_matrix).rgb;
-    diff = HSS_GetCroppedTexSample(Source, xy).rgb;
+    diff = HSM_GetCroppedTexSample(Source, xy).rgb;
 
     float rgb_max = max(col.r, max(col.g, col.b));
 
@@ -358,6 +358,6 @@ void main()
     FragColor = vec4(col, 1);
 
 	// HSM Added Prep and add output gamma
-	FragColor = HSS_GetPostCrtPreppedColor(FragColor, screen_curved_coord, SCREEN_COORD, SCREEN_ASPECT, SCREEN_SCALE, ColoredGelImage, TubeHighlightImage);
+	FragColor = HSM_GetPostCrtPreppedColor(FragColor, screen_curved_coord, SCREEN_COORD, SCREEN_ASPECT, SCREEN_SCALE, ColoredGelImage, TubeHighlightImage);
 	// End Addition
 }

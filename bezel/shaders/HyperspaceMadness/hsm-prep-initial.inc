@@ -89,15 +89,15 @@ vec4 ApplyLUT(vec4 in_color, sampler2D in_LUT)
 
 vec4 AddText(vec2 in_coord, vec4 in_color)
 {
-   float screen_aspect = HSS_GetScreenAspect();
-   vec2 screen_scale = HSS_GetScreenScale(screen_aspect);
-   vec2 screen_size = HSS_GetScreenSize(screen_scale);
-   vec2 int_scale_mult = HSS_GetIntegerScaleMult(screen_size);
-   vec2 original_size = HSS_GetRotatedRawOriginalSize();
-   vec2 cropped_original_size = HSS_GetCroppedRotatedOriginalSize();
-   vec2 cropped_original_size_with_core_res_mult = HSS_GetCroppedRotatedOriginalSizeWithCoreResMult();
+   float screen_aspect = HSM_GetScreenAspect();
+   vec2 screen_scale = HSM_GetScreenScale(screen_aspect);
+   vec2 screen_size = HSM_GetScreenSize(screen_scale);
+   vec2 int_scale_mult = HSM_GetIntegerScaleMult(screen_size);
+   vec2 original_size = HSM_GetRotatedRawOriginalSize();
+   vec2 cropped_original_size = HSM_GetCroppedRotatedOriginalSize();
+   vec2 cropped_original_size_with_core_res_mult = HSM_GetCroppedRotatedOriginalSizeWithCoreResMult();
    
-   if (H_FLIP_VIEWPORT_AND_CORE_VERTICAL > 0.5) in_coord.y = 1 - in_coord.y;
+   if (HSM_FLIP_VIEWPORT_AND_CORE_VERTICAL > 0.5) in_coord.y = 1 - in_coord.y;
    
    vec4 out_color = in_color;
    out_color = mix(out_color, vec4(0, 0, 0, 1), GetTextMask(in_coord + 2 * vec2(1/global.OutputSize.x, 0), global.FinalViewportSize.xy, screen_size, original_size, cropped_original_size, cropped_original_size_with_core_res_mult, int_scale_mult, global.OriginalSize.xy));
@@ -113,16 +113,16 @@ void main()
    FragColor = texture(Source, vTexCoord);
 
    // Apply black level & gamma with input as non linearized
-   FragColor = HSS_ApplyBlackLevel(FragColor, 0);
+   FragColor = HSM_ApplyBlackLevel(FragColor, 0);
 
    // Phosphor Persistence
-   FragColor = HSS_ApplyPhosphorPersistence(FragColor, PassFeedback6, vTexCoord);
+   FragColor = HSM_ApplyPhosphorPersistence(FragColor, PassFeedback6, vTexCoord);
 
    // Put Average Luminance in the alpha channel
    FragColor.a = GetAverageLuma();
    
    //////// Draw text to show out_colorolutions ////////// 
-   if (H_MEGA_BEZEL_DEBUG == 1)
+   if (HSM_RESOLUTION_DEBUG_ON == 1)
    {
       FragColor = AddText(vTexCoord, FragColor);
    }

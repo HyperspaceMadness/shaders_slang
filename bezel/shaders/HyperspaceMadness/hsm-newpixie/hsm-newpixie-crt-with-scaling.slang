@@ -76,10 +76,10 @@ layout(push_constant) uniform Push
 // #define frametexture frametexture
 
 // Calculate values for fragment stage
-vec2 CROPPED_ORIGINAL_SIZE = HSS_GetCroppedRotatedOriginalSizeWithCoreResMult();
-float SCREEN_ASPECT = HSS_GetScreenAspect();
-vec2 SCREEN_SCALE = HSS_GetScreenScale(SCREEN_ASPECT);
-float USE_VERTICAL_SCANLINES = HSS_GetUseVerticalScanlines(SCREEN_ASPECT);
+vec2 CROPPED_ORIGINAL_SIZE = HSM_GetCroppedRotatedOriginalSizeWithCoreResMult();
+float SCREEN_ASPECT = HSM_GetScreenAspect();
+vec2 SCREEN_SCALE = HSM_GetScreenScale(SCREEN_ASPECT);
+float USE_VERTICAL_SCANLINES = HSM_GetUseVerticalScanlines(SCREEN_ASPECT);
 
 #pragma stage vertex
 layout(location = 0) in vec4 Position;
@@ -94,7 +94,7 @@ void main()
     // gl_Position = global.MVP * modpos;
     gl_Position = global.MVP * Position;
     vTexCoord = TexCoord;
-    SCREEN_COORD = HSS_GetScreenVTexCoord(vTexCoord, SCREEN_SCALE);
+    SCREEN_COORD = HSM_GetScreenVTexCoord(vTexCoord, SCREEN_SCALE);
 }
 
 #pragma stage fragment
@@ -115,7 +115,7 @@ vec3 tsample( sampler2D samp, vec2 tc, float offs, vec2 resolution )
     // vec3 s = pow( abs( texture( samp, vec2( tc.x, 1.0-tc.y ) ).rgb), vec3( 2.2 ) );
     
     // HSM Added
-    vec3 s = pow( abs( HSS_GetCroppedTexSample( samp, vec2(tc.x, tc.y) ).rgb), vec3( 2.2 ) );
+    vec3 s = pow( abs( HSM_GetCroppedTexSample( samp, vec2(tc.x, tc.y) ).rgb), vec3( 2.2 ) );
     
     return s*vec3(1.25);
     }
@@ -161,8 +161,8 @@ void main()
     // HSM Removed
     // vec2 curved_uv = mix( curve( uv ), uv, 0.4 );
 
-    vec2 screen_curved_coord = HSS_GetCurvedCoord(uv, 1, SCREEN_ASPECT);
-    vec2 curved_uv = HSS_GetMirrorWrappedCoord(screen_curved_coord);
+    vec2 screen_curved_coord = HSM_GetCurvedCoord(uv, 1, SCREEN_ASPECT);
+    vec2 curved_uv = HSM_GetMirrorWrappedCoord(screen_curved_coord);
     // vec2 screen_curved_coord = curve(uv);
     // vec2 curved_uv = mix( screen_curved_coord, uv, 0.4 );
 
@@ -214,7 +214,7 @@ void main()
     col *= vec3(0.95,1.05,0.95);
     col = clamp(col*1.3 + 0.75*col*col + 1.25*col*col*col*col*col,vec3(0.0),vec3(10.0));
 	
-    // HSM Removed - Vignette is added in HSS_GetPostCrtPreppedColor
+    // HSM Removed - Vignette is added in HSM_GetPostCrtPreppedColor
     // /* Vignette */
     // float vig = (0.1 + 1.0*16.0*curved_uv.x*curved_uv.y*(1.0-curved_uv.x)*(1.0-curved_uv.y));
     // vig = 1.3*pow(vig,0.5);
@@ -233,12 +233,12 @@ void main()
     float s = pow(scans,0.9);
 
     // Approximate adjustments to get a similar result to what newpixie generates at this point
-    // col = HSS_Linearize(HSS_GetCroppedTexSample(backbuffer, curved_uv), 2).rgb;
+    // col = HSM_Linearize(HSM_GetCroppedTexSample(backbuffer, curved_uv), 2).rgb;
     // col *= 1.25;
     // col *= vec3(1.1, 1.20, 1.1);
     // col = clamp(col*1.3 + 0.75*col*col + 1.25*col*col*col*col*col,vec3(0.0),vec3(10.0));
 
-    float outside_screen_mask = 1 - HSS_GetCornerMask(screen_curved_coord, SCREEN_ASPECT, 0, 1);
+    float outside_screen_mask = 1 - HSM_GetCornerMask(screen_curved_coord, SCREEN_ASPECT, 0, 1);
     s = mix(s, 0.4, outside_screen_mask);
 
     col = col * vec3(s);
@@ -275,6 +275,6 @@ void main()
 
     // HSM Added
     FragColor = clamp(FragColor, 0, 1);
-    FragColor = HSS_Linearize(FragColor, HSS_DEFAULT_CRT_GAMMA);
-    FragColor = HSS_GetPostCrtPreppedColor(FragColor, screen_curved_coord, SCREEN_COORD, SCREEN_ASPECT, SCREEN_SCALE, ColoredGelImage, TubeHighlightImage);
+    FragColor = HSM_Linearize(FragColor, HSM_DEFAULT_CRT_GAMMA);
+    FragColor = HSM_GetPostCrtPreppedColor(FragColor, screen_curved_coord, SCREEN_COORD, SCREEN_ASPECT, SCREEN_SCALE, ColoredGelImage, TubeHighlightImage);
 }

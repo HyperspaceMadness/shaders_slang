@@ -225,7 +225,7 @@ layout(std140, set = 0, binding = 0) uniform UBO
 // #define interlace_res         params.interlace_res
 
 // HSM Added
-#define interlace_res H_SCANLINE_INTERLACE_TRIGGER_RES
+#define interlace_res HSM_SCANLINE_INTERLACE_TRIGGER_RES
 
 // HSM Removed (Moved it to the top)
 // #pragma parameter bloom "Bloom Strength" 0.0 0.0 2.0 0.1
@@ -233,7 +233,7 @@ layout(std140, set = 0, binding = 0) uniform UBO
 // #pragma parameter scans "Scanline 1&2 Saturation" 0.5 0.0 1.0 0.1
 // #define scans         	params.scans     // scanline saturation
 
-#define COMPAT_TEXTURE(c,d) HSS_GetCroppedTexSample(c,d)
+#define COMPAT_TEXTURE(c,d) HSM_GetCroppedTexSample(c,d)
 // #define TEX0 vTexCoord
 // #define InputSize SourceSize
 // #define TextureSize SourceSize
@@ -242,17 +242,17 @@ layout(std140, set = 0, binding = 0) uniform UBO
 // #define SourceSize global.SourceSize
 // HSM Added
 #define SourceSize CROPPED_ORIGINAL_SIZE
-// #define SourceSize HSS_GetCroppedRotatedOriginalSizeWithCoreResMult()
+// #define SourceSize HSM_GetCroppedRotatedOriginalSizeWithCoreResMult()
 // End Addition
 
 #define OutputSize global.OutputSize
 #define gl_FragCoord (vTexCoord * OutputSize.xy)
 
 // Calculate values for fragment stage
-vec2 CROPPED_ORIGINAL_SIZE = HSS_GetCroppedRotatedOriginalSizeWithCoreResMult();
-float SCREEN_ASPECT = HSS_GetScreenAspect();
-vec2 SCREEN_SCALE = HSS_GetScreenScale(SCREEN_ASPECT);
-float USE_VERTICAL_SCANLINES = HSS_GetUseVerticalScanlines(SCREEN_ASPECT);
+vec2 CROPPED_ORIGINAL_SIZE = HSM_GetCroppedRotatedOriginalSizeWithCoreResMult();
+float SCREEN_ASPECT = HSM_GetScreenAspect();
+vec2 SCREEN_SCALE = HSM_GetScreenScale(SCREEN_ASPECT);
+float USE_VERTICAL_SCANLINES = HSM_GetUseVerticalScanlines(SCREEN_ASPECT);
 
 
 #pragma stage vertex
@@ -267,7 +267,7 @@ void main()
 {
 	gl_Position = global.MVP * Position;
 	vTexCoord = TexCoord * 1.00001;
-	SCREEN_COORD = HSS_GetScreenVTexCoord(vTexCoord, SCREEN_SCALE);
+	SCREEN_COORD = HSM_GetScreenVTexCoord(vTexCoord, SCREEN_SCALE);
 }
 
 #pragma stage fragment
@@ -556,8 +556,8 @@ void main()
 	// HSM Removed
 	float TATE = USE_VERTICAL_SCANLINES;
 
-	vec2 screen_curved_coord = HSS_GetCurvedCoord(SCREEN_COORD, 1, SCREEN_ASPECT);
-	vec2 pos = HSS_GetMirrorWrappedCoord(screen_curved_coord);
+	vec2 screen_curved_coord = HSM_GetCurvedCoord(SCREEN_COORD, 1, SCREEN_ASPECT);
+	vec2 pos = HSM_GetMirrorWrappedCoord(screen_curved_coord);
 
 	vec2 coffset = vec2(0.5, 0.5);
 	bool use_interlace = (interlace_mode > 0.5 && interlace_mode < 2.5 && interlace_res <= mix(SourceSize.y, SourceSize.x, TATE));
@@ -808,7 +808,7 @@ void main()
 	FragColor = vec4(color, 1);
 	
 	// Prep and add output gamma
-	FragColor = HSS_GetPostCrtPreppedColor(FragColor, screen_curved_coord, SCREEN_COORD, SCREEN_ASPECT, SCREEN_SCALE, ColoredGelImage, TubeHighlightImage);
+	FragColor = HSM_GetPostCrtPreppedColor(FragColor, screen_curved_coord, SCREEN_COORD, SCREEN_ASPECT, SCREEN_SCALE, ColoredGelImage, TubeHighlightImage);
 	// End Addition
 }
 

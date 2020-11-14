@@ -106,10 +106,10 @@ void main()
     bloom_tex_uv = tex_uv;
 
     // HSM Added
-    float screen_aspect = HSS_GetScreenAspect();
-    vec2 screen_scale = HSS_GetScreenScale(screen_aspect);
-    vec2 position_offset = HSS_GetPositionOffset();
-    halation_tex_uv = HSS_GetVTexCoordWithArgs(halation_tex_uv, screen_scale, position_offset);
+    float screen_aspect = HSM_GetScreenAspect();
+    vec2 screen_scale = HSM_GetScreenScale(screen_aspect);
+    vec2 position_offset = HSM_GetPositionOffset();
+    halation_tex_uv = HSM_GetVTexCoordWithArgs(halation_tex_uv, screen_scale, position_offset);
 
     //  We're horizontally blurring the bloom input (vertically blurred
     //  brightpass).  Get the uv distance between output pixels / input texels

@@ -124,16 +124,16 @@ void main()
     //scanline_texture_size_inv = scanline_texture_size_inv;
 
     // HSM Added
-    CROPPED_ORIGINAL_SIZE = HSS_GetCroppedRotatedOriginalSizeWithCoreResMult();
-	SCREEN_ASPECT = HSS_GetScreenAspect();
-	SCREEN_SCALE = HSS_GetScreenScale(SCREEN_ASPECT);
-	// SCREEN_COORD = HSS_GetScreenVTexCoord(vTexCoord, SCREEN_SCALE);
-	USE_VERTICAL_SCANLINES = HSS_GetUseVerticalScanlines(SCREEN_ASPECT);
+    CROPPED_ORIGINAL_SIZE = HSM_GetCroppedRotatedOriginalSizeWithCoreResMult();
+	SCREEN_ASPECT = HSM_GetScreenAspect();
+	SCREEN_SCALE = HSM_GetScreenScale(SCREEN_ASPECT);
+	// SCREEN_COORD = HSM_GetScreenVTexCoord(vTexCoord, SCREEN_SCALE);
+	USE_VERTICAL_SCANLINES = HSM_GetUseVerticalScanlines(SCREEN_ASPECT);
 
-    vec2 position_offset = HSS_GetPositionOffset();
-    scanline_tex_uv = HSS_GetVTexCoordWithArgs(scanline_tex_uv, SCREEN_SCALE, position_offset);
-    blur3x3_tex_uv = HSS_GetVTexCoordWithArgs(blur3x3_tex_uv, SCREEN_SCALE, position_offset);
-    halation_tex_uv = HSS_GetVTexCoordWithArgs(halation_tex_uv, SCREEN_SCALE, position_offset);
+    vec2 position_offset = HSM_GetPositionOffset();
+    scanline_tex_uv = HSM_GetVTexCoordWithArgs(scanline_tex_uv, SCREEN_SCALE, position_offset);
+    blur3x3_tex_uv = HSM_GetVTexCoordWithArgs(blur3x3_tex_uv, SCREEN_SCALE, position_offset);
+    halation_tex_uv = HSM_GetVTexCoordWithArgs(halation_tex_uv, SCREEN_SCALE, position_offset);
     // End Addition
 
     //  Get a consistent name for the final mask texture size.  Sample mode 0
@@ -205,7 +205,7 @@ void main()
     //     VERTICAL_SCANLINEStexture_size, scanline_texture_size_inv);
 
     // HSM Added
-    vec2 scanline_tex_mirror_wrap_uv = HSS_GetMirrorWrapCoord(scanline_tex_uv);
+    vec2 scanline_tex_mirror_wrap_uv = HSM_GetMirrorWrapCoord(scanline_tex_uv);
     const float3 scanline_color_dim = sample_rgb_scanline_horizontal(VERTICAL_SCANLINEStexture, 
                                                                     scanline_tex_mirror_wrap_uv,
                                                                     VERTICAL_SCANLINEStexture_size, 

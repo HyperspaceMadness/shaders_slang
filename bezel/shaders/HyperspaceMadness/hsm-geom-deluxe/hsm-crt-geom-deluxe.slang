@@ -101,11 +101,11 @@ void main()
    v_texCoord = TexCoord;
   
   // HSM Added
-  CROPPED_ORIGINAL_SIZE = HSS_GetCroppedRotatedOriginalSizeWithCoreResMult();
-	SCREEN_ASPECT = HSS_GetScreenAspect();
-	SCREEN_SCALE = HSS_GetScreenScale(SCREEN_ASPECT);
-	SCREEN_COORD = HSS_GetScreenVTexCoord(v_texCoord, SCREEN_SCALE);
-	USE_VERTICAL_SCANLINES = HSS_GetUseVerticalScanlines(SCREEN_ASPECT);
+  CROPPED_ORIGINAL_SIZE = HSM_GetCroppedRotatedOriginalSizeWithCoreResMult();
+	SCREEN_ASPECT = HSM_GetScreenAspect();
+	SCREEN_SCALE = HSM_GetScreenScale(SCREEN_ASPECT);
+	SCREEN_COORD = HSM_GetScreenVTexCoord(v_texCoord, SCREEN_SCALE);
+	USE_VERTICAL_SCANLINES = HSM_GetUseVerticalScanlines(SCREEN_ASPECT);
     // End Addition
 
   // // Precalculate a bunch of useful values we'll need in the fragment
@@ -168,9 +168,9 @@ layout(set = 0, binding = 6) uniform sampler2D TubeHighlightImage;
 
 // HSM Added
 #ifdef LINEAR_PROCESSING
-#       define TEX2D(c) pow(HSS_GetCroppedTexSample(PreCRTPass, (c)), vec4(CRTgamma))
+#       define TEX2D(c) pow(HSM_GetCroppedTexSample(PreCRTPass, (c)), vec4(CRTgamma))
 #else
-#       define TEX2D(c) HSS_GetCroppedTexSample(PreCRTPass, (c))
+#       define TEX2D(c) HSM_GetCroppedTexSample(PreCRTPass, (c))
 #endif
 
 // float intersect(vec2 xy , vec2 sinangle, vec2 cosangle)
@@ -278,8 +278,8 @@ void main()
   // float cval = corner(xy);
 
 // HSM Added
-	vec2 screen_curved_coord = HSS_GetCurvedCoord(SCREEN_COORD, 1, SCREEN_ASPECT);
-  xy = HSS_GetMirrorWrappedCoord(screen_curved_coord);
+	vec2 screen_curved_coord = HSM_GetCurvedCoord(SCREEN_COORD, 1, SCREEN_ASPECT);
+  xy = HSM_GetMirrorWrappedCoord(screen_curved_coord);
   vec2 xy0 = xy;
   // End Addition
 
@@ -348,7 +348,7 @@ void main()
   vec3 mul_res  = (col * weights + col2 * weights2).rgb;
 
   // halation and corners
-  vec3 blur = pow(HSS_GetCroppedTexSample(blur_texture,xy0).rgb, vec3(CRTgamma.x));
+  vec3 blur = pow(HSM_GetCroppedTexSample(blur_texture,xy0).rgb, vec3(CRTgamma.x));
   // HSM Removed
   // mul_res = mix(mul_res, blur, halation.x) * vec3(cval);
   // HSM Added
@@ -369,7 +369,7 @@ void main()
   FragColor = vec4(mul_res*mask, col.a);
 
   // HSM Added Prep and add output gamma
-  FragColor = HSS_Linearize(FragColor, HSS_DEFAULT_SRGB_GAMMA);
-	FragColor = HSS_GetPostCrtPreppedColor(FragColor, screen_curved_coord, SCREEN_COORD, SCREEN_ASPECT, SCREEN_SCALE, ColoredGelImage, TubeHighlightImage);
+  FragColor = HSM_Linearize(FragColor, HSM_DEFAULT_SRGB_GAMMA);
+	FragColor = HSM_GetPostCrtPreppedColor(FragColor, screen_curved_coord, SCREEN_COORD, SCREEN_ASPECT, SCREEN_SCALE, ColoredGelImage, TubeHighlightImage);
 	// End Addition
 }

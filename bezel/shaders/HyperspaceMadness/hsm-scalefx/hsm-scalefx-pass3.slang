@@ -46,11 +46,11 @@ layout(push_constant) uniform Push
 {
 	vec4 SourceSize;
 	float SFX_SCN;
-	float HSS_SCALEFX_ON;
+	float HSM_SCALEFX_ON;
 } params;
 
-#pragma parameter HSS_SCALEFX_ON 	"[ SCALEFX ]   ScaleFx ON - Must Increase Core Res Sampling" 0 0 1 1
-#define HSS_SCALEFX_ON params.HSS_SCALEFX_ON
+#pragma parameter HSM_SCALEFX_ON 	"[ SCALEFX ]   ScaleFx ON - Must Increase Core Res Sampling" 0 0 1 1
+#define HSM_SCALEFX_ON params.HSM_SCALEFX_ON
 
 // #pragma parameter SFX_SCN "ScaleFX Filter Corners" 1.0 0.0 1.0 1.0
 #define SFX_SCN 1
@@ -104,7 +104,7 @@ bvec4 loadOr(vec4 x){
 
 void main()
 {
-	if (HSS_SCALEFX_ON < 0.5) 
+	if (HSM_SCALEFX_ON < 0.5) 
 	{
 		FragColor = texture(Source, vTexCoord);
 		return;

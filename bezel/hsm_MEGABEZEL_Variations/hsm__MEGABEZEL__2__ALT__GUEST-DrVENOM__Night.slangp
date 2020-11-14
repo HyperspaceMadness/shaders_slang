@@ -22,8 +22,8 @@ LEDImage = ../shaders/HyperspaceMadness/textures/Transparent_DummyTexture_16x16.
 TopLayerImage = ../shaders/HyperspaceMadness/textures/Transparent_DummyTexture_16x16.png
 TopLayerVertImage = ../shaders/HyperspaceMadness/textures/Transparent_DummyTexture_16x16.png
 
-parameters = "H_BG_VIGNETTE_OPACITY;H_BZL_COLOR_VALUE;H_NIGHT_OPACITY"
+parameters = "HSM_BG_VIGNETTE_OPACITY;HSM_BZL_COLOR_VALUE;HSM_NIGHT_OPACITY"
 
-H_BG_VIGNETTE_OPACITY = 0
-H_BZL_COLOR_VALUE = 30
-H_NIGHT_OPACITY = 98
+HSM_BG_VIGNETTE_OPACITY = 0
+HSM_BZL_COLOR_VALUE = 30
+HSM_NIGHT_OPACITY = 98

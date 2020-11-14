@@ -46,7 +46,7 @@ layout(push_constant) uniform Push
 	vec4 SourceSize;
 	float SFX_CLR;
 	float SFX_SAA;
-	float HSS_SCALEFX_ON;
+	float HSM_SCALEFX_ON;
 } params;
 
 
@@ -61,8 +61,8 @@ layout(set = 0, binding = 0, std140) uniform UBO
    mat4 MVP;
 } global;
 
-#pragma parameter HSS_SCALEFX_ON 	"[ SCALEFX ]   ScaleFx ON - Must Increase Core Res Sampling" 0 0 1 1
-#define HSS_SCALEFX_ON params.HSS_SCALEFX_ON
+#pragma parameter HSM_SCALEFX_ON 	"[ SCALEFX ]   ScaleFx ON - Must Increase Core Res Sampling" 0 0 1 1
+#define HSM_SCALEFX_ON params.HSM_SCALEFX_ON
 
 #pragma stage vertex
 layout(location = 0) in vec4 Position;
@@ -93,7 +93,7 @@ float str(float d, vec2 a, vec2 b){
 
 void main()
 {
-	if (HSS_SCALEFX_ON < 0.5) 
+	if (HSM_SCALEFX_ON < 0.5) 
 	{
 		FragColor = texture(Source, vTexCoord);
 		return;

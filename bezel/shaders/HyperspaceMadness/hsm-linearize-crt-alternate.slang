@@ -28,5 +28,5 @@ layout(set = 0, binding = 2) uniform sampler2D BR_CRTPassAlternate;
 
 void main()
 {
-   FragColor = HSS_Linearize(texture(BR_CRTPassAlternate, vTexCoord), HSS_DEFAULT_CRT_GAMMA);
+   FragColor = HSM_Linearize(texture(BR_CRTPassAlternate, vTexCoord), HSM_DEFAULT_CRT_GAMMA);
 }

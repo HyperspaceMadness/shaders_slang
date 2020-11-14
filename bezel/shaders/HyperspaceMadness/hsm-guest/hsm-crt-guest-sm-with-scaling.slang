@@ -164,7 +164,7 @@ layout(push_constant) uniform Push
 // #define COMPAT_TEXTURE(c,d) texture(c,d)
 
 // HSM Added
-#define COMPAT_TEXTURE(c,d) HSS_GetCroppedTexSample(c,d)
+#define COMPAT_TEXTURE(c,d) HSM_GetCroppedTexSample(c,d)
 // End Addition
 
 // HSM Removed
@@ -191,11 +191,11 @@ void main()
 	gl_Position = global.MVP * Position;
 	vTexCoord = TexCoord;
 
-	CROPPED_ORIGINAL_SIZE = HSS_GetCroppedRotatedOriginalSizeWithCoreResMult();
-	SCREEN_ASPECT = HSS_GetScreenAspect();
-	SCREEN_SCALE = HSS_GetScreenScale(SCREEN_ASPECT);
-	SCREEN_COORD = HSS_GetScreenVTexCoord(vTexCoord, SCREEN_SCALE);
-	USE_VERTICAL_SCANLINES = HSS_GetUseVerticalScanlines(SCREEN_ASPECT);
+	CROPPED_ORIGINAL_SIZE = HSM_GetCroppedRotatedOriginalSizeWithCoreResMult();
+	SCREEN_ASPECT = HSM_GetScreenAspect();
+	SCREEN_SCALE = HSM_GetScreenScale(SCREEN_ASPECT);
+	SCREEN_COORD = HSM_GetScreenVTexCoord(vTexCoord, SCREEN_SCALE);
+	USE_VERTICAL_SCANLINES = HSM_GetUseVerticalScanlines(SCREEN_ASPECT);
 }
 
 #pragma stage fragment
@@ -331,8 +331,8 @@ void main()
 	*/
 	
 	// HSM Added
-	vec2 screen_curved_coord = HSS_GetCurvedCoord(SCREEN_COORD, 1, SCREEN_ASPECT);
-	tex = HSS_GetMirrorWrappedCoord(screen_curved_coord);
+	vec2 screen_curved_coord = HSM_GetCurvedCoord(SCREEN_COORD, 1, SCREEN_ASPECT);
+	tex = HSM_GetMirrorWrappedCoord(screen_curved_coord);
 	// End Addition
 	
 	vec2 OGL2Pos = tex * SourceSize1.xy - vec2(0.5,0.5);
@@ -598,6 +598,6 @@ void main()
 
 	// // HSM Addition
 	FragColor = vec4(color, 1.0);
-	FragColor = HSS_GetPostCrtPreppedColor(FragColor, screen_curved_coord, SCREEN_COORD, SCREEN_ASPECT, SCREEN_SCALE, ColoredGelImage, TubeHighlightImage);
+	FragColor = HSM_GetPostCrtPreppedColor(FragColor, screen_curved_coord, SCREEN_COORD, SCREEN_ASPECT, SCREEN_SCALE, ColoredGelImage, TubeHighlightImage);
 	// // End Addition
 }

@@ -57,11 +57,11 @@ void main()
     gl_Position = global.MVP * Position;
     vTexCoord = TexCoord;
 
-	CROPPED_ORIGINAL_SIZE = HSS_GetCroppedRotatedOriginalSizeWithCoreResMult();
-	SCREEN_ASPECT = HSS_GetScreenAspect();
-	SCREEN_SCALE = HSS_GetScreenScale(SCREEN_ASPECT);
-	SCREEN_COORD = HSS_GetScreenVTexCoord(vTexCoord, SCREEN_SCALE);
-	USE_VERTICAL_SCANLINES = HSS_GetUseVerticalScanlines(SCREEN_ASPECT);
+	CROPPED_ORIGINAL_SIZE = HSM_GetCroppedRotatedOriginalSizeWithCoreResMult();
+	SCREEN_ASPECT = HSM_GetScreenAspect();
+	SCREEN_SCALE = HSM_GetScreenScale(SCREEN_ASPECT);
+	SCREEN_COORD = HSM_GetScreenVTexCoord(vTexCoord, SCREEN_SCALE);
+	USE_VERTICAL_SCANLINES = HSM_GetUseVerticalScanlines(SCREEN_ASPECT);
 }
 
 #pragma stage fragment
@@ -107,7 +107,7 @@ float intsmear(float x, float dx, float d, float coeffs[7])
 // {
 //     vec2 offset = pixel_offset * 1/global.SourceSize.xy;
 //     vec3 color = texelFetchOffset(Source, (coord), 0, (pixel_offset)).rgb;
-//     // vec3 color = HSS_GetCroppedTexSample(Source, coord + offset).rgb;
+//     // vec3 color = HSM_GetCroppedTexSample(Source, coord + offset).rgb;
 //     return pow(vec3(param.LCD_GAIN) * color + vec3(param.LCD_BLACK_LEVEL), vec3(param.LCD_GAMMA)) + vec3(param.LCD_AMBIENT);
 // }
 
@@ -120,8 +120,8 @@ void main()
     */
 
     // HSM Added
-	vec2 screen_curved_coord = HSS_GetCurvedCoord(SCREEN_COORD, 1, SCREEN_ASPECT);
-    vec2 curved_coord = HSS_GetMirrorWrappedCoord(screen_curved_coord);
+	vec2 screen_curved_coord = HSM_GetCurvedCoord(SCREEN_COORD, 1, SCREEN_ASPECT);
+    vec2 curved_coord = HSM_GetMirrorWrappedCoord(screen_curved_coord);
     vec2 texelSize = 1 / CROPPED_ORIGINAL_SIZE;
     // End Addition
 
@@ -170,6 +170,6 @@ void main()
 
     // HSM Added
     FragColor = vec4(averageColor, 1);
-    FragColor = HSS_GetPostCrtPreppedColor(FragColor, screen_curved_coord, SCREEN_COORD, SCREEN_ASPECT, SCREEN_SCALE, ColoredGelImage, TubeHighlightImage);
+    FragColor = HSM_GetPostCrtPreppedColor(FragColor, screen_curved_coord, SCREEN_COORD, SCREEN_ASPECT, SCREEN_SCALE, ColoredGelImage, TubeHighlightImage);
     // End Addition
 }

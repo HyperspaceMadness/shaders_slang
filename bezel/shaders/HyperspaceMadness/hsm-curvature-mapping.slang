@@ -18,9 +18,9 @@ void main()
 	vTexCoord = TexCoord * 1.0001;
 
 	// Coordinate in the space which includes the entire glass area including the illuminated screen and black line around it 
-	SCREEN_ASPECT = HSS_GetScreenAspect();
-	SCREEN_SCALE = HSS_GetScreenScale(SCREEN_ASPECT);
-	SCREEN_COORD = HSS_GetScreenVTexCoord(vTexCoord, SCREEN_SCALE);
+	SCREEN_ASPECT = HSM_GetScreenAspect();
+	SCREEN_SCALE = HSM_GetScreenScale(SCREEN_ASPECT);
+	SCREEN_COORD = HSM_GetScreenVTexCoord(vTexCoord, SCREEN_SCALE);
 }
 
 #pragma stage fragment
@@ -33,7 +33,7 @@ layout(location = 0) out vec4 FragColor;
 
 void main()
 {
-	vec2 tube_curved_coord = HSS_GetTubeCurvedCoord(SCREEN_COORD, SCREEN_SCALE, SCREEN_ASPECT);
+	vec2 tube_curved_coord = HSM_GetTubeCurvedCoord(SCREEN_COORD, SCREEN_SCALE, SCREEN_ASPECT);
 
 	// float flip_tilt = 0;
 
@@ -42,69 +42,69 @@ void main()
 	// 	float split_pos_2 = 0;
 	// 	float split_dist = 0;
 	// 	float split_axis_is_horizontal = 0;
-	// 	HSS_GetSplitInfo(split_pos_1, split_pos_2, split_dist, split_axis_is_horizontal);
+	// 	HSM_GetSplitInfo(split_pos_1, split_pos_2, split_dist, split_axis_is_horizontal);
 
-	// 	float coord_1D = HSS_GetSplitAxisCoord1D(screen_coord, split_axis_is_horizontal);
+	// 	float coord_1D = HSM_GetSplitAxisCoord1D(screen_coord, split_axis_is_horizontal);
 		
 	// 	// check if we are on the first screen and therfore need to flip the tilt
 	// 	flip_tilt = HHLP_IsUnderValue(coord_1D, 0.5);
 
-	// 	if (H_SPLITSCREEN_CENTER_FILL_MODE == 1)
+	// 	if (HSM_SPLITSCREEN_CENTER_FILL_MODE == 1)
 	// 	{
 	// 		// Get the screen scale for each sub-screen, this helps calculate the correct black edge offset
 	// 		screen_scale = split_axis_is_horizontal * vec2(split_pos_1 * SCREEN_SCALE.x, SCREEN_SCALE.y) + (1 - split_axis_is_horizontal) * vec2(SCREEN_SCALE.x, (1 - split_pos_2) * SCREEN_SCALE.y);
 
 	// 		// If this was on the first screen then flip it so we get the opposite tilt
-	// 		// screen_coord = flip_tilt * HSS_GetFlippedCoordOnSplitAxis(screen_coord, SCREEN_ASPECT) + (1 - flip_tilt) * screen_coord;
+	// 		// screen_coord = flip_tilt * HSM_GetFlippedCoordOnSplitAxis(screen_coord, SCREEN_ASPECT) + (1 - flip_tilt) * screen_coord;
 	// 	}
 	// #endif
 
-	// vec2 black_edge_scale_offset = HSS_GetTubeScale(screen_scale) / screen_scale;
+	// vec2 black_edge_scale_offset = HSM_GetTubeScale(screen_scale) / screen_scale;
 
 	// // Get the tube coord with the black edge added
-	// // vec2 tube_coord = HSS_GetInverseScaledCoord(screen_coord, black_edge_scale_offset);
+	// // vec2 tube_coord = HSM_GetInverseScaledCoord(screen_coord, black_edge_scale_offset);
 
 	// // Get the curved coordinate, setting allow_split_screen to off (0)
-	// vec2 tube_curved_coord = HSS_GetCurvedCoord(screen_coord, H_BZL_INNER_CURVATURE_SCALE, SCREEN_ASPECT);
+	// vec2 tube_curved_coord = HSM_GetCurvedCoord(screen_coord, HSM_BZL_INNER_CURVATURE_SCALE, SCREEN_ASPECT);
 
 	// #ifdef HSM_SPLIT_SCREEN_PRESET
-	// 	if (H_SPLITSCREEN_CENTER_FILL_MODE == 1)
+	// 	if (HSM_SPLITSCREEN_CENTER_FILL_MODE == 1)
 	// 	{
 	// 		// Take the sub-screen area and re-map it to 0-1
-	// 		tube_curved_coord = HSS_Get0To1CoordFromSplitArea(tube_curved_coord, split_pos_1, split_pos_2, split_dist, split_axis_is_horizontal);
+	// 		tube_curved_coord = HSM_Get0To1CoordFromSplitArea(tube_curved_coord, split_pos_1, split_pos_2, split_dist, split_axis_is_horizontal);
 
 	// 		// If this was flipped then flip it back
-	// 		// tube_curved_coord = flip_tilt * HSS_GetFlippedCoordOnSplitAxis(tube_curved_coord, SCREEN_ASPECT) + (1 - flip_tilt) * tube_curved_coord;
+	// 		// tube_curved_coord = flip_tilt * HSM_GetFlippedCoordOnSplitAxis(tube_curved_coord, SCREEN_ASPECT) + (1 - flip_tilt) * tube_curved_coord;
 	// 	}
 	// #endif
 
-	// tube_curved_coord = HSS_GetInverseScaledCoord(tube_curved_coord, black_edge_scale_offset);
+	// tube_curved_coord = HSM_GetInverseScaledCoord(tube_curved_coord, black_edge_scale_offset);
 
 
 
 	// #ifdef HSM_SPLIT_SCREEN_PRESET
-	// if (H_SPLITSCREEN_CENTER_FILL_MODE == 1)
+	// if (HSM_SPLITSCREEN_CENTER_FILL_MODE == 1)
 	// 	{
-	// 		float coord_1D = HSS_GetSplitAxisCoord1D(screen_coord, split_axis_is_horizontal);
+	// 		float coord_1D = HSM_GetSplitAxisCoord1D(screen_coord, split_axis_is_horizontal);
 			
 	// 		float split_pos_1 = 0;
 	// 		float split_pos_2 = 0;
 	// 		float split_dist = 0;
-	// 		HSS_GetSplitInfo(split_pos_1, split_pos_2, split_dist);
-	// 		tube_curved_coord = HSS_GetSplitAreaCoordFrom0To1(screen_coord, tube_curved_coord, split_pos_1, split_pos_2, split_dist);
+	// 		HSM_GetSplitInfo(split_pos_1, split_pos_2, split_dist);
+	// 		tube_curved_coord = HSM_GetSplitAreaCoordFrom0To1(screen_coord, tube_curved_coord, split_pos_1, split_pos_2, split_dist);
 	// 	}
 	// #endif
 
-	vec2 edge_mask_coord = (tube_curved_coord - 0.5) * (1 - (H_BZL_INNER_EDGE_THICKNESS / vec2(SCREEN_ASPECT, 1))) + 0.5;
+	vec2 edge_mask_coord = (tube_curved_coord - 0.5) * (1 - (HSM_BZL_INNER_EDGE_THICKNESS / vec2(SCREEN_ASPECT, 1))) + 0.5;
 	float edge_sharpness = 0.99;
 
 	// If this is used in the glass preset adjust the smoothness of the edge of the glass 
-	if (H_GLASSBORDER_ON == 1)
-		edge_sharpness = H_GLASS_INNER_EDGE_SOFTNESS;
+	if (HSM_GLASSBORDER_ON == 1)
+		edge_sharpness = HSM_GLASS_INNER_EDGE_SOFTNESS;
 
-	float outside_tube_mask = 1 - HSS_GetCornerMask(tube_curved_coord, SCREEN_ASPECT, H_BZL_INNER_CORNER_RADIUS_SCALE * H_SCREEN_CORNER_RADIUS, 0.99);
+	float outside_tube_mask = 1 - HSM_GetCornerMask(tube_curved_coord, SCREEN_ASPECT, HSM_BZL_INNER_CORNER_RADIUS_SCALE * HSM_SCREEN_CORNER_RADIUS, 0.99);
 
-	float edge_mask =  HSS_GetCornerMask(edge_mask_coord, SCREEN_ASPECT, H_BZL_INNER_CORNER_RADIUS_SCALE * H_SCREEN_CORNER_RADIUS, edge_sharpness);
+	float edge_mask =  HSM_GetCornerMask(edge_mask_coord, SCREEN_ASPECT, HSM_BZL_INNER_CORNER_RADIUS_SCALE * HSM_SCREEN_CORNER_RADIUS, edge_sharpness);
 
 	FragColor = vec4(tube_curved_coord.x, tube_curved_coord.y, outside_tube_mask, edge_mask);
 }

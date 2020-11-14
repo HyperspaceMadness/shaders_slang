@@ -33,7 +33,7 @@ float clamp_0_1(float in_value)
 
 void main()
 {
-	if (H_BLUR_NUM_SAMPLES > 0)
+	if (H_REFLECT_BLUR_NUM_SAMPLES > 0)
 	{
 		vec2 tube_coord_warped = vec2(0, 0);
 		float outside_tube_mask = 0;
@@ -63,7 +63,7 @@ void main()
 		float outside_ratio_warped = clamp(length(outermap_warped_outside_screen_vector) / outermap_range, 0, 1);
 
 		float hbl_sharpness_falloff_distance = 7;
-		if (HGL_GLASSBORDER_ON == 1)
+		if (H_GLASSBORDER_ON == 1)
 			hbl_sharpness_falloff_distance = 20;
 
 		float blur_ratio = clamp_0_1(outside_ratio_warped / (hbl_sharpness_falloff_distance / 100));
@@ -72,13 +72,13 @@ void main()
 		blur_ratio = HHLP_QuadraticBezier (clamp_0_1(blur_ratio - blur_midpoint), vec2(0.05, hbl_sharpness_falloff_speed));
 
 		float in_split_screen_area = 0;
-		if (H_SPLIT_SCREEN_ON == 1)
+		if (H_SPLITSCREEN_ON == 1)
 		{
 			in_split_screen_area = HSS_GetSplitScreenAreaGradient(tube_coord_warped, 1.5, 0);
 			blur_ratio = (1 - outside_tube_mask) * HHLP_EasePowerInOut(0.5 + HSS_GetSplitScreenAreaGradient(tube_coord_warped, 0.2, 1.5), 2) + outside_tube_mask * blur_ratio;
 		}
 
-		blur_ratio = H_BLUR_MIN + blur_ratio * (H_BLUR_MAX - H_BLUR_MIN);
+		blur_ratio = H_REFLECT_BLUR_MIN + blur_ratio * (H_REFLECT_BLUR_MAX - H_REFLECT_BLUR_MIN);
 
 		vec3 col = vec3(0.0);
 		
@@ -103,7 +103,7 @@ void main()
 		float blend_with_unblurred = smoothstep(-0.3, 0.3, HHLP_QuadraticBezier(blur_ratio, vec2(0.5, 0.5)));
 
 		float k_total = 0.;
-		for (float i = -H_BLUR_NUM_SAMPLES; i <= H_BLUR_NUM_SAMPLES; i++)
+		for (float i = -H_REFLECT_BLUR_NUM_SAMPLES; i <= H_REFLECT_BLUR_NUM_SAMPLES; i++)
 		{
 			float k = exp(-blur_falloff * (i) * (i));
 			k_total += k;
@@ -116,7 +116,7 @@ void main()
 		vec4 blurred_color = vec4(col / k_total, 1.0);
 
 		// If this is used in a split screen preset and blending of the center area is requested add that to the 
-		if (H_SPLIT_SCREEN_ON == 1)
+		if (H_SPLITSCREEN_ON == 1)
 			blend_with_unblurred = clamp(blend_with_unblurred + in_split_screen_area, 0, 1);
 
 		vec4 unblurred_color = texture(BR_MirrorLowResPass, vTexCoord);

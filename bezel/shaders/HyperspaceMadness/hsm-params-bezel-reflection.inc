@@ -111,35 +111,32 @@ float H_FRM_SHADOW_WIDTH = global.H_FRM_SHADOW_WIDTH;
 #pragma parameter H_REFLECTION_BLEND_MODE             "[ REFLECTION ]  Blend Mode -  Off | Normal | Add"  2 0 2 1
 float H_REFLECTION_BLEND_MODE = global.H_REFLECTION_BLEND_MODE;
 
-#pragma parameter H_REFLECTION_MASK_MODE              "[REFLECTN] Mask - ALL | Tube | Bz- | Bz | Bz+ | Frm | Frm+ | BG"   3 0 7 1
+#pragma parameter H_REFLECTION_MASK_MODE              "[ REFLECTN] Mask- ALL | Tube | Bz- | Bz | Bz+ | Frm | Frm+ | BG"   3 0 7 1
 float H_REFLECTION_MASK_MODE = global.H_REFLECTION_MASK_MODE;
 
+#pragma parameter H_REFLECT_GLOBAL_AMOUNT 					  "[ REFLECTION ]  Global Amount" 0.4 0 3 0.02
+float H_REFLECT_GLOBAL_AMOUNT = global.H_REFLECT_GLOBAL_AMOUNT;
 
-#pragma parameter H_REFLECTION_AMOUNT_TITLE			      "_____[ REFLECTION AMOUNT  ]____________________________________" 0 0 0 0
+#pragma parameter H_REFLECT_GLOBAL_GAMMA_ADJUST 			"[ REFLECTION ]  Global Gamma Adjust" 1.2 0.25 3 0.05
+float H_REFLECT_GLOBAL_GAMMA_ADJUST = global.H_REFLECT_GLOBAL_GAMMA_ADJUST;
 
-#pragma parameter H_GLOBAL_AMOUNT 					  "[ REFLECTION AMOUNT ]  Global Amount" 0.4 0 3 0.02
-float H_GLOBAL_AMOUNT = global.H_GLOBAL_AMOUNT;
+#pragma parameter H_REFLECT_INNER_EDGE_AMOUNT 			"[ REFLECTION ]  Inner Edge Amount" 0.9 0 3 0.02
+float H_REFLECT_INNER_EDGE_AMOUNT = global.H_REFLECT_INNER_EDGE_AMOUNT;
 
-#pragma parameter H_GLOBAL_GAMMA_ADJUST 			"[ REFLECTION AMOUNT ]  Global Gamma Adjust" 1.2 0.25 3 0.05
-float H_GLOBAL_GAMMA_ADJUST = global.H_GLOBAL_GAMMA_ADJUST;
+#pragma parameter H_REFLECT_INNER_EDGE_FULLSCREEN_GLOW 		"[ REFLECTION ]  Inner Edge Fullscreen Glow" 0.4 0 10 0.02
+float H_REFLECT_INNER_EDGE_FULLSCREEN_GLOW = global.H_REFLECT_INNER_EDGE_FULLSCREEN_GLOW;
 
-#pragma parameter H_INNER_EDGE_REFLECTION 			"[ REFLECTION AMOUNT ]  Inner Edge Amount" 0.9 0 3 0.02
-float H_INNER_EDGE_REFLECTION = global.H_INNER_EDGE_REFLECTION;
+#pragma parameter H_REFLECT_DIRECT_AMOUNT 				"[ REFLECTION ]  Direct Reflection" 1.5 0 3 0.02
+float H_REFLECT_DIRECT_AMOUNT = global.H_REFLECT_DIRECT_AMOUNT;
 
-#pragma parameter H_INNER_EDGE_FULLSCREEN_GLOW 		"[ REFLECTION AMOUNT ]  Inner Edge Fullscreen Glow" 0.4 0 10 0.02
-float H_INNER_EDGE_FULLSCREEN_GLOW = global.H_INNER_EDGE_FULLSCREEN_GLOW;
+#pragma parameter H_REFLECT_DIFFUSED_AMOUNT 				"[ REFLECTION ]  Diffused Reflection" 0.5 0 3 0.02
+float H_REFLECT_DIFFUSED_AMOUNT = global.H_REFLECT_DIFFUSED_AMOUNT;
 
-#pragma parameter H_DIRECT_REFLECTION 				"[ REFLECTION AMOUNT ]  Direct Reflection" 1.5 0 3 0.02
-float H_DIRECT_REFLECTION = global.H_DIRECT_REFLECTION;
+#pragma parameter H_REFLECT_FULLSCREEN_GLOW 					"[ REFLECTION ]  FullScreen Glow" 75 0 600 0.5
+float H_REFLECT_FULLSCREEN_GLOW = global.H_REFLECT_FULLSCREEN_GLOW;
 
-#pragma parameter H_DIFFUSED_REFLECTION 				"[ REFLECTION AMOUNT ]  Diffused Reflection" 0.5 0 3 0.02
-float H_DIFFUSED_REFLECTION = global.H_DIFFUSED_REFLECTION;
-
-#pragma parameter H_FULLSCREEN_GLOW 					"[ REFLECTION AMOUNT ]  FullScreen Glow" 75 0 600 0.5
-float H_FULLSCREEN_GLOW = global.H_FULLSCREEN_GLOW;
-
-#pragma parameter H_FULLSCREEN_GLOW_GAMMA 			"[ REFLECTION AMOUNT ]  FullScreen Glow Gamma" 3 0 5 0.02
-float H_FULLSCREEN_GLOW_GAMMA = global.H_FULLSCREEN_GLOW_GAMMA;
+#pragma parameter H_REFLECT_FULLSCREEN_GLOW_GAMMA 			"[ REFLECTION ]  FullScreen Glow Gamma" 3 0 5 0.02
+float H_REFLECT_FULLSCREEN_GLOW_GAMMA = global.H_REFLECT_FULLSCREEN_GLOW_GAMMA;
 
 
 //---------------------------------------------------------------------------------------------------
@@ -147,68 +144,68 @@ float H_FULLSCREEN_GLOW_GAMMA = global.H_FULLSCREEN_GLOW_GAMMA;
 //---------------------------------------------------------------------------------------------------
 #pragma parameter H_REFLECTION_FADE_TITLE			"_____[ REFLECTION FADE ]_______________________________________" 0 0 0 0
 
-#pragma parameter H_FADE_AMOUNT 					"[ REFLECTION FADE ]  Fade Amount" 1 0 1 0.05
-float H_FADE_AMOUNT = global.H_FADE_AMOUNT;
+#pragma parameter H_REFLECT_FADE_AMOUNT 					"[ REFLECTION FADE ]  Fade Amount" 1 0 1 0.05
+float H_REFLECT_FADE_AMOUNT = global.H_REFLECT_FADE_AMOUNT;
 
-#pragma parameter H_RADIAL_FADE_WIDTH 				"[ REFLECTION FADE ]  Radial Fade Width" 100 0 1000 1
-float H_RADIAL_FADE_WIDTH = global.H_RADIAL_FADE_WIDTH;
+#pragma parameter H_REFLECT_RADIAL_FADE_WIDTH 				"[ REFLECTION FADE ]  Radial Fade Width" 100 0 1000 1
+float H_REFLECT_RADIAL_FADE_WIDTH = global.H_REFLECT_RADIAL_FADE_WIDTH;
 
-#pragma parameter H_RADIAL_FADE_HEIGHT 				"[ REFLECTION FADE ]  Radial Fade Height" 100 0 1000 1
-float H_RADIAL_FADE_HEIGHT = global.H_RADIAL_FADE_HEIGHT;
+#pragma parameter H_REFLECT_RADIAL_FADE_HEIGHT 				"[ REFLECTION FADE ]  Radial Fade Height" 100 0 1000 1
+float H_REFLECT_RADIAL_FADE_HEIGHT = global.H_REFLECT_RADIAL_FADE_HEIGHT;
 
-#pragma parameter H_LATERAL_OUTER_FADE_POSITION 		"[ REFLECTION FADE ]  Lateral Outer Fade Position" -18 -500 500 0.5
-float H_LATERAL_OUTER_FADE_POSITION = global.H_LATERAL_OUTER_FADE_POSITION;
+#pragma parameter H_REFLECT_LATERAL_OUTER_FADE_POSITION 		"[ REFLECTION FADE ]  Lateral Outer Fade Position" -18 -500 500 0.5
+float H_REFLECT_LATERAL_OUTER_FADE_POSITION = global.H_REFLECT_LATERAL_OUTER_FADE_POSITION;
 
-#pragma parameter H_LATERAL_OUTER_FADE_DISTANCE 		"[ REFLECTION FADE ]  Lateral Outer Fade Distance" 20 1 400 0.5
-float H_LATERAL_OUTER_FADE_DISTANCE = global.H_LATERAL_OUTER_FADE_DISTANCE;
+#pragma parameter H_REFLECT_LATERAL_OUTER_FADE_DISTANCE 		"[ REFLECTION FADE ]  Lateral Outer Fade Distance" 20 1 400 0.5
+float H_REFLECT_LATERAL_OUTER_FADE_DISTANCE = global.H_REFLECT_LATERAL_OUTER_FADE_DISTANCE;
 
 
-#pragma parameter H_REFLECTION_CORNER_TITLE			"_____[ REFLECTION CORNER ]_____________________________________" 0 0 0 0
+#pragma parameter H_REFLECT_CORNER_TITLE			"_____[ REFLECTION CORNER ]_____________________________________" 0 0 0 0
 
-#pragma parameter H_CORNER_FADE 						"[ REFLECTION CORNER FADE ]  Corner Fade" 10 1 100 0.5
-float H_CORNER_FADE = global.H_CORNER_FADE;
+#pragma parameter H_REFLECT_CORNER_FADE 						"[ REFLECTION CORNER FADE ]  Corner Fade" 10 1 100 0.5
+float H_REFLECT_CORNER_FADE = global.H_REFLECT_CORNER_FADE;
 
-#pragma parameter H_CORNER_FADE_DISTANCE 				"[ REFLECTION CORNER FADE ]  Corner Fade Distance" 100 1 100 1
-float H_CORNER_FADE_DISTANCE = global.H_CORNER_FADE_DISTANCE;
+#pragma parameter H_REFLECT_CORNER_FADE_DISTANCE 				"[ REFLECTION CORNER FADE ]  Corner Fade Distance" 100 1 100 1
+float H_REFLECT_CORNER_FADE_DISTANCE = global.H_REFLECT_CORNER_FADE_DISTANCE;
 
-#pragma parameter H_CORNER_INNER_SPREAD 	            "[ REFLECTION CORNER FADE ]  Corner Inner Spread" 500 0 1000 10
-float H_CORNER_INNER_SPREAD = global.H_CORNER_INNER_SPREAD;
+#pragma parameter H_REFLECT_CORNER_INNER_SPREAD 	            "[ REFLECTION CORNER FADE ]  Corner Inner Spread" 500 0 1000 10
+float H_REFLECT_CORNER_INNER_SPREAD = global.H_REFLECT_CORNER_INNER_SPREAD;
 
-#pragma parameter H_CORNER_OUTER_SPREAD 	            "[ REFLECTION CORNER FADE ]  Corner Outer Spread" 160 0 1000 10
-float H_CORNER_OUTER_SPREAD = global.H_CORNER_OUTER_SPREAD;
+#pragma parameter H_REFLECT_CORNER_OUTER_SPREAD 	            "[ REFLECTION CORNER FADE ]  Corner Outer Spread" 160 0 1000 10
+float H_REFLECT_CORNER_OUTER_SPREAD = global.H_REFLECT_CORNER_OUTER_SPREAD;
 
-#pragma parameter H_CORNER_ROTATION_OFFSET_TOP 	    "[ REFLECTION CORNER ROTATION ]  Offset Top" 0 -90 90 0.5
-float H_CORNER_ROTATION_OFFSET_TOP = global.H_CORNER_ROTATION_OFFSET_TOP;
+#pragma parameter H_REFLECT_CORNER_ROTATION_OFFSET_TOP 	    "[ REFLECTION CORNER ROTATION ]  Offset Top" 0 -90 90 0.5
+float H_REFLECT_CORNER_ROTATION_OFFSET_TOP = global.H_REFLECT_CORNER_ROTATION_OFFSET_TOP;
 
-#pragma parameter H_CORNER_ROTATION_OFFSET_BOTTOM 	"[ REFLECTION CORNER ROTATION ]  Offset Bottom" 0 -90 90 0.5
-float H_CORNER_ROTATION_OFFSET_BOTTOM = global.H_CORNER_ROTATION_OFFSET_BOTTOM;
+#pragma parameter H_REFLECT_CORNER_ROTATION_OFFSET_BOTTOM 	"[ REFLECTION CORNER ROTATION ]  Offset Bottom" 0 -90 90 0.5
+float H_REFLECT_CORNER_ROTATION_OFFSET_BOTTOM = global.H_REFLECT_CORNER_ROTATION_OFFSET_BOTTOM;
 
-// #pragma parameter H_CORNER_SPREAD_FALLOFF             "[ REFLECTION CORNER FADE ]  Corner Spread Falloff"  50 1 200 1
-// float H_CORNER_SPREAD_FALLOFF = global.H_CORNER_SPREAD_FALLOFF;
+// #pragma parameter H_REFLECT_CORNER_SPREAD_FALLOFF             "[ REFLECTION CORNER FADE ]  Corner Spread Falloff"  50 1 200 1
+// float H_REFLECT_CORNER_SPREAD_FALLOFF = global.H_REFLECT_CORNER_SPREAD_FALLOFF;
 
 //---------------------------------------------------------------------------------------------------
 // Reflection Blur
 //---------------------------------------------------------------------------------------------------
 #pragma parameter H_REFLECT_BLUR_TITLE			        "_____[ REFLECTION BLUR & NOISE ]_______________________________" 0 0 0 0
 
-#pragma parameter H_BLUR_NUM_SAMPLES 					"[ REFLECTION BLUR ]  Num Samples - 0 for OFF" 12 0 40 1
-float H_BLUR_NUM_SAMPLES = global.H_BLUR_NUM_SAMPLES;
+#pragma parameter H_REFLECT_BLUR_NUM_SAMPLES 					"[ REFLECTION BLUR ]  Num Samples - 0 for OFF" 12 0 40 1
+float H_REFLECT_BLUR_NUM_SAMPLES = global.H_REFLECT_BLUR_NUM_SAMPLES;
 
-#pragma parameter H_BLUR_MIN 							"[ REFLECTION BLUR ]  Min" 	0 0 1 0.01
-float H_BLUR_MIN = global.H_BLUR_MIN;
+#pragma parameter H_REFLECT_BLUR_MIN 							"[ REFLECTION BLUR ]  Min" 	0 0 1 0.01
+float H_REFLECT_BLUR_MIN = global.H_REFLECT_BLUR_MIN;
 
-#pragma parameter H_BLUR_MAX 							"[ REFLECTION BLUR ]  Max" 	0.95 0 1 0.01
-float H_BLUR_MAX = global.H_BLUR_MAX;
+#pragma parameter H_REFLECT_BLUR_MAX 							"[ REFLECTION BLUR ]  Max" 	0.95 0 1 0.01
+float H_REFLECT_BLUR_MAX = global.H_REFLECT_BLUR_MAX;
 
 // Reflection Noise
-#pragma parameter H_NOISE_AMOUNT 						"[ REFLECTION NOISE ]   Amount" 0.5 0 1 0.1
-float H_NOISE_AMOUNT = global.H_NOISE_AMOUNT;
+#pragma parameter H_REFLECT_NOISE_AMOUNT 						"[ REFLECTION NOISE ]   Amount" 0.5 0 1 0.1
+float H_REFLECT_NOISE_AMOUNT = global.H_REFLECT_NOISE_AMOUNT;
 
-#pragma parameter H_NOISE_SAMPLES 					    "[ REFLECTION NOISE ]   Samples (0 for OFF)" 1 0 20 1
-float H_NOISE_SAMPLES = global.H_NOISE_SAMPLES;
+#pragma parameter H_REFLECT_NOISE_SAMPLES 					    "[ REFLECTION NOISE ]   Samples (0 for OFF)" 1 0 20 1
+float H_REFLECT_NOISE_SAMPLES = global.H_REFLECT_NOISE_SAMPLES;
 
-#pragma parameter H_NOISE_SAMPLE_DISTANCE 			"[ REFLECTION NOISE ]   Sample Distance" 0.20 0 1 0.01
-float H_NOISE_SAMPLE_DISTANCE = global.H_NOISE_SAMPLE_DISTANCE;
+#pragma parameter H_REFLECT_NOISE_SAMPLE_DISTANCE 			"[ REFLECTION NOISE ]   Sample Distance" 0.20 0 1 0.01
+float H_REFLECT_NOISE_SAMPLE_DISTANCE = global.H_REFLECT_NOISE_SAMPLE_DISTANCE;
 
 
 //---------------------------------------------------------------------------------------------------
@@ -220,8 +217,8 @@ float H_REFLECTION_IS_LAST_PASS = global.H_REFLECTION_IS_LAST_PASS;
 
 /////////////// CONSTANT TUNING SETTINGS ///////////////
 
-#ifndef H_CORNER_SPREAD_FALLOFF
-    #define H_CORNER_SPREAD_FALLOFF 100
+#ifndef H_REFLECT_CORNER_SPREAD_FALLOFF
+    #define H_REFLECT_CORNER_SPREAD_FALLOFF 100
 #endif
 
 #ifndef H_GLASS_INNER_EDGE_SOFTNESS

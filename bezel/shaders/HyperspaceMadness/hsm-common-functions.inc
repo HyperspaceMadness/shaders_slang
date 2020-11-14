@@ -27,7 +27,7 @@ float HSS_GetSplitScreenAmount()
 		float is_horizontal = HHLP_IsOverValue(original_size.x / original_size.y, 1);
 
 		// Split screen amount should be smaller when the aspect is horizontal
-		return is_horizontal * H_SPLIT_SCREEN_AMOUNT / 2 + (1 - is_horizontal) * H_SPLIT_SCREEN_AMOUNT;
+		return is_horizontal * H_SPLITSCREEN_AMOUNT / 2 + (1 - is_horizontal) * H_SPLITSCREEN_AMOUNT;
 	#else
 		return 0;
 	#endif
@@ -605,7 +605,7 @@ vec2 HSS_GetCurvedCoord(vec2 in_coord, float curvature_multiplier, float screen_
 		float in_coord_1D = HSS_GetSplitAxisCoord1D(in_coord, split_axis_is_horizontal);
 		float coord_is_on_first_half = HHLP_IsUnderValue(in_coord_1D, 0.5);
 
-		if (H_SPLIT_SCREEN_CENTER_FILL_MODE == 1)
+		if (H_SPLITSCREEN_CENTER_FILL_MODE == 1)
 		{
 			// If we are using split screen the take the coordinates from each screen and stretch them to 0-1
 			adjusted_coord = HSS_Get0To1CoordFromSplitArea(in_coord, split_pos_1, split_pos_2, split_dist, split_axis_is_horizontal);
@@ -653,7 +653,7 @@ vec2 HSS_GetCurvedCoord(vec2 in_coord, float curvature_multiplier, float screen_
 
 	// If this is split screen we need to scale 0-1 space back to the subsection of the screen
 	#ifdef HSM_SPLIT_SCREEN_PRESET
-		if (H_SPLIT_SCREEN_CENTER_FILL_MODE == 1)
+		if (H_SPLITSCREEN_CENTER_FILL_MODE == 1)
 		{
 			// If the coordinate was originally on the first screen then flip it back
 			curved_coord = coord_is_on_first_half * HSS_GetFlippedCoordOnSplitAxis(curved_coord, split_axis_is_horizontal) + 
@@ -715,7 +715,7 @@ vec2 HSS_GetTubeCurvedCoord(vec2 screen_coord, vec2 screen_scale, float screen_a
 	float split_dist = 0;
 	float split_axis_is_horizontal = 0;
 
-	if (H_SPLIT_SCREEN_ON == 1)
+	if (H_SPLITSCREEN_ON == 1)
 	{
 		HSS_GetSplitInfo(split_pos_1, split_pos_2, split_dist, split_axis_is_horizontal);
 
@@ -724,7 +724,7 @@ vec2 HSS_GetTubeCurvedCoord(vec2 screen_coord, vec2 screen_scale, float screen_a
 		// check if we are on the first screen and therfore need to flip the tilt
 		flip_tilt = HHLP_IsUnderValue(coord_1D, 0.5);
 
-		if (H_SPLIT_SCREEN_CENTER_FILL_MODE == 1)
+		if (H_SPLITSCREEN_CENTER_FILL_MODE == 1)
 		{
 			// Get the screen scale for each sub-screen, this helps calculate the correct black edge offset
 			screen_scale = split_axis_is_horizontal * vec2(split_pos_1 * screen_scale.x, screen_scale.y) + (1 - split_axis_is_horizontal) * vec2(screen_scale.x, (1 - split_pos_2) * screen_scale.y);
@@ -740,11 +740,11 @@ vec2 HSS_GetTubeCurvedCoord(vec2 screen_coord, vec2 screen_scale, float screen_a
 	// vec2 tube_coord = HSS_GetInverseScaledCoord(screen_coord, black_edge_scale_offset);
 
 	// Get the curved coordinate, setting allow_split_screen to off (0)
-	vec2 tube_curved_coord = HSS_GetCurvedCoord(screen_coord, H_TUBE_CURVATURE_SCALE, screen_aspect);
+	vec2 tube_curved_coord = HSS_GetCurvedCoord(screen_coord, H_BZL_INNER_CURVATURE_SCALE, screen_aspect);
 
-	if (H_SPLIT_SCREEN_ON == 1)
+	if (H_SPLITSCREEN_ON == 1)
 	{
-		if (H_SPLIT_SCREEN_CENTER_FILL_MODE == 1)
+		if (H_SPLITSCREEN_CENTER_FILL_MODE == 1)
 		{
 			// Take the sub-screen area and re-map it to 0-1
 			tube_curved_coord = HSS_Get0To1CoordFromSplitArea(tube_curved_coord, split_pos_1, split_pos_2, split_dist, split_axis_is_horizontal);
@@ -933,7 +933,7 @@ vec4 HSS_GetCroppedTexSample(sampler2D in_sampler, vec2 in_cropped_coord)
 	vec4 negative_crop_color = vec4(H_COLOR_NEGATIVE_CROP_BRIGHTNESS / 10000, H_COLOR_NEGATIVE_CROP_BRIGHTNESS / 10000, H_COLOR_NEGATIVE_CROP_BRIGHTNESS / 10000, 1);
 	
 	#ifdef HSM_SPLIT_SCREEN_PRESET
-		float use_neg_crop_color = HHLP_EqualsValue(H_SPLIT_SCREEN_CENTER_FILL_MODE, 0, 0.1) * in_split_area;
+		float use_neg_crop_color = HHLP_EqualsValue(H_SPLITSCREEN_CENTER_FILL_MODE, 0, 0.1) * in_split_area;
 		out_color = use_neg_crop_color * negative_crop_color + (1 - use_neg_crop_color) * out_color;
 	#endif
 
@@ -1016,7 +1016,7 @@ vec4 HSS_ApplyScanlineMask(vec4 in_color, vec2 in_coord, vec2 screen_scale)
 	float scan_axis_res = use_vert_scanlines * sampling_res.x + (1 - use_vert_scanlines) * sampling_res.y;
 	float scan_axis_pos = use_vert_scanlines * in_coord.x + (1 - use_vert_scanlines) * in_coord.y;
 
-	if (H_SCREENFX_FAKE_SCANLINE_OPACITY < 0.001 || scan_axis_res < H_INTERLACE_TRIGGER_RES )
+	if (H_SCANLINE_FAKE_SCANLINE_OPACITY < 0.001 || scan_axis_res < H_SCANLINE_INTERLACE_TRIGGER_RES )
 	{
 		return in_color;
 	}
@@ -1052,11 +1052,11 @@ vec4 HSS_ApplyScanlineMask(vec4 in_color, vec2 in_coord, vec2 screen_scale)
 
 	float final_scanline_mask = clamp(1 * scanline_mask, 0, 1);
 
-	color_brightness_modulation = HHLP_EasePowerOut(smoothstep(0.4, H_SCREENFX_FAKE_SCANLINE_BRIGHTNESS_CUTOFF + 1.5, (in_color.r + in_color.g +  in_color.b) / 3), 2);
-	final_scanline_mask = clamp(mix(1, mix(final_scanline_mask, 1, color_brightness_modulation), H_SCREENFX_FAKE_SCANLINE_OPACITY), 0, 1);
+	color_brightness_modulation = HHLP_EasePowerOut(smoothstep(0.4, H_SCANLINE_FAKE_SCANLINE_BRIGHTNESS_CUTOFF + 1.5, (in_color.r + in_color.g +  in_color.b) / 3), 2);
+	final_scanline_mask = clamp(mix(1, mix(final_scanline_mask, 1, color_brightness_modulation), H_SCANLINE_FAKE_SCANLINE_OPACITY), 0, 1);
 
 	vec4 masked_color = in_color;
-	masked_color *= 1 + 0.5 * H_SCREENFX_FAKE_SCANLINE_OPACITY;
+	masked_color *= 1 + 0.5 * H_SCANLINE_FAKE_SCANLINE_OPACITY;
 	masked_color = clamp(final_scanline_mask * masked_color, 0, 1);
 	masked_color.w = in_color.w;
 
@@ -1079,12 +1079,12 @@ vec4 HSS_GetPostCrtPreppedColor(vec4 in_color_linear, vec2 screen_curved_coord, 
 	float vignette_factor = HSS_GetScreenVignetteFactor(mirrored_screen_coord, H_SCREENFX_VIGNETTE);
 
 	// If this is called from the glass preset we don't want the vignette to affect mirrored area
-	if (HGL_GLASSBORDER_ON == 1)
+	if (H_GLASSBORDER_ON == 1)
 		vignette_factor = 1 - ((1 - vignette_factor) * screen_mask);
 
 	out_color *= vignette_factor;
 
-	if (H_SCREENFX_FAKE_SCANLINE_OPACITY > 0)
+	if (H_SCANLINE_FAKE_SCANLINE_OPACITY > 0)
 	{
 		vec4 scanline_masked_color = HSS_ApplyScanlineMask(out_color, screen_coord, screen_scale);
 		// out_color = mix(out_color, scanline_masked_color, screen_mask);
@@ -1125,7 +1125,7 @@ vec4 HSS_GetPostCrtPreppedColor(vec4 in_color_linear, vec2 screen_curved_coord, 
 	out_color.a = in_color_linear.a;
 
 	// If we are not using this with the bezel we want
-	if (H_SCREEN_MASK_OUTSIDE_SCREEN == 1)
+	if (H_CRT_IS_LAST_PASS == 1)
 		out_color *= screen_mask;
 
 	// Apply the final Gamma

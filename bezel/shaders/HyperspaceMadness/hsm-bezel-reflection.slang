@@ -150,7 +150,7 @@ void main()
 
 	// A hack to adjust the angle offset, because without it the corner angle isn't pointing exactly at the corner
 	// This offset is the opposite direction for vertical and horizontal aspect ratio
-	float corner_rotation_offset = (SCREEN_COORD.y < 0.5) ? -H_CORNER_ROTATION_OFFSET_TOP : -H_CORNER_ROTATION_OFFSET_BOTTOM;
+	float corner_rotation_offset = (SCREEN_COORD.y < 0.5) ? -H_REFLECT_CORNER_ROTATION_OFFSET_TOP : -H_REFLECT_CORNER_ROTATION_OFFSET_BOTTOM;
 
     if (H_CURVATURE_MODE == 0)
         // If we are using a 3d Curvature no offset is necessary
@@ -166,10 +166,10 @@ void main()
 	// Get the distance perpendicular to the crease direction so we can use it to fade later
 	float distance_from_crease = HHLP_GetDistanceToLine(outermap_coord_warped_ctr_at_screen_corner.x, outermap_coord_warped_ctr_at_screen_corner.y, 1, corner_crease_dir.y / corner_crease_dir.x, 0 );
 
-	float fade_out_to_corner = HHLP_QuadraticBezier(clamp(length(outermap_warped_outside_screen_vector) / (corner_crease_length * 2), 0, 1), vec2(0.5, H_CORNER_SPREAD_FALLOFF / 100));
+	float fade_out_to_corner = HHLP_QuadraticBezier(clamp(length(outermap_warped_outside_screen_vector) / (corner_crease_length * 2), 0, 1), vec2(0.5, H_REFLECT_CORNER_SPREAD_FALLOFF / 100));
 
-	float corner_fade_width_inner = H_CORNER_INNER_SPREAD / 100 * (SCREEN_SCALE.x + SCREEN_SCALE.y) * H_BZL_INNER_CORNER_RADIUS_SCALE * H_SCREEN_CORNER_RADIUS / 10 / 250 * 1.2;
-	float corner_fade_width_outer = H_CORNER_OUTER_SPREAD / 100 * (SCREEN_SCALE.x + SCREEN_SCALE.y) * H_BZL_OUTER_CORNER_RADIUS_SCALE * H_SCREEN_CORNER_RADIUS / 10 / 250 * 1.6;
+	float corner_fade_width_inner = H_REFLECT_CORNER_INNER_SPREAD / 100 * (SCREEN_SCALE.x + SCREEN_SCALE.y) * H_BZL_INNER_CORNER_RADIUS_SCALE * H_SCREEN_CORNER_RADIUS / 10 / 250 * 1.2;
+	float corner_fade_width_outer = H_REFLECT_CORNER_OUTER_SPREAD / 100 * (SCREEN_SCALE.x + SCREEN_SCALE.y) * H_BZL_OUTER_CORNER_RADIUS_SCALE * H_SCREEN_CORNER_RADIUS / 10 / 250 * 1.6;
 	float corner_fade_width = (corner_fade_width_inner + fade_out_to_corner * (corner_fade_width_outer - corner_fade_width_inner));
 
 	// Get a vector perpendicular to the crease that we can shift the crease to blend between bottom/top and sides
@@ -213,7 +213,7 @@ void main()
 	float hmbz_bezel_highlight_width = 0.25;
 
 	float hmbz_bezel_edge_highlight_width = 0.8;
-	if (HGL_GLASSBORDER_ON == 1)
+	if (H_GLASSBORDER_ON == 1)
 		hmbz_bezel_edge_highlight_width = 0.55;
 
 	float top_center_highlight_mask 	= hmbz_bezel_highlight_top * top_mask * HHLP_QuadraticBezier(smoothstep(hmbz_bezel_highlight_width, 0, abs(outermap_warped_coord_ctr.x)), vec2(0.5, hmbz_bezel_highlight_falloff_speed));
@@ -224,7 +224,7 @@ void main()
 	float edge_bottom_center_highlight_mask 	= hmbz_bezel_highlight_bottom * bottom_mask * HHLP_QuadraticBezier(smoothstep(hmbz_bezel_edge_highlight_width, 0, abs(outermap_warped_coord_ctr.x)), vec2(0.8, 0));
 	float edge_sides_highlight_mask 			= hmbz_bezel_highlight_sides * sides_mask * HHLP_QuadraticBezier(smoothstep(hmbz_bezel_edge_highlight_width, 0, abs(outermap_warped_coord_ctr.y)), vec2(0.8, 0));
 
-	if (HGL_GLASSBORDER_ON == 1)
+	if (H_GLASSBORDER_ON == 1)
 	{
 		edge_top_center_highlight_mask 		= 0.6 * top_mask * HHLP_QuadraticBezier(smoothstep(hmbz_bezel_edge_highlight_width, 0, abs(outermap_warped_coord_ctr.x)), vec2(0.8, 1));
 		edge_bottom_center_highlight_mask 	= bottom_mask * HHLP_QuadraticBezier(smoothstep(hmbz_bezel_edge_highlight_width, 0, abs(outermap_warped_coord_ctr.x)), vec2(0.8, 1));
@@ -240,29 +240,29 @@ void main()
 	vec4 edge_reflected_color = vec4(0);
 	vec4 glass_border_edge_color = vec4(0);
 	vec4 edge_fullscreen_glow = vec4(0);
-	if (H_GLOBAL_AMOUNT > 0)
+	if (H_REFLECT_GLOBAL_AMOUNT > 0)
 	{
 		// Corner Mask for Specular highlights
-		float fade_out_to_corner = smoothstep(0 + H_CORNER_FADE_DISTANCE / 100 / 2, 0 - H_CORNER_FADE_DISTANCE / 100 / 2, outside_ratio_warped);
-		float corner_fade_mask = (top_corner_mask + bottom_corner_mask) * (H_CORNER_FADE / 100) * fade_out_to_corner * 2;
+		float fade_out_to_corner = smoothstep(0 + H_REFLECT_CORNER_FADE_DISTANCE / 100 / 2, 0 - H_REFLECT_CORNER_FADE_DISTANCE / 100 / 2, outside_ratio_warped);
+		float corner_fade_mask = (top_corner_mask + bottom_corner_mask) * (H_REFLECT_CORNER_FADE / 100) * fade_out_to_corner * 2;
 
 		// Radial fade - fading away from the edges of the screen
 		float radial_fade_speed = 100;
-		float radial_fade_sides = 1 - HHLP_QuadraticBezier(clamp((outside_ratio_warped / (H_RADIAL_FADE_WIDTH / 500)), 0, 1), vec2(1 - (radial_fade_speed / 100), 1));
-		float radial_fade_top_bottom = 1 - HHLP_QuadraticBezier(clamp((outside_ratio_warped / (H_RADIAL_FADE_HEIGHT / 500)), 0, 1), vec2(1 - (radial_fade_speed / 100), 1));
+		float radial_fade_sides = 1 - HHLP_QuadraticBezier(clamp((outside_ratio_warped / (H_REFLECT_RADIAL_FADE_WIDTH / 500)), 0, 1), vec2(1 - (radial_fade_speed / 100), 1));
+		float radial_fade_top_bottom = 1 - HHLP_QuadraticBezier(clamp((outside_ratio_warped / (H_REFLECT_RADIAL_FADE_HEIGHT / 500)), 0, 1), vec2(1 - (radial_fade_speed / 100), 1));
 		float radial_fade_mask = clamp((1 - sides_mask) * radial_fade_top_bottom
 									+ sides_mask * radial_fade_sides, 0, 1);
 
-		float radial_inner_fade_mask = clamp(0.3 + 0.7 * HHLP_QuadraticBezier(smoothstep(0.01, 0.3, outside_ratio_warped / (H_RADIAL_FADE_WIDTH / 500)), vec2(0.1, 0.3)), 0, 1);
+		float radial_inner_fade_mask = clamp(0.3 + 0.7 * HHLP_QuadraticBezier(smoothstep(0.01, 0.3, outside_ratio_warped / (H_REFLECT_RADIAL_FADE_WIDTH / 500)), vec2(0.1, 0.3)), 0, 1);
 
 		// Lateral fade - Fading left to right across the bottom or top to bottom along the sides 
 		float distance_ratio = smoothstep(0, 0.075, outside_ratio_warped);
-		float lateral_outer_fade_distance = H_LATERAL_OUTER_FADE_DISTANCE / 100;
+		float lateral_outer_fade_distance = H_REFLECT_LATERAL_OUTER_FADE_DISTANCE / 100;
 		lateral_outer_fade_distance = 0.5 * lateral_outer_fade_distance + distance_ratio * 0.5 * lateral_outer_fade_distance;
-		float lateral_fade_mask = (1 - sides_mask) * GetFade(abs(outermap_warped_coord_ctr.x) + (H_LATERAL_OUTER_FADE_POSITION / -1000) / SCREEN_ASPECT, 
+		float lateral_fade_mask = (1 - sides_mask) * GetFade(abs(outermap_warped_coord_ctr.x) + (H_REFLECT_LATERAL_OUTER_FADE_POSITION / -1000) / SCREEN_ASPECT, 
 																	outermap_screen_size_from_center.x,
 																	outermap_screen_size_from_center.x * lateral_outer_fade_distance)
-										+  sides_mask * GetFade(abs(outermap_warped_coord_ctr.y) + (H_LATERAL_OUTER_FADE_POSITION / -1000) / SCREEN_ASPECT, 
+										+  sides_mask * GetFade(abs(outermap_warped_coord_ctr.y) + (H_REFLECT_LATERAL_OUTER_FADE_POSITION / -1000) / SCREEN_ASPECT, 
 																outermap_screen_size_from_center.y, 
 																outermap_screen_size_from_center.y * lateral_outer_fade_distance); 
 
@@ -272,41 +272,41 @@ void main()
 
 
 		// Put all the fades together into one mask
-		float final_fade_mask = clamp(H_FADE_AMOUNT * combined_fade_mask, 0, 1) + 1 - H_FADE_AMOUNT;
+		float final_fade_mask = clamp(H_REFLECT_FADE_AMOUNT * combined_fade_mask, 0, 1) + 1 - H_REFLECT_FADE_AMOUNT;
 
-		float stoichaic_blur_samples = H_NOISE_SAMPLES;
+		float stoichaic_blur_samples = H_REFLECT_NOISE_SAMPLES;
 		float noise_falloff = 0.3;
 		float stoichaic_blur_max = HHLP_QuadraticBezier(outside_ratio_warped, vec2(0, noise_falloff)) * 3;
-		float stoichaic_blur_amount = H_NOISE_SAMPLE_DISTANCE;
+		float stoichaic_blur_amount = H_REFLECT_NOISE_SAMPLE_DISTANCE;
 
 		vec4 fullscreen_blurred_sampled_color = HSS_GetStoichaicBlurredSample(BR_MirrorFullscreenGlowPass, VIEWPORT_COORD.xy, stoichaic_blur_samples, (1 - corner_mask) * stoichaic_blur_max * 3, stoichaic_blur_amount);
 
 		vec4 corner_reflection_color = fullscreen_blurred_sampled_color;
 		
-		vec4 fullscreen_glow_color = pow(fullscreen_blurred_sampled_color, vec4(H_FULLSCREEN_GLOW_GAMMA));
+		vec4 fullscreen_glow_color = pow(fullscreen_blurred_sampled_color, vec4(H_REFLECT_FULLSCREEN_GLOW_GAMMA));
 		
 		vec4 diffused_reflection_color = texture(BR_MirrorReflectionDiffusedPass, VIEWPORT_COORD.xy);
 		vec4 diffused_reflection_scatter_color = HSS_GetStoichaicBlurredSample(BR_MirrorReflectionDiffusedPass, VIEWPORT_COORD.xy, stoichaic_blur_samples, stoichaic_blur_max, stoichaic_blur_amount);
-		vec4 diffused_reflection_blended_color = mix(diffused_reflection_color, diffused_reflection_scatter_color, H_NOISE_AMOUNT);
+		vec4 diffused_reflection_blended_color = mix(diffused_reflection_color, diffused_reflection_scatter_color, H_REFLECT_NOISE_AMOUNT);
 
 		vec4 blurred_reflection_scatter_color = HSS_GetStoichaicBlurredSample(BR_MirrorBlurredPass, VIEWPORT_COORD.xy, stoichaic_blur_samples, stoichaic_blur_max, stoichaic_blur_amount);
-		vec4 blurred_reflection_blended_color = mix(blurred_reflection_color, blurred_reflection_scatter_color, H_NOISE_AMOUNT);
+		vec4 blurred_reflection_blended_color = mix(blurred_reflection_color, blurred_reflection_scatter_color, H_REFLECT_NOISE_AMOUNT);
 
 		// Add Fullscreen Glow
 		float lateral_fade_outer_mask_for_glow = (lateral_fade_mask - 1) * 0.8 + 1;
 
 		//Combine diffused and undiffused reflection
 		
-		vec4 bezel_reflected_color = (H_DIRECT_REFLECTION * blurred_reflection_blended_color + H_DIFFUSED_REFLECTION * diffused_reflection_blended_color) * final_fade_mask;
+		vec4 bezel_reflected_color = (H_REFLECT_DIRECT_AMOUNT * blurred_reflection_blended_color + H_REFLECT_DIFFUSED_AMOUNT * diffused_reflection_blended_color) * final_fade_mask;
 
 		// Add Reflection from corners which is sampled from the fullscreen glow
-		bezel_reflected_color += H_CORNER_FADE * corner_reflection_color * corner_fade_mask;
+		bezel_reflected_color += H_REFLECT_CORNER_FADE * corner_reflection_color * corner_fade_mask;
 
 		// Add Fullscreen Glow
-		bezel_reflected_color += H_FULLSCREEN_GLOW / 100 * 1.5 * fullscreen_glow_color * radial_inner_fade_mask * lateral_fade_outer_mask_for_glow;
+		bezel_reflected_color += H_REFLECT_FULLSCREEN_GLOW / 100 * 1.5 * fullscreen_glow_color * radial_inner_fade_mask * lateral_fade_outer_mask_for_glow;
 
 		// Add Bezel and Edge reflection together
-		edge_reflected_color = 1.25 * H_INNER_EDGE_REFLECTION * (blurred_reflection_color + 0.50 * diffused_reflection_color);
+		edge_reflected_color = 1.25 * H_REFLECT_INNER_EDGE_AMOUNT * (blurred_reflection_color + 0.50 * diffused_reflection_color);
 		float reflection_area_mask = outside_tube_mask;
 
 
@@ -315,7 +315,7 @@ void main()
 		vignette_shadow_mask += 0.5 * H_BG_VIGNETTE_OPACITY * HHLP_QuadraticBezier(smoothstep(outside_ratio_warped, 0, 0.1), vec2(1, 0.5));
 
 		// Edge Reflection
-		if (HGL_GLASSBORDER_ON == 1)
+		if (H_GLASSBORDER_ON == 1)
 		{
 			reflected_color += (1 - vignette_shadow_mask) * bezel_reflected_color;
 			reflection_area_mask *= outside_tube_mask_wider;
@@ -327,24 +327,24 @@ void main()
 			reflected_color += edge_mask * (edge_reflected_color + HHLP_EasePowerIn(corner_mask, 1) * corner_reflection_color);
 		}
 
-		reflected_color = H_GLOBAL_AMOUNT * pow(reflected_color, vec4(H_GLOBAL_GAMMA_ADJUST));
+		reflected_color = H_REFLECT_GLOBAL_AMOUNT * pow(reflected_color, vec4(H_REFLECT_GLOBAL_GAMMA_ADJUST));
 		
 		// Mask reflection to only appear inside the bezel
 		reflected_color = clamp(reflected_color, 0, 1) * clamp(reflection_area_mask, 0, 1);
 
-		if (HGL_GLASSBORDER_ON == 1)
+		if (H_GLASSBORDER_ON == 1)
 		{
-			glass_border_edge_color = H_GLOBAL_AMOUNT * pow(edge_reflected_color, vec4(H_GLOBAL_GAMMA_ADJUST));
+			glass_border_edge_color = H_REFLECT_GLOBAL_AMOUNT * pow(edge_reflected_color, vec4(H_REFLECT_GLOBAL_GAMMA_ADJUST));
 			reflected_color = mix(reflected_color, glass_border_edge_color, edge_mask * outside_tube_mask);
 		}
 		// Edge Full Screen Glow
 		// Add Small amount of static glow on the edge (So when the screen is dark there is some highlight) as well as dynamic light
-		edge_fullscreen_glow = H_INNER_EDGE_FULLSCREEN_GLOW * edge_highlight_mask * outside_tube_mask * (vec4(0.005) 
+		edge_fullscreen_glow = H_REFLECT_INNER_EDGE_FULLSCREEN_GLOW * edge_highlight_mask * outside_tube_mask * (vec4(0.005) 
 									+ (avg_lum_mult  + 0.5) * (2 * fullscreen_glow_color + vec4(0.01)));
 		
 		// Add Diffused reflection on top of the glass inner edge
-		if (HGL_GLASSBORDER_ON == 1)
-			edge_fullscreen_glow += H_INNER_EDGE_FULLSCREEN_GLOW * 0.5 * edge_highlight_mask * outside_tube_mask * diffused_reflection_color;
+		if (H_GLASSBORDER_ON == 1)
+			edge_fullscreen_glow += H_REFLECT_INNER_EDGE_FULLSCREEN_GLOW * 0.5 * edge_highlight_mask * outside_tube_mask * diffused_reflection_color;
 
 		reflected_color += clamp(edge_fullscreen_glow, 0, 1);
 		reflected_color.a = 1;
@@ -408,7 +408,7 @@ void main()
 
 
     // // REFLECTION
-	// if (HGL_GLASSBORDER_ON == 1)
+	// if (H_GLASSBORDER_ON == 1)
 	// 	frag_color_linear = mix(frag_color_linear, reflected_color, screen_mask);
 	// else
 	// 	frag_color_linear += reflected_color;

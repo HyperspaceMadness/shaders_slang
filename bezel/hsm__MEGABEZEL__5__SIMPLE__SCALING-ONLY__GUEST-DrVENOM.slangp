@@ -76,6 +76,6 @@ SamplerLUT3 = shaders/HyperspaceMadness/textures/lut/other1_32.png
 SamplerLUT3_linear = true
 ColoredGelImage = shaders/HyperspaceMadness/textures/Transparent_DummyTexture_16x16.png
 
-parameters = "H_SCREEN_MASK_OUTSIDE_SCREEN"
+parameters = "H_CRT_IS_LAST_PASS"
 
-H_SCREEN_MASK_OUTSIDE_SCREEN = 1
+H_CRT_IS_LAST_PASS = 1

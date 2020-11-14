@@ -101,6 +101,8 @@ float H_CUTOUT_CORNER_RADIUS = global.H_CUTOUT_CORNER_RADIUS;
 //---------------------------------------------------------------------------------------------------
 //    MASK DEBUG
 //---------------------------------------------------------------------------------------------------
+#pragma parameter H_MASK_DEBUG_TITLE			"_____[ MASK DEBUG ]____________________________________________" 0 0 0 0
+
 #pragma parameter H_LAYERING_DEBUG_MASK_MODE    "[ DEBUG ]  Mask - ALL | Tube | Bz- | Bz | Bz+ | Frm | Frm+ | BG" -1 -2 7 1
 float H_LAYERING_DEBUG_MASK_MODE = global.H_LAYERING_DEBUG_MASK_MODE;
 
@@ -130,6 +132,12 @@ float H_BG_VIGNETTE_OPACITY = global.H_BG_VIGNETTE_OPACITY / 100;
 
 #pragma parameter H_BG_APPLY_ADJUSTMENT         "[ BG ] Apply NightLight & Static Gamma (0 for Backdrop)"  1 0 1 1
 float H_BG_APPLY_ADJUSTMENT = global.H_BG_APPLY_ADJUSTMENT;
+
+#pragma parameter H_BG_TEXTURE_ASPECT_MODE      "[ BG ] Texture Aspect- Full | Expl. | 4:3 | 3:4 | 16:9 | 9:16" 0 0 5 1
+float H_BG_TEXTURE_ASPECT_MODE = global.H_BG_TEXTURE_ASPECT_MODE;
+
+#pragma parameter H_BG_EXPLICIT_TEXTURE_ASPECT  "[ BG ]  Explicit Texture Aspect" 1.33333 0.01 3 0.01
+float H_BG_EXPLICIT_TEXTURE_ASPECT = global.H_BG_EXPLICIT_TEXTURE_ASPECT;
 
 #pragma parameter H_BG_SCALE_MODE               "[ BG ]  Scale Mode - FullScreen | Tube | Bezel" 0 0 2 1
 float H_BG_SCALE_MODE = global.H_BG_SCALE_MODE;
@@ -185,6 +193,12 @@ float H_BZL_IMG_MASK_MODE = global.H_BZL_IMG_MASK_MODE;
 #pragma parameter H_BZL_IMG_CUTOUT_MODE           "[ BEZEL IMG ]  Cutout Mask - OFF | ON | Invert" 0 0 2 1
 float H_BZL_IMG_CUTOUT_MODE = global.H_BZL_IMG_CUTOUT_MODE;
 
+#pragma parameter H_BZL_IMG_TEXTURE_ASPECT_MODE      "[ BEZEL IMG] TexturAspct- Full | Expl.| 4:3 | 3:4 | 16:9 | 9:16" 0 0 5 1
+float H_BZL_IMG_TEXTURE_ASPECT_MODE = global.H_BZL_IMG_TEXTURE_ASPECT_MODE;
+
+#pragma parameter H_BZL_IMG_EXPLICIT_TEXTURE_ASPECT  "[ BEZEL IMG ]  Explicit Texture Aspect" 1.33333 0.01 3 0.01
+float H_BZL_IMG_EXPLICIT_TEXTURE_ASPECT = global.H_BZL_IMG_EXPLICIT_TEXTURE_ASPECT;
+
 #pragma parameter H_BZL_IMG_SCALE_MODE            "[ BEZEL IMG ]  Scale Mode - FullScreen | Tube | Bezel | BG"  1 0 3 1
 float H_BZL_IMG_SCALE_MODE = global.H_BZL_IMG_SCALE_MODE;
 
@@ -205,38 +219,44 @@ float H_BZL_IMG_USE_CURVATURE = global.H_BZL_IMG_USE_CURVATURE;
 
 
 //---------------------------------------------------------------------------------------------------
-//    CAB GLASS IMAGE
+//    CAB GLS IMAGE
 //---------------------------------------------------------------------------------------------------
 #pragma parameter H_CAB_GLASS_TITLE			"_____[ CABINET OR CABINET GLASS ]______________________________" 0 0 0 0
 
-#pragma parameter H_CAB_GLASS_OPACITY           "[ CAB GLASS ]  Opacity" 0 0 100 1
+#pragma parameter H_CAB_GLASS_OPACITY           "[ CAB GLS ]  Opacity" 0 0 100 1
 float H_CAB_GLASS_OPACITY = global.H_CAB_GLASS_OPACITY / 100;
 
-#pragma parameter H_CAB_GLASS_BRIGHTNESS        "[ CAB GLASS ]  Brightness" 100 0 400 1
+#pragma parameter H_CAB_GLASS_BRIGHTNESS        "[ CAB GLS ]  Brightness" 100 0 400 1
 float H_CAB_GLASS_BRIGHTNESS = global.H_CAB_GLASS_BRIGHTNESS / 100;
 
-#pragma parameter H_CAB_GLASS_BLEND_MODE        "[ CAB GLASS ]  Blend Mode - Off | Normal | Add | Multiply"  1 0 3 1
+#pragma parameter H_CAB_GLASS_BLEND_MODE        "[ CAB GLS ]  Blend Mode - Off | Normal | Add | Multiply"  1 0 3 1
 float H_CAB_GLASS_BLEND_MODE = global.H_CAB_GLASS_BLEND_MODE;
 
-#pragma parameter H_CAB_GLASS_MASK_MODE         "[CAB GLASS] Mask- ALL | Tube | Bz- | Bz | Bz+ | Frm | Frm+ | BG" 0 0 7 1
+#pragma parameter H_CAB_GLASS_MASK_MODE         "[CAB GLS] Mask - ALL | Tube | Bz- | Bz | Bz+ | Frm | Frm+ | BG" 0 0 7 1
 float H_CAB_GLASS_MASK_MODE = global.H_CAB_GLASS_MASK_MODE;
 
-#pragma parameter H_CAB_GLASS_CUTOUT_MODE       "[ CAB GLASS ]  Cutout Mask - OFF | ON | Invert" 0 0 2 1
+#pragma parameter H_CAB_GLASS_CUTOUT_MODE       "[ CAB GLS ]  Cutout Mask - OFF | ON | Invert" 0 0 2 1
 float H_CAB_GLASS_CUTOUT_MODE = global.H_CAB_GLASS_CUTOUT_MODE;
 
-#pragma parameter H_CAB_GLASS_SCALE_MODE        "[CAB GLASS] Scale Mode- Full | BG | Tube | Bzl | Decal | TopImg" 0 0 5 1
+#pragma parameter H_CAB_GLASS_TEXTURE_ASPECT_MODE  "[ CAB GLS] TexturAspect- Full | Expl. | 4:3 | 3:4 | 16:9 | 9:16" 0 0 5 1
+float H_CAB_GLASS_TEXTURE_ASPECT_MODE = global.H_CAB_GLASS_TEXTURE_ASPECT_MODE;
+
+#pragma parameter H_CAB_GLASS_EXPLICIT_TEXTURE_ASPECT  "[ CAB GLS ]  Explicit Texture Aspect" 1.33333 0.01 3 0.01
+float H_CAB_GLASS_EXPLICIT_TEXTURE_ASPECT = global.H_CAB_GLASS_EXPLICIT_TEXTURE_ASPECT;
+
+#pragma parameter H_CAB_GLASS_SCALE_MODE        "[ CAB GLS ] Scale Mode- Full | BG | Tube | Bzl | Decal | TopImg" 0 0 5 1
 float H_CAB_GLASS_SCALE_MODE = global.H_CAB_GLASS_SCALE_MODE;
 
-#pragma parameter H_CAB_GLASS_SCALE_KEEP_ASPECT "[ CAB GLASS ]  Keep Aspect"  1 0 1 1
+#pragma parameter H_CAB_GLASS_SCALE_KEEP_ASPECT "[ CAB GLS ]  Keep Aspect"  1 0 1 1
 float H_CAB_GLASS_SCALE_KEEP_ASPECT = global.H_CAB_GLASS_SCALE_KEEP_ASPECT;
 
-#pragma parameter H_CAB_GLASS_SCALE             "[ CAB GLASS ]  Scale" 100 10 500 1
+#pragma parameter H_CAB_GLASS_SCALE             "[ CAB GLS ]  Scale" 100 10 500 1
 float H_CAB_GLASS_SCALE = global.H_CAB_GLASS_SCALE / 100;
 
-#pragma parameter H_CAB_GLASS_SCALE_X             "[ CAB GLASS ]  Scale X" 100 10 500 1
+#pragma parameter H_CAB_GLASS_SCALE_X             "[ CAB GLS ]  Scale X" 100 10 500 1
 float H_CAB_GLASS_SCALE_X = global.H_CAB_GLASS_SCALE_X / 100;
 
-#pragma parameter H_CAB_GLASS_POS_Y             "[ CAB GLASS ]  Position Y" 0 10 500 1
+#pragma parameter H_CAB_GLASS_POS_Y             "[ CAB GLS ]  Position Y" 0 10 500 1
 float H_CAB_GLASS_POS_Y = global.H_CAB_GLASS_POS_Y / 100;
 
 
@@ -256,6 +276,12 @@ float H_DECAL_MASK_MODE = global.H_DECAL_MASK_MODE;
 
 #pragma parameter H_DECAL_CUTOUT_MODE            "[ DECAL ]  Cutout Mask - OFF | ON | Invert" 0 0 2 1
 float H_DECAL_CUTOUT_MODE = global.H_DECAL_CUTOUT_MODE;
+
+#pragma parameter H_DECAL_TEXTURE_ASPECT_MODE  "[ DECAL ] TextureAspect- Full | Expl. | 4:3 | 3:4 | 16:9 | 9:16" 0 0 5 1
+float H_DECAL_TEXTURE_ASPECT_MODE = global.H_DECAL_TEXTURE_ASPECT_MODE;
+
+#pragma parameter H_DECAL_EXPLICIT_TEXTURE_ASPECT  "[ DECAL ]  Explicit Texture Aspect" 1.33333 0.01 3 0.01
+float H_DECAL_EXPLICIT_TEXTURE_ASPECT = global.H_DECAL_EXPLICIT_TEXTURE_ASPECT;
 
 #pragma parameter H_DECAL_SCALE_MODE            "[ DECAL ]  Scale Mode - Full | Tube | Bezel | BG | Bzl Img"  2 0 4 1
 float H_DECAL_SCALE_MODE = global.H_DECAL_SCALE_MODE;
@@ -290,6 +316,12 @@ float H_LED_MASK_MODE = global.H_LED_MASK_MODE;
 #pragma parameter H_LED_CUTOUT_MODE             "[ LED ]  Cutout Mask - OFF | ON | Invert" 0 0 2 1
 float H_LED_CUTOUT_MODE = global.H_LED_CUTOUT_MODE;
 
+#pragma parameter H_LED_TEXTURE_ASPECT_MODE  "[ LED ] Texture Aspect- Full | Expl. | 4:3 | 3:4 | 16:9 | 9:16" 0 0 5 1
+float H_LED_TEXTURE_ASPECT_MODE = global.H_LED_TEXTURE_ASPECT_MODE;
+
+#pragma parameter H_LED_EXPLICIT_TEXTURE_ASPECT  "[ LED ]  Explicit Texture Aspect" 1.33333 0.01 3 0.01
+float H_LED_EXPLICIT_TEXTURE_ASPECT = global.H_LED_EXPLICIT_TEXTURE_ASPECT;
+
 #pragma parameter H_LED_SCALE_MODE              "[ LED ] Scale Mode - Full | Tube | Bezel | BG | Bzl Img | Decal"  0 0 5 1
 float H_LED_SCALE_MODE = global.H_LED_SCALE_MODE;
 
@@ -322,6 +354,12 @@ float H_TOP_MASK_MODE = global.H_TOP_MASK_MODE;
 
 #pragma parameter H_TOP_CUTOUT_MODE             "[ TOP ]  Cutout Mask - OFF | ON | Invert" 0 0 2 1
 float H_TOP_CUTOUT_MODE = global.H_TOP_CUTOUT_MODE;
+
+#pragma parameter H_TOP_TEXTURE_ASPECT_MODE  "[ TOP ] Texture Aspect- Full | Expl. | 4:3 | 3:4 | 16:9 | 9:16" 0 0 5 1
+float H_TOP_TEXTURE_ASPECT_MODE = global.H_TOP_TEXTURE_ASPECT_MODE;
+
+#pragma parameter H_TOP_EXPLICIT_TEXTURE_ASPECT  "[ TOP ]  Explicit Texture Aspect" 1.33333 0.01 3 0.01
+float H_TOP_EXPLICIT_TEXTURE_ASPECT = global.H_TOP_EXPLICIT_TEXTURE_ASPECT;
 
 #pragma parameter H_TOP_SCALE_MODE              "[ TOP ] Scale Mode - Full | Tube | Bezel | BG | Bzl Img | Decal"  0 0 5 1
 float H_TOP_SCALE_MODE = global.H_TOP_SCALE_MODE;

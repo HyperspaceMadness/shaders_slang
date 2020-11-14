@@ -1,0 +1,43 @@
+#reference "../hsm__MEGABEZEL__0__GUEST-DrVENOM.slangp"
+
+// Define textures to be used by the different passes
+textures = "SamplerLUT1;SamplerLUT2;SamplerLUT3;BackgroundImage;BackgroundVertImage;ColoredGelImage;TubeHighlightImage;CabinetGlassImage;BezelImage;BezelVertImage;DecalImage;NightLightingImage;LEDImage;TopLayerImage;TopLayerVertImage;"
+
+SamplerLUT1 = ../shaders/HyperspaceMadness/textures/lut/16.png
+SamplerLUT1_linear = true
+SamplerLUT2 = ../shaders/HyperspaceMadness/textures/lut/64.png
+SamplerLUT2_linear = true
+SamplerLUT3 = ../shaders/HyperspaceMadness/textures/lut/other1_32.png
+SamplerLUT3_linear = true
+
+BackgroundImage = ../shaders/HyperspaceMadness/textures/HSM_Duimon_Super_Famicom_3840x2160.png
+BackgroundVertImage = ../shaders/HyperspaceMadness/textures/HSM_Duimon_Super_Famicom_3840x2160.png
+ColoredGelImage = ../shaders/HyperspaceMadness/textures/Transparent_DummyTexture_16x16.png
+CabinetGlassImage = ../shaders/HyperspaceMadness/textures/TubeGlassOverlayImage_Night_3840x2160.png
+BezelImage = ../shaders/HyperspaceMadness/textures/Transparent_DummyTexture_16x16.png
+BezelVertImage = ../shaders/HyperspaceMadness/textures/Transparent_DummyTexture_16x16.png
+DecalImage = ../shaders/HyperspaceMadness/textures/Transparent_DummyTexture_16x16.png
+NightLightingImage = ../shaders/HyperspaceMadness/textures/NightLighting_3840x2160.jpg
+LEDImage = ../shaders/HyperspaceMadness/textures/Transparent_DummyTexture_16x16.png
+TopLayerImage = ../shaders/HyperspaceMadness/textures/Transparent_DummyTexture_16x16.png
+TopLayerVertImage = ../shaders/HyperspaceMadness/textures/Transparent_DummyTexture_16x16.png
+
+parameters = "H_FLIP_VIEWPORT_AND_CORE_VERTICAL;H_INT_SCALE_MODE;H_SCANLINE_DIRECTION;H_CORE_RES_SAMPLING_MULT_SCANLINE_DIR;H_CORE_RES_SAMPLING_MULT_OPPOSITE_DIR;H_SCANLINE_INTERLACE_TRIGGER_RES;H_CROP_OVERSCAN_TOP;H_CROP_OVERSCAN_BOTTOM;H_CROP_OVERSCAN_LEFT;H_CROP_OVERSCAN_RIGHT;H_SCANLINE_FAKE_SCANLINE_OPACITY;H_BG_VIGNETTE_OPACITY;H_BZL_COLOR_VALUE;H_NIGHT_OPACITY;HSS_SCALEFX_ON;GDV_INTERLACE_MODE;GDV_MASK_TYPE"
+
+H_FLIP_VIEWPORT_AND_CORE_VERTICAL = 1
+H_INT_SCALE_MODE = 1
+H_SCANLINE_DIRECTION = 2
+H_CORE_RES_SAMPLING_MULT_SCANLINE_DIR = 2
+H_CORE_RES_SAMPLING_MULT_OPPOSITE_DIR = 2
+H_SCANLINE_INTERLACE_TRIGGER_RES = 650
+H_CROP_OVERSCAN_TOP = 34
+H_CROP_OVERSCAN_BOTTOM = 27
+H_CROP_OVERSCAN_LEFT = 14
+H_CROP_OVERSCAN_RIGHT = 13
+H_SCANLINE_FAKE_SCANLINE_OPACITY = 0
+H_BG_VIGNETTE_OPACITY = 0
+H_BZL_COLOR_VALUE = 30
+H_NIGHT_OPACITY = 98
+HSS_SCALEFX_ON = 1
+GDV_INTERLACE_MODE = 2
+GDV_MASK_TYPE = 2

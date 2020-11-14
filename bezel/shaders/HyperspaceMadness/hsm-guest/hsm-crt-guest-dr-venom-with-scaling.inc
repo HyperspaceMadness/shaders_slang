@@ -225,7 +225,7 @@ layout(std140, set = 0, binding = 0) uniform UBO
 // #define interlace_res         params.interlace_res
 
 // HSM Added
-#define interlace_res H_INTERLACE_TRIGGER_RES
+#define interlace_res H_SCANLINE_INTERLACE_TRIGGER_RES
 
 // HSM Removed (Moved it to the top)
 // #pragma parameter bloom "Bloom Strength" 0.0 0.0 2.0 0.1

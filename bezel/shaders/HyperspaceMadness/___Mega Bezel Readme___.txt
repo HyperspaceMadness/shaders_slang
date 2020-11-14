@@ -85,16 +85,21 @@ HyperspaceMadness Mega Bezel Shader Readme
 -----  Parameter Descriptions  ----------------------------------------------------------------------------------------------------
 -----------------------------------------------------------------------------------------------------------------------------------
 
-___HSM MEGA BEZEL__ V.202X-XX-XX-0 - Debug ON --- Turn on debug text to show resolution & integer scale info
+_____[ HSM MEGA BEZEL  V.20XX-XX-XX-X ]____________________
 
-[VERTICAL FLIP]  Flip Viewport Vertical --- Some 3D cores flip the viewport, this flips it back
-
-[ROTATE]  Rotate CRT Tube --- Turns the tube 90 degrees counter counter-clockwise
+[ DEBUG ]  Debug ON - set to 1 to turn Debug On
 
 
------- [ASPECT] -------------------------------------------------------------------------------------------
+_____[ FLIP & ROTATE ]_________________________________________
 
-[ASPECT]  Orientation --- Should the aspect be horizontal or vertical?
+[ VERTICAL FLIP ]  Flip Vertical - For 3D Cores --- Some 3D cores flip the viewport, this flips it back
+
+[ ROTATE ]  Rotate CRT Tube --- Turns the tube 90 degrees counter counter-clockwise
+
+
+_____[ ASPECT RATIO ]__________________________________________
+
+[ ASPECT ]  Orientation --- Should the aspect be horizontal or vertical?
             0 - Auto - Chooses vertical vs horizontal based on the core resolution
             1 - Horizontal, uses horizontal aspect
             2 - Vertical, uses vertical aspect
@@ -108,15 +113,15 @@ ___HSM MEGA BEZEL__ V.202X-XX-XX-0 - Debug ON --- Turn on debug text to show res
             5 - PAR (The aspect ratio of the pixel resolution)
             6 - Full (The screen will scale to the full viewport)
 
-[ASPECT]  Explicit Aspect Ratio --- Ratio used when Auto is chosen in [Aspect] Type is set to Explicit
+[ASPECT]  Explicit Aspect Ratio --- Ratio used when [Aspect] Type is set to Explicit or if Auto is chosen and no matching resolution can be found
 
 
 ------ [SCALING] -------------------------------------------------------------------------------------------
 
 [SCALING]  Int Scale Mode
             0 - Off, Use Non-Integer Scale
-            1 - Integer Scale On for the screen's for a horizontal aspect ratio this is the vertical axis
-                If the aspect ratio is vertical integer scale is used for both horizontal and vertical axes
+            1 - ShortAxis Integer Scale On - for the viewport (monitor) in landscape mode this is the vertical axis
+                If the screen/tube aspect ratio is vertical then integer scale is used for both horizontal and vertical axes
             2 - Integer Scale on both axes
 
 [SCALING]  Int Scale Multiple Offset --- Adjusts the size of the screen by increasing the multiple of the core resolution (on both axes) when using integer scale, to make the screen larger or smaller
@@ -130,6 +135,9 @@ ___HSM MEGA BEZEL__ V.202X-XX-XX-0 - Debug ON --- Turn on debug text to show res
 [SCALING]  Snap To Int-Scale Tolerance --- Snaps the non-integer scale to the closest integer scale within the tolerance 
                                             This allows you to set an approximate size for the screen and have it snap to an integer scale but not if it would be too much different
 
+[ POSITION ]  Position X --- Moves the screen/tube sideways
+
+[ POSITION ]  Position Y --- Moves the screen/tube up and down
 
 ------ [CROPPING] -------------------------------------------------------------------------------------------
     Cropping allows you to hide edges of the game image which were never meant to be seen 

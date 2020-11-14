@@ -47,6 +47,13 @@ Thanks to:
 #define IMAGE_SCALE_MODE_BEZELIMAGE 4
 #define IMAGE_SCALE_MODE_DECAL 5
 
+#define TEXTURE_ASPECT_MODE_VIEWPORT 0
+#define TEXTURE_ASPECT_MODE_EXPLICIT 1
+#define TEXTURE_ASPECT_MODE_4_3 2
+#define TEXTURE_ASPECT_MODE_3_4 3
+#define TEXTURE_ASPECT_MODE_16_9 4
+#define TEXTURE_ASPECT_MODE_9_16 5
+
 /////////////// Helper Functions ///////////////
 
 float TUBE_MASK = 0;
@@ -77,8 +84,19 @@ vec4 PreMultAlphaBlend(vec4 color_under, vec4 color_over)
 
 // Takes a viewport coordinate and gives a new coordinate scaled by the specific scale mode
 // Takes into account the default sizes of each scale mode
-vec2 GetScaledCoord(vec2 viewport_coord, vec2 background_coord, vec2 screen_coord, vec2 bezel_outside_coord, vec2 bezel_image_coord, vec2 decal_coord, vec2 scale_offset, vec2 pos_offset, float scale_mode, float keep_aspect)
+vec2 GetScaledCoord(vec2 viewport_coord, vec2 background_coord, vec2 screen_coord, vec2 bezel_outside_coord, vec2 bezel_image_coord, vec2 decal_coord, float texture_aspect_mode, float explicit_texture_aspect, vec2 scale_offset, vec2 pos_offset, float scale_mode, float keep_aspect)
 {
+	if (texture_aspect_mode == TEXTURE_ASPECT_MODE_VIEWPORT)
+		explicit_texture_aspect = global.OutputSize.x / global.OutputSize.y;
+	if (texture_aspect_mode == TEXTURE_ASPECT_MODE_4_3)
+		explicit_texture_aspect = 1.33333;
+	if (texture_aspect_mode == TEXTURE_ASPECT_MODE_3_4)
+		explicit_texture_aspect = 0.75;
+	if (texture_aspect_mode == TEXTURE_ASPECT_MODE_16_9)
+		explicit_texture_aspect = 1.7777;
+	if (texture_aspect_mode == TEXTURE_ASPECT_MODE_9_16)
+		explicit_texture_aspect = 0.5625;
+
 	vec2 destination_scale = vec2(0.5);
 	vec2 destination_pos_offset = pos_offset;
 	vec2 destination_coord = viewport_coord / 0.5;
@@ -123,8 +141,8 @@ vec2 GetScaledCoord(vec2 viewport_coord, vec2 background_coord, vec2 screen_coor
 	}
 
 	// Find the aspect difference so the image can be shown without distortion
-	vec2 destination_size = destination_scale * global.OutputSize.xy;
-	float aspect_difference = (global.OutputSize.x / global.OutputSize.y) / destination_aspect;
+	// vec2 destination_size = destination_scale * global.OutputSize.xy;
+	float aspect_difference = explicit_texture_aspect / destination_aspect;
 
 	destination_scale *= (keep_aspect == 1) ? vec2(aspect_difference, 1) : vec2(1);
 	destination_scale *= scale_offset;
@@ -286,28 +304,28 @@ void main()
 	float split_dist = 0;
 	float split_axis_is_horizontal = 0;
 
-	if (H_SPLIT_SCREEN_ON == 1)
+	if (H_SPLITSCREEN_ON == 1)
 	{
 
 		HSS_GetSplitInfo(split_pos_1, split_pos_2, split_dist, split_axis_is_horizontal);
 
-		if (H_SPLIT_SCREEN_CENTER_FILL_MODE == 2)
+		if (H_SPLITSCREEN_CENTER_FILL_MODE == 2)
 		{
 			float sides_split_fade_mask = 1 - HSS_GetSplitScreenAreaGradient(tube_coord_warped, 1, 0.04);
 			crt_linear *= sides_split_fade_mask;
 		}
 		else
 		{
-			if (H_SPLIT_SCREEN_CENTER_FILL_MODE == 1)
+			if (H_SPLITSCREEN_CENTER_FILL_MODE == 1)
 				// Take the split area and re-map it to 0-1
 				screen_curved_coord = HSS_Get0To1CoordFromSplitArea(screen_curved_coord, split_pos_1, split_pos_2, split_dist, split_axis_is_horizontal);
 
 			// If this is the split screen preset and we want to blend the center colors
-			if (H_SPLIT_SCREEN_CENTER_FILL_MODE == 3 || H_SPLIT_SCREEN_CENTER_FILL_MODE == 4)
+			if (H_SPLITSCREEN_CENTER_FILL_MODE == 3 || H_SPLITSCREEN_CENTER_FILL_MODE == 4)
 				float split_screen_area_mask = (1 - outside_tube_mask) * HHLP_EasePowerOut(HSS_GetSplitScreenAreaGradient(tube_coord_warped, 0.25, 1.25), 2);
 
 			// If we should fade to black in the center
-			if (H_SPLIT_SCREEN_CENTER_FILL_MODE > 3 && H_SPLIT_SCREEN_CENTER_FILL_MODE < 6)
+			if (H_SPLITSCREEN_CENTER_FILL_MODE > 3 && H_SPLITSCREEN_CENTER_FILL_MODE < 6)
 			{
 				float split_screen_area_mask = HHLP_EasePowerOut(HSS_GetSplitScreenAreaGradient(tube_coord_warped, 0.1, 1.4), 2);
 				
@@ -363,9 +381,9 @@ void main()
 	vec2 sub_screen_scale = SCREEN_SCALE;
 	float frame_thickness = H_FRM_THICKNESS;
 
-	if (H_SPLIT_SCREEN_ON == 1)
+	if (H_SPLITSCREEN_ON == 1)
 		// If we are using split screen with separate frames
-		if (H_SPLIT_SCREEN_CENTER_FILL_MODE == 1)
+		if (H_SPLITSCREEN_CENTER_FILL_MODE == 1)
 		{
 			outer_bezel_scale = split_axis_is_horizontal * vec2((outer_bezel_scale.x - 1) * 2 + 1, outer_bezel_scale.y) + (1 - split_axis_is_horizontal) * vec2(outer_bezel_scale.x, (outer_bezel_scale.y - 1) * 2 + 1);
 			
@@ -385,8 +403,8 @@ void main()
 	if ((H_CURVATURE_MODE > 0) && ((H_CURVATURE_3D_TILT_ANGLE_X != 0) || (H_CURVATURE_3D_TILT_ANGLE_Y != 0)))
 		bezel_outside_coord = HSS_GetCurvedCoord(bezel_outside_coord, 0, outer_bezel_scale.x * global.OutputSize.x / global.OutputSize.y / outer_bezel_scale.y);
 
-	if (H_SPLIT_SCREEN_ON == 1)
-		if (H_SPLIT_SCREEN_CENTER_FILL_MODE == 1)
+	if (H_SPLITSCREEN_ON == 1)
+		if (H_SPLITSCREEN_CENTER_FILL_MODE == 1)
 		{
 			// If this was on the first screen then flip it back
 			bezel_outside_coord = HSS_Get0To1CoordFromSplitArea(bezel_outside_coord, split_pos_1, split_pos_2, split_dist, split_axis_is_horizontal);
@@ -429,9 +447,9 @@ void main()
 
 	// A hack to adjust the angle offset, because without it the corner angle isn't pointing exactly at the corner
 	// This offset is the opposite direction for vertical and horizontal aspect ratio
-	float corner_rotation_offset = (SCREEN_COORD.y < 0.5) ? -H_CORNER_ROTATION_OFFSET_TOP : -H_CORNER_ROTATION_OFFSET_BOTTOM;
+	float corner_rotation_offset = (SCREEN_COORD.y < 0.5) ? -H_REFLECT_CORNER_ROTATION_OFFSET_TOP : -H_REFLECT_CORNER_ROTATION_OFFSET_BOTTOM;
 
-	if (H_SPLIT_SCREEN_CENTER_FILL_MODE == 1)
+	if (H_SPLITSCREEN_CENTER_FILL_MODE == 1)
 		corner_rotation_offset += SCREEN_ASPECT < 1 ? 13 : -13; 
 	else
 		if (H_CURVATURE_MODE == 0)
@@ -448,10 +466,10 @@ void main()
 	// Get the distance perpendicular to the crease direction so we can use it to fade later
 	float distance_from_crease = HHLP_GetDistanceToLine(outermap_coord_warped_ctr_at_screen_corner.x, outermap_coord_warped_ctr_at_screen_corner.y, 1, corner_crease_dir.y / corner_crease_dir.x, 0 );
 
-	float fade_out_to_corner = HHLP_QuadraticBezier(clamp(length(outermap_warped_outside_screen_vector) / (corner_crease_length * 2), 0, 1), vec2(0.5, H_CORNER_SPREAD_FALLOFF / 100));
+	float fade_out_to_corner = HHLP_QuadraticBezier(clamp(length(outermap_warped_outside_screen_vector) / (corner_crease_length * 2), 0, 1), vec2(0.5, H_REFLECT_CORNER_SPREAD_FALLOFF / 100));
 
-	float corner_fade_width_inner = H_CORNER_INNER_SPREAD / 100 * (SCREEN_SCALE.x + SCREEN_SCALE.y) * H_BZL_INNER_CORNER_RADIUS_SCALE * H_SCREEN_CORNER_RADIUS / 10 / 250 * 1.2;
-	float corner_fade_width_outer = H_CORNER_OUTER_SPREAD / 100 * (SCREEN_SCALE.x + SCREEN_SCALE.y) * H_BZL_OUTER_CORNER_RADIUS_SCALE * H_SCREEN_CORNER_RADIUS / 10 / 250 * 1.6;
+	float corner_fade_width_inner = H_REFLECT_CORNER_INNER_SPREAD / 100 * (SCREEN_SCALE.x + SCREEN_SCALE.y) * H_BZL_INNER_CORNER_RADIUS_SCALE * H_SCREEN_CORNER_RADIUS / 10 / 250 * 1.2;
+	float corner_fade_width_outer = H_REFLECT_CORNER_OUTER_SPREAD / 100 * (SCREEN_SCALE.x + SCREEN_SCALE.y) * H_BZL_OUTER_CORNER_RADIUS_SCALE * H_SCREEN_CORNER_RADIUS / 10 / 250 * 1.6;
 	float corner_fade_width = (corner_fade_width_inner + fade_out_to_corner * (corner_fade_width_outer - corner_fade_width_inner));
 
 	// Get a vector perpendicular to the crease that we can shift the crease to blend between bottom/top and sides
@@ -499,6 +517,8 @@ void main()
 
 	vec2 background_coord_no_mirror = VIEWPORT_COORD;
 	background_coord_no_mirror = GetScaledCoord(VIEWPORT_COORD, background_coord_no_mirror, screen_coord, bezel_outside_coord, vec2(0), vec2(0),
+									H_BG_TEXTURE_ASPECT_MODE, 
+									H_BG_EXPLICIT_TEXTURE_ASPECT, 
 									vec2(H_BG_SCALE * H_BG_SCALE_X, H_BG_SCALE), 
 									vec2(0, H_BG_POS_Y), 
 									H_BG_SCALE_MODE, 
@@ -559,7 +579,7 @@ void main()
 	float hmbz_bezel_highlight_width = 0.25;
 
 	float hmbz_bezel_edge_highlight_width = 0.8;
-	if (HGL_GLASSBORDER_ON == 1)
+	if (H_GLASSBORDER_ON == 1)
 		hmbz_bezel_edge_highlight_width = 0.55;
 	
 	float hmbz_bezel_brightness_frame_inner_edge = 0.014;
@@ -589,7 +609,7 @@ void main()
 	float edge_bottom_center_highlight_mask 	= hmbz_bezel_highlight_bottom * bottom_mask * HHLP_QuadraticBezier(smoothstep(hmbz_bezel_edge_highlight_width, 0, abs(outermap_warped_coord_ctr.x)), vec2(0.8, 0));
 	float edge_sides_highlight_mask 			= hmbz_bezel_highlight_sides * sides_mask * HHLP_QuadraticBezier(smoothstep(hmbz_bezel_edge_highlight_width, 0, abs(outermap_warped_coord_ctr.y)), vec2(0.8, 0));
 
-	if (HGL_GLASSBORDER_ON == 1)
+	if (H_GLASSBORDER_ON == 1)
 	{
 		edge_top_center_highlight_mask 		= 0.6 * top_mask * HHLP_QuadraticBezier(smoothstep(hmbz_bezel_edge_highlight_width, 0, abs(outermap_warped_coord_ctr.x)), vec2(0.8, 1));
 		edge_bottom_center_highlight_mask 	= bottom_mask * HHLP_QuadraticBezier(smoothstep(hmbz_bezel_edge_highlight_width, 0, abs(outermap_warped_coord_ctr.x)), vec2(0.8, 1));
@@ -641,7 +661,7 @@ void main()
 	if (H_FRM_OPACITY > 0.001)
 		frame_shadow_layer.a = HHLP_QuadraticBezier(smoothstep(H_FRM_SHADOW_WIDTH / 100, 0, dist_outside_frame), vec2(1, 0));
 
-	if (HGL_GLASSBORDER_ON == 1)
+	if (H_GLASSBORDER_ON == 1)
 		OUTSIDE_TUBE_MASK_FOR_IMAGE = clamp(outside_tube_mask - edge_mask, 0, 1);
 	else
 		OUTSIDE_TUBE_MASK_FOR_IMAGE = 1 - HSS_GetCornerMask((tube_coord_warped - 0.5) * 1.003 + 0.5, SCREEN_ASPECT, H_FRM_OUTER_CORNER_RADIUS, 1);
@@ -727,6 +747,8 @@ void main()
 		screen_coord_for_bezel_image = screen_curved_coord;
 	
 	vec2 bezel_image_coord = GetScaledCoord(VIEWPORT_COORD, background_coord_no_mirror, screen_coord_for_bezel_image, bezel_outside_coord, vec2(0), vec2(0),
+											H_BZL_IMG_TEXTURE_ASPECT_MODE, 
+											H_BZL_IMG_EXPLICIT_TEXTURE_ASPECT,
 											vec2(H_BZL_IMG_SCALE * H_BZL_IMG_SCALE_X, H_BZL_IMG_SCALE), 
 											vec2(0, H_BZL_IMG_POS_Y), 
 											H_BZL_IMG_SCALE_MODE, 
@@ -768,6 +790,8 @@ void main()
 	//----------------------------------------------------
 	vec4 decal_image = vec4(0);
 	vec2 decal_coord = GetScaledCoord(VIEWPORT_COORD, background_coord_no_mirror, screen_coord, bezel_outside_coord, bezel_image_coord, vec2(0),
+										H_DECAL_TEXTURE_ASPECT_MODE, 
+										H_DECAL_EXPLICIT_TEXTURE_ASPECT, 
 										vec2(H_DECAL_SCALE * H_DECAL_SCALE_X, H_DECAL_SCALE), 
 										vec2(0, H_DECAL_POS_Y), 
 										H_DECAL_SCALE_MODE, 
@@ -791,6 +815,8 @@ void main()
 
 	vec4 top_image = vec4(0);
 	vec2 top_image_coord = GetScaledCoord(VIEWPORT_COORD, background_coord_no_mirror, screen_coord, bezel_outside_coord, bezel_image_coord, decal_coord,
+						H_TOP_TEXTURE_ASPECT_MODE, 
+						H_TOP_EXPLICIT_TEXTURE_ASPECT, 
 						vec2(H_TOP_SCALE * H_TOP_SCALE_X, H_TOP_SCALE), 
 						vec2(0, H_TOP_POS_Y), 
 						H_TOP_SCALE_MODE, 
@@ -823,6 +849,8 @@ void main()
 	if (H_CAB_GLASS_OPACITY > 0)
 	{
 		vec2 cab_glass_coord = GetScaledCoord(VIEWPORT_COORD, background_coord_no_mirror, screen_coord, bezel_outside_coord, bezel_image_coord, decal_coord,
+						H_CAB_GLASS_TEXTURE_ASPECT_MODE, 
+						H_CAB_GLASS_EXPLICIT_TEXTURE_ASPECT, 
 						vec2(H_CAB_GLASS_SCALE * H_CAB_GLASS_SCALE_X, H_CAB_GLASS_SCALE), 
 						vec2(0, H_CAB_GLASS_POS_Y), 
 						H_CAB_GLASS_SCALE_MODE, 
@@ -857,6 +885,8 @@ void main()
 	if (H_LED_OPACITY > 0)
 	{
 		vec2 led_coord = GetScaledCoord(VIEWPORT_COORD, background_coord_no_mirror, screen_coord, bezel_outside_coord, bezel_image_coord, decal_coord,
+						H_LED_TEXTURE_ASPECT_MODE, 
+						H_LED_EXPLICIT_TEXTURE_ASPECT, 
 						vec2(H_LED_SCALE * H_LED_SCALE_X, H_LED_SCALE), 
 						vec2(0, H_LED_POS_Y), 
 						H_LED_SCALE_MODE, 
@@ -898,12 +928,16 @@ void main()
 	vec2 cutout_coord = (VIEWPORT_COORD - 0.5) * 2 + 0.5;
 	if (H_CUTOUT_SCALE_MODE == 1)
 		cutout_coord = GetScaledCoord(screen_coord, vec2(0,0), vec2(0,0), vec2(0,0), vec2(0,0), vec2(0,0),
+								TEXTURE_ASPECT_MODE_VIEWPORT,
+								1,
 								vec2(H_CUTOUT_SCALE * H_CUTOUT_SCALE_X, H_CUTOUT_SCALE), 
 								vec2(0, H_CUTOUT_POS_Y), 
 								IMAGE_SCALE_MODE_VIEWPORT, 
 								0);
 	else if (H_CUTOUT_SCALE_MODE == 2)
 		cutout_coord = GetScaledCoord(bezel_outside_coord, vec2(0,0), vec2(0,0), vec2(0,0), vec2(0,0), vec2(0,0),
+										TEXTURE_ASPECT_MODE_VIEWPORT,
+										1,
 										vec2(H_CUTOUT_SCALE * H_CUTOUT_SCALE_X, H_CUTOUT_SCALE), 
 										vec2(0, H_CUTOUT_POS_Y), 
 										IMAGE_SCALE_MODE_VIEWPORT, 
@@ -912,6 +946,8 @@ void main()
 	{
 		cutout_coord = (VIEWPORT_COORD - 0.5) / vec2(DEFAULT_BEZEL_SCALE_V * screen_aspect / output_aspect, DEFAULT_BEZEL_SCALE_V) + 0.5;
 		cutout_coord = GetScaledCoord(cutout_coord, background_coord_no_mirror, screen_coord_for_bezel_image, bezel_outside_coord, bezel_image_coord, decal_coord,
+												TEXTURE_ASPECT_MODE_VIEWPORT,
+												1,
 												vec2(H_CUTOUT_SCALE * H_CUTOUT_SCALE_X, H_CUTOUT_SCALE), 
 												vec2(0, H_CUTOUT_POS_Y), 
 												H_CUTOUT_SCALE_MODE, 
@@ -935,7 +971,7 @@ void main()
 
 	vec4 frag_color_linear = vec4(0);
 
-	for(int i=0; i < 21; i++)
+	for(int i=0; i < 23; i++)
 	{
 		// BACKGROUND
 		if (H_BG_LAYER_ORDER == i)
@@ -1030,7 +1066,7 @@ void main()
 		// REFLECTION
 		if (H_REFLECTION_LAYER_ORDER == i)
 			if (H_REFLECTION_BLEND_MODE > -1)
-				if (H_GLOBAL_AMOUNT > 0)
+				if (H_REFLECT_GLOBAL_AMOUNT > 0)
 					frag_color_linear = BlendModeLayerMix(frag_color_linear, 
 															reflection_linear, 
 															H_REFLECTION_BLEND_MODE, 

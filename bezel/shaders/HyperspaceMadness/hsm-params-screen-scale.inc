@@ -10,7 +10,7 @@ Description:
 // Screen Scale Required Parameters
 #pragma parameter H_MEGA_BEZEL_TITLE					"_____[ HSM MEGA BEZEL  ALPHA.2020-11-03-0 ]____________________" 0 0 0 0
 
-#pragma parameter H_MEGA_BEZEL_DEBUG					"[ DEBUG ]  Debug ON" 0 0 1 1
+#pragma parameter H_MEGA_BEZEL_DEBUG					"[ DEBUG ]  Show Resolution Info" 0 0 1 1
 float H_MEGA_BEZEL_DEBUG = global.H_MEGA_BEZEL_DEBUG;
 
 //---------------------------------------------------------------------------------------------------
@@ -108,15 +108,15 @@ float H_CORE_RES_SAMPLING_MULT_SCANLINE_DIR = global.H_CORE_RES_SAMPLING_MULT_SC
 #pragma parameter H_CORE_RES_SAMPLING_MULT_OPPOSITE_DIR			"[ CORE RES SAMPLING ]  Opposite Dir"  1 0.25 16 0.25
 float H_CORE_RES_SAMPLING_MULT_OPPOSITE_DIR = global.H_CORE_RES_SAMPLING_MULT_OPPOSITE_DIR;
 
-#pragma parameter H_INTERLACE_TRIGGER_RES 						"[ INTERLACE AND FAKE SCANLINES ]  Trigger Res" 600.0 0.0 2000.0 25.0
-#define H_INTERLACE_TRIGGER_RES global.H_INTERLACE_TRIGGER_RES
+#pragma parameter H_SCANLINE_INTERLACE_TRIGGER_RES 						"[ INTERLACE AND FAKE SCANLINES ]  Trigger Res" 600.0 0.0 2000.0 25.0
+#define H_SCANLINE_INTERLACE_TRIGGER_RES global.H_SCANLINE_INTERLACE_TRIGGER_RES
 
-#pragma parameter H_SCREENFX_FAKE_SCANLINE_OPACITY 				"[ FAKE SCANLINES ]  Scanline Opacity - Def 0.7" 0.7 0 1 0.05
-#define H_SCREENFX_FAKE_SCANLINE_OPACITY global.H_SCREENFX_FAKE_SCANLINE_OPACITY
+#pragma parameter H_SCANLINE_FAKE_SCANLINE_OPACITY 				"[ FAKE SCANLINES ]  Scanline Opacity - Def 0.7" 0.7 0 1 0.05
+#define H_SCANLINE_FAKE_SCANLINE_OPACITY global.H_SCANLINE_FAKE_SCANLINE_OPACITY
 
-// #pragma parameter H_SCREENFX_FAKE_SCANLINE_BRIGHTNESS_CUTOFF 	"[ SCREEN FX ]  Fake 240p Scanline Brightness Cutoff - Def 3" 3 0 10 0.05
-#ifndef H_SCREENFX_FAKE_SCANLINE_BRIGHTNESS_CUTOFF
-	#define H_SCREENFX_FAKE_SCANLINE_BRIGHTNESS_CUTOFF 3
+// #pragma parameter H_SCANLINE_FAKE_SCANLINE_BRIGHTNESS_CUTOFF 	"[ SCREEN FX ]  Fake 240p Scanline Brightness Cutoff - Def 3" 3 0 10 0.05
+#ifndef H_SCANLINE_FAKE_SCANLINE_BRIGHTNESS_CUTOFF
+	#define H_SCANLINE_FAKE_SCANLINE_BRIGHTNESS_CUTOFF 3
 #endif
 
 
@@ -125,16 +125,16 @@ float H_CORE_RES_SAMPLING_MULT_OPPOSITE_DIR = global.H_CORE_RES_SAMPLING_MULT_OP
 //---------------------------------------------------------------------------------------------------
 #pragma parameter H_SPLITSCREEN_TITLE					"_____[ SPLIT SCREEN ]__________________________________________" 0 0 0 0
 
-#pragma parameter H_SPLIT_SCREEN_ON					"[ SPLIT SCREEN ]  Split ON - SPLIT SCREEN PRESET ONLY" 0 0 1 1
-float H_SPLIT_SCREEN_ON = global.H_SPLIT_SCREEN_ON;
+#pragma parameter H_SPLITSCREEN_ON					"[ SPLIT SCREEN ]  Split ON - SPLIT SCREEN PRESET ONLY" 0 0 1 1
+float H_SPLITSCREEN_ON = global.H_SPLITSCREEN_ON;
 
-#pragma parameter H_SPLIT_SCREEN_AMOUNT				"[ SPLIT SCREEN ]  Split Thickness - SPLIT SCREEN PRESET ONLY" 0 0 256 2
-float H_SPLIT_SCREEN_AMOUNT = global.H_SPLIT_SCREEN_AMOUNT;
+#pragma parameter H_SPLITSCREEN_AMOUNT				"[ SPLIT SCREEN ]  Split Thickness - SPLIT SCREEN PRESET ONLY" 0 0 256 2
+float H_SPLITSCREEN_AMOUNT = global.H_SPLITSCREEN_AMOUNT;
 
 // TODO add Split Position, also auto set position, catches for 3DS
 
-#pragma parameter H_SPLIT_SCREEN_CENTER_FILL_MODE		"[ SPLIT SCREEN ] Center Fill - 1:Bezel 2:Reflect 3:Blend 4:Fade" 0 0 6 1
-float H_SPLIT_SCREEN_CENTER_FILL_MODE = global.H_SPLIT_SCREEN_CENTER_FILL_MODE;
+#pragma parameter H_SPLITSCREEN_CENTER_FILL_MODE		"[ SPLIT SCREEN ] Center Fill - 1:Bezel 2:Reflect 3:Blend 4:Fade" 0 0 6 1
+float H_SPLITSCREEN_CENTER_FILL_MODE = global.H_SPLITSCREEN_CENTER_FILL_MODE;
 
 
 //---------------------------------------------------------------------------------------------------
@@ -175,10 +175,10 @@ float H_CURVATURE_3D_TILT_ANGLE_Y = global.H_CURVATURE_3D_TILT_ANGLE_Y;
 #pragma parameter H_COLOR_NEGATIVE_CROP_BRIGHTNESS	"[ SCANLINES ON BLACK ]  Negative Crop Brightness - Def 1.8" 1.8 0 100 0.2
 #define H_COLOR_NEGATIVE_CROP_BRIGHTNESS global.H_COLOR_NEGATIVE_CROP_BRIGHTNESS
 
-#pragma parameter HSS_PHOSPHOR_PERSISTENCE             "[ PHOSPHOR PERSISTENCE ]  Amount - Pos:Neutral, Neg:Blue ______" 0 -1 1 0.05
+#pragma parameter HSS_PHOSPHOR_PERSISTENCE          "[ PHOSPHOR PERSISTENCE ]  Amount - Pos:Neutral, Neg:Blue ______" 0 -1 1 0.05
 #define HSS_PHOSPHOR_PERSISTENCE global.HSS_PHOSPHOR_PERSISTENCE
 
-#pragma parameter H_COLOR_CRT_GAMMA   				"[ SCREEN FX ]  CRT Gamma (Linear to Gamma Space Encode) Def 2.2" 2.2 0.1 5 0.05
+#pragma parameter H_COLOR_CRT_GAMMA   				"[ GAMMA ]  CRT Gamma (Linear to Gamma Space Encode) Def 2.2" 2.2 0.1 5 0.05
 #define H_COLOR_CRT_GAMMA global.H_COLOR_CRT_GAMMA
 
 #pragma parameter H_SCREENFX_VIGNETTE                "[ SCREEN FX ]  Screen Vignette" 0 0 1 0.01
@@ -228,8 +228,8 @@ float H_TUBE_HIGHLIGHT_IMAGE_SCALE = global.H_TUBE_HIGHLIGHT_IMAGE_SCALE / 100;
 //---------------------------------------------------------------------------------------------------
 //    GLASS BORDER
 //---------------------------------------------------------------------------------------------------
-#pragma parameter HGL_GLASSBORDER_ON       "[ GLASS BORDER ]  ON (Glass Preset Only)" 0 0 1 1
-float HGL_GLASSBORDER_ON = global.HGL_GLASSBORDER_ON;
+#pragma parameter H_GLASSBORDER_ON       "[ GLASS BORDER ]  ON (Glass Preset Only)" 0 0 1 1
+float H_GLASSBORDER_ON = global.H_GLASSBORDER_ON;
 
 
 //---------------------------------------------------------------------------------------------------
@@ -237,8 +237,8 @@ float HGL_GLASSBORDER_ON = global.HGL_GLASSBORDER_ON;
 //---------------------------------------------------------------------------------------------------
 #pragma parameter H_BEZEL_TITLE		"_____[ BEZEL ]_________________________________________________" 0 0 0 0
 
-#pragma parameter H_TUBE_CURVATURE_SCALE 	"[ BEZEL ]  Inner Curvature Scale" 1 0 20 0.1
-#define H_TUBE_CURVATURE_SCALE global.H_TUBE_CURVATURE_SCALE
+#pragma parameter H_BZL_INNER_CURVATURE_SCALE 	"[ BEZEL ]  Inner Curvature Scale" 1 0 20 0.1
+#define H_BZL_INNER_CURVATURE_SCALE global.H_BZL_INNER_CURVATURE_SCALE
 
 #ifndef H_SCREENFX_SCANLINE_RES
 	#define H_SCREENFX_SCANLINE_RES 240

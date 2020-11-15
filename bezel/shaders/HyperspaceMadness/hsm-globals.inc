@@ -87,7 +87,6 @@ layout(std140, set = 0, binding = 0) uniform UBO
 	float HSM_BZL_COLOR_HUE;
 	float HSM_BZL_COLOR_SATURATION;
 	float HSM_BZL_COLOR_VALUE;
-	float HSM_BZL_COLOR_BLEND_WITH_IMAGE;
 	float HSM_BZL_BRIGHTNESS;
 	float HSM_BZL_HIGHLIGHT;
 
@@ -155,6 +154,7 @@ layout(std140, set = 0, binding = 0) uniform UBO
 	float HSM_NIGHT_DITHERING_SAMPLES;
 
 	float HSM_BG_LAYER_ORDER;
+float HSM_VIEWPORT_VIGNETTE_LAYER_ORDER;
 	float HSM_CRT_LAYER_ORDER;
 	float HSM_BZL_IMG_LAYER_ORDER;
 	float HSM_CAB_GLASS_LAYER_ORDER;
@@ -168,7 +168,9 @@ layout(std140, set = 0, binding = 0) uniform UBO
 	// Image Background
 	float HSM_BG_OPACITY;
 	float HSM_BG_BRIGHTNESS;
-	float HSM_BG_VIGNETTE_OPACITY;
+	float HSM_VIEWPORT_VIGNETTE_OPACITY;
+float HSM_VIEWPORT_VIGNETTE_MASK_MODE;
+float HSM_VIEWPORT_VIGNETTE_CUTOUT_MODE;
 	float HSM_BG_APPLY_ADJUSTMENT;
 	float HSM_BG_BLEND_MODE;
 	float HSM_BG_MASK_MODE;

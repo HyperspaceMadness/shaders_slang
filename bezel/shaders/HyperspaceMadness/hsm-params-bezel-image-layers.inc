@@ -46,34 +46,37 @@ float HSM_NIGHT_DITHERING_SAMPLES = global.HSM_NIGHT_DITHERING_SAMPLES;
 
 #pragma parameter HSM_LAYER_ORDER_TITLE			"_____[ LAYER ORDER ]___________________________________________" 0 0 0 0
 
-#pragma parameter HSM_BG_LAYER_ORDER              "[ LAYER ORDER ]  BG Image"  2 0 22 1
+#pragma parameter HSM_BG_LAYER_ORDER              "[ LAYER ORDER ]  BG Image"  4 0 44 1
 float HSM_BG_LAYER_ORDER = global.HSM_BG_LAYER_ORDER;
 
-#pragma parameter HSM_CRT_LAYER_ORDER             "[ LAYER ORDER ]  CRT Screen"  4 0 22 1
+#pragma parameter HSM_VIEWPORT_VIGNETTE_LAYER_ORDER "[ LAYER ORDER ]  Viewport Vignette"  8 0 44 1
+float HSM_VIEWPORT_VIGNETTE_LAYER_ORDER = global.HSM_VIEWPORT_VIGNETTE_LAYER_ORDER;
+
+#pragma parameter HSM_CRT_LAYER_ORDER             "[ LAYER ORDER ]  CRT Screen"  12 0 44 1
 float HSM_CRT_LAYER_ORDER = global.HSM_CRT_LAYER_ORDER;
 
-#pragma parameter HSM_BZL_IMG_LAYER_ORDER         "[ LAYER ORDER ]  Bezel Image"  6 0 22 1
+#pragma parameter HSM_BZL_IMG_LAYER_ORDER         "[ LAYER ORDER ]  Bezel Image"  16 0 44 1
 float HSM_BZL_IMG_LAYER_ORDER = global.HSM_BZL_IMG_LAYER_ORDER;
 
-#pragma parameter HSM_BZL_LAYER_ORDER             "[ LAYER ORDER ]  Bezel (Generated)"  8 0 22 1
+#pragma parameter HSM_BZL_LAYER_ORDER             "[ LAYER ORDER ]  Bezel (Generated)"  20 0 44 1
 float HSM_BZL_LAYER_ORDER = global.HSM_BZL_LAYER_ORDER;
 
-#pragma parameter HSM_FRM_LAYER_ORDER             "[ LAYER ORDER ]  Frame (Generated)"  10 0 22 1
+#pragma parameter HSM_FRM_LAYER_ORDER             "[ LAYER ORDER ]  Frame (Generated)"  24 0 44 1
 float HSM_FRM_LAYER_ORDER = global.HSM_FRM_LAYER_ORDER;
 
-#pragma parameter HSM_CAB_GLASS_LAYER_ORDER       "[ LAYER ORDER ]  Cabinet Glass Image"  12 0 22 1
+#pragma parameter HSM_CAB_GLASS_LAYER_ORDER       "[ LAYER ORDER ]  Cabinet Glass Image"  28 0 44 1
 float HSM_CAB_GLASS_LAYER_ORDER = global.HSM_CAB_GLASS_LAYER_ORDER;
 
-#pragma parameter HSM_DECAL_LAYER_ORDER           "[ LAYER ORDER ]  Decal Image"  14 0 22 1
+#pragma parameter HSM_DECAL_LAYER_ORDER           "[ LAYER ORDER ]  Decal Image"  32 0 44 1
 float HSM_DECAL_LAYER_ORDER = global.HSM_DECAL_LAYER_ORDER;
 
-#pragma parameter HSM_REFLECT_LAYER_ORDER      "[ LAYER ORDER ]  Reflection (Generated)"  16 0 22 1
+#pragma parameter HSM_REFLECT_LAYER_ORDER      "[ LAYER ORDER ]  Reflection (Generated)"  36 0 44 1
 float HSM_REFLECT_LAYER_ORDER = global.HSM_REFLECT_LAYER_ORDER;
 
-#pragma parameter HSM_LED_LAYER_ORDER             "[ LAYER ORDER ]  LED Image"  18 0 22 1
+#pragma parameter HSM_LED_LAYER_ORDER             "[ LAYER ORDER ]  LED Image"  40 0 44 1
 float HSM_LED_LAYER_ORDER = global.HSM_LED_LAYER_ORDER;
 
-#pragma parameter HSM_TOP_LAYER_ORDER             "[ LAYER ORDER ]  Top Image"  20 0 22 1
+#pragma parameter HSM_TOP_LAYER_ORDER             "[ LAYER ORDER ]  Top Image"  44 0 44 1
 float HSM_TOP_LAYER_ORDER = global.HSM_TOP_LAYER_ORDER;
 
 
@@ -103,7 +106,7 @@ float HSM_CUTOUT_CORNER_RADIUS = global.HSM_CUTOUT_CORNER_RADIUS;
 //---------------------------------------------------------------------------------------------------
 #pragma parameter HSM_MASK_DEBUG_TITLE			"_____[ MASK DEBUG ]____________________________________________" 0 0 0 0
 
-#pragma parameter HSM_LAYERING_DEBUG_MASK_MODE    "[ DEBUG ]  Mask - ALL | Tube | Bz- | Bz | Bz+ | Frm | Frm+ | BG" -1 -2 7 1
+#pragma parameter HSM_LAYERING_DEBUG_MASK_MODE    "Mask - ALL | Scrn | Tube | Bz- | Bz | Bz+ | Frm | Frm+ | BG" -1 -2 8 1
 float HSM_LAYERING_DEBUG_MASK_MODE = global.HSM_LAYERING_DEBUG_MASK_MODE;
 
 
@@ -118,7 +121,7 @@ float HSM_BG_OPACITY = global.HSM_BG_OPACITY / 100;
 #pragma parameter HSM_BG_BLEND_MODE               "[ BG ]  Blend Mode - Off | Normal | Add | Multiply"  1 -1 2 1
 float HSM_BG_BLEND_MODE = global.HSM_BG_BLEND_MODE;
 
-#pragma parameter HSM_BG_MASK_MODE                "[ BG ]  Mask - ALL | Tube | Bz- | Bz | Bz+ | Fram | Fram+ | BG" 0 0 7 1
+#pragma parameter HSM_BG_MASK_MODE                "Mask - ALL | Screen | Tube | Bz- | Bz | Bz+ | Frm | Frm+ | BG" 0 0 8 1
 float HSM_BG_MASK_MODE = global.HSM_BG_MASK_MODE;
 
 #pragma parameter HSM_BG_CUTOUT_MODE              "[ BG ]  Cutout Mask - OFF | ON | Invert" 0 0 2 1
@@ -126,9 +129,6 @@ float HSM_BG_CUTOUT_MODE = global.HSM_BG_CUTOUT_MODE;
 
 #pragma parameter HSM_BG_BRIGHTNESS               "[ BG ]  Brightness" 100 0 600 0.5
 float HSM_BG_BRIGHTNESS = global.HSM_BG_BRIGHTNESS / 100;
-
-#pragma parameter HSM_BG_VIGNETTE_OPACITY         "[ BG ]  Vignette Opacity" 50 0 100 2
-float HSM_BG_VIGNETTE_OPACITY = global.HSM_BG_VIGNETTE_OPACITY / 100;
 
 #pragma parameter HSM_BG_APPLY_ADJUSTMENT         "[ BG ] Apply NightLight & Static Gamma (0 for Backdrop)"  1 0 1 1
 float HSM_BG_APPLY_ADJUSTMENT = global.HSM_BG_APPLY_ADJUSTMENT;
@@ -157,6 +157,19 @@ float HSM_BG_POS_Y = global.HSM_BG_POS_Y / 100;
 #pragma parameter HSM_BG_MIRROR_WRAP              "[ BG ]  Mirror Wrap" 1 0 1 1
 float HSM_BG_MIRROR_WRAP = global.HSM_BG_MIRROR_WRAP;
 
+//---------------------------------------------------------------------------------------------------
+//    VIEWPORT VIGNETTE
+//---------------------------------------------------------------------------------------------------
+#pragma parameter HSM_VIEWPORT_VIGNETTE_TITLE			"_____[ VIEWPORT VIGNETTE ]_____________________________________" 0 0 0 0
+
+#pragma parameter HSM_VIEWPORT_VIGNETTE_OPACITY            "[ VIEWPORT_VIGNETTE ]  Opacity" 50 0 100 2
+float HSM_VIEWPORT_VIGNETTE_OPACITY = global.HSM_VIEWPORT_VIGNETTE_OPACITY / 100;
+
+#pragma parameter HSM_VIEWPORT_VIGNETTE_MASK_MODE          "Mask - ALL | Scrn | Tube | Bz- | Bz | Bz+ | Frm | Frm+ | BG" 5 0 8 1
+float HSM_VIEWPORT_VIGNETTE_MASK_MODE = global.HSM_VIEWPORT_VIGNETTE_MASK_MODE;
+
+#pragma parameter HSM_VIEWPORT_VIGNETTE_CUTOUT_MODE              "[ VIEWPORT_VIGNETTE ]  Cutout Mask - OFF | ON | Invert" 0 0 2 1
+float HSM_VIEWPORT_VIGNETTE_CUTOUT_MODE = global.HSM_VIEWPORT_VIGNETTE_CUTOUT_MODE;
 
 //---------------------------------------------------------------------------------------------------
 //    CRT Layer
@@ -187,7 +200,7 @@ float HSM_BZL_IMG_BRIGHTNESS = global.HSM_BZL_IMG_BRIGHTNESS / 100;
 #pragma parameter HSM_BZL_IMG_BLEND_MODE            "[ BEZEL IMG ]  Blend Mode -  Off | Normal | Add | Multiply"  1 0 3 1
 float HSM_BZL_IMG_BLEND_MODE = global.HSM_BZL_IMG_BLEND_MODE;
 
-#pragma parameter HSM_BZL_IMG_MASK_MODE             "[BEZEL IMG] Mask- ALL | Tube | Bz- | Bz | Bz+ | Frm | Frm+ | BG" 3 0 7 1
+#pragma parameter HSM_BZL_IMG_MASK_MODE             "Mask - ALL | Screen | Tube | Bz- | Bz | Bz+ | Frm | Frm+ | BG" 4 0 8 1
 float HSM_BZL_IMG_MASK_MODE = global.HSM_BZL_IMG_MASK_MODE;
 
 #pragma parameter HSM_BZL_IMG_CUTOUT_MODE           "[ BEZEL IMG ]  Cutout Mask - OFF | ON | Invert" 0 0 2 1
@@ -232,7 +245,7 @@ float HSM_CAB_GLASS_BRIGHTNESS = global.HSM_CAB_GLASS_BRIGHTNESS / 100;
 #pragma parameter HSM_CAB_GLASS_BLEND_MODE        "[ CAB GLS ]  Blend Mode - Off | Normal | Add | Multiply"  1 0 3 1
 float HSM_CAB_GLASS_BLEND_MODE = global.HSM_CAB_GLASS_BLEND_MODE;
 
-#pragma parameter HSM_CAB_GLASS_MASK_MODE         "[CAB GLS] Mask - ALL | Tube | Bz- | Bz | Bz+ | Frm | Frm+ | BG" 0 0 7 1
+#pragma parameter HSM_CAB_GLASS_MASK_MODE         "Mask - ALL | Screen | Tube | Bz- | Bz | Bz+ | Frm | Frm+ | BG" 0 0 8 1
 float HSM_CAB_GLASS_MASK_MODE = global.HSM_CAB_GLASS_MASK_MODE;
 
 #pragma parameter HSM_CAB_GLASS_CUTOUT_MODE       "[ CAB GLS ]  Cutout Mask - OFF | ON | Invert" 0 0 2 1
@@ -271,7 +284,7 @@ float HSM_DECAL_OPACITY = global.HSM_DECAL_OPACITY / 100;
 #pragma parameter HSM_DECAL_BLEND_MODE            "[ DECAL ]  Blend Mode -  Off | Normal | Add | Multiply"  1 0 3 1
 float HSM_DECAL_BLEND_MODE = global.HSM_DECAL_BLEND_MODE;
 
-#pragma parameter HSM_DECAL_MASK_MODE             "[ DECAL ] Mask- ALL | Tube | Bz- | Bz | Bz+ | Fram | Fram+ | BG"   0 0 7 1
+#pragma parameter HSM_DECAL_MASK_MODE             "Mask - ALL | Screen | Tube | Bz- | Bz | Bz+ | Frm | Frm+ | BG"   0 0 8 1
 float HSM_DECAL_MASK_MODE = global.HSM_DECAL_MASK_MODE;
 
 #pragma parameter HSM_DECAL_CUTOUT_MODE            "[ DECAL ]  Cutout Mask - OFF | ON | Invert" 0 0 2 1
@@ -310,7 +323,7 @@ float HSM_LED_OPACITY = global.HSM_LED_OPACITY / 100;
 #pragma parameter HSM_LED_BLEND_MODE              "[ LED ]  Blend Mode - Off | Normal | Add | Multiply"  2 0 3 1
 float HSM_LED_BLEND_MODE = global.HSM_LED_BLEND_MODE;
 
-#pragma parameter HSM_LED_MASK_MODE               "[ LED ]  Mask - ALL | Tube | Bz- | Bz | Bz+ | Fram | Fram+ | BG"   7 0 7 1
+#pragma parameter HSM_LED_MASK_MODE               "Mask - ALL | Screen | Tube | Bz- | Bz | Bz+ | Frm | Frm+ | BG"   8 0 8 1
 float HSM_LED_MASK_MODE = global.HSM_LED_MASK_MODE;
 
 #pragma parameter HSM_LED_CUTOUT_MODE             "[ LED ]  Cutout Mask - OFF | ON | Invert" 0 0 2 1
@@ -349,7 +362,7 @@ float HSM_TOP_OPACITY = global.HSM_TOP_OPACITY / 100;
 #pragma parameter HSM_TOP_BLEND_MODE              "[ TOP ]  Blend Mode - Off | Normal | Add | Multiply"  1 0 3 1
 float HSM_TOP_BLEND_MODE = global.HSM_TOP_BLEND_MODE;
 
-#pragma parameter HSM_TOP_MASK_MODE               "[ TOP ]  Mask - ALL | Tube | Bz- | Bz | Bz+ | Fram | Fram+ | BG"   0 0 7 1
+#pragma parameter HSM_TOP_MASK_MODE               "Mask - ALL | Screen | Tube | Bz- | Bz | Bz+ | Frm | Frm+ | BG"   0 0 8 1
 float HSM_TOP_MASK_MODE = global.HSM_TOP_MASK_MODE;
 
 #pragma parameter HSM_TOP_CUTOUT_MODE             "[ TOP ]  Cutout Mask - OFF | ON | Invert" 0 0 2 1

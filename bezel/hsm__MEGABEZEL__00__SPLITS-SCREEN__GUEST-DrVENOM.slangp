@@ -201,6 +201,21 @@ alias25 = BR_MirrorFullscreenGlowPass
 //          BR_MirrorReflectionDiffusedPass
 //          BR_MirrorFullscreenGlowPass
 //      Blur passes are in linearized color space, and CRT Pass already has gamma encoded in it
+
+shader26 = shaders/HyperspaceMadness/hsm-bezel-reflection.slang
+mipmap_input26 = true
+filter_linear26 = true
+scale_type26 = viewport
+float_framebuffer26 = true
+alias26 = BR_CRTAndReflectionPass
+
+// Bezel Generation & Reflection ----------------------------------------------------------------
+//      Uses these previous passes:
+//          BR_CRTPass
+//          BR_MirrorBlurredPass
+//          BR_MirrorReflectionDiffusedPass
+//          BR_MirrorFullscreenGlowPass
+//      Blur passes are in linearized color space, and CRT Pass already has gamma encoded in it
 //
 //      Uses these textures
             // BackgroundImage
@@ -211,11 +226,11 @@ alias25 = BR_MirrorFullscreenGlowPass
             // TopLayerImage
             // TopLayerVertImage
 
-shader26 = shaders/HyperspaceMadness/hsm-bezel-image-layers.slang
-mipmap_input26 = true
-filter_linear26 = true
-scale_type26 = viewport
-float_framebuffer26 = false
+shader27 = shaders/HyperspaceMadness/hsm-bezel-image-layers.slang
+mipmap_input27 = true
+filter_linear27 = true
+scale_type27 = viewport
+float_framebuffer27 = false
 
 // Define how many shaders will be used from this list
 shaders = 28

@@ -311,8 +311,8 @@ void main()
 
 
 		float vignette_shadow_mask = 0;
-		vignette_shadow_mask += 0.75 * HHLP_QuadraticBezier(1 - HSM_GetVignetteFactor(VIEWPORT_COORD, HSM_BG_VIGNETTE_OPACITY), vec2(1, 0.5));
-		vignette_shadow_mask += 0.5 * HSM_BG_VIGNETTE_OPACITY * HHLP_QuadraticBezier(smoothstep(outside_ratio_warped, 0, 0.1), vec2(1, 0.5));
+		vignette_shadow_mask += 0.75 * HHLP_QuadraticBezier(1 - HSM_GetVignetteFactor(VIEWPORT_COORD, HSM_VIEWPORT_VIGNETTE_OPACITY), vec2(1, 0.5));
+		vignette_shadow_mask += 0.5 * HSM_VIEWPORT_VIGNETTE_OPACITY * HHLP_QuadraticBezier(smoothstep(outside_ratio_warped, 0, 0.1), vec2(1, 0.5));
 
 		// Edge Reflection
 		if (HSM_GLASSBORDER_ON == 1)

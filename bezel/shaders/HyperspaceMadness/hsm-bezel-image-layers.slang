@@ -32,13 +32,18 @@ Thanks to:
 #define BLEND_MODE_MULTIPLY 3
 
 #define MASK_MODE_ALL 0
-#define MASK_MODE_TUBE 1
-#define MASK_MODE_INSIDE_BEZEL 2
-#define MASK_MODE_BEZEL 3
-#define MASK_MODE_OUTSIDE_TUBE 4
-#define MASK_MODE_FRAME 5
-#define MASK_MODE_OUTSIDE_BEZEL 6
-#define MASK_MODE_OUTSIDE_FRAME 7
+#define MASK_MODE_SCREEN 1
+#define MASK_MODE_TUBE 2
+#define MASK_MODE_INSIDE_BEZEL 3
+#define MASK_MODE_BEZEL 4
+#define MASK_MODE_OUTSIDE_TUBE 5
+#define MASK_MODE_FRAME 6
+#define MASK_MODE_OUTSIDE_BEZEL 7
+#define MASK_MODE_OUTSIDE_FRAME 8
+
+#define CUTOUT_MODE_OFF 0
+#define CUTOUT_MODE_INSIDE 1
+#define CUTOUT_MODE_OUTSIDE 1
 
 #define IMAGE_SCALE_MODE_VIEWPORT 0
 #define IMAGE_SCALE_MODE_SCREEN 1
@@ -56,6 +61,7 @@ Thanks to:
 
 /////////////// Helper Functions ///////////////
 
+float SCREEN_MASK = 0;
 float TUBE_MASK = 0;
 float BEZEL_MASK = 0;
 float INSIDE_BEZEL_MASK = 0;
@@ -157,6 +163,7 @@ vec2 GetScaledCoord(vec2 viewport_coord, vec2 background_coord, vec2 screen_coor
 float GetMask(float mask_mode)
 {
 	float mask = 	(mask_mode == MASK_MODE_ALL) ? 1 :
+					(mask_mode == MASK_MODE_SCREEN) ? SCREEN_MASK :
 					(mask_mode == MASK_MODE_TUBE) ? TUBE_MASK :
 					(mask_mode == MASK_MODE_INSIDE_BEZEL) ? INSIDE_BEZEL_MASK :
 					(mask_mode == MASK_MODE_BEZEL) ? BEZEL_MASK :
@@ -180,9 +187,9 @@ vec4 BlendModeLayerMix(vec4 color_under, vec4 color_over, float blend_mode, floa
 		return color_under;
 	
 	float cutout_mask = 1;
-	if (cutout_mode == 1)
+	if (cutout_mode == CUTOUT_MODE_INSIDE)
 		cutout_mask = CUTOUT_MASK;
-	if (cutout_mode == 2)
+	if (cutout_mode == CUTOUT_MODE_OUTSIDE)
 		cutout_mask = 1 - CUTOUT_MASK;
 
 	if (blend_mode == BLEND_MODE_OFF)
@@ -336,8 +343,8 @@ void main()
 
 
 	// Shrink the mask by 0.001 to clip off outer edge
-	float screen_mask = HSM_GetCornerMask(((screen_curved_coord - 0.5) * 1.001) + 0.5, SCREEN_ASPECT, HSM_SCREEN_CORNER_RADIUS, HSM_SCREEN_EDGE_SHARPNESS);
-	// crt_linear *= screen_mask;
+	SCREEN_MASK = HSM_GetCornerMask(((screen_curved_coord - 0.5) * 1.001) + 0.5, SCREEN_ASPECT, HSM_SCREEN_CORNER_RADIUS, HSM_SCREEN_EDGE_SHARPNESS);
+
 	//----------------------------------------------------
 	//  Calculate Outside mapping Coords
 	//----------------------------------------------------
@@ -511,7 +518,7 @@ void main()
 
 	vec4 background_color = vec4(0);
 
-	float vignette_shadow_mask = 0;
+
 	float edge_highlight_mask  = 0;
 
 
@@ -545,13 +552,8 @@ void main()
 						0,
 						1);
 
-	// if (HSM_CRT_SCREEN_BLEND_MODE == 0)
-	// 	background_color *= outside_tube_mask_wider;
 
 
-	vignette_shadow_mask += 0.75 * HHLP_QuadraticBezier(1 - HSM_GetVignetteFactor(VIEWPORT_COORD, HSM_BG_VIGNETTE_OPACITY), vec2(1, 0.5));
-	vignette_shadow_mask += 0.5 * HSM_BG_VIGNETTE_OPACITY * HHLP_QuadraticBezier(smoothstep(outside_ratio_warped, 0, 0.1), vec2(1, 0.5));
-	
 	//----------------------------------------------------
 	// Background Image - Applied Underneath Bezel
 	//----------------------------------------------------
@@ -587,7 +589,7 @@ void main()
 	float hmbz_brightness_shadow = 0;
 	float hmbz_frame_brightness = 100;
 
-	vec3 base_color = mix(BEZEL_FRAME_ORIGINAL_COLOR_RGB, background_color.rgb, HSM_BZL_COLOR_BLEND_WITH_IMAGE);
+	vec3 base_color = BEZEL_FRAME_ORIGINAL_COLOR_RGB;
 
 	vec3 base_color_with_noise = mix(base_color, 1.5 * base_color * noise_mask, HSM_BZL_NOISE);
 	vec3 top_color = hmbz_bezel_brightness_top * HSM_BZL_BRIGHTNESS / 100 * base_color_with_noise;
@@ -697,15 +699,14 @@ void main()
 		}
 	}
 
-	//----------------------------------------------------
-	// Background
-	//----------------------------------------------------
-	// Add Vignette to Background
-	if (HSM_BG_VIGNETTE_OPACITY > 0)
-	{
-		background_color.rgb = mix(background_color.rgb, vec3(0), vignette_shadow_mask);
-		background_color = PreMultAlphaBlend(vec4(0, 0, 0, 1), background_color);
-	}
+
+	//-----------------------------------------------------------------------------------------
+	// Full Viewport Vignette
+	//-----------------------------------------------------------------------------------------
+	vec4 vignette_layer = vec4(0);
+	vignette_layer.a += 0.75 * HHLP_QuadraticBezier(1 - HSM_GetVignetteFactor(VIEWPORT_COORD, HSM_VIEWPORT_VIGNETTE_OPACITY), vec2(1, 0.5));
+	vignette_layer.a += 0.5 * HSM_VIEWPORT_VIGNETTE_OPACITY * HHLP_QuadraticBezier(smoothstep(outside_ratio_warped, 0, 0.1), vec2(1, 0.5));
+
 
 	//----------------------------------------------------
 	// Generated Bezel
@@ -971,7 +972,7 @@ void main()
 
 	vec4 frag_color_linear = vec4(0);
 
-	for(int i=0; i < 23; i++)
+	for(int i=0; i < 45; i++)
 	{
 		// BACKGROUND
 		if (HSM_BG_LAYER_ORDER == i)
@@ -981,6 +982,15 @@ void main()
 													HSM_BG_MASK_MODE, 
 													HSM_BG_CUTOUT_MODE,
 													HSM_BG_OPACITY);
+
+		// VIGNETTE
+		if (HSM_VIEWPORT_VIGNETTE_LAYER_ORDER == i)
+			frag_color_linear = BlendModeLayerMix(frag_color_linear, 
+													vignette_layer, 
+													BLEND_MODE_NORMAL, 
+													HSM_VIEWPORT_VIGNETTE_MASK_MODE, 
+													HSM_VIEWPORT_VIGNETTE_CUTOUT_MODE,
+													HSM_VIEWPORT_VIGNETTE_OPACITY);
 
 		// CRT SCREEN
 		if (HSM_CRT_LAYER_ORDER == i)

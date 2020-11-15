@@ -16,155 +16,172 @@ shader3 = shaders/HyperspaceMadness/hsm-mdapt/hsm-mdapt-pass1.slang
 shader4 = shaders/HyperspaceMadness/hsm-mdapt/hsm-mdapt-pass2.slang
 shader5 = shaders/HyperspaceMadness/hsm-mdapt/hsm-mdapt-pass3.slang
 shader6 = shaders/HyperspaceMadness/hsm-mdapt/hsm-mdapt-pass4.slang
-alias6 = refpass
 
-shader7 = shaders/HyperspaceMadness/hsm-scalefx/hsm-scalefx-pass0.slang
-filter_linear7 = false
-scale_type7 = source
-scale7 = 1.0
-float_framebuffer7 = true
-alias7 = scalefx_pass0
+shader7 = shaders/HyperspaceMadness/hsm-sgenpt-mix/hsm-sgenpt-mix.slang
+alias7 = refpass
 
-shader8 = shaders/HyperspaceMadness/hsm-scalefx/hsm-scalefx-pass1.slang
+shader8 = shaders/HyperspaceMadness/hsm-scalefx/hsm-scalefx-pass0.slang
 filter_linear8 = false
 scale_type8 = source
 scale8 = 1.0
 float_framebuffer8 = true
+alias8 = scalefx_pass0
 
-shader9 = shaders/HyperspaceMadness/hsm-scalefx/hsm-scalefx-pass2.slang
+shader9 = shaders/HyperspaceMadness/hsm-scalefx/hsm-scalefx-pass1.slang
 filter_linear9 = false
 scale_type9 = source
 scale9 = 1.0
+float_framebuffer9 = true
 
-shader10 = shaders/HyperspaceMadness/hsm-scalefx/hsm-scalefx-pass3.slang
+shader10 = shaders/HyperspaceMadness/hsm-scalefx/hsm-scalefx-pass2.slang
 filter_linear10 = false
 scale_type10 = source
 scale10 = 1.0
 
-shader11 = shaders/HyperspaceMadness/hsm-scalefx/hsm-scalefx-pass4.slang
+shader11 = shaders/HyperspaceMadness/hsm-scalefx/hsm-scalefx-pass3.slang
 filter_linear11 = false
 scale_type11 = source
-scale11 = 3
+scale11 = 1.0
+
+shader12 = shaders/HyperspaceMadness/hsm-scalefx/hsm-scalefx-pass4.slang
+filter_linear12 = false
+scale_type12 = source
+scale12 = 3
 
 // GTU TV Processing
-shader12 = shaders/HyperspaceMadness/hsm-gtu/hsm-gtu-pass1.slang
-scale_type12 = source
-scale12 = 1.0
-float_framebuffer12 = true
-
-shader13 = shaders/HyperspaceMadness/hsm-gtu/hsm-gtu-pass2.slang
-scale_type_x13 = source
-scale_x13 = 1.0
-scale_type_y13 = source
-scale_y13 = 1.0
-filter_linear13 = false
+shader13 = shaders/HyperspaceMadness/hsm-gtu/hsm-gtu-pass1.slang
+scale_type13 = source
+scale13 = 1.0
 float_framebuffer13 = true
 
-// //NTSC passes added here so you can swap out with GTU
-// shader12 = shaders/HyperspaceMadness/hsm-ntsc-adaptive/hsm-ntsc-pass1.slang
-// scale_type12 = source
-// scale_x12 = 4.0
-// filter_linear12 = false
-// float_framebuffer12 = true
-
-// shader13 = shaders/HyperspaceMadness/hsm-ntsc-adaptive/hsm-ntsc-pass2.slang
-// scale_type13 = source
-// scale_x13 = 0.25
-// filter_linear13 = false
-
-shader14 = shaders/HyperspaceMadness/hsm-linearize.slang
+shader14 = shaders/HyperspaceMadness/hsm-gtu/hsm-gtu-pass2.slang
+scale_type_x14 = source
+scale_x14 = 1.0
+scale_type_y14 = source
+scale_y14 = 1.0
 filter_linear14 = false
-srgb_framebuffer14 = true
-alias14 = ORIG_LINEARIZED
+float_framebuffer14 = true
 
-shader15 = shaders/HyperspaceMadness/hsm-easymode/hsm-crt-easymode-blur_horiz.slang
+// //NTSC passes added here so you can swap out with GTU
+// shader13 = shaders/HyperspaceMadness/hsm-ntsc-adaptive/hsm-ntsc-pass1.slang
+// scale_type13 = source
+// scale_x13 = 4.0
+// filter_linear13 = false
+// float_framebuffer13 = true
+
+// shader14 = shaders/HyperspaceMadness/hsm-ntsc-adaptive/hsm-ntsc-pass2.slang
+// scale_type14 = source
+// scale_x14 = 0.25
+// filter_linear14 = false
+
+shader15 = shaders/HyperspaceMadness/hsm-linearize.slang
 filter_linear15 = false
 srgb_framebuffer15 = true
+alias15 = ORIG_LINEARIZED
 
-shader16 = shaders/HyperspaceMadness/hsm-easymode/hsm-crt-easymode-blur_vert.slang
+shader16 = shaders/HyperspaceMadness/hsm-easymode/hsm-crt-easymode-blur_horiz.slang
 filter_linear16 = false
 srgb_framebuffer16 = true
 
-shader17 = shaders/HyperspaceMadness/hsm-easymode/hsm-crt-easymode-threshold.slang
+shader17 = shaders/HyperspaceMadness/hsm-easymode/hsm-crt-easymode-blur_vert.slang
 filter_linear17 = false
 srgb_framebuffer17 = true
 
-// Easymode's Shader!
-shader18 = shaders/HyperspaceMadness/hsm-easymode/hsm-crt-easymode-halation-with-scaling.slang
-filter_linear18 = true
-scale_type18 = viewport
-float_framebuffer18 = true
-alias18 = BR_CRTPass
+shader18 = shaders/HyperspaceMadness/hsm-easymode/hsm-crt-easymode-threshold.slang
+filter_linear18 = false
+srgb_framebuffer18 = true
 
-// Tube Scale Curvature Mapping
-// Write mapping into the pass, of the 4 channels, x & y are tube warped coord and z & w are outside tube mask and edge mask
-shader19 = shaders/HyperspaceMadness/hsm-curvature-mapping.slang
-mipmap_input19 = true
+// Easymode's Shader!
+shader19 = shaders/HyperspaceMadness/hsm-easymode/hsm-crt-easymode-halation-with-scaling.slang
 filter_linear19 = true
 scale_type19 = viewport
 float_framebuffer19 = true
-alias19 = BR_MappingPass
+alias19 = BR_CRTPass
+
+// Tube Scale Curvature Mapping
+// Write mapping into the pass, of the 4 channels, x & y are tube warped coord and z & w are outside tube mask and edge mask
+shader20 = shaders/HyperspaceMadness/hsm-curvature-mapping.slang
+mipmap_input20 = true
+filter_linear20 = true
+scale_type20 = viewport
+float_framebuffer20 = true
+alias20 = BR_MappingPass
 
 // Reduce Resolution  ----------------------------------------------------------------
 //      Reduce the resolution to a small static size regardless of final resolution
 //      Allows consistent look and faster at different final resolutions for blur
 //      Mipmap option allows downscaling without artifacts
-shader20 = shaders/HyperspaceMadness/hsm-linearize-crt.slang
-mipmap_input20 = true
-filter_linear20 = true
-scale_type20 = absolute
-float_framebuffer20 = true
-// scale_x20 = 480
-// scale_y20 = 270
-// scale_x20 = 960
-// scale_y20 = 540
-scale_x20 = 800
-scale_y20 = 600
-wrap_mode20 = mirrored_repeat
-float_framebuffer20 = true
-alias20 = BR_MirrorLowResPass
-
-// Add Blur for the Reflection (Horizontal) ----------------------------------------------------------------
-shader21 = shaders/HyperspaceMadness/hsm-blur-outside-screen-horiz.slang
+shader21 = shaders/HyperspaceMadness/hsm-linearize-crt.slang
 mipmap_input21 = true
 filter_linear21 = true
+scale_type21 = absolute
 float_framebuffer21 = true
-scale_type22 = source
+// scale_x21 = 480
+// scale_y21 = 270
+// scale_x21 = 960
+// scale_y21 = 540
+scale_x21 = 800
+scale_y21 = 600
 wrap_mode21 = mirrored_repeat
+float_framebuffer21 = true
+alias21 = BR_MirrorLowResPass
+
+// Add Blur for the Reflection (Horizontal) ----------------------------------------------------------------
+shader22 = shaders/HyperspaceMadness/hsm-blur-outside-screen-horiz.slang
+mipmap_input22 = true
+filter_linear22 = true
+float_framebuffer22 = true
+scale_type23 = source
+wrap_mode22 = mirrored_repeat
 
 // Add Blur for the Reflection (Vertical) ----------------------------------------------------------------
-shader22 = shaders/HyperspaceMadness/hsm-blur-outside-screen-vert.slang
-filter_linear22 = false
-scale_type22 = source
-float_framebuffer22 = true
-wrap_mode22 = mirrored_repeat
-alias22 = BR_MirrorBlurredPass
+shader23 = shaders/HyperspaceMadness/hsm-blur-outside-screen-vert.slang
+filter_linear23 = false
+scale_type23 = source
+float_framebuffer23 = true
+wrap_mode23 = mirrored_repeat
+alias23 = BR_MirrorBlurredPass
 
 // Reduce resolution ----------------------------------------------------------------
 // Reduced to a very small amount so we can create a blur which will create a glow from the screen
 //      Mipmap option allows smoother downscaling
-shader23 = ../blurs/blur9x9.slang
-mipmap_input23 = true
-filter_linear23 = true
-scale_type23 = absolute
-float_framebuffer23 = true
-scale_x23 = 128
-scale_y23 = 128
-wrap_mode23 = mirrored_repeat
-alias23 = BR_MirrorReflectionDiffusedPass
-
-// Add Diffused glow all around the screen ----------------------------------------------------------------
-//      lurred so much that it's non directional
-//      Mipmap option allows downscaling without artifacts
 shader24 = ../blurs/blur9x9.slang
 mipmap_input24 = true
 filter_linear24 = true
 scale_type24 = absolute
 float_framebuffer24 = true
-scale_x24 = 12
-scale_y24 = 12
+scale_x24 = 128
+scale_y24 = 128
 wrap_mode24 = mirrored_repeat
-alias24 = BR_MirrorFullscreenGlowPass
+alias24 = BR_MirrorReflectionDiffusedPass
+
+// Add Diffused glow all around the screen ----------------------------------------------------------------
+//      lurred so much that it's non directional
+//      Mipmap option allows downscaling without artifacts
+shader25 = ../blurs/blur9x9.slang
+mipmap_input25 = true
+filter_linear25 = true
+scale_type25 = absolute
+float_framebuffer25 = true
+scale_x25 = 12
+scale_y25 = 12
+wrap_mode25 = mirrored_repeat
+alias25 = BR_MirrorFullscreenGlowPass
+
+// Bezel Generation & Reflection ----------------------------------------------------------------
+//      Uses these previous passes:
+//          BR_CRTPass
+//          BR_MirrorBlurredPass
+//          BR_MirrorReflectionDiffusedPass
+//          BR_MirrorFullscreenGlowPass
+//      Blur passes are in linearized color space, and CRT Pass already has gamma encoded in it
+
+shader26 = shaders/HyperspaceMadness/hsm-bezel-reflection.slang
+mipmap_input26 = true
+filter_linear26 = true
+scale_type26 = viewport
+float_framebuffer26 = true
+alias26 = BR_CRTAndReflectionPass
 
 // Bezel Generation & Reflection ----------------------------------------------------------------
 //      Uses these previous passes:
@@ -183,14 +200,14 @@ alias24 = BR_MirrorFullscreenGlowPass
             // TopLayerImage
             // TopLayerVertImage
 
-shader25 = shaders/HyperspaceMadness/hsm-bezel-image-layers.slang
-mipmap_input25 = true
-filter_linear25 = true
-scale_type25 = viewport
-float_framebuffer25 = false
+shader27 = shaders/HyperspaceMadness/hsm-bezel-image-layers.slang
+mipmap_input27 = true
+filter_linear27 = true
+scale_type27 = viewport
+float_framebuffer27 = false
 
 // Define how many shaders will be used from this list
-shaders = 26
+shaders = 28
 
 // Define textures to be used by the different passes
 textures = "SamplerLUT1;SamplerLUT2;SamplerLUT3;BackgroundImage;BackgroundVertImage;ColoredGelImage;TubeHighlightImage;CabinetGlassImage;BezelImage;BezelVertImage;DecalImage;NightLightingImage;LEDImage;TopLayerImage;TopLayerVertImage;"

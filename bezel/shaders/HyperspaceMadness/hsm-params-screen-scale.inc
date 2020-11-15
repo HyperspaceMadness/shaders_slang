@@ -8,7 +8,7 @@ Description:
 */
 
 // Screen Scale Required Parameters
-#pragma parameter HSM_MEGA_BEZEL_TITLE					"_____[ HSM MEGA BEZEL  ALPHA.2020-11-03-0 ]____________________" 0 0 0 0
+#pragma parameter HSM_MEGA_BEZEL_TITLE					"_____[ HSM MEGA BEZEL  ALPHA.2020-11-15-0 ]____________________" 0 0 0 0
 
 #pragma parameter HSM_RESOLUTION_DEBUG_ON					"[ DEBUG ]  Show Resolution Info" 0 0 1 1
 float HSM_RESOLUTION_DEBUG_ON = global.HSM_RESOLUTION_DEBUG_ON;
@@ -43,7 +43,7 @@ float HSM_ASPECT_RATIO_EXPLICIT = global.HSM_ASPECT_RATIO_EXPLICIT;
 //---------------------------------------------------------------------------------------------------
 //    SCALING
 //---------------------------------------------------------------------------------------------------
-#pragma parameter HSM_SCALING_TITLE					"_____[ SCALING & POSITION ]____________________________________" 0 0 0 0
+#pragma parameter HSM_SCALING_TITLE					"_____[ SCALING ]_______________________________________________" 0 0 0 0
 
 #pragma parameter HSM_INT_SCALE_MODE 					"[ SCALING ]  Int Scale Mode - OFF | ShortAxis | BothAxes" 0 0 2 1
 #define HSM_INT_SCALE_MODE global.HSM_INT_SCALE_MODE
@@ -69,6 +69,8 @@ float HSM_SNAP_TO_INT_SCALE_TOLERANCE = global.HSM_SNAP_TO_INT_SCALE_TOLERANCE;
 //---------------------------------------------------------------------------------------------------
 //    Position
 //---------------------------------------------------------------------------------------------------
+#pragma parameter HSM_SCREEN_POSITION_TITLE					"_____[ POSITION ]______________________________________________" 0 0 0 0
+
 #pragma parameter HSM_SCREEN_POSITION_X 				"[ POSITION ]  Position X" 0 -100 100 0.1
 float HSM_SCREEN_POSITION_X = global.HSM_SCREEN_POSITION_X / 100;
 
@@ -95,18 +97,24 @@ float HSM_CROP_OVERSCAN_RIGHT = global.HSM_CROP_OVERSCAN_RIGHT;
 
 
 //---------------------------------------------------------------------------------------------------
-//    SCANLINES & SAMPLING
+//    CORE RES SAMPLING
 //---------------------------------------------------------------------------------------------------
-#pragma parameter HSM_SCANLINE_TITLE								"_____[ SCANLINES & SAMPLING ]__________________________________" 0 0 0 0
-
-#pragma parameter HSM_SCANLINE_DIRECTION 							"[ SCANLINE DIRECTION ]  Guest & Easymode - Auto | Horiz | Vert"  0 0 2 1
-float HSM_SCANLINE_DIRECTION = global.HSM_SCANLINE_DIRECTION;
+#pragma parameter HSM_SAMPLING_TITLE								"_____[ CORE RES SAMPLING ]_____________________________________" 0 0 0 0
 
 #pragma parameter HSM_CORE_RES_SAMPLING_MULT_SCANLINE_DIR			"[ CORE RES SAMPLING ]  Scanline Dir"  1 0.25 16 0.25
 float HSM_CORE_RES_SAMPLING_MULT_SCANLINE_DIR = global.HSM_CORE_RES_SAMPLING_MULT_SCANLINE_DIR;
 
 #pragma parameter HSM_CORE_RES_SAMPLING_MULT_OPPOSITE_DIR			"[ CORE RES SAMPLING ]  Opposite Dir"  1 0.25 16 0.25
 float HSM_CORE_RES_SAMPLING_MULT_OPPOSITE_DIR = global.HSM_CORE_RES_SAMPLING_MULT_OPPOSITE_DIR;
+
+
+//---------------------------------------------------------------------------------------------------
+//    SCANLINES
+//---------------------------------------------------------------------------------------------------
+#pragma parameter HSM_SCANLINE_TITLE								"_____[ SCANLINES ]_____________________________________________" 0 0 0 0
+
+#pragma parameter HSM_SCANLINE_DIRECTION 							"[ SCANLINE DIRECTION ]  Guest & Easymode - Auto | Horiz | Vert"  0 0 2 1
+float HSM_SCANLINE_DIRECTION = global.HSM_SCANLINE_DIRECTION;
 
 #pragma parameter HSM_SCANLINE_INTERLACE_TRIGGER_RES 						"[ INTERLACE AND FAKE SCANLINES ]  Trigger Res" 600.0 0.0 2000.0 25.0
 #define HSM_SCANLINE_INTERLACE_TRIGGER_RES global.HSM_SCANLINE_INTERLACE_TRIGGER_RES
@@ -165,9 +173,19 @@ float HSM_CURVATURE_3D_TILT_ANGLE_Y = global.HSM_CURVATURE_3D_TILT_ANGLE_Y;
 
 
 //---------------------------------------------------------------------------------------------------
+//    PHOSPHOR PERSISTENCE
+//---------------------------------------------------------------------------------------------------
+#pragma parameter HSM_PERSISTENCE_TITLE								"_____[ PHOSPHOR PERSISTENCE ]__________________________________" 0 0 0 0
+
+#pragma parameter HSM_PHOSPHOR_PERSISTENCE          "[ PHOSPHOR PERSISTENCE ]  Amount - Pos:Neutral, Neg:Blue" 0 -1 1 0.05
+#define HSM_PHOSPHOR_PERSISTENCE global.HSM_PHOSPHOR_PERSISTENCE
+
+
+
+//---------------------------------------------------------------------------------------------------
 //    COLOR & Persistence
 //---------------------------------------------------------------------------------------------------
-#pragma parameter HSM_COLOR_AND_PERSISTENCE_TITLE		"_____[ COLOR & PERSISTENCE ]___________________________________" 0 0 0 0
+#pragma parameter HSM_COLOR_AND_PERSISTENCE_TITLE		"_____[ COLOR ]___________________________________" 0 0 0 0
 
 #pragma parameter HSM_COLOR_BLACK_LEVEL 				"[ SCANLINES ON BLACK ]  Black Level - Def -0.04" -0.04 -1 1 0.01
 #define HSM_COLOR_BLACK_LEVEL global.HSM_COLOR_BLACK_LEVEL
@@ -175,13 +193,10 @@ float HSM_CURVATURE_3D_TILT_ANGLE_Y = global.HSM_CURVATURE_3D_TILT_ANGLE_Y;
 #pragma parameter HSM_COLOR_NEGATIVE_CROP_BRIGHTNESS	"[ SCANLINES ON BLACK ]  Negative Crop Brightness - Def 1.8" 1.8 0 100 0.2
 #define HSM_COLOR_NEGATIVE_CROP_BRIGHTNESS global.HSM_COLOR_NEGATIVE_CROP_BRIGHTNESS
 
-#pragma parameter HSM_PHOSPHOR_PERSISTENCE          "[ PHOSPHOR PERSISTENCE ]  Amount - Pos:Neutral, Neg:Blue ______" 0 -1 1 0.05
-#define HSM_PHOSPHOR_PERSISTENCE global.HSM_PHOSPHOR_PERSISTENCE
-
 #pragma parameter HSM_COLOR_CRT_GAMMA   				"[ GAMMA ]  CRT Gamma (Linear to Gamma Space Encode) Def 2.2" 2.2 0.1 5 0.05
 #define HSM_COLOR_CRT_GAMMA global.HSM_COLOR_CRT_GAMMA
 
-#pragma parameter HSM_SCREEN_VIGNETTE                "[ SCREEN FX ]  Screen Vignette" 0 0 1 0.01
+#pragma parameter HSM_SCREEN_VIGNETTE                	"[ SCREEN VIGNETTE ]  Opacity" 0 0 1 0.01
 #define HSM_SCREEN_VIGNETTE global.HSM_SCREEN_VIGNETTE
 
 

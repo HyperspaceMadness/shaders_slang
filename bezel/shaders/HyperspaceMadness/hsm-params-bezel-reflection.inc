@@ -57,9 +57,6 @@ float HSM_BZL_COLOR_SATURATION = global.HSM_BZL_COLOR_SATURATION / 100;
 #pragma parameter HSM_BZL_COLOR_VALUE				    "[ BEZEL & FRAME COLOR ]  Color Value/Brightness - Def 10" 10 0 100 0.2
 float HSM_BZL_COLOR_VALUE = global.HSM_BZL_COLOR_VALUE / 100;
 
-#pragma parameter HSM_BZL_COLOR_BLEND_WITH_IMAGE		"[ BEZEL & FRAME COLOR ]  Blend Color with Image" 0 0 1 0.05
-float HSM_BZL_COLOR_BLEND_WITH_IMAGE = global.HSM_BZL_COLOR_BLEND_WITH_IMAGE;
-
 #pragma parameter HSM_BZL_NOISE 						"[ BEZEL & FRAME COLOR ]  Noise - Def 30" 30 0 100 1
 float HSM_BZL_NOISE = global.HSM_BZL_NOISE / 100;
 
@@ -106,15 +103,15 @@ float HSM_FRM_SHADOW_WIDTH = global.HSM_FRM_SHADOW_WIDTH;
 //---------------------------------------------------------------------------------------------------
 //    REFLECTION
 //---------------------------------------------------------------------------------------------------
-#pragma parameter HSM_REFLECTION_TITLE			"_____[ REFLECTION ]____________________________________________" 0 0 0 0
+#pragma parameter HSM_REFLECTION_TITLE			            "_____[ REFLECTION ]____________________________________________" 0 0 0 0
 
-#pragma parameter HSM_REFLECT_BLEND_MODE             "[ REFLECTION ]  Blend Mode -  Off | Normal | Add"  2 0 2 1
+#pragma parameter HSM_REFLECT_BLEND_MODE                    "[ REFLECTION ]  Blend Mode -  Off | Normal | Add"  2 0 2 1
 float HSM_REFLECT_BLEND_MODE = global.HSM_REFLECT_BLEND_MODE;
 
-#pragma parameter HSM_REFLECT_MASK_MODE              "[ REFLECTN] Mask- ALL | Tube | Bz- | Bz | Bz+ | Frm | Frm+ | BG"   3 0 7 1
+#pragma parameter HSM_REFLECT_MASK_MODE                     "Mask - ALL | Screen | Tube | Bz- | Bz | Bz+ | Frm | Frm+ | BG"   4 0 8 1
 float HSM_REFLECT_MASK_MODE = global.HSM_REFLECT_MASK_MODE;
 
-#pragma parameter HSM_REFLECT_GLOBAL_AMOUNT 					  "[ REFLECTION ]  Global Amount" 0.4 0 3 0.02
+#pragma parameter HSM_REFLECT_GLOBAL_AMOUNT 				"[ REFLECTION ]  Global Amount" 0.4 0 3 0.02
 float HSM_REFLECT_GLOBAL_AMOUNT = global.HSM_REFLECT_GLOBAL_AMOUNT;
 
 #pragma parameter HSM_REFLECT_GLOBAL_GAMMA_ADJUST 			"[ REFLECTION ]  Global Gamma Adjust" 1.2 0.25 3 0.05
@@ -123,7 +120,7 @@ float HSM_REFLECT_GLOBAL_GAMMA_ADJUST = global.HSM_REFLECT_GLOBAL_GAMMA_ADJUST;
 #pragma parameter HSM_REFLECT_INNER_EDGE_AMOUNT 			"[ REFLECTION ]  Inner Edge Amount" 0.9 0 3 0.02
 float HSM_REFLECT_INNER_EDGE_AMOUNT = global.HSM_REFLECT_INNER_EDGE_AMOUNT;
 
-#pragma parameter HSM_REFLECT_INNER_EDGE_FULLSCREEN_GLOW 		"[ REFLECTION ]  Inner Edge Fullscreen Glow" 0.4 0 10 0.02
+#pragma parameter HSM_REFLECT_INNER_EDGE_FULLSCREEN_GLOW 	"[ REFLECTION ]  Inner Edge Fullscreen Glow" 0.4 0 10 0.02
 float HSM_REFLECT_INNER_EDGE_FULLSCREEN_GLOW = global.HSM_REFLECT_INNER_EDGE_FULLSCREEN_GLOW;
 
 #pragma parameter HSM_REFLECT_DIRECT_AMOUNT 				"[ REFLECTION ]  Direct Reflection" 1.5 0 3 0.02
@@ -132,10 +129,10 @@ float HSM_REFLECT_DIRECT_AMOUNT = global.HSM_REFLECT_DIRECT_AMOUNT;
 #pragma parameter HSM_REFLECT_DIFFUSED_AMOUNT 				"[ REFLECTION ]  Diffused Reflection" 0.5 0 3 0.02
 float HSM_REFLECT_DIFFUSED_AMOUNT = global.HSM_REFLECT_DIFFUSED_AMOUNT;
 
-#pragma parameter HSM_REFLECT_FULLSCREEN_GLOW 					"[ REFLECTION ]  FullScreen Glow" 75 0 600 0.5
+#pragma parameter HSM_REFLECT_FULLSCREEN_GLOW 				"[ REFLECTION ]  FullScreen Glow" 75 0 600 0.5
 float HSM_REFLECT_FULLSCREEN_GLOW = global.HSM_REFLECT_FULLSCREEN_GLOW;
 
-#pragma parameter HSM_REFLECT_FULLSCREEN_GLOW_GAMMA 			"[ REFLECTION ]  FullScreen Glow Gamma" 3 0 5 0.02
+#pragma parameter HSM_REFLECT_FULLSCREEN_GLOW_GAMMA 		"[ REFLECTION ]  FullScreen Glow Gamma" 3 0 5 0.02
 float HSM_REFLECT_FULLSCREEN_GLOW_GAMMA = global.HSM_REFLECT_FULLSCREEN_GLOW_GAMMA;
 
 

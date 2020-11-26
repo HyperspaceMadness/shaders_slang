@@ -14,7 +14,7 @@ layout(std140, set = 0, binding = 0) uniform UBO
 	mat4 MVP;
 } global;
 
-#pragma parameter PS1_BOX_BLUR_MODE "[DE-DITHERING]  PS1 Box Blur ON" 0.0 0.0 1.0 1.0
+#pragma parameter PS1_BOX_BLUR_MODE "[ PS1 Box Blur ] ON" 0.0 0.0 1.0 1.0
 #define PS1_BOX_BLUR_MODE params.PS1_BOX_BLUR_MODE
 
 #pragma stage vertex

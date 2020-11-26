@@ -1078,8 +1078,8 @@ vec4 HSM_GetPostCrtPreppedColor(vec4 in_color_linear, vec2 screen_curved_coord, 
 	vec2 mirrored_screen_coord = HSM_GetMirrorWrappedCoord(screen_curved_coord);
 	float vignette_factor = HSM_GetScreenVignetteFactor(mirrored_screen_coord, HSM_SCREEN_VIGNETTE);
 
-	// If this is called from the glass preset we don't want the vignette to affect mirrored area
-	if (HSM_GLASSBORDER_ON == 1)
+	// This affects if the vignette shows up in the reflection or not
+	if (HSM_SCREEN_VIGNETTE_IN_REFLECTION == 0)
 		vignette_factor = 1 - ((1 - vignette_factor) * screen_mask);
 
 	out_color *= vignette_factor;

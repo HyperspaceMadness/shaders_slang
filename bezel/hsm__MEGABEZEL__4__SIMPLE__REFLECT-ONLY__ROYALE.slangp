@@ -181,22 +181,7 @@ scale_y18 = 12
 wrap_mode18 = mirrored_repeat
 alias18 = BR_MirrorFullscreenGlowPass
 
-// Bezel Generation & Reflection ----------------------------------------------------------------
-//      Uses these previous passes:
-//          BR_CRTPass
-//          BR_MirrorBlurredPass
-//          BR_MirrorReflectionDiffusedPass
-//          BR_MirrorFullscreenGlowPass
-//      Blur passes are in linearized color space, and CRT Pass already has gamma encoded in it
-//
-//      Uses these textures
-            // BackgroundImage
-            // BackgroundVertImage
-            // CabinetGlassImage
-            // NightLightingImage
-            // LEDImage
-            // TopLayerImage
-            // TopLayerVertImage
+// Bezel Reflection ----------------------------------------------------------------
 
 shader19 = shaders/HyperspaceMadness/hsm-bezel-reflection.slang
 mipmap_input19 = true

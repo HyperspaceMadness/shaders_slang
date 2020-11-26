@@ -175,7 +175,7 @@ wrap_mode25 = mirrored_repeat
 alias25 = BR_MirrorFullscreenGlowPass
 
 
-// Bezel Generation & Reflection ----------------------------------------------------------------
+// Bezel Reflection ----------------------------------------------------------------
 //      Uses these previous passes:
 //          BR_CRTPass
 //          BR_MirrorBlurredPass
@@ -214,31 +214,6 @@ float_framebuffer27 = false
 // Define how many shaders will be used from this list
 shaders = 28
 
-
-// Define textures to be used by the different passes
-textures = "SamplerLUT1;SamplerLUT2;SamplerLUT3;BackgroundImage;BackgroundVertImage;ColoredGelImage;TubeHighlightImage;CabinetGlassImage;BezelImage;BezelVertImage;DecalImage;NightLightingImage;LEDImage;TopLayerImage;TopLayerVertImage;"
-
-SamplerLUT1 = shaders/HyperspaceMadness/textures/lut/16.png
-SamplerLUT1_linear = true
-SamplerLUT2 = shaders/HyperspaceMadness/textures/lut/64.png
-SamplerLUT2_linear = true
-SamplerLUT3 = shaders/HyperspaceMadness/textures/lut/other1_32.png
-SamplerLUT3_linear = true
-
-BackgroundImage = shaders/HyperspaceMadness/textures/BackgroundImage_Carbon_3840x2160.png
-BackgroundVertImage = shaders/HyperspaceMadness/textures/BackgroundImage_Carbon_3840x2160.png
-ColoredGelImage = shaders/HyperspaceMadness/textures/Transparent_DummyTexture_16x16.png
-TubeHighlightImage = shaders/HyperspaceMadness/textures/TubeGlassOverlayImage_3840x2160.png
-CabinetGlassImage = shaders/HyperspaceMadness/textures/Transparent_DummyTexture_16x16.png
-BezelImage = shaders/HyperspaceMadness/textures/Transparent_DummyTexture_16x16.png
-BezelVertImage = shaders/HyperspaceMadness/textures/Transparent_DummyTexture_16x16.png
-DecalImage = shaders/HyperspaceMadness/textures/Transparent_DummyTexture_16x16.png
-NightLightingImage = shaders/HyperspaceMadness/textures/NightLighting_3840x2160.jpg
-LEDImage = shaders/HyperspaceMadness/textures/Transparent_DummyTexture_16x16.png
-TopLayerImage = shaders/HyperspaceMadness/textures/Transparent_DummyTexture_16x16.png
-TopLayerVertImage = shaders/HyperspaceMadness/textures/Transparent_DummyTexture_16x16.png
-
-parameters = "HSM_RESOLUTION_DEBUG_ON;HSM_FLIP_VIEWPORT_AND_CORE_VERTICAL;HSM_ROTATE_CORE_IMAGE;HSM_ASPECT_RATIO_ORIENTATION;HSM_ASPECT_RATIO_MODE;HSM_ASPECT_RATIO_EXPLICIT;HSM_INT_SCALE_MODE;HSM_INT_SCALE_MULTIPLE_OFFSET;HSM_INT_SCALE_MULTIPLE_OFFSET_LONG;HSM_INT_SCALE_BORDER_MIN_HEIGHT;HSM_NON_INTEGER_SCALE;HSM_SCANLINE_DIRECTION;HSM_CORE_RES_SAMPLING_MULT_SCANLINE_DIR;HSM_CORE_RES_SAMPLING_MULT_OPPOSITE_DIR;HSM_SCANLINE_INTERLACE_TRIGGER_RES;HSM_SCREEN_POSITION_X;HSM_SCREEN_POSITION_Y;HSM_CROP_OVERSCAN_TOP;HSM_CROP_OVERSCAN_BOTTOM;HSM_CROP_OVERSCAN_LEFT;HSM_CROP_OVERSCAN_RIGHT;HSM_CURVATURE_MODE;HSM_CURVATURE_3D_RADIUS;HSM_CURVATURE_3D_VIEW_DIST;HSM_CURVATURE_3D_TILT_ANGLE_X;HSM_CURVATURE_3D_TILT_ANGLE_X;HSM_CURVATURE_3D_TILT_ANGLE_Y;HSM_CURVATURE_2D_SCALE_LONG_AXIS;HSM_CURVATURE_2D_SCALE_SHORT_AXIS;HSM_COLOR_CRT_PROFILE;HSM_COLOR_SPACE;HSM_COLOR_TEMPERATURE;HSM_COLOR_SATURATION;HSM_COLOR_LUMINANCE;HSM_COLOR_BLACK_LEVEL;HSM_COLOR_NEGATIVE_CROP_BRIGHTNESS;HSM_COLOR_CRT_GAMMA;HSM_PHOSPHOR_PERSISTENCE;HSM_SCREEN_CORNER_RADIUS;HSM_SCREEN_EDGE_SHARPNESS;HSM_SCREEN_VIGNETTE;HSM_SCANLINE_FAKE_SCANLINE_OPACITY;HSM_TUBE_BLACK_EDGE_THICKNESS;HSM_BZL_INNER_CURVATURE_SCALE;HSM_CAB_GLASS_OPACITY;HSM_CAB_GLASS_SCALE;HSM_BZL_INNER_EDGE_SHADOW;HSM_BG_BRIGHTNESS;HSM_BG_SCALE_MODE;HSM_BG_ASPECT_RATIO;HSM_BG_BRIGHTNESS;HSM_BG_BRIGHTNESS;HSM_VIEWPORT_VIGNETTE_OPACITY;HSM_CRT_TUBE_BLEND_MODE;HSM_BG_SCALE_WITH_TUBE;HSM_BG_SCALE;HSM_BG_POS_Y;HSM_BZL_IMG_OPACITY;HSM_BZL_IMG_SCALE_MODE;HSM_BZL_IMG_SCALE;HSM_BZL_IMG_POS_Y;HSM_BZL_COLOR_HUE;HSM_BZL_COLOR_SATURATION;HSM_BZL_COLOR_VALUE;HSM_BZL_NOISE;HSM_BZL_OPACITY;HSM_BZL_WIDTH;HSM_BZL_HEIGHT;HSM_BZL_OUTER_CURVATURE_SCALE;HSM_BZL_INNER_CORNER_RADIUS_SCALE;HSM_BZL_OUTER_CORNER_RADIUS_SCALE;HSM_BZL_INNER_EDGE_THICKNESS;HSM_BZL_BRIGHTNESS;HSM_BZL_HIGHLIGHT;HSM_STATIC_LAYERS_GAMMA;HSM_FRM_OPACITY;HSM_FRM_OUTER_CURVATURE_SCALE;HSM_FRM_THICKNESS;HSM_FRM_INNER_EDGE_THICKNESS;HSM_FRM_INNER_CORNER_RADIUS_SCALE;HSM_FRM_OUTER_CORNER_RADIUS;HSM_FRM_OUTER_EDGE_THICKNESS;HSM_FRM_OUTER_EDGE_SHADING;HSM_BZL_OUTER_POSITION_Y;HSM_FRM_SHADOW_OPACITY;HSM_FRM_SHADOW_WIDTH;HSM_REFLECT_BLUR_NUM_SAMPLES;HSM_REFLECT_BLUR_MIN;HSM_REFLECT_BLUR_MAX;HSM_REFLECT_NOISE_AMOUNT;HSM_REFLECT_NOISE_SAMPLES;HSM_REFLECT_NOISE_SAMPLE_DISTANCE;HSM_REFLECT_GLOBAL_AMOUNT;HSM_REFLECT_GLOBAL_GAMMA_ADJUST;HSM_REFLECT_INNER_EDGE_AMOUNT;HSM_REFLECT_INNER_EDGE_FULLSCREEN_GLOW;HSM_REFLECT_DIRECT_AMOUNT;HSM_REFLECT_DIFFUSED_AMOUNT;HSM_REFLECT_FULLSCREEN_GLOW;HSM_REFLECT_FULLSCREEN_GLOW_GAMMA;HSM_REFLECT_FADE_AMOUNT;HSM_REFLECT_RADIAL_FADE_WIDTH;HSM_REFLECT_RADIAL_FADE_HEIGHT;HSM_REFLECT_LATERAL_OUTER_FADE_POSITION;HSM_REFLECT_LATERAL_OUTER_FADE_DISTANCE;HSM_REFLECT_CORNER_FADE;HSM_REFLECT_CORNER_FADE_DISTANCE;HSM_REFLECT_CORNER_INNER_SPREAD;HSM_REFLECT_IS_LAST_PASS;HSM_REFLECT_CORNER_OUTER_SPREAD;HSM_DECAL_OPACITY;HSM_DECAL_SCALE;HSM_DECAL_POS_Y;HSM_NIGHT_OPACITY;HSM_LED_OPACITY;HSM_TOP_OPACITY;HSM_TOP_BLEND_MODE;HSM_TOP_MASK_MODE;MDAPT_MODE;CBOD_MODE;PS1_BOX_BLUR_MODE;GTU_MODE;GTU_SIGNAL_RESOLUTION;GST_GLOW_GRADE;GDV_GLOW_STRENGTH;GDV_BLOOM_STRENGTH;GDV_BRIGHT_BOOST_DARK_COLORS;GDV_BRIGHT_BOOST_BRIGHT_COLORS;GDV_SCANLINE_TYPE;GDV_SCANLINE_SHAPE_EDGES_LOW;GDV_SCANLINE_SHAPE_CENTER_HIGH;GDV_SCANLINE_DARK_BEAM_SIZE_MIN;GDV_SCANLINE_BRIGHT_BEAM_SIZE_MAX;GDV_SCANLINE_OVERGROWN_BRIGHT_BEAM;GDV_SCANLINE_1_2_SATURATION;GDV_HORIZONTAL_SHARPNESS;GDV_SUBTRACTIVE_SHARPNESS;GDV_MASK_TYPE;GDV_MASK_SIZE;GDV_PVM_LIKE_COLORS;GDV_SLOTMASK_STRENGTH;GDV_SLOTMASK_WIDTH;GDV_SLOTMASK_HEIGHT;GDV_SLOTMASK_SIZE;GDV_MASK_5_TO_7_CUTOFF;GDV_MASK_4_TO_6_DARK;GDV_MASK_4_TO_6_LIGHT;GDV_MASK_0_7_STRENGTH;GDV_INTERLACE_MODE"
 
 HSM_CROP_OVERSCAN_TOP = 15
 HSM_CROP_OVERSCAN_BOTTOM = 15
@@ -300,6 +275,66 @@ GDV_MASK_TYPE = 1
 GDV_PVM_LIKE_COLORS = 0.2
 
 
+// Define textures to be used by the different passes
+textures = "SamplerLUT1;SamplerLUT2;SamplerLUT3;ColoredGelImage;TubeHighlightImage;GlassBorderSurfaceImage;BackgroundImage;BackgroundVertImage;CabinetGlassImage;BezelImage;BezelVertImage;DecalImage;NightLightingImage;LEDImage;TopLayerImage;TopLayerVertImage;"
 
+SamplerLUT1 = shaders/HyperspaceMadness/textures/lut/16.png
+SamplerLUT1_linear = true
+SamplerLUT2 = shaders/HyperspaceMadness/textures/lut/64.png
+SamplerLUT2_linear = true
+SamplerLUT3 = shaders/HyperspaceMadness/textures/lut/other1_32.png
+SamplerLUT3_linear = true
+
+ColoredGelImage = shaders/HyperspaceMadness/textures/Transparent_DummyTexture_16x16.png
+ColoredGelImage_mipmap = true
+ColoredGelImage_linear = true
+
+TubeHighlightImage = shaders/HyperspaceMadness/textures/TubeGlassOverlayImage_3840x2160.png
+TubeHighlightImage_mipmap = true
+TubeHighlightImage_linear = true
+
+GlassBorderSurfaceImage = shaders/HyperspaceMadness/textures/Transparent_DummyTexture_16x16.png
+GlassBorderSurfaceImage = true
+GlassBorderSurfaceImage = true
+
+BackgroundImage = shaders/HyperspaceMadness/textures/BackgroundImage_Carbon_3840x2160.png
+BackgroundImage_mipmap = true
+BackgroundImage_linear = true
+
+BackgroundVertImage = shaders/HyperspaceMadness/textures/BackgroundImage_Carbon_3840x2160.png
+BackgroundVertImage_mipmap = true
+BackgroundVertImage_linear = true
+
+CabinetGlassImage = shaders/HyperspaceMadness/textures/Transparent_DummyTexture_16x16.png
+CabinetGlassImage_mipmap = true
+CabinetGlassImage_linear = true
+
+BezelImage = shaders/HyperspaceMadness/textures/Transparent_DummyTexture_16x16.png
+BezelImage_mipmap = true
+BezelImage_linear = true
+
+BezelVertImage = shaders/HyperspaceMadness/textures/Transparent_DummyTexture_16x16.png
+BezelVertImage_mipmap = true
+BezelVertImage_linear = true
+
+DecalImage = shaders/HyperspaceMadness/textures/Transparent_DummyTexture_16x16.png
+DecalImage_mipmap = true
+DecalImage_linear = true
+
+NightLightingImage = shaders/HyperspaceMadness/textures/NightLighting_3840x2160.jpg
+NightLightingImage_mipmap = true
+NightLightingImage_linear = true
+
+LEDImage = shaders/HyperspaceMadness/textures/Transparent_DummyTexture_16x16.png
+LEDImage_mipmap = true
+LEDImage_linear = true
+
+TopLayerImage = shaders/HyperspaceMadness/textures/Transparent_DummyTexture_16x16.png
+TopLayerImage_mipmap = true
+TopLayerImage_linear = true
+
+TopLayerVertImage = shaders/HyperspaceMadness/textures/Transparent_DummyTexture_16x16.png
+TopLayerVertImage_mipmap = true
+TopLayerVertImage_linear = true
 
 

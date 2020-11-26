@@ -168,7 +168,7 @@ scale_y25 = 12
 wrap_mode25 = mirrored_repeat
 alias25 = BR_MirrorFullscreenGlowPass
 
-// Bezel Generation & Reflection ----------------------------------------------------------------
+// Bezel Reflection ----------------------------------------------------------------
 //      Uses these previous passes:
 //          BR_CRTPass
 //          BR_MirrorBlurredPass
@@ -183,22 +183,7 @@ scale_type26 = viewport
 float_framebuffer26 = true
 alias26 = BR_CRTAndReflectionPass
 
-// Bezel Generation & Reflection ----------------------------------------------------------------
-//      Uses these previous passes:
-//          BR_CRTPass
-//          BR_MirrorBlurredPass
-//          BR_MirrorReflectionDiffusedPass
-//          BR_MirrorFullscreenGlowPass
-//      Blur passes are in linearized color space, and CRT Pass already has gamma encoded in it
-//
-//      Uses these textures
-            // BackgroundImage
-            // BackgroundVertImage
-            // CabinetGlassImage
-            // NightLightingImage
-            // LEDImage
-            // TopLayerImage
-            // TopLayerVertImage
+// Bezel Reflection ----------------------------------------------------------------
 
 shader27 = shaders/HyperspaceMadness/hsm-bezel-image-layers.slang
 mipmap_input27 = true
@@ -210,7 +195,7 @@ float_framebuffer27 = false
 shaders = 28
 
 // Define textures to be used by the different passes
-textures = "SamplerLUT1;SamplerLUT2;SamplerLUT3;BackgroundImage;BackgroundVertImage;ColoredGelImage;TubeHighlightImage;CabinetGlassImage;BezelImage;BezelVertImage;DecalImage;NightLightingImage;LEDImage;TopLayerImage;TopLayerVertImage;"
+textures = "SamplerLUT1;SamplerLUT2;SamplerLUT3;ColoredGelImage;TubeHighlightImage;GlassBorderSurfaceImage;BackgroundImage;BackgroundVertImage;CabinetGlassImage;BezelImage;BezelVertImage;DecalImage;NightLightingImage;LEDImage;TopLayerImage;TopLayerVertImage;"
 
 SamplerLUT1 = shaders/HyperspaceMadness/textures/lut/16.png
 SamplerLUT1_linear = true
@@ -219,14 +204,6 @@ SamplerLUT2_linear = true
 SamplerLUT3 = shaders/HyperspaceMadness/textures/lut/other1_32.png
 SamplerLUT3_linear = true
 
-BackgroundImage = shaders/HyperspaceMadness/textures/BackgroundImage_Carbon_3840x2160.png
-BackgroundImage_mipmap = true
-BackgroundImage_linear = true
-
-BackgroundVertImage = shaders/HyperspaceMadness/textures/BackgroundImage_Carbon_3840x2160.png
-BackgroundVertImage_mipmap = true
-BackgroundVertImage_linear = true
-
 ColoredGelImage = shaders/HyperspaceMadness/textures/Transparent_DummyTexture_16x16.png
 ColoredGelImage_mipmap = true
 ColoredGelImage_linear = true
@@ -234,6 +211,18 @@ ColoredGelImage_linear = true
 TubeHighlightImage = shaders/HyperspaceMadness/textures/TubeGlassOverlayImage_3840x2160.png
 TubeHighlightImage_mipmap = true
 TubeHighlightImage_linear = true
+
+GlassBorderSurfaceImage = shaders/HyperspaceMadness/textures/Transparent_DummyTexture_16x16.png
+GlassBorderSurfaceImage = true
+GlassBorderSurfaceImage = true
+
+BackgroundImage = shaders/HyperspaceMadness/textures/BackgroundImage_Carbon_3840x2160.png
+BackgroundImage_mipmap = true
+BackgroundImage_linear = true
+
+BackgroundVertImage = shaders/HyperspaceMadness/textures/BackgroundImage_Carbon_3840x2160.png
+BackgroundVertImage_mipmap = true
+BackgroundVertImage_linear = true
 
 CabinetGlassImage = shaders/HyperspaceMadness/textures/Transparent_DummyTexture_16x16.png
 CabinetGlassImage_mipmap = true

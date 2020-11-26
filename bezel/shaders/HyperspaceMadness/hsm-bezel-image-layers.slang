@@ -26,10 +26,6 @@ Thanks to:
 #define DEFAULT_BEZEL_SCALE_V 0.91159
 
 /////////////// DEFINES ///////////////
-#define BLEND_MODE_OFF 0
-#define BLEND_MODE_NORMAL 1
-#define BLEND_MODE_ADD 2
-#define BLEND_MODE_MULTIPLY 3
 
 #define MASK_MODE_ALL 0
 #define MASK_MODE_SCREEN 1
@@ -581,7 +577,7 @@ void main()
 	float hmbz_bezel_highlight_width = 0.25;
 
 	float hmbz_bezel_edge_highlight_width = 0.8;
-	if (HSM_GLASSBORDER_ON == 1)
+	if (HSM_GLASS_BORDER_ON == 1)
 		hmbz_bezel_edge_highlight_width = 0.55;
 	
 	float hmbz_bezel_brightness_frame_inner_edge = 0.014;
@@ -611,7 +607,7 @@ void main()
 	float edge_bottom_center_highlight_mask 	= hmbz_bezel_highlight_bottom * bottom_mask * HHLP_QuadraticBezier(smoothstep(hmbz_bezel_edge_highlight_width, 0, abs(outermap_warped_coord_ctr.x)), vec2(0.8, 0));
 	float edge_sides_highlight_mask 			= hmbz_bezel_highlight_sides * sides_mask * HHLP_QuadraticBezier(smoothstep(hmbz_bezel_edge_highlight_width, 0, abs(outermap_warped_coord_ctr.y)), vec2(0.8, 0));
 
-	if (HSM_GLASSBORDER_ON == 1)
+	if (HSM_GLASS_BORDER_ON == 1)
 	{
 		edge_top_center_highlight_mask 		= 0.6 * top_mask * HHLP_QuadraticBezier(smoothstep(hmbz_bezel_edge_highlight_width, 0, abs(outermap_warped_coord_ctr.x)), vec2(0.8, 1));
 		edge_bottom_center_highlight_mask 	= bottom_mask * HHLP_QuadraticBezier(smoothstep(hmbz_bezel_edge_highlight_width, 0, abs(outermap_warped_coord_ctr.x)), vec2(0.8, 1));
@@ -663,7 +659,7 @@ void main()
 	if (HSM_FRM_OPACITY > 0.001)
 		frame_shadow_layer.a = HHLP_QuadraticBezier(smoothstep(HSM_FRM_SHADOW_WIDTH / 100, 0, dist_outside_frame), vec2(1, 0));
 
-	if (HSM_GLASSBORDER_ON == 1)
+	if (HSM_GLASS_BORDER_ON == 1)
 		OUTSIDE_TUBE_MASK_FOR_IMAGE = clamp(outside_tube_mask - edge_mask, 0, 1);
 	else
 		OUTSIDE_TUBE_MASK_FOR_IMAGE = 1 - HSM_GetCornerMask((tube_coord_warped - 0.5) * 1.003 + 0.5, SCREEN_ASPECT, HSM_FRM_OUTER_CORNER_RADIUS, 1);
@@ -698,15 +694,6 @@ void main()
 			night_lighting_image = vec4(HSM_HSVtoRGB(night_lighting_image_hsv), night_lighting_image.a);
 		}
 	}
-
-
-	//-----------------------------------------------------------------------------------------
-	// Full Viewport Vignette
-	//-----------------------------------------------------------------------------------------
-	vec4 vignette_layer = vec4(0);
-	vignette_layer.a += 0.75 * HHLP_QuadraticBezier(1 - HSM_GetVignetteFactor(VIEWPORT_COORD, HSM_VIEWPORT_VIGNETTE_OPACITY), vec2(1, 0.5));
-	vignette_layer.a += 0.5 * HSM_VIEWPORT_VIGNETTE_OPACITY * HHLP_QuadraticBezier(smoothstep(outside_ratio_warped, 0, 0.1), vec2(1, 0.5));
-
 
 	//----------------------------------------------------
 	// Generated Bezel
@@ -965,6 +952,24 @@ void main()
 	else
 		CUTOUT_MASK = 1 - HSM_GetCornerMask(cutout_coord, SCREEN_ASPECT, HSM_CUTOUT_CORNER_RADIUS, 1);
 
+	//-----------------------------------------------------------------------------------------
+	// Full Viewport Vignette
+	//-----------------------------------------------------------------------------------------
+	// TODO need to use scaling parameters for this
+	vec4 vignette_layer = vec4(0);
+
+	if (HSM_VIEWPORT_VIGNETTE_OPACITY > 0)
+	{
+		vec2 vignette_coord = GetScaledCoord(VIEWPORT_COORD, background_coord_no_mirror, screen_coord, bezel_outside_coord, bezel_image_coord, decal_coord,
+					TEXTURE_ASPECT_MODE_VIEWPORT, 
+					1, 
+					vec2(HSM_VIEWPORT_VIGNETTE_SCALE * HSM_VIEWPORT_VIGNETTE_SCALE_X, HSM_VIEWPORT_VIGNETTE_SCALE), 
+					vec2(0, HSM_VIEWPORT_VIGNETTE_POS_Y), 
+					HSM_VIEWPORT_VIGNETTE_SCALE_MODE, 
+					0);
+
+		vignette_layer.a += 0.75 * HHLP_QuadraticBezier(1 - HSM_GetVignetteFactor(vignette_coord, HSM_VIEWPORT_VIGNETTE_OPACITY), vec2(1, 0.5));
+	}
 
 	//-----------------------------------------------------------------------------------------
 	// COMPOSITE ALL LAYERS

@@ -172,7 +172,7 @@ wrap_mode25 = mirrored_repeat
 alias25 = BR_MirrorFullscreenGlowPass
 
 
-// Bezel Generation & Reflection ----------------------------------------------------------------
+// Bezel Reflection ----------------------------------------------------------------
 //      Uses these previous passes:
 //          BR_CRTPass
 //          BR_MirrorBlurredPass
@@ -213,7 +213,7 @@ shaders = 28
 
 
 // Define textures to be used by the different passes
-textures = "SamplerLUT1;SamplerLUT2;SamplerLUT3;BackgroundImage;BackgroundVertImage;ColoredGelImage;TubeHighlightImage;CabinetGlassImage;BezelImage;BezelVertImage;DecalImage;NightLightingImage;LEDImage;TopLayerImage;TopLayerVertImage;"
+textures = "SamplerLUT1;SamplerLUT2;SamplerLUT3;ColoredGelImage;TubeHighlightImage;GlassBorderSurfaceImage;BackgroundImage;BackgroundVertImage;CabinetGlassImage;BezelImage;BezelVertImage;DecalImage;NightLightingImage;LEDImage;TopLayerImage;TopLayerVertImage;"
 
 SamplerLUT1 = shaders/HyperspaceMadness/textures/lut/16.png
 SamplerLUT1_linear = true
@@ -226,8 +226,7 @@ BackgroundImage = shaders/HyperspaceMadness/textures/BackgroundImage_Carbon_3840
 BackgroundVertImage = shaders/HyperspaceMadness/textures/BackgroundImage_Carbon_3840x2160.png
 ColoredGelImage = shaders/HyperspaceMadness/textures/Transparent_DummyTexture_16x16.png
 TubeHighlightImage = shaders/HyperspaceMadness/textures/TubeGlassOverlayImage_3840x2160.png
-CabinetGlassImage = shaders/HyperspaceMadness/textures/Transparent_DummyTexture_16x16.png
-BezelImage = shaders/HyperspaceMadness/textures/Transparent_DummyTexture_16x16.png
+GlassBorderSurfaceImage = shaders/HyperspaceMadness/textures/Transparent_DummyTexture_16x16.pngBezelImage = shaders/HyperspaceMadness/textures/Transparent_DummyTexture_16x16.png
 BezelVertImage = shaders/HyperspaceMadness/textures/Transparent_DummyTexture_16x16.png
 DecalImage = shaders/HyperspaceMadness/textures/Transparent_DummyTexture_16x16.png
 NightLightingImage = shaders/HyperspaceMadness/textures/NightLighting_3840x2160.jpg

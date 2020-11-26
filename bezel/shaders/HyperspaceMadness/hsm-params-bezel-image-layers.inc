@@ -91,7 +91,7 @@ float HSM_CUTOUT_SCALE_MODE = global.HSM_CUTOUT_SCALE_MODE;
 #pragma parameter HSM_CUTOUT_SCALE 				"[ CUTOUT ]  Scale" 100 -100 200 0.1
 float HSM_CUTOUT_SCALE = global.HSM_CUTOUT_SCALE / 100;
 
-#pragma parameter HSM_CUTOUT_SCALE_X 		        "[ CUTOUT ]  Scale X" 100 -100 200 0.1
+#pragma parameter HSM_CUTOUT_SCALE_X 		    "[ CUTOUT ]  Scale X" 100 -100 200 0.1
 float HSM_CUTOUT_SCALE_X = global.HSM_CUTOUT_SCALE_X / 100;
 
 #pragma parameter HSM_CUTOUT_POS_Y 		        "[ CUTOUT ] Position Y" 0 -100 200 0.1
@@ -115,7 +115,7 @@ float HSM_LAYERING_DEBUG_MASK_MODE = global.HSM_LAYERING_DEBUG_MASK_MODE;
 //---------------------------------------------------------------------------------------------------
 #pragma parameter HSM_BACKGROUND_TITLE			"_____[ BACKGROUND ]____________________________________________" 0 0 0 0
 
-#pragma parameter HSM_BG_OPACITY               "[ BG ]  Opacity" 100 0 100 1
+#pragma parameter HSM_BG_OPACITY                  "[ BG ]  Opacity" 100 0 100 1
 float HSM_BG_OPACITY = global.HSM_BG_OPACITY / 100;
 
 #pragma parameter HSM_BG_BLEND_MODE               "[ BG ]  Blend Mode - Off | Normal | Add | Multiply"  1 -1 2 1
@@ -151,7 +151,7 @@ float HSM_BG_SCALE = global.HSM_BG_SCALE / 100;
 #pragma parameter HSM_BG_SCALE_X                  "[ BG ]  Scale X" 100 0 1000 0.1
 float HSM_BG_SCALE_X = global.HSM_BG_SCALE_X / 100;
 
-#pragma parameter HSM_BG_POS_Y                    "[ BG ]  Position Y" 0 -100 100 0.1
+#pragma parameter HSM_BG_POS_Y                    "[ BG ]  Position Y"  0 -100 100 0.1
 float HSM_BG_POS_Y = global.HSM_BG_POS_Y / 100;
 
 #pragma parameter HSM_BG_MIRROR_WRAP              "[ BG ]  Mirror Wrap" 1 0 1 1
@@ -160,16 +160,28 @@ float HSM_BG_MIRROR_WRAP = global.HSM_BG_MIRROR_WRAP;
 //---------------------------------------------------------------------------------------------------
 //    VIEWPORT VIGNETTE
 //---------------------------------------------------------------------------------------------------
-#pragma parameter HSM_VIEWPORT_VIGNETTE_TITLE			"_____[ VIEWPORT VIGNETTE ]_____________________________________" 0 0 0 0
+#pragma parameter HSM_VIEWPORT_VIGNETTE_TITLE			    "_____[ VIEWPORT VIGNETTE ]_____________________________________" 0 0 0 0
 
-#pragma parameter HSM_VIEWPORT_VIGNETTE_OPACITY            "[ VIEWPORT_VIGNETTE ]  Opacity" 50 0 100 2
+#pragma parameter HSM_VIEWPORT_VIGNETTE_OPACITY            "[ VIGNETTE ]  Opacity" 50 0 100 2
 float HSM_VIEWPORT_VIGNETTE_OPACITY = global.HSM_VIEWPORT_VIGNETTE_OPACITY / 100;
 
 #pragma parameter HSM_VIEWPORT_VIGNETTE_MASK_MODE          "Mask - ALL | Scrn | Tube | Bz- | Bz | Bz+ | Frm | Frm+ | BG" 5 0 8 1
 float HSM_VIEWPORT_VIGNETTE_MASK_MODE = global.HSM_VIEWPORT_VIGNETTE_MASK_MODE;
 
-#pragma parameter HSM_VIEWPORT_VIGNETTE_CUTOUT_MODE              "[ VIEWPORT_VIGNETTE ]  Cutout Mask - OFF | ON | Invert" 0 0 2 1
+#pragma parameter HSM_VIEWPORT_VIGNETTE_CUTOUT_MODE        "[ VIGNETTE ]  Cutout Mask - OFF | ON | Invert" 0 0 2 1
 float HSM_VIEWPORT_VIGNETTE_CUTOUT_MODE = global.HSM_VIEWPORT_VIGNETTE_CUTOUT_MODE;
+
+#pragma parameter HSM_VIEWPORT_VIGNETTE_SCALE_MODE         "[ VIGNETT ] Scale Mode- Full | BG | Tube | Bzl | Decal | TopImg" 0 0 5 1
+float HSM_VIEWPORT_VIGNETTE_SCALE_MODE = global.HSM_VIEWPORT_VIGNETTE_SCALE_MODE;
+
+#pragma parameter HSM_VIEWPORT_VIGNETTE_SCALE                 "[ VIGNETTE ]  Scale" 100 0 1000 0.1
+float HSM_VIEWPORT_VIGNETTE_SCALE = global.HSM_VIEWPORT_VIGNETTE_SCALE / 100;
+
+#pragma parameter HSM_VIEWPORT_VIGNETTE_SCALE_X               "[ VIGNETTE ]  Scale X" 100 0 1000 0.1
+float HSM_VIEWPORT_VIGNETTE_SCALE_X = global.HSM_VIEWPORT_VIGNETTE_SCALE_X / 100;
+
+#pragma parameter HSM_VIEWPORT_VIGNETTE_POS_Y                 "[ VIGNETTE ]  Position Y"  0 -100 100 0.1
+float HSM_VIEWPORT_VIGNETTE_POS_Y = global.HSM_VIEWPORT_VIGNETTE_POS_Y / 100;
 
 //---------------------------------------------------------------------------------------------------
 //    CRT Layer
@@ -224,7 +236,7 @@ float HSM_BZL_IMG_SCALE = global.HSM_BZL_IMG_SCALE / 100;
 #pragma parameter HSM_BZL_IMG_SCALE_X               "[ BEZEL IMG ]  Scale X" 100 0 1000 0.1
 float HSM_BZL_IMG_SCALE_X = global.HSM_BZL_IMG_SCALE_X / 100;
 
-#pragma parameter HSM_BZL_IMG_POS_Y                 "[ BEZEL IMG ]  Position Y" 0 -100 100 0.1
+#pragma parameter HSM_BZL_IMG_POS_Y                 "[ BEZEL IMG ]  Position Y"  0 -100 100 0.1
 float HSM_BZL_IMG_POS_Y = global.HSM_BZL_IMG_POS_Y / 100;
 
 #pragma parameter HSM_BZL_IMG_USE_CURVATURE          "[ BEZEL IMG ]  Use Curvature"  0 0 1 1
@@ -266,10 +278,10 @@ float HSM_CAB_GLASS_SCALE_KEEP_ASPECT = global.HSM_CAB_GLASS_SCALE_KEEP_ASPECT;
 #pragma parameter HSM_CAB_GLASS_SCALE             "[ CAB GLS ]  Scale" 100 10 500 1
 float HSM_CAB_GLASS_SCALE = global.HSM_CAB_GLASS_SCALE / 100;
 
-#pragma parameter HSM_CAB_GLASS_SCALE_X             "[ CAB GLS ]  Scale X" 100 10 500 1
+#pragma parameter HSM_CAB_GLASS_SCALE_X             "[ CAB GLS ]  Scale X" 100 0 500 1
 float HSM_CAB_GLASS_SCALE_X = global.HSM_CAB_GLASS_SCALE_X / 100;
 
-#pragma parameter HSM_CAB_GLASS_POS_Y             "[ CAB GLS ]  Position Y" 0 10 500 1
+#pragma parameter HSM_CAB_GLASS_POS_Y             "[ CAB GLS ]  Position Y"  0 -100 100 0.1
 float HSM_CAB_GLASS_POS_Y = global.HSM_CAB_GLASS_POS_Y / 100;
 
 

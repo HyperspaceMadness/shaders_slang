@@ -20,7 +20,7 @@ Thanks to:
 */
 
 /////////////// IMPORTS ///////////////
-#include "hsm-globals-and-all-params.inc"
+#include "hsm-globals-and-reflection-params.inc"
 
 /////////////// Helper Functions ///////////////
 
@@ -33,6 +33,45 @@ vec2 SCREEN_SCALE = HSM_GetScreenScale(SCREEN_ASPECT);
 float GetFade(float current_position, float corner_position, float fade_distance)
 {
 	return smoothstep(corner_position + fade_distance / 2, corner_position - fade_distance / 2, current_position);
+}
+
+/* Composite one image over top another using the alpha to blend
+ * It is expected that the input colors have been already premultiplied
+ * which means their rgb has already been multiplied by their alpha */
+vec4 PreMultAlphaBlend(vec4 color_under, vec4 color_over)
+{
+	vec4 out_color = vec4(color_over.rgb + (color_under.rgb * (1 - color_over.a)), clamp(color_under.a + color_over.a, 0, 1));
+	return out_color;
+}
+
+// Assumes Opacity is already encoded in alpha
+vec4 BlendModeLayerMixSimple(vec4 color_under, vec4 color_over, float blend_mode, float layer_opacity)
+{
+	if (blend_mode == BLEND_MODE_OFF || layer_opacity == 0)
+		return color_under;
+	
+	color_over.a *= layer_opacity;
+	
+	vec4 out_color = vec4(0);
+
+	if (blend_mode == BLEND_MODE_NORMAL)
+	{
+		
+		color_over.rgb *= color_over.a;
+		out_color = PreMultAlphaBlend(color_under, color_over);
+	}
+	else
+	{
+		vec4 blend_color = color_under; 
+		if (blend_mode == BLEND_MODE_ADD)  	 		blend_color.rgb = color_under.rgb + color_over.rgb ;
+		if (blend_mode == BLEND_MODE_MULTIPLY)  	blend_color.rgb = color_under.rgb * color_over.rgb ;
+
+		// return vec4(mix(color_under.rgb, blend_color.rgb, color_over.a), 1); //
+
+		out_color = vec4(clamp(mix(color_under.rgb, blend_color.rgb, color_over.a), 0, 1), color_under.a);
+		// return out_color;
+	}
+	return out_color;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
@@ -73,11 +112,12 @@ layout(set = 0, binding = 2) uniform sampler2D BR_CRTPass;
 
 layout(set = 0, binding = 5) uniform sampler2D TubeHighlightImage;
 layout(set = 0, binding = 6) uniform sampler2D ColoredGelImage;
+layout(set = 0, binding = 7) uniform sampler2D GlassBorderSurfaceImage;
 
-layout(set = 0, binding = 7) uniform sampler2D BR_MirrorBlurredPass;
-layout(set = 0, binding = 8) uniform sampler2D BR_MirrorReflectionDiffusedPass;
-layout(set = 0, binding = 9) uniform sampler2D BR_MirrorFullscreenGlowPass;
-layout(set = 0, binding = 10) uniform sampler2D AvgLumPass;
+layout(set = 0, binding = 8) uniform sampler2D BR_MirrorBlurredPass;
+layout(set = 0, binding = 9) uniform sampler2D BR_MirrorReflectionDiffusedPass;
+layout(set = 0, binding = 10) uniform sampler2D BR_MirrorFullscreenGlowPass;
+layout(set = 0, binding = 11) uniform sampler2D AvgLumPass;
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
 void main()
@@ -213,7 +253,7 @@ void main()
 	float hmbz_bezel_highlight_width = 0.25;
 
 	float hmbz_bezel_edge_highlight_width = 0.8;
-	if (HSM_GLASSBORDER_ON == 1)
+	if (HSM_GLASS_BORDER_ON == 1)
 		hmbz_bezel_edge_highlight_width = 0.55;
 
 	float top_center_highlight_mask 	= hmbz_bezel_highlight_top * top_mask * HHLP_QuadraticBezier(smoothstep(hmbz_bezel_highlight_width, 0, abs(outermap_warped_coord_ctr.x)), vec2(0.5, hmbz_bezel_highlight_falloff_speed));
@@ -224,7 +264,7 @@ void main()
 	float edge_bottom_center_highlight_mask 	= hmbz_bezel_highlight_bottom * bottom_mask * HHLP_QuadraticBezier(smoothstep(hmbz_bezel_edge_highlight_width, 0, abs(outermap_warped_coord_ctr.x)), vec2(0.8, 0));
 	float edge_sides_highlight_mask 			= hmbz_bezel_highlight_sides * sides_mask * HHLP_QuadraticBezier(smoothstep(hmbz_bezel_edge_highlight_width, 0, abs(outermap_warped_coord_ctr.y)), vec2(0.8, 0));
 
-	if (HSM_GLASSBORDER_ON == 1)
+	if (HSM_GLASS_BORDER_ON == 1)
 	{
 		edge_top_center_highlight_mask 		= 0.6 * top_mask * HHLP_QuadraticBezier(smoothstep(hmbz_bezel_edge_highlight_width, 0, abs(outermap_warped_coord_ctr.x)), vec2(0.8, 1));
 		edge_bottom_center_highlight_mask 	= bottom_mask * HHLP_QuadraticBezier(smoothstep(hmbz_bezel_edge_highlight_width, 0, abs(outermap_warped_coord_ctr.x)), vec2(0.8, 1));
@@ -232,6 +272,8 @@ void main()
 	}
 
 	edge_highlight_mask 	= hmbz_bezel_highlight_edge * edge_mask * (edge_top_center_highlight_mask + edge_bottom_center_highlight_mask + edge_sides_highlight_mask);
+
+	float vignette_shadow_mask = 0;
 
 	//----------------------------------------------------
 	// Reflection
@@ -310,12 +352,12 @@ void main()
 		float reflection_area_mask = outside_tube_mask;
 
 
-		float vignette_shadow_mask = 0;
-		vignette_shadow_mask += 0.75 * HHLP_QuadraticBezier(1 - HSM_GetVignetteFactor(VIEWPORT_COORD, HSM_VIEWPORT_VIGNETTE_OPACITY), vec2(1, 0.5));
-		vignette_shadow_mask += 0.5 * HSM_VIEWPORT_VIGNETTE_OPACITY * HHLP_QuadraticBezier(smoothstep(outside_ratio_warped, 0, 0.1), vec2(1, 0.5));
+
+		vignette_shadow_mask += 0.75 * HHLP_QuadraticBezier(1 - HSM_GetVignetteFactor(VIEWPORT_COORD, HSM_REFLECT_VIGNETTE_AMOUNT), vec2(1, 0.5));
+		vignette_shadow_mask += 0.5 * HSM_REFLECT_VIGNETTE_AMOUNT * HHLP_QuadraticBezier(smoothstep(outside_ratio_warped, 0, 0.1), vec2(1, 0.5));
 
 		// Edge Reflection
-		if (HSM_GLASSBORDER_ON == 1)
+		if (HSM_GLASS_BORDER_ON == 1)
 		{
 			reflected_color += (1 - vignette_shadow_mask) * bezel_reflected_color;
 			reflection_area_mask *= outside_tube_mask_wider;
@@ -332,7 +374,7 @@ void main()
 		// Mask reflection to only appear inside the bezel
 		reflected_color = clamp(reflected_color, 0, 1) * clamp(reflection_area_mask, 0, 1);
 
-		if (HSM_GLASSBORDER_ON == 1)
+		if (HSM_GLASS_BORDER_ON == 1)
 		{
 			glass_border_edge_color = HSM_REFLECT_GLOBAL_AMOUNT * pow(edge_reflected_color, vec4(HSM_REFLECT_GLOBAL_GAMMA_ADJUST));
 			reflected_color = mix(reflected_color, glass_border_edge_color, edge_mask * outside_tube_mask);
@@ -343,7 +385,7 @@ void main()
 									+ (avg_lum_mult  + 0.5) * (2 * fullscreen_glow_color + vec4(0.01)));
 		
 		// Add Diffused reflection on top of the glass inner edge
-		if (HSM_GLASSBORDER_ON == 1)
+		if (HSM_GLASS_BORDER_ON == 1)
 			edge_fullscreen_glow += HSM_REFLECT_INNER_EDGE_FULLSCREEN_GLOW * 0.5 * edge_highlight_mask * outside_tube_mask * diffused_reflection_color;
 
 		reflected_color += clamp(edge_fullscreen_glow, 0, 1);
@@ -400,20 +442,17 @@ void main()
 		frag_color_linear += black_edge_mask * HSM_TUBE_HIGHLIGHT_IMAGE_OPACITY * tube_highlight_image * tube_highlight_image.a;
 	}
 
-
-
-    // frag_color_linear +=  (1 - screen_mask) * vec4(0.8, 0, 0, 1);
-
-	// frag_color_linear += tube_highlight_image;
-
-
-    // // REFLECTION
-	// if (HSM_GLASSBORDER_ON == 1)
-	// 	frag_color_linear = mix(frag_color_linear, reflected_color, screen_mask);
-	// else
-	// 	frag_color_linear += reflected_color;
-
 	frag_color_linear += reflected_color;
+
+	if (HSM_GLASS_BORDER_SURFACE_IMG_OPACITY > 0)
+	{
+		vec4 layer_over_reflection_image = texture(GlassBorderSurfaceImage, VIEWPORT_COORD);
+		layer_over_reflection_image.a *= outside_tube_mask_wider * (1 - edge_mask);
+		frag_color_linear = BlendModeLayerMixSimple(frag_color_linear, layer_over_reflection_image, HSM_GLASS_BORDER_SURFACE_BLEND_MODE, HSM_GLASS_BORDER_SURFACE_IMG_OPACITY);
+		
+		
+		// frag_color_linear += layer_over_reflection_image;
+	}
 
 	// Convert from linear to gamma space values
 	if (HSM_REFLECT_IS_LAST_PASS == 1)

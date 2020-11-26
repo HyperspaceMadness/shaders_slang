@@ -63,7 +63,7 @@ void main()
 		float outside_ratio_warped = clamp(length(outermap_warped_outside_screen_vector) / outermap_range, 0, 1);
 
 		float hbl_sharpness_falloff_distance = 7;
-		if (HSM_GLASSBORDER_ON == 1)
+		if (HSM_GLASS_BORDER_ON == 1)
 			hbl_sharpness_falloff_distance = 20;
 
 		float blur_ratio = clamp_0_1(outside_ratio_warped / (hbl_sharpness_falloff_distance / 100));

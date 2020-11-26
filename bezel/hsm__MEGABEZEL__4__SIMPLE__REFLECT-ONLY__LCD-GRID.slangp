@@ -103,22 +103,7 @@ scale_y14 = 12
 wrap_mode14 = mirrored_repeat
 alias14 = BR_MirrorFullscreenGlowPass
 
-// Bezel Generation & Reflection ----------------------------------------------------------------
-//      Uses these previous passes:
-//          BR_CRTPass
-//          BR_MirrorBlurredPass
-//          BR_MirrorReflectionDiffusedPass
-//          BR_MirrorFullscreenGlowPass
-//      Blur passes are in linearized color space, and CRT Pass already has gamma encoded in it
-//
-//      Uses these textures
-            // BackgroundImage
-            // BackgroundVertImage
-            // CabinetGlassImage
-            // NightLightingImage
-            // LEDImage
-            // TopLayerImage
-            // TopLayerVertImage
+// Bezel Reflection ----------------------------------------------------------------
 
 shader15 = shaders/HyperspaceMadness/hsm-bezel-reflection.slang
 mipmap_input15 = true
@@ -131,7 +116,7 @@ shaders = 16
 
 
 // Define textures to be used by the different passes
-textures = "SamplerLUT1;SamplerLUT2;SamplerLUT3;ColoredGelImage;TubeHighlightImage;CabinetGlassImage;"
+textures = "SamplerLUT1;SamplerLUT2;SamplerLUT3;ColoredGelImage;TubeHighlightImage;GlassBorderSurfaceImage;"
 
 SamplerLUT1 = shaders/HyperspaceMadness/textures/lut/16.png
 SamplerLUT1_linear = true
@@ -142,8 +127,9 @@ SamplerLUT3_linear = true
 
 ColoredGelImage = shaders/HyperspaceMadness/textures/Transparent_DummyTexture_16x16.png
 TubeHighlightImage = shaders/HyperspaceMadness/textures/TubeGlassOverlayImage_3840x2160.png
-CabinetGlassImage = shaders/HyperspaceMadness/textures/Transparent_DummyTexture_16x16.png
-
+GlassBorderSurfaceImage = shaders/HyperspaceMadness/textures/Transparent_DummyTexture_16x16.png
+GlassBorderSurfaceImage = true
+GlassBorderSurfaceImage = true
 parameters = "HSM_INT_SCALE_MODE;HSM_NON_INTEGER_SCALE;HSM_CURVATURE_2D_SCALE_LONG_AXIS;HSM_CURVATURE_2D_SCALE_SHORT_AXIS;HSM_COLOR_CRT_PROFILE;HSM_TUBE_BLACK_EDGE_THICKNESS;HSM_VIEWPORT_VIGNETTE_OPACITY;HSM_BZL_WIDTH;HSM_BZL_HEIGHT;HSM_FRM_OPACITY;HSM_REFLECT_IS_LAST_PASS;LCD_RSUBPIX_R;LCD_GSUBPIX_G;LCD_BSUBPIX_B;LCD_GAIN;LCD_GAMMA;LCD_BLACK_LEVEL;LCD_BGR;"
 
 HSM_ASPECT_RATIO_EXPLICIT = 1.5

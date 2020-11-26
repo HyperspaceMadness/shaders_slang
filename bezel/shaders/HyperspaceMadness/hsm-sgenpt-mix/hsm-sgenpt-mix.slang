@@ -40,10 +40,10 @@ layout(push_constant) uniform Push
 	float SGPT_BLEND_OPTION;
 } params;
 
-#pragma parameter SGPT_MODE "[ GENESIS TRANSPARENCY - SGENPT-MIX ] - Mode OFF | V2 | V4" 0 0 2 1
+#pragma parameter SGPT_MODE "[ SGENPT-MIX - GENESIS TRANSPARENCY ] - Mode OFF | V2 | V4" 0 0 2 1
 #define SGPT_MODE params.SGPT_MODE
 
-#pragma parameter SGPT_SHARPNESS "[ GENESIS TRANSPARENCY - SGENPT-MIX ] - Sharpness" 1 0 2 0.1
+#pragma parameter SGPT_SHARPNESS "[ SGENPT-MIX - GENESIS TRANSPARENCY ] - Sharpness" 1 0 2 0.1
 #define SGPT_SHARPNESS params.SGPT_SHARPNESS
 
 // #pragma parameter SGPT_AR_STRENGTH "[ GENESIS TRANSPARENCY - SGENPT-MIX ] - (V2) Anti-ringing " 1 0 1 0.1

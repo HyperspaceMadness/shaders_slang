@@ -100,6 +100,7 @@ float HSM_FRM_SHADOW_OPACITY = global.HSM_FRM_SHADOW_OPACITY;
 float HSM_FRM_SHADOW_WIDTH = global.HSM_FRM_SHADOW_WIDTH;
 
 
+
 //---------------------------------------------------------------------------------------------------
 //    REFLECTION
 //---------------------------------------------------------------------------------------------------
@@ -156,6 +157,9 @@ float HSM_REFLECT_LATERAL_OUTER_FADE_POSITION = global.HSM_REFLECT_LATERAL_OUTER
 #pragma parameter HSM_REFLECT_LATERAL_OUTER_FADE_DISTANCE 		"[ REFLECTION FADE ]  Lateral Outer Fade Distance" 20 1 400 0.5
 float HSM_REFLECT_LATERAL_OUTER_FADE_DISTANCE = global.HSM_REFLECT_LATERAL_OUTER_FADE_DISTANCE;
 
+#pragma parameter HSM_REFLECT_VIGNETTE_AMOUNT 		            "[ REFLECTION FADE ]  Viewport Vignette (For Glass Presets)" 0 0 100 0.5
+float HSM_REFLECT_VIGNETTE_AMOUNT = global.HSM_REFLECT_VIGNETTE_AMOUNT / 100;
+
 
 #pragma parameter HSM_REFLECT_CORNER_TITLE			"_____[ REFLECTION CORNER ]_____________________________________" 0 0 0 0
 
@@ -203,6 +207,21 @@ float HSM_REFLECT_NOISE_SAMPLES = global.HSM_REFLECT_NOISE_SAMPLES;
 
 #pragma parameter HSM_REFLECT_NOISE_SAMPLE_DISTANCE 			"[ REFLECTION NOISE ]   Sample Distance" 0.20 0 1 0.01
 float HSM_REFLECT_NOISE_SAMPLE_DISTANCE = global.HSM_REFLECT_NOISE_SAMPLE_DISTANCE;
+
+
+//---------------------------------------------------------------------------------------------------
+//    GLASS BORDER
+//---------------------------------------------------------------------------------------------------
+#pragma parameter HSM_GLASS_BORDER_TITLE			        "_____[ GLASS BORDER ]__________________________________________" 0 0 0 0
+
+#pragma parameter HSM_GLASS_BORDER_ON                       "[ GLASS BORDER ]  ON (Glass Preset Only)" 0 0 1 1
+float HSM_GLASS_BORDER_ON = global.HSM_GLASS_BORDER_ON;
+
+#pragma parameter HSM_GLASS_BORDER_SURFACE_IMG_OPACITY 	    "[ GLASS BORDER ]  Surface Image Opacity" 0 0 100 0.1
+float HSM_GLASS_BORDER_SURFACE_IMG_OPACITY = global.HSM_GLASS_BORDER_SURFACE_IMG_OPACITY / 100;
+
+#pragma parameter HSM_GLASS_BORDER_SURFACE_BLEND_MODE 		"[ GLASS BORDER ]  Surface Blend Mode - Off | Norm | Add | Mult"  2 0 3 1
+float HSM_GLASS_BORDER_SURFACE_BLEND_MODE = global.HSM_GLASS_BORDER_SURFACE_BLEND_MODE;
 
 
 //---------------------------------------------------------------------------------------------------

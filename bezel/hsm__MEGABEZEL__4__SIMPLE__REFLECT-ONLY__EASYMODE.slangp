@@ -104,22 +104,7 @@ scale_y12 = 12
 wrap_mode12 = mirrored_repeat
 alias12 = BR_MirrorFullscreenGlowPass
 
-// Bezel Generation & Reflection ----------------------------------------------------------------
-//      Uses these previous passes:
-//          BR_CRTPass
-//          BR_MirrorBlurredPass
-//          BR_MirrorReflectionDiffusedPass
-//          BR_MirrorFullscreenGlowPass
-//      Blur passes are in linearized color space, and CRT Pass already has gamma encoded in it
-//
-//      Uses these textures
-            // BackgroundImage
-            // BackgroundVertImage
-            // CabinetGlassImage
-            // NightLightingImage
-            // LEDImage
-            // TopLayerImage
-            // TopLayerVertImage
+// Bezel Reflection ----------------------------------------------------------------
 
 shader13 = shaders/HyperspaceMadness/hsm-bezel-reflection.slang
 mipmap_input13 = true
@@ -131,7 +116,7 @@ float_framebuffer13 = false
 shaders = 14
 
 // Define textures to be used by the different passes
-textures = "SamplerLUT1;SamplerLUT2;SamplerLUT3;ColoredGelImage;TubeHighlightImage;CabinetGlassImage;"
+textures = "SamplerLUT1;SamplerLUT2;SamplerLUT3;ColoredGelImage;TubeHighlightImage;GlassBorderSurfaceImage;"
 
 SamplerLUT1 = shaders/HyperspaceMadness/textures/lut/16.png
 SamplerLUT1_linear = true
@@ -142,8 +127,9 @@ SamplerLUT3_linear = true
 
 ColoredGelImage = shaders/HyperspaceMadness/textures/Transparent_DummyTexture_16x16.png
 TubeHighlightImage = shaders/HyperspaceMadness/textures/TubeGlassOverlayImage_3840x2160.png
-CabinetGlassImage = shaders/HyperspaceMadness/textures/Transparent_DummyTexture_16x16.png
-
+GlassBorderSurfaceImage = shaders/HyperspaceMadness/textures/Transparent_DummyTexture_16x16.png
+GlassBorderSurfaceImage = true
+GlassBorderSurfaceImage = true
 parameters = "HSM_REFLECT_IS_LAST_PASS"
 
 HSM_REFLECT_IS_LAST_PASS = 1

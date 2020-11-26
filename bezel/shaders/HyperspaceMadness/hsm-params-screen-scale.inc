@@ -199,6 +199,8 @@ float HSM_CURVATURE_3D_TILT_ANGLE_Y = global.HSM_CURVATURE_3D_TILT_ANGLE_Y;
 #pragma parameter HSM_SCREEN_VIGNETTE                	"[ SCREEN VIGNETTE ]  Opacity" 0 0 1 0.01
 #define HSM_SCREEN_VIGNETTE global.HSM_SCREEN_VIGNETTE
 
+#pragma parameter HSM_SCREEN_VIGNETTE_IN_REFLECTION     "[ SCREEN VIGNETTE ]  Opacity in Reflection" 0 0 1 1
+float HSM_SCREEN_VIGNETTE_IN_REFLECTION = global.HSM_SCREEN_VIGNETTE_IN_REFLECTION;
 
 //---------------------------------------------------------------------------------------------------
 //    SCREEN EDGE
@@ -239,13 +241,6 @@ float HSM_TUBE_HIGHLIGHT_IMAGE_SCALE = global.HSM_TUBE_HIGHLIGHT_IMAGE_SCALE / 1
 
 #pragma parameter HSM_CRT_IS_LAST_PASS 		"[ SCREEN EDGE ]  CRT is Last Pass" 0 0 1 1
 #define HSM_CRT_IS_LAST_PASS global.HSM_CRT_IS_LAST_PASS
-
-//---------------------------------------------------------------------------------------------------
-//    GLASS BORDER
-//---------------------------------------------------------------------------------------------------
-#pragma parameter HSM_GLASSBORDER_ON       "[ GLASS BORDER ]  ON (Glass Preset Only)" 0 0 1 1
-float HSM_GLASSBORDER_ON = global.HSM_GLASSBORDER_ON;
-
 
 //---------------------------------------------------------------------------------------------------
 //    Tube / Inner Bezel Curvature

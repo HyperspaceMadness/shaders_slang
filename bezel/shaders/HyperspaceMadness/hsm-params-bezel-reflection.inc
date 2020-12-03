@@ -72,14 +72,22 @@ float HSM_FRM_OPACITY = global.HSM_FRM_OPACITY / 100;
 #pragma parameter HSM_FRM_BLEND_MODE                  "[ FRAME ]  Blend Mode - Off | Normal | Add | Mult"  1 0 3 1
 float HSM_FRM_BLEND_MODE = global.HSM_FRM_BLEND_MODE;
 
-#pragma parameter HSM_FRM_THICKNESS 					"[ FRAME ]  Thickness" 7 0 200 0.2
-float HSM_FRM_THICKNESS = global.HSM_FRM_THICKNESS / 100;
-
 #pragma parameter HSM_FRM_INNER_EDGE_THICKNESS 		"[ FRAME ]  Inner Edge Thickness" 1 0 50 0.05
 float HSM_FRM_INNER_EDGE_THICKNESS = global.HSM_FRM_INNER_EDGE_THICKNESS / 1000;
 
 #pragma parameter HSM_FRM_INNER_CORNER_RADIUS_SCALE 	"[ FRAME ]  Inner Corner Radius Scale" 1 0 50 0.05
 float HSM_FRM_INNER_CORNER_RADIUS_SCALE = global.HSM_FRM_INNER_CORNER_RADIUS_SCALE;
+
+#pragma parameter HSM_FRM_THICKNESS 					"[ FRAME ]  Thickness" 7 0 200 0.2
+float HSM_FRM_THICKNESS = global.HSM_FRM_THICKNESS / 100;
+
+// #pragma parameter HSM_FRM_THICKNESS_SCALE_X 			"[ FRAME ]  Thickness Scale X" 100 0 1000 0.2
+// float HSM_FRM_THICKNESS_SCALE_X = global.HSM_FRM_THICKNESS_SCALE_X / 100;
+float HSM_FRM_THICKNESS_SCALE_X = 1;
+
+// #pragma parameter HSM_FRM_OUTER_POS_Y 			        "[ FRAME ]  Outer Pos Y" 7 -100 100 0.2
+// float HSM_FRM_OUTER_POS_Y = global.HSM_FRM_OUTER_POS_Y / 100;
+float HSM_FRM_OUTER_POS_Y = 0;
 
 #pragma parameter HSM_FRM_OUTER_CURVATURE_SCALE 		"[ FRAME ]  Outer Curvature Scale" 0 0 5 0.05
 float HSM_FRM_OUTER_CURVATURE_SCALE = global.HSM_FRM_OUTER_CURVATURE_SCALE;

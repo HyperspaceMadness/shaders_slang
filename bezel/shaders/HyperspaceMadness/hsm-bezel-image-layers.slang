@@ -418,7 +418,7 @@ void main()
 	vec2 black_edge_scale_offset = HSM_GetTubeScale(sub_screen_scale) / sub_screen_scale;
 
 	bezel_outside_coord = HSM_GetInverseScaledCoord(bezel_outside_coord, black_edge_scale_offset * outer_bezel_scale) + vec2(0, HSM_BZL_OUTER_POSITION_Y / 100);
-	vec2 frame_outside_coord = (bezel_outside_coord - 0.5) / vec2(frame_thickness/ (sub_screen_scale.x / sub_screen_scale.y * output_aspect) + 1, frame_thickness + 1) + 0.5;
+	vec2 frame_outside_coord = (bezel_outside_coord - 0.5) / vec2((frame_thickness * HSM_FRM_THICKNESS_SCALE_X) / (sub_screen_scale.x / sub_screen_scale.y * output_aspect) + 1, frame_thickness + 1) + 0.5;
 
 	FRAME_SCALE = screen_scale * black_edge_scale_offset * outer_bezel_scale;
 

@@ -89,7 +89,7 @@ void main()
 	gl_Position = global.MVP * Position;
 	vec2 vTexCoord = TexCoord;
 
-	if (HSM_FLIP_VIEWPORT_AND_CORE_VERTICAL > 0.5)
+	if (HSM_FLIP_VIEWPORT_VERTICAL > 0.5)
 		vTexCoord.y =  1 - vTexCoord.y;
 
 	SCREEN_COORD = HSM_GetScreenVTexCoord(vTexCoord, SCREEN_SCALE);
@@ -110,7 +110,7 @@ layout(set = 0, binding = 1) uniform sampler2D BR_MappingPass;
 
 layout(set = 0, binding = 2) uniform sampler2D BR_CRTPass;
 
-layout(set = 0, binding = 5) uniform sampler2D TubeHighlightImage;
+layout(set = 0, binding = 5) uniform sampler2D TubeStaticReflectionImage;
 layout(set = 0, binding = 6) uniform sampler2D ColoredGelImage;
 layout(set = 0, binding = 7) uniform sampler2D GlassBorderSurfaceImage;
 
@@ -427,14 +427,14 @@ void main()
     if (HSM_TUBE_HIGHLIGHT_IMAGE_OPACITY > 0)
     {
 		vec2 tube_highlight_coord = (tube_coord_warped - 0.5) / HSM_TUBE_HIGHLIGHT_IMAGE_SCALE + 0.5;
-        // vec4 tube_highlight_image = texture(TubeHighlightImage, tube_highlight_coord);
+        // vec4 tube_highlight_image = texture(TubeStaticReflectionImage, tube_highlight_coord);
 
 		// // Dithering for the glass reflection if needed to reduce banding
 		// float blur_max_size = 1;
 		// float blur_amount = 0.2;
-		// vec4 tube_highlight_image = HSM_GetStoichaicBlurredSample(TubeHighlightImage, tube_highlight_coord, HSM_TUBE_HIGHLIGHT_IMAGE_DITHERING_SAMPLES, blur_max_size, blur_amount);
+		// vec4 tube_highlight_image = HSM_GetStoichaicBlurredSample(TubeStaticReflectionImage, tube_highlight_coord, HSM_TUBE_HIGHLIGHT_IMAGE_DITHERING_SAMPLES, blur_max_size, blur_amount);
 		
-		vec4 tube_highlight_image = texture(TubeHighlightImage, tube_highlight_coord);
+		vec4 tube_highlight_image = texture(TubeStaticReflectionImage, tube_highlight_coord);
 		tube_highlight_image = HSM_Linearize(tube_highlight_image, HSM_DEFAULT_SRGB_GAMMA);
 
         // Since the tube highlight has already been applied in the crt pass and we've already masked it to the screen

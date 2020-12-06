@@ -36,23 +36,28 @@ layout(push_constant) uniform Push
 
 // HSM Removed
 // #pragma parameter GAMMA_OUTPUT          "    Gamma Output" 2.2 0.1 5.0 0.01
+#pragma parameter ESM_EASYMODE_TITLE        "[ --- EASYMODE--- ]____________________________________________" 0 0 0 1
+#pragma parameter ESM_SCANLINE_TITLE         "[ SCANLINE ]___________________________________________________" 0 0 0 1
 #pragma parameter ESM_INTERLACING_TOGGLE    "[EASYMODE SCANLINE]  Interlace ON" 0 0.0 1.0 1.0
-#pragma parameter ESM_SCANLINE_STRENGTH_MIN "[SCANLINE]  Strength Min." 0.2 0.0 1.0 0.05
-#pragma parameter ESM_SCANLINE_STRENGTH_MAX "[SCANLINE]  Strength Max." 0.4 0.0 1.0 0.05
-#pragma parameter ESM_SCANLINE_BEAM_MIN     "[SCANLINE]  Beam Min." 1.0 0.25 5.0 0.05
-#pragma parameter ESM_SCANLINE_BEAM_MAX     "[SCANLINE]  Beam Max." 1.0 0.25 5.0 0.05
+#pragma parameter ESM_SCANLINE_STRENGTH_MIN "      Strength Min." 0.2 0.0 1.0 0.05
+#pragma parameter ESM_SCANLINE_STRENGTH_MAX "      Strength Max." 0.4 0.0 1.0 0.05
+#pragma parameter ESM_SCANLINE_BEAM_MIN     "      Beam Min." 1.0 0.25 5.0 0.05
+#pragma parameter ESM_SCANLINE_BEAM_MAX     "      Beam Max." 1.0 0.25 5.0 0.05
 
-#pragma parameter ESM_SHARPNESS_H           "[SHARPNESS]  Horizontal" 0.6 0.0 1.0 0.05
-#pragma parameter ESM_SHARPNESS_V           "[SHARPNESS]  Vertical" 1.0 0.0 1.0 0.05
+#pragma parameter ESM_SHARPNESS_TITLE        "[ SHARPNESS ]__________________________________________________" 0 0 0 1
+#pragma parameter ESM_SHARPNESS_H           "      Horizontal" 0.6 0.0 1.0 0.05
+#pragma parameter ESM_SHARPNESS_V           "      Vertical" 1.0 0.0 1.0 0.05
 
-#pragma parameter ESM_MASK_TYPE             "[MASK]  Type" 4.0 0.0 7.0 1.0
-#pragma parameter ESM_MASK_SIZE             "[MASK]  Size - 0:Auto, 1:2K, 2:4K" 0 0 100 1
-#pragma parameter ESM_MASK_STRENGTH_MIN     "[MASK]  Strength Min." 0.2 0.0 0.5 0.01
-#pragma parameter ESM_MASK_STRENGTH_MAX     "[MASK]  Strength Max." 0.2 0.0 0.5 0.01
+#pragma parameter ESM_MASK_TITLE            "[ MASK ]_______________________________________________________" 0 0 0 1
+#pragma parameter ESM_MASK_TYPE             "      Type" 4.0 0.0 7.0 1.0
+#pragma parameter ESM_MASK_SIZE             "      Size - 0:Auto, 1:2K, 2:4K" 0 0 100 1
+#pragma parameter ESM_MASK_STRENGTH_MIN     "      Strength Min." 0.2 0.0 0.5 0.01
+#pragma parameter ESM_MASK_STRENGTH_MAX     "      Strength Max." 0.2 0.0 0.5 0.01
 
-#pragma parameter ESM_HALATION              "[ GLOW ]  Halation" 0.03 0.0 1.0 0.01
-#pragma parameter ESM_DIFFUSION             "[ GLOW ]  Diffusion" 0.0 0.0 1.0 0.01
-#pragma parameter ESM_BRIGHTNESS            "[ GLOW ]  Brightness" 1.0 0.0 2.0 0.05
+#pragma parameter ESM_GLOW_TITLE        "[ GLOW ]_______________________________________________________" 0 0 0 1
+#pragma parameter ESM_HALATION              "      Halation" 0.03 0.0 1.0 0.01
+#pragma parameter ESM_DIFFUSION             "      Diffusion" 0.0 0.0 1.0 0.01
+#pragma parameter ESM_BRIGHTNESS            "      Brightness" 1.0 0.0 2.0 0.05
 
 // HSM Removed
 // #pragma parameter GEOM_CURVATURE "Geom Curvature" 0.0 0.0 0.1 0.01
@@ -181,7 +186,7 @@ layout(location = 0) out vec4 FragColor;
 layout(set = 0, binding = 2) uniform sampler2D Source;
 layout(set = 0, binding = 3) uniform sampler2D ORIG_LINEARIZED;
 layout(set = 0, binding = 5) uniform sampler2D ColoredGelImage;
-layout(set = 0, binding = 6) uniform sampler2D TubeHighlightImage;
+layout(set = 0, binding = 6) uniform sampler2D TubeStaticReflectionImage;
 
 void main()
 {
@@ -358,6 +363,6 @@ void main()
     FragColor = vec4(col, 1);
 
 	// HSM Added Prep and add output gamma
-	FragColor = HSM_GetPostCrtPreppedColor(FragColor, screen_curved_coord, SCREEN_COORD, SCREEN_ASPECT, SCREEN_SCALE, ColoredGelImage, TubeHighlightImage);
+	FragColor = HSM_GetPostCrtPreppedColor(FragColor, screen_curved_coord, SCREEN_COORD, SCREEN_ASPECT, SCREEN_SCALE, ColoredGelImage, TubeStaticReflectionImage);
 	// End Addition
 }

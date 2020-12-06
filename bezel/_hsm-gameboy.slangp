@@ -30,8 +30,18 @@ alias4 = "PASS4"
 
 shaders = 5
 
-textures = COLOR_PALETTE;BACKGROUND
-COLOR_PALETTE = shaders/HyperspaceMadness/hsm-gameboy/palette-gameboy-dmg-0.png
-COLOR_PALETTE_linear = false
+textures = ColorPaletteImage;BACKGROUND;ColoredGelImage;TubeStaticReflectionImage;
+
+ColorPaletteImage = shaders/HyperspaceMadness/hsm-gameboy/palette-gameboy-dmg-0.png
+ColorPaletteImage_linear = false
+
 BACKGROUND = shaders/HyperspaceMadness/hsm-gameboy/bg-gameboy-dmg.png
 BACKGROUND_linear = true
+
+ColoredGelImage = shaders/HyperspaceMadness/hsm-gameboy/bg-gameboy-dmg.png
+ColoredGelImage_mipmap = true
+ColoredGelImage_linear = true
+
+TubeStaticReflectionImage = shaders/HyperspaceMadness/textures/TubeGlassOverlayImage_3840x2160.png
+TubeHighlightImage_mipmap = true
+TubeHighlightImage_linear = true

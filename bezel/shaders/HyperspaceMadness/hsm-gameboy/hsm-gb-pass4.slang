@@ -27,37 +27,43 @@ layout(push_constant) uniform Push
 
 // Useful to fine-tune the colors.
 // Higher values make the "black" color closer to black - [0, 1] [DEFAULT: 0.95]
-#pragma parameter contrast          "[ GAMEBOY ]  Contrast" 0.95 0.0 1. 0 0.05
+#pragma parameter contrast          "      Contrast" 0.95 0.0 1. 0 0.05
 
 // Controls the ambient light of the screen. 
 // Lower values darken the screen - [0, 2] [DEFAULT: 1.00]
-#pragma parameter screen_light      "[ GAMEBOY ]  Ambient Screen Light" 1.0 0.0 2.0 0.05
+#pragma parameter screen_light      "      Ambient Screen Light" 1.0 0.0 2.0 0.05
 
 // Controls the opacity of the dot-matrix pixels. 
 // Lower values make pixels more transparent - [0, 1] [DEFAULT: 1.00]
-#pragma parameter pixel_opacity     "[ GAMEBOY ]  Pixel Opacity" 1.0 0.01 1.0 0.01
+#pragma parameter pixel_opacity     "      Pixel Opacity" 1.0 0.01 1.0 0.01
 
 // Higher values suppress changes in background color directly beneath
 // the foreground to improve image clarity - [0, 1] [DEFAULT: 0.75]
-#pragma parameter bg_smoothing      "[ GAMEBOY ]  Background Smooth" 0.75 0.0 1.0 0.05
+#pragma parameter bg_smoothing      "      Background Smooth" 0.75 0.0 1.0 0.05
+
+
+#pragma parameter GBY_SHADOW_TITLE	"[ SHADOW ]_____________________________________________________" 0 0 0 0
 
 // How strongly shadows affect the background
 // Higher values darken the shadows - [0, 1] [DEFAULT: 0.55]
-#pragma parameter shadow_opacity    "[ GAMEBOY ]  Shadow Opacity" 0.55 0.01 1.0 0.01
+#pragma parameter shadow_opacity    "      Shadow Opacity" 0.55 0.01 1.0 0.01
 
 // How far the shadow should be shifted to the
 // right in pixels - [-infinity, infinity] [DEFAULT: 1.0]
-#pragma parameter shadow_offset_x   "[ GAMEBOY ]  Shadow Offset Horiz" 1.0 -5.0 5.0 0.5
+#pragma parameter shadow_offset_x   "      Shadow Offset Horiz" 1.0 -5.0 5.0 0.5
 
 // How far the shadow should be shifted
 // down in pixels - [-infinity, infinity] [DEFAULT: 1.5]
-#pragma parameter shadow_offset_y   "[ GAMEBOY ]  Shadow Offset Vert" 1.0 -5.0 5.0 0.5
+#pragma parameter shadow_offset_y   "      Shadow Offset Vert" 1.0 -5.0 5.0 0.5
+
+
+#pragma parameter GBY_SCREENOFFSET_TITLE	"[ SCREEN OFFSET ]______________________________________________" 0 0 0 0
 
 // Screen offset - [-infinity, infinity] [DEFAULT: 0]
-#pragma parameter screen_offset_x   "[ GAMEBOY ]  Screen Offset Horiz" 0.0 -5.0 5.0 0.5
+#pragma parameter screen_offset_x   "      Screen Offset Horiz" 0.0 -5.0 5.0 0.5
 
 // Screen offset - [-infinity, infinity] [DEFAULT: 0]
-#pragma parameter screen_offset_y   "[ GAMEBOY ]  Screen Offset Vert" 0.0 -5.0 5.0 0.5    
+#pragma parameter screen_offset_y   "      Screen Offset Vert" 0.0 -5.0 5.0 0.5    
 
 ///////////////////////////////////////////////////////////////////////////
 //                                                                       //
@@ -89,11 +95,14 @@ layout(location = 0) in vec4 Position;
 layout(location = 1) in vec2 TexCoord;
 layout(location = 0) out vec2 vTexCoord;
 layout(location = 1) out vec2 texel;
+layout(location = 2) out vec2 SCREEN_COORD;
 
 void main()
 {
     gl_Position = global.MVP * Position;
     vTexCoord = TexCoord * 1.0001;
+    
+	SCREEN_COORD = HSM_GetScreenVTexCoord(vTexCoord, SCREEN_SCALE);
 
     texel = params.SourceSize.zw;
 }
@@ -105,11 +114,13 @@ void main()
 #pragma stage fragment
 layout(location = 0) in vec2 vTexCoord;
 layout(location = 1) in vec2 texel;
+layout(location = 2) in vec2 SCREEN_COORD;
 layout(location = 0) out vec4 FragColor;
 layout(set = 0, binding = 1) uniform sampler2D Source;
 layout(set = 0, binding = 2) uniform sampler2D PassOutput1;
-layout(set = 0, binding = 3) uniform sampler2D ColoredGelImage;
-layout(set = 0, binding = 4) uniform sampler2D ColorPaletteImage;
+layout(set = 0, binding = 3) uniform sampler2D ColorPaletteImage;
+layout(set = 0, binding = 4) uniform sampler2D ColoredGelImage;
+layout(set = 0, binding = 5) uniform sampler2D TubeStaticReflectionImage;
 
 #define bg_color texture(ColorPaletteImage, vec2(0.25, 0.5)) 
 
@@ -128,6 +139,11 @@ layout(set = 0, binding = 4) uniform sampler2D ColorPaletteImage;
 
 void main()
 {
+    // HSM Added
+	vec2 screen_curved_coord = HSM_GetCurvedCoord(SCREEN_COORD, 1, SCREEN_ASPECT);
+	vec2 screen_curved_coord_mirrored = HSM_GetMirrorWrappedCoord(screen_curved_coord);
+    // End Addition
+
     vec2 tex = floor(params.PassOutputSize1.xy * vTexCoord);
     tex = (tex + 0.5) * params.PassOutputSize1.zw;
     
@@ -164,4 +180,8 @@ void main()
     out_color = (foreground * foreground.a * params.contrast) + (out_color * (params.screen_light - foreground.a * params.contrast * params.pixel_opacity));
     
     FragColor = out_color;
+
+    // Prep and add output gamma
+	FragColor = HSM_GetPostCrtPreppedColor(FragColor, screen_curved_coord, SCREEN_COORD, SCREEN_ASPECT, SCREEN_SCALE, ColoredGelImage, TubeStaticReflectionImage);
+	// End Addition
 }

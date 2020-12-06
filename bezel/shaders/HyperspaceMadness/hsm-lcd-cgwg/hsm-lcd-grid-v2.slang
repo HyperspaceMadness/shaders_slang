@@ -22,20 +22,23 @@ layout(push_constant) uniform Push
     float LCD_BGR;
 } param;
 
-#pragma parameter LCD_RSUBPIX_R  "[EASYMODE]  Colour of R subpixel: R" 1.0 0.0 1.0 0.01
-#pragma parameter LCD_RSUBPIX_G  "[EASYMODE]  Colour of R subpixel: G" 0.0 0.0 1.0 0.01
-#pragma parameter LCD_RSUBPIX_B  "[EASYMODE]  Colour of R subpixel: B" 0.0 0.0 1.0 0.01
-#pragma parameter LCD_GSUBPIX_R  "[EASYMODE]  Colour of G subpixel: R" 0.0 0.0 1.0 0.01
-#pragma parameter LCD_GSUBPIX_G  "[EASYMODE]  Colour of G subpixel: G" 1.0 0.0 1.0 0.01
-#pragma parameter LCD_GSUBPIX_B  "[EASYMODE]  Colour of G subpixel: B" 0.0 0.0 1.0 0.01
-#pragma parameter LCD_BSUBPIX_R  "[EASYMODE]  Colour of B subpixel: R" 0.0 0.0 1.0 0.01
-#pragma parameter LCD_BSUBPIX_G  "[EASYMODE]  Colour of B subpixel: G" 0.0 0.0 1.0 0.01
-#pragma parameter LCD_BSUBPIX_B  "[EASYMODE]  Colour of B subpixel: B" 1.0 0.0 1.0 0.01
-#pragma parameter LCD_GAIN       "[EASYMODE]  Gain"                    1.0 0.5 2.0 0.05
-#pragma parameter LCD_GAMMA      "[EASYMODE]  LCD Gamma"               3.0 0.5 5.0 0.1
-#pragma parameter LCD_BLACK_LEVEL "[EASYMODE]  Black level"            0.05 0.0 0.5 0.01
-#pragma parameter LCD_AMBIENT    "[EASYMODE]  Ambient"                 0.0 0.0 0.5 0.01
-#pragma parameter LCD_BGR        "[EASYMODE]  BGR"                     0 0 1 1
+#pragma parameter LCD_TITLE	        "[ --- LCD GRID V2 --- ]________________________________________" 0 0 0 0
+#pragma parameter LCD_SUBPIX_TITLE	"[ SUBPIXEL COLORS ]____________________________________________" 0 0 0 0
+#pragma parameter LCD_RSUBPIX_R     "      Colour of R subpixel: R" 1.0 0.0 1.0 0.01
+#pragma parameter LCD_RSUBPIX_G     "      Colour of R subpixel: G" 0.0 0.0 1.0 0.01
+#pragma parameter LCD_RSUBPIX_B     "      Colour of R subpixel: B" 0.0 0.0 1.0 0.01
+#pragma parameter LCD_GSUBPIX_R     "      Colour of G subpixel: R" 0.0 0.0 1.0 0.01
+#pragma parameter LCD_GSUBPIX_G     "      Colour of G subpixel: G" 1.0 0.0 1.0 0.01
+#pragma parameter LCD_GSUBPIX_B     "      Colour of G subpixel: B" 0.0 0.0 1.0 0.01
+#pragma parameter LCD_BSUBPIX_R     "      Colour of B subpixel: R" 0.0 0.0 1.0 0.01
+#pragma parameter LCD_BSUBPIX_G     "      Colour of B subpixel: G" 0.0 0.0 1.0 0.01
+#pragma parameter LCD_BSUBPIX_B     "      Colour of B subpixel: B" 1.0 0.0 1.0 0.01
+#pragma parameter LCD_BRIGHT_TITLE	"[ BRIGHTNESS & GAMMA ]_________________________________________" 0 0 0 0
+#pragma parameter LCD_GAIN          "      Gain"                    1.0 0.5 2.0 0.05
+#pragma parameter LCD_GAMMA         "      LCD Gamma"               3.0 0.5 5.0 0.1
+#pragma parameter LCD_BLACK_LEVEL   "      Black level"            0.05 0.0 0.5 0.01
+#pragma parameter LCD_AMBIENT       "      Ambient"                 0.0 0.0 0.5 0.01
+#pragma parameter LCD_BGR           "      BGR"                     0 0 1 1
 
 #define outgamma 2.2
 
@@ -73,7 +76,7 @@ layout(location = 4) in vec2 SCREEN_COORD;
 layout(location = 5) in float USE_VERTICAL_SCANLINES;
 
 layout(set = 0, binding = 5) uniform sampler2D ColoredGelImage;
-layout(set = 0, binding = 6) uniform sampler2D TubeHighlightImage;
+layout(set = 0, binding = 6) uniform sampler2D TubeStaticReflectionImage;
 
 layout(location = 0) out vec4 FragColor;
 layout(set = 0, binding = 2) uniform sampler2D Source;
@@ -170,6 +173,6 @@ void main()
 
     // HSM Added
     FragColor = vec4(averageColor, 1);
-    FragColor = HSM_GetPostCrtPreppedColor(FragColor, screen_curved_coord, SCREEN_COORD, SCREEN_ASPECT, SCREEN_SCALE, ColoredGelImage, TubeHighlightImage);
+    FragColor = HSM_GetPostCrtPreppedColor(FragColor, screen_curved_coord, SCREEN_COORD, SCREEN_ASPECT, SCREEN_SCALE, ColoredGelImage, TubeStaticReflectionImage);
     // End Addition
 }

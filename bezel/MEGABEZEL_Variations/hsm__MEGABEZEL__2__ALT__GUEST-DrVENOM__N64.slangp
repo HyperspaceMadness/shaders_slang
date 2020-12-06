@@ -12,7 +12,7 @@ LEDImage = ../shaders/HyperspaceMadness/textures/Transparent_DummyTexture_16x16.
 TopLayerImage = ../shaders/HyperspaceMadness/textures/Transparent_DummyTexture_16x16.png
 TopLayerVertImage = ../shaders/HyperspaceMadness/textures/Transparent_DummyTexture_16x16.png
 
-HSM_FLIP_VIEWPORT_AND_CORE_VERTICAL = 1
+HSM_FLIP_VIEWPORT_VERTICAL = 1
 HSM_INT_SCALE_MODE = 1
 HSM_SCANLINE_DIRECTION = 2
 HSM_CORE_RES_SAMPLING_MULT_SCANLINE_DIR = 2

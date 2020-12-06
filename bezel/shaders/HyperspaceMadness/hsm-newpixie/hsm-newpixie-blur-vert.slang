@@ -55,7 +55,7 @@ layout(push_constant) uniform Push
 	float NPX_BLUR_VERT;
 } params;
 
-#pragma parameter NPX_BLUR_VERT "[NEWPIXIE]   Vertical Blur" 1.0 0.0 5.0 0.25
+#pragma parameter NPX_BLUR_VERT "      Vertical Blur" 1.0 0.0 5.0 0.25
 
 vec2 blur = vec2(0.0, params.NPX_BLUR_VERT) * params.OutputSize.zw;
 

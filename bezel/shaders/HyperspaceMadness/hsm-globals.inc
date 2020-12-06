@@ -15,7 +15,8 @@ layout(std140, set = 0, binding = 0) uniform UBO
 	uint FrameCount;
 
 	float HSM_RESOLUTION_DEBUG_ON;
-	float HSM_FLIP_VIEWPORT_AND_CORE_VERTICAL;
+	float HSM_FLIP_VIEWPORT_VERTICAL;
+float HSM_FLIP_CORE_VERTICAL;
 	
 	float HSM_ROTATE_CORE_IMAGE;
 	float HSM_ASPECT_RATIO_ORIENTATION;

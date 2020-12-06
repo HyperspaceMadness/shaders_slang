@@ -155,7 +155,7 @@ layout(set = 0, binding = 3) uniform sampler2D PreCRTPass;
 //layout(set = 0, binding = 5) uniform sampler2D slot;
 //layout(set = 0, binding = 6) uniform sampler2D delta;
 layout(set = 0, binding = 5) uniform sampler2D ColoredGelImage;
-layout(set = 0, binding = 6) uniform sampler2D TubeHighlightImage;
+layout(set = 0, binding = 6) uniform sampler2D TubeStaticReflectionImage;
 
 #define blur_texture blur
 
@@ -370,6 +370,6 @@ void main()
 
   // HSM Added Prep and add output gamma
   FragColor = HSM_Linearize(FragColor, HSM_DEFAULT_SRGB_GAMMA);
-	FragColor = HSM_GetPostCrtPreppedColor(FragColor, screen_curved_coord, SCREEN_COORD, SCREEN_ASPECT, SCREEN_SCALE, ColoredGelImage, TubeHighlightImage);
+	FragColor = HSM_GetPostCrtPreppedColor(FragColor, screen_curved_coord, SCREEN_COORD, SCREEN_ASPECT, SCREEN_SCALE, ColoredGelImage, TubeStaticReflectionImage);
 	// End Addition
 }

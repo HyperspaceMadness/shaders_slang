@@ -55,7 +55,7 @@ layout(push_constant) uniform Push
 	float NPX_BLUR_HORIZ;
 } params;
 
-#pragma parameter NPX_BLUR_HORIZ "[NEWPIXIE]   Horizontal Blur" 1.0 0.75 5.0 0.25
+#pragma parameter NPX_BLUR_HORIZ "      Horizontal Blur" 1.0 0.75 5.0 0.25
 
 vec2 blur = vec2(params.NPX_BLUR_HORIZ, 0.0) * params.OutputSize.zw;
 

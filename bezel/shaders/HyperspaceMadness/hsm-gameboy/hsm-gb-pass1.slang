@@ -17,13 +17,15 @@ layout(push_constant) uniform Push
 // Config                                                                     //
 ////////////////////////////////////////////////////////////////////////////////
 
+#pragma parameter GBY_BLENDING_TITLE	"[ BLENDING ]___________________________________________________" 0 0 0 0
+
 // 0 - only the space between dots is blending
 // 1 - all texels are blended
 /* TODO/FIXME - When set to zero, frame will be a solid green color */
-#pragma parameter blending_mode                 "[ GAMEBOY ]  Blending Mode" 1.0 0.0 1.0 1.0            
+#pragma parameter blending_mode                 "      Blending Mode" 1.0 0.0 1.0 1.0            
 
 // The amount of alpha swapped between neighboring texels
-#pragma parameter adjacent_texel_alpha_blending "[ GAMEBOY ]  Neighbor Blending" 0.1755 0.0 1.0 0.05
+#pragma parameter adjacent_texel_alpha_blending "      Neighbor Blending" 0.1755 0.0 1.0 0.05
 
 ///////////////////////////////////////////////////////////////////////////
 //                                                                       //

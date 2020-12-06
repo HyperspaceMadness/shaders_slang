@@ -19,16 +19,18 @@ layout(push_constant) uniform Push
 // Config                                                                     //
 ////////////////////////////////////////////////////////////////////////////////
 
+#pragma parameter GBY_TITLE	"[ --- GAMEBOY --- ]____________________________________________" 0 0 0 0
+
 // The alpha value of dots in their "off" state
 // Does not affect the border region of the screen - [0, 1]
-#pragma parameter baseline_alpha    "[ GAMEBOY ]  Baseline Alpha" 0.10 0.0 1.0 0.01
+#pragma parameter baseline_alpha    "      Baseline Alpha" 0.10 0.0 1.0 0.01
 
 // Fine-tune the balance between the different shades of grey
-#pragma parameter grey_balance      "[ GAMEBOY ]  Grey Balance" 3.0 2.0 4.0 0.1
+#pragma parameter grey_balance      "      Grey Balance" 3.0 2.0 4.0 0.1
 
 // Simulate response time
 // Higher values result in longer color transition periods - [0, 1]
-#pragma parameter response_time     "[ GAMEBOY ]  LCD Response Time" 0.333 0.0 0.777 0.111
+#pragma parameter response_time     "      LCD Response Time" 0.333 0.0 0.777 0.111
 
 ///////////////////////////////////////////////////////////////////////////
 //                                                                       //
@@ -62,9 +64,11 @@ vec2 SCREEN_SCALE = HSM_GetScreenScale(SCREEN_ASPECT);
 #pragma stage vertex
 layout(location = 0) in vec4 Position;
 layout(location = 1) in vec2 TexCoord;
+
 layout(location = 0) out vec2 vTexCoord;
 layout(location = 2) out vec2 dot_size;
 layout(location = 3) out vec2 one_texel;
+layout(location = 4) out vec2 SCREEN_COORD;
 
 ////////////////////////////////////////////////////////////////////////////////
 // Vertex definitions                                                         //
@@ -92,7 +96,7 @@ void main()
     // Remaps position to integer scaled output
     gl_Position = global.MVP * Position / vec4( vec2(SCREEN_SCALE * params.OutputSize.xy / scaled_video_out), 1.0, 1.0 );   
     vTexCoord = TexCoord * 1.0001;
-    vTexCoord = HSM_GetVTexCoordWithArgs(vTexCoord, SCREEN_SCALE, HSM_GetPositionOffset());
+    SCREEN_COORD = HSM_GetVTexCoordWithArgs(vTexCoord, SCREEN_SCALE, HSM_GetPositionOffset());
 
     // Pixel size inside source
     dot_size = 1 / CROPPED_ORIGINAL_SIZE;
@@ -109,7 +113,10 @@ void main()
 layout(location = 0) in vec2 vTexCoord;
 layout(location = 2) in vec2 dot_size;
 layout(location = 3) in vec2 one_texel;
+layout(location = 4) in vec2 SCREEN_COORD;
+
 layout(location = 0) out vec4 FragColor;
+
 layout(set = 0, binding = 2) uniform sampler2D Source;
 layout(set = 0, binding = 3) uniform sampler2D OriginalHistory1;
 layout(set = 0, binding = 4) uniform sampler2D OriginalHistory2;
@@ -129,20 +136,23 @@ layout(set = 0, binding = 10) uniform sampler2D ColorPaletteImage;
 
 
 // Frame sampling definitions
-#define curr_rgb  abs(1.0 - texture(Source,           vTexCoord).rgb)
-#define prev0_rgb abs(1.0 - texture(OriginalHistory1, vTexCoord).rgb)
-#define prev1_rgb abs(1.0 - texture(OriginalHistory2, vTexCoord).rgb)
-#define prev2_rgb abs(1.0 - texture(OriginalHistory3, vTexCoord).rgb)
-#define prev3_rgb abs(1.0 - texture(OriginalHistory4, vTexCoord).rgb)
-#define prev4_rgb abs(1.0 - texture(OriginalHistory5, vTexCoord).rgb)
-#define prev5_rgb abs(1.0 - texture(OriginalHistory6, vTexCoord).rgb)
-#define prev6_rgb abs(1.0 - texture(OriginalHistory7, vTexCoord).rgb)
+#define curr_rgb  abs(1.0 - texture(Source,           screen_curved_coord_mirrored).rgb)
+#define prev0_rgb abs(1.0 - texture(OriginalHistory1, screen_curved_coord_mirrored).rgb)
+#define prev1_rgb abs(1.0 - texture(OriginalHistory2, screen_curved_coord_mirrored).rgb)
+#define prev2_rgb abs(1.0 - texture(OriginalHistory3, screen_curved_coord_mirrored).rgb)
+#define prev3_rgb abs(1.0 - texture(OriginalHistory4, screen_curved_coord_mirrored).rgb)
+#define prev4_rgb abs(1.0 - texture(OriginalHistory5, screen_curved_coord_mirrored).rgb)
+#define prev5_rgb abs(1.0 - texture(OriginalHistory6, screen_curved_coord_mirrored).rgb)
+#define prev6_rgb abs(1.0 - texture(OriginalHistory7, screen_curved_coord_mirrored).rgb)
 
 void main()
 {
+    vec2 screen_curved_coord = HSM_GetCurvedCoord(SCREEN_COORD, 1, SCREEN_ASPECT);
+	vec2 screen_curved_coord_mirrored = HSM_GetMirrorWrappedCoord(screen_curved_coord);
+
     // Determine if the corrent texel lies on a dot or in the space between dots
     float is_on_dot = 0.0;                   
-    if ( mod(vTexCoord.x, dot_size.x) > one_texel.x && mod(vTexCoord.y, dot_size.y * 1.0001) > one_texel.y )
+    if ( mod(screen_curved_coord_mirrored.x, dot_size.x) > one_texel.x && mod(screen_curved_coord_mirrored.y, dot_size.y * 1.0001) > one_texel.y )
         is_on_dot = 1.0;
 
     // Sample color from the current and previous frames, apply response time modifier

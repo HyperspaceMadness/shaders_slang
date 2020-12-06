@@ -115,7 +115,7 @@ alias18 = GlowPass
 // CRT Shader - Guest-Venom ----------------------------------------------------------------
 //      Guest's Awesome Shader!!!
 //      Has been slightly altered to use the same scaling as the rest of the shders for the bezel & reflection
-shader19 = shaders/HyperspaceMadness/hsm-guest/hsm-crt-guest-dr-venom-with-scaling-split-screen.slang
+shader19 = shaders/HyperspaceMadness/hsm-guest/hsm-crt-guest-dr-venom-with-scaling.slang
 mipmap_input19 = true
 filter_linear19 = true
 scale_type19 = viewport
@@ -126,7 +126,7 @@ alias19 = BR_CRTPass
 
 // Tube Scale Curvature Mapping
 // Write mapping into the pass, of the 4 channels, x & y are tube warped coord and z & w are outside tube mask and edge mask
-shader20 = shaders/HyperspaceMadness/hsm-curvature-mapping-split-screen.slang
+shader20 = shaders/HyperspaceMadness/hsm-curvature-mapping.slang
 mipmap_input20 = true
 filter_linear20 = true
 scale_type20 = viewport
@@ -222,7 +222,7 @@ shaders = 28
 
 
 // Define textures to be used by the different passes
-textures = "SamplerLUT1;SamplerLUT2;SamplerLUT3;ColoredGelImage;TubeHighlightImage;GlassBorderSurfaceImage;BackgroundImage;BackgroundVertImage;CabinetGlassImage;BezelImage;BezelVertImage;DecalImage;NightLightingImage;LEDImage;TopLayerImage;TopLayerVertImage;"
+textures = "SamplerLUT1;SamplerLUT2;SamplerLUT3;ColoredGelImage;TubeStaticReflectionImage;GlassBorderSurfaceImage;BackgroundImage;BackgroundVertImage;CabinetGlassImage;BezelImage;BezelVertImage;DecalImage;NightLightingImage;LEDImage;TopLayerImage;TopLayerVertImage;"
 
 SamplerLUT1 = shaders/HyperspaceMadness/textures/lut/16.png
 SamplerLUT1_linear = true
@@ -235,7 +235,7 @@ ColoredGelImage = shaders/HyperspaceMadness/textures/Transparent_DummyTexture_16
 ColoredGelImage_mipmap = true
 ColoredGelImage_linear = true
 
-TubeHighlightImage = shaders/HyperspaceMadness/textures/TubeGlassOverlayImage_3840x2160.png
+TubeStaticReflectionImage = shaders/HyperspaceMadness/textures/TubeGlassOverlayImage_3840x2160.png
 TubeHighlightImage_mipmap = true
 TubeHighlightImage_linear = true
 
@@ -283,8 +283,6 @@ TopLayerVertImage = shaders/HyperspaceMadness/textures/Transparent_DummyTexture_
 TopLayerVertImage_mipmap = true
 TopLayerVertImage_linear = true
 
-
-parameters = "HSM_ASPECT_RATIO_MODE;HSM_NON_INTEGER_SCALE;HSM_SNAP_TO_INT_SCALE_TOLERANCE;HSM_SPLITSCREEN_AMOUNT;HSM_SPLITSCREEN_CENTER_FILL_MODE;HSM_SCANLINE_DIRECTION;HSM_SCANLINE_INTERLACE_TRIGGER_RES;HSM_CURVATURE_MODE;HSM_CURVATURE_2D_SCALE_LONG_AXIS;HSM_CURVATURE_2D_SCALE_SHORT_AXIS"
 
 HSM_ASPECT_RATIO_MODE = 5
 HSM_NON_INTEGER_SCALE =  92.77

@@ -25,8 +25,8 @@ layout(std140, set = 0, binding = 0) uniform UBO
     float MDAPT_MODE;
 } global;
 
-#pragma parameter HSM_DEDITHERING_TITLE "_____[ DE-DITHERING ]__________________________________________" 0 0 0 0
-#pragma parameter MDAPT_MODE "[ MDAPT ]    OFF | Strict | Relaxed | Stripes"	1 0 3 1
+#pragma parameter HSM_DEDITHERING_TITLE "[ --- MDAPT DE-DITHERING --- ]_________________________________" 0 0 0 0
+#pragma parameter MDAPT_MODE "      Mode -  OFF | Strict | Relaxed | Stripes"	1 0 3 1
 
 // #pragma parameter MODE "MDAPT Monochrome Analysis"	0.0 0.0 1.0 1.0
 // #pragma parameter PWR  "MDAPT Color Metric Exp"		2.0 0.0 10.0 0.1

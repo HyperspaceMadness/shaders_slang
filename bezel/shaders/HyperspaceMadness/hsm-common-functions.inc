@@ -899,7 +899,7 @@ vec4 HSM_GetCroppedTexSample(sampler2D in_sampler, vec2 in_cropped_coord)
 	vec2 cropped_size = HSM_GetCroppedRotatedOriginalSize();
 
 	// Flip the coordinate vertically if desired
-	in_cropped_coord.y = HSM_FLIP_VIEWPORT_AND_CORE_VERTICAL * (1 - in_cropped_coord.y) + (1 - HSM_FLIP_VIEWPORT_AND_CORE_VERTICAL) * in_cropped_coord.y;
+	in_cropped_coord.y = abs(HSM_FLIP_VIEWPORT_VERTICAL - HSM_FLIP_CORE_VERTICAL) * (1 - in_cropped_coord.y) + (1 - abs(HSM_FLIP_VIEWPORT_VERTICAL - HSM_FLIP_CORE_VERTICAL)) * in_cropped_coord.y;
 
 	vec2 px_coord = in_cropped_coord * cropped_size;
 
@@ -1114,7 +1114,7 @@ vec4 HSM_GetPostCrtPreppedColor(vec4 in_color_linear, vec2 screen_curved_coord, 
 		// // Dithering for the glass reflection if needed to reduce banding
 		// float blur_max_size = 1;
 		// float blur_amount = 0.2;
-		// vec4 tube_highlight_image = HSM_GetStoichaicBlurredSample(TubeHighlightImage, tube_highlight_coord, HSM_TUBE_HIGHLIGHT_IMAGE_DITHERING_SAMPLES, blur_max_size, blur_amount);
+		// vec4 tube_highlight_image = HSM_GetStoichaicBlurredSample(TubeStaticReflectionImage, tube_highlight_coord, HSM_TUBE_HIGHLIGHT_IMAGE_DITHERING_SAMPLES, blur_max_size, blur_amount);
 		
 		vec4 tube_highlight_image = texture(tube_highlight_image_sampler, tube_highlight_coord);
 		tube_highlight_image = HSM_Linearize(tube_highlight_image, HSM_DEFAULT_SRGB_GAMMA);

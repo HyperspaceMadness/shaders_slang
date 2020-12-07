@@ -424,22 +424,22 @@ void main()
 	}
 
 	// TUBE HIGHLIGHT
-    if (HSM_TUBE_HIGHLIGHT_IMAGE_OPACITY > 0)
+    if (HSM_TUBE_STATIC_REFLECTION_IMAGE_OPACITY > 0)
     {
-		vec2 tube_highlight_coord = (tube_coord_warped - 0.5) / HSM_TUBE_HIGHLIGHT_IMAGE_SCALE + 0.5;
+		vec2 tube_highlight_coord = (tube_coord_warped - 0.5) / HSM_TUBE_STATIC_REFLECTION_IMAGE_SCALE + 0.5;
         // vec4 tube_highlight_image = texture(TubeStaticReflectionImage, tube_highlight_coord);
 
 		// // Dithering for the glass reflection if needed to reduce banding
 		// float blur_max_size = 1;
 		// float blur_amount = 0.2;
-		// vec4 tube_highlight_image = HSM_GetStoichaicBlurredSample(TubeStaticReflectionImage, tube_highlight_coord, HSM_TUBE_HIGHLIGHT_IMAGE_DITHERING_SAMPLES, blur_max_size, blur_amount);
+		// vec4 tube_highlight_image = HSM_GetStoichaicBlurredSample(TubeStaticReflectionImage, tube_highlight_coord, HSM_TUBE_STATIC_REFLECTION_IMAGE_DITHERING_SAMPLES, blur_max_size, blur_amount);
 		
 		vec4 tube_highlight_image = texture(TubeStaticReflectionImage, tube_highlight_coord);
 		tube_highlight_image = HSM_Linearize(tube_highlight_image, HSM_DEFAULT_SRGB_GAMMA);
 
         // Since the tube highlight has already been applied in the crt pass and we've already masked it to the screen
 		// We just need to add the tube highlight on the black screen area
-		frag_color_linear += black_edge_mask * HSM_TUBE_HIGHLIGHT_IMAGE_OPACITY * tube_highlight_image * tube_highlight_image.a;
+		frag_color_linear += black_edge_mask * HSM_TUBE_STATIC_REFLECTION_IMAGE_OPACITY * tube_highlight_image * tube_highlight_image.a;
 	}
 
 	frag_color_linear += reflected_color;

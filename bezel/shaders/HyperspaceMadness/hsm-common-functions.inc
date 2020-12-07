@@ -1107,19 +1107,19 @@ vec4 HSM_GetPostCrtPreppedColor(vec4 in_color_linear, vec2 screen_curved_coord, 
 			out_color = mix(out_color, out_color + gel_image, gel_image.a * HSM_TUBE_COLORED_GEL_IMAGE_ADDITIVE_AMOUNT);
 	}
 
-	if (HSM_TUBE_HIGHLIGHT_IMAGE_OPACITY > 0)
+	if (HSM_TUBE_STATIC_REFLECTION_IMAGE_OPACITY > 0)
 	{
-		vec2 tube_highlight_coord = (mirrored_tube_coord - 0.5) / HSM_TUBE_HIGHLIGHT_IMAGE_SCALE + 0.5;
+		vec2 tube_highlight_coord = (mirrored_tube_coord - 0.5) / HSM_TUBE_STATIC_REFLECTION_IMAGE_SCALE + 0.5;
 
 		// // Dithering for the glass reflection if needed to reduce banding
 		// float blur_max_size = 1;
 		// float blur_amount = 0.2;
-		// vec4 tube_highlight_image = HSM_GetStoichaicBlurredSample(TubeStaticReflectionImage, tube_highlight_coord, HSM_TUBE_HIGHLIGHT_IMAGE_DITHERING_SAMPLES, blur_max_size, blur_amount);
+		// vec4 tube_highlight_image = HSM_GetStoichaicBlurredSample(TubeStaticReflectionImage, tube_highlight_coord, HSM_TUBE_STATIC_REFLECTION_IMAGE_DITHERING_SAMPLES, blur_max_size, blur_amount);
 		
 		vec4 tube_highlight_image = texture(tube_highlight_image_sampler, tube_highlight_coord);
 		tube_highlight_image = HSM_Linearize(tube_highlight_image, HSM_DEFAULT_SRGB_GAMMA);
 
-		out_color.rgb += HSM_TUBE_HIGHLIGHT_IMAGE_OPACITY * tube_highlight_image.a * tube_highlight_image.rgb;
+		out_color.rgb += HSM_TUBE_STATIC_REFLECTION_IMAGE_OPACITY * tube_highlight_image.a * tube_highlight_image.rgb;
 	}
 
 	out_color.a = in_color_linear.a;

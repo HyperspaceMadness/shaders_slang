@@ -118,11 +118,12 @@ layout(location = 2) in vec2 SCREEN_COORD;
 layout(location = 0) out vec4 FragColor;
 layout(set = 0, binding = 1) uniform sampler2D Source;
 layout(set = 0, binding = 2) uniform sampler2D PassOutput1;
-layout(set = 0, binding = 3) uniform sampler2D ColorPaletteImage;
-layout(set = 0, binding = 4) uniform sampler2D ColoredGelImage;
-layout(set = 0, binding = 5) uniform sampler2D TubeStaticReflectionImage;
+layout(set = 0, binding = 3) uniform sampler2D DMG0ColorPaletteImage;
+layout(set = 0, binding = 4) uniform sampler2D LCDBackgroundImage;
+layout(set = 0, binding = 5) uniform sampler2D ColoredGelImage;
+layout(set = 0, binding = 6) uniform sampler2D TubeStaticReflectionImage;
 
-#define bg_color texture(ColorPaletteImage, vec2(0.25, 0.5)) 
+#define bg_color texture(DMG0ColorPaletteImage, vec2(0.25, 0.5)) 
 
 // Sample the background color from the palette
 #define shadow_alpha (params.contrast * params.shadow_opacity)
@@ -149,7 +150,7 @@ void main()
     
     // Sample all the relevant textures
     vec4 foreground = texture(PassOutput1, tex - screen_offset);
-    vec4 background = texture(ColoredGelImage, vTexCoord);
+    vec4 background = texture(LCDBackgroundImage, SCREEN_COORD);
     vec4 shadows    = texture(Source, vTexCoord - (shadow_offset + screen_offset));
     vec4 background_color = bg_color;
 

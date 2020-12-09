@@ -125,13 +125,18 @@ layout(set = 0, binding = 6) uniform sampler2D OriginalHistory4;
 layout(set = 0, binding = 7) uniform sampler2D OriginalHistory5;
 layout(set = 0, binding = 8) uniform sampler2D OriginalHistory6;
 layout(set = 0, binding = 9) uniform sampler2D OriginalHistory7;
-layout(set = 0, binding = 10) uniform sampler2D ColorPaletteImage;
+layout(set = 0, binding = 10) uniform sampler2D DMG0ColorPaletteImage;
+layout(set = 0, binding = 11) uniform sampler2D DMG1ColorPaletteImage;
+layout(set = 0, binding = 12) uniform sampler2D DMG2ColorPaletteImage;
+layout(set = 0, binding = 13) uniform sampler2D PocketColorPaletteImage;
+layout(set = 0, binding = 14) uniform sampler2D LightColorPaletteImage;
+layout(set = 0, binding = 15) uniform sampler2D CustomColorPaletteImage;
 
 ////////////////////////////////////////////////////////////////////////////////
 //fragment definitions                                                        //
 ////////////////////////////////////////////////////////////////////////////////
 
-#define foreground_color texture(ColorPaletteImage, vec2(0.75, 0.5)).rgb                 //hardcoded to look up the foreground color from the right half of the palette image
+#define foreground_color texture(DMG0ColorPaletteImage, vec2(0.75, 0.5)).rgb                 //hardcoded to look up the foreground color from the right half of the palette image
 //#define rgb_to_alpha(rgb) ( ((rgb.r + rgb.g + rgb.b) / 3.0) + (is_on_dot * vec2(params.baseline_alpha), 1.0) )       //averages rgb values (allows it to work with color games), modified for contrast and base alpha
 
 

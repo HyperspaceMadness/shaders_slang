@@ -219,8 +219,8 @@ TubeStaticReflectionImage_mipmap = true
 TubeStaticReflectionImage_linear = true
 
 GlassBorderSurfaceImage = shaders/HyperspaceMadness/textures/Transparent_DummyTexture_16x16.png
-GlassBorderSurfaceImage = true
-GlassBorderSurfaceImage = true
+GlassBorderSurfaceImage_mipmap = true
+GlassBorderSurfaceImage_linear = true
 
 BackgroundImage = shaders/HyperspaceMadness/textures/BackgroundImage_Carbon_3840x2160.png
 BackgroundImage_mipmap = true

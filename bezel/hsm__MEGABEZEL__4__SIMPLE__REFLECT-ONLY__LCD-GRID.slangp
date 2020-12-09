@@ -128,8 +128,8 @@ SamplerLUT3_linear = true
 ColoredGelImage = shaders/HyperspaceMadness/textures/Transparent_DummyTexture_16x16.png
 TubeStaticReflectionImage = shaders/HyperspaceMadness/textures/TubeGlassOverlayImage_3840x2160.png
 GlassBorderSurfaceImage = shaders/HyperspaceMadness/textures/Transparent_DummyTexture_16x16.png
-GlassBorderSurfaceImage = true
-GlassBorderSurfaceImage = true
+GlassBorderSurfaceImage_mipmap = true
+GlassBorderSurfaceImage_linear = true
 parameters = "HSM_INT_SCALE_MODE;HSM_NON_INTEGER_SCALE;HSM_CURVATURE_2D_SCALE_LONG_AXIS;HSM_CURVATURE_2D_SCALE_SHORT_AXIS;HSM_COLOR_CRT_PROFILE;HSM_TUBE_BLACK_EDGE_THICKNESS;HSM_VIEWPORT_VIGNETTE_OPACITY;HSM_BZL_WIDTH;HSM_BZL_HEIGHT;HSM_FRM_OPACITY;HSM_REFLECT_IS_LAST_PASS;LCD_RSUBPIX_R;LCD_GSUBPIX_G;LCD_BSUBPIX_B;LCD_GAIN;LCD_GAMMA;LCD_BLACK_LEVEL;LCD_BGR;"
 
 HSM_ASPECT_RATIO_EXPLICIT = 1.5

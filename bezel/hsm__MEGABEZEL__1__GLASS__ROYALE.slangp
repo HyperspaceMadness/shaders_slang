@@ -310,5 +310,5 @@ TubeStaticReflectionImage_mipmap = true
 TubeStaticReflectionImage_linear = true
 
 GlassBorderSurfaceImage = shaders/HyperspaceMadness/textures/TopLayerImageGradient_3840x2160.png
-GlassBorderSurfaceImage = true
-GlassBorderSurfaceImage = true
+GlassBorderSurfaceImage_mipmap = true
+GlassBorderSurfaceImage_linear = true

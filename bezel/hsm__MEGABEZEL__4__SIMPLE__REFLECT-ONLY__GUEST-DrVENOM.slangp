@@ -157,8 +157,8 @@ SamplerLUT3_linear = true
 ColoredGelImage = shaders/HyperspaceMadness/textures/Transparent_DummyTexture_16x16.png
 TubeStaticReflectionImage = shaders/HyperspaceMadness/textures/TubeGlassOverlayImage_3840x2160.png
 GlassBorderSurfaceImage = shaders/HyperspaceMadness/textures/Transparent_DummyTexture_16x16.png
-GlassBorderSurfaceImage = true
-GlassBorderSurfaceImage = true
+GlassBorderSurfaceImage_mipmap = true
+GlassBorderSurfaceImage_linear = true
 parameters = "HSM_REFLECT_IS_LAST_PASS"
 
 HSM_REFLECT_IS_LAST_PASS = 1

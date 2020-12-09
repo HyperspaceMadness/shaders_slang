@@ -134,19 +134,30 @@ float_framebuffer13 = false
 shaders = 14
 
 // Define textures to be used by the different passes
-textures = "ColorPaletteImage;SamplerLUT1;SamplerLUT2;SamplerLUT3;ColoredGelImage;TubeStaticReflectionImage;GlassBorderSurfaceImage;BackgroundImage;BackgroundVertImage;CabinetGlassImage;BezelImage;BezelVertImage;DecalImage;NightLightingImage;LEDImage;TopLayerImage;TopLayerVertImage;"
+textures = "DMG0ColorPaletteImage;DMG1ColorPaletteImage;DMG2ColorPaletteImage;PocketColorPaletteImage;LightColorPaletteImage;CustomColorPaletteImage;LCDBackgroundImage;ColoredGelImage;TubeStaticReflectionImage;GlassBorderSurfaceImage;BackgroundImage;BackgroundVertImage;CabinetGlassImage;BezelImage;BezelVertImage;DecalImage;NightLightingImage;LEDImage;TopLayerImage;TopLayerVertImage;"
 
-ColorPaletteImage = shaders/HyperspaceMadness/hsm-gameboy/palette-gameboy-dmg-0.png
-ColorPaletteImage_linear = false  
+DMG0ColorPaletteImage = shaders/HyperspaceMadness/hsm-gameboy/palette-gameboy-dmg-0.png
+DMG0ColorPaletteImage_linear = false
 
-SamplerLUT1 = shaders/HyperspaceMadness/textures/lut/16.png
-SamplerLUT1_linear = true
-SamplerLUT2 = shaders/HyperspaceMadness/textures/lut/64.png
-SamplerLUT2_linear = true
-SamplerLUT3 = shaders/HyperspaceMadness/textures/lut/other1_32.png
-SamplerLUT3_linear = true
+DMG1ColorPaletteImage = shaders/HyperspaceMadness/hsm-gameboy/palette-gameboy-dmg-1.png
+DMG1ColorPaletteImage_linear = false
 
-ColoredGelImage = shaders/HyperspaceMadness/hsm-gameboy/bg-gameboy-dmg.png
+DMG2ColorPaletteImage = shaders/HyperspaceMadness/hsm-gameboy/palette-gameboy-dmg-2.png
+DMG2ColorPaletteImage_linear = false
+
+PocketColorPaletteImage = shaders/HyperspaceMadness/hsm-gameboy/palette-gameboy-pocket.png
+PocketColorPaletteImage_linear = false
+
+LightColorPaletteImage = shaders/HyperspaceMadness/hsm-gameboy/palette-gameboy-light.png
+LightColorPaletteImage_linear = false
+
+CustomColorPaletteImage = shaders/HyperspaceMadness/hsm-gameboy/palette-gameboy-custom.png
+CustomColorPaletteImage_linear = false
+
+LCDBackgroundImage = shaders/HyperspaceMadness/hsm-gameboy/bg-gameboy-dmg.png
+LCDBackgroundImage_linear = true
+
+ColoredGelImage = shaders/HyperspaceMadness/textures/Transparent_DummyTexture_16x16.png
 ColoredGelImage_mipmap = true
 ColoredGelImage_linear = true
 
@@ -155,8 +166,8 @@ TubeStaticReflectionImage_mipmap = true
 TubeStaticReflectionImage_linear = true
 
 GlassBorderSurfaceImage = shaders/HyperspaceMadness/textures/Transparent_DummyTexture_16x16.png
-GlassBorderSurfaceImage = true
-GlassBorderSurfaceImage = true
+GlassBorderSurfaceImage_mipmap = true
+GlassBorderSurfaceImage_linear = true
 
 BackgroundImage = shaders/HyperspaceMadness/textures/BackgroundImage_Carbon_3840x2160.png
 BackgroundImage_mipmap = true

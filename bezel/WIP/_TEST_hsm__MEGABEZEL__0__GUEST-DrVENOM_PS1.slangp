@@ -1,0 +1,17 @@
+#reference "../hsm__MEGABEZEL__0__GUEST-DrVENOM.slangp"
+
+HSM_BZL_COLOR_HUE = "210.000000"
+HSM_BZL_COLOR_SATURATION = "68.000000"
+HSM_BZL_COLOR_VALUE = "37.200073"
+HSM_NIGHT_OPACITY = "75.000000"
+
+BackgroundImage = "PS1\Playstation.png"
+BackgroundVertImage = "PS1\Playstation.png"
+ColoredGelImage = "..\shaders\HyperspaceMadness\textures\ColoredGel_Red_Green.png"
+CabinetGlassImage = "PS1\SpaceInvadersCabinetGlass.png"
+BezelImage = "DOT\DOT_Bezel_Light.png"
+BezelVertImage = "DOT\DOT_Bezel_Light_Vert.png"
+DecalImage = "PS1\MarkIII_logo_TopLayerImage.png"
+LEDImage = "PS1\Playstation_LED.png"
+TopLayerImage = "DOT\DOT_Bezel_Pane_Light.png"
+TopLayerVertImage = "DOT\DOT_Bezel_Pane_Light_Vert.png"

@@ -1,0 +1,4 @@
+#reference "Monitor-1084S-D2-Black.slangp"
+
+HSM_NIGHT_OPACITY = "100.000000"
+HSM_NIGHT_DITHERING_SAMPLES = "10.000000"

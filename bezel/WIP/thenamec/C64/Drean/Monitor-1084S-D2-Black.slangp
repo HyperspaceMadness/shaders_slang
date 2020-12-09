@@ -1,0 +1,22 @@
+#reference "../_Base/Monitor-1084S-D2-Black.slangp"
+
+// Warning: image paths are relative to monitor preset!
+
+// LED IS USED FOR WALLPAPER LED
+LEDImage = "textures/led.png"
+HSM_LED_OPACITY = "95.000000"
+HSM_LED_EXPLICIT_TEXTURE_ASPECT = "1.000000"
+HSM_LED_LAYER_ORDER = "14.000000"
+
+// BG IS USED FOR WALLPAPER BACKGROUND
+BackgroundImage = "textures/bg.png"
+
+
+// // LED IS USED FOR WALLPAPER LED
+// LEDImage = "../../C64/Drean/textures/led.png"
+// HSM_LED_OPACITY = "95.000000"
+// HSM_LED_EXPLICIT_TEXTURE_ASPECT = "1.000000"
+// HSM_LED_LAYER_ORDER = "14.000000"
+
+// // BG IS USED FOR WALLPAPER BACKGROUND
+// BackgroundImage = "../../C64/Drean/textures/bg.png"

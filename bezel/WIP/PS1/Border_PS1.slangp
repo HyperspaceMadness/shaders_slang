@@ -1,0 +1,5 @@
+#reference "../DOT/Border_DOT.slangp"
+
+textures = BORDER
+
+BORDER = Playstation.png

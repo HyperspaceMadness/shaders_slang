@@ -1,3 +1,0 @@
-#reference "../crt/crt-easymode-halation.slangp"
-GEOM_CURVATURE = "0.100000"
-GEOM_WARP = "0.020000"

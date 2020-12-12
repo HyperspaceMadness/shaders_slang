@@ -267,11 +267,12 @@ layout(set = 0, binding = 4)  uniform sampler2D BackgroundVertImage;
 layout(set = 0, binding = 5)  uniform sampler2D CabinetGlassImage;
 layout(set = 0, binding = 6)  uniform sampler2D BezelImage;
 layout(set = 0, binding = 7)  uniform sampler2D BezelVertImage;
-layout(set = 0, binding = 8)  uniform sampler2D DecalImage;
-layout(set = 0, binding = 9)  uniform sampler2D NightLightingImage;
-layout(set = 0, binding = 10) uniform sampler2D LEDImage;
-layout(set = 0, binding = 11) uniform sampler2D TopLayerImage;
-layout(set = 0, binding = 12) uniform sampler2D TopLayerVertImage;
+layout(set = 0, binding = 8)  uniform sampler2D FrameHighlightImage;
+layout(set = 0, binding = 9)  uniform sampler2D DecalImage;
+layout(set = 0, binding = 10) uniform sampler2D NightLightingImage;
+layout(set = 0, binding = 11) uniform sampler2D LEDImage;
+layout(set = 0, binding = 12) uniform sampler2D TopLayerImage;
+layout(set = 0, binding = 13) uniform sampler2D TopLayerVertImage;
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
 void main()

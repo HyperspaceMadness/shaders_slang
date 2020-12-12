@@ -1,0 +1,5 @@
+#reference "../../../border/imgborder.slangp"
+
+textures = BORDER
+
+BORDER = DOT_Bezel.png

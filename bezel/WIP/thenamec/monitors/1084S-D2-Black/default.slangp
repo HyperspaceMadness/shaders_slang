@@ -1,6 +1,9 @@
-#reference "../../../hsm__MEGABEZEL__0__GUEST-DrVENOM.slangp"
+#reference "../../../../hsm__MEGABEZEL__0__GUEST-DrVENOM.slangp"
 
 // 1084S-D2-Black FULL PROFILE
+
+textures = "BezelImage;DecalImage"
+
 HSM_NON_INTEGER_SCALE = "64.600000"
 HSM_BZL_IMG_SCALE = "133.600000"
 HSM_BZL_IMG_POS_Y = "-9.600000"

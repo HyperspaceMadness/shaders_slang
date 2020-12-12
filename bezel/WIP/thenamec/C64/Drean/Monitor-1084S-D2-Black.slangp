@@ -2,6 +2,8 @@
 
 // Warning: image paths are relative to monitor preset!
 
+textures = "LEDImage;BackgroundImage"
+
 // LED IS USED FOR WALLPAPER LED
 LEDImage = "textures/led.png"
 HSM_LED_OPACITY = "95.000000"

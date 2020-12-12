@@ -134,7 +134,7 @@ float_framebuffer13 = false
 shaders = 14
 
 // Define textures to be used by the different passes
-textures = "DMG0ColorPaletteImage;DMG1ColorPaletteImage;DMG2ColorPaletteImage;PocketColorPaletteImage;LightColorPaletteImage;CustomColorPaletteImage;LCDBackgroundImage;ColoredGelImage;TubeStaticReflectionImage;GlassBorderSurfaceImage;BackgroundImage;BackgroundVertImage;CabinetGlassImage;BezelImage;BezelVertImage;DecalImage;NightLightingImage;LEDImage;TopLayerImage;TopLayerVertImage;"
+textures = "DMG0ColorPaletteImage;DMG1ColorPaletteImage;DMG2ColorPaletteImage;PocketColorPaletteImage;LightColorPaletteImage;CustomColorPaletteImage;LCDBackgroundImage;ColoredGelImage;TubeStaticReflectionImage;GlassBorderSurfaceImage;FrameHighlightImage;BackgroundImage;BackgroundVertImage;CabinetGlassImage;BezelImage;BezelVertImage;DecalImage;NightLightingImage;LEDImage;TopLayerImage;TopLayerVertImage;"
 
 DMG0ColorPaletteImage = shaders/HyperspaceMadness/hsm-gameboy/palette-gameboy-dmg-0.png
 DMG0ColorPaletteImage_linear = false
@@ -168,6 +168,10 @@ TubeStaticReflectionImage_linear = true
 GlassBorderSurfaceImage = shaders/HyperspaceMadness/textures/Transparent_DummyTexture_16x16.png
 GlassBorderSurfaceImage_mipmap = true
 GlassBorderSurfaceImage_linear = true
+
+FrameHighlightImage = shaders/HyperspaceMadness/textures/Transparent_DummyTexture_16x16.png
+FrameHighlightImage_mipmap = true
+FrameHighlightImage_linear = true
 
 BackgroundImage = shaders/HyperspaceMadness/textures/BackgroundImage_Carbon_3840x2160.png
 BackgroundImage_mipmap = true

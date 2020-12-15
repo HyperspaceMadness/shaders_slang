@@ -72,6 +72,12 @@ float HSM_FRM_OPACITY = global.HSM_FRM_OPACITY / 100;
 #pragma parameter HSM_FRM_BLEND_MODE                    "      Blend Mode - Off | Normal | Add | Mult"  1 0 3 1
 float HSM_FRM_BLEND_MODE = global.HSM_FRM_BLEND_MODE;
 
+#pragma parameter HSM_FRM_TEXTURE_OPACITY               "      Texture Overlay Opacity (Highlight)" 1.5 0 100 0.1
+float HSM_FRM_TEXTURE_OPACITY = global.HSM_FRM_TEXTURE_OPACITY / 100;
+
+#pragma parameter HSM_FRM_TEXTURE_BLEND_MODE            "      Texture Overlay Blend Mode - Off | Normal | Add | Mult"  2 0 3 1
+float HSM_FRM_TEXTURE_BLEND_MODE = global.HSM_FRM_TEXTURE_BLEND_MODE;
+
 #pragma parameter HSM_FRM_INNER_EDGE_THICKNESS 		    "      Inner Edge Thickness" 1 0 50 0.05
 float HSM_FRM_INNER_EDGE_THICKNESS = global.HSM_FRM_INNER_EDGE_THICKNESS / 1000;
 

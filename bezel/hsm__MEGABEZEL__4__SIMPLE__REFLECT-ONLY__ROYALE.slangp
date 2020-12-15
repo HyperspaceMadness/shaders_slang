@@ -230,8 +230,8 @@ GlassBorderSurfaceImage = shaders/HyperspaceMadness/textures/Transparent_DummyTe
 GlassBorderSurfaceImage_mipmap = true
 GlassBorderSurfaceImage_linear = true
 
-FrameHighlightImage = shaders/HyperspaceMadness/textures/Transparent_DummyTexture_16x16.png
-FrameHighlightImage_mipmap = true
-FrameHighlightImage_linear = true
+FrameTextureImage = shaders/HyperspaceMadness/textures/FrameTexture_2800x2120.png
+FrameTextureImage_mipmap = true
+FrameTextureImage_linear = true
 
 HSM_REFLECT_IS_LAST_PASS = 1

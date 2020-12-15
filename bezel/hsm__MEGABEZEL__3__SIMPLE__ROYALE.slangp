@@ -202,7 +202,7 @@ shaders = 21
 
 // Define textures to be used by the different passes
 // textures = "mask_grille_texture_small;mask_slot_texture_small;mask_shadow_texture_small;SamplerLUT1;SamplerLUT2;SamplerLUT3;ColoredGelImage;TubeStaticReflectionImage;GlassBorderSurfaceImage;"
-textures = "mask_grille_texture_small;mask_slot_texture_small;mask_shadow_texture_small;SamplerLUT1;SamplerLUT2;SamplerLUT3;ColoredGelImage;TubeStaticReflectionImage;GlassBorderSurfaceImage;FrameHighlightImage;BackgroundImage;BackgroundVertImage;CabinetGlassImage;BezelImage;BezelVertImage;DecalImage;NightLightingImage;LEDImage;TopLayerImage;TopLayerVertImage;"
+textures = "mask_grille_texture_small;mask_slot_texture_small;mask_shadow_texture_small;SamplerLUT1;SamplerLUT2;SamplerLUT3;ColoredGelImage;TubeStaticReflectionImage;GlassBorderSurfaceImage;FrameTextureImage;BackgroundImage;BackgroundVertImage;CabinetGlassImage;BezelImage;BezelVertImage;DecalImage;NightLightingImage;LEDImage;TopLayerImage;TopLayerVertImage;"
 
 mask_grille_texture_small = "shaders/HyperspaceMadness/hsm-crt-royale/TileableLinearApertureGrille15Wide8And5d5SpacingResizeTo64.png"
 mask_grille_texture_small_wrap_mode = "repeat"
@@ -238,12 +238,12 @@ GlassBorderSurfaceImage = shaders/HyperspaceMadness/textures/Transparent_DummyTe
 GlassBorderSurfaceImage_mipmap = true
 GlassBorderSurfaceImage_linear = true
 
-FrameHighlightImage = shaders/HyperspaceMadness/textures/Transparent_DummyTexture_16x16.png
-FrameHighlightImage_mipmap = true
-FrameHighlightImage_linear = true
+FrameTextureImage = shaders/HyperspaceMadness/textures/FrameTexture_2800x2120.png
+FrameTextureImage_mipmap = true
+FrameTextureImage_linear = true
 
 // Define textures to be used by the different passes
-// textures = "SamplerLUT1;SamplerLUT2;SamplerLUT3;ColoredGelImage;TubeStaticReflectionImage;GlassBorderSurfaceImage;FrameHighlightImage;BackgroundImage;BackgroundVertImage;CabinetGlassImage;BezelImage;BezelVertImage;DecalImage;NightLightingImage;LEDImage;TopLayerImage;TopLayerVertImage;mask_grille_texture_small;mask_slot_texture_small;mask_shadow_texture_small;"
+// textures = "SamplerLUT1;SamplerLUT2;SamplerLUT3;ColoredGelImage;TubeStaticReflectionImage;GlassBorderSurfaceImage;FrameTextureImage;BackgroundImage;BackgroundVertImage;CabinetGlassImage;BezelImage;BezelVertImage;DecalImage;NightLightingImage;LEDImage;TopLayerImage;TopLayerVertImage;mask_grille_texture_small;mask_slot_texture_small;mask_shadow_texture_small;"
 
 
 BackgroundImage = shaders/HyperspaceMadness/textures/BackgroundImage_Carbon_3840x2160.png

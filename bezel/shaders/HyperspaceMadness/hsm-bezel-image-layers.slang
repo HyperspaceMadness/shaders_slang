@@ -267,7 +267,7 @@ layout(set = 0, binding = 4)  uniform sampler2D BackgroundVertImage;
 layout(set = 0, binding = 5)  uniform sampler2D CabinetGlassImage;
 layout(set = 0, binding = 6)  uniform sampler2D BezelImage;
 layout(set = 0, binding = 7)  uniform sampler2D BezelVertImage;
-layout(set = 0, binding = 8)  uniform sampler2D FrameHighlightImage;
+layout(set = 0, binding = 8)  uniform sampler2D FrameTextureImage;
 layout(set = 0, binding = 9)  uniform sampler2D DecalImage;
 layout(set = 0, binding = 10) uniform sampler2D NightLightingImage;
 layout(set = 0, binding = 11) uniform sampler2D LEDImage;
@@ -636,6 +636,12 @@ void main()
 	float frame_outer_edge_width = HSM_FRM_OUTER_EDGE_THICKNESS * 0.006;
 	vec3 frame_diffuse_color = mix(frame_color, (1 - HSM_FRM_OUTER_EDGE_SHADING) * frame_color, smoothstep(frame_outer_edge_width, 0, dist_inside_outer_edge));
 	
+	if (HSM_FRM_TEXTURE_OPACITY > 0)
+	{
+		vec4 frame_texture_color = HSM_Linearize(texture(FrameTextureImage, frame_outside_coord), HSM_DEFAULT_SRGB_GAMMA);
+		frame_diffuse_color = BlendModeLayerMix(vec4(frame_diffuse_color, 1), frame_texture_color, HSM_FRM_TEXTURE_BLEND_MODE, MASK_MODE_ALL, CUTOUT_MODE_OFF, HSM_FRM_TEXTURE_OPACITY).rgb;
+	}
+
 	frame_diffuse_color = mix(frame_diffuse_color, outside_frame_color, OUTSIDE_FRAME_MASK);
 
 	// Composite in color from outside the bezel

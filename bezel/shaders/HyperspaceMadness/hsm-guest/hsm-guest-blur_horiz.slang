@@ -29,7 +29,7 @@ layout(push_constant) uniform Push
 #pragma parameter GDV_TITLE 		"______[ --- GUEST-DrVENOM --- ]________________________________" 0 0 0 1
 
 #pragma parameter GDV_GLOW_TITLE 		"[ GLOW ]_______________________________________________________" 0 0 0 1
-#pragma parameter GST_GLOW_GRADE 	"[ GLOW ]  Glow Grade" 0.30 0.00 1.0 0.01 
+#pragma parameter GST_GLOW_GRADE 	"      Glow Grade" 0.30 0.00 1.0 0.01 
 #define GLOW_FALLOFF_H params.GST_GLOW_GRADE
 
 layout(std140, set = 0, binding = 0) uniform UBO

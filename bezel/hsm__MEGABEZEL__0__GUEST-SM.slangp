@@ -17,12 +17,13 @@ shader4 = shaders/HyperspaceMadness/hsm-mdapt/hsm-mdapt-pass2.slang
 shader5 = shaders/HyperspaceMadness/hsm-mdapt/hsm-mdapt-pass3.slang
 shader6 = shaders/HyperspaceMadness/hsm-mdapt/hsm-mdapt-pass4.slang
 
+// SGENDPT - Hyllian's great de-dither shader
 shader7 = shaders/HyperspaceMadness/hsm-sgenpt-mix/hsm-sgenpt-mix.slang
+shader8 = shaders/HyperspaceMadness/hsm-sgenpt-mix/hsm-sgenpt-mix-pass2.slang
 
-shader8 = shaders/HyperspaceMadness/hsm-ps1dither/hsm-PS1-Undither-BoxBlur.slang
-alias8 = refpass
+shader9 = shaders/HyperspaceMadness/hsm-ps1dither/hsm-PS1-Undither-BoxBlur.slang
+alias9 = refpass
 
-shader9 = ../stock.slang
 shader10 = ../stock.slang
 shader11 = ../stock.slang
 

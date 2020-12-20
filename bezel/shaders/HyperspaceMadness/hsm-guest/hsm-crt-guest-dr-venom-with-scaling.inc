@@ -107,11 +107,11 @@ layout(std140, set = 0, binding = 0) uniform UBO
 
 // HSM Added (Moved from the bottom)
 
-#pragma parameter GDV_GLOW_STRENGTH 				"[ GLOW ]  Glow Strength" 0.02 0.0 0.5 0.01
+#pragma parameter GDV_GLOW_STRENGTH 				"      Glow Strength" 0.02 0.0 0.5 0.01
 #define glow         params.GDV_GLOW_STRENGTH     // Glow Strength
 
 // HSM Changed from default of 0 to 0.1
-#pragma parameter GDV_BLOOM_STRENGTH 				"[ GLOW ]  Bloom Strength" 0.1 0 2 0.05
+#pragma parameter GDV_BLOOM_STRENGTH 				"      Bloom Strength" 0.1 0 2 0.05
 #define bloom          params.GDV_BLOOM_STRENGTH     // bloom effect
 
 #pragma parameter GDV_BRIGHTNESS_TITLE				"[ BRIGHTNESS ]_________________________________________________" 0 0 0 0

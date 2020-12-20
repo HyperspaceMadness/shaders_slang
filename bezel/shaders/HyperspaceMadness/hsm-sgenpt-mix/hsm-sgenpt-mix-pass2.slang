@@ -1,7 +1,7 @@
 #version 450
 
 /*
-   SGENPT-MIX - Sega Genesis Pseudo Transparency Mixer Shader - v8b
+   SGENPT-MIX - Sega Genesis Pseudo Transparency Mixer Shader - v8 - Pass2
    
    2011-2020 Hyllian - sergiogdb@gmail.com
 
@@ -32,24 +32,22 @@ layout(push_constant) uniform Push
 	vec4 OriginalSize;
 	vec4 OutputSize;
 	uint FrameCount;
-	float SGPT_BLEND_OPTION;
-	float SGPT_BLEND_LEVEL;
-	float SGPT_ADJUST_VIEW;
-	float SGPT_LINEAR_GAMMA;
+	float SGPT_BLEND_OPTION_P2;
+	float SGPT_BLEND_LEVEL_P2;
+	float SGPT_ADJUST_VIEW_P2;
+	float SGPT_ON;
 } params;
 
-#pragma parameter SGPT_BLEND_OPTION "0.OFF | 1.VL | 2.CB | 3.CB-S | 4.Both | 5.Both2 | 6.Both-S" 4.0 0.0 6.0 1.0
-#pragma parameter SGPT_BLEND_LEVEL "SGENPT-MIX Both Blend Level" 1.0 0.0 1.0 0.1
-#pragma parameter SGPT_ADJUST_VIEW "SGENPT-MIX Adjust View" 0.0 0.0 1.0 1.0
-#pragma parameter SGPT_LINEAR_GAMMA "SGENPT-MIX Use Linear Gamma" 0.0 0.0 1.0 1.0
-#define SGPT_BLEND_OPTION params.SGPT_BLEND_OPTION
-#define SGPT_BLEND_LEVEL params.SGPT_BLEND_LEVEL
-#define SGPT_ADJUST_VIEW params.SGPT_ADJUST_VIEW
-#define SGPT_LINEAR_GAMMA params.SGPT_LINEAR_GAMMA
+#pragma parameter SGPT_ON 				"    SGENPT-MIX ON" 0 0 1 1
+#pragma parameter SGPT_BLEND_OPTION_P2 	"    Pass 2 Blend - OFF | VL | CB | CB-S | Both | Both2 | Both-S" 2.0 0.0 6.0 1.0
+#pragma parameter SGPT_BLEND_LEVEL_P2 	"    Pass 2 - Both Blend Level " 1.0 0.0 1.0 0.1
+// #pragma parameter SGPT_ADJUST_VIEW_P2 	"    Pass 2 - Adjust View" 0.0 0.0 1.0 1.0
+#define SGPT_BLEND_OPTION_P2 (params.SGPT_BLEND_OPTION_P2 * params.SGPT_ON)
+#define SGPT_BLEND_LEVEL_P2 params.SGPT_BLEND_LEVEL_P2
+#define SGPT_ADJUST_VIEW_P2 0
 
-#define GAMMA_EXP		(SGPT_LINEAR_GAMMA+1.0)
-#define GAMMA_IN(color)		pow(color, vec3(GAMMA_EXP, GAMMA_EXP, GAMMA_EXP))
-#define GAMMA_OUT(color)	pow(color, vec3(1.0 / GAMMA_EXP, 1.0 / GAMMA_EXP, 1.0 / GAMMA_EXP))
+#define GAMMA_IN(color)     color*color
+#define GAMMA_OUT(color)    sqrt(color)
 
 const vec3 Y = vec3(.2126, .7152, .0722);
 
@@ -76,7 +74,7 @@ void main()
 #pragma stage fragment
 layout(location = 0) in vec2 vTexCoord;
 layout(location = 0) out vec4 FragColor;
-layout(set = 0, binding = 2) uniform sampler2D Source;
+layout(set = 0, binding = 1) uniform sampler2D Source;
 
 void main()
 {
@@ -102,61 +100,55 @@ void main()
 
 	float diff = dot(max(max(C, L), max(C, R)) - min(min(C, L), min(C, R)), Y);
 
-	if (SGPT_BLEND_OPTION == 1) // Only Vertical Lines
+	if (SGPT_BLEND_OPTION_P2 == 1)
 	{
 		min_sample = max_s(min_sample, min_s(C, DL, DR), min_s(C, UL, UR));
 		max_sample = min_s(max_sample, max_s(C, DL, DR), max_s(C, UL, UR));
 
-		diff *= (1.0 - SGPT_BLEND_LEVEL);
+		diff *= (1.0 - SGPT_BLEND_LEVEL_P2);
 
 		color = 0.5*( 1.0 + diff )*C + 0.25*( 1.0 - diff )*(L + R);
 	}
-	else if (SGPT_BLEND_OPTION == 2) // Only Checkerboard
+	else if (SGPT_BLEND_OPTION_P2 == 2)
 	{
 		min_sample = max(min_sample, min_s(C, U, D));
 		max_sample = min(max_sample, max_s(C, U, D));
 
-		diff *= (1.0 - SGPT_BLEND_LEVEL);
+		diff *= (1.0 - SGPT_BLEND_LEVEL_P2);
 
 		color = 0.5*( 1.0 + diff )*C + 0.125*( 1.0 - diff )*(L + R + U + D);
 	}
-	else if (SGPT_BLEND_OPTION == 3) // Only Checkerboard - Soft
+	else if (SGPT_BLEND_OPTION_P2 == 3)
 	{
 		min_sample = min_s(min_sample, U, D);
 		max_sample = max_s(max_sample, U, D);
 
-		diff *= (1.0 - SGPT_BLEND_LEVEL);
+		diff *= (1.0 - SGPT_BLEND_LEVEL_P2);
 
 		color = 0.5*( 1.0 + diff )*C + 0.125*( 1.0 - diff )*(L + R + U + D);
 	}
-	else if (SGPT_BLEND_OPTION == 4) // VL-CB
-	{
-		diff *= (1.0 - SGPT_BLEND_LEVEL);
-
-		color = 0.5*( 1.0 + diff )*C + 0.25*( 1.0 - diff )*(L + R);
-	}
-	else if (SGPT_BLEND_OPTION == 5) // VL-CB-2
+	else if (SGPT_BLEND_OPTION_P2 == 4)
 	{
 		min_sample = min_s(min_sample, U, D);
 		max_sample = max_s(max_sample, U, D);
 
-		diff *= (1.0 - SGPT_BLEND_LEVEL);
+		diff *= (1.0 - SGPT_BLEND_LEVEL_P2);
 
 		color = 0.5*( 1.0 + diff )*C + 0.25*( 1.0 - diff )*(L + R);
 	}
-	else if (SGPT_BLEND_OPTION == 6) // VL-CB-Soft
+	else if (SGPT_BLEND_OPTION_P2 == 5)
 	{
 		min_sample = min(min_sample, min(min_s(D, DL, DR), min_s(U, UL, UR)));
 		max_sample = max(max_sample, max(max_s(D, DL, DR), max_s(U, UL, UR)));
 
-		diff *= (1.0 - SGPT_BLEND_LEVEL);
+		diff *= (1.0 - SGPT_BLEND_LEVEL_P2);
 
 		color = 0.5*( 1.0 + diff )*C + 0.25*( 1.0 - diff )*(L + R);
 	}
 
 	color = clamp(color, min_sample, max_sample);
 
-	color = mix(color, vec3(dot(abs(C-color), vec3(1.0, 1.0, 1.0))), SGPT_ADJUST_VIEW);
+	color = mix(color, vec3(dot(abs(C-color), vec3(1.0, 1.0, 1.0))), SGPT_ADJUST_VIEW_P2);
 
 	FragColor = vec4(GAMMA_OUT(color), 1.0);
 }

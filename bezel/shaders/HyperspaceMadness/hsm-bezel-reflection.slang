@@ -370,7 +370,7 @@ void main()
 		}
 
 		reflected_color = HSM_REFLECT_GLOBAL_AMOUNT * pow(reflected_color, vec4(HSM_REFLECT_GLOBAL_GAMMA_ADJUST));
-		
+
 		// Mask reflection to only appear inside the bezel
 		reflected_color = clamp(reflected_color, 0, 1) * clamp(reflection_area_mask, 0, 1);
 
@@ -390,19 +390,6 @@ void main()
 
 		reflected_color += clamp(edge_fullscreen_glow, 0, 1);
 		reflected_color.a = 1;
-
-		// vec4 frag_color_linear = vec4(0);
-		// if (VIEWPORT_COORD.x < 0.5 && VIEWPORT_COORD.y < 0.5)
-		// frag_color_linear = edge_highlight_mask * vec4(1);
-		// if (VIEWPORT_COORD.x > 0.5 && VIEWPORT_COORD.y < 0.5)
-		// frag_color_linear = edge_fullscreen_glow;
-		// // if (VIEWPORT_COORD.x < 0.5 && VIEWPORT_COORD.y > 0.5)
-		// // frag_color_linear = glass_border_edge_color * edge_mask * outside_tube_mask + edge_fullscreen_glow;
-		// // if (VIEWPORT_COORD.x > 0.5 && VIEWPORT_COORD.y > 0.5)
-		// // frag_color_linear = glass_border_edge_color * edge_mask * outside_tube_mask;
-
-		// FragColor = HSM_ApplyGamma(clamp(frag_color_linear, 0, 1), HSM_DEFAULT_SRGB_GAMMA);
-		// return;
 	}
 
     // CRT
@@ -441,6 +428,9 @@ void main()
 		// We just need to add the tube highlight on the black screen area
 		frag_color_linear += black_edge_mask * HSM_TUBE_STATIC_REFLECTION_IMAGE_OPACITY * tube_highlight_image * tube_highlight_image.a;
 	}
+
+	// Clamp otherwise we get artifacts (blue overlays of brighter parts of image)
+	frag_color_linear = clamp(frag_color_linear, 0, 1);
 
 	frag_color_linear += reflected_color;
 

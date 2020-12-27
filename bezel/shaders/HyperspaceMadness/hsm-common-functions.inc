@@ -1124,7 +1124,7 @@ vec4 HSM_GetPostCrtPreppedColor(vec4 in_color_linear, vec2 screen_curved_coord, 
 
 	out_color.a = in_color_linear.a;
 
-	// If we are not using this with the bezel we want
+	// If we are not using this with the bezel we want to mask outside the screen
 	if (HSM_CRT_IS_LAST_PASS == 1)
 		out_color *= screen_mask;
 

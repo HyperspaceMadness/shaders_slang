@@ -128,7 +128,7 @@ void main()
     vec2 texelSize = 1 / CROPPED_ORIGINAL_SIZE;
     // End Addition
 
-    vec2 range = global.OutputSize.zw;
+    vec2 range = global.OutputSize.zw / SCREEN_SCALE;
 
     vec3 cred   = pow(vec3(param.LCD_RSUBPIX_R, param.LCD_RSUBPIX_G, param.LCD_RSUBPIX_B), vec3(outgamma));
     vec3 cgreen = pow(vec3(param.LCD_GSUBPIX_R, param.LCD_GSUBPIX_G, param.LCD_GSUBPIX_B), vec3(outgamma));

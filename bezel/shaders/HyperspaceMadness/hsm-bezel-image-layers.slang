@@ -69,11 +69,52 @@ float OUTSIDE_FRAME_MASK_FOR_IMAGE = 0;
 float OUTSIDE_FRAME_MASK = 0;
 float CUTOUT_MASK = 0;
 
+float SOURCE_MATTE_PREMULTIPLIED = 0;
+float SOURCE_MATTE_WHITE = 1;
+float SOURCE_MATTE_NONE = 2;
+
 float SCREEN_ASPECT = HSM_GetScreenAspect();
 vec2 SCREEN_SCALE = HSM_GetScreenScale(SCREEN_ASPECT);
 vec2 TUBE_SCALE = HSM_GetTubeScale(SCREEN_SCALE);
 vec2 FRAME_SCALE = vec2(1);
 vec2 BACKGROUND_SCALE = vec2(1);
+
+/*
+	Texture interpolation based on "Improved texture interpolation" by Inigo Quilez
+	Original description: http://www.iquilezles.org/www/articles/texture/texture.htm
+	Expects the texture to be using linear filtering
+*/
+vec4 TextureQuilez(sampler2D in_sampler_2D, vec2 in_texture_size, vec2 p)
+{
+	vec2 tex_size = textureSize(in_sampler_2D, 0);
+	p = p * in_texture_size + vec2(0.5, 0.5);
+
+	vec2 i = floor(p);
+	vec2 f = p - i;
+	f = f * f * f * (f * (f * 6.0 - vec2(15.0, 15.0)) + vec2(10.0, 10.0));
+	p = i + f;
+
+	p = (p - vec2(0.5, 0.5)) * (1/in_texture_size);
+
+	// final sum and weight normalization
+	return texture(in_sampler_2D, p);
+}
+
+vec4 GetPreMultipliedColorLinear(vec4 in_color, float matte_type, float encoded_gamma)
+{
+	vec4 out_color = in_color;
+
+	if (matte_type == SOURCE_MATTE_WHITE)
+		out_color.rgb = clamp(out_color.rgb - (1 - out_color.a), 0, 1);
+
+	out_color = HSM_Linearize(out_color, encoded_gamma);
+
+	// If the color was not already premultiplied (matted with black) premultiply it now
+	if (matte_type == SOURCE_MATTE_NONE)
+		out_color.rgb *= out_color.a;
+
+	return out_color;
+}
 
 /* Composite one image over top another using the alpha to blend
  * It is expected that the input colors have been already premultiplied
@@ -513,50 +554,9 @@ void main()
 	crt_linear.rgb *= tube_edge_shadow_mult * (1 - outside_tube_mask_wider);
 	crt_linear.a = (1 - outside_tube_mask_wider);
 
-	vec4 background_color = vec4(0);
-
-
-	float edge_highlight_mask  = 0;
-
-
-	vec2 background_coord_no_mirror = VIEWPORT_COORD;
-	background_coord_no_mirror = GetScaledCoord(VIEWPORT_COORD, background_coord_no_mirror, screen_coord, bezel_outside_coord, vec2(0), vec2(0),
-									HSM_BG_TEXTURE_ASPECT_MODE, 
-									HSM_BG_EXPLICIT_TEXTURE_ASPECT, 
-									vec2(HSM_BG_SCALE * HSM_BG_SCALE_X, HSM_BG_SCALE), 
-									vec2(0, HSM_BG_POS_Y), 
-									HSM_BG_SCALE_MODE, 
-									HSM_BG_SCALE_KEEP_ASPECT);
-
-	vec2 background_coord = background_coord_no_mirror;
-
-	if (HSM_BG_MIRROR_WRAP == 1)
-		background_coord = HSM_GetMirrorWrapCoord(background_coord);
-
-	if (SCREEN_ASPECT > 1)
-		background_color = texture(BackgroundImage, background_coord).rgba;
-	else 
-		background_color = texture(BackgroundVertImage, background_coord).rgba;
-
-	background_color = HSM_Linearize(background_color, HSM_DEFAULT_SRGB_GAMMA);
-
-	// Premultiply background color
-	background_color.rgb *= background_color.a * HSM_BG_BRIGHTNESS;
-	BlendModeLayerMix(vec4(0), 
-						background_color, 
-						BLEND_MODE_NORMAL, 
-						HSM_BG_MASK_MODE, 
-						0,
-						1);
-
-
-
-	//----------------------------------------------------
-	// Background Image - Applied Underneath Bezel
-	//----------------------------------------------------
 
 	// ----------------------------------------------------
-	// Generated Bezel - Applied ON TOP of the Background, BELOW the reflection
+	// Generated Bezel
 	// ----------------------------------------------------
 
 	/* This first bit is to get a mapping of the space outside of the screen which is continuous
@@ -615,7 +615,7 @@ void main()
 		edge_sides_highlight_mask 			= 0.7 * sides_mask * HHLP_QuadraticBezier(smoothstep(hmbz_bezel_edge_highlight_width, 0, abs(outermap_warped_coord_ctr.y)), vec2(0.8, 1));
 	}
 
-	edge_highlight_mask 	= hmbz_bezel_highlight_edge * edge_mask * (edge_top_center_highlight_mask + edge_bottom_center_highlight_mask + edge_sides_highlight_mask);
+	float edge_highlight_mask 	= hmbz_bezel_highlight_edge * edge_mask * (edge_top_center_highlight_mask + edge_bottom_center_highlight_mask + edge_sides_highlight_mask);
 
 	// Combine all the individual highlights into one mask
 	float combined_highlight_mask = (1 + 2.5 * HSM_BZL_NOISE) * (1 - noise_mask * 2.5 * HSM_BZL_NOISE) * (top_center_highlight_mask + bottom_center_highlight_mask + sides_highlight_mask);
@@ -671,6 +671,7 @@ void main()
 	else
 		OUTSIDE_TUBE_MASK_FOR_IMAGE = 1 - HSM_GetCornerMask((tube_coord_warped - 0.5) * 1.003 + 0.5, SCREEN_ASPECT, HSM_FRM_OUTER_CORNER_RADIUS, 1);
 
+
 	//-----------------------------------------------------------------------------------------
 	// Night Lighting Image
 	//-----------------------------------------------------------------------------------------
@@ -702,6 +703,49 @@ void main()
 		}
 	}
 
+
+	//-----------------------------------------------------------------------------------------
+	// Background Image
+	//-----------------------------------------------------------------------------------------
+	vec2 background_coord_no_mirror	= GetScaledCoord(VIEWPORT_COORD, VIEWPORT_COORD, screen_coord, bezel_outside_coord, vec2(0), vec2(0),
+												HSM_BG_TEXTURE_ASPECT_MODE, 
+												HSM_BG_EXPLICIT_TEXTURE_ASPECT, 
+												vec2(HSM_BG_SCALE * HSM_BG_SCALE_X, HSM_BG_SCALE), 
+												vec2(0, HSM_BG_POS_Y), 
+												HSM_BG_SCALE_MODE, 
+												HSM_BG_SCALE_KEEP_ASPECT);
+
+	vec2 background_coord = background_coord_no_mirror;
+	if (HSM_BG_MIRROR_WRAP == 1)
+		background_coord = HSM_GetMirrorWrapCoord(background_coord);
+
+	//-----------------------------------------------------------------------------------------
+	// BACKGROUND
+	//-----------------------------------------------------------------------------------------
+	vec4 background_image = vec4(0);
+	if (HSM_BG_OPACITY > 0)
+	{
+		if (SCREEN_ASPECT > 1)
+			background_image = texture(BackgroundImage, background_coord).rgba;
+		else 
+			background_image = texture(BackgroundVertImage, background_coord).rgba;
+
+		// Premultiply Alpha
+		background_image = GetPreMultipliedColorLinear(background_image, HSM_BG_SOURCE_MATTE_TYPE, HSM_DEFAULT_SRGB_GAMMA);
+
+		// Premultiply background color
+		background_image.rgb *= HSM_BG_BRIGHTNESS;
+		
+		if (HSM_BG_APPLY_ADJUSTMENT == 1)
+			if (HSM_STATIC_LAYERS_GAMMA != 1)
+				background_image = HSM_ApplyGamma(background_image, HSM_STATIC_LAYERS_GAMMA);
+
+		// NIGHT LIGHTING
+		if (HSM_BG_APPLY_ADJUSTMENT == 1)
+			if (HSM_NIGHT_OPACITY > 0)
+				background_image = BlendMultiply(background_image, night_lighting_image, HSM_NIGHT_OPACITY);
+	}
+
 	//----------------------------------------------------
 	// Generated Bezel
 	//----------------------------------------------------
@@ -726,7 +770,6 @@ void main()
 				bezel_layer = clamp(bezel_and_frame_rgba * FRAME_AND_BEZEL_MASK, 0, 1);
 			else
 				bezel_layer = clamp(bezel_and_frame_rgba * BEZEL_MASK, 0, 1);
-
 
 		if (HSM_FRM_OPACITY > 0 )
 			frame_layer = clamp(bezel_and_frame_rgba * FRAME_MASK, 0, 1);
@@ -753,8 +796,11 @@ void main()
 		bezel_image = SCREEN_ASPECT < 1 ? texture(BezelVertImage, bezel_image_coord):
 										  texture(BezelImage,     bezel_image_coord);
 
-		bezel_image = HSM_Linearize(bezel_image, HSM_DEFAULT_SRGB_GAMMA);
-		// bezel_image.rgb *= HSM_BZL_IMG_BRIGHTNESS;
+		// Premultiply Alpha
+		bezel_image = GetPreMultipliedColorLinear(bezel_image, HSM_BZL_SOURCE_MATTE_TYPE, HSM_DEFAULT_SRGB_GAMMA);
+
+		// Adjust Brightness
+		bezel_image.rgb *= HSM_BZL_IMG_BRIGHTNESS;
 
 		// Do HSV alterations on the night lighting image
 		if (HSM_BZL_IMG_HUE != 0 || HSM_BZL_IMG_SATURATION != 1 || HSM_BZL_IMG_BRIGHTNESS != 1)
@@ -773,9 +819,6 @@ void main()
 		if (HSM_NIGHT_OPACITY > 0)
 			if (HSM_BZL_IMG_BLEND_MODE != BLEND_MODE_ADD)
 				bezel_image = BlendMultiply(bezel_image, night_lighting_image, HSM_NIGHT_OPACITY);
-
-		// Premultiply Alpha
-		bezel_image.rgb *= bezel_image.a;
 	}
 
 	vec4 reflection_linear = crt_and_reflection_linear;// * outside_tube_mask;
@@ -794,7 +837,9 @@ void main()
 	if (HSM_DECAL_OPACITY > 0)
 	{
 		decal_image = texture(DecalImage, decal_coord);
-		decal_image = HSM_Linearize(decal_image, HSM_DEFAULT_SRGB_GAMMA);
+		
+		// Premultiply Alpha
+		decal_image = GetPreMultipliedColorLinear(decal_image, HSM_DECAL_SOURCE_MATTE_TYPE, HSM_DEFAULT_SRGB_GAMMA);
 
 		// STATIC GAMMA
 		if (HSM_STATIC_LAYERS_GAMMA != 1)
@@ -804,8 +849,6 @@ void main()
 		if (HSM_NIGHT_OPACITY > 0)
 			if (HSM_DECAL_BLEND_MODE != BLEND_MODE_ADD)
 				decal_image = BlendMultiply(decal_image, night_lighting_image, HSM_NIGHT_OPACITY);
-
-		decal_image.rgb *= decal_image.a;
 	}
 
 	vec4 top_image = vec4(0);
@@ -823,7 +866,9 @@ void main()
 		// Get the top image color and masking values if needed
 		top_image = SCREEN_ASPECT < 1 ? texture(TopLayerVertImage, top_image_coord):
 										texture(TopLayerImage,     top_image_coord);
-		top_image = HSM_Linearize(top_image, HSM_DEFAULT_SRGB_GAMMA);
+
+		// Premultiply Alpha
+		top_image = GetPreMultipliedColorLinear(top_image, HSM_TOP_SOURCE_MATTE_TYPE, HSM_DEFAULT_SRGB_GAMMA);
 
 		// STATIC GAMMA
 		if (HSM_STATIC_LAYERS_GAMMA != 1)
@@ -833,8 +878,6 @@ void main()
 		if (HSM_NIGHT_OPACITY > 0)
 				if (HSM_TOP_BLEND_MODE != BLEND_MODE_ADD)
 					top_image = BlendMultiply(top_image, night_lighting_image, HSM_NIGHT_OPACITY);
-
-		top_image.rgb *= top_image.a;
 	}
 	
 	//----------------------------------------------------
@@ -854,9 +897,13 @@ void main()
 		// Add Scaling
 		cab_glass_coord = (cab_glass_coord - 0.5) * 1 / HSM_CAB_GLASS_SCALE + 0.5;
 
+		// Sample Texture
 		cab_glass_image = texture(CabinetGlassImage, cab_glass_coord.xy);
 
-		cab_glass_image = HSM_Linearize(cab_glass_image, HSM_DEFAULT_SRGB_GAMMA);
+		// Premultiply Alpha
+		cab_glass_image = GetPreMultipliedColorLinear(cab_glass_image, HSM_CAB_GLASS_SOURCE_MATTE_TYPE, HSM_DEFAULT_SRGB_GAMMA);
+
+		// Adjust Brightness
 		cab_glass_image.rgb *= HSM_CAB_GLASS_BRIGHTNESS;
 
 		// STATIC GAMMA
@@ -867,9 +914,6 @@ void main()
 		if (HSM_NIGHT_OPACITY > 0)
 			if (HSM_CAB_GLASS_BLEND_MODE != BLEND_MODE_ADD)
 				cab_glass_image = BlendMultiply(cab_glass_image, night_lighting_image, HSM_NIGHT_OPACITY);
-
-		
-		// cab_glass_image.rgb *= cab_glass_image.a;
 	}
 
 	//-----------------------------------------------------------------------------------------
@@ -888,29 +932,15 @@ void main()
 						HSM_LED_SCALE_KEEP_ASPECT);
 
 		led_image = texture(LEDImage, led_coord);
-		led_image = HSM_Linearize(led_image, HSM_DEFAULT_SRGB_GAMMA);
+
+		// Premultiply Alpha
+		led_image = GetPreMultipliedColorLinear(led_image, HSM_LED_SOURCE_MATTE_TYPE, HSM_DEFAULT_SRGB_GAMMA);
 
 		// STATIC GAMMA
 		if (HSM_STATIC_LAYERS_GAMMA != 1)
 			led_image = HSM_ApplyGamma(led_image, HSM_STATIC_LAYERS_GAMMA);
-
-		led_image.rgb *= led_image.a;
 	}
 
-	//-----------------------------------------------------------------------------------------
-	// BACKGROUND
-	//-----------------------------------------------------------------------------------------
-	if (HSM_BG_APPLY_ADJUSTMENT == 1)
-		if (HSM_STATIC_LAYERS_GAMMA != 1)
-			background_color = HSM_ApplyGamma(background_color, HSM_STATIC_LAYERS_GAMMA);
-
-	// NIGHT LIGHTING
-	if (HSM_BG_APPLY_ADJUSTMENT == 1)
-		if (HSM_NIGHT_OPACITY > 0)
-			background_color = BlendMultiply(background_color, night_lighting_image, HSM_NIGHT_OPACITY);
-
-	// PREMULTIPLIED ALPHA
-	background_color.rgb *= background_color.a;
 
 
 	//-----------------------------------------------------------------------------------------
@@ -989,7 +1019,7 @@ void main()
 		// BACKGROUND
 		if (HSM_BG_LAYER_ORDER == i)
 			frag_color_linear = BlendModeLayerMix(frag_color_linear, 
-													background_color, 
+													background_image, 
 													HSM_BG_BLEND_MODE, 
 													HSM_BG_MASK_MODE, 
 													HSM_BG_CUTOUT_MODE,

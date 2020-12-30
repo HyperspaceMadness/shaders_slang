@@ -121,6 +121,9 @@ float HSM_BG_OPACITY = global.HSM_BG_OPACITY / 100;
 #pragma parameter HSM_BG_BLEND_MODE               "      Blend Mode - Off | Normal | Add | Multiply"  1 -1 2 1
 float HSM_BG_BLEND_MODE = global.HSM_BG_BLEND_MODE;
 
+#pragma parameter HSM_BG_SOURCE_MATTE_TYPE              "      Source Matte Color - Black | White | None"  0 0 2 1
+float HSM_BG_SOURCE_MATTE_TYPE = global.HSM_BG_SOURCE_MATTE_TYPE;
+
 #pragma parameter HSM_BG_MASK_MODE                "    Mask - ALL | Scrn | Tube | Bz- | Bz | Bz+ | Frm | Frm+ | BG" 0 0 8 1
 float HSM_BG_MASK_MODE = global.HSM_BG_MASK_MODE;
 
@@ -212,6 +215,9 @@ float HSM_BZL_IMG_BRIGHTNESS = global.HSM_BZL_IMG_BRIGHTNESS / 100;
 #pragma parameter HSM_BZL_IMG_BLEND_MODE                "      Blend Mode -  Off | Normal | Add | Multiply"  1 0 3 1
 float HSM_BZL_IMG_BLEND_MODE = global.HSM_BZL_IMG_BLEND_MODE;
 
+#pragma parameter HSM_BZL_SOURCE_MATTE_TYPE             "      Source Matte Color - Black | White | None"  0 0 2 1
+float HSM_BZL_SOURCE_MATTE_TYPE = global.HSM_BZL_SOURCE_MATTE_TYPE;
+
 #pragma parameter HSM_BZL_IMG_MASK_MODE                 "    Mask - ALL | Scrn | Tube | Bz- | Bz | Bz+ | Frm | Frm+ | BG" 4 0 8 1
 float HSM_BZL_IMG_MASK_MODE = global.HSM_BZL_IMG_MASK_MODE;
 
@@ -257,6 +263,9 @@ float HSM_CAB_GLASS_BRIGHTNESS = global.HSM_CAB_GLASS_BRIGHTNESS / 100;
 #pragma parameter HSM_CAB_GLASS_BLEND_MODE                  "      Blend Mode - Off | Normal | Add | Multiply"  1 0 3 1
 float HSM_CAB_GLASS_BLEND_MODE = global.HSM_CAB_GLASS_BLEND_MODE;
 
+#pragma parameter HSM_CAB_GLASS_SOURCE_MATTE_TYPE                 "      Source Matte Color - Black | White | None"  0 0 2 1
+float HSM_CAB_GLASS_SOURCE_MATTE_TYPE = global.HSM_CAB_GLASS_SOURCE_MATTE_TYPE;
+
 #pragma parameter HSM_CAB_GLASS_MASK_MODE                   "    Mask - ALL | Scrn | Tube | Bz- | Bz | Bz+ | Frm | Frm+ | BG" 0 0 8 1
 float HSM_CAB_GLASS_MASK_MODE = global.HSM_CAB_GLASS_MASK_MODE;
 
@@ -295,6 +304,9 @@ float HSM_DECAL_OPACITY = global.HSM_DECAL_OPACITY / 100;
 
 #pragma parameter HSM_DECAL_BLEND_MODE                  "      Blend Mode -  Off | Normal | Add | Multiply"  1 0 3 1
 float HSM_DECAL_BLEND_MODE = global.HSM_DECAL_BLEND_MODE;
+
+#pragma parameter HSM_DECAL_SOURCE_MATTE_TYPE                 "      Source Matte Color - Black | White | None"  0 0 2 1
+float HSM_DECAL_SOURCE_MATTE_TYPE = global.HSM_DECAL_SOURCE_MATTE_TYPE;
 
 #pragma parameter HSM_DECAL_MASK_MODE                   "    Mask - ALL | Scrn | Tube | Bz- | Bz | Bz+ | Frm | Frm+ | BG"   0 0 8 1
 float HSM_DECAL_MASK_MODE = global.HSM_DECAL_MASK_MODE;
@@ -335,6 +347,9 @@ float HSM_LED_OPACITY = global.HSM_LED_OPACITY / 100;
 #pragma parameter HSM_LED_BLEND_MODE                    "      Blend Mode - Off | Normal | Add | Multiply"  2 0 3 1
 float HSM_LED_BLEND_MODE = global.HSM_LED_BLEND_MODE;
 
+#pragma parameter HSM_LED_SOURCE_MATTE_TYPE                   "      Source Matte Color - Black | White | None"  0 0 2 1
+float HSM_LED_SOURCE_MATTE_TYPE = global.HSM_LED_SOURCE_MATTE_TYPE;
+
 #pragma parameter HSM_LED_MASK_MODE                     "    Mask - ALL | Scrn | Tube | Bz- | Bz | Bz+ | Frm | Frm+ | BG"   8 0 8 1
 float HSM_LED_MASK_MODE = global.HSM_LED_MASK_MODE;
 
@@ -373,6 +388,9 @@ float HSM_TOP_OPACITY = global.HSM_TOP_OPACITY / 100;
 
 #pragma parameter HSM_TOP_BLEND_MODE                    "      Blend Mode - Off | Normal | Add | Multiply"  1 0 3 1
 float HSM_TOP_BLEND_MODE = global.HSM_TOP_BLEND_MODE;
+
+#pragma parameter HSM_TOP_SOURCE_MATTE_TYPE                   "      Source Matte Color - Black | White | None"  0 0 2 1
+float HSM_TOP_SOURCE_MATTE_TYPE = global.HSM_TOP_SOURCE_MATTE_TYPE;
 
 #pragma parameter HSM_TOP_MASK_MODE                     "    Mask - ALL | Scrn | Tube | Bz- | Bz | Bz+ | Frm | Frm+ | BG"   0 0 8 1
 float HSM_TOP_MASK_MODE = global.HSM_TOP_MASK_MODE;

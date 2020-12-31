@@ -46,37 +46,37 @@ float HSM_NIGHT_DITHERING_SAMPLES = global.HSM_NIGHT_DITHERING_SAMPLES;
 
 #pragma parameter HSM_LAYER_ORDER_TITLE			"[ LAYER ORDER ]________________________________________________" 0 0 0 0
 
-#pragma parameter HSM_BG_LAYER_ORDER              "      Background Image"  4 0 44 1
+#pragma parameter HSM_BG_LAYER_ORDER              "      Background Image"  0 0 12 1
 float HSM_BG_LAYER_ORDER = global.HSM_BG_LAYER_ORDER;
 
-#pragma parameter HSM_VIEWPORT_VIGNETTE_LAYER_ORDER "      Viewport Vignette"  8 0 44 1
+#pragma parameter HSM_VIEWPORT_VIGNETTE_LAYER_ORDER "      Viewport Vignette"  1 0 12 1
 float HSM_VIEWPORT_VIGNETTE_LAYER_ORDER = global.HSM_VIEWPORT_VIGNETTE_LAYER_ORDER;
 
-#pragma parameter HSM_CRT_LAYER_ORDER             "      CRT Screen"  12 0 44 1
+#pragma parameter HSM_CRT_LAYER_ORDER             "      CRT Screen"  3 0 12 1
 float HSM_CRT_LAYER_ORDER = global.HSM_CRT_LAYER_ORDER;
 
-#pragma parameter HSM_BZL_IMG_LAYER_ORDER         "      Bezel Image"  16 0 44 1
+#pragma parameter HSM_BZL_IMG_LAYER_ORDER         "      Bezel Image"  4 0 12 1
 float HSM_BZL_IMG_LAYER_ORDER = global.HSM_BZL_IMG_LAYER_ORDER;
 
-#pragma parameter HSM_BZL_LAYER_ORDER             "      Bezel (Generated)"  20 0 44 1
+#pragma parameter HSM_BZL_LAYER_ORDER             "      Bezel (Generated)"  5 0 12 1
 float HSM_BZL_LAYER_ORDER = global.HSM_BZL_LAYER_ORDER;
 
-#pragma parameter HSM_FRM_LAYER_ORDER             "      Frame (Generated)"  24 0 44 1
+#pragma parameter HSM_FRM_LAYER_ORDER             "      Frame (Generated)"  6 0 12 1
 float HSM_FRM_LAYER_ORDER = global.HSM_FRM_LAYER_ORDER;
 
-#pragma parameter HSM_CAB_GLASS_LAYER_ORDER       "      Cabinet Glass Image"  28 0 44 1
+#pragma parameter HSM_CAB_GLASS_LAYER_ORDER       "      Cabinet Glass Image"  7 0 12 1
 float HSM_CAB_GLASS_LAYER_ORDER = global.HSM_CAB_GLASS_LAYER_ORDER;
 
-#pragma parameter HSM_DECAL_LAYER_ORDER           "      Decal Image"  32 0 44 1
+#pragma parameter HSM_DECAL_LAYER_ORDER           "      Decal Image"  8 0 12 1
 float HSM_DECAL_LAYER_ORDER = global.HSM_DECAL_LAYER_ORDER;
 
-#pragma parameter HSM_REFLECT_LAYER_ORDER      "      Reflection (Generated)"  36 0 44 1
+#pragma parameter HSM_REFLECT_LAYER_ORDER      "      Reflection (Generated)"  9 0 12 1
 float HSM_REFLECT_LAYER_ORDER = global.HSM_REFLECT_LAYER_ORDER;
 
-#pragma parameter HSM_LED_LAYER_ORDER             "      LED Image"  40 0 44 1
+#pragma parameter HSM_LED_LAYER_ORDER             "      LED Image"  10 0 12 1
 float HSM_LED_LAYER_ORDER = global.HSM_LED_LAYER_ORDER;
 
-#pragma parameter HSM_TOP_LAYER_ORDER             "      Top Image"  44 0 44 1
+#pragma parameter HSM_TOP_LAYER_ORDER             "      Top Image"  12 0 12 1
 float HSM_TOP_LAYER_ORDER = global.HSM_TOP_LAYER_ORDER;
 
 

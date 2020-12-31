@@ -69,11 +69,11 @@ float_framebuffer12 = true
 // scale_x13 = 0.25
 // filter_linear13 = false
 
-shader13 = ../stock.slang
-shader14 = ../stock.slang
-shader15 = ../stock.slang
-shader16 = ../stock.slang
-shader17 = ../stock.slang
+shader13 = :/shaders/shaders_slang/stock.slang
+shader14 = :/shaders/shaders_slang/stock.slang
+shader15 = :/shaders/shaders_slang/stock.slang
+shader16 = :/shaders/shaders_slang/stock.slang
+shader17 = :/shaders/shaders_slang/stock.slang
 
 // Simple Scanline Shader
 shader18 = shaders/HyperspaceMadness/hsm-test-simple-scanline.slang

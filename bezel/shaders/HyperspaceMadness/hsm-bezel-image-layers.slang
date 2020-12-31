@@ -73,6 +73,8 @@ float SOURCE_MATTE_PREMULTIPLIED = 0;
 float SOURCE_MATTE_WHITE = 1;
 float SOURCE_MATTE_NONE = 2;
 
+float MAX_LAYER_ORDER = 12;
+
 float SCREEN_ASPECT = HSM_GetScreenAspect();
 vec2 SCREEN_SCALE = HSM_GetScreenScale(SCREEN_ASPECT);
 vec2 TUBE_SCALE = HSM_GetTubeScale(SCREEN_SCALE);
@@ -1014,7 +1016,7 @@ void main()
 
 	vec4 frag_color_linear = vec4(0);
 
-	for(int i=0; i < 45; i++)
+	for(int i=0; i <= MAX_LAYER_ORDER; i++)
 	{
 		// BACKGROUND
 		if (HSM_BG_LAYER_ORDER == i)

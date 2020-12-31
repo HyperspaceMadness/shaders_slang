@@ -61,11 +61,11 @@ filter_linear13 = false
 float_framebuffer13 = true
 alias13 = "PreCRTPass"
 
-shader14 = ../stock.slang
+shader14 = :/shaders/shaders_slang/stock.slang
 
-shader15 = ../stock.slang
+shader15 = :/shaders/shaders_slang/stock.slang
 
-shader16 = ../stock.slang
+shader16 = :/shaders/shaders_slang/stock.slang
 filter_linear16 = true
 mipmap_input16 = true
 scale_type16 = absolute
@@ -132,7 +132,7 @@ alias23 = BR_MirrorBlurredPass
 // Reduce resolution ----------------------------------------------------------------
 // Reduced to a very small amount so we can create a blur which will create a glow from the screen
 //      Mipmap option allows smoother downscaling
-shader24 = ../blurs/blur9x9.slang
+shader24 = :/shaders/shaders_slang/blurs/blur9x9.slang
 mipmap_input24 = true
 filter_linear24 = true
 scale_type24 = absolute
@@ -145,7 +145,7 @@ alias24 = BR_MirrorReflectionDiffusedPass
 // Add Diffused glow all around the screen ----------------------------------------------------------------
 //      lurred so much that it's non directional
 //      Mipmap option allows downscaling without artifacts
-shader25 = ../blurs/blur9x9.slang
+shader25 = :/shaders/shaders_slang/blurs/blur9x9.slang
 mipmap_input25 = true
 filter_linear25 = true
 scale_type25 = absolute

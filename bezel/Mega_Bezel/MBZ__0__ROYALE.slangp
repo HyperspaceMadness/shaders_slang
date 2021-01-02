@@ -155,7 +155,7 @@ shaders = 16
 // textures = "mask_grille_texture_small;mask_slot_texture_small;mask_shadow_texture_small;SamplerLUT1;SamplerLUT2;SamplerLUT3;ColoredGelImage;TubeStaticReflectionImage;GlassBorderSurfaceImage;"
 
 // Define textures to be used by the different passes
-textures = "mask_grille_texture_small;mask_slot_texture_small;mask_shadow_texture_small;SamplerLUT1;SamplerLUT2;SamplerLUT3;BackgroundImage;BackgroundVertImage;ColoredGelImage;TubeStaticReflectionImage;GlassBorderSurfaceImage;CabinetGlassImage;BezelImage;BezelVertImage;DecalImage;NightLightingImage;LEDImage;TopLayerImage;TopLayerVertImage;"
+textures = "mask_grille_texture_small;mask_slot_texture_small;mask_shadow_texture_small;SamplerLUT1;SamplerLUT2;SamplerLUT3;BackgroundImage;BackgroundVertImage;ColoredGelImage;TubeStaticReflectionImage;GlassBorderSurfaceImage;FrameTextureImage;CabinetGlassImage;BezelImage;BezelVertImage;DecalImage;NightLightingImage;LEDImage;TopLayerImage;TopLayerVertImage;"
 
 mask_grille_texture_small = "shaders/HyperspaceMadness/hsm-crt-royale/TileableLinearApertureGrille15Wide8And5d5SpacingResizeTo64.png"
 mask_grille_texture_small_wrap_mode = "repeat"
@@ -180,57 +180,43 @@ SamplerLUT3 = shaders/HyperspaceMadness/textures/lut/other1_32.png
 SamplerLUT3_linear = true
 
 ColoredGelImage = shaders/HyperspaceMadness/textures/Transparent_DummyTexture_16x16.png
-ColoredGelImage_mipmap = true
 ColoredGelImage_linear = true
 
 TubeStaticReflectionImage = shaders/HyperspaceMadness/textures/TubeGlassOverlayImage_3840x2160.png
-TubeStaticReflectionImage_mipmap = true
 TubeStaticReflectionImage_linear = true
 
 GlassBorderSurfaceImage = shaders/HyperspaceMadness/textures/Transparent_DummyTexture_16x16.png
-GlassBorderSurfaceImage_mipmap = true
 GlassBorderSurfaceImage_linear = true
 
 FrameTextureImage = shaders/HyperspaceMadness/textures/FrameTexture_2800x2120.png
-FrameTextureImage_mipmap = true
 FrameTextureImage_linear = true
 
 BackgroundImage = shaders/HyperspaceMadness/textures/BackgroundImage_Carbon_3840x2160.png
-BackgroundImage_mipmap = true
 BackgroundImage_linear = true
 
 BackgroundVertImage = shaders/HyperspaceMadness/textures/BackgroundImage_Carbon_3840x2160.png
-BackgroundVertImage_mipmap = true
 BackgroundVertImage_linear = true
 
 CabinetGlassImage = shaders/HyperspaceMadness/textures/Transparent_DummyTexture_16x16.png
-CabinetGlassImage_mipmap = true
 CabinetGlassImage_linear = true
 
 BezelImage = shaders/HyperspaceMadness/textures/Transparent_DummyTexture_16x16.png
-BezelImage_mipmap = true
 BezelImage_linear = true
 
 BezelVertImage = shaders/HyperspaceMadness/textures/Transparent_DummyTexture_16x16.png
-BezelVertImage_mipmap = true
 BezelVertImage_linear = true
 
 DecalImage = shaders/HyperspaceMadness/textures/Transparent_DummyTexture_16x16.png
-DecalImage_mipmap = true
 DecalImage_linear = true
 
 NightLightingImage = shaders/HyperspaceMadness/textures/NightLighting_3840x2160.jpg
-NightLightingImage_mipmap = true
 NightLightingImage_linear = true
 
 LEDImage = shaders/HyperspaceMadness/textures/Transparent_DummyTexture_16x16.png
-LEDImage_mipmap = true
 LEDImage_linear = true
 
 TopLayerImage = shaders/HyperspaceMadness/textures/Transparent_DummyTexture_16x16.png
-TopLayerImage_mipmap = true
 TopLayerImage_linear = true
 
 TopLayerVertImage = shaders/HyperspaceMadness/textures/Transparent_DummyTexture_16x16.png
-TopLayerVertImage_mipmap = true
 TopLayerVertImage_linear = true

@@ -37,10 +37,10 @@ layout(push_constant) uniform Push
 
 //////////////////////////////////  INCLUDES  //////////////////////////////////
 
-#include "../../../../../include/compat_macros.inc"
+#include "../../../../../../include/compat_macros.inc"
 #include "../user-settings.h"
 #include "bind-shader-params.h"
-#include "../../../../../include/gamma-management.h"
+#include "../../../../../../include/gamma-management.h"
 #include "scanline-functions.h"
 
 #pragma stage vertex

@@ -44,7 +44,7 @@ const float bloom_diff_thresh_ = 1.0/256.0;
 
 /////////////////////////////  SETTINGS MANAGEMENT  ////////////////////////////
 
-#include "../../../../../include/compat_macros.inc"
+#include "../../../../../../include/compat_macros.inc"
 #include "../user-settings.h"
 #include "derived-settings-and-constants.h"
 #include "bind-shader-params.h"
@@ -52,7 +52,7 @@ const float bloom_diff_thresh_ = 1.0/256.0;
 
 ///////////////////////////////  VERTEX INCLUDES  //////////////////////////////
 
-#include "../../../../../include/gamma-management.h"
+#include "../../../../../../include/gamma-management.h"
 #include "phosphor-mask-resizing.h"
 #include "scanline-functions.h"
 

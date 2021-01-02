@@ -33,7 +33,7 @@ layout(push_constant) uniform Push
 
 #define LAST_PASS
 #define SIMULATE_CRT_ON_LCD
-#include "../../../../../include/compat_macros.inc"
+#include "../../../../../../include/compat_macros.inc"
 #include "../user-settings.h"
 #include "derived-settings-and-constants.h"
 #include "bind-shader-params.h"
@@ -67,7 +67,7 @@ float geom_tilt_angle_x = HSM_CURVATURE_3D_TILT_ANGLE_X;
 float geom_tilt_angle_y = HSM_CURVATURE_3D_TILT_ANGLE_Y;
 
 //////////////////////////////////  INCLUDES  //////////////////////////////////
-#include "../../../../../include/gamma-management.h"
+#include "../../../../../../include/gamma-management.h"
 #include "tex2Dantialias.h"
 #include "geometry-functions.h"
 

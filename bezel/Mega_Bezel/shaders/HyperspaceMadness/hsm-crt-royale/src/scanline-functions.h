@@ -24,8 +24,8 @@
 
 #include "../user-settings.h"
 #include "derived-settings-and-constants.h"
-#include "../../../../../include/special-functions.h"
-#include "../../../../../include/gamma-management.h"
+#include "../../../../../../include/special-functions.h"
+#include "../../../../../../include/gamma-management.h"
 
 
 /////////////////////////////  SCANLINE FUNCTIONS  /////////////////////////////

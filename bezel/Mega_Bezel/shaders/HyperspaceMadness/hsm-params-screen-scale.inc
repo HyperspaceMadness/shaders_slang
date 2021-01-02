@@ -131,21 +131,21 @@ float HSM_SCANLINE_DIRECTION = global.HSM_SCANLINE_DIRECTION;
 #endif
 
 
-//---------------------------------------------------------------------------------------------------
-//    SPLIT SCREEN
-//---------------------------------------------------------------------------------------------------
-#pragma parameter HSM_SPLITSCREEN_TITLE					"[ SPLIT SCREEN ]_______________________________________________" 0 0 0 0
+// //---------------------------------------------------------------------------------------------------
+// //    SPLIT SCREEN
+// //---------------------------------------------------------------------------------------------------
+// #pragma parameter HSM_SPLITSCREEN_TITLE					"[ SPLIT SCREEN ]_______________________________________________" 0 0 0 0
 
-#pragma parameter HSM_SPLITSCREEN_ON					"      Split Screen ON - SPLIT SCREEN PRESET ONLY" 0 0 1 1
-float HSM_SPLITSCREEN_ON = global.HSM_SPLITSCREEN_ON;
+// #pragma parameter HSM_SPLITSCREEN_ON					"      Split Screen ON - SPLIT SCREEN PRESET ONLY" 0 0 1 1
+// float HSM_SPLITSCREEN_ON = global.HSM_SPLITSCREEN_ON;
 
-#pragma parameter HSM_SPLITSCREEN_AMOUNT				"      Split Thickness - SPLIT SCREEN PRESET ONLY" 0 0 256 2
-float HSM_SPLITSCREEN_AMOUNT = global.HSM_SPLITSCREEN_AMOUNT;
+// #pragma parameter HSM_SPLITSCREEN_AMOUNT				"      Split Thickness - SPLIT SCREEN PRESET ONLY" 0 0 256 2
+// float HSM_SPLITSCREEN_AMOUNT = global.HSM_SPLITSCREEN_AMOUNT;
 
-// TODO add Split Position, also auto set position, catches for 3DS
+// // TODO add Split Position, also auto set position, catches for 3DS
 
-#pragma parameter HSM_SPLITSCREEN_CENTER_FILL_MODE		"      Center Fill Mode - 1:Bezel 2:Reflect 3:Blend 4:Fade" 0 0 6 1
-float HSM_SPLITSCREEN_CENTER_FILL_MODE = global.HSM_SPLITSCREEN_CENTER_FILL_MODE;
+// #pragma parameter HSM_SPLITSCREEN_CENTER_FILL_MODE		"      Center Fill Mode - 1:Bezel 2:Reflect 3:Blend 4:Fade" 0 0 6 1
+// float HSM_SPLITSCREEN_CENTER_FILL_MODE = global.HSM_SPLITSCREEN_CENTER_FILL_MODE;
 
 
 //---------------------------------------------------------------------------------------------------

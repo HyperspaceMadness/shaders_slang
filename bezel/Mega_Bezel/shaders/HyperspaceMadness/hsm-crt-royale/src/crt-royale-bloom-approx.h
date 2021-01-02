@@ -33,10 +33,10 @@ const float max_viewport_size_x = 1080.0*1024.0*(4.0/3.0);
 
 ///////////////////////////////  VERTEX INCLUDES  ///////////////////////////////
 
-#include "../../../../../include/compat_macros.inc"
+#include "../../../../../../include/compat_macros.inc"
 #include "../user-settings.h"
 #include "bind-shader-params.h"
-#include "../../../../../include/gamma-management.h"
+#include "../../../../../../include/gamma-management.h"
 #include "derived-settings-and-constants.h"
 #include "scanline-functions.h"
 
@@ -111,9 +111,9 @@ layout(set = 0, binding = 4) uniform sampler2D Original;
 
 //////////////////////////////  FRAGMENT INCLUDES  //////////////////////////////
 
-#include "../../../../../include/blur-functions.h"
+#include "../../../../../../include/blur-functions.h"
 #include "bloom-functions.h"
-#include "../../../../../include/gamma-management.h"
+#include "../../../../../../include/gamma-management.h"
 
 
 ///////////////////////////////////  HELPERS  //////////////////////////////////

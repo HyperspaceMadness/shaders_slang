@@ -76,6 +76,7 @@ filter_linear17 = true
 shader18 = shaders/HyperspaceMadness/hsm-guest/hsm-crt-guest-sm-with-scaling.slang
 filter_linear18 = true
 scale_type18 = viewport
+wrap_mode18 = mirrored_repeat
 alias18 = BR_CRTPass
 
 

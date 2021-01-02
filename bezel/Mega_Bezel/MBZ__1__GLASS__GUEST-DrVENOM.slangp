@@ -222,7 +222,7 @@ shaders = 30
 
 HSM_SCREEN_EDGE_SHARPNESS = "1.000000"
 HSM_TUBE_BLACK_EDGE_THICKNESS = "-0.070000"
-HSM_GLASS_BORDER_SURFACE_IMG_OPACITY = "1.000000"
+HSM_REFLECT_ONLY_IMG_OPACITY = "1.000000"
 HSM_GLASS_BORDER_ON = "1.000000"
 HSM_BZL_WIDTH = "7.500000"
 HSM_BZL_HEIGHT = "6.000000"
@@ -255,7 +255,7 @@ HSM_TOP_BLEND_MODE = "1.000000"
 HSM_TOP_MASK_MODE = "2.000000"
 
 // Define textures to be used by the different passes
-textures = "SamplerLUT1;SamplerLUT2;SamplerLUT3;ColoredGelImage;TubeStaticReflectionImage;GlassBorderSurfaceImage;"
+textures = "SamplerLUT1;SamplerLUT2;SamplerLUT3;ColoredGelImage;TubeStaticReflectionImage;ReflectOnlyLayerImage;"
 
 SamplerLUT1 = shaders/HyperspaceMadness/textures/lut/16.png
 SamplerLUT1_linear = true
@@ -272,6 +272,6 @@ TubeStaticReflectionImage = shaders/HyperspaceMadness/textures/TubeGlassOverlayI
 TubeStaticReflectionImage_mipmap = true
 TubeStaticReflectionImage_linear = true
 
-GlassBorderSurfaceImage = shaders/HyperspaceMadness/textures/TopLayerImageGradient_3840x2160.png
-GlassBorderSurfaceImage_mipmap = true
-GlassBorderSurfaceImage_linear = true
+ReflectOnlyLayerImage = shaders/HyperspaceMadness/textures/TopLayerImageGradient_3840x2160.png
+ReflectOnlyLayerImage_mipmap = true
+ReflectOnlyLayerImage_linear = true

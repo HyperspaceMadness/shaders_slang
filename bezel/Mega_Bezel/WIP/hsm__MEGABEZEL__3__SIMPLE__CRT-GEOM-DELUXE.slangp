@@ -116,7 +116,7 @@ shaders = 14
 
 
 // Define textures to be used by the different passes
-textures = "SamplerLUT1;SamplerLUT2;SamplerLUT3;ColoredGelImage;TubeStaticReflectionImage;GlassBorderSurfaceImage;FrameTextureImage;BackgroundImage;BackgroundVertImage;CabinetGlassImage;BezelImage;BezelVertImage;DecalImage;NightLightingImage;LEDImage;TopLayerImage;TopLayerVertImage;"
+textures = "SamplerLUT1;SamplerLUT2;SamplerLUT3;ColoredGelImage;TubeStaticReflectionImage;ReflectOnlyLayerImage;FrameTextureImage;BackgroundImage;BackgroundVertImage;CabinetGlassImage;BezelImage;BezelVertImage;DecalImage;NightLightingImage;LEDImage;TopLayerImage;TopLayerVertImage;"
 
 SamplerLUT1 = shaders/HyperspaceMadness/textures/lut/16.png
 SamplerLUT1_linear = true
@@ -129,7 +129,7 @@ BackgroundImage = shaders/HyperspaceMadness/textures/BackgroundImage_Carbon_3840
 BackgroundVertImage = shaders/HyperspaceMadness/textures/BackgroundImage_Carbon_3840x2160.png
 ColoredGelImage = shaders/HyperspaceMadness/textures/Transparent_DummyTexture_16x16.png
 TubeStaticReflectionImage = shaders/HyperspaceMadness/textures/TubeGlassOverlayImage_3840x2160.png
-GlassBorderSurfaceImage = shaders/HyperspaceMadness/textures/Transparent_DummyTexture_16x16.pngBezelImage = shaders/HyperspaceMadness/textures/Transparent_DummyTexture_16x16.png
+ReflectOnlyLayerImage = shaders/HyperspaceMadness/textures/Transparent_DummyTexture_16x16.pngBezelImage = shaders/HyperspaceMadness/textures/Transparent_DummyTexture_16x16.png
 BezelVertImage = shaders/HyperspaceMadness/textures/Transparent_DummyTexture_16x16.png
 DecalImage = shaders/HyperspaceMadness/textures/Transparent_DummyTexture_16x16.png
 NightLightingImage = shaders/HyperspaceMadness/textures/NightLighting_3840x2160.jpg

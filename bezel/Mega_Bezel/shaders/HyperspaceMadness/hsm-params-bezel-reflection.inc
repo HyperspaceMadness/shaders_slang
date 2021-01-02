@@ -231,11 +231,17 @@ float HSM_REFLECT_NOISE_SAMPLE_DISTANCE = global.HSM_REFLECT_NOISE_SAMPLE_DISTAN
 #pragma parameter HSM_GLASS_BORDER_ON                       "      Glass Border ON (Glass Preset Only)" 0 0 1 1
 float HSM_GLASS_BORDER_ON = global.HSM_GLASS_BORDER_ON;
 
-#pragma parameter HSM_GLASS_BORDER_SURFACE_IMG_OPACITY 	    "      Surface Image Opacity" 0 0 100 0.1
-float HSM_GLASS_BORDER_SURFACE_IMG_OPACITY = global.HSM_GLASS_BORDER_SURFACE_IMG_OPACITY / 100;
 
-#pragma parameter HSM_GLASS_BORDER_SURFACE_BLEND_MODE 		"      Surface Blend Mode - Off | Norm | Add | Mult"  2 0 3 1
-float HSM_GLASS_BORDER_SURFACE_BLEND_MODE = global.HSM_GLASS_BORDER_SURFACE_BLEND_MODE;
+//---------------------------------------------------------------------------------------------------
+//    REFLECT ONLY IMAGE LAYER
+//---------------------------------------------------------------------------------------------------
+#pragma parameter HSM_REFLECT_ONLY_IMAGE_TITLE	                    "[ REFLECT ONLY IMAGE LAYER ]___________________________________" 0 0 0 0
+
+#pragma parameter HSM_REFLECT_ONLY_IMG_OPACITY 	                    "      Opacity" 0 0 100 0.1
+float HSM_REFLECT_ONLY_IMG_OPACITY = global.HSM_REFLECT_ONLY_IMG_OPACITY / 100;
+
+#pragma parameter HSM_REFLECT_ONLY_IMG_BLEND_MODE 		            "      Blend Mode - Off | Norm | Add | Mult"  2 0 3 1
+float HSM_REFLECT_ONLY_IMG_BLEND_MODE = global.HSM_REFLECT_ONLY_IMG_BLEND_MODE;
 
 
 //---------------------------------------------------------------------------------------------------

@@ -112,7 +112,7 @@ layout(set = 0, binding = 2) uniform sampler2D BR_CRTPass;
 
 layout(set = 0, binding = 5) uniform sampler2D TubeStaticReflectionImage;
 layout(set = 0, binding = 6) uniform sampler2D ColoredGelImage;
-layout(set = 0, binding = 7) uniform sampler2D GlassBorderSurfaceImage;
+layout(set = 0, binding = 7) uniform sampler2D ReflectOnlyLayerImage;
 
 layout(set = 0, binding = 8) uniform sampler2D BR_MirrorBlurredPass;
 layout(set = 0, binding = 9) uniform sampler2D BR_MirrorReflectionDiffusedPass;
@@ -434,11 +434,11 @@ void main()
 
 	frag_color_linear += reflected_color;
 
-	if (HSM_GLASS_BORDER_SURFACE_IMG_OPACITY > 0)
+	if (HSM_REFLECT_ONLY_IMG_OPACITY > 0)
 	{
-		vec4 layer_over_reflection_image = texture(GlassBorderSurfaceImage, VIEWPORT_COORD);
+		vec4 layer_over_reflection_image = texture(ReflectOnlyLayerImage, VIEWPORT_COORD);
 		layer_over_reflection_image.a *= outside_tube_mask_wider * (1 - edge_mask);
-		frag_color_linear = BlendModeLayerMixSimple(frag_color_linear, layer_over_reflection_image, HSM_GLASS_BORDER_SURFACE_BLEND_MODE, HSM_GLASS_BORDER_SURFACE_IMG_OPACITY);
+		frag_color_linear = BlendModeLayerMixSimple(frag_color_linear, layer_over_reflection_image, HSM_REFLECT_ONLY_IMG_BLEND_MODE, HSM_REFLECT_ONLY_IMG_OPACITY);
 		
 		
 		// frag_color_linear += layer_over_reflection_image;

@@ -116,7 +116,7 @@ shaders = 16
 
 
 // Define textures to be used by the different passes
-textures = "SamplerLUT1;SamplerLUT2;SamplerLUT3;ColoredGelImage;TubeStaticReflectionImage;ReflectOnlyLayerImage;"
+textures = "SamplerLUT1;SamplerLUT2;SamplerLUT3;IntroImage;ColoredGelImage;TubeStaticReflectionImage;ReflectOnlyLayerImage;"
 
 SamplerLUT1 = shaders/HyperspaceMadness/textures/lut/16.png
 SamplerLUT1_linear = true
@@ -125,13 +125,19 @@ SamplerLUT2_linear = true
 SamplerLUT3 = shaders/HyperspaceMadness/textures/lut/other1_32.png
 SamplerLUT3_linear = true
 
-ColoredGelImage = shaders/HyperspaceMadness/textures/Transparent_DummyTexture_16x16.png
-TubeStaticReflectionImage = shaders/HyperspaceMadness/textures/TubeGlassOverlayImage_3840x2160.png
-ReflectOnlyLayerImage = shaders/HyperspaceMadness/textures/Transparent_DummyTexture_16x16.png
-ReflectOnlyLayerImage_mipmap = true
-ReflectOnlyLayerImage_linear = true
-parameters = "HSM_INT_SCALE_MODE;HSM_NON_INTEGER_SCALE;HSM_CURVATURE_2D_SCALE_LONG_AXIS;HSM_CURVATURE_2D_SCALE_SHORT_AXIS;HSM_COLOR_CRT_PROFILE;HSM_TUBE_BLACK_EDGE_THICKNESS;HSM_VIEWPORT_VIGNETTE_OPACITY;HSM_BZL_WIDTH;HSM_BZL_HEIGHT;HSM_FRM_OPACITY;HSM_REFLECT_IS_LAST_PASS;LCD_RSUBPIX_R;LCD_GSUBPIX_G;LCD_BSUBPIX_B;LCD_GAIN;LCD_GAMMA;LCD_BLACK_LEVEL;LCD_BGR;"
+IntroImage = shaders/HyperspaceMadness/textures/IntroImage_MegaBezelLogo.png
+IntroImage_linear = false
 
+ColoredGelImage = shaders/HyperspaceMadness/textures/Transparent_DummyTexture_16x16.png
+ColoredGelImage_linear = true
+
+TubeStaticReflectionImage = shaders/HyperspaceMadness/textures/TubeGlassOverlayImage_3840x2160.png
+TubeStaticReflectionImage_linear = true
+
+ReflectOnlyLayerImage = shaders/HyperspaceMadness/textures/TopLayerImageGradient_3840x2160.png
+ReflectOnlyLayerImage_linear = true
+
+// Parameters
 HSM_ASPECT_RATIO_EXPLICIT = 1.5
 
 HSM_INT_SCALE_MODE = 0

@@ -201,8 +201,8 @@ shaders = 21
 
 
 // Define textures to be used by the different passes
-// textures = "mask_grille_texture_small;mask_slot_texture_small;mask_shadow_texture_small;SamplerLUT1;SamplerLUT2;SamplerLUT3;ColoredGelImage;TubeStaticReflectionImage;ReflectOnlyLayerImage;"
-textures = "mask_grille_texture_small;mask_slot_texture_small;mask_shadow_texture_small;SamplerLUT1;SamplerLUT2;SamplerLUT3;ColoredGelImage;TubeStaticReflectionImage;ReflectOnlyLayerImage;FrameTextureImage;BackgroundImage;BackgroundVertImage;CabinetGlassImage;BezelImage;BezelVertImage;DecalImage;NightLightingImage;LEDImage;TopLayerImage;TopLayerVertImage;"
+// textures = "mask_grille_texture_small;mask_slot_texture_small;mask_shadow_texture_small;SamplerLUT1;SamplerLUT2;SamplerLUT3;IntroImage;ColoredGelImage;TubeStaticReflectionImage;ReflectOnlyLayerImage;"
+textures = "mask_grille_texture_small;mask_slot_texture_small;mask_shadow_texture_small;SamplerLUT1;SamplerLUT2;SamplerLUT3;IntroImage;ColoredGelImage;TubeStaticReflectionImage;ReflectOnlyLayerImage;FrameTextureImage;BackgroundImage;BackgroundVertImage;CabinetGlassImage;BezelImage;BezelVertImage;DecalImage;NightLightingImage;LEDImage;TopLayerImage;TopLayerVertImage;"
 
 mask_grille_texture_small = "shaders/HyperspaceMadness/hsm-crt-royale/TileableLinearApertureGrille15Wide8And5d5SpacingResizeTo64.png"
 mask_grille_texture_small_wrap_mode = "repeat"
@@ -225,6 +225,9 @@ SamplerLUT2 = shaders/HyperspaceMadness/textures/lut/64.png
 SamplerLUT2_linear = true
 SamplerLUT3 = shaders/HyperspaceMadness/textures/lut/other1_32.png
 SamplerLUT3_linear = true
+
+IntroImage = shaders/HyperspaceMadness/textures/IntroImage_MegaBezelLogo.png
+IntroImage_linear = false
 
 ColoredGelImage = shaders/HyperspaceMadness/textures/Transparent_DummyTexture_16x16.png
 ColoredGelImage_linear = true

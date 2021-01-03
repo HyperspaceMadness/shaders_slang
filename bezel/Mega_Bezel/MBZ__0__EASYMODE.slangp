@@ -199,7 +199,7 @@ float_framebuffer29 = false
 shaders = 30
 
 // Define textures to be used by the different passes
-textures = "SamplerLUT1;SamplerLUT2;SamplerLUT3;ColoredGelImage;TubeStaticReflectionImage;ReflectOnlyLayerImage;FrameTextureImage;BackgroundImage;BackgroundVertImage;CabinetGlassImage;BezelImage;BezelVertImage;DecalImage;NightLightingImage;LEDImage;TopLayerImage;TopLayerVertImage;"
+textures = "SamplerLUT1;SamplerLUT2;SamplerLUT3;IntroImage;ColoredGelImage;TubeStaticReflectionImage;ReflectOnlyLayerImage;FrameTextureImage;BackgroundImage;BackgroundVertImage;CabinetGlassImage;BezelImage;BezelVertImage;DecalImage;NightLightingImage;LEDImage;TopLayerImage;TopLayerVertImage;"
 
 SamplerLUT1 = shaders/HyperspaceMadness/textures/lut/16.png
 SamplerLUT1_linear = true
@@ -207,6 +207,9 @@ SamplerLUT2 = shaders/HyperspaceMadness/textures/lut/64.png
 SamplerLUT2_linear = true
 SamplerLUT3 = shaders/HyperspaceMadness/textures/lut/other1_32.png
 SamplerLUT3_linear = true
+
+IntroImage = shaders/HyperspaceMadness/textures/IntroImage_MegaBezelLogo.png
+IntroImage_linear = false
 
 ColoredGelImage = shaders/HyperspaceMadness/textures/Transparent_DummyTexture_16x16.png
 ColoredGelImage_linear = true

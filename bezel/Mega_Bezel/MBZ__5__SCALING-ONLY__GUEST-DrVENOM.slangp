@@ -53,7 +53,7 @@ alias6 = GlowPass
 // CRT Shader - Guest-Venom ----------------------------------------------------------------
 //      Guest's Awesome Shader!!!
 //      Has been slightly altered to use the same scaling as the rest of the shders for the bezel & reflection
-shader7 = shaders/HyperspaceMadness/hsm-guest/hsm-crt-guest-dr-venom-with-scaling-mask.slang
+shader7 = shaders/HyperspaceMadness/hsm-guest/hsm-crt-guest-dr-venom-with-scaling.slang
 mipmap_input7 = true
 filter_linear7 = true
 scale_type7 = viewport
@@ -62,11 +62,12 @@ float_framebuffer7 = true
 wrap_mode7 = mirrored_repeat
 alias7 = BR_CRTPass
 
+// Define how many shaders will be used from this list
 shaders = 8
 
 
 // Define textures to be used by the different passes
-textures = "SamplerLUT1;SamplerLUT2;SamplerLUT3;ColoredGelImage;"
+textures = "SamplerLUT1;SamplerLUT2;SamplerLUT3;IntroImage;ColoredGelImage;TubeStaticReflectionImage;"
 
 SamplerLUT1 = shaders/HyperspaceMadness/textures/lut/16.png
 SamplerLUT1_linear = true
@@ -74,8 +75,15 @@ SamplerLUT2 = shaders/HyperspaceMadness/textures/lut/64.png
 SamplerLUT2_linear = true
 SamplerLUT3 = shaders/HyperspaceMadness/textures/lut/other1_32.png
 SamplerLUT3_linear = true
+
+IntroImage = shaders/HyperspaceMadness/textures/IntroImage_MegaBezelLogo.png
+IntroImage_linear = false
+
 ColoredGelImage = shaders/HyperspaceMadness/textures/Transparent_DummyTexture_16x16.png
+ColoredGelImage_linear = true
 
-parameters = "HSM_CRT_IS_LAST_PASS"
+TubeStaticReflectionImage = shaders/HyperspaceMadness/textures/TubeGlassOverlayImage_3840x2160.png
+TubeStaticReflectionImage_linear = true
 
+// Parameters
 HSM_CRT_IS_LAST_PASS = 1

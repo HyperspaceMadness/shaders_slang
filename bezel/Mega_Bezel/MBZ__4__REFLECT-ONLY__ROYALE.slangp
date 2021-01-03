@@ -3,7 +3,7 @@
 //      Add Color Correction
 //      Calculate Average Luminance and put in alpha channel
 //      Debug Drawing of the resolution & screen scaling info
-shader0 = shaders/HyperspaceMadness/hsm-prep-initial.slang
+shader0 = shaders/HyperspaceMadness/hsm-prep-initial-reflection-only.slang
 float_framebuffer0 = true
 
 // Color Correction with Dogway's awesome Grade shader

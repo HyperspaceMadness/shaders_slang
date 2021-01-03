@@ -21,9 +21,47 @@ layout(location = 0) in vec2 vTexCoord;
 layout(location = 0) out vec4 FragColor;
 layout(set = 0, binding = 2) uniform sampler2D Source;
 layout(set = 0, binding = 3) uniform sampler2D PassFeedback6;
+layout(set = 0, binding = 4) uniform sampler2D IntroImage;
 
 #define eps 1e-3
 
+/* Composite one image over top another using the alpha to blend
+ * It is expected that the input colors have been already premultiplied
+ * which means their rgb has already been multiplied by their alpha */
+vec4 PreMultAlphaBlend(vec4 color_under, vec4 color_over)
+{
+	vec4 out_color = vec4(color_over.rgb + (color_under.rgb * (1 - color_over.a)), clamp(color_under.a + color_over.a, 0, 1));
+	return out_color;
+}
+
+// Assumes Opacity is already encoded in alpha
+vec4 BlendModeLayerMix(vec4 color_under, vec4 color_over, float blend_mode, float layer_opacity)
+{
+	if (blend_mode == 0)
+		return color_under;
+
+	if (blend_mode == BLEND_MODE_OFF)
+		return color_under;
+	
+	color_over.a *= layer_opacity;
+
+	vec4 out_color = vec4(0);
+
+	if (blend_mode == BLEND_MODE_NORMAL)
+	{
+		color_over.rgb *= color_over.a;
+		out_color = PreMultAlphaBlend(color_under, color_over);
+	}
+	else
+	{
+		vec4 blend_color = color_under; 
+		if (blend_mode == BLEND_MODE_ADD)  	 		blend_color.rgb = color_under.rgb + color_over.rgb ;
+		if (blend_mode == BLEND_MODE_MULTIPLY)  	blend_color.rgb = color_under.rgb * color_over.rgb ;
+
+		out_color = vec4(clamp(mix(color_under.rgb, blend_color.rgb, color_over.a), 0, 1), color_under.a);
+	}
+	return out_color;
+}
 
 float GetAverageLuma()
 {
@@ -109,7 +147,31 @@ vec4 AddText(vec2 in_coord, vec4 in_color)
 
 void main()
 {
+   vec2 intro_image_res = vec2(HSM_INTRO_IMAGE_RES_X, HSM_INTRO_IMAGE_RES_Y);
+   vec2 intro_image_scale = intro_image_res / global.OriginalSize.xy;
+   vec2 coord_in_intro_image = 1 - ((1 - vTexCoord) / intro_image_scale);
+
    FragColor = texture(Source, vTexCoord);
+
+   vec4 intro_image = texture(IntroImage, coord_in_intro_image);
+   float logo_opacity = 0;
+   float initial_wait = 20;
+   float visible_wait = 30;
+   float fade_in_time = 50;
+   float fade_out_time = 50;
+   if (global.FrameCount > initial_wait && global.FrameCount <= initial_wait + fade_in_time)
+      logo_opacity =  (global.FrameCount - initial_wait) / fade_in_time;
+   if (global.FrameCount > initial_wait + fade_in_time && global.FrameCount <= initial_wait + fade_in_time + visible_wait) 
+      logo_opacity =  1;
+   if (global.FrameCount > initial_wait + fade_in_time + visible_wait) 
+      logo_opacity =  1 - clamp((global.FrameCount - (initial_wait + fade_in_time + visible_wait)) / fade_out_time, 0, 1);
+   
+   // if (global.FrameCount < fade_in_time)
+   // logo_opacity = mod(global.FrameCount, fade_in_time)/fade_in_time;
+
+   FragColor = BlendModeLayerMix(FragColor, intro_image, HSM_INTRO_IMAGE_BLEND_MODE, logo_opacity);
+
+
 
    // Apply black level & gamma with input as non linearized
    FragColor = HSM_ApplyBlackLevel(FragColor, 0);

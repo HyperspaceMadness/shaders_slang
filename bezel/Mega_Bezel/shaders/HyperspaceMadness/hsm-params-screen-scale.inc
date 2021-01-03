@@ -175,12 +175,29 @@ float HSM_CURVATURE_3D_TILT_ANGLE_X = global.HSM_CURVATURE_3D_TILT_ANGLE_X;
 float HSM_CURVATURE_3D_TILT_ANGLE_Y = global.HSM_CURVATURE_3D_TILT_ANGLE_Y;
 
 
+
+//---------------------------------------------------------------------------------------------------
+//    INTRO IMAGE
+//---------------------------------------------------------------------------------------------------
+#pragma parameter HSM_INTRO_IMAGE_TITLE					"[ INTRO IMAGE ]________________________________________________" 0 0 0 0
+
+#pragma parameter HSM_INTRO_IMAGE_BLEND_MODE        	"      Blend Mode - Off | Norm | Add | Mult"  1 0 3 1
+#define HSM_INTRO_IMAGE_BLEND_MODE global.HSM_INTRO_IMAGE_BLEND_MODE
+
+#pragma parameter HSM_INTRO_IMAGE_RES_X        			"      Res X"  128 0 640 2
+#define HSM_INTRO_IMAGE_RES_X global.HSM_INTRO_IMAGE_RES_X
+
+#pragma parameter HSM_INTRO_IMAGE_RES_Y        			"      Res Y"  128 0 640 2
+#define HSM_INTRO_IMAGE_RES_Y global.HSM_INTRO_IMAGE_RES_Y
+
+
+
 //---------------------------------------------------------------------------------------------------
 //    PHOSPHOR PERSISTENCE
 //---------------------------------------------------------------------------------------------------
-#pragma parameter HSM_PERSISTENCE_TITLE				"[ PHOSPHOR PERSISTENCE ]_______________________________________" 0 0 0 0
+#pragma parameter HSM_PERSISTENCE_TITLE					"[ PHOSPHOR PERSISTENCE ]_______________________________________" 0 0 0 0
 
-#pragma parameter HSM_PHOSPHOR_PERSISTENCE          "      Phosphor Persistence - Positive:Neutral, Negative:Blue" 0 -1 1 0.05
+#pragma parameter HSM_PHOSPHOR_PERSISTENCE          	"      Phosphor Persistence - Positive:Neutral, Negative:Blue" 0 -1 1 0.05
 #define HSM_PHOSPHOR_PERSISTENCE global.HSM_PHOSPHOR_PERSISTENCE
 
 
@@ -209,6 +226,8 @@ float HSM_CURVATURE_3D_TILT_ANGLE_Y = global.HSM_CURVATURE_3D_TILT_ANGLE_Y;
 #pragma parameter HSM_SCREEN_VIGNETTE_IN_REFLECTION     "      Screen Vignette  Opacity in Reflection" 0 0 1 1
 float HSM_SCREEN_VIGNETTE_IN_REFLECTION = global.HSM_SCREEN_VIGNETTE_IN_REFLECTION;
 
+
+
 //---------------------------------------------------------------------------------------------------
 //    SCREEN EDGE
 //---------------------------------------------------------------------------------------------------
@@ -222,7 +241,6 @@ float HSM_SCREEN_VIGNETTE_IN_REFLECTION = global.HSM_SCREEN_VIGNETTE_IN_REFLECTI
 
 #pragma parameter HSM_TUBE_BLACK_EDGE_THICKNESS 		"      Black Border Thickness - Def 1" 1 -2 8 0.05
 #define HSM_TUBE_BLACK_EDGE_THICKNESS global.HSM_TUBE_BLACK_EDGE_THICKNESS
-
 
 
 
@@ -250,6 +268,8 @@ float HSM_TUBE_STATIC_REFLECTION_IMAGE_SCALE = global.HSM_TUBE_STATIC_REFLECTION
 
 #pragma parameter HSM_CRT_IS_LAST_PASS 							"      CRT is Last Pass" 0 0 1 1
 #define HSM_CRT_IS_LAST_PASS global.HSM_CRT_IS_LAST_PASS
+
+
 
 //---------------------------------------------------------------------------------------------------
 //    Tube / Inner Bezel Curvature

@@ -22,8 +22,8 @@ layout(push_constant) uniform Push
     float LCD_BGR;
 } param;
 
-#pragma parameter LCD_TITLE	        "[ --- LCD GRID V2 --- ]________________________________________" 0 0 0 0
-#pragma parameter LCD_SUBPIX_TITLE	"[ SUBPIXEL COLORS ]____________________________________________" 0 0 0 0
+#pragma parameter LCD_TITLE	        "[ --- LCD GRID V2 --- ]________________________________________" 0 0 1 1
+#pragma parameter LCD_SUBPIX_TITLE	"[ SUBPIXEL COLORS ]____________________________________________" 0 0 1 1
 #pragma parameter LCD_RSUBPIX_R     "      Colour of R subpixel: R" 1.0 0.0 1.0 0.01
 #pragma parameter LCD_RSUBPIX_G     "      Colour of R subpixel: G" 0.0 0.0 1.0 0.01
 #pragma parameter LCD_RSUBPIX_B     "      Colour of R subpixel: B" 0.0 0.0 1.0 0.01
@@ -33,7 +33,7 @@ layout(push_constant) uniform Push
 #pragma parameter LCD_BSUBPIX_R     "      Colour of B subpixel: R" 0.0 0.0 1.0 0.01
 #pragma parameter LCD_BSUBPIX_G     "      Colour of B subpixel: G" 0.0 0.0 1.0 0.01
 #pragma parameter LCD_BSUBPIX_B     "      Colour of B subpixel: B" 1.0 0.0 1.0 0.01
-#pragma parameter LCD_BRIGHT_TITLE	"[ BRIGHTNESS & GAMMA ]_________________________________________" 0 0 0 0
+#pragma parameter LCD_BRIGHT_TITLE	"[ BRIGHTNESS & GAMMA ]_________________________________________" 0 0 1 1
 #pragma parameter LCD_GAIN          "      Gain"                    1.0 0.5 2.0 0.05
 #pragma parameter LCD_GAMMA         "      LCD Gamma"               3.0 0.5 5.0 0.1
 #pragma parameter LCD_BLACK_LEVEL   "      Black level"            0.05 0.0 0.5 0.01

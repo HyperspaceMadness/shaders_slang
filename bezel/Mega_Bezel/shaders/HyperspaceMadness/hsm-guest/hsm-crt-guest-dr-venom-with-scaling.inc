@@ -114,7 +114,7 @@ layout(std140, set = 0, binding = 0) uniform UBO
 #pragma parameter GDV_BLOOM_STRENGTH 				"      Bloom Strength" 0.1 0 2 0.05
 #define bloom          params.GDV_BLOOM_STRENGTH     // bloom effect
 
-#pragma parameter GDV_BRIGHTNESS_TITLE				"[ BRIGHTNESS ]_________________________________________________" 0 0 0 0
+#pragma parameter GDV_BRIGHTNESS_TITLE				"[ BRIGHTNESS ]_________________________________________________" 0 0 1 1
 
 #pragma parameter GDV_BRIGHT_BOOST_DARK_COLORS 		"      Boost Dark Colors" 1.40 0.50 4.00 0.05
 #define brightboost  params.GDV_BRIGHT_BOOST_DARK_COLORS     // adjust brightness
@@ -123,7 +123,7 @@ layout(std140, set = 0, binding = 0) uniform UBO
 #define brightboost1  params.GDV_BRIGHT_BOOST_BRIGHT_COLORS     // adjust brightness
 
 
-#pragma parameter GDV_SCANLINE_TITLE	"[ SCANLINE ]___________________________________________________" 0 0 0 0
+#pragma parameter GDV_SCANLINE_TITLE	"[ SCANLINE ]___________________________________________________" 0 0 1 1
 
 #pragma parameter GDV_SCANLINE_TYPE "      Type" 0.0 0.0 2.0 1.0
 #define gsl          params.GDV_SCANLINE_TYPE      // Alternate scanlines
@@ -153,7 +153,7 @@ layout(std140, set = 0, binding = 0) uniform UBO
 #define vertmask     params.GDV_PVM_LIKE_COLORS     // Vertical mask
 
 
-#pragma parameter GDV_SHARPNESS_TITLE	"[ SHARPNESS ]__________________________________________________" 0 0 0 0
+#pragma parameter GDV_SHARPNESS_TITLE	"[ SHARPNESS ]__________________________________________________" 0 0 1 1
 
 #pragma parameter GDV_HORIZONTAL_SHARPNESS "      Horizontal Sharpness" 5.25 1.0 15.0 0.25
 #define h_sharp      params.GDV_HORIZONTAL_SHARPNESS     // pixel sharpness
@@ -162,7 +162,7 @@ layout(std140, set = 0, binding = 0) uniform UBO
 #define s_sharp      params.GDV_SUBTRACTIVE_SHARPNESS     // subtractive sharpness
 
 // HSM Modified, Turned Interlace Mode Off, some parameters moved from global to params 
-#pragma parameter GDV_INTERLACE_TITLE	"[ INTERLACE ]__________________________________________________" 0 0 0 0
+#pragma parameter GDV_INTERLACE_TITLE	"[ INTERLACE ]__________________________________________________" 0 0 1 1
 #pragma parameter GDV_INTERLACE_MODE "      Interlace Mode at Trigger Res  - OFF | ON | Blend | Sharp" 3 0 3 1
 #define interlace_mode         params.GDV_INTERLACE_MODE     // interlace mode 
 
@@ -181,7 +181,7 @@ layout(std140, set = 0, binding = 0) uniform UBO
 // #define glow         params.glow     // Glow Strength
 
 
-#pragma parameter GDV_MASK_TITLE		"[ MASK ]_______________________________________________________" 0 0 0 0
+#pragma parameter GDV_MASK_TITLE		"[ MASK ]_______________________________________________________" 0 0 1 1
 
 #pragma parameter GDV_MASK_TYPE 		"      Type - 0:CGWG, 1-4:Lottes, 5-6:Trinitron" 7 -1 7 1
 #define shadowMask   params.GDV_MASK_TYPE     // Mask Style
@@ -203,7 +203,7 @@ layout(std140, set = 0, binding = 0) uniform UBO
 
 
 // Slotmask
-#pragma parameter GDV_SLOTMASK_TITLE	"[ SLOTMASK ]___________________________________________________" 0 0 0 0
+#pragma parameter GDV_SLOTMASK_TITLE	"[ SLOTMASK ]___________________________________________________" 0 0 1 1
 
 #pragma parameter GDV_SLOTMASK_STRENGTH "      Strength - Def 0" 0 0.0 1.0 0.05
 #define slotmask     params.GDV_SLOTMASK_STRENGTH     // Slot Mask ON/OFF

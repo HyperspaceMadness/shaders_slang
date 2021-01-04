@@ -96,7 +96,7 @@ layout(push_constant) uniform Push
 #pragma parameter GSM_BLOOM_STRENGTH 	"      Bloom Strength" 0.40 0.0 2.0 0.05
 #define bloom params.GSM_BLOOM_STRENGTH
 
-#pragma parameter GDV_BRIGHTNESS_TITLE				"[ BRIGHTNESS ]_________________________________________________" 0 0 0 0
+#pragma parameter GDV_BRIGHTNESS_TITLE				"[ BRIGHTNESS ]_________________________________________________" 0 0 1 1
 
 #pragma parameter GSM_AUTO_BRIGHTNESS 	"      Automatic Brightness (Mask)" 0.5 0.0 1.0 0.1
 #define autobrm params.GSM_AUTO_BRIGHTNESS
@@ -112,7 +112,7 @@ layout(push_constant) uniform Push
 #define brightboost2 params.GSM_BRIGHT_BOOST_BRIGHT_COLORS
 
 
-#pragma parameter GDV_SCANLINE_TITLE				"[ SCANLINE ]___________________________________________________" 0 0 0 0
+#pragma parameter GDV_SCANLINE_TITLE				"[ SCANLINE ]___________________________________________________" 0 0 1 1
 
 #pragma parameter GSM_SCANLINE_TYPE 				"      Type" 1.0 0.0 3.0 1.0
 #define stype params.GSM_SCANLINE_TYPE
@@ -136,7 +136,7 @@ layout(push_constant) uniform Push
 #define s_beam params.GSM_SCANLINE_OVERGROWN_BRIGHT_BEAM
 
 
-#pragma parameter GDV_SHARPNESS_TITLE				"[ SHARPNESS ]__________________________________________________" 0 0 0 0
+#pragma parameter GDV_SHARPNESS_TITLE				"[ SHARPNESS ]__________________________________________________" 0 0 1 1
 
 #pragma parameter GSM_HORIZONTAL_SHARPNESS 			"      Horizontal Sharpness" 3.0 1.0 10.0 0.10
 #define h_sharp params.GSM_HORIZONTAL_SHARPNESS
@@ -145,7 +145,7 @@ layout(push_constant) uniform Push
 #define cubic params.GSM_SCANLINE_CUBIC_FILTERING
 
 
-#pragma parameter GDV_MASK_TITLE					"[ MASK ]_______________________________________________________" 0 0 0 0
+#pragma parameter GDV_MASK_TITLE					"[ MASK ]_______________________________________________________" 0 0 1 1
 
 #pragma parameter GSM_MASK_TYPE 					"      Type (4&5 are 4k masks)" 0.0 0.0 5.0 1.0
 #define mask params.GSM_MASK_TYPE

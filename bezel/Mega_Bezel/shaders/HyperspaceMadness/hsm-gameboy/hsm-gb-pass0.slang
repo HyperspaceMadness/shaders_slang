@@ -19,7 +19,7 @@ layout(push_constant) uniform Push
 // Config                                                                     //
 ////////////////////////////////////////////////////////////////////////////////
 
-#pragma parameter GBY_TITLE	"[ --- GAMEBOY --- ]____________________________________________" 0 0 0 0
+#pragma parameter GBY_TITLE	"[ --- GAMEBOY --- ]____________________________________________" 0 0 1 1
 
 // The alpha value of dots in their "off" state
 // Does not affect the border region of the screen - [0, 1]

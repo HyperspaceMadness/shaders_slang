@@ -40,17 +40,18 @@ scale_y12 = 1.0
 filter_linear12 = false
 float_framebuffer12 = true
 
-// //NTSC passes added here so you can swap out with GTU
-// shader12 = shaders/HyperspaceMadness/hsm-ntsc-adaptive/hsm-ntsc-pass1.slang
-// scale_type12 = source
-// scale_x12 = 4.0
-// filter_linear12 = false
-// float_framebuffer12 = true
+// shader11 = :\shaders\shaders_slang\ntsc\shaders\ntsc-adaptive\ntsc-pass1.slang
+// scale_type11 = source
+// scale_x11 = 4.0
+// filter_linear11 = false
+// scale_type11 = 1.0
+// float_framebuffer11 = true
 
-// shader13 = shaders/HyperspaceMadness/hsm-ntsc-adaptive/hsm-ntsc-pass2.slang
-// scale_type13 = source
-// scale_x13 = 0.25
-// filter_linear13 = false
+// shader12 = :\shaders\shaders_slang\ntsc\shaders\ntsc-adaptive\ntsc-pass2.slang
+// scale_type12 = source
+// scale_x12 = 0.5
+// scale_y12 = 1.0
+// filter_linear12 = false
 
 shader13 = :/shaders/shaders_slang/stock.slang
 shader14 = :/shaders/shaders_slang/stock.slang

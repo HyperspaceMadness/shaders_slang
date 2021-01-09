@@ -35,16 +35,19 @@ float_framebuffer12 = true
 
 shader13 = shaders/HyperspaceMadness/hsm-gtu/hsm-gtu-pass2.slang
 
-// //NTSC passes added here so you can swap out with GTU
-// shader12 = shaders/HyperspaceMadness/hsm-ntsc-adaptive/hsm-ntsc-pass1.slang
+// // NTSC passes added here so you can swap out with GTU
+
+// shader12 = :\shaders\shaders_slang\ntsc\shaders\ntsc-adaptive\ntsc-pass1.slang
 // scale_type12 = source
 // scale_x12 = 4.0
 // filter_linear12 = false
+// scale_type12 = 1.0
 // float_framebuffer12 = true
 
-// shader13 = shaders/HyperspaceMadness/hsm-ntsc-adaptive/hsm-ntsc-pass2.slang
+// shader13 = :\shaders\shaders_slang\ntsc\shaders\ntsc-adaptive\ntsc-pass2.slang
 // scale_type13 = source
-// scale_x13 = 0.25
+// scale_x13 = 0.5
+// scale_y13 = 1.0
 // filter_linear13 = false
 
 // Linearize Color ----------------------------------------------------------------

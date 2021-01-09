@@ -17,12 +17,12 @@ shader4 = shaders/HyperspaceMadness/hsm-mdapt/hsm-mdapt-pass2.slang
 shader5 = shaders/HyperspaceMadness/hsm-mdapt/hsm-mdapt-pass3.slang
 shader6 = shaders/HyperspaceMadness/hsm-mdapt/hsm-mdapt-pass4.slang
 
+// SGENDPT - Hyllian's great de-dither shader
 shader7 = shaders/HyperspaceMadness/hsm-sgenpt-mix/hsm-sgenpt-mix.slang
+shader8 = shaders/HyperspaceMadness/hsm-sgenpt-mix/hsm-sgenpt-mix-pass2.slang
 
-shader8 = shaders/HyperspaceMadness/hsm-ps1dither/hsm-PS1-Undither-BoxBlur.slang
-alias8 = refpass
-
-shader9 = :/shaders/shaders_slang/stock.slang
+shader9 = shaders/HyperspaceMadness/hsm-ps1dither/hsm-PS1-Undither-BoxBlur.slang
+alias9 = refpass
 
 shader10 = shaders/HyperspaceMadness/hsm-scalefx/hsm-scalefx-pass0.slang
 filter_linear10 = false
@@ -50,7 +50,7 @@ scale13 = 1.0
 shader14 = shaders/HyperspaceMadness/hsm-scalefx/hsm-scalefx-pass4.slang
 filter_linear14 = false
 scale_type14 = source
-scale14 = 3
+scale14 = 1
 
 // GTU TV Processing
 shader15 = shaders/HyperspaceMadness/hsm-gtu/hsm-gtu-pass1.slang
@@ -66,16 +66,27 @@ scale_y16 = 1.0
 filter_linear16 = false
 float_framebuffer16 = true
 
-// //NTSC passes added here so you can swap out with GTU
-// shader15 = shaders/HyperspaceMadness/hsm-ntsc-adaptive/hsm-ntsc-pass1.slang
+// // NTSC passes added here so you can swap out with GTU
+// // To use the ntsc-adaptive you will need to comment out the scale-fx passes
+// // and uncomment the following
+
+// shader10 = :/shaders/shaders_slang/stock.slang
+// shader11 = :/shaders/shaders_slang/stock.slang
+// shader12 = :/shaders/shaders_slang/stock.slang
+// shader13 = :/shaders/shaders_slang/stock.slang
+// shader14 = :/shaders/shaders_slang/stock.slang
+
+// shader15 = :\shaders\shaders_slang\ntsc\shaders\ntsc-adaptive\ntsc-pass1.slang
 // scale_type15 = source
 // scale_x15 = 4.0
 // filter_linear15 = false
+// scale_type15 = 1.0
 // float_framebuffer15 = true
 
-// shader16 = shaders/HyperspaceMadness/hsm-ntsc-adaptive/hsm-ntsc-pass2.slang
+// shader16 = :\shaders\shaders_slang\ntsc\shaders\ntsc-adaptive\ntsc-pass2.slang
 // scale_type16 = source
-// scale_x16 = 0.25
+// scale_x16 = 0.5
+// scale_y16 = 1.0
 // filter_linear16 = false
 
 // Linearize Color ----------------------------------------------------------------
@@ -89,8 +100,6 @@ alias17 = LinearizePass
 // Guest-Venom Pass ----------------------------------------------------------------
 shader18 = shaders/HyperspaceMadness/hsm-guest/hsm-guest-linearize_scanlines.slang
 filter_linear18 = true
-scale_type18 = source
-scale18 = 1
 float_framebuffer18 = true
 
 // Reduce resolution to a small consistent size so blur is consistent between different core resolutions
@@ -110,6 +119,7 @@ scale20 = 1
 float_framebuffer20 = true
 
 // Guest-Venom Pass ----------------------------------------------------------------
+// This pass must use float framebuffer to avoid banding artifacts 
 shader21 = shaders/HyperspaceMadness/hsm-guest/hsm-guest-blur_vert.slang
 mipmap_input21 = true
 filter_linear21 = true
@@ -125,15 +135,12 @@ shader22 = shaders/HyperspaceMadness/hsm-guest/hsm-crt-guest-dr-venom-with-scali
 mipmap_input22 = true
 filter_linear22 = true
 scale_type22 = viewport
-scale22 = 1.0
-float_framebuffer22 = true
 wrap_mode22 = mirrored_repeat
 alias22 = BR_CRTPass
 
 // Tube Scale Curvature Mapping
 // Write mapping into the pass, of the 4 channels, x & y are tube warped coord and z & w are outside tube mask and edge mask
 shader23 = shaders/HyperspaceMadness/hsm-curvature-mapping.slang
-mipmap_input23 = true
 filter_linear23 = true
 scale_type23 = viewport
 float_framebuffer23 = true
@@ -147,7 +154,6 @@ shader24 = shaders/HyperspaceMadness/hsm-linearize-crt.slang
 mipmap_input24 = true
 filter_linear24 = true
 scale_type24 = absolute
-float_framebuffer24 = true
 // scale_x24 = 480
 // scale_y24 = 270
 // scale_x24 = 960
@@ -155,23 +161,17 @@ float_framebuffer24 = true
 scale_x24 = 800
 scale_y24 = 600
 wrap_mode24 = mirrored_repeat
-float_framebuffer24 = true
 alias24 = BR_MirrorLowResPass
 
 // Add Blur for the Reflection (Horizontal) ----------------------------------------------------------------
 shader25 = shaders/HyperspaceMadness/hsm-blur-outside-screen-horiz.slang
 mipmap_input25 = true
 filter_linear25 = true
-float_framebuffer25 = true
-scale_type26 = source
 wrap_mode25 = mirrored_repeat
 
 // Add Blur for the Reflection (Vertical) ----------------------------------------------------------------
 shader26 = shaders/HyperspaceMadness/hsm-blur-outside-screen-vert.slang
-filter_linear26 = false
-scale_type26 = source
-float_framebuffer26 = true
-wrap_mode26 = mirrored_repeat
+filter_linear25 = true
 alias26 = BR_MirrorBlurredPass
 
 // Reduce resolution ----------------------------------------------------------------
@@ -181,7 +181,6 @@ shader27 = :/shaders/shaders_slang/blurs/blur9x9.slang
 mipmap_input27 = true
 filter_linear27 = true
 scale_type27 = absolute
-float_framebuffer27 = true
 scale_x27 = 128
 scale_y27 = 128
 wrap_mode27 = mirrored_repeat
@@ -194,7 +193,6 @@ shader28 = :/shaders/shaders_slang/blurs/blur9x9.slang
 mipmap_input28 = true
 filter_linear28 = true
 scale_type28 = absolute
-float_framebuffer28 = true
 scale_x28 = 12
 scale_y28 = 12
 wrap_mode28 = mirrored_repeat
@@ -210,8 +208,6 @@ alias28 = BR_MirrorFullscreenGlowPass
 //      Blur passes are in linearized color space, and CRT Pass already has gamma encoded in it
 
 shader29 = shaders/HyperspaceMadness/hsm-bezel-reflection.slang
-mipmap_input29 = true
-filter_linear29 = true
 scale_type29 = viewport
 float_framebuffer29 = true
 alias29 = BR_CRTAndReflectionPass

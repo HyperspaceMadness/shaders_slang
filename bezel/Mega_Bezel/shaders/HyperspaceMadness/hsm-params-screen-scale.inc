@@ -10,9 +10,6 @@ Description:
 // Screen Scale Required Parameters
 #pragma parameter HSM_MEGA_BEZEL_TITLE					"[ --- HSM MEGA BEZEL  ALPHA.2020-12-15-0 --- ]_________________" 0 0 1 1
 
-#pragma parameter HSM_RESOLUTION_DEBUG_ON				"      Show Resolution Info" 0 0 1 1
-float HSM_RESOLUTION_DEBUG_ON = global.HSM_RESOLUTION_DEBUG_ON;
-
 //---------------------------------------------------------------------------------------------------
 //    FLIP & ROTATE
 //---------------------------------------------------------------------------------------------------
@@ -47,6 +44,9 @@ float HSM_ASPECT_RATIO_EXPLICIT = global.HSM_ASPECT_RATIO_EXPLICIT;
 //    SCALING
 //---------------------------------------------------------------------------------------------------
 #pragma parameter HSM_SCALING_TITLE						"[ SCALING ]____________________________________________________" 0 0 1 1
+
+#pragma parameter HSM_RESOLUTION_DEBUG_ON				"      Show Resolution Info" 0 0 1 1
+float HSM_RESOLUTION_DEBUG_ON = global.HSM_RESOLUTION_DEBUG_ON;
 
 #pragma parameter HSM_INT_SCALE_MODE 					"      Int Scale Mode - OFF | ShortAxis | BothAxes" 0 0 2 1
 #define HSM_INT_SCALE_MODE global.HSM_INT_SCALE_MODE
@@ -190,6 +190,17 @@ float HSM_CURVATURE_3D_TILT_ANGLE_Y = global.HSM_CURVATURE_3D_TILT_ANGLE_Y;
 #pragma parameter HSM_INTRO_IMAGE_RES_Y        			"      Res Y"  128 0 640 2
 #define HSM_INTRO_IMAGE_RES_Y global.HSM_INTRO_IMAGE_RES_Y
 
+#pragma parameter HSM_INTRO_IMAGE_TIME_INITIAL_WAIT     "      Initial Wait Time (Frames)"  120 0 1200 10
+#define HSM_INTRO_IMAGE_TIME_INITIAL_WAIT global.HSM_INTRO_IMAGE_TIME_INITIAL_WAIT
+
+#pragma parameter HSM_INTRO_IMAGE_TIME_FADE_IN       	"      Fade In Time"  60 0 600 10
+#define HSM_INTRO_IMAGE_TIME_FADE_IN global.HSM_INTRO_IMAGE_TIME_FADE_IN
+
+#pragma parameter HSM_INTRO_IMAGE_TIME_HOLD     		"      Hold Time"  30 0 600 10
+#define HSM_INTRO_IMAGE_TIME_HOLD global.HSM_INTRO_IMAGE_TIME_HOLD
+
+#pragma parameter HSM_INTRO_IMAGE_TIME_FADE_OUT       	"      Fade Out Time"  80 0 600 10
+#define HSM_INTRO_IMAGE_TIME_FADE_OUT global.HSM_INTRO_IMAGE_TIME_FADE_OUT
 
 
 //---------------------------------------------------------------------------------------------------

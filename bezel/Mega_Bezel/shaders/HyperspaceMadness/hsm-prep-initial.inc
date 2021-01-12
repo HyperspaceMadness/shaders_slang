@@ -108,31 +108,131 @@ vec4 AddText(vec2 in_coord, vec4 in_color)
    return clamp(out_color, 0, 1);
 }
 
-void main()
+// -----------------------------------------------------------------------------
+// TV Startup Static Animation
+// -----------------------------------------------------------------------------
+vec4 GetColorWithIntro(vec4 in_color, vec2 in_coord)
 {
-   vec2 intro_image_res = vec2(HSM_INTRO_IMAGE_RES_X, HSM_INTRO_IMAGE_RES_Y);
-   vec2 intro_image_scale = intro_image_res / global.OriginalSize.xy;
-   vec2 coord_in_intro_image = 1 - ((1 - vTexCoord) / intro_image_scale);
+   vec4 out_color = in_color;
 
-   FragColor = texture(Source, vTexCoord);
-
-   // float frame_count = mod(global.FrameCount, 360);
    float frame_count = global.FrameCount;
 
-   if (frame_count <= HSM_INTRO_IMAGE_TIME_INITIAL_WAIT + HSM_INTRO_IMAGE_TIME_FADE_IN + HSM_INTRO_IMAGE_TIME_HOLD + HSM_INTRO_IMAGE_TIME_FADE_OUT)
-   {
-      vec4 intro_image = texture(IntroImage, coord_in_intro_image);
-      float logo_opacity = 0;
-      if (frame_count > HSM_INTRO_IMAGE_TIME_INITIAL_WAIT && frame_count <= HSM_INTRO_IMAGE_TIME_INITIAL_WAIT + HSM_INTRO_IMAGE_TIME_FADE_IN)
-         logo_opacity =  (frame_count - HSM_INTRO_IMAGE_TIME_INITIAL_WAIT) / HSM_INTRO_IMAGE_TIME_FADE_IN;
-      if (frame_count > HSM_INTRO_IMAGE_TIME_INITIAL_WAIT + HSM_INTRO_IMAGE_TIME_FADE_IN && frame_count <= HSM_INTRO_IMAGE_TIME_INITIAL_WAIT + HSM_INTRO_IMAGE_TIME_FADE_IN + HSM_INTRO_IMAGE_TIME_HOLD) 
-         logo_opacity =  1;
-      if (frame_count > HSM_INTRO_IMAGE_TIME_INITIAL_WAIT + HSM_INTRO_IMAGE_TIME_FADE_IN + HSM_INTRO_IMAGE_TIME_HOLD) 
-         logo_opacity =  1 - clamp((frame_count - (HSM_INTRO_IMAGE_TIME_INITIAL_WAIT + HSM_INTRO_IMAGE_TIME_FADE_IN + HSM_INTRO_IMAGE_TIME_HOLD)) / HSM_INTRO_IMAGE_TIME_FADE_OUT, 0, 1);
-      
-      FragColor = HSM_BlendModeLayerMix(FragColor, intro_image, HSM_INTRO_IMAGE_BLEND_MODE, logo_opacity);
-   }
+   // Loop the animation so we can see the results
+   if (HSM_INTRO_WHEN_TO_SHOW == 2)
+      frame_count = mod(frame_count, HSM_INTRO_REPEAT_TIME);
 
+   float mask_wait = 20 / HSM_INTRO_SPEED;
+   
+	float mask_fade_horizontal = 40 / HSM_INTRO_SPEED;
+	float mask_fade_vertical = 60 / HSM_INTRO_SPEED;
+	float mask_vert_wait = mask_fade_horizontal * 0.4;
+
+   vec4 solid_color = vec4(HSM_HSVtoRGB(vec3(HSM_INTRO_SOLID_COLOR_HUE, HSM_INTRO_SOLID_COLOR_SAT, HSM_INTRO_SOLID_COLOR_VALUE)), 1);
+   // vec4 solid_color = HSM_Linearize(vec4(HSM_HSVtoRGB(vec3(HSM_BZL_COLOR_HUE, HSM_BZL_COLOR_SATURATION, HSM_BZL_COLOR_VALUE)), 1), HSM_DEFAULT_SRGB_GAMMA).rgb;
+
+	float solid_color_hold = HSM_INTRO_SOLID_COLOR_HOLD / HSM_INTRO_SPEED;
+	float solid_color_fade_out = HSM_INTRO_SOLID_COLOR_FADE_OUT / HSM_INTRO_SPEED;
+
+   float intro_logo_wait = HSM_INTRO_LOGO_WAIT / HSM_INTRO_SPEED;
+   float intro_logo_fade_in = HSM_INTRO_LOGO_FADE_IN / HSM_INTRO_SPEED;
+   float intro_logo_hold = HSM_INTRO_LOGO_HOLD / HSM_INTRO_SPEED;
+   float intro_logo_fade_out = HSM_INTRO_LOGO_FADE_OUT / HSM_INTRO_SPEED;
+
+	float static_hold = 80 / HSM_INTRO_SPEED;
+	float static_fade_out = 120 / HSM_INTRO_SPEED;
+
+	if (frame_count <= mask_wait + mask_vert_wait + mask_fade_vertical + static_hold + static_fade_out)
+	{
+		vec2 noise_res = global.OriginalSize.xy;
+		vec2 quantized_coord = vec2(floor(in_coord.x * noise_res.x) / noise_res.x, floor(in_coord.y * noise_res.y) / noise_res.y);
+
+		float width = (frame_count - mask_wait) / (mask_fade_horizontal/2);
+		float height = (clamp((frame_count - mask_wait - mask_vert_wait) / mask_fade_vertical, 0, 1) + 0.005) * 2;
+		float mask = abs(in_coord.x - 0.5) > width * 0.5 ? 0 : 1;
+		mask *= HHLP_EasePowerOut(abs(in_coord.y - 0.5), 1.5) > height ? 0 : 1;
+
+		// mask = HHLP_EasePowerIn(mask, 2);
+
+		float area = width * height;
+
+		float solid_color_opacity = HHLP_EasePowerIn(clamp(1 - (frame_count - (mask_wait + mask_fade_horizontal/2.5 + solid_color_hold)) / solid_color_fade_out * 2, 0, 1), 1.5);
+      out_color = mix(out_color, vec4(0, 0, 0, 1), solid_color_opacity);
+
+		float static_opacity =  1 - clamp((frame_count - static_hold - mask_wait - mask_fade_horizontal) / static_fade_out, 0, 1);
+		static_opacity = HHLP_EasePowerInOut(static_opacity, 4);
+
+		// Calculate Static Noise
+		float e = 2.7182818284590452353602874713527;
+		float G = e + (mod(frame_count, 30)/30 + 1000);
+		vec2 r = (G * sin(G * quantized_coord.xy));
+		vec4 noise_color = vec4(fract(r.x * r.y * (1.0 + quantized_coord.x)));
+		noise_color.a = 1;
+
+		noise_color.rgb *= 0.60;
+
+      vec2 intro_image_res = vec2(HSM_INTRO_LOGO_RES_X, HSM_INTRO_LOGO_RES_Y);
+      vec2 intro_image_scale = intro_image_res / global.OriginalSize.xy;
+
+      // Center
+      vec2 coord_in_intro_image = (in_coord - 0.5) / intro_image_scale + 0.5;
+
+      // Top Left
+      if (HSM_INTRO_LOGO_PLACEMENT == 1)
+         coord_in_intro_image = in_coord / intro_image_scale;
+      // Top Right
+      if (HSM_INTRO_LOGO_PLACEMENT == 2)
+         coord_in_intro_image = (in_coord - vec2(1 - intro_image_scale.x, 0)) / intro_image_scale;
+      // Bottom Left
+      if (HSM_INTRO_LOGO_PLACEMENT == 3)
+         coord_in_intro_image = (in_coord - vec2(0, 1 - intro_image_scale.y)) / intro_image_scale;
+      // Bottom Right
+      if (HSM_INTRO_LOGO_PLACEMENT == 4)
+         coord_in_intro_image = (in_coord - (1 - intro_image_scale)) / intro_image_scale;
+
+      // float logo_opacity = 1;
+
+      // if (frame_count <= intro_logo_wait + intro_logo_fade_in + intro_logo_hold + intro_logo_fade_out)
+      // {
+         vec4 intro_image = texture(IntroImage, coord_in_intro_image);
+         // intro_image = HSM_Linearize(intro_image, HSM_DEFAULT_SRGB_GAMMA);
+         float logo_opacity = 1 - HHLP_EasePowerOut(clamp(1 - (frame_count - mask_wait - mask_fade_horizontal/4) / intro_logo_fade_in, 0, 1), 1.5);
+      //    if (frame_count > intro_logo_wait && frame_count <= intro_logo_wait + intro_logo_fade_in)
+      //       logo_opacity =  (frame_count - intro_logo_wait) / intro_logo_fade_in;
+      //    if (frame_count > intro_logo_wait + intro_logo_fade_in && frame_count <= intro_logo_wait + intro_logo_fade_in + intro_logo_hold) 
+      //       logo_opacity =  1;
+      //    if (frame_count > intro_logo_wait + intro_logo_fade_in + intro_logo_hold) 
+      //       logo_opacity =  1 - clamp((frame_count - (intro_logo_wait + intro_logo_fade_in + intro_logo_hold)) / intro_logo_fade_out, 0, 1);
+
+         logo_opacity *=  clamp(clamp((frame_count - intro_logo_wait) / intro_logo_fade_in, 0, 1) - 
+                                 clamp((frame_count - (intro_logo_wait + intro_logo_fade_in + intro_logo_hold)) / intro_logo_fade_out, 0, 1), 
+                                 0, 1);
+
+		out_color = HSM_BlendModeLayerMix(out_color, noise_color, HSM_INTRO_NOISE_BLEND_MODE, static_opacity);
+
+      // Logo UNDER solid color
+      if (HSM_INTRO_LOGO_OVER_SOLID_COLOR == 0)
+         out_color = HSM_BlendModeLayerMix(out_color, intro_image, HSM_INTRO_LOGO_BLEND_MODE, logo_opacity);
+
+		out_color = HSM_BlendModeLayerMix(out_color, solid_color, HSM_INTRO_SOLID_COLOR_BLEND_MODE, solid_color_opacity);
+
+      // Logo OVER solid color
+      if (HSM_INTRO_LOGO_OVER_SOLID_COLOR == 1)
+         out_color = HSM_BlendModeLayerMix(out_color, intro_image, HSM_INTRO_LOGO_BLEND_MODE, logo_opacity);
+
+		out_color *= mask;
+
+      HSM_Delinearize(out_color, HSM_DEFAULT_SRGB_GAMMA);
+	}
+   return out_color;
+}
+
+void main()
+{
+   FragColor = texture(Source, vTexCoord);
+   // HSM_Linearize(FragColor, HSM_DEFAULT_SRGB_GAMMA);
+
+   if (HSM_INTRO_WHEN_TO_SHOW > 0)
+      FragColor = GetColorWithIntro(FragColor, vTexCoord);
 
    // Apply black level & gamma with input as non linearized
    FragColor = HSM_ApplyBlackLevel(FragColor, 0);
@@ -145,7 +245,7 @@ void main()
    
    //////// Draw text to show out_colorolutions ////////// 
    if (HSM_RESOLUTION_DEBUG_ON == 1)
-   {
       FragColor = AddText(vTexCoord, FragColor);
-   }
+
+   // FragColor = HSM_Delinearize(FragColor, HSM_DEFAULT_SRGB_GAMMA);
 }

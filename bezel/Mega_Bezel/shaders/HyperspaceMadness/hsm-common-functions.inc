@@ -1132,50 +1132,6 @@ vec4 HSM_GetPostCrtPreppedColor(vec4 in_color_linear, vec2 screen_curved_coord, 
 	vec2 tube_curved_coord = HSM_GetTubeCurvedCoord(screen_coord, screen_scale, screen_aspect);
 	vec2 mirrored_tube_coord = HSM_GetMirrorWrappedCoord(tube_curved_coord);
 
-	// TV Startup Static Animation
-	float mask_wait = 50;
-	float mask_fade_in = 50;
-	float white_hold = 30;
-	float white_fade = 35;
-	float static_hold = 60;
-	float static_fade_out = 80;
-
-	if (global.FrameCount <= mask_wait + mask_fade_in + static_hold + static_fade_out)
-	{
-		float frame_count = mod(global.FrameCount, 360);
-		// float frame_count = global.FrameCount;
-		vec2 screen_res = screen_scale * global.FinalViewportSize.xy;
-		vec2 noise_res = vec2(1000, 1000);
-		vec2 quantized_coord = vec2(floor(mirrored_tube_coord.x * noise_res.x) / noise_res.x, floor(mirrored_tube_coord.y * noise_res.y) / noise_res.y);
-
-		float width = (frame_count - mask_wait) / (mask_fade_in/2) * 2;
-		float height = (clamp((frame_count - mask_wait - (mask_fade_in/6)) / white_fade, 0, 1) + 0.0015) * 2;
-		float mask = abs(mirrored_tube_coord.x - 0.5) > width * 0.5 ? 0 : 1;
-		mask *= HHLP_EasePowerOut(abs(mirrored_tube_coord.y - 0.5), 1.5) > height ? 0 : 1;
-
-		// mask = HHLP_EasePowerIn(mask, 2);
-
-		float area = width * height;
-		// float white_mix = clamp(3 - area, 0, 1);
-		float white_mix = HHLP_EasePowerIn(clamp(1 - (frame_count - (mask_wait + mask_fade_in/2.5 + white_hold)) / (mask_fade_in) * 2, 0, 1), 1.5);
-
-		float static_opacity =  1 - clamp((frame_count - static_hold - mask_wait - mask_fade_in) / static_fade_out, 0, 1);
-		static_opacity = HHLP_EasePowerInOut(static_opacity, 4);
-
-		// Calculate Static Noise
-		float e = 2.7182818284590452353602874713527;
-		float G = e + (mod(frame_count, 30)/30 + 1000);
-		vec2 r = (G * sin(G * quantized_coord.xy));
-		vec4 noise_color = vec4(fract(r.x * r.y * (1.0 + quantized_coord.x)));
-		noise_color.a = 1;
-
-		noise_color.rgb *= 0.25;
-		noise_color.rgb += mix(noise_color.rgb, vec3(1), white_mix);
-
-		out_color = HSM_BlendModeLayerMix(out_color, noise_color, BLEND_MODE_NORMAL, static_opacity);
-		out_color *= mask;
-	}
-
 	// Add a Colored Gel image on top of the screen, this is what colors games like space invaders or battlezone
 	if (HSM_TUBE_COLORED_GEL_IMAGE_MULTIPLY_AMOUNT > 0 || HSM_TUBE_COLORED_GEL_IMAGE_ADDITIVE_AMOUNT > 0)
 	{

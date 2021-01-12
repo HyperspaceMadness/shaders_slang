@@ -177,33 +177,6 @@ float HSM_CURVATURE_3D_TILT_ANGLE_Y = global.HSM_CURVATURE_3D_TILT_ANGLE_Y;
 
 
 //---------------------------------------------------------------------------------------------------
-//    INTRO IMAGE
-//---------------------------------------------------------------------------------------------------
-#pragma parameter HSM_INTRO_IMAGE_TITLE					"[ INTRO IMAGE ]________________________________________________" 0 0 1 1
-
-#pragma parameter HSM_INTRO_IMAGE_BLEND_MODE        	"      Blend Mode - Off | Norm | Add | Mult"  1 0 3 1
-#define HSM_INTRO_IMAGE_BLEND_MODE global.HSM_INTRO_IMAGE_BLEND_MODE
-
-#pragma parameter HSM_INTRO_IMAGE_RES_X        			"      Res X"  128 0 640 2
-#define HSM_INTRO_IMAGE_RES_X global.HSM_INTRO_IMAGE_RES_X
-
-#pragma parameter HSM_INTRO_IMAGE_RES_Y        			"      Res Y"  128 0 640 2
-#define HSM_INTRO_IMAGE_RES_Y global.HSM_INTRO_IMAGE_RES_Y
-
-#pragma parameter HSM_INTRO_IMAGE_TIME_INITIAL_WAIT     "      Initial Wait Time (Frames)"  120 0 1200 10
-#define HSM_INTRO_IMAGE_TIME_INITIAL_WAIT global.HSM_INTRO_IMAGE_TIME_INITIAL_WAIT
-
-#pragma parameter HSM_INTRO_IMAGE_TIME_FADE_IN       	"      Fade In Time"  60 0 600 10
-#define HSM_INTRO_IMAGE_TIME_FADE_IN global.HSM_INTRO_IMAGE_TIME_FADE_IN
-
-#pragma parameter HSM_INTRO_IMAGE_TIME_HOLD     		"      Hold Time"  30 0 600 10
-#define HSM_INTRO_IMAGE_TIME_HOLD global.HSM_INTRO_IMAGE_TIME_HOLD
-
-#pragma parameter HSM_INTRO_IMAGE_TIME_FADE_OUT       	"      Fade Out Time"  80 0 600 10
-#define HSM_INTRO_IMAGE_TIME_FADE_OUT global.HSM_INTRO_IMAGE_TIME_FADE_OUT
-
-
-//---------------------------------------------------------------------------------------------------
 //    PHOSPHOR PERSISTENCE
 //---------------------------------------------------------------------------------------------------
 #pragma parameter HSM_PERSISTENCE_TITLE					"[ PHOSPHOR PERSISTENCE ]_______________________________________" 0 0 1 1
@@ -279,6 +252,70 @@ float HSM_TUBE_STATIC_REFLECTION_IMAGE_SCALE = global.HSM_TUBE_STATIC_REFLECTION
 
 #pragma parameter HSM_CRT_IS_LAST_PASS 							"      CRT is Last Pass" 0 0 1 1
 #define HSM_CRT_IS_LAST_PASS global.HSM_CRT_IS_LAST_PASS
+
+
+
+//---------------------------------------------------------------------------------------------------
+//    INTRO IMAGE
+//---------------------------------------------------------------------------------------------------
+#pragma parameter HSM_INTRO_IMAGE_TITLE					"[ INTRO IMAGE ]________________________________________________" 0 0 1 1
+
+#pragma parameter HSM_INTRO_WHEN_TO_SHOW     			"      Show Intro - OFF | When Content Loads | Repeat"  1 0 2 1
+#define HSM_INTRO_WHEN_TO_SHOW global.HSM_INTRO_WHEN_TO_SHOW
+
+#pragma parameter HSM_INTRO_REPEAT_TIME     			"      Repeat Cycle Length"  360 20 960 20
+#define HSM_INTRO_REPEAT_TIME global.HSM_INTRO_REPEAT_TIME
+
+#pragma parameter HSM_INTRO_SPEED     					"      Speed"  100 1 500 5
+#define HSM_INTRO_SPEED (global.HSM_INTRO_SPEED / 100)
+
+#pragma parameter HSM_INTRO_LOGO_BLEND_MODE        		"      Logo Blend Mode - Off | Norm | Add | Mult"  1 0 3 1
+#define HSM_INTRO_LOGO_BLEND_MODE global.HSM_INTRO_LOGO_BLEND_MODE
+
+#pragma parameter HSM_INTRO_NOISE_BLEND_MODE        	"      Noise Blend Mode - Off | Norm | Add | Mult"  1 0 3 1
+#define HSM_INTRO_NOISE_BLEND_MODE global.HSM_INTRO_NOISE_BLEND_MODE
+
+#pragma parameter HSM_INTRO_SOLID_COLOR_BLEND_MODE      "      Solid Color Blend Mode - Off | Norm | Add | Mult"  1 0 3 1
+#define HSM_INTRO_SOLID_COLOR_BLEND_MODE global.HSM_INTRO_SOLID_COLOR_BLEND_MODE
+
+#pragma parameter HSM_INTRO_LOGO_OVER_SOLID_COLOR       "      Logo Over Solid Color - Off | ON"  1 0 1 1
+#define HSM_INTRO_LOGO_OVER_SOLID_COLOR global.HSM_INTRO_LOGO_OVER_SOLID_COLOR
+
+#pragma parameter HSM_INTRO_LOGO_PLACEMENT        		"      Logo Placement - Middle | TL | TR | BL | BR"  0 0 4 1
+#define HSM_INTRO_LOGO_PLACEMENT global.HSM_INTRO_LOGO_PLACEMENT
+
+#pragma parameter HSM_INTRO_LOGO_RES_X        			"      Logo Res X"  192 0 3840 16
+#define HSM_INTRO_LOGO_RES_X global.HSM_INTRO_LOGO_RES_X
+
+#pragma parameter HSM_INTRO_LOGO_RES_Y        			"      Logo Res Y"  96 0 3840 16
+#define HSM_INTRO_LOGO_RES_Y global.HSM_INTRO_LOGO_RES_Y
+
+#pragma parameter HSM_INTRO_LOGO_WAIT     				"      Logo Wait Frames"  20 0 1200 5
+#define HSM_INTRO_LOGO_WAIT global.HSM_INTRO_LOGO_WAIT
+
+#pragma parameter HSM_INTRO_LOGO_FADE_IN       			"      Logo Fade In Frames"  20 0 600 5
+#define HSM_INTRO_LOGO_FADE_IN global.HSM_INTRO_LOGO_FADE_IN
+
+#pragma parameter HSM_INTRO_LOGO_HOLD     				"      Logo Hold Frames"  130 0 600 5
+#define HSM_INTRO_LOGO_HOLD global.HSM_INTRO_LOGO_HOLD
+
+#pragma parameter HSM_INTRO_LOGO_FADE_OUT       		"      Logo Fade Out Frames"  80 0 600 5
+#define HSM_INTRO_LOGO_FADE_OUT global.HSM_INTRO_LOGO_FADE_OUT
+
+#pragma parameter HSM_INTRO_SOLID_COLOR_HUE     		"      Solid Color Hue"  0 0 360 1
+#define HSM_INTRO_SOLID_COLOR_HUE (global.HSM_INTRO_SOLID_COLOR_HUE / 360)
+
+#pragma parameter HSM_INTRO_SOLID_COLOR_SAT     		"      Solid Color Saturation"  0 0 100 5
+#define HSM_INTRO_SOLID_COLOR_SAT (global.HSM_INTRO_SOLID_COLOR_SAT / 100)
+
+#pragma parameter HSM_INTRO_SOLID_COLOR_VALUE     		"      Solid Color Value"  100 0 100 5
+#define HSM_INTRO_SOLID_COLOR_VALUE (global.HSM_INTRO_SOLID_COLOR_VALUE / 100)
+
+#pragma parameter HSM_INTRO_SOLID_COLOR_HOLD     		"      Solid Color Hold Frames"  40 0 600 5
+#define HSM_INTRO_SOLID_COLOR_HOLD global.HSM_INTRO_SOLID_COLOR_HOLD
+
+#pragma parameter HSM_INTRO_SOLID_COLOR_FADE_OUT        "      Solid Color Fade Out Frames"  40 0 600 5
+#define HSM_INTRO_SOLID_COLOR_FADE_OUT global.HSM_INTRO_SOLID_COLOR_FADE_OUT
 
 
 

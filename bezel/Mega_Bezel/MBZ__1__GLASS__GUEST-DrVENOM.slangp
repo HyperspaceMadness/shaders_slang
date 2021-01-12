@@ -227,7 +227,7 @@ SamplerLUT3 = shaders/HyperspaceMadness/textures/lut/other1_32.png
 SamplerLUT3_linear = true
 
 IntroImage = shaders/HyperspaceMadness/textures/IntroImage_MegaBezelLogo.png
-IntroImage_linear = false
+IntroImage_linear = true
 
 ColoredGelImage = shaders/HyperspaceMadness/textures/Transparent_DummyTexture_16x16.png
 ColoredGelImage_linear = true

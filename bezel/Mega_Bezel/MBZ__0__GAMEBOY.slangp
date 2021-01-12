@@ -158,7 +158,7 @@ LCDBackgroundImage = shaders/HyperspaceMadness/hsm-gameboy/bg-gameboy-dmg.png
 LCDBackgroundImage_linear = true
 
 IntroImage = shaders/HyperspaceMadness/textures/IntroImage_MegaBezelLogo.png
-IntroImage_linear = false
+IntroImage_linear = true
 
 ColoredGelImage = shaders/HyperspaceMadness/textures/Transparent_DummyTexture_16x16.png
 ColoredGelImage_linear = true

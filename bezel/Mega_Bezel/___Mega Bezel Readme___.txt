@@ -11,6 +11,7 @@ HyperspaceMadness Mega Bezel Shader Readme
     - Enable easier use of bezels and more "natural" presentation
     - Ease of use for screen scaling and automatic aspect ratio with existing shaders
     - Provide a consistent set of enhanced features wrapped around the core crt shaders
+    - Layering images to add art and visual effects
 
 
 
@@ -20,6 +21,7 @@ HyperspaceMadness Mega Bezel Shader Readme
 
   -In general there is a background image which fills the screen, then the game screen is drawn scaled down with an automatically generated bezel image drawn around the screen. 
   -The bezel and frame you see around the screen auto generated and not part of the background image
+  -Additional Images can be layered on top to augment the look
   -Most things can be changed to your taste with adjustment of the parameters, so try them out!
 
 
@@ -32,10 +34,10 @@ HyperspaceMadness Mega Bezel Shader Readme
         - Delete shaders/shaders_slang/bezel/shaders/HyperspaceMadness
         - Delete all hsm presets from shaders/shaders_slang/bezel
         - Inside the .zip is a shaders folder, drop this shaders folder directly over your existing one and everything will go into the right place
-    - Set video driver to Vulcan (It will run in GLCore but seems 2x faster in Vulcan)
+    - Set video driver to Vulcan or GLCore (Vulcan seems faster)
     - Set video aspect ratio to your monitor aspect ratio, e.g. 16:9
     - Set integer scale to OFF
-    - Load a preset in the shaders menu, Mega Bezel shaders are found in shaders_slang/bezel
+    - Load a preset in the shaders menu, Mega Bezel shaders are found in shaders_slang/bezel/Mega_Bezel
 
 
 
@@ -44,18 +46,33 @@ HyperspaceMadness Mega Bezel Shader Readme
 ----------------------------------------
 
     Presets are named/sorted by performance
-        The most flexible (and most resource hungry) are at the top starting with index 0
-        As the name's index number increases the presets get faster and less flexible
-    Currently all presets will include all the mega bezel settings except for SCREENSCALE-ONLY which has a subset of parameters
+        The most flexible and most resource hungry are at the top starting with index 0
+        As the name's index number increases the presets get faster but less flexible
 
-    - Group 0 BASE - Most flexible shader presets, one preset for each different CRT Shader (Includes MDAPT, ScaleFX & GTU)
-    - Group 1 GLASS - Glass presets which show a blurry reflection in the area around the screen
-    - Group 2 ALT - Same as group 0 but have different parameter values
-    - Group 3 SIMPLIFIED - Same as Base except extra passes before the CRT pass removed (Includes MDAPT, ScaleFX & GTU)
-    - Group 4 Reflection-Only - Meant to be used with retroarch's standard overlay feature. Removes the frame and other images applied
-    - Group 5 SCREENSCALE-ONLY - Only includes the screen scaling and screen effects like fake scanlines
+    - Group 0 BASE - Most flexible shader presets, one preset for each different CRT Shader 
+                     Includes MDAPT, ScaleFX & GTU
 
+    - Group 1 GLASS - Glass presets which show a blurry reflection in the area around the screen 
+                    - Includes MDAPT, ScaleFX & GTU
+                    - Does not include the additional Image Layering.
 
+    - Group 3 SIMPLE - Same as Base except extra passes before the CRT pass removed 
+                     - (No MDAPT, ScaleFX & GTU)
+                     - Includes only a subset of the image layers (Background and Top Extra Layer)
+
+    - Group 4 REFLECT_ONLY - Image Layering pass has been removed
+                           - No auto-generated bezel and frame and no image layering
+                           - Includes an image which can be used for the background/bezel which the reflection will appear on top of
+                           - When used with an image which was a snapshot from a default mega bezel preset the reflection masking will match the frame
+                           - Can be used with a standard retroarch overlay
+                           - When used with a standard overlay the retroarch video aspect ratio can be set to something like 4:3 to achieve higher performance
+
+    - Group 5 SCALING-ONLY - Includes only the screen scaling and screen effects like fake scanlines
+                           - All passes after CRT pass have been removed
+
+Presets in Mega_Bezel/Variations
+    - These presets are simple presets referencing one of the presets in the Mega_Bezel folder
+    - They reference the original preset then have adjusted parameters or texture paths
 
 ----------------------------------------
 ----------  Troubleshooting  -----------

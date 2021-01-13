@@ -5,6 +5,9 @@
 const float hag_afterglow_persistence = 0.5;
 const float hag_afterglow_saturation = 0.1;
 
+float SCREEN_ASPECT = HSM_GetScreenAspect();
+vec2 SCREEN_SCALE = HSM_GetScreenScale(SCREEN_ASPECT);
+
 #pragma stage vertex
 layout(location = 0) in vec4 Position;
 layout(location = 1) in vec2 TexCoord;
@@ -24,6 +27,28 @@ layout(set = 0, binding = 3) uniform sampler2D PassFeedback6;
 layout(set = 0, binding = 4) uniform sampler2D IntroImage;
 
 #define eps 1e-3
+
+/*
+	Texture interpolation based on "Improved texture interpolation" by Inigo Quilez
+	Original description: http://www.iquilezles.org/www/articles/texture/texture.htm
+	Expects the texture to be using linear filtering
+*/
+vec4 TextureQuilez(sampler2D in_sampler_2D, vec2 in_texture_size, vec2 p)
+{
+	vec2 tex_size = textureSize(in_sampler_2D, 0);
+	p = p * in_texture_size + vec2(0.5, 0.5);
+
+	vec2 i = floor(p);
+	vec2 f = p - i;
+	f = f * f * f * (f * (f * 6.0 - vec2(15.0, 15.0)) + vec2(10.0, 10.0));
+	p = i + f;
+
+	p = (p - vec2(0.5, 0.5)) * (1/in_texture_size);
+
+	// final sum and weight normalization
+	return texture(in_sampler_2D, p);
+}
+
 
 float GetAverageLuma()
 {
@@ -138,20 +163,19 @@ vec4 GetColorWithIntro(vec4 in_color, vec2 in_coord)
    float intro_logo_hold = HSM_INTRO_LOGO_HOLD / HSM_INTRO_SPEED;
    float intro_logo_fade_out = HSM_INTRO_LOGO_FADE_OUT / HSM_INTRO_SPEED;
 
-	float static_hold = 80 / HSM_INTRO_SPEED;
-	float static_fade_out = 120 / HSM_INTRO_SPEED;
+	float static_hold = HSM_INTRO_NOISE_HOLD / HSM_INTRO_SPEED;
+	float static_fade_out = HSM_INTRO_NOISE_FADE_OUT / HSM_INTRO_SPEED;
 
 	if (frame_count <= mask_wait + mask_vert_wait + mask_fade_vertical + static_hold + static_fade_out)
 	{
 		vec2 noise_res = global.OriginalSize.xy;
+      noise_res = min(noise_res, vec2(640, 480));
 		vec2 quantized_coord = vec2(floor(in_coord.x * noise_res.x) / noise_res.x, floor(in_coord.y * noise_res.y) / noise_res.y);
 
 		float width = (frame_count - mask_wait) / (mask_fade_horizontal/2);
 		float height = (clamp((frame_count - mask_wait - mask_vert_wait) / mask_fade_vertical, 0, 1) + 0.005) * 2;
 		float mask = abs(in_coord.x - 0.5) > width * 0.5 ? 0 : 1;
 		mask *= HHLP_EasePowerOut(abs(in_coord.y - 0.5), 1.5) > height ? 0 : 1;
-
-		// mask = HHLP_EasePowerIn(mask, 2);
 
 		float area = width * height;
 
@@ -170,12 +194,20 @@ vec4 GetColorWithIntro(vec4 in_color, vec2 in_coord)
 
 		noise_color.rgb *= 0.60;
 
+		out_color = HSM_BlendModeLayerMix(out_color, noise_color, HSM_INTRO_NOISE_BLEND_MODE, static_opacity);
+
       vec2 intro_image_res = vec2(HSM_INTRO_LOGO_RES_X, HSM_INTRO_LOGO_RES_Y);
-      vec2 intro_image_scale = intro_image_res / global.OriginalSize.xy;
+      float intro_image_aspect = intro_image_res.x/intro_image_res.y;
+      // vec2 intro_image_scale = intro_image_res / global.OriginalSize.xy / SCREEN_ASPECT;
+
+      float intro_logo_height = HSM_INTRO_LOGO_HEIGHT;
+      if (intro_logo_height == 0)
+         intro_logo_height = intro_image_res.y / global.OriginalSize.y;
+
+      vec2 intro_image_scale = vec2(intro_logo_height * intro_image_aspect / SCREEN_ASPECT, intro_logo_height);
 
       // Center
       vec2 coord_in_intro_image = (in_coord - 0.5) / intro_image_scale + 0.5;
-
       // Top Left
       if (HSM_INTRO_LOGO_PLACEMENT == 1)
          coord_in_intro_image = in_coord / intro_image_scale;
@@ -189,25 +221,13 @@ vec4 GetColorWithIntro(vec4 in_color, vec2 in_coord)
       if (HSM_INTRO_LOGO_PLACEMENT == 4)
          coord_in_intro_image = (in_coord - (1 - intro_image_scale)) / intro_image_scale;
 
-      // float logo_opacity = 1;
+      // Quilez gives a better rescaling weighted more to the center of the pixel like bicubic
+      vec4 intro_image = TextureQuilez(IntroImage, intro_image_res, coord_in_intro_image);
+      float logo_opacity = 1 - HHLP_EasePowerOut(clamp(1 - (frame_count - mask_wait - mask_fade_horizontal/4) / intro_logo_fade_in, 0, 1), 1.5);
+      logo_opacity *=  clamp(clamp((frame_count - intro_logo_wait) / intro_logo_fade_in, 0, 1) - 
+                              clamp((frame_count - (intro_logo_wait + intro_logo_fade_in + intro_logo_hold)) / intro_logo_fade_out, 0, 1), 
+                              0, 1);
 
-      // if (frame_count <= intro_logo_wait + intro_logo_fade_in + intro_logo_hold + intro_logo_fade_out)
-      // {
-         vec4 intro_image = texture(IntroImage, coord_in_intro_image);
-         // intro_image = HSM_Linearize(intro_image, HSM_DEFAULT_SRGB_GAMMA);
-         float logo_opacity = 1 - HHLP_EasePowerOut(clamp(1 - (frame_count - mask_wait - mask_fade_horizontal/4) / intro_logo_fade_in, 0, 1), 1.5);
-      //    if (frame_count > intro_logo_wait && frame_count <= intro_logo_wait + intro_logo_fade_in)
-      //       logo_opacity =  (frame_count - intro_logo_wait) / intro_logo_fade_in;
-      //    if (frame_count > intro_logo_wait + intro_logo_fade_in && frame_count <= intro_logo_wait + intro_logo_fade_in + intro_logo_hold) 
-      //       logo_opacity =  1;
-      //    if (frame_count > intro_logo_wait + intro_logo_fade_in + intro_logo_hold) 
-      //       logo_opacity =  1 - clamp((frame_count - (intro_logo_wait + intro_logo_fade_in + intro_logo_hold)) / intro_logo_fade_out, 0, 1);
-
-         logo_opacity *=  clamp(clamp((frame_count - intro_logo_wait) / intro_logo_fade_in, 0, 1) - 
-                                 clamp((frame_count - (intro_logo_wait + intro_logo_fade_in + intro_logo_hold)) / intro_logo_fade_out, 0, 1), 
-                                 0, 1);
-
-		out_color = HSM_BlendModeLayerMix(out_color, noise_color, HSM_INTRO_NOISE_BLEND_MODE, static_opacity);
 
       // Logo UNDER solid color
       if (HSM_INTRO_LOGO_OVER_SOLID_COLOR == 0)

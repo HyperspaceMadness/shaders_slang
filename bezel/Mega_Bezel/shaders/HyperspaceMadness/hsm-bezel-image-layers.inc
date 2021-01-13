@@ -79,26 +79,6 @@ vec2 TUBE_SCALE = HSM_GetTubeScale(SCREEN_SCALE);
 vec2 FRAME_SCALE = vec2(1);
 vec2 BACKGROUND_SCALE = vec2(1);
 
-/*
-	Texture interpolation based on "Improved texture interpolation" by Inigo Quilez
-	Original description: http://www.iquilezles.org/www/articles/texture/texture.htm
-	Expects the texture to be using linear filtering
-*/
-vec4 TextureQuilez(sampler2D in_sampler_2D, vec2 in_texture_size, vec2 p)
-{
-	vec2 tex_size = textureSize(in_sampler_2D, 0);
-	p = p * in_texture_size + vec2(0.5, 0.5);
-
-	vec2 i = floor(p);
-	vec2 f = p - i;
-	f = f * f * f * (f * (f * 6.0 - vec2(15.0, 15.0)) + vec2(10.0, 10.0));
-	p = i + f;
-
-	p = (p - vec2(0.5, 0.5)) * (1/in_texture_size);
-
-	// final sum and weight normalization
-	return texture(in_sampler_2D, p);
-}
 
 vec4 GetPreMultipliedColorLinear(vec4 in_color, float matte_type, float encoded_gamma)
 {

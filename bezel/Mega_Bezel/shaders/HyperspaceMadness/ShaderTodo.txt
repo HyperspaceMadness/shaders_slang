@@ -30,13 +30,12 @@ Changes:
     *  3840x2160 - ? fps
 
 Mega Bezel Still to Come:
+  * Startup Expose more timing
+  * Scaling Control / Resolution vs Height based (0 = Resolution?)
+  * Mask Reflection in Reflect-Only presets for use with background graphics which include the frame
+    * Default Preset?
   * Cutout and Inverse cutout not working on Top Layer?
-  * Startup
-    * Expose Logo Timing
-    * Logo Placement
-    * Logo Application - Core Image or Post CRT
-    * Static for intro
-    * Use Sprite Sheet for Intro Animation
+  * Startup Animation - Sprite Sheet
   * Bilinear scale option per layer
   * Redo Splitscreen with mapping and no dependence on sampling
   * Add Shadow for Image Cutout

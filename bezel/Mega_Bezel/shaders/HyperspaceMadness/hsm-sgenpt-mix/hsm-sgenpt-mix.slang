@@ -39,7 +39,7 @@ layout(push_constant) uniform Push
 	float SGPT_ON;
 } params;
 
-#pragma parameter SGPT_TITLE			"[ --- SGENPT-MIX DE-DITHERING V8b --- ]________________________" 0 0 1 1
+#pragma parameter SGPT_TITLE			"[ --- SGENPT-MIX DE-DITHERING V8b --- ]________________________" 0 0 0.01 0.01
 
 #pragma parameter SGPT_ON 				"    SGENPT-MIX ON" 0 0 1 1
 #pragma parameter SGPT_BLEND_OPTION 	"    Pass 1 Blend - OFF | VL | CB | CB-S | Both | Both2 | Both-S" 4.0 0.0 6.0 1.0

@@ -51,6 +51,7 @@ HyperspaceMadness Mega Bezel Shader Readme
 
     - Group 0 BASE - Most flexible shader presets, one preset for each different CRT Shader 
                      Includes MDAPT, ScaleFX & GTU
+                     The Guest-DrVenom preset is considered the default preset
 
     - Group 1 GLASS - Glass presets which show a blurry reflection in the area around the screen 
                     - Includes MDAPT, ScaleFX & GTU
@@ -102,26 +103,28 @@ Presets in Mega_Bezel/Variations
 -----  Parameter Descriptions  ----------------------------------------------------------------------------------------------------
 -----------------------------------------------------------------------------------------------------------------------------------
 
-_____[ HSM MEGA BEZEL  V.20XX-XX-XX-X ]____________________
+[ --- HSM MEGA BEZEL  20XX-XX-XX-0 --- ]_______________________
 
 [ DEBUG ]  Debug ON - set to 1 to turn Debug On
 
 
-_____[ FLIP & ROTATE ]_________________________________________
+[ FLIP & ROTATE ]______________________________________________
 
-[ VERTICAL FLIP ]  Flip Vertical - For 3D Cores --- Some 3D cores flip the viewport, this flips it back
+    Flip Viewport Vertical --- Some cores flip the viewport (full monitor area), this flips it back
 
-[ ROTATE ]  Rotate CRT Tube --- Turns the tube 90 degrees counter counter-clockwise
+    Flip Core Image Vertical --- Some cores flip the core image, this flips it back
+
+    Rotate CRT Tube --- Turns the tube 90 degrees counter counter-clockwise
 
 
-_____[ ASPECT RATIO ]__________________________________________
+[ ASPECT RATIO ]_______________________________________________
 
-[ ASPECT ]  Orientation --- Should the aspect be horizontal or vertical?
+    Orientation --- Should the aspect be horizontal or vertical? This does not rotate the image.
             0 - Auto - Chooses vertical vs horizontal based on the core resolution
-            1 - Horizontal, uses horizontal aspect
-            2 - Vertical, uses vertical aspect
+            1 - Horizontal - uses horizontal aspect
+            2 - Vertical - uses vertical aspect
 
-[ASPECT]  Type --- Choose type of aspect ratio
+    Type --- Choose type of aspect ratio
             0 - Auto - Choose aspect ratio based on educated guesses about the core resolution
             1 - Explicit - Use the aspect ratio from the [ASPECT]  Explicit Aspect Ratio parameter
             2 - 4:3 (Almost all arcade games are 4:3)
@@ -130,7 +133,7 @@ _____[ ASPECT RATIO ]__________________________________________
             5 - PAR (The aspect ratio of the pixel resolution)
             6 - Full (The screen will scale to the full viewport)
 
-[ASPECT]  Explicit Aspect Ratio --- Ratio used when [Aspect] Type is set to Explicit or if Auto is chosen and no matching resolution can be found
+    Explicit Aspect Ratio --- Ratio used when [Aspect] Type is set to Explicit or if Auto is chosen and no matching resolution can be found
 
 
 ------ [SCALING] -------------------------------------------------------------------------------------------

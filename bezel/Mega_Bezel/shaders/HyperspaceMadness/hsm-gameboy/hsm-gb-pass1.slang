@@ -17,7 +17,7 @@ layout(push_constant) uniform Push
 // Config                                                                     //
 ////////////////////////////////////////////////////////////////////////////////
 
-#pragma parameter GBY_BLENDING_TITLE	"[ BLENDING ]___________________________________________________" 0 0 1 1
+#pragma parameter GBY_BLENDING_TITLE	"[ BLENDING ]___________________________________________________" 0 0 0.01 0.01
 
 // 0 - only the space between dots is blending
 // 1 - all texels are blended

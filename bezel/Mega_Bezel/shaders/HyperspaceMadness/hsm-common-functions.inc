@@ -854,11 +854,6 @@ float HSM_IsInNegativeCropArea(vec2 in_coord)
 	return clamp(result, 0, 1);
 }
 
-void HSM_srand(vec2 a, out float r)
-{
-	r = sin(dot(a, vec2(1233.224, 1743.335)));
-}
-
 float HSM_rand(inout float r)
 {
 	r = fract(3712.65 * r + 0.61432);
@@ -873,8 +868,8 @@ vec4 HSM_GetStoichaicBlurredSample(sampler2D in_sampler, vec2 in_coord, float nu
 	// Common value for max_blur_size is about 40
 	float p = blur_ratio * max_blur_size / global.SourceSize.y;
 	vec4 blurred_color = vec4(0.0);
-	float radius;
-	HSM_srand(in_coord, radius);
+	// srand
+	float radius = sin(dot(in_coord, vec2(1233.224, 1743.335)));
 	vec2 radius_vector;
 	
 	for(int i=0; i < num_samples; i++)

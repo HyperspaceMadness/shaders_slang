@@ -50,7 +50,7 @@ scale13 = 1.0
 shader14 = shaders/HyperspaceMadness/hsm-scalefx/hsm-scalefx-pass4.slang
 filter_linear14 = false
 scale_type14 = source
-scale14 = 1
+scale14 = 3
 
 // GTU TV Processing
 shader15 = shaders/HyperspaceMadness/hsm-gtu/hsm-gtu-pass1.slang

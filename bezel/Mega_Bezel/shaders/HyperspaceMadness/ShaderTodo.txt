@@ -30,10 +30,8 @@ Changes:
     *  3840x2160 - ? fps
 
 Mega Bezel Still to Come:
-  * Startup Expose more timing
-  * Scaling Control / Resolution vs Height based (0 = Resolution?)
-  * Mask Reflection in Reflect-Only presets for use with background graphics which include the frame
-    * Default Preset?
+  * Add Control for how much reflection on outer bezel outer edge
+  * Reflect Only Preset with an image?
   * Cutout and Inverse cutout not working on Top Layer?
   * Startup Animation - Sprite Sheet
   * Bilinear scale option per layer

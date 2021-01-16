@@ -142,9 +142,7 @@ vec4 GetColorWithIntro(vec4 in_color, vec2 in_coord)
 
    float frame_count = global.FrameCount;
 
-   // Loop the animation so we can see the results
-   if (HSM_INTRO_WHEN_TO_SHOW == 2)
-      frame_count = mod(frame_count, HSM_INTRO_REPEAT_TIME);
+
 
    float mask_wait = 20 / HSM_INTRO_SPEED;
    
@@ -163,10 +161,23 @@ vec4 GetColorWithIntro(vec4 in_color, vec2 in_coord)
    float intro_logo_hold = HSM_INTRO_LOGO_HOLD / HSM_INTRO_SPEED;
    float intro_logo_fade_out = HSM_INTRO_LOGO_FADE_OUT / HSM_INTRO_SPEED;
 
-	float static_hold = HSM_INTRO_NOISE_HOLD / HSM_INTRO_SPEED;
-	float static_fade_out = HSM_INTRO_NOISE_FADE_OUT / HSM_INTRO_SPEED;
+	float noise_hold = HSM_INTRO_NOISE_HOLD / HSM_INTRO_SPEED;
+	float noise_fade_out = HSM_INTRO_NOISE_FADE_OUT / HSM_INTRO_SPEED;
 
-	if (frame_count <= mask_wait + mask_vert_wait + mask_fade_vertical + static_hold + static_fade_out)
+   // Black Hold starts from end of Static Hold
+   float black_hold = HSM_INTRO_SOLID_BLACK_HOLD / HSM_INTRO_SPEED;
+	float black_fade_out = HSM_INTRO_SOLID_BLACK_FADE_OUT / HSM_INTRO_SPEED;
+
+   float power_on_seq_length = mask_wait + mask_vert_wait + mask_fade_vertical;
+   float fade_out_seq_length = max(noise_fade_out, black_hold + black_fade_out);
+   float logo_seq_length     = intro_logo_wait + intro_logo_fade_in + intro_logo_hold + intro_logo_fade_out;
+   float full_seq_length     = max(power_on_seq_length + noise_hold + fade_out_seq_length, logo_seq_length);
+
+   // Loop the animation so we can see the results
+   if (HSM_INTRO_WHEN_TO_SHOW == 2)
+      frame_count = mod(frame_count, full_seq_length + 15);
+
+	if (frame_count <= full_seq_length)
 	{
 		vec2 noise_res = global.OriginalSize.xy;
       noise_res = min(noise_res, vec2(640, 480));
@@ -179,11 +190,14 @@ vec4 GetColorWithIntro(vec4 in_color, vec2 in_coord)
 
 		float area = width * height;
 
-		float solid_color_opacity = HHLP_EasePowerIn(clamp(1 - (frame_count - (mask_wait + mask_fade_horizontal/2.5 + solid_color_hold)) / solid_color_fade_out * 2, 0, 1), 1.5);
-      out_color = mix(out_color, vec4(0, 0, 0, 1), solid_color_opacity);
+      float black_opacity = HHLP_EasePowerIn(clamp(1 - (frame_count - (power_on_seq_length + noise_hold + black_hold)) / black_fade_out, 0, 1), 1.5);
+      out_color = mix(out_color, vec4(0, 0, 0, 1), black_opacity);
 
-		float static_opacity =  1 - clamp((frame_count - static_hold - mask_wait - mask_fade_horizontal) / static_fade_out, 0, 1);
-		static_opacity = HHLP_EasePowerInOut(static_opacity, 4);
+		float solid_color_opacity = HHLP_EasePowerIn(clamp(1 - (frame_count - (mask_wait + mask_fade_horizontal/2.5 + solid_color_hold)) / solid_color_fade_out * 2, 0, 1), 1.5);
+      // out_color = mix(out_color, vec4(0, 0, 0, 1), solid_color_opacity);
+
+		float noise_opacity =  1 - clamp((frame_count - (power_on_seq_length + noise_hold)) / noise_fade_out, 0, 1);
+		noise_opacity = HHLP_EasePowerInOut(noise_opacity, 4);
 
 		// Calculate Static Noise
 		float e = 2.7182818284590452353602874713527;
@@ -194,7 +208,7 @@ vec4 GetColorWithIntro(vec4 in_color, vec2 in_coord)
 
 		noise_color.rgb *= 0.60;
 
-		out_color = HSM_BlendModeLayerMix(out_color, noise_color, HSM_INTRO_NOISE_BLEND_MODE, static_opacity);
+		out_color = HSM_BlendModeLayerMix(out_color, noise_color, HSM_INTRO_NOISE_BLEND_MODE, noise_opacity);
 
       vec2 intro_image_res = vec2(HSM_INTRO_LOGO_RES_X, HSM_INTRO_LOGO_RES_Y);
       float intro_image_aspect = intro_image_res.x/intro_image_res.y;
@@ -227,7 +241,6 @@ vec4 GetColorWithIntro(vec4 in_color, vec2 in_coord)
       logo_opacity *=  clamp(clamp((frame_count - intro_logo_wait) / intro_logo_fade_in, 0, 1) - 
                               clamp((frame_count - (intro_logo_wait + intro_logo_fade_in + intro_logo_hold)) / intro_logo_fade_out, 0, 1), 
                               0, 1);
-
 
       // Logo UNDER solid color
       if (HSM_INTRO_LOGO_OVER_SOLID_COLOR == 0)

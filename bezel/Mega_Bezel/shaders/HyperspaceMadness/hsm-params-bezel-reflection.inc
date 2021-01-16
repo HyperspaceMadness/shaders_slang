@@ -46,7 +46,7 @@ float HSM_BZL_INNER_EDGE_SHADOW = global.HSM_BZL_INNER_EDGE_SHADOW / 100;
 //---------------------------------------------------------------------------------------------------
 // Bezel & Frame Color
 //---------------------------------------------------------------------------------------------------
-#pragma parameter HSM_BEZEL_FRAME_COLOR_TITLE		"[ BEZEL & FRAME COLOR ]________________________________________" 0 0 1 1
+#pragma parameter HSM_BEZEL_FRAME_COLOR_TITLE		"[ BEZEL & FRAME COLOR ]________________________________________" 0 0 0.01 0.01
 
 #pragma parameter HSM_BZL_COLOR_HUE					"      Hue" 0 0 360 1
 float HSM_BZL_COLOR_HUE = global.HSM_BZL_COLOR_HUE / 360;
@@ -64,7 +64,7 @@ float HSM_BZL_NOISE = global.HSM_BZL_NOISE / 100;
 //---------------------------------------------------------------------------------------------------
 //    FRAME
 //---------------------------------------------------------------------------------------------------
-#pragma parameter HSM_FRAME_TITLE			            "[ FRAME ]______________________________________________________" 0 0 1 1
+#pragma parameter HSM_FRAME_TITLE			            "[ FRAME ]______________________________________________________" 0 0 0.01 0.01
 
 #pragma parameter HSM_FRM_OPACITY                       "      Opacity" 100 0 100 5
 float HSM_FRM_OPACITY = global.HSM_FRM_OPACITY / 100;
@@ -116,7 +116,7 @@ float HSM_FRM_SHADOW_WIDTH = global.HSM_FRM_SHADOW_WIDTH;
 //---------------------------------------------------------------------------------------------------
 //    REFLECTION
 //---------------------------------------------------------------------------------------------------
-#pragma parameter HSM_REFLECTION_TITLE			            "[ REFLECTION ]_________________________________________________" 0 0 1 1
+#pragma parameter HSM_REFLECTION_TITLE			            "[ REFLECTION ]_________________________________________________" 0 0 0.01 0.01
 
 #pragma parameter HSM_REFLECT_BLEND_MODE                    "      Blend Mode -  Off | Normal | Add"  2 0 2 1
 float HSM_REFLECT_BLEND_MODE = global.HSM_REFLECT_BLEND_MODE;
@@ -152,7 +152,7 @@ float HSM_REFLECT_FULLSCREEN_GLOW_GAMMA = global.HSM_REFLECT_FULLSCREEN_GLOW_GAM
 //---------------------------------------------------------------------------------------------------
 // Reflection Fading
 //---------------------------------------------------------------------------------------------------
-#pragma parameter HSM_REFLECTION_FADE_TITLE			            "[ REFLECTION FADE ]____________________________________________" 0 0 1 1
+#pragma parameter HSM_REFLECTION_FADE_TITLE			            "[ REFLECTION FADE ]____________________________________________" 0 0 0.01 0.01
 
 #pragma parameter HSM_REFLECT_FADE_AMOUNT 					    "      Fade Amount" 1 0 1 0.05
 float HSM_REFLECT_FADE_AMOUNT = global.HSM_REFLECT_FADE_AMOUNT;
@@ -173,7 +173,7 @@ float HSM_REFLECT_LATERAL_OUTER_FADE_DISTANCE = global.HSM_REFLECT_LATERAL_OUTER
 float HSM_REFLECT_VIGNETTE_AMOUNT = global.HSM_REFLECT_VIGNETTE_AMOUNT / 100;
 
 
-#pragma parameter HSM_REFLECT_CORNER_TITLE			            "[ REFLECTION CORNER ]__________________________________________" 0 0 1 1
+#pragma parameter HSM_REFLECT_CORNER_TITLE			            "[ REFLECTION CORNER ]__________________________________________" 0 0 0.01 0.01
 
 #pragma parameter HSM_REFLECT_CORNER_FADE 						"      Corner Fade" 10 1 100 0.5
 float HSM_REFLECT_CORNER_FADE = global.HSM_REFLECT_CORNER_FADE;
@@ -199,7 +199,7 @@ float HSM_REFLECT_CORNER_ROTATION_OFFSET_BOTTOM = global.HSM_REFLECT_CORNER_ROTA
 //---------------------------------------------------------------------------------------------------
 // Reflection Blur
 //---------------------------------------------------------------------------------------------------
-#pragma parameter HSM_REFLECT_BLUR_TITLE			                "[ REFLECTION BLUR ]____________________________________________" 0 0 1 1
+#pragma parameter HSM_REFLECT_BLUR_TITLE			                "[ REFLECTION BLUR ]____________________________________________" 0 0 0.01 0.01
 
 #pragma parameter HSM_REFLECT_BLUR_NUM_SAMPLES 					    "      Blur Samples - 0 for OFF" 12 0 40 1
 float HSM_REFLECT_BLUR_NUM_SAMPLES = global.HSM_REFLECT_BLUR_NUM_SAMPLES;
@@ -211,7 +211,7 @@ float HSM_REFLECT_BLUR_MIN = global.HSM_REFLECT_BLUR_MIN;
 float HSM_REFLECT_BLUR_MAX = global.HSM_REFLECT_BLUR_MAX;
 
 // Reflection Noise
-#pragma parameter HSM_REFLECT_NOISE_TITLE			                "[ REFLECTION NOISE ]___________________________________________" 0 0 1 1
+#pragma parameter HSM_REFLECT_NOISE_TITLE			                "[ REFLECTION NOISE ]___________________________________________" 0 0 0.01 0.01
 
 #pragma parameter HSM_REFLECT_NOISE_AMOUNT 						    "      Noise Amount" 0.5 0 1 0.1
 float HSM_REFLECT_NOISE_AMOUNT = global.HSM_REFLECT_NOISE_AMOUNT;
@@ -226,7 +226,7 @@ float HSM_REFLECT_NOISE_SAMPLE_DISTANCE = global.HSM_REFLECT_NOISE_SAMPLE_DISTAN
 //---------------------------------------------------------------------------------------------------
 //    GLASS BORDER
 //---------------------------------------------------------------------------------------------------
-#pragma parameter HSM_GLASS_BORDER_TITLE			        "[ GLASS BORDER ]_______________________________________________" 0 0 1 1
+#pragma parameter HSM_GLASS_BORDER_TITLE			        "[ GLASS BORDER ]_______________________________________________" 0 0 0.01 0.01
 
 #pragma parameter HSM_GLASS_BORDER_ON                       "      Glass Border ON (Glass Preset Only)" 0 0 1 1
 float HSM_GLASS_BORDER_ON = global.HSM_GLASS_BORDER_ON;
@@ -235,7 +235,7 @@ float HSM_GLASS_BORDER_ON = global.HSM_GLASS_BORDER_ON;
 //---------------------------------------------------------------------------------------------------
 //    REFLECT ONLY IMAGE LAYER
 //---------------------------------------------------------------------------------------------------
-#pragma parameter HSM_REFLECT_ONLY_IMAGE_TITLE	                    "[ REFLECT ONLY IMAGE LAYER ]___________________________________" 0 0 1 1
+#pragma parameter HSM_REFLECT_ONLY_IMAGE_TITLE	                    "[ REFLECT ONLY IMAGE LAYER ]___________________________________" 0 0 0.01 0.01
 
 #pragma parameter HSM_REFLECT_ONLY_IMG_OPACITY 	                    "      Opacity" 0 0 100 0.1
 float HSM_REFLECT_ONLY_IMG_OPACITY = global.HSM_REFLECT_ONLY_IMG_OPACITY / 100;
@@ -243,15 +243,16 @@ float HSM_REFLECT_ONLY_IMG_OPACITY = global.HSM_REFLECT_ONLY_IMG_OPACITY / 100;
 #pragma parameter HSM_REFLECT_ONLY_IMG_BLEND_MODE 		            "      Blend Mode - Off | Norm | Add | Mult"  2 0 3 1
 float HSM_REFLECT_ONLY_IMG_BLEND_MODE = global.HSM_REFLECT_ONLY_IMG_BLEND_MODE;
 
+#pragma parameter HSM_REFLECT_MASK_TO_BEZEL                         "      Mask Reflection to Bezel" 0 0 1 1
+float HSM_REFLECT_MASK_TO_BEZEL = global.HSM_REFLECT_MASK_TO_BEZEL;
 
 //---------------------------------------------------------------------------------------------------
 // Reflection Is Last Pass
 //---------------------------------------------------------------------------------------------------
-#pragma parameter HSM_REFLECT_LAST_PASS_TITLE			        "[ REFLECTION IS LAST PASS ]____________________________________" 0 0 1 1
+#pragma parameter HSM_REFLECT_LAST_PASS_TITLE			        "[ REFLECTION IS LAST PASS ]____________________________________" 0 0 0.01 0.01
 
 #pragma parameter HSM_REFLECT_IS_LAST_PASS "      Reflection is Last Pass (Glass and Reflect Only Presets)" 0 0 1 1
 float HSM_REFLECT_IS_LAST_PASS = global.HSM_REFLECT_IS_LAST_PASS;
-
 
 /////////////// CONSTANT TUNING SETTINGS ///////////////
 

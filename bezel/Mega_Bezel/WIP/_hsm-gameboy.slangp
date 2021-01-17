@@ -1,60 +1,108 @@
-shader0 = shaders/HyperspaceMadness/hsm-gameboy/hsm-gb-pass0.slang
+shader0 = ../shaders/HyperspaceMadness/hsm-gameboy/hsm-gb-pass0.slang
 filter_linear0 = false
 scale_type0 = viewport
 scale0 = 1.0
 alias0 = "PASS0"
 
-shader1 = shaders/HyperspaceMadness/hsm-gameboy/hsm-gb-pass1.slang
+shader1 = ../shaders/HyperspaceMadness/hsm-gameboy/hsm-gb-pass1.slang
 filter_linear1 = false
 scale_type1 = source
 scale1 = 1.0
 alias1 = "PASS1"
 
-shader2 = shaders/HyperspaceMadness/hsm-gameboy/hsm-gb-pass2.slang
+shader2 = ../shaders/HyperspaceMadness/hsm-gameboy/hsm-gb-pass2.slang
 filter_linear2 = false
 scale_type2 = source
 scale2 = 1.0
 alias2 = "PASS2"
 
-shader3 = shaders/HyperspaceMadness/hsm-gameboy/hsm-gb-pass3.slang
+shader3 = ../shaders/HyperspaceMadness/hsm-gameboy/hsm-gb-pass3.slang
 filter_linear3 = false
 scale_type3 = source
 scale3 = 1.0
 alias3 = "PASS3"
 
-shader4 = shaders/HyperspaceMadness/hsm-gameboy/hsm-gb-pass4.slang
+shader4 = ../shaders/HyperspaceMadness/hsm-gameboy/hsm-gb-pass4.slang
 filter_linear4 = false
 scale_type4 = source
 scale4 = 1.0
-alias4 = "PASS4"
+alias4 = "BR_CRTPass"
 
+// Define how many shaders will be used from this list
 shaders = 5
 
-textures = "DMG0ColorPaletteImage;DMG1ColorPaletteImage;DMG2ColorPaletteImage;PocketColorPaletteImage;LightColorPaletteImage;CustomColorPaletteImage;BACKGROUND;IntroImage;ColoredGelImage;TubeStaticReflectionImage;"
-DMG0ColorPaletteImage = shaders/HyperspaceMadness/hsm-gameboy/palette-gameboy-dmg-0.png
+// Define textures to be used by the different passes
+textures = "DMG0ColorPaletteImage;DMG1ColorPaletteImage;DMG2ColorPaletteImage;PocketColorPaletteImage;LightColorPaletteImage;CustomColorPaletteImage;LCDBackgroundImage;IntroImage;ColoredGelImage;TubeStaticReflectionImage;ReflectOnlyLayerImage;FrameTextureImage;BackgroundImage;BackgroundVertImage;CabinetGlassImage;BezelImage;BezelVertImage;DecalImage;NightLightingImage;LEDImage;TopLayerImage;TopLayerVertImage;"
+
+DMG0ColorPaletteImage = ../shaders/HyperspaceMadness/hsm-gameboy/palette-gameboy-dmg-0.png
 DMG0ColorPaletteImage_linear = false
 
-DMG1ColorPaletteImage = shaders/HyperspaceMadness/hsm-gameboy/palette-gameboy-dmg-1.png
+DMG1ColorPaletteImage = ../shaders/HyperspaceMadness/hsm-gameboy/palette-gameboy-dmg-1.png
 DMG1ColorPaletteImage_linear = false
 
-DMG2ColorPaletteImage = shaders/HyperspaceMadness/hsm-gameboy/palette-gameboy-dmg-2.png
+DMG2ColorPaletteImage = ../shaders/HyperspaceMadness/hsm-gameboy/palette-gameboy-dmg-2.png
 DMG2ColorPaletteImage_linear = false
 
-PocketColorPaletteImage = shaders/HyperspaceMadness/hsm-gameboy/palette-gameboy-pocket.png
+PocketColorPaletteImage = ../shaders/HyperspaceMadness/hsm-gameboy/palette-gameboy-pocket.png
 PocketColorPaletteImage_linear = false
 
-LightColorPaletteImage = shaders/HyperspaceMadness/hsm-gameboy/palette-gameboy-light.png
+LightColorPaletteImage = ../shaders/HyperspaceMadness/hsm-gameboy/palette-gameboy-light.png
 LightColorPaletteImage_linear = false
 
-CustomColorPaletteImage = shaders/HyperspaceMadness/hsm-gameboy/palette-gameboy-custom.png
+CustomColorPaletteImage = ../shaders/HyperspaceMadness/hsm-gameboy/palette-gameboy-custom.png
 CustomColorPaletteImage_linear = false
 
+LCDBackgroundImage = ../shaders/HyperspaceMadness/hsm-gameboy/bg-gameboy-dmg.png
+LCDBackgroundImage_linear = true
 
-BACKGROUND = shaders/HyperspaceMadness/hsm-gameboy/bg-gameboy-dmg.png
-BACKGROUND_linear = true
+IntroImage = ../shaders/HyperspaceMadness/textures/IntroImage_MegaBezelLogo.png
+IntroImage_linear = true
 
-ColoredGelImage = shaders/HyperspaceMadness/hsm-gameboy/bg-gameboy-dmg.png
+ColoredGelImage = ../shaders/HyperspaceMadness/textures/Transparent_DummyTexture_16x16.png
 ColoredGelImage_linear = true
 
-TubeStaticReflectionImage = shaders/HyperspaceMadness/textures/TubeGlassOverlayImage_3840x2160.png
+TubeStaticReflectionImage = ../shaders/HyperspaceMadness/textures/TubeGlassOverlayImage_3840x2160.png
 TubeStaticReflectionImage_linear = true
+
+ReflectOnlyLayerImage = ../shaders/HyperspaceMadness/textures/Transparent_DummyTexture_16x16.png
+ReflectOnlyLayerImage_linear = true
+
+FrameTextureImage = ../shaders/HyperspaceMadness/textures/FrameTexture_2800x2120.png
+FrameTextureImage_linear = true
+
+BackgroundImage = ../shaders/HyperspaceMadness/textures/BackgroundImage_Carbon_3840x2160.png
+BackgroundImage_linear = true
+
+BackgroundVertImage = ../shaders/HyperspaceMadness/textures/BackgroundImage_Carbon_3840x2160.png
+BackgroundVertImage_linear = true
+
+CabinetGlassImage = ../shaders/HyperspaceMadness/textures/Transparent_DummyTexture_16x16.png
+CabinetGlassImage_linear = true
+
+BezelImage = ../shaders/HyperspaceMadness/textures/Transparent_DummyTexture_16x16.png
+BezelImage_linear = true
+
+BezelVertImage = ../shaders/HyperspaceMadness/textures/Transparent_DummyTexture_16x16.png
+BezelVertImage_linear = true
+
+DecalImage = ../shaders/HyperspaceMadness/textures/Transparent_DummyTexture_16x16.png
+DecalImage_linear = true
+
+NightLightingImage = ../shaders/HyperspaceMadness/textures/NightLighting_3840x2160.jpg
+NightLightingImage_linear = true
+
+LEDImage = ../shaders/HyperspaceMadness/textures/Transparent_DummyTexture_16x16.png
+LEDImage_linear = true
+
+TopLayerImage = ../shaders/HyperspaceMadness/textures/Transparent_DummyTexture_16x16.png
+TopLayerImage_linear = true
+
+TopLayerVertImage = ../shaders/HyperspaceMadness/textures/Transparent_DummyTexture_16x16.png
+TopLayerVertImage_linear = true
+
+HSM_INT_SCALE_MODE = "2.000000"
+HSM_INT_SCALE_BORDER_MIN_HEIGHT = "7.00000"
+HSM_CURVATURE_MODE = "-1.000000"
+HSM_SCREEN_CORNER_RADIUS = "0.000000"
+HSM_SCREEN_EDGE_SHARPNESS = "0.800000"
+HSM_TUBE_BLACK_EDGE_THICKNESS = "-0.000000"

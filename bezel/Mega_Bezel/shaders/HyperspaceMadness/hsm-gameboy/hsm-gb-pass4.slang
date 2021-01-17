@@ -10,6 +10,7 @@ layout(push_constant) uniform Push
 	vec4 OriginalSize;
 	vec4 SourceSize;
 	vec4 PassOutputSize1;
+	float gameboy_color_palette;
 	float contrast;
 	float screen_light;
 	float pixel_opacity;
@@ -24,6 +25,8 @@ layout(push_constant) uniform Push
 ////////////////////////////////////////////////////////////////////////////////
 // Config                                                                     //
 ////////////////////////////////////////////////////////////////////////////////
+
+#pragma parameter gameboy_color_palette    "      Palette - DMG0 | DMG1 | DMG2 | Pocket | Light | Custom" 0 0 5 1
 
 // Useful to fine-tune the colors.
 // Higher values make the "black" color closer to black - [0, 1] [DEFAULT: 0.95]
@@ -119,11 +122,16 @@ layout(location = 0) out vec4 FragColor;
 layout(set = 0, binding = 1) uniform sampler2D Source;
 layout(set = 0, binding = 2) uniform sampler2D PassOutput1;
 layout(set = 0, binding = 3) uniform sampler2D DMG0ColorPaletteImage;
-layout(set = 0, binding = 4) uniform sampler2D LCDBackgroundImage;
-layout(set = 0, binding = 5) uniform sampler2D ColoredGelImage;
-layout(set = 0, binding = 6) uniform sampler2D TubeStaticReflectionImage;
+layout(set = 0, binding = 4) uniform sampler2D DMG1ColorPaletteImage;
+layout(set = 0, binding = 5) uniform sampler2D DMG2ColorPaletteImage;
+layout(set = 0, binding = 6) uniform sampler2D PocketColorPaletteImage;
+layout(set = 0, binding = 7) uniform sampler2D LightColorPaletteImage;
+layout(set = 0, binding = 8) uniform sampler2D CustomColorPaletteImage;
+layout(set = 0, binding = 9) uniform sampler2D LCDBackgroundImage;
+layout(set = 0, binding = 10) uniform sampler2D ColoredGelImage;
+layout(set = 0, binding = 11) uniform sampler2D TubeStaticReflectionImage;
 
-#define bg_color texture(DMG0ColorPaletteImage, vec2(0.25, 0.5)) 
+// #define bg_color texture(DMG0ColorPaletteImage, vec2(0.25, 0.5)) 
 
 // Sample the background color from the palette
 #define shadow_alpha (params.contrast * params.shadow_opacity)
@@ -141,6 +149,20 @@ layout(set = 0, binding = 6) uniform sampler2D TubeStaticReflectionImage;
 void main()
 {
     // HSM Added
+    vec4 bg_color = vec4(0, 0, 0, 1);
+    if (params.gameboy_color_palette == 0)
+        bg_color = texture(DMG0ColorPaletteImage, vec2(0.25, 0.5));
+    if (params.gameboy_color_palette == 1)
+        bg_color = texture(DMG1ColorPaletteImage, vec2(0.25, 0.5));
+    if (params.gameboy_color_palette == 2)
+        bg_color = texture(DMG2ColorPaletteImage, vec2(0.25, 0.5));
+    if (params.gameboy_color_palette == 3)
+        bg_color = texture(PocketColorPaletteImage, vec2(0.25, 0.5));
+    if (params.gameboy_color_palette == 4)
+        bg_color = texture(LightColorPaletteImage, vec2(0.25, 0.5));
+    if (params.gameboy_color_palette == 5)
+        bg_color = texture(CustomColorPaletteImage, vec2(0.25, 0.5));
+
 	vec2 screen_curved_coord = HSM_GetCurvedCoord(SCREEN_COORD, 1, SCREEN_ASPECT);
 	vec2 screen_curved_coord_mirrored = HSM_GetMirrorWrappedCoord(screen_curved_coord);
     // End Addition
@@ -180,7 +202,8 @@ void main()
     // Foreground is alpha blended with the shadowed background
     out_color = (foreground * foreground.a * params.contrast) + (out_color * (params.screen_light - foreground.a * params.contrast * params.pixel_opacity));
     
-    FragColor = out_color;
+    // Linearize so it is linear when it goes to the post prep
+    FragColor = HSM_Linearize(out_color, HSM_DEFAULT_CRT_GAMMA);
 
     // Prep and add output gamma
 	FragColor = HSM_GetPostCrtPreppedColor(FragColor, screen_curved_coord, SCREEN_COORD, SCREEN_ASPECT, SCREEN_SCALE, ColoredGelImage, TubeStaticReflectionImage);

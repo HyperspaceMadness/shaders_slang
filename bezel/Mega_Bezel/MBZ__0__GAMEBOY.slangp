@@ -202,7 +202,7 @@ TopLayerImage_linear = true
 TopLayerVertImage = shaders/HyperspaceMadness/textures/Transparent_DummyTexture_16x16.png
 TopLayerVertImage_linear = true
 
-HSM_INT_SCALE_MODE = "1.000000"
+HSM_INT_SCALE_MODE = "2.000000"
 HSM_INT_SCALE_BORDER_MIN_HEIGHT = "10.500000"
 HSM_CURVATURE_MODE = "-1.000000"
 HSM_SCREEN_CORNER_RADIUS = "0.000000"

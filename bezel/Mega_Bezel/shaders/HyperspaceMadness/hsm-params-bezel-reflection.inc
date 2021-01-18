@@ -243,6 +243,9 @@ float HSM_REFLECT_ONLY_IMG_OPACITY = global.HSM_REFLECT_ONLY_IMG_OPACITY / 100;
 #pragma parameter HSM_REFLECT_ONLY_IMG_BLEND_MODE 		            "      Blend Mode - Off | Norm | Add | Mult"  2 0 3 1
 float HSM_REFLECT_ONLY_IMG_BLEND_MODE = global.HSM_REFLECT_ONLY_IMG_BLEND_MODE;
 
+#pragma parameter HSM_REFLECT_ONLY_IMG_ASPECT_RATIO 				"      Aspect Ratio - Full | 16:9 | 9:16"  0 0 6 1
+float HSM_REFLECT_ONLY_IMG_ASPECT_RATIO = global.HSM_REFLECT_ONLY_IMG_ASPECT_RATIO;
+
 #pragma parameter HSM_REFLECT_MASK_TO_BEZEL                         "      Mask Reflection to Bezel" 0 0 1 1
 float HSM_REFLECT_MASK_TO_BEZEL = global.HSM_REFLECT_MASK_TO_BEZEL;
 

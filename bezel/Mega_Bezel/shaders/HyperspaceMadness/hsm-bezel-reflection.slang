@@ -459,7 +459,19 @@ void main()
 
 	if (HSM_REFLECT_ONLY_IMG_OPACITY > 0)
 	{
-		vec4 layer_over_reflection_image = texture(ReflectOnlyLayerImage, VIEWPORT_COORD);
+		vec2 reflect_only_img_coord = VIEWPORT_COORD;
+		float final_viewport_aspect = global.FinalViewportSize.x/global.FinalViewportSize.y;
+
+		// Image Ratio is 16:9
+		if (HSM_REFLECT_ONLY_IMG_ASPECT_RATIO == 1)
+			reflect_only_img_coord.x = (VIEWPORT_COORD.x - 0.5) / (1.7777/final_viewport_aspect) + 0.5;
+
+		// Image Ratio is 9:16
+		if (HSM_REFLECT_ONLY_IMG_ASPECT_RATIO == 2)
+			reflect_only_img_coord.y = (VIEWPORT_COORD.y - 0.5) / (0.5625/final_viewport_aspect) + 0.5;
+
+		vec4 layer_over_reflection_image = texture(ReflectOnlyLayerImage, reflect_only_img_coord);
+		layer_over_reflection_image = HSM_Linearize(layer_over_reflection_image, HSM_DEFAULT_SRGB_GAMMA);
 		layer_over_reflection_image.a *= outside_tube_mask_wider * (1 - edge_mask);
 		frag_color_linear = BlendModeLayerMixSimple(frag_color_linear, layer_over_reflection_image, HSM_REFLECT_ONLY_IMG_BLEND_MODE, HSM_REFLECT_ONLY_IMG_OPACITY);
 		

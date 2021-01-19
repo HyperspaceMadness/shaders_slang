@@ -31,8 +31,6 @@ Changes:
 
 Mega Bezel Still to Come:
   * Add Control for how much reflection on outer bezel outer edge
-  * Reflect Only Preset with an image?
-  * Cutout and Inverse cutout not working on Top Layer?
   * Startup Animation - Sprite Sheet
   * Bilinear scale option per layer
   * Redo Splitscreen with mapping and no dependence on sampling

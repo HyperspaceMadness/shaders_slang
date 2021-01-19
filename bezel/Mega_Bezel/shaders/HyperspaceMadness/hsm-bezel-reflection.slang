@@ -164,7 +164,10 @@ void main()
 	vec2 screen_curved_coord = HSM_GetCurvedCoord(SCREEN_COORD, 1, SCREEN_ASPECT);
 
 	// Shrink the mask by 0.001 to clip off outer edge
-	float screen_mask = HSM_GetCornerMask(((screen_curved_coord - 0.5) * 1.001) + 0.5, SCREEN_ASPECT, HSM_SCREEN_CORNER_RADIUS, HSM_SCREEN_EDGE_SHARPNESS);
+	float screen_edge_sharpness = 0.5;
+	if (HSM_GLASS_BORDER_ON == 1)
+		screen_edge_sharpness = HSM_SCREEN_EDGE_SHARPNESS;
+	float screen_mask = HSM_GetCornerMask(((screen_curved_coord - 0.5) * 1.001) + 0.5, SCREEN_ASPECT, HSM_SCREEN_CORNER_RADIUS, screen_edge_sharpness);
 
 	//----------------------------------------------------
 	//  Calculate Outside mapping Coords
@@ -255,7 +258,7 @@ void main()
 	float top_corner_mask = corner_mask * top_half_mask;
 	float bottom_corner_mask = corner_mask * (1 - top_half_mask);
 
-	float outside_tube_mask_wider = 1 - HSM_GetCornerMask(tube_warped_coord_ctr * 0.996 + 0.5, SCREEN_ASPECT, HSM_BZL_INNER_CORNER_RADIUS_SCALE * HSM_SCREEN_CORNER_RADIUS, 0.9);
+	float outside_tube_mask_wider = 1 - HSM_GetCornerMask(tube_warped_coord_ctr * 0.996 + 0.5, SCREEN_ASPECT, HSM_BZL_INNER_CORNER_RADIUS_SCALE * HSM_SCREEN_CORNER_RADIUS, screen_edge_sharpness);
 	float tube_shadow_mask = HSM_GetCornerMask(tube_warped_coord_ctr + 0.5, SCREEN_ASPECT, HSM_BZL_INNER_CORNER_RADIUS_SCALE * HSM_SCREEN_CORNER_RADIUS, 0);
 	float tube_edge_shadow_mult = HSM_BZL_INNER_EDGE_SHADOW * (tube_shadow_mask) + (1 - HSM_BZL_INNER_EDGE_SHADOW);
 
@@ -472,11 +475,11 @@ void main()
 
 		vec4 layer_over_reflection_image = texture(ReflectOnlyLayerImage, reflect_only_img_coord);
 		layer_over_reflection_image = HSM_Linearize(layer_over_reflection_image, HSM_DEFAULT_SRGB_GAMMA);
-		layer_over_reflection_image.a *= outside_tube_mask_wider * (1 - edge_mask);
+		if (HSM_GLASS_BORDER_ON == 1)
+			layer_over_reflection_image.a *= outside_tube_mask_wider * (1 - edge_mask);
+		else
+			layer_over_reflection_image *= outside_tube_mask;
 		frag_color_linear = BlendModeLayerMixSimple(frag_color_linear, layer_over_reflection_image, HSM_REFLECT_ONLY_IMG_BLEND_MODE, HSM_REFLECT_ONLY_IMG_OPACITY);
-		
-		
-		// frag_color_linear += layer_over_reflection_image;
 	}
 
 	// Convert from linear to gamma space values

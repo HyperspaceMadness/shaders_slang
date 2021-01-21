@@ -134,14 +134,12 @@ vec2 GetScaledCoord(vec2 viewport_coord, vec2 background_coord, vec2 screen_coor
 	{
 		destination_coord = screen_coord;
 		destination_scale = vec2(1, 1) * (1 / DEFAULT_TUBE_SCALE_V);
-		// destination_pos_offset += vec2(0, HSM_SCREEN_POSITION_Y);
 		destination_aspect = (SCREEN_SCALE.x * global.OutputSize.x) / (SCREEN_SCALE.y * global.OutputSize.y);
 	}
 	else if (scale_mode == IMAGE_SCALE_MODE_FRAME)
 	{
 		destination_coord = bezel_outside_coord;
 		destination_scale = vec2(1, 1) * (1 / DEFAULT_BEZEL_SCALE_V);
-		// destination_pos_offset += vec2(0, HSM_SCREEN_POSITION_Y + HSM_BZL_OUTER_POSITION_Y);
 		destination_aspect = (FRAME_SCALE.x * global.OutputSize.x) / (FRAME_SCALE.y * global.OutputSize.y);
 	}
 	else if (scale_mode == IMAGE_SCALE_MODE_BG)
@@ -363,11 +361,11 @@ void main()
 	float screen_scale_diagonal = sqrt(SCREEN_SCALE.y * SCREEN_SCALE.y + (SCREEN_SCALE.y * SCREEN_ASPECT) * (SCREEN_SCALE.y * SCREEN_ASPECT));
 
 	// TODO need to correct for screen aspect of sub screen
-	vec2 outer_bezel_scale = vec2(HSM_BZL_WIDTH / SCREEN_ASPECT + 1, HSM_BZL_HEIGHT / 100 + 1);
+	vec2 outer_bezel_scale = vec2(HSM_BZL_WIDTH / SCREEN_ASPECT + 1, HSM_BZL_HEIGHT + 1);
 
 
 	float screen_aspect = SCREEN_ASPECT;
-	vec2 frame_pos_offset = vec2(0, HSM_BZL_OUTER_POSITION_Y / 100);
+	vec2 frame_pos_offset = vec2(0, HSM_BZL_OUTER_POSITION_Y);
 
 	// Need to put this before screen_scale_diagonal?
 	vec2 screen_coord = SCREEN_COORD; //HSM_GetScreenVTexCoord(VIEWPORT_COORD, SCREEN_SCALE);
@@ -382,7 +380,7 @@ void main()
 	// 		outer_bezel_scale = split_axis_is_horizontal * vec2((outer_bezel_scale.x - 1) * 2 + 1, outer_bezel_scale.y) + (1 - split_axis_is_horizontal) * vec2(outer_bezel_scale.x, (outer_bezel_scale.y - 1) * 2 + 1);
 			
 	// 		// Adjust the direction of position depending on if the screens are left & Right or Top and Bottom
-	// 		frame_pos_offset *= HSM_SetSplitAxisCoord(vec2(1,1), HSM_BZL_OUTER_POSITION_Y / 100,  split_axis_is_horizontal);
+	// 		frame_pos_offset *= HSM_SetSplitAxisCoord(vec2(1,1), HSM_BZL_OUTER_POSITION_Y,  split_axis_is_horizontal);
 			
 	// 		// If this is the first screen invert the position offset, so the screens slide toward or away from each other 
 	// 		float in_first_half = HHLP_IsUnderValue(HSM_GetSplitAxisCoord1D(SCREEN_COORD, split_axis_is_horizontal), 0.5);
@@ -408,7 +406,7 @@ void main()
 
 	vec2 black_edge_scale_offset = HSM_GetTubeScale(sub_screen_scale) / sub_screen_scale;
 
-	bezel_outside_coord = HSM_GetInverseScaledCoord(bezel_outside_coord, black_edge_scale_offset * outer_bezel_scale) + vec2(0, HSM_BZL_OUTER_POSITION_Y / 100);
+	bezel_outside_coord = HSM_GetInverseScaledCoord(bezel_outside_coord, black_edge_scale_offset * outer_bezel_scale) + vec2(0, HSM_BZL_OUTER_POSITION_Y);
 	vec2 frame_outside_coord = (bezel_outside_coord + vec2(0, HSM_FRM_OUTER_POS_Y) - 0.5) / vec2((frame_thickness * HSM_FRM_THICKNESS_SCALE_X) / (sub_screen_scale.x / sub_screen_scale.y * output_aspect) + 1, frame_thickness + 1) + 0.5;
 
 	FRAME_SCALE = screen_scale * black_edge_scale_offset * outer_bezel_scale;
@@ -429,11 +427,11 @@ void main()
 	const float pi = 3.1415;
 
 	// Get amount to shift the point at the outer corner to match the overall position offset
-	vec2 pos_shift_offset = vec2(0, HSM_BZL_OUTER_POSITION_Y / 100) * SCREEN_SCALE.y / outermap_scale;
+	vec2 pos_shift_offset = vec2(0, HSM_BZL_OUTER_POSITION_Y) * SCREEN_SCALE.y / outermap_scale;
 	pos_shift_offset *= outermap_coord.y > 0.5 ? 1 : -1;
 
 	// Get the direction vector from the inner corner of the bezel pointing at the outer corner 
-	vec2 corner_crease_dir = (outermap_screen_corner_ctr_coord + pos_shift_offset) / vec2(HSM_BZL_HEIGHT / 100 + 1, HSM_BZL_WIDTH + 1) - (outermap_screen_corner_ctr_coord) ;
+	vec2 corner_crease_dir = (outermap_screen_corner_ctr_coord + pos_shift_offset) / vec2(HSM_BZL_HEIGHT + 1, HSM_BZL_WIDTH + 1) - (outermap_screen_corner_ctr_coord) ;
 	corner_crease_dir *= vec2(SCREEN_ASPECT, 1);
 
 	float aspect_corner_length_scale_offset = SCREEN_ASPECT > 1 ? 0.9 : 1.5;
@@ -462,8 +460,8 @@ void main()
 
 	float fade_out_to_corner = HHLP_QuadraticBezier(clamp(length(outermap_warped_outside_screen_vector) / (corner_crease_length * 2), 0, 1), vec2(0.5, HSM_REFLECT_CORNER_SPREAD_FALLOFF / 100));
 
-	float corner_fade_width_inner = HSM_REFLECT_CORNER_INNER_SPREAD / 100 * (SCREEN_SCALE.x + SCREEN_SCALE.y) * HSM_BZL_INNER_CORNER_RADIUS_SCALE * HSM_SCREEN_CORNER_RADIUS / 10 / 250 * 1.2;
-	float corner_fade_width_outer = HSM_REFLECT_CORNER_OUTER_SPREAD / 100 * (SCREEN_SCALE.x + SCREEN_SCALE.y) * HSM_BZL_OUTER_CORNER_RADIUS_SCALE * HSM_SCREEN_CORNER_RADIUS / 10 / 250 * 1.6;
+	float corner_fade_width_inner = HSM_REFLECT_CORNER_INNER_SPREAD * (SCREEN_SCALE.x + SCREEN_SCALE.y) * HSM_BZL_INNER_CORNER_RADIUS_SCALE * HSM_SCREEN_CORNER_RADIUS / 10 / 250 * 1.2;
+	float corner_fade_width_outer = HSM_REFLECT_CORNER_OUTER_SPREAD * (SCREEN_SCALE.x + SCREEN_SCALE.y) * HSM_BZL_OUTER_CORNER_RADIUS_SCALE * HSM_SCREEN_CORNER_RADIUS / 10 / 250 * 1.6;
 	float corner_fade_width = (corner_fade_width_inner + fade_out_to_corner * (corner_fade_width_outer - corner_fade_width_inner));
 
 	// Get a vector perpendicular to the crease that we can shift the crease to blend between bottom/top and sides
@@ -538,9 +536,9 @@ void main()
 	vec3 base_color = BEZEL_FRAME_ORIGINAL_COLOR_RGB;
 
 	vec3 base_color_with_noise = mix(base_color, 1.5 * base_color * noise_mask, HSM_BZL_NOISE);
-	vec3 top_color = hmbz_bezel_brightness_top * HSM_BZL_BRIGHTNESS / 100 * base_color_with_noise;
-	vec3 bottom_color = hmbz_bezel_brightness_bottom * HSM_BZL_BRIGHTNESS / 100 * base_color_with_noise;
-	vec3 sides_color = hmbz_bezel_brightness_sides * HSM_BZL_BRIGHTNESS / 100 * base_color_with_noise;
+	vec3 top_color = hmbz_bezel_brightness_top * HSM_BZL_BRIGHTNESS * base_color_with_noise;
+	vec3 bottom_color = hmbz_bezel_brightness_bottom * HSM_BZL_BRIGHTNESS * base_color_with_noise;
+	vec3 sides_color = hmbz_bezel_brightness_sides * HSM_BZL_BRIGHTNESS * base_color_with_noise;
 
 	vec3 frame_color = hmbz_frame_brightness / 100 * mix(base_color, 1.5 * base_color * noise_mask, 0.6 * HSM_BZL_NOISE);;
 	
@@ -568,12 +566,12 @@ void main()
 
 	// Combine all the individual highlights into one mask
 	float combined_highlight_mask = (1 + 2.5 * HSM_BZL_NOISE) * (1 - noise_mask * 2.5 * HSM_BZL_NOISE) * (top_center_highlight_mask + bottom_center_highlight_mask + sides_highlight_mask);
-	vec3 bezel_color = bezel_diffuse_color + HSM_BZL_HIGHLIGHT / 100 * combined_highlight_mask;
-	bezel_color += HSM_BZL_HIGHLIGHT / 100 * edge_highlight_mask;
+	vec3 bezel_color = bezel_diffuse_color + HSM_BZL_HIGHLIGHT * combined_highlight_mask;
+	bezel_color += HSM_BZL_HIGHLIGHT * edge_highlight_mask;
 
 
 	// Add the inner edge highlight on top of the bezel color which has it's own highlight
-	vec3 frame_inner_edge_color = bezel_color + hmbz_bezel_brightness_frame_inner_edge + HSM_BZL_HIGHLIGHT * 0.1 * hmbz_bezel_brightness_frame_inner_edge;
+	vec3 frame_inner_edge_color = bezel_color + hmbz_bezel_brightness_frame_inner_edge + HSM_BZL_HIGHLIGHT * 10 * hmbz_bezel_brightness_frame_inner_edge;
 	bezel_color = mix(bezel_color, frame_inner_edge_color, frame_inner_edge_mask);
 
 	// Get color for the frame area outside of the bezel
@@ -582,7 +580,7 @@ void main()
 	OUTSIDE_FRAME_MASK_FOR_IMAGE = 1 - HSM_GetCornerMask(frame_outside_coord_ctr * 0.999 + 0.5, SCREEN_ASPECT, HSM_FRM_OUTER_CORNER_RADIUS, 1);
 
 	float dist_inside_outer_edge = min(0.5 - abs(frame_outside_coord_ctr.x), 0.5 - abs(frame_outside_coord_ctr.y));
-	float frame_outer_edge_width = HSM_FRM_OUTER_EDGE_THICKNESS * 0.006;
+	float frame_outer_edge_width = HSM_FRM_OUTER_EDGE_THICKNESS;
 	vec3 frame_diffuse_color = mix(frame_color, (1 - HSM_FRM_OUTER_EDGE_SHADING) * frame_color, smoothstep(frame_outer_edge_width, 0, dist_inside_outer_edge));
 	
 	if (HSM_FRM_TEXTURE_OPACITY > 0)
@@ -613,7 +611,7 @@ void main()
 
 	vec4 frame_shadow_layer = vec4(0);
 	if (HSM_FRM_OPACITY > 0.001)
-		frame_shadow_layer.a = HHLP_QuadraticBezier(smoothstep(HSM_FRM_SHADOW_WIDTH / 100, 0, dist_outside_frame), vec2(1, 0));
+		frame_shadow_layer.a = HHLP_QuadraticBezier(smoothstep(HSM_FRM_SHADOW_WIDTH, 0, dist_outside_frame), vec2(1, 0));
 
 	if (HSM_GLASS_BORDER_ON == 1)
 		OUTSIDE_TUBE_MASK_FOR_IMAGE = clamp(outside_tube_mask - edge_mask, 0, 1);

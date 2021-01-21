@@ -16,28 +16,28 @@ float HSM_BZL_BLEND_MODE = global.HSM_BZL_BLEND_MODE;
 float HSM_BZL_WIDTH = global.HSM_BZL_WIDTH / 100;
 
 #pragma parameter HSM_BZL_HEIGHT 					    "      Height - Def 6" 6 -10 200 0.1
-float HSM_BZL_HEIGHT = global.HSM_BZL_HEIGHT;
+float HSM_BZL_HEIGHT = global.HSM_BZL_HEIGHT / 100;
 
 #pragma parameter HSM_BZL_INNER_EDGE_THICKNESS		    "      Inner Edge Thickness - Def 0.7" 0.7 0 5 0.1
 float HSM_BZL_INNER_EDGE_THICKNESS = global.HSM_BZL_INNER_EDGE_THICKNESS  / 100;
 
-#pragma parameter HSM_BZL_INNER_CORNER_RADIUS_SCALE	    "      Inner Corner Radius Scale - Def 0.5" 0.5 0 10 0.1
-float HSM_BZL_INNER_CORNER_RADIUS_SCALE = global.HSM_BZL_INNER_CORNER_RADIUS_SCALE;
+#pragma parameter HSM_BZL_INNER_CORNER_RADIUS_SCALE	    "      Inner Corner Radius Scale - Def 50" 50 0 100 1
+float HSM_BZL_INNER_CORNER_RADIUS_SCALE = global.HSM_BZL_INNER_CORNER_RADIUS_SCALE / 100;
 
-#pragma parameter HSM_BZL_OUTER_CORNER_RADIUS_SCALE 	"      Outer Corner Radius Scale - Def 1" 1 0 10 0.1
-float HSM_BZL_OUTER_CORNER_RADIUS_SCALE = global.HSM_BZL_OUTER_CORNER_RADIUS_SCALE;
+#pragma parameter HSM_BZL_OUTER_CORNER_RADIUS_SCALE 	"      Outer Corner Radius Scale - Def 100" 100 0 1000 1
+float HSM_BZL_OUTER_CORNER_RADIUS_SCALE = global.HSM_BZL_OUTER_CORNER_RADIUS_SCALE / 100;
 
-#pragma parameter HSM_BZL_OUTER_CURVATURE_SCALE 		"      Outer Curvature Scale" 0 0 5 0.05
-float HSM_BZL_OUTER_CURVATURE_SCALE = global.HSM_BZL_OUTER_CURVATURE_SCALE;
+#pragma parameter HSM_BZL_OUTER_CURVATURE_SCALE 		"      Outer Curvature Scale" 0 0 500 5
+float HSM_BZL_OUTER_CURVATURE_SCALE = global.HSM_BZL_OUTER_CURVATURE_SCALE / 100;
 
 #pragma parameter HSM_BZL_OUTER_POSITION_Y 			    "      Outer Edge Position Y" 0 -25 25 0.05
-float HSM_BZL_OUTER_POSITION_Y = global.HSM_BZL_OUTER_POSITION_Y;
+float HSM_BZL_OUTER_POSITION_Y = global.HSM_BZL_OUTER_POSITION_Y / 100;
 
 #pragma parameter HSM_BZL_BRIGHTNESS 				    "      Brightness - Def 30" 30 0 300 2
-float HSM_BZL_BRIGHTNESS = global.HSM_BZL_BRIGHTNESS;
+float HSM_BZL_BRIGHTNESS = global.HSM_BZL_BRIGHTNESS / 100;
 
 #pragma parameter HSM_BZL_HIGHLIGHT 					"      Highlight" 1 0 100 0.2
-float HSM_BZL_HIGHLIGHT = global.HSM_BZL_HIGHLIGHT;
+float HSM_BZL_HIGHLIGHT = global.HSM_BZL_HIGHLIGHT / 100;
 
 #pragma parameter HSM_BZL_INNER_EDGE_SHADOW             "      Opacity of Shadow from Bezel on Tube" 70 0 200 5
 float HSM_BZL_INNER_EDGE_SHADOW = global.HSM_BZL_INNER_EDGE_SHADOW / 100;
@@ -81,8 +81,8 @@ float HSM_FRM_TEXTURE_BLEND_MODE = global.HSM_FRM_TEXTURE_BLEND_MODE;
 #pragma parameter HSM_FRM_INNER_EDGE_THICKNESS 		    "      Inner Edge Thickness" 1 0 50 0.05
 float HSM_FRM_INNER_EDGE_THICKNESS = global.HSM_FRM_INNER_EDGE_THICKNESS / 1000;
 
-#pragma parameter HSM_FRM_INNER_CORNER_RADIUS_SCALE 	"      Inner Corner Radius Scale" 1 0 50 0.05
-float HSM_FRM_INNER_CORNER_RADIUS_SCALE = global.HSM_FRM_INNER_CORNER_RADIUS_SCALE;
+#pragma parameter HSM_FRM_INNER_CORNER_RADIUS_SCALE 	"      Inner Corner Radius Scale" 100 0 500 5
+float HSM_FRM_INNER_CORNER_RADIUS_SCALE = global.HSM_FRM_INNER_CORNER_RADIUS_SCALE / 100;
 
 #pragma parameter HSM_FRM_THICKNESS 					"      Thickness" 7 0 200 0.2
 float HSM_FRM_THICKNESS = global.HSM_FRM_THICKNESS / 100;
@@ -93,23 +93,24 @@ float HSM_FRM_THICKNESS_SCALE_X = global.HSM_FRM_THICKNESS_SCALE_X / 100;
 #pragma parameter HSM_FRM_OUTER_POS_Y 			        "      Outer Pos Y" 0 -100 100 0.05
 float HSM_FRM_OUTER_POS_Y = global.HSM_FRM_OUTER_POS_Y / 100;
 
-#pragma parameter HSM_FRM_OUTER_CURVATURE_SCALE 		"      Outer Curvature Scale" 0 0 5 0.05
-float HSM_FRM_OUTER_CURVATURE_SCALE = global.HSM_FRM_OUTER_CURVATURE_SCALE;
+#pragma parameter HSM_FRM_OUTER_CURVATURE_SCALE 		"      Outer Curvature Scale" 0 0 500 5
+float HSM_FRM_OUTER_CURVATURE_SCALE = global.HSM_FRM_OUTER_CURVATURE_SCALE / 100;
 
+// TODO how this is being used is strange
 #pragma parameter HSM_FRM_OUTER_CORNER_RADIUS 		    "      Outer Corner Radius" 5 0 70 0.05
 float HSM_FRM_OUTER_CORNER_RADIUS = global.HSM_FRM_OUTER_CORNER_RADIUS;
 
 #pragma parameter HSM_FRM_OUTER_EDGE_THICKNESS 		    "      Outer Edge Thickness" 1 0 100 0.1
-float HSM_FRM_OUTER_EDGE_THICKNESS = global.HSM_FRM_OUTER_EDGE_THICKNESS;
+float HSM_FRM_OUTER_EDGE_THICKNESS = global.HSM_FRM_OUTER_EDGE_THICKNESS * 0.006;
 
-#pragma parameter HSM_FRM_OUTER_EDGE_SHADING 		    "      Outer Edge Shading" 0.5 0 1 0.05
-float HSM_FRM_OUTER_EDGE_SHADING = global.HSM_FRM_OUTER_EDGE_SHADING;
+#pragma parameter HSM_FRM_OUTER_EDGE_SHADING 		    "      Outer Edge Shading" 50 0 100 5
+float HSM_FRM_OUTER_EDGE_SHADING = global.HSM_FRM_OUTER_EDGE_SHADING / 100;
 
-#pragma parameter HSM_FRM_SHADOW_OPACITY	            "      Shadow Opacity" 1 0 3 0.01
-float HSM_FRM_SHADOW_OPACITY = global.HSM_FRM_SHADOW_OPACITY;
+#pragma parameter HSM_FRM_SHADOW_OPACITY	            "      Shadow Opacity" 100 0 300 1
+float HSM_FRM_SHADOW_OPACITY = global.HSM_FRM_SHADOW_OPACITY / 100;
 
 #pragma parameter HSM_FRM_SHADOW_WIDTH                  "      Shadow Width" 10 0 50 0.1
-float HSM_FRM_SHADOW_WIDTH = global.HSM_FRM_SHADOW_WIDTH;
+float HSM_FRM_SHADOW_WIDTH = global.HSM_FRM_SHADOW_WIDTH / 100;
 
 
 
@@ -124,29 +125,32 @@ float HSM_REFLECT_BLEND_MODE = global.HSM_REFLECT_BLEND_MODE;
 #pragma parameter HSM_REFLECT_MASK_MODE                     "  Mask - ALL | Screen | Tube | Bz- | Bz | Bz+ | Frm | Frm+ | BG"   4 0 8 1
 float HSM_REFLECT_MASK_MODE = global.HSM_REFLECT_MASK_MODE;
 
-#pragma parameter HSM_REFLECT_GLOBAL_AMOUNT 				"      Global Amount" 0.4 0 3 0.02
-float HSM_REFLECT_GLOBAL_AMOUNT = global.HSM_REFLECT_GLOBAL_AMOUNT;
+#pragma parameter HSM_REFLECT_GLOBAL_AMOUNT 				"      Global Amount" 40 0 300 2
+float HSM_REFLECT_GLOBAL_AMOUNT = global.HSM_REFLECT_GLOBAL_AMOUNT / 100;
 
 #pragma parameter HSM_REFLECT_GLOBAL_GAMMA_ADJUST 			"      Global Gamma Adjust" 1.2 0.25 3 0.05
 float HSM_REFLECT_GLOBAL_GAMMA_ADJUST = global.HSM_REFLECT_GLOBAL_GAMMA_ADJUST;
 
-#pragma parameter HSM_REFLECT_INNER_EDGE_AMOUNT 			"      Inner Edge Amount" 0.9 0 3 0.02
-float HSM_REFLECT_INNER_EDGE_AMOUNT = global.HSM_REFLECT_INNER_EDGE_AMOUNT;
+#pragma parameter HSM_REFLECT_DIRECT_AMOUNT 				"      Direct Reflection" 150 0 300 2
+float HSM_REFLECT_DIRECT_AMOUNT = global.HSM_REFLECT_DIRECT_AMOUNT / 100;
 
-#pragma parameter HSM_REFLECT_INNER_EDGE_FULLSCREEN_GLOW 	"      Inner Edge Fullscreen Glow" 0.4 0 10 0.02
-float HSM_REFLECT_INNER_EDGE_FULLSCREEN_GLOW = global.HSM_REFLECT_INNER_EDGE_FULLSCREEN_GLOW;
-
-#pragma parameter HSM_REFLECT_DIRECT_AMOUNT 				"      Direct Reflection" 1.5 0 3 0.02
-float HSM_REFLECT_DIRECT_AMOUNT = global.HSM_REFLECT_DIRECT_AMOUNT;
-
-#pragma parameter HSM_REFLECT_DIFFUSED_AMOUNT 				"      Diffused Reflection" 0.5 0 3 0.02
-float HSM_REFLECT_DIFFUSED_AMOUNT = global.HSM_REFLECT_DIFFUSED_AMOUNT;
+#pragma parameter HSM_REFLECT_DIFFUSED_AMOUNT 				"      Diffused Reflection" 50 0 300 2
+float HSM_REFLECT_DIFFUSED_AMOUNT = global.HSM_REFLECT_DIFFUSED_AMOUNT / 100;
 
 #pragma parameter HSM_REFLECT_FULLSCREEN_GLOW 				"      FullScreen Glow" 75 0 600 0.5
-float HSM_REFLECT_FULLSCREEN_GLOW = global.HSM_REFLECT_FULLSCREEN_GLOW;
+float HSM_REFLECT_FULLSCREEN_GLOW = global.HSM_REFLECT_FULLSCREEN_GLOW / 100;
 
 #pragma parameter HSM_REFLECT_FULLSCREEN_GLOW_GAMMA 		"      FullScreen Glow Gamma" 3 0 5 0.02
 float HSM_REFLECT_FULLSCREEN_GLOW_GAMMA = global.HSM_REFLECT_FULLSCREEN_GLOW_GAMMA;
+
+#pragma parameter HSM_REFLECT_INNER_EDGE_AMOUNT 			"      Inner Edge Amount" 90 0 300 2
+float HSM_REFLECT_INNER_EDGE_AMOUNT = global.HSM_REFLECT_INNER_EDGE_AMOUNT / 100;
+
+#pragma parameter HSM_REFLECT_INNER_EDGE_FULLSCREEN_GLOW 	"      Inner Edge Fullscreen Glow" 40 0 1000 1
+float HSM_REFLECT_INNER_EDGE_FULLSCREEN_GLOW = global.HSM_REFLECT_INNER_EDGE_FULLSCREEN_GLOW / 100;
+
+#pragma parameter HSM_REFLECT_FRAME_INNER_EDGE_AMOUNT 		"      Frame Inner Edge Amount" 100 0 300 2
+float HSM_REFLECT_FRAME_INNER_EDGE_AMOUNT = global.HSM_REFLECT_FRAME_INNER_EDGE_AMOUNT / 100;
 
 
 //---------------------------------------------------------------------------------------------------
@@ -154,20 +158,20 @@ float HSM_REFLECT_FULLSCREEN_GLOW_GAMMA = global.HSM_REFLECT_FULLSCREEN_GLOW_GAM
 //---------------------------------------------------------------------------------------------------
 #pragma parameter HSM_REFLECTION_FADE_TITLE			            "[ REFLECTION FADE ]____________________________________________" 0 0 0.01 0.01
 
-#pragma parameter HSM_REFLECT_FADE_AMOUNT 					    "      Fade Amount" 1 0 1 0.05
-float HSM_REFLECT_FADE_AMOUNT = global.HSM_REFLECT_FADE_AMOUNT;
+#pragma parameter HSM_REFLECT_FADE_AMOUNT 					    "      Fade Amount" 100 0 100 5
+float HSM_REFLECT_FADE_AMOUNT = global.HSM_REFLECT_FADE_AMOUNT / 100;
 
 #pragma parameter HSM_REFLECT_RADIAL_FADE_WIDTH 			    "      Radial Fade Width" 100 0 1000 1
-float HSM_REFLECT_RADIAL_FADE_WIDTH = global.HSM_REFLECT_RADIAL_FADE_WIDTH;
+float HSM_REFLECT_RADIAL_FADE_WIDTH = global.HSM_REFLECT_RADIAL_FADE_WIDTH / 500;
 
 #pragma parameter HSM_REFLECT_RADIAL_FADE_HEIGHT 				"      Radial Fade Height" 100 0 1000 1
-float HSM_REFLECT_RADIAL_FADE_HEIGHT = global.HSM_REFLECT_RADIAL_FADE_HEIGHT;
+float HSM_REFLECT_RADIAL_FADE_HEIGHT = global.HSM_REFLECT_RADIAL_FADE_HEIGHT / 500;
 
 #pragma parameter HSM_REFLECT_LATERAL_OUTER_FADE_POSITION 		"      Lateral Outer Fade Position" -18 -500 500 0.5
-float HSM_REFLECT_LATERAL_OUTER_FADE_POSITION = global.HSM_REFLECT_LATERAL_OUTER_FADE_POSITION;
+float HSM_REFLECT_LATERAL_OUTER_FADE_POSITION = global.HSM_REFLECT_LATERAL_OUTER_FADE_POSITION / -1000;
 
 #pragma parameter HSM_REFLECT_LATERAL_OUTER_FADE_DISTANCE 		"      Lateral Outer Fade Distance" 20 1 400 0.5
-float HSM_REFLECT_LATERAL_OUTER_FADE_DISTANCE = global.HSM_REFLECT_LATERAL_OUTER_FADE_DISTANCE;
+float HSM_REFLECT_LATERAL_OUTER_FADE_DISTANCE = global.HSM_REFLECT_LATERAL_OUTER_FADE_DISTANCE / 100;
 
 #pragma parameter HSM_REFLECT_VIGNETTE_AMOUNT 		            "      Viewport Vignette (For Glass Presets)" 0 0 100 0.5
 float HSM_REFLECT_VIGNETTE_AMOUNT = global.HSM_REFLECT_VIGNETTE_AMOUNT / 100;
@@ -175,17 +179,18 @@ float HSM_REFLECT_VIGNETTE_AMOUNT = global.HSM_REFLECT_VIGNETTE_AMOUNT / 100;
 
 #pragma parameter HSM_REFLECT_CORNER_TITLE			            "[ REFLECTION CORNER ]__________________________________________" 0 0 0.01 0.01
 
+// TODO how this is being used is strange
 #pragma parameter HSM_REFLECT_CORNER_FADE 						"      Corner Fade" 10 1 100 0.5
-float HSM_REFLECT_CORNER_FADE = global.HSM_REFLECT_CORNER_FADE;
+float HSM_REFLECT_CORNER_FADE = global.HSM_REFLECT_CORNER_FADE / 100;
 
 #pragma parameter HSM_REFLECT_CORNER_FADE_DISTANCE 				"      Corner Fade Distance" 100 1 100 1
-float HSM_REFLECT_CORNER_FADE_DISTANCE = global.HSM_REFLECT_CORNER_FADE_DISTANCE;
+float HSM_REFLECT_CORNER_FADE_DISTANCE = global.HSM_REFLECT_CORNER_FADE_DISTANCE / 100;
 
 #pragma parameter HSM_REFLECT_CORNER_INNER_SPREAD 	            "      Corner Inner Spread" 500 0 1000 10
-float HSM_REFLECT_CORNER_INNER_SPREAD = global.HSM_REFLECT_CORNER_INNER_SPREAD;
+float HSM_REFLECT_CORNER_INNER_SPREAD = global.HSM_REFLECT_CORNER_INNER_SPREAD / 100;
 
 #pragma parameter HSM_REFLECT_CORNER_OUTER_SPREAD 	            "      Corner Outer Spread" 160 0 1000 10
-float HSM_REFLECT_CORNER_OUTER_SPREAD = global.HSM_REFLECT_CORNER_OUTER_SPREAD;
+float HSM_REFLECT_CORNER_OUTER_SPREAD = global.HSM_REFLECT_CORNER_OUTER_SPREAD / 100;
 
 #pragma parameter HSM_REFLECT_CORNER_ROTATION_OFFSET_TOP 	    "      Corner Rotation Offset Top" 0 -90 90 0.5
 float HSM_REFLECT_CORNER_ROTATION_OFFSET_TOP = global.HSM_REFLECT_CORNER_ROTATION_OFFSET_TOP;
@@ -204,31 +209,31 @@ float HSM_REFLECT_CORNER_ROTATION_OFFSET_BOTTOM = global.HSM_REFLECT_CORNER_ROTA
 #pragma parameter HSM_REFLECT_BLUR_NUM_SAMPLES 					    "      Blur Samples - 0 for OFF" 12 0 40 1
 float HSM_REFLECT_BLUR_NUM_SAMPLES = global.HSM_REFLECT_BLUR_NUM_SAMPLES;
 
-#pragma parameter HSM_REFLECT_BLUR_MIN 							    "      Min Blur" 	0 0 1 0.01
-float HSM_REFLECT_BLUR_MIN = global.HSM_REFLECT_BLUR_MIN;
+#pragma parameter HSM_REFLECT_BLUR_MIN 							    "      Min Blur" 	0 0 100 1
+float HSM_REFLECT_BLUR_MIN = global.HSM_REFLECT_BLUR_MIN / 100;
 
-#pragma parameter HSM_REFLECT_BLUR_MAX 							    "      Max Blur" 	0.95 0 1 0.01
-float HSM_REFLECT_BLUR_MAX = global.HSM_REFLECT_BLUR_MAX;
+#pragma parameter HSM_REFLECT_BLUR_MAX 							    "      Max Blur" 	95 0 100 1
+float HSM_REFLECT_BLUR_MAX = global.HSM_REFLECT_BLUR_MAX / 100;
 
 // Reflection Noise
 #pragma parameter HSM_REFLECT_NOISE_TITLE			                "[ REFLECTION NOISE ]___________________________________________" 0 0 0.01 0.01
 
-#pragma parameter HSM_REFLECT_NOISE_AMOUNT 						    "      Noise Amount" 0.5 0 1 0.1
-float HSM_REFLECT_NOISE_AMOUNT = global.HSM_REFLECT_NOISE_AMOUNT;
+#pragma parameter HSM_REFLECT_NOISE_AMOUNT 						    "      Noise Amount" 50 0 100 1
+float HSM_REFLECT_NOISE_AMOUNT = global.HSM_REFLECT_NOISE_AMOUNT / 100;
 
 #pragma parameter HSM_REFLECT_NOISE_SAMPLES 					    "      Noise Samples (0 for OFF)" 1 0 20 1
 float HSM_REFLECT_NOISE_SAMPLES = global.HSM_REFLECT_NOISE_SAMPLES;
 
-#pragma parameter HSM_REFLECT_NOISE_SAMPLE_DISTANCE 			    "      Sample Distance" 0.20 0 1 0.01
-float HSM_REFLECT_NOISE_SAMPLE_DISTANCE = global.HSM_REFLECT_NOISE_SAMPLE_DISTANCE;
+#pragma parameter HSM_REFLECT_NOISE_SAMPLE_DISTANCE 			    "      Sample Distance" 20 0 100 1
+float HSM_REFLECT_NOISE_SAMPLE_DISTANCE = global.HSM_REFLECT_NOISE_SAMPLE_DISTANCE / 100;
 
 
 //---------------------------------------------------------------------------------------------------
 //    GLASS BORDER
 //---------------------------------------------------------------------------------------------------
-#pragma parameter HSM_GLASS_BORDER_TITLE			        "[ GLASS BORDER ]_______________________________________________" 0 0 0.01 0.01
+#pragma parameter HSM_GLASS_BORDER_TITLE			                "[ GLASS BORDER ]_______________________________________________" 0 0 0.01 0.01
 
-#pragma parameter HSM_GLASS_BORDER_ON                       "      Glass Border ON (Glass Preset Only)" 0 0 1 1
+#pragma parameter HSM_GLASS_BORDER_ON                               "      Glass Border ON (Glass Preset Only)" 0 0 1 1
 float HSM_GLASS_BORDER_ON = global.HSM_GLASS_BORDER_ON;
 
 
@@ -252,7 +257,7 @@ float HSM_REFLECT_MASK_TO_BEZEL = global.HSM_REFLECT_MASK_TO_BEZEL;
 //---------------------------------------------------------------------------------------------------
 // Reflection Is Last Pass
 //---------------------------------------------------------------------------------------------------
-#pragma parameter HSM_REFLECT_LAST_PASS_TITLE			        "[ REFLECTION IS LAST PASS ]____________________________________" 0 0 0.01 0.01
+#pragma parameter HSM_REFLECT_LAST_PASS_TITLE			            "[ REFLECTION IS LAST PASS ]____________________________________" 0 0 0.01 0.01
 
 #pragma parameter HSM_REFLECT_IS_LAST_PASS "      Reflection is Last Pass (Glass and Reflect Only Presets)" 0 0 1 1
 float HSM_REFLECT_IS_LAST_PASS = global.HSM_REFLECT_IS_LAST_PASS;
@@ -263,6 +268,7 @@ float HSM_REFLECT_IS_LAST_PASS = global.HSM_REFLECT_IS_LAST_PASS;
     #define HSM_REFLECT_CORNER_SPREAD_FALLOFF 100
 #endif
 
+// TODO see if we should expose this
 #ifndef HSM_GLASS_INNER_EDGE_SOFTNESS
     #define HSM_GLASS_INNER_EDGE_SOFTNESS 0.3
 #endif

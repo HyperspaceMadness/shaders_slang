@@ -281,6 +281,28 @@ void main()
 
 	float vignette_shadow_mask = 0;
 
+	float frame_inner_edge_mask = 1;
+	vec2 frame_pos_offset = vec2(0, HSM_BZL_OUTER_POSITION_Y);
+	vec2 bezel_outside_coord = SCREEN_COORD + frame_pos_offset;
+	// Calculation of Bezel Masks
+	if (HSM_REFLECT_MASK_TO_BEZEL == 1 || HSM_FRM_INNER_EDGE_THICKNESS > 0)
+	{
+		float screen_scale_diagonal = sqrt(SCREEN_SCALE.y * SCREEN_SCALE.y + (SCREEN_SCALE.y * SCREEN_ASPECT) * (SCREEN_SCALE.y * SCREEN_ASPECT));
+		vec2 black_edge_scale_offset = HSM_GetTubeScale(SCREEN_SCALE) / SCREEN_SCALE;
+		vec2 outer_bezel_scale = vec2(HSM_BZL_WIDTH / SCREEN_ASPECT + 1, HSM_BZL_HEIGHT + 1);
+		outer_bezel_scale = (outer_bezel_scale - 1) * screen_scale_diagonal + 1;
+
+		bezel_outside_coord = HSM_GetInverseScaledCoord(bezel_outside_coord, black_edge_scale_offset * outer_bezel_scale) + vec2(0, HSM_BZL_OUTER_POSITION_Y);
+
+		if (HSM_BZL_OUTER_CURVATURE_SCALE > 0)
+			bezel_outside_coord = HSM_GetCurvedCoord(bezel_outside_coord, HSM_BZL_OUTER_CURVATURE_SCALE, outer_bezel_scale.x * global.OutputSize.x / global.OutputSize.y / outer_bezel_scale.y);
+
+		frame_inner_edge_mask = (HSM_FRM_INNER_EDGE_THICKNESS == 0) ? 0 : 1 - HSM_GetCornerMask(	(bezel_outside_coord - 0.5) * (1 + (HSM_FRM_INNER_EDGE_THICKNESS / vec2(SCREEN_ASPECT, 1))) + 0.5, 
+																									SCREEN_ASPECT, 
+																									HSM_FRM_INNER_CORNER_RADIUS_SCALE * HSM_BZL_OUTER_CORNER_RADIUS_SCALE * HSM_SCREEN_CORNER_RADIUS, 
+																									HSM_REFLECT_FRAME_INNER_EDGE_SHARPNESS);
+	}
+
 	//----------------------------------------------------
 	// Reflection
 	//----------------------------------------------------
@@ -293,6 +315,8 @@ void main()
 		// Corner Mask for Specular highlights
 		float fade_out_to_corner = smoothstep(0 + HSM_REFLECT_CORNER_FADE_DISTANCE / 2, 0 - HSM_REFLECT_CORNER_FADE_DISTANCE / 2, outside_ratio_warped);
 		float corner_fade_mask = (top_corner_mask + bottom_corner_mask) * (HSM_REFLECT_CORNER_FADE) * fade_out_to_corner * 2;
+
+		// corner_fade_mask *= 1 - frame_inner_edge_mask;
 
 		// Radial fade - fading away from the edges of the screen
 		float radial_fade_speed = 100;
@@ -317,7 +341,6 @@ void main()
 		vec2 screen_coord_ctr = SCREEN_COORD - 0.5;
 
 		float combined_fade_mask = radial_fade_mask * lateral_fade_mask;
-
 
 		// Put all the fades together into one mask
 		float final_fade_mask = clamp(HSM_REFLECT_FADE_AMOUNT * combined_fade_mask, 0, 1) + 1 - HSM_REFLECT_FADE_AMOUNT;
@@ -354,7 +377,7 @@ void main()
 		bezel_reflected_color += HSM_REFLECT_FULLSCREEN_GLOW * 1.5 * fullscreen_glow_color * radial_inner_fade_mask * lateral_fade_outer_mask_for_glow;
 
 		// Add Bezel and Edge reflection together
-		edge_reflected_color = 1.25 * HSM_REFLECT_INNER_EDGE_AMOUNT * (blurred_reflection_color + 0.50 * diffused_reflection_color);
+		edge_reflected_color = 1.25 * HSM_REFLECT_BEZEL_INNER_EDGE_AMOUNT * (blurred_reflection_color + 0.50 * diffused_reflection_color);
 		float reflection_area_mask = outside_tube_mask;
 
 
@@ -387,44 +410,25 @@ void main()
 		}
 		// Edge Full Screen Glow
 		// Add Small amount of static glow on the edge (So when the screen is dark there is some highlight) as well as dynamic light
-		edge_fullscreen_glow = HSM_REFLECT_INNER_EDGE_FULLSCREEN_GLOW * edge_highlight_mask * outside_tube_mask * (vec4(0.005) 
+		edge_fullscreen_glow = HSM_REFLECT_BEZEL_INNER_EDGE_FULLSCREEN_GLOW * edge_highlight_mask * outside_tube_mask * (vec4(0.005) 
 									+ (avg_lum_mult  + 0.5) * (2 * fullscreen_glow_color + vec4(0.01)));
 		
 		// Add Diffused reflection on top of the glass inner edge
 		if (HSM_GLASS_BORDER_ON == 1)
-			edge_fullscreen_glow += HSM_REFLECT_INNER_EDGE_FULLSCREEN_GLOW * 0.5 * edge_highlight_mask * outside_tube_mask * diffused_reflection_color;
+			edge_fullscreen_glow += HSM_REFLECT_BEZEL_INNER_EDGE_FULLSCREEN_GLOW * 0.5 * edge_highlight_mask * outside_tube_mask * diffused_reflection_color;
 
 		reflected_color += clamp(edge_fullscreen_glow, 0, 1);
 		reflected_color.a = 1;
 
-		// Calculation of Bezel Masks
-		if (HSM_REFLECT_MASK_TO_BEZEL == 1 || HSM_FRM_INNER_EDGE_THICKNESS > 0)
-		{
-			float screen_scale_diagonal = sqrt(SCREEN_SCALE.y * SCREEN_SCALE.y + (SCREEN_SCALE.y * SCREEN_ASPECT) * (SCREEN_SCALE.y * SCREEN_ASPECT));
-			vec2 black_edge_scale_offset = HSM_GetTubeScale(SCREEN_SCALE) / SCREEN_SCALE;
-			vec2 outer_bezel_scale = vec2(HSM_BZL_WIDTH / SCREEN_ASPECT + 1, HSM_BZL_HEIGHT + 1);
-			outer_bezel_scale = (outer_bezel_scale - 1) * screen_scale_diagonal + 1;
 
-			vec2 frame_pos_offset = vec2(0, HSM_BZL_OUTER_POSITION_Y);
-			vec2 bezel_outside_coord = SCREEN_COORD + frame_pos_offset;
-			bezel_outside_coord = HSM_GetInverseScaledCoord(bezel_outside_coord, black_edge_scale_offset * outer_bezel_scale) + vec2(0, HSM_BZL_OUTER_POSITION_Y);
+		// TODO need to modulate how much reflection happens on the frame inner edge, Reduce corner, smooth be
+		// smooth transition? 
 
-			if (HSM_BZL_OUTER_CURVATURE_SCALE > 0)
-				bezel_outside_coord = HSM_GetCurvedCoord(bezel_outside_coord, HSM_BZL_OUTER_CURVATURE_SCALE, outer_bezel_scale.x * global.OutputSize.x / global.OutputSize.y / outer_bezel_scale.y);
+		reflected_color.rgb *= (1 - HSM_REFLECT_FRAME_INNER_EDGE_AMOUNT) * (1 - frame_inner_edge_mask) + HSM_REFLECT_FRAME_INNER_EDGE_AMOUNT;
 
-			float frame_inner_edge_mask = (HSM_FRM_INNER_EDGE_THICKNESS == 0) ? 0 : 1 - HSM_GetCornerMask(	(bezel_outside_coord - 0.5) * (1 + (HSM_FRM_INNER_EDGE_THICKNESS / vec2(SCREEN_ASPECT, 1))) + 0.5, 
-																												SCREEN_ASPECT, 
-																												HSM_FRM_INNER_CORNER_RADIUS_SCALE * HSM_BZL_OUTER_CORNER_RADIUS_SCALE * HSM_SCREEN_CORNER_RADIUS, 
-																												0.9);
+		if (HSM_REFLECT_MASK_TO_BEZEL == 1)
+			reflected_color *= HSM_GetCornerMask(bezel_outside_coord, SCREEN_ASPECT, HSM_FRM_INNER_CORNER_RADIUS_SCALE * HSM_BZL_OUTER_CORNER_RADIUS_SCALE * HSM_SCREEN_CORNER_RADIUS, 0.9);
 
-			// TODO need to modulate how much reflection happens on the frame inner edge, Reduce corner, smooth be
-			// smooth transition? 
-
-			// HSM_REFLECT_FRAME_INNER_EDGE_AMOUNT
-
-			if (HSM_REFLECT_MASK_TO_BEZEL == 1)
-				reflected_color *= HSM_GetCornerMask(bezel_outside_coord, SCREEN_ASPECT, HSM_FRM_INNER_CORNER_RADIUS_SCALE * HSM_BZL_OUTER_CORNER_RADIUS_SCALE * HSM_SCREEN_CORNER_RADIUS, 0.9);
-		}
 	}
 
     // CRT

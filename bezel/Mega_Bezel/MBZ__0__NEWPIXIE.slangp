@@ -19,7 +19,7 @@ shader6 = shaders/HyperspaceMadness/hsm-mdapt/hsm-mdapt-pass4.slang
 
 // SGENDPT - Hyllian's great de-dither shader
 shader7 = shaders/HyperspaceMadness/hsm-sgenpt-mix/hsm-sgenpt-mix.slang
-shader8 = shaders/HyperspaceMadness/hsm-sgenpt-mix/hsm-sgenpt-mix-pass2.slang
+shader8 = :/shaders/shaders_slang/stock.slang
 
 shader9 = shaders/HyperspaceMadness/hsm-ps1dither/hsm-PS1-Undither-BoxBlur.slang
 alias9 = refpass

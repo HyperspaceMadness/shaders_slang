@@ -45,7 +45,7 @@ float_framebuffer5 = true
 // Guest's Awesome Shader!!! Guest-SM (Scanline Mask)
 //      Guest's Awesome Shader!!!
 //      Has been slightly altered to use the same scaling as the rest of the shders for the bezel & reflection
-shader6 = shaders/HyperspaceMadness/hsm-guest/hsm-crt-guest-sm-with-scaling-simple.slang
+shader6 = shaders/HyperspaceMadness/hsm-guest/hsm-crt-guest-sm-with-scaling.slang
 mipmap_input6 = true
 filter_linear6 = true
 scale_type6 = viewport
@@ -125,16 +125,25 @@ scale_y12 = 12
 wrap_mode12 = mirrored_repeat
 alias12 = BR_MirrorFullscreenGlowPass
 
+
 // Bezel Reflection ----------------------------------------------------------------
 
-shader13 = shaders/HyperspaceMadness/hsm-bezel-image-layers.slang
+shader13 = shaders/HyperspaceMadness/hsm-bezel-reflection.slang
 mipmap_input13 = true
 filter_linear13 = true
 scale_type13 = viewport
-float_framebuffer13 = false
+float_framebuffer13 = true
+alias13 = BR_CRTAndReflectionPass
+
+
+shader14 = shaders/HyperspaceMadness/hsm-bezel-image-layers.slang
+mipmap_input14 = true
+filter_linear14 = true
+scale_type14 = viewport
+float_framebuffer14 = false
 
 // Define how many shaders will be used from this list
-shaders = 14
+shaders = 15
 
 
 // Define textures to be used by the different passes

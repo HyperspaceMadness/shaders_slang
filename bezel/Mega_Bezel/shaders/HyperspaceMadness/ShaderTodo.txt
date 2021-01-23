@@ -59,7 +59,7 @@ Mega Bezel Still to Come:
   
   *  Add Deconvergence (Dogway Glass?)
   * Simulated Gamma & Display Gamma
-  * Calibrate brightness of crt shaders to Guest-Venom
+  * Calibrate brightness of crt shaders & LCD to Guest-Venom
 
   * Put Torridgristle LUT back in for blue skys
 
@@ -85,6 +85,7 @@ Mega Bezel Still to Come:
   * Reflection on areas outside the frame, e.g. Arcade Speaker Panel and Control Panel
   * Optimize presets using non-float frame buffers
   * Independent frame scaling?
+  * Find way to do textureSize so we don't have to define texture aspect in parameters
 
 Retroarch Features
 
@@ -116,10 +117,3 @@ Retroarch Features
     Crawl
 
   Super Glow HighFX Version?, manage brightness
-
-
-
-  Hi there, I was wondering if you could point me in the right direction if you have the time. 
-
-I'm trying to get the size of textures inside slang, and not having a lot of luck, I was trying textureSize(mysampler2d, 0) I'm trying to use this so I can get the aspect ratio of a user supplied texture. 
- In my internet searching seems like it should work, but it seems to always return the same thing (I think it returns 1) 

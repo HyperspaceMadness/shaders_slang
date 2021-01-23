@@ -8,7 +8,7 @@ Description:
 */
 
 // Screen Scale Required Parameters
-#pragma parameter HSM_MEGA_BEZEL_TITLE					"[ --- HSM MEGA BEZEL  ALPHA.2020-12-15-0 --- ]_________________" 0 0 0.01 0.01
+#pragma parameter HSM_MEGA_BEZEL_TITLE					"[ --- HSM MEGA BEZEL  ALPHA.2021-01-23-0 --- ]_________________" 0 0 0.01 0.01
 
 //---------------------------------------------------------------------------------------------------
 //    FLIP & ROTATE
@@ -74,11 +74,11 @@ float HSM_SNAP_TO_INT_SCALE_TOLERANCE = global.HSM_SNAP_TO_INT_SCALE_TOLERANCE;
 //---------------------------------------------------------------------------------------------------
 #pragma parameter HSM_SCREEN_POSITION_TITLE				"[ POSITION ]___________________________________________________" 0 0 0.01 0.01
 
-#pragma parameter HSM_SCREEN_POSITION_X 				"      Position X" 0 -100 100 0.1
-float HSM_SCREEN_POSITION_X = global.HSM_SCREEN_POSITION_X / 100;
+#pragma parameter HSM_SCREEN_POSITION_X 				"      Position X" 0 -250 250 1
+float HSM_SCREEN_POSITION_X = global.HSM_SCREEN_POSITION_X / 1000;
 
-#pragma parameter HSM_SCREEN_POSITION_Y 				"      Position Y" 0 -100 100 0.1
-float HSM_SCREEN_POSITION_Y = -1 * global.HSM_SCREEN_POSITION_Y / 100;
+#pragma parameter HSM_SCREEN_POSITION_Y 				"      Position Y" 0 -250 250 1
+float HSM_SCREEN_POSITION_Y = -1 * global.HSM_SCREEN_POSITION_Y / 1000;
 
 
 //---------------------------------------------------------------------------------------------------
@@ -104,11 +104,11 @@ float HSM_CROP_OVERSCAN_RIGHT = global.HSM_CROP_OVERSCAN_RIGHT;
 //---------------------------------------------------------------------------------------------------
 #pragma parameter HSM_SAMPLING_TITLE								"[ CORE RES SAMPLING ]__________________________________________" 0 0 0.01 0.01
 
-#pragma parameter HSM_CORE_RES_SAMPLING_MULT_SCANLINE_DIR			"      Scanline Direction Multiplier"  1 0.25 16 0.25
-float HSM_CORE_RES_SAMPLING_MULT_SCANLINE_DIR = global.HSM_CORE_RES_SAMPLING_MULT_SCANLINE_DIR;
+#pragma parameter HSM_CORE_RES_SAMPLING_MULT_SCANLINE_DIR			"      Scanline Direction Multiplier"  100 25 1600 25
+float HSM_CORE_RES_SAMPLING_MULT_SCANLINE_DIR = global.HSM_CORE_RES_SAMPLING_MULT_SCANLINE_DIR / 100;
 
-#pragma parameter HSM_CORE_RES_SAMPLING_MULT_OPPOSITE_DIR			"      Opposite Direction Multiplier"  1 0.25 16 0.25
-float HSM_CORE_RES_SAMPLING_MULT_OPPOSITE_DIR = global.HSM_CORE_RES_SAMPLING_MULT_OPPOSITE_DIR;
+#pragma parameter HSM_CORE_RES_SAMPLING_MULT_OPPOSITE_DIR			"      Opposite Direction Multiplier"  100 25 1600 25
+float HSM_CORE_RES_SAMPLING_MULT_OPPOSITE_DIR = global.HSM_CORE_RES_SAMPLING_MULT_OPPOSITE_DIR / 100;
 
 
 //---------------------------------------------------------------------------------------------------
@@ -122,8 +122,8 @@ float HSM_SCANLINE_DIRECTION = global.HSM_SCANLINE_DIRECTION;
 #pragma parameter HSM_SCANLINE_INTERLACE_TRIGGER_RES 				"      Interlace and Fake Scanlines Trigger Res" 600.0 0.0 2000.0 25.0
 #define HSM_SCANLINE_INTERLACE_TRIGGER_RES global.HSM_SCANLINE_INTERLACE_TRIGGER_RES
 
-#pragma parameter HSM_SCANLINE_FAKE_SCANLINE_OPACITY 				"      Fake Scanline Opacity - Def 0.7" 0.7 0 1 0.05
-#define HSM_SCANLINE_FAKE_SCANLINE_OPACITY global.HSM_SCANLINE_FAKE_SCANLINE_OPACITY
+#pragma parameter HSM_SCANLINE_FAKE_SCANLINE_OPACITY 				"      Fake Scanline Opacity - Def 70" 70 0 100 5
+#define HSM_SCANLINE_FAKE_SCANLINE_OPACITY global.HSM_SCANLINE_FAKE_SCANLINE_OPACITY / 100
 
 // #pragma parameter HSM_SCANLINE_FAKE_SCANLINE_BRIGHTNESS_CUTOFF 	"[ SCREEN FX ]  Fake 240p Scanline Brightness Cutoff - Def 3" 3 0 10 0.05
 #ifndef HSM_SCANLINE_FAKE_SCANLINE_BRIGHTNESS_CUTOFF
@@ -156,23 +156,23 @@ float HSM_SCANLINE_DIRECTION = global.HSM_SCANLINE_DIRECTION;
 #pragma parameter HSM_CURVATURE_MODE 					"      Curvature Mode  -1:OFF 0:2D 1-2:3D Sphere, 3:3D Cylinder" 0 -1 3 1
 float HSM_CURVATURE_MODE = global.HSM_CURVATURE_MODE;
 
-#pragma parameter HSM_CURVATURE_2D_SCALE_LONG_AXIS 		"      2D Curvature on Long Axis - Def 1" 1 0 4 0.05
-#define HSM_CURVATURE_2D_SCALE_LONG_AXIS global.HSM_CURVATURE_2D_SCALE_LONG_AXIS
+#pragma parameter HSM_CURVATURE_2D_SCALE_LONG_AXIS 		"      2D Curvature on Long Axis - Def 100" 100 0 400 5
+#define HSM_CURVATURE_2D_SCALE_LONG_AXIS global.HSM_CURVATURE_2D_SCALE_LONG_AXIS / 100
 
-#pragma parameter HSM_CURVATURE_2D_SCALE_SHORT_AXIS 	"      2D Curvature on Short Axis - Def 1" 1 0 4 0.05
-#define HSM_CURVATURE_2D_SCALE_SHORT_AXIS global.HSM_CURVATURE_2D_SCALE_SHORT_AXIS
+#pragma parameter HSM_CURVATURE_2D_SCALE_SHORT_AXIS 	"      2D Curvature on Short Axis - Def 100" 100 0 400 5
+#define HSM_CURVATURE_2D_SCALE_SHORT_AXIS global.HSM_CURVATURE_2D_SCALE_SHORT_AXIS / 100
 
-#pragma parameter HSM_CURVATURE_3D_RADIUS 				"      3D Radius" 2 0.16 1024 0.01
-float HSM_CURVATURE_3D_RADIUS = global.HSM_CURVATURE_3D_RADIUS;
+#pragma parameter HSM_CURVATURE_3D_RADIUS 				"      3D Radius" 200 16 102400 1
+float HSM_CURVATURE_3D_RADIUS = global.HSM_CURVATURE_3D_RADIUS / 100;
 
-#pragma parameter HSM_CURVATURE_3D_VIEW_DIST 			"      3D View Distance - Def 1.5" 1.5 0.5 1024 0.05
-float HSM_CURVATURE_3D_VIEW_DIST = global.HSM_CURVATURE_3D_VIEW_DIST;
+#pragma parameter HSM_CURVATURE_3D_VIEW_DIST 			"      3D View Distance - Def 150" 150 50 102400 5
+float HSM_CURVATURE_3D_VIEW_DIST = global.HSM_CURVATURE_3D_VIEW_DIST / 100;
 
-#pragma parameter HSM_CURVATURE_3D_TILT_ANGLE_X 		"      3D Tilt Angle X" 0 -1.5 1.5 0.01
-float HSM_CURVATURE_3D_TILT_ANGLE_X = global.HSM_CURVATURE_3D_TILT_ANGLE_X;
+#pragma parameter HSM_CURVATURE_3D_TILT_ANGLE_X 		"      3D Tilt Angle X" 0 -120 120 1
+float HSM_CURVATURE_3D_TILT_ANGLE_X = global.HSM_CURVATURE_3D_TILT_ANGLE_X / 100;
 
-#pragma parameter HSM_CURVATURE_3D_TILT_ANGLE_Y 		"      3D Tilt Angle Y" 0 -1.5 1.5 0.01
-float HSM_CURVATURE_3D_TILT_ANGLE_Y = global.HSM_CURVATURE_3D_TILT_ANGLE_Y;
+#pragma parameter HSM_CURVATURE_3D_TILT_ANGLE_Y 		"      3D Tilt Angle Y" 0 -120 120 1
+float HSM_CURVATURE_3D_TILT_ANGLE_Y = global.HSM_CURVATURE_3D_TILT_ANGLE_Y / 100;
 
 
 
@@ -181,8 +181,8 @@ float HSM_CURVATURE_3D_TILT_ANGLE_Y = global.HSM_CURVATURE_3D_TILT_ANGLE_Y;
 //---------------------------------------------------------------------------------------------------
 #pragma parameter HSM_PERSISTENCE_TITLE					"[ PHOSPHOR PERSISTENCE ]_______________________________________" 0 0 0.01 0.01
 
-#pragma parameter HSM_PHOSPHOR_PERSISTENCE          	"      Phosphor Persistence - Positive:Neutral, Negative:Blue" 0 -1 1 0.05
-#define HSM_PHOSPHOR_PERSISTENCE global.HSM_PHOSPHOR_PERSISTENCE
+#pragma parameter HSM_PHOSPHOR_PERSISTENCE          	"      Phosphor Persistence - Positive:Neutral, Negative:Blue" 0 -100 100 5
+#define HSM_PHOSPHOR_PERSISTENCE global.HSM_PHOSPHOR_PERSISTENCE / 100
 
 
 
@@ -191,8 +191,8 @@ float HSM_CURVATURE_3D_TILT_ANGLE_Y = global.HSM_CURVATURE_3D_TILT_ANGLE_Y;
 //---------------------------------------------------------------------------------------------------
 #pragma parameter HSM_COLOR_AND_PERSISTENCE_TITLE		"[ SCANLINES ON BLACK ]_________________________________________" 0 0 0.01 0.01
 
-#pragma parameter HSM_COLOR_BLACK_LEVEL 				"      Black Level - Def -0.04" -0.04 -1 1 0.01
-#define HSM_COLOR_BLACK_LEVEL global.HSM_COLOR_BLACK_LEVEL
+#pragma parameter HSM_COLOR_BLACK_LEVEL 				"      Black Level - Def -4" -4 -100 100 1
+#define HSM_COLOR_BLACK_LEVEL global.HSM_COLOR_BLACK_LEVEL / 100
 
 #pragma parameter HSM_COLOR_NEGATIVE_CROP_BRIGHTNESS	"      Negative Crop Brightness - Def 1.8" 1.8 0 100 0.2
 #define HSM_COLOR_NEGATIVE_CROP_BRIGHTNESS global.HSM_COLOR_NEGATIVE_CROP_BRIGHTNESS
@@ -204,11 +204,11 @@ float HSM_CURVATURE_3D_TILT_ANGLE_Y = global.HSM_CURVATURE_3D_TILT_ANGLE_Y;
 
 #pragma parameter HSM_SCREENVIGNETTE_TITLE				"[ SCREEN VIGNETTE ]____________________________________________" 0 0 0.01 0.01
 
-#pragma parameter HSM_SCREEN_VIGNETTE                	"      Screen Vignette Opacity" 0 0 1 0.01
-#define HSM_SCREEN_VIGNETTE global.HSM_SCREEN_VIGNETTE
+#pragma parameter HSM_SCREEN_VIGNETTE                	"      Screen Vignette Opacity" 0 0 100 1
+#define HSM_SCREEN_VIGNETTE global.HSM_SCREEN_VIGNETTE / 100
 
-#pragma parameter HSM_SCREEN_VIGNETTE_IN_REFLECTION     "      Screen Vignette  Opacity in Reflection" 0 0 1 1
-float HSM_SCREEN_VIGNETTE_IN_REFLECTION = global.HSM_SCREEN_VIGNETTE_IN_REFLECTION;
+#pragma parameter HSM_SCREEN_VIGNETTE_IN_REFLECTION     "      Screen Vignette  Opacity in Reflection" 100 0 100 1
+float HSM_SCREEN_VIGNETTE_IN_REFLECTION = global.HSM_SCREEN_VIGNETTE_IN_REFLECTION / 100;
 
 
 
@@ -220,11 +220,11 @@ float HSM_SCREEN_VIGNETTE_IN_REFLECTION = global.HSM_SCREEN_VIGNETTE_IN_REFLECTI
 #pragma parameter HSM_SCREEN_CORNER_RADIUS 				"      Corner Radius - Def 10" 10 0 70 1
 #define HSM_SCREEN_CORNER_RADIUS global.HSM_SCREEN_CORNER_RADIUS
 
-#pragma parameter HSM_SCREEN_EDGE_SHARPNESS 			"      Edge Sharpness - Def 0.4" 0.4 0 1 0.01
-#define HSM_SCREEN_EDGE_SHARPNESS global.HSM_SCREEN_EDGE_SHARPNESS
+#pragma parameter HSM_SCREEN_EDGE_SHARPNESS 			"      Edge Sharpness - Def 40" 40 0 90 1
+#define HSM_SCREEN_EDGE_SHARPNESS global.HSM_SCREEN_EDGE_SHARPNESS / 100
 
-#pragma parameter HSM_TUBE_BLACK_EDGE_THICKNESS 		"      Black Border Thickness - Def 1" 1 -2 8 0.05
-#define HSM_TUBE_BLACK_EDGE_THICKNESS global.HSM_TUBE_BLACK_EDGE_THICKNESS
+#pragma parameter HSM_TUBE_BLACK_EDGE_THICKNESS 		"      Black Border Thickness - Def 100" 100 -200 800 5
+#define HSM_TUBE_BLACK_EDGE_THICKNESS global.HSM_TUBE_BLACK_EDGE_THICKNESS / 100
 
 
 
@@ -343,8 +343,8 @@ float HSM_TUBE_STATIC_REFLECTION_IMAGE_SCALE = global.HSM_TUBE_STATIC_REFLECTION
 //---------------------------------------------------------------------------------------------------
 #pragma parameter HSM_BEZEL_TITLE								"[ BEZEL ]______________________________________________________" 0 0 0.01 0.01
 
-#pragma parameter HSM_BZL_INNER_CURVATURE_SCALE 				"      Inner Curvature Scale" 1 0 20 0.1
-#define HSM_BZL_INNER_CURVATURE_SCALE global.HSM_BZL_INNER_CURVATURE_SCALE
+#pragma parameter HSM_BZL_INNER_CURVATURE_SCALE 				"      Inner Curvature Scale" 100 0 2000 10
+#define HSM_BZL_INNER_CURVATURE_SCALE global.HSM_BZL_INNER_CURVATURE_SCALE / 100
 
 #ifndef HSM_SCREENFX_SCANLINE_RES
 	#define HSM_SCREENFX_SCANLINE_RES 240

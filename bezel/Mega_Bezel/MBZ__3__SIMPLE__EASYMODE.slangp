@@ -106,14 +106,23 @@ alias12 = BR_MirrorFullscreenGlowPass
 
 // Bezel Reflection ----------------------------------------------------------------
 
-shader13 = shaders/HyperspaceMadness/hsm-bezel-image-layers-simple.slang
+shader13 = shaders/HyperspaceMadness/hsm-bezel-reflection.slang
 mipmap_input13 = true
 filter_linear13 = true
 scale_type13 = viewport
-float_framebuffer13 = false
+float_framebuffer13 = true
+alias13 = BR_CRTAndReflectionPass
+
+// Bezel Reflection ----------------------------------------------------------------
+
+shader14 = shaders/HyperspaceMadness/hsm-bezel-image-layers-simple.slang
+mipmap_input14 = true
+filter_linear14 = true
+scale_type14 = viewport
+float_framebuffer14 = false
 
 // Define how many shaders will be used from this list
-shaders = 14
+shaders = 15
 
 // Define textures to be used by the different passes
 textures = "SamplerLUT1;SamplerLUT2;SamplerLUT3;IntroImage;ColoredGelImage;TubeStaticReflectionImage;ReflectOnlyLayerImage;FrameTextureImage;BackgroundImage;BackgroundVertImage;CabinetGlassImage;BezelImage;BezelVertImage;DecalImage;NightLightingImage;LEDImage;TopLayerImage;TopLayerVertImage;"

@@ -105,15 +105,21 @@ wrap_mode14 = mirrored_repeat
 alias14 = BR_MirrorFullscreenGlowPass
 
 // Bezel Reflection ----------------------------------------------------------------
-
-shader15 = shaders/HyperspaceMadness/hsm-bezel-image-layers-simple.slang
+shader15 = shaders/HyperspaceMadness/hsm-bezel-reflection.slang
 mipmap_input15 = true
 filter_linear15 = true
 scale_type15 = viewport
-float_framebuffer15 = false
+float_framebuffer15 = true
+alias15 = BR_CRTAndReflectionPass
+
+shader16 = shaders/HyperspaceMadness/hsm-bezel-image-layers-simple.slang
+mipmap_input16 = true
+filter_linear16 = true
+scale_type16 = viewport
+float_framebuffer16 = false
 
 // Define how many shaders will be used from this list
-shaders = 16
+shaders = 17
 
 
 // Define textures to be used by the different passes
@@ -174,20 +180,14 @@ TopLayerVertImage_linear = true
 
 // Parameters
 HSM_ASPECT_RATIO_EXPLICIT = 1.5
-
-HSM_INT_SCALE_MODE = 0
-HSM_NON_INTEGER_SCALE = 74.074
-HSM_CURVATURE_2D_SCALE_LONG_AXIS = 0
-HSM_CURVATURE_2D_SCALE_SHORT_AXIS = 0
-
+HSM_INT_SCALE_MODE = 2
+HSM_INT_SCALE_BORDER_MIN_HEIGHT = 15
+HSM_CURVATURE_MODE = -1
 HSM_COLOR_CRT_PROFILE = 0
-HSM_TUBE_BLACK_EDGE_THICKNESS = 1.6
-HSM_VIEWPORT_VIGNETTE_OPACITY = 0
-
-HSM_BZL_WIDTH = 15
-HSM_BZL_HEIGHT = 12
-
-HSM_FRM_OPACITY = 0
+HSM_TUBE_BLACK_EDGE_THICKNESS = 50
+HSM_BZL_WIDTH = 160
+HSM_BZL_HEIGHT = 150
+HSM_FRM_THICKNESS = 100
 
 LCD_RSUBPIX_R = 0.75
 LCD_GSUBPIX_G = 0.75

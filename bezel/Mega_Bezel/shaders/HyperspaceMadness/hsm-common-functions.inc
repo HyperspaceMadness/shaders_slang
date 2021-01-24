@@ -925,16 +925,19 @@ vec4 HSM_GetCroppedTexSample(sampler2D in_sampler, vec2 in_cropped_coord)
 	
 	vec4 out_color = texture(in_sampler, sample_coord);
 
-	vec4 negative_crop_color = vec4(HSM_COLOR_NEGATIVE_CROP_BRIGHTNESS / 10000, HSM_COLOR_NEGATIVE_CROP_BRIGHTNESS / 10000, HSM_COLOR_NEGATIVE_CROP_BRIGHTNESS / 10000, 1);
+	// // ----------------- Negative Crop ----------------------------
+	// // Feature Removed due to cost
+	// vec4 negative_crop_color = vec4(HSM_COLOR_NEGATIVE_CROP_BRIGHTNESS / 10000, HSM_COLOR_NEGATIVE_CROP_BRIGHTNESS / 10000, HSM_COLOR_NEGATIVE_CROP_BRIGHTNESS / 10000, 1);
 	
 	#ifdef HSM_SPLIT_SCREEN_PRESET
 		float use_neg_crop_color = HHLP_EqualsValue(HSM_SPLITSCREEN_CENTER_FILL_MODE, 0, 0.1) * in_split_area;
 		out_color = use_neg_crop_color * negative_crop_color + (1 - use_neg_crop_color) * out_color;
 	#endif
 
-	float negative_crop = HSM_IsInNegativeCropArea(sample_coord);
-
-	out_color = negative_crop * negative_crop_color + (1 - negative_crop) * out_color;
+	// // ----------------- Negative Crop ----------------------------
+	// // Feature Removed due to cost, was 1/3 processing for a Guest-Dr-Venom Scaling Only preset
+	// float negative_crop = HSM_IsInNegativeCropArea(sample_coord);
+	// out_color = negative_crop * negative_crop_color + (1 - negative_crop) * out_color;
 
 	// #ifdef HSM_SPLIT_SCREEN_BLEND_CENTER_PRESET
 	// 	out_color = in_split_area * vec4(0) + (1 - in_split_area) * out_color;

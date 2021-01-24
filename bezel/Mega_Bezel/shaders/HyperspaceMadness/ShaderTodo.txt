@@ -25,6 +25,7 @@ Changes:
   * Added Header/Title Params for section breaks
   * LCD preset fixed artifacts in screen and in reflection 
   * Guest-SM Garbage Pixels fixed
+  * Negative Cropping Removed due to performance cost
 
   *  Performance of Guest-Venom Preset on Nvidia RTX2060:
     *  3840x2160 - ? fps

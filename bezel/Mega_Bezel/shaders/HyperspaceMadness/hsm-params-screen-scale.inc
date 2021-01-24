@@ -86,16 +86,16 @@ float HSM_SCREEN_POSITION_Y = -1 * global.HSM_SCREEN_POSITION_Y / 1000;
 //---------------------------------------------------------------------------------------------------
 #pragma parameter HSM_CROPPING_TITLE					"[ CROPPING ]___________________________________________________" 0 0 0.01 0.01
 
-#pragma parameter HSM_CROP_OVERSCAN_TOP 				"      Crop Overscan Top" 0 -256 256 1
+#pragma parameter HSM_CROP_OVERSCAN_TOP 				"      Crop Overscan Top" 0 0 256 1
 float HSM_CROP_OVERSCAN_TOP = global.HSM_CROP_OVERSCAN_TOP;
 
-#pragma parameter HSM_CROP_OVERSCAN_BOTTOM 				"      Crop Overscan Bottom" 0 -256 256 1
+#pragma parameter HSM_CROP_OVERSCAN_BOTTOM 				"      Crop Overscan Bottom" 0 0 256 1
 float HSM_CROP_OVERSCAN_BOTTOM = global.HSM_CROP_OVERSCAN_BOTTOM;
 
-#pragma parameter HSM_CROP_OVERSCAN_LEFT 				"      Crop Overscan Left" 0 -256 256 1
+#pragma parameter HSM_CROP_OVERSCAN_LEFT 				"      Crop Overscan Left" 0 0 256 1
 float HSM_CROP_OVERSCAN_LEFT = global.HSM_CROP_OVERSCAN_LEFT;
 
-#pragma parameter HSM_CROP_OVERSCAN_RIGHT 				"      Crop Overscan Right" 0 -256 256 1
+#pragma parameter HSM_CROP_OVERSCAN_RIGHT 				"      Crop Overscan Right" 0 0 256 1
 float HSM_CROP_OVERSCAN_RIGHT = global.HSM_CROP_OVERSCAN_RIGHT;
 
 
@@ -194,8 +194,8 @@ float HSM_CURVATURE_3D_TILT_ANGLE_Y = global.HSM_CURVATURE_3D_TILT_ANGLE_Y / 100
 #pragma parameter HSM_COLOR_BLACK_LEVEL 				"      Black Level - Def -4" -4 -100 100 1
 #define HSM_COLOR_BLACK_LEVEL global.HSM_COLOR_BLACK_LEVEL / 100
 
-#pragma parameter HSM_COLOR_NEGATIVE_CROP_BRIGHTNESS	"      Negative Crop Brightness - Def 1.8" 1.8 0 100 0.2
-#define HSM_COLOR_NEGATIVE_CROP_BRIGHTNESS global.HSM_COLOR_NEGATIVE_CROP_BRIGHTNESS
+// #pragma parameter HSM_COLOR_NEGATIVE_CROP_BRIGHTNESS	"      Negative Crop Brightness - Def 1.8" 1.8 0 100 0.2
+// #define HSM_COLOR_NEGATIVE_CROP_BRIGHTNESS global.HSM_COLOR_NEGATIVE_CROP_BRIGHTNESS
 
 #pragma parameter HSM_COLOR_TITLE						"[ CRT GAMMA ]__________________________________________________" 0 0 0.01 0.01
 

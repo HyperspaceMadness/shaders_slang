@@ -268,6 +268,14 @@ float HSM_REFLECT_MASK_TO_BEZEL = global.HSM_REFLECT_MASK_TO_BEZEL;
 #pragma parameter HSM_REFLECT_IS_LAST_PASS "      Reflection is Last Pass (Glass and Reflect Only Presets)" 0 0 1 1
 float HSM_REFLECT_IS_LAST_PASS = global.HSM_REFLECT_IS_LAST_PASS;
 
+//---------------------------------------------------------------------------------------------------
+//    NIGHT LIGHTING IMAGE
+//---------------------------------------------------------------------------------------------------
+#pragma parameter HSM_NIGHT_LIGHTING_TITLE "[ NIGHT LIGHTING ]_____________________________________________" 0 0 0.01 0.01
+
+#pragma parameter HSM_NIGHT_OPACITY       "      Opacity"  0 0 100 1
+float HSM_NIGHT_OPACITY = global.HSM_NIGHT_OPACITY / 100;
+
 /////////////// CONSTANT TUNING SETTINGS ///////////////
 
 #ifndef HSM_REFLECT_CORNER_SPREAD_FALLOFF

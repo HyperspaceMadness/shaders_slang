@@ -231,6 +231,9 @@ TubeStaticReflectionImage_linear = true
 ReflectOnlyLayerImage = shaders/HyperspaceMadness/textures/TopLayerImageGradient_3840x2160.png
 ReflectOnlyLayerImage_linear = true
 
+NightLightingImage = shaders/HyperspaceMadness/textures/NightLighting_3840x2160.jpg
+NightLightingImage_linear = true
+
 
 // Parameters
 HSM_SCREEN_EDGE_SHARPNESS = "90.0000"

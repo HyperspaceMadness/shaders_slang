@@ -115,11 +115,12 @@ layout(set = 0, binding = 2) uniform sampler2D BR_CRTPass;
 layout(set = 0, binding = 5) uniform sampler2D TubeStaticReflectionImage;
 layout(set = 0, binding = 6) uniform sampler2D ColoredGelImage;
 layout(set = 0, binding = 7) uniform sampler2D ReflectOnlyLayerImage;
+layout(set = 0, binding = 8) uniform sampler2D NightLightingImage;
 
-layout(set = 0, binding = 8) uniform sampler2D BR_MirrorBlurredPass;
-layout(set = 0, binding = 9) uniform sampler2D BR_MirrorReflectionDiffusedPass;
-layout(set = 0, binding = 10) uniform sampler2D BR_MirrorFullscreenGlowPass;
-layout(set = 0, binding = 11) uniform sampler2D AvgLumPass;
+layout(set = 0, binding = 9) uniform sampler2D BR_MirrorBlurredPass;
+layout(set = 0, binding = 10) uniform sampler2D BR_MirrorReflectionDiffusedPass;
+layout(set = 0, binding = 11) uniform sampler2D BR_MirrorFullscreenGlowPass;
+layout(set = 0, binding = 12) uniform sampler2D AvgLumPass;
 
 
 float GetBezelMask()
@@ -508,6 +509,10 @@ void main()
 			layer_over_reflection_image.a *= outside_tube_mask_wider * (1 - edge_mask);
 		else
 			layer_over_reflection_image *= outside_tube_mask;
+
+		if (HSM_NIGHT_OPACITY > 0)
+			layer_over_reflection_image = mix(layer_over_reflection_image, layer_over_reflection_image * texture(NightLightingImage, VIEWPORT_COORD), HSM_NIGHT_OPACITY);
+
 		frag_color_linear = BlendModeLayerMixSimple(frag_color_linear, layer_over_reflection_image, HSM_REFLECT_ONLY_IMG_BLEND_MODE, HSM_REFLECT_ONLY_IMG_OPACITY);
 	}
 

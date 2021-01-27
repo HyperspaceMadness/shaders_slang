@@ -39,8 +39,10 @@ layout(push_constant) uniform Push
 	float MODE;
 	float XBR_EDGE_SHP;
 	float XBR_TEXTURE_SHP;
+   float XBR_EDGE_STR_P1;
 } params;
 
+#pragma parameter XBR_EDGE_STR_P1 "Xbr - Edge Strength p1" 0.0 0.0 5.0 0.5
 #pragma parameter MODE "Mode - Normal, Details, Adaptive" 0.0 0.0 2.0 1.0
 #pragma parameter XBR_EDGE_SHP "Adaptive Dynamic Edge Sharp" 0.4 0.0 3.0 0.1
 #pragma parameter XBR_TEXTURE_SHP "Adaptive Static Edge Sharp" 1.0 0.0 2.0 0.1
@@ -48,6 +50,7 @@ layout(push_constant) uniform Push
 #define MODE params.MODE
 #define XBR_EDGE_SHP params.XBR_EDGE_SHP
 #define XBR_TEXTURE_SHP params.XBR_TEXTURE_SHP
+#define XBR_EDGE_STR_P1 params.XBR_EDGE_STR_P1
 
 layout(std140, set = 0, binding = 0) uniform UBO
 {
@@ -128,8 +131,8 @@ void main()
 		wp1	=	1.0;
 		wp2	=	0.0;
 		wp3	=	0.0;
-		wp4	=	1.0;
-		wp5	=	-1.0;
+		wp4	=	0.0;
+		wp5	=	0.0;
 		wp6	=	0.0;
 
 		weight1	=	(XBR_WEIGHT*1.75068/10.0);
@@ -166,7 +169,7 @@ void main()
 	vec2 dir = fp - vec2(0.5,0.5);
  	if ((dir.x*dir.y)>0.0)
 	{
-		FragColor = (fp.x>0.5) ? texture(Source, vTexCoord) : texture(Original, vTexCoord);
+		FragColor = mix( texture(Original, vTexCoord), texture(Source, vTexCoord), step(0.0, dir.x));
 	}
 	else
 	{
@@ -212,7 +215,7 @@ void main()
 	/* Calc edgeness in horizontal/vertical directions. */
 	float hv_edge = (hv_wd(wp1, wp2, wp3, wp4, wp5, wp6, f, i, e, h, c, i5, b, h5) - hv_wd(wp1, wp2, wp3, wp4, wp5, wp6, e, f, h, i, d, f4, g, i4));
 
-	float limits = XBR_EDGE_STR + 0.000001;
+	float limits = XBR_EDGE_STR_P1 + 0.000001;
 	float edge_strength = smoothstep(0.0, limits, abs(d_edge));
 	
 	vec4 w1, w2;
@@ -247,8 +250,8 @@ void main()
 	vec3 color =  mix(mix(c1, c2, step(0.0, d_edge)), mix(c3, c4, step(0.0, hv_edge)), 1. - edge_strength);
 
 	/* Anti-ringing code. */
-	vec3 min_sample = min4( E, F, H, I ) + (1.-XBR_ANTI_RINGING)*mix((P2-H)*(F-P1), (P0-E)*(I-P3), step(0.0, d_edge));
-	vec3 max_sample = max4( E, F, H, I ) - (1.-XBR_ANTI_RINGING)*mix((P2-H)*(F-P1), (P0-E)*(I-P3), step(0.0, d_edge));
+	vec3 min_sample = min4( E, F, H, I );
+	vec3 max_sample = max4( E, F, H, I );
 	color = clamp(color, min_sample, max_sample);
 	
 	FragColor = vec4(color, 1.0);

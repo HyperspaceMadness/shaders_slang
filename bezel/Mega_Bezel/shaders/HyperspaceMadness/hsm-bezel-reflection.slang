@@ -411,7 +411,6 @@ void main()
 		{
 			reflected_color += (1 - vignette_shadow_mask) * bezel_reflected_color;
 			reflection_area_mask *= outside_tube_mask_wider;
-			reflected_color += edge_mask * edge_reflected_color;
 		}
 		else
 		{

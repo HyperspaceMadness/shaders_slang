@@ -21,6 +21,9 @@ float HSM_FLIP_VIEWPORT_VERTICAL = global.HSM_FLIP_VIEWPORT_VERTICAL;
 #pragma parameter HSM_FLIP_CORE_VERTICAL				"      Flip Core Image Vertical"  0 0 1 1
 float HSM_FLIP_CORE_VERTICAL = global.HSM_FLIP_CORE_VERTICAL;
 
+#pragma parameter HSM_FLIP_CORE_HORIZONTAL				"      Flip Core Image Horizontal"  0 0 1 1
+float HSM_FLIP_CORE_HORIZONTAL = global.HSM_FLIP_CORE_HORIZONTAL;
+
 #pragma parameter HSM_ROTATE_CORE_IMAGE					"      Rotate CRT Tube"  0 0 1 1
 float HSM_ROTATE_CORE_IMAGE = global.HSM_ROTATE_CORE_IMAGE;
 

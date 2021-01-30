@@ -862,7 +862,7 @@ float HSM_rand(inout float r)
 
 vec4 HSM_GetStoichaicBlurredSample(sampler2D in_sampler, vec2 in_coord, float num_samples, float max_blur_size, float blur_ratio)
 {
-	if (num_samples == 0)
+	if (num_samples < 1)
 		return texture(in_sampler, in_coord);
 
 	// Common value for max_blur_size is about 40
@@ -878,10 +878,6 @@ vec4 HSM_GetStoichaicBlurredSample(sampler2D in_sampler, vec2 in_coord, float nu
 		radius_vector.y = HSM_rand(radius);
 		vec2 sample_coord = in_coord + radius_vector * p;
 
-		// sample_coord = HSM_GetMirrorWrappedCoord(sample_coord);
-		sample_coord = clamp(sample_coord, 0.04, 0.96);
-		// if (abs(sample_coord.y - 0.5) > 0.5) blurred_color += vec4(1, 0, 0, 0);
-
 		blurred_color += texture(in_sampler, sample_coord) / num_samples;
 	}
 	return blurred_color;
@@ -894,6 +890,7 @@ vec4 HSM_GetCroppedTexSample(sampler2D in_sampler, vec2 in_cropped_coord)
 	vec2 cropped_size = HSM_GetCroppedRotatedOriginalSize();
 
 	// Flip the coordinate vertically if desired
+	in_cropped_coord.x = HSM_FLIP_CORE_HORIZONTAL * (1 - in_cropped_coord.x) + (1 - HSM_FLIP_CORE_HORIZONTAL) * in_cropped_coord.x;
 	in_cropped_coord.y = abs(HSM_FLIP_VIEWPORT_VERTICAL - HSM_FLIP_CORE_VERTICAL) * (1 - in_cropped_coord.y) + (1 - abs(HSM_FLIP_VIEWPORT_VERTICAL - HSM_FLIP_CORE_VERTICAL)) * in_cropped_coord.y;
 
 	vec2 px_coord = in_cropped_coord * cropped_size;

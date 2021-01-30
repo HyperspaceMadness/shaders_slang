@@ -31,10 +31,9 @@ Changes:
     *  3840x2160 - ? fps
 
 Mega Bezel Still to Come:
-  * Fix Inconsistencies in Edge of Glass Preset
   * Re-Evaluate Frame Inner Edge Reflection for performance
   * Startup Animation - Sprite Sheet
-  * Bilinear scale option per layer
+  * Bilinear scale option per layer?
   * Redo Splitscreen with mapping and no dependence on sampling
   * Add Shadow for Image Cutout
   * Frame Shading

@@ -946,25 +946,7 @@ vec4 HSM_GetCroppedTexSample(sampler2D in_sampler, vec2 in_cropped_coord)
 	return out_color;
 }
 
-vec4 HSM_ApplyPhosphorPersistence(vec4 in_color, sampler2D in_feedback_pass, vec2 in_coord)
-{
-	if (HSM_PHOSPHOR_PERSISTENCE == 0) return in_color;
 
-	vec3 Phosphor = HSM_PHOSPHOR_PERSISTENCE < 0 ? vec3(0.5, 0.6, 0.8) : vec3(0.5, 0.5, 0.5);
-
-	float delta_time = 5 - 5 * HHLP_EasePowerOut(abs(HSM_PHOSPHOR_PERSISTENCE), 2) + 0.1;
-	vec4 prev_color = texture(in_feedback_pass, in_coord);
-	prev_color.r *= pow(Phosphor.r, delta_time);
-	prev_color.g *= pow(Phosphor.g, delta_time);
-	prev_color.b *= pow(Phosphor.b, delta_time);
-
-	vec4 out_color = in_color;
-	out_color.r = max(prev_color.r, out_color.r);
-	out_color.g = max(prev_color.g, out_color.g);
-	out_color.b = max(prev_color.b, out_color.b);
-
-	return out_color;
-}
 
 float HSM_GetVignetteFactor(vec2 coord, float amount)
 {

@@ -28,15 +28,15 @@ float HSM_ROTATE_CORE_IMAGE = global.HSM_ROTATE_CORE_IMAGE;
 //---------------------------------------------------------------------------------------------------
 //    ASPECT RATIO
 //---------------------------------------------------------------------------------------------------
-#pragma parameter HSM_ASPECT_RATIO_TITLE					"[ ASPECT RATIO ]_______________________________________________" 0 0 0.01 0.01
+#pragma parameter HSM_ASPECT_RATIO_TITLE				"[ ASPECT RATIO ]_______________________________________________" 0 0 0.01 0.01
 
-#pragma parameter HSM_ASPECT_RATIO_ORIENTATION 				"      Orientation - Auto | Horizontal | Vertical"  0 0 2 1
+#pragma parameter HSM_ASPECT_RATIO_ORIENTATION 			"      Orientation - Auto | Horizontal | Vertical"  0 0 2 1
 float HSM_ASPECT_RATIO_ORIENTATION = global.HSM_ASPECT_RATIO_ORIENTATION;
 
-#pragma parameter HSM_ASPECT_RATIO_MODE 					"      Type - Auto | Explicit | 4:3 | 3:2 | 16:9 | PAR | Full"  0 0 6 1
+#pragma parameter HSM_ASPECT_RATIO_MODE 				"      Type - Auto | Explicit | 4:3 | 3:2 | 16:9 | PAR | Full"  0 0 6 1
 float HSM_ASPECT_RATIO_MODE = global.HSM_ASPECT_RATIO_MODE;
 
-#pragma parameter HSM_ASPECT_RATIO_EXPLICIT					"      Explicit Aspect Ratio (Also Auto Ratio Fallback)"  1.3333 0 3 0.002
+#pragma parameter HSM_ASPECT_RATIO_EXPLICIT				"      Explicit Aspect Ratio (Also Auto Ratio Fallback)"  1.3333 0 3 0.002
 float HSM_ASPECT_RATIO_EXPLICIT = global.HSM_ASPECT_RATIO_EXPLICIT;
 
 
@@ -136,10 +136,10 @@ float HSM_SCANLINE_DIRECTION = global.HSM_SCANLINE_DIRECTION;
 // //---------------------------------------------------------------------------------------------------
 // #pragma parameter HSM_SPLITSCREEN_TITLE					"[ SPLIT SCREEN ]_______________________________________________" 0 0 0.01 0.01
 
-// #pragma parameter HSM_SPLITSCREEN_ON					"      Split Screen ON - SPLIT SCREEN PRESET ONLY" 0 0 1 1
+// #pragma parameter HSM_SPLITSCREEN_ON						"      Split Screen ON - SPLIT SCREEN PRESET ONLY" 0 0 1 1
 // float HSM_SPLITSCREEN_ON = global.HSM_SPLITSCREEN_ON;
 
-// #pragma parameter HSM_SPLITSCREEN_AMOUNT				"      Split Thickness - SPLIT SCREEN PRESET ONLY" 0 0 256 2
+// #pragma parameter HSM_SPLITSCREEN_AMOUNT					"      Split Thickness - SPLIT SCREEN PRESET ONLY" 0 0 256 2
 // float HSM_SPLITSCREEN_AMOUNT = global.HSM_SPLITSCREEN_AMOUNT;
 
 // // TODO add Split Position, also auto set position, catches for 3DS
@@ -151,27 +151,27 @@ float HSM_SCANLINE_DIRECTION = global.HSM_SCANLINE_DIRECTION;
 //---------------------------------------------------------------------------------------------------
 //    CURVATURE
 //---------------------------------------------------------------------------------------------------
-#pragma parameter HSM_CURVATURE_TITLE					"[ CURVATURE ]__________________________________________________" 0 0 0.01 0.01
+#pragma parameter HSM_CURVATURE_TITLE						"[ CURVATURE ]__________________________________________________" 0 0 0.01 0.01
 
-#pragma parameter HSM_CURVATURE_MODE 					"      Curvature Mode  -1:OFF 0:2D 1-2:3D Sphere, 3:3D Cylinder" 0 -1 3 1
+#pragma parameter HSM_CURVATURE_MODE 						"      Curvature Mode  -1:OFF 0:2D 1-2:3D Sphere, 3:3D Cylinder" 0 -1 3 1
 float HSM_CURVATURE_MODE = global.HSM_CURVATURE_MODE;
 
-#pragma parameter HSM_CURVATURE_2D_SCALE_LONG_AXIS 		"      2D Curvature on Long Axis - Def 100" 100 0 400 5
+#pragma parameter HSM_CURVATURE_2D_SCALE_LONG_AXIS 			"      2D Curvature on Long Axis - Def 100" 100 0 400 5
 #define HSM_CURVATURE_2D_SCALE_LONG_AXIS global.HSM_CURVATURE_2D_SCALE_LONG_AXIS / 100
 
-#pragma parameter HSM_CURVATURE_2D_SCALE_SHORT_AXIS 	"      2D Curvature on Short Axis - Def 100" 100 0 400 5
+#pragma parameter HSM_CURVATURE_2D_SCALE_SHORT_AXIS 		"      2D Curvature on Short Axis - Def 100" 100 0 400 5
 #define HSM_CURVATURE_2D_SCALE_SHORT_AXIS global.HSM_CURVATURE_2D_SCALE_SHORT_AXIS / 100
 
-#pragma parameter HSM_CURVATURE_3D_RADIUS 				"      3D Radius" 200 16 102400 1
+#pragma parameter HSM_CURVATURE_3D_RADIUS 					"      3D Radius" 200 16 102400 1
 float HSM_CURVATURE_3D_RADIUS = global.HSM_CURVATURE_3D_RADIUS / 100;
 
-#pragma parameter HSM_CURVATURE_3D_VIEW_DIST 			"      3D View Distance - Def 150" 150 50 102400 5
+#pragma parameter HSM_CURVATURE_3D_VIEW_DIST 				"      3D View Distance - Def 150" 150 50 102400 5
 float HSM_CURVATURE_3D_VIEW_DIST = global.HSM_CURVATURE_3D_VIEW_DIST / 100;
 
-#pragma parameter HSM_CURVATURE_3D_TILT_ANGLE_X 		"      3D Tilt Angle X" 0 -120 120 1
+#pragma parameter HSM_CURVATURE_3D_TILT_ANGLE_X 			"      3D Tilt Angle X" 0 -120 120 1
 float HSM_CURVATURE_3D_TILT_ANGLE_X = global.HSM_CURVATURE_3D_TILT_ANGLE_X / 100;
 
-#pragma parameter HSM_CURVATURE_3D_TILT_ANGLE_Y 		"      3D Tilt Angle Y" 0 -120 120 1
+#pragma parameter HSM_CURVATURE_3D_TILT_ANGLE_Y 			"      3D Tilt Angle Y" 0 -120 120 1
 float HSM_CURVATURE_3D_TILT_ANGLE_Y = global.HSM_CURVATURE_3D_TILT_ANGLE_Y / 100;
 
 
@@ -179,35 +179,42 @@ float HSM_CURVATURE_3D_TILT_ANGLE_Y = global.HSM_CURVATURE_3D_TILT_ANGLE_Y / 100
 //---------------------------------------------------------------------------------------------------
 //    PHOSPHOR PERSISTENCE
 //---------------------------------------------------------------------------------------------------
-#pragma parameter HSM_PERSISTENCE_TITLE					"[ PHOSPHOR PERSISTENCE ]_______________________________________" 0 0 0.01 0.01
+#pragma parameter HSM_PERSISTENCE_TITLE						"[ PHOSPHOR PERSISTENCE ]_______________________________________" 0 0 0.01 0.01
 
-#pragma parameter HSM_PHOSPHOR_PERSISTENCE          	"      Phosphor Persistence - Positive:Neutral, Negative:Blue" 0 -100 100 5
-#define HSM_PHOSPHOR_PERSISTENCE global.HSM_PHOSPHOR_PERSISTENCE / 100
+#pragma parameter HSM_PHOSPHOR_PERSISTENCE_BLEND          	"      Amount" 30 0 100 2
+#define HSM_PHOSPHOR_PERSISTENCE_BLEND global.HSM_PHOSPHOR_PERSISTENCE_BLEND / 100
 
+#pragma parameter HSM_PHOSPHOR_PERSISTENCE_RED          	"      Red Persistence" 50 0 100 5
+#define HSM_PHOSPHOR_PERSISTENCE_RED global.HSM_PHOSPHOR_PERSISTENCE_RED / 100
 
+#pragma parameter HSM_PHOSPHOR_PERSISTENCE_GREEN          	"      Green Persistence" 50 0 100 5
+#define HSM_PHOSPHOR_PERSISTENCE_GREEN global.HSM_PHOSPHOR_PERSISTENCE_GREEN / 100
+
+#pragma parameter HSM_PHOSPHOR_PERSISTENCE_BLUE          	"      Blue Persistence" 50 0 100 5
+#define HSM_PHOSPHOR_PERSISTENCE_BLUE global.HSM_PHOSPHOR_PERSISTENCE_BLUE / 100
 
 //---------------------------------------------------------------------------------------------------
 //    COLOR & Persistence
 //---------------------------------------------------------------------------------------------------
-#pragma parameter HSM_COLOR_AND_PERSISTENCE_TITLE		"[ SCANLINES ON BLACK ]_________________________________________" 0 0 0.01 0.01
+#pragma parameter HSM_COLOR_AND_PERSISTENCE_TITLE			"[ SCANLINES ON BLACK ]_________________________________________" 0 0 0.01 0.01
 
-#pragma parameter HSM_COLOR_BLACK_LEVEL 				"      Black Level - Def -4" -4 -100 100 1
+#pragma parameter HSM_COLOR_BLACK_LEVEL 					"      Black Level - Def -4" -4 -100 100 1
 #define HSM_COLOR_BLACK_LEVEL global.HSM_COLOR_BLACK_LEVEL / 100
 
-// #pragma parameter HSM_COLOR_NEGATIVE_CROP_BRIGHTNESS	"      Negative Crop Brightness - Def 1.8" 1.8 0 100 0.2
+// #pragma parameter HSM_COLOR_NEGATIVE_CROP_BRIGHTNESS		"      Negative Crop Brightness - Def 1.8" 1.8 0 100 0.2
 // #define HSM_COLOR_NEGATIVE_CROP_BRIGHTNESS global.HSM_COLOR_NEGATIVE_CROP_BRIGHTNESS
 
-#pragma parameter HSM_COLOR_TITLE						"[ CRT GAMMA ]__________________________________________________" 0 0 0.01 0.01
+#pragma parameter HSM_COLOR_TITLE							"[ CRT GAMMA ]__________________________________________________" 0 0 0.01 0.01
 
-#pragma parameter HSM_COLOR_CRT_GAMMA   				"      CRT Gamma (Linear to Gamma Space Encode) Def 2.2" 2.2 0.1 5 0.05
+#pragma parameter HSM_COLOR_CRT_GAMMA   					"      CRT Gamma (Linear to Gamma Space Encode) Def 2.2" 2.2 0.1 5 0.05
 #define HSM_COLOR_CRT_GAMMA global.HSM_COLOR_CRT_GAMMA
 
-#pragma parameter HSM_SCREENVIGNETTE_TITLE				"[ SCREEN VIGNETTE ]____________________________________________" 0 0 0.01 0.01
+#pragma parameter HSM_SCREENVIGNETTE_TITLE					"[ SCREEN VIGNETTE ]____________________________________________" 0 0 0.01 0.01
 
-#pragma parameter HSM_SCREEN_VIGNETTE                	"      Screen Vignette Opacity" 0 0 100 1
+#pragma parameter HSM_SCREEN_VIGNETTE                		"      Screen Vignette Opacity" 0 0 100 1
 #define HSM_SCREEN_VIGNETTE global.HSM_SCREEN_VIGNETTE / 100
 
-#pragma parameter HSM_SCREEN_VIGNETTE_IN_REFLECTION     "      Screen Vignette  Opacity in Reflection" 100 0 100 1
+#pragma parameter HSM_SCREEN_VIGNETTE_IN_REFLECTION     	"      Screen Vignette  Opacity in Reflection" 100 0 100 1
 float HSM_SCREEN_VIGNETTE_IN_REFLECTION = global.HSM_SCREEN_VIGNETTE_IN_REFLECTION / 100;
 
 
@@ -215,15 +222,15 @@ float HSM_SCREEN_VIGNETTE_IN_REFLECTION = global.HSM_SCREEN_VIGNETTE_IN_REFLECTI
 //---------------------------------------------------------------------------------------------------
 //    SCREEN EDGE
 //---------------------------------------------------------------------------------------------------
-#pragma parameter HSM_SCREEN_EDGE_TITLE					"[ SCREEN EDGE ]________________________________________________" 0 0 0.01 0.01
+#pragma parameter HSM_SCREEN_EDGE_TITLE							"[ SCREEN EDGE ]________________________________________________" 0 0 0.01 0.01
 
-#pragma parameter HSM_SCREEN_CORNER_RADIUS 				"      Corner Radius - Def 10" 10 0 70 1
+#pragma parameter HSM_SCREEN_CORNER_RADIUS 						"      Corner Radius - Def 10" 10 0 70 1
 #define HSM_SCREEN_CORNER_RADIUS global.HSM_SCREEN_CORNER_RADIUS
 
-#pragma parameter HSM_SCREEN_EDGE_SHARPNESS 			"      Edge Sharpness - Def 40" 40 0 90 1
+#pragma parameter HSM_SCREEN_EDGE_SHARPNESS 					"      Edge Sharpness - Def 40" 40 0 90 1
 #define HSM_SCREEN_EDGE_SHARPNESS global.HSM_SCREEN_EDGE_SHARPNESS / 100
 
-#pragma parameter HSM_TUBE_BLACK_EDGE_THICKNESS 		"      Black Border Thickness - Def 100" 100 -200 800 5
+#pragma parameter HSM_TUBE_BLACK_EDGE_THICKNESS 				"      Black Border Thickness - Def 100" 100 -200 800 5
 #define HSM_TUBE_BLACK_EDGE_THICKNESS global.HSM_TUBE_BLACK_EDGE_THICKNESS / 100
 
 
@@ -239,10 +246,10 @@ float HSM_TUBE_COLORED_GEL_IMAGE_MULTIPLY_AMOUNT = global.HSM_TUBE_COLORED_GEL_I
 #pragma parameter HSM_TUBE_COLORED_GEL_IMAGE_ADDITIVE_AMOUNT  	"      Colored Gel Additive Amount" 0 0 100 0.05
 float HSM_TUBE_COLORED_GEL_IMAGE_ADDITIVE_AMOUNT = global.HSM_TUBE_COLORED_GEL_IMAGE_ADDITIVE_AMOUNT / 100;
 
-#pragma parameter HSM_TUBE_STATIC_REFLECTION_IMAGE_OPACITY  			"      Tube Static Reflection Opacity" 0 0 100 0.1
+#pragma parameter HSM_TUBE_STATIC_REFLECTION_IMAGE_OPACITY  	"      Tube Static Reflection Opacity" 0 0 100 0.1
 float HSM_TUBE_STATIC_REFLECTION_IMAGE_OPACITY = global.HSM_TUBE_STATIC_REFLECTION_IMAGE_OPACITY / 100;
 
-#pragma parameter HSM_TUBE_STATIC_REFLECTION_IMAGE_SCALE  				"      Tube Static Reflection Scale" 110 0 1000 1
+#pragma parameter HSM_TUBE_STATIC_REFLECTION_IMAGE_SCALE  		"      Tube Static Reflection Scale" 110 0 1000 1
 float HSM_TUBE_STATIC_REFLECTION_IMAGE_SCALE = global.HSM_TUBE_STATIC_REFLECTION_IMAGE_SCALE / 100;
 
 // #pragma parameter HSM_TUBE_STATIC_REFLECTION_IMAGE_DITHERING_SAMPLES  "[ TUBE IMAGES ]   Tube Static Reflection Noise Samples (Reduces Banding)" 0 0 10 1
@@ -258,83 +265,83 @@ float HSM_TUBE_STATIC_REFLECTION_IMAGE_SCALE = global.HSM_TUBE_STATIC_REFLECTION
 //---------------------------------------------------------------------------------------------------
 //    INTRO IMAGE
 //---------------------------------------------------------------------------------------------------
-#pragma parameter HSM_INTRO_IMAGE_TITLE					"[ INTRO SEQUENCE ]_____________________________________________" 0 0 0.01 0.01
+#pragma parameter HSM_INTRO_IMAGE_TITLE							"[ INTRO SEQUENCE ]_____________________________________________" 0 0 0.01 0.01
 
-#pragma parameter HSM_INTRO_WHEN_TO_SHOW     			"      Show Intro - OFF | When Content Loads | Repeat"  1 0 2 1
+#pragma parameter HSM_INTRO_WHEN_TO_SHOW     					"      Show Intro - OFF | When Content Loads | Repeat"  1 0 2 1
 #define HSM_INTRO_WHEN_TO_SHOW global.HSM_INTRO_WHEN_TO_SHOW
 
-#pragma parameter HSM_INTRO_SPEED     					"      Speed"  100 1 500 5
+#pragma parameter HSM_INTRO_SPEED     							"      Speed"  100 1 500 5
 #define HSM_INTRO_SPEED (global.HSM_INTRO_SPEED / 100)
 
-#pragma parameter HSM_INTRO_LOGO_TITLE					"[ INTRO LOGO ]_________________________________________________" 0 0 0.01 0.01
+#pragma parameter HSM_INTRO_LOGO_TITLE							"[ INTRO LOGO ]_________________________________________________" 0 0 0.01 0.01
 
-#pragma parameter HSM_INTRO_LOGO_BLEND_MODE        		"      Logo Blend Mode - Off | Norm | Add | Mult"  1 0 3 1
+#pragma parameter HSM_INTRO_LOGO_BLEND_MODE        				"      Logo Blend Mode - Off | Norm | Add | Mult"  1 0 3 1
 #define HSM_INTRO_LOGO_BLEND_MODE global.HSM_INTRO_LOGO_BLEND_MODE
 
-#pragma parameter HSM_INTRO_LOGO_OVER_SOLID_COLOR       "      Logo Over Solid Color - Off | ON"  1 0 1 1
+#pragma parameter HSM_INTRO_LOGO_OVER_SOLID_COLOR       		"      Logo Over Solid Color - Off | ON"  1 0 1 1
 #define HSM_INTRO_LOGO_OVER_SOLID_COLOR global.HSM_INTRO_LOGO_OVER_SOLID_COLOR
 
-#pragma parameter HSM_INTRO_LOGO_HEIGHT        			"      Logo Height (0 for exact resolution)"  42.86 0 100 1
+#pragma parameter HSM_INTRO_LOGO_HEIGHT        					"      Logo Height (0 for exact resolution)"  42.86 0 100 1
 #define HSM_INTRO_LOGO_HEIGHT (global.HSM_INTRO_LOGO_HEIGHT / 100)
 
-#pragma parameter HSM_INTRO_LOGO_RES_X        			"      Logo Res X"  192 0 3840 16
+#pragma parameter HSM_INTRO_LOGO_RES_X        					"      Logo Res X"  192 0 3840 16
 #define HSM_INTRO_LOGO_RES_X global.HSM_INTRO_LOGO_RES_X
 
-#pragma parameter HSM_INTRO_LOGO_RES_Y        			"      Logo Res Y"  96 0 3840 16
+#pragma parameter HSM_INTRO_LOGO_RES_Y        					"      Logo Res Y"  96 0 3840 16
 #define HSM_INTRO_LOGO_RES_Y global.HSM_INTRO_LOGO_RES_Y
 
-#pragma parameter HSM_INTRO_LOGO_PLACEMENT        		"      Logo Placement - Middle | TL | TR | BL | BR"  0 0 4 1
+#pragma parameter HSM_INTRO_LOGO_PLACEMENT        				"      Logo Placement - Middle | TL | TR | BL | BR"  0 0 4 1
 #define HSM_INTRO_LOGO_PLACEMENT global.HSM_INTRO_LOGO_PLACEMENT
 
-#pragma parameter HSM_INTRO_LOGO_WAIT     				"      Logo Wait Before Start Frames"  20 0 1200 5
+#pragma parameter HSM_INTRO_LOGO_WAIT     						"      Logo Wait Before Start Frames"  20 0 1200 5
 #define HSM_INTRO_LOGO_WAIT global.HSM_INTRO_LOGO_WAIT
 
-#pragma parameter HSM_INTRO_LOGO_FADE_IN       			"      Logo Fade In Frames"  20 0 600 5
+#pragma parameter HSM_INTRO_LOGO_FADE_IN       					"      Logo Fade In Frames"  20 0 600 5
 #define HSM_INTRO_LOGO_FADE_IN global.HSM_INTRO_LOGO_FADE_IN
 
-#pragma parameter HSM_INTRO_LOGO_HOLD     				"      Logo Hold Frames"  130 0 600 5
+#pragma parameter HSM_INTRO_LOGO_HOLD     						"      Logo Hold Frames"  130 0 600 5
 #define HSM_INTRO_LOGO_HOLD global.HSM_INTRO_LOGO_HOLD
 
-#pragma parameter HSM_INTRO_LOGO_FADE_OUT       		"      Logo Fade Out Frames"  80 0 600 5
+#pragma parameter HSM_INTRO_LOGO_FADE_OUT       				"      Logo Fade Out Frames"  80 0 600 5
 #define HSM_INTRO_LOGO_FADE_OUT global.HSM_INTRO_LOGO_FADE_OUT
 
-#pragma parameter HSM_INTRO_LOGO_SOLID_TITLE			"[ INTRO SOLID COLOR ]__________________________________________" 0 0 0.01 0.01
+#pragma parameter HSM_INTRO_LOGO_SOLID_TITLE					"[ INTRO SOLID COLOR ]__________________________________________" 0 0 0.01 0.01
 
-#pragma parameter HSM_INTRO_SOLID_COLOR_BLEND_MODE      "      Solid Color Blend Mode - Off | Norm | Add | Mult"  1 0 3 1
+#pragma parameter HSM_INTRO_SOLID_COLOR_BLEND_MODE      		"      Solid Color Blend Mode - Off | Norm | Add | Mult"  1 0 3 1
 #define HSM_INTRO_SOLID_COLOR_BLEND_MODE global.HSM_INTRO_SOLID_COLOR_BLEND_MODE
 
-#pragma parameter HSM_INTRO_SOLID_COLOR_HUE     		"      Solid Color Hue"  0 0 360 1
+#pragma parameter HSM_INTRO_SOLID_COLOR_HUE     				"      Solid Color Hue"  0 0 360 1
 #define HSM_INTRO_SOLID_COLOR_HUE (global.HSM_INTRO_SOLID_COLOR_HUE / 360)
 
-#pragma parameter HSM_INTRO_SOLID_COLOR_SAT     		"      Solid Color Saturation"  0 0 100 5
+#pragma parameter HSM_INTRO_SOLID_COLOR_SAT     				"      Solid Color Saturation"  0 0 100 5
 #define HSM_INTRO_SOLID_COLOR_SAT (global.HSM_INTRO_SOLID_COLOR_SAT / 100)
 
-#pragma parameter HSM_INTRO_SOLID_COLOR_VALUE     		"      Solid Color Value"  100 0 100 5
+#pragma parameter HSM_INTRO_SOLID_COLOR_VALUE     				"      Solid Color Value"  100 0 100 5
 #define HSM_INTRO_SOLID_COLOR_VALUE (global.HSM_INTRO_SOLID_COLOR_VALUE / 100)
 
-#pragma parameter HSM_INTRO_SOLID_COLOR_HOLD     		"      Solid Color Hold Frames"  40 0 600 5
+#pragma parameter HSM_INTRO_SOLID_COLOR_HOLD     				"      Solid Color Hold Frames"  40 0 600 5
 #define HSM_INTRO_SOLID_COLOR_HOLD global.HSM_INTRO_SOLID_COLOR_HOLD
 
-#pragma parameter HSM_INTRO_SOLID_COLOR_FADE_OUT        "      Solid Color Fade Out Frames"  40 0 600 5
+#pragma parameter HSM_INTRO_SOLID_COLOR_FADE_OUT        		"      Solid Color Fade Out Frames"  40 0 600 5
 #define HSM_INTRO_SOLID_COLOR_FADE_OUT global.HSM_INTRO_SOLID_COLOR_FADE_OUT
 
-#pragma parameter HSM_INTRO_NOISE_TITLE					"[ INTRO STATIC NOISE ]_________________________________________" 0 0 0.01 0.01
+#pragma parameter HSM_INTRO_NOISE_TITLE							"[ INTRO STATIC NOISE ]_________________________________________" 0 0 0.01 0.01
 
-#pragma parameter HSM_INTRO_NOISE_BLEND_MODE        	"      Static Noise Blend Mode - Off | Norm | Add | Mult"  1 0 3 1
+#pragma parameter HSM_INTRO_NOISE_BLEND_MODE        			"      Static Noise Blend Mode - Off | Norm | Add | Mult"  1 0 3 1
 #define HSM_INTRO_NOISE_BLEND_MODE global.HSM_INTRO_NOISE_BLEND_MODE
 
-#pragma parameter HSM_INTRO_NOISE_HOLD     				"      Static Noise Hold Frames"  80 0 600 5
+#pragma parameter HSM_INTRO_NOISE_HOLD     						"      Static Noise Hold Frames"  80 0 600 5
 #define HSM_INTRO_NOISE_HOLD global.HSM_INTRO_NOISE_HOLD
 
-#pragma parameter HSM_INTRO_NOISE_FADE_OUT       		"      Static Noise Fade Out Frames"  120 0 600 5
+#pragma parameter HSM_INTRO_NOISE_FADE_OUT       				"      Static Noise Fade Out Frames"  120 0 600 5
 #define HSM_INTRO_NOISE_FADE_OUT global.HSM_INTRO_NOISE_FADE_OUT
 
-#pragma parameter HSM_INTRO_SOLID_BLACK_TITLE			"[ INTRO SOLID BLACK ]_________________________________________" 0 0 0.01 0.01
+#pragma parameter HSM_INTRO_SOLID_BLACK_TITLE					"[ INTRO SOLID BLACK ]_________________________________________" 0 0 0.01 0.01
 
-#pragma parameter HSM_INTRO_SOLID_BLACK_HOLD     		"      Solid Black Hold Frames"  0 0 600 5
+#pragma parameter HSM_INTRO_SOLID_BLACK_HOLD     				"      Solid Black Hold Frames"  0 0 600 5
 #define HSM_INTRO_SOLID_BLACK_HOLD global.HSM_INTRO_SOLID_BLACK_HOLD
 
-#pragma parameter HSM_INTRO_SOLID_BLACK_FADE_OUT       	"      Solid Black Fade Out Frames"  0 0 600 5
+#pragma parameter HSM_INTRO_SOLID_BLACK_FADE_OUT       			"      Solid Black Fade Out Frames"  0 0 600 5
 #define HSM_INTRO_SOLID_BLACK_FADE_OUT global.HSM_INTRO_SOLID_BLACK_FADE_OUT
 
 

@@ -1,0 +1,65 @@
+#version 450
+
+#include "hsm-globals.inc"
+#include "hsm-params-screen-scale.inc"
+#include "hsm-common-functions.inc"
+
+#pragma stage vertex
+layout(location = 0) in vec4 Position;
+layout(location = 1) in vec2 TexCoord;
+layout(location = 0) out vec2 vTexCoord;
+
+void main()
+{
+   gl_Position = global.MVP * Position;
+   vTexCoord = TexCoord;
+}
+
+#pragma stage fragment
+layout(location = 0) in vec2 vTexCoord;
+layout(location = 0) out vec4 FragColor;
+layout(set = 0, binding = 2) uniform sampler2D Source;
+layout(set = 0, binding = 3) uniform sampler2D PersistencePassFeedback;
+
+#define previous_pass_feedback PersistencePassFeedback
+#define eps 1e-3
+
+vec4 HSM_ApplyPhosphorPersistence(vec4 in_color, vec4 prev_color, vec2 in_coord)
+{
+	if (HSM_PHOSPHOR_PERSISTENCE_RED == 0 && HSM_PHOSPHOR_PERSISTENCE_GREEN == 0 && HSM_PHOSPHOR_PERSISTENCE_BLUE == 0) 
+		return in_color;
+
+	vec3 persistence = vec3(HSM_PHOSPHOR_PERSISTENCE_RED, HSM_PHOSPHOR_PERSISTENCE_GREEN, HSM_PHOSPHOR_PERSISTENCE_BLUE);
+
+	float delta_time_red = clamp(5 - 5 * HHLP_EasePowerIn(abs(HSM_PHOSPHOR_PERSISTENCE_RED), 2) + 0.1, 0, 1);
+	float delta_time_green = clamp(5 - 5 * HHLP_EasePowerIn(abs(HSM_PHOSPHOR_PERSISTENCE_GREEN), 2) + 0.1, 0, 1);
+	float delta_time_blue = clamp(5 - 5 * HHLP_EasePowerIn(abs(HSM_PHOSPHOR_PERSISTENCE_BLUE), 2) + 0.1, 0, 1);
+
+	prev_color.r *= pow(persistence.r, delta_time_red);
+	prev_color.g *= pow(persistence.g, delta_time_green);
+	prev_color.b *= pow(persistence.b, delta_time_blue);
+
+   prev_color *= HSM_PHOSPHOR_PERSISTENCE_BLEND;
+
+	vec4 out_color = in_color;
+	out_color.r = max(prev_color.r, out_color.r);
+	out_color.g = max(prev_color.g, out_color.g);
+	out_color.b = max(prev_color.b, out_color.b);
+
+	return out_color;
+}
+
+void main()
+{
+   FragColor = texture(Source, vTexCoord);
+   FragColor = HSM_Linearize(FragColor, HSM_DEFAULT_SRGB_GAMMA);
+
+	vec4 prev_color = texture(previous_pass_feedback, vTexCoord);
+   prev_color = HSM_Linearize(prev_color, HSM_DEFAULT_SRGB_GAMMA);
+
+   // Phosphor Persistence
+   FragColor = HSM_ApplyPhosphorPersistence(FragColor, prev_color, vTexCoord);
+
+   // FragColor = mix(texture(previous_pass_feedback, vTexCoord), texture(Source, vTexCoord), 0.5);
+   FragColor = HSM_Delinearize(FragColor, HSM_DEFAULT_SRGB_GAMMA);
+}

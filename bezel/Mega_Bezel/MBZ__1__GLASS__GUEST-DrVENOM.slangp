@@ -19,75 +19,80 @@ shader6 = shaders/HyperspaceMadness/hsm-mdapt/hsm-mdapt-pass4.slang
 
 // SGENDPT - Hyllian's great de-dither shader
 shader7 = shaders/HyperspaceMadness/hsm-sgenpt-mix/hsm-sgenpt-mix.slang
-shader8 = :/shaders/shaders_slang/stock.slang
 
-shader9 = shaders/HyperspaceMadness/hsm-ps1dither/hsm-PS1-Undither-BoxBlur.slang
-alias9 = refpass
+shader8 = shaders/HyperspaceMadness/hsm-ps1dither/hsm-PS1-Undither-BoxBlur.slang
+alias8 = refpass
 
-shader10 = shaders/HyperspaceMadness/hsm-scalefx/hsm-scalefx-pass0.slang
+shader9 = shaders/HyperspaceMadness/hsm-scalefx/hsm-scalefx-pass0.slang
+filter_linear9 = false
+scale_type9 = source
+scale9 = 1.0
+float_framebuffer9 = true
+alias9 = scalefx_pass0
+
+shader10 = shaders/HyperspaceMadness/hsm-scalefx/hsm-scalefx-pass1.slang
 filter_linear10 = false
 scale_type10 = source
 scale10 = 1.0
 float_framebuffer10 = true
-alias10 = scalefx_pass0
 
-shader11 = shaders/HyperspaceMadness/hsm-scalefx/hsm-scalefx-pass1.slang
+shader11 = shaders/HyperspaceMadness/hsm-scalefx/hsm-scalefx-pass2.slang
 filter_linear11 = false
 scale_type11 = source
 scale11 = 1.0
-float_framebuffer11 = true
 
-shader12 = shaders/HyperspaceMadness/hsm-scalefx/hsm-scalefx-pass2.slang
+shader12 = shaders/HyperspaceMadness/hsm-scalefx/hsm-scalefx-pass3.slang
 filter_linear12 = false
 scale_type12 = source
 scale12 = 1.0
 
-shader13 = shaders/HyperspaceMadness/hsm-scalefx/hsm-scalefx-pass3.slang
+shader13 = shaders/HyperspaceMadness/hsm-scalefx/hsm-scalefx-pass4.slang
 filter_linear13 = false
 scale_type13 = source
-scale13 = 1.0
-
-shader14 = shaders/HyperspaceMadness/hsm-scalefx/hsm-scalefx-pass4.slang
-filter_linear14 = false
-scale_type14 = source
-scale14 = 1
+scale13 = 3
 
 // GTU TV Processing
-shader15 = shaders/HyperspaceMadness/hsm-gtu/hsm-gtu-pass1.slang
-scale_type15 = source
-scale15 = 1.0
-float_framebuffer15 = true
+shader14 = shaders/HyperspaceMadness/hsm-gtu/hsm-gtu-pass1.slang
+scale_type14 = source
+scale14 = 1.0
+float_framebuffer14 = true
 
-shader16 = shaders/HyperspaceMadness/hsm-gtu/hsm-gtu-pass2.slang
-scale_type_x16 = source
-scale_x16 = 1.0
-scale_type_y16 = source
-scale_y16 = 1.0
-filter_linear16 = false
-float_framebuffer16 = true
+shader15 = shaders/HyperspaceMadness/hsm-gtu/hsm-gtu-pass2.slang
+scale_type_x15 = source
+scale_x15 = 1.0
+scale_type_y15 = source
+scale_y15 = 1.0
+filter_linear15 = false
+float_framebuffer15 = true
 
 // // NTSC passes added here so you can swap out with GTU
 // // To use the ntsc-adaptive you will need to comment out the scale-fx passes
 // // and uncomment the following
 
+// shader9 = :/shaders/shaders_slang/stock.slang
 // shader10 = :/shaders/shaders_slang/stock.slang
 // shader11 = :/shaders/shaders_slang/stock.slang
 // shader12 = :/shaders/shaders_slang/stock.slang
 // shader13 = :/shaders/shaders_slang/stock.slang
-// shader14 = :/shaders/shaders_slang/stock.slang
 
-// shader15 = :\shaders\shaders_slang\ntsc\shaders\ntsc-adaptive\ntsc-pass1.slang
+// shader14 = :\shaders\shaders_slang\ntsc\shaders\ntsc-adaptive\ntsc-pass1.slang
+// scale_type14 = source
+// scale_x14 = 4.0
+// filter_linear14 = false
+// scale_type14 = 1.0
+// float_framebuffer14 = true
+
+// shader15 = :\shaders\shaders_slang\ntsc\shaders\ntsc-adaptive\ntsc-pass2.slang
 // scale_type15 = source
-// scale_x15 = 4.0
+// scale_x15 = 0.5
+// scale_y15 = 1.0
 // filter_linear15 = false
-// scale_type15 = 1.0
-// float_framebuffer15 = true
 
-// shader16 = :\shaders\shaders_slang\ntsc\shaders\ntsc-adaptive\ntsc-pass2.slang
-// scale_type16 = source
-// scale_x16 = 0.5
-// scale_y16 = 1.0
-// filter_linear16 = false
+shader16 = shaders/HyperspaceMadness/hsm-phosphor-persistence.slang
+filter_linear16 = false
+scale_type16 = source
+scale16 = 1.0
+alias16 = "PersistencePass"
 
 // Linearize Color ----------------------------------------------------------------
 shader17 = shaders/HyperspaceMadness/hsm-guest/hsm-guest-linearize.slang
@@ -171,7 +176,7 @@ wrap_mode25 = mirrored_repeat
 
 // Add Blur for the Reflection (Vertical) ----------------------------------------------------------------
 shader26 = shaders/HyperspaceMadness/hsm-blur-outside-screen-vert.slang
-filter_linear25 = true
+filter_linear26 = true
 alias26 = BR_MirrorBlurredPass
 
 // Reduce resolution ----------------------------------------------------------------

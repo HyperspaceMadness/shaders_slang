@@ -271,7 +271,7 @@ void main()
    FragColor = HSM_ApplyBlackLevel(FragColor, 0);
 
    // Phosphor Persistence
-   FragColor = HSM_ApplyPhosphorPersistence(FragColor, PassFeedback6, vTexCoord);
+   // FragColor = HSM_ApplyPhosphorPersistence(FragColor, PassFeedback6, vTexCoord);
 
    // Put Average Luminance in the alpha channel
    FragColor.a = GetAverageLuma();

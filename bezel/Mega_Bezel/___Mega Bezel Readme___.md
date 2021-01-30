@@ -4,7 +4,7 @@ HyperspaceMadness Mega Bezel Shader Readme
 
 
 ----------------------------------------
-------------What does it do?------------
+What does it do?
 ----------------------------------------
 
     - Adds an auto-generated bezel around the screen with reflection
@@ -16,7 +16,7 @@ HyperspaceMadness Mega Bezel Shader Readme
 
 
 ----------------------------------------
-------------How does it work?-----------
+How does it work?
 ----------------------------------------
 
   -In general there is a background image which fills the screen, then the game screen is drawn scaled down with an automatically generated bezel image drawn around the screen. 
@@ -27,7 +27,7 @@ HyperspaceMadness Mega Bezel Shader Readme
 
 
 ----------------------------------------
-------------Installation----------------
+Installation
 ----------------------------------------
 
     - If you have previous versions of the Mega Bezel installed:
@@ -42,32 +42,32 @@ HyperspaceMadness Mega Bezel Shader Readme
 
 
 ----------------------------------------
-------------Choosing a Preset-----------
+Choosing a Preset
 ----------------------------------------
 
     Presets are named/sorted by performance
         The most flexible and most resource hungry are at the top starting with index 0
         As the name's index number increases the presets get faster but less flexible
-
+    
     - Group 0 BASE - Most flexible shader presets, one preset for each different CRT Shader 
                      Includes MDAPT, ScaleFX & GTU
                      The Guest-DrVenom preset is considered the default preset
-
+    
     - Group 1 GLASS - Glass presets which show a blurry reflection in the area around the screen 
                     - Includes MDAPT, ScaleFX & GTU
                     - Does not include the additional Image Layering.
-
+    
     - Group 3 SIMPLE - Same as Base except extra passes before the CRT pass removed 
                      - (No MDAPT, ScaleFX & GTU)
                      - Includes only a subset of the image layers (Background and Top Extra Layer)
-
+    
     - Group 4 REFLECT_ONLY - Image Layering pass has been removed
                            - No auto-generated bezel and frame and no image layering
                            - Includes an image which can be used for the background/bezel which the reflection will appear on top of
                            - When used with an image which was a snapshot from a default mega bezel preset the reflection masking will match the frame
                            - Can be used with a standard retroarch overlay
                            - When used with a standard overlay the retroarch video aspect ratio can be set to something like 4:3 to achieve higher performance
-
+    
     - Group 5 SCALING-ONLY - Includes only the screen scaling and screen effects like fake scanlines
                            - All passes after CRT pass have been removed
 
@@ -76,7 +76,7 @@ Presets in Mega_Bezel/Variations
     - They reference the original preset then have adjusted parameters or texture paths
 
 ----------------------------------------
-----------  Troubleshooting  -----------
+Troubleshooting
 ----------------------------------------
 
     In general if you have difficulties loading the shader try loading it with teh imageviewer core
@@ -85,12 +85,12 @@ Presets in Mega_Bezel/Variations
             -Open an image with this core
             -Load the shader
             -If the shader loads correctly then the shader is working.
-
+    
     When using the shader in imageviewer works, but it doesn’t work when using a core, it is possibly related to the core, or the graphics card being overwhelmed by resource usage with both the core demands and the shader demands
-
+    
     If you still have difficulties loading the shader with a specific core update the core
     If you still have difficulties download a new separate version of retroarch and try it there. Sometimes problems lurk in some random config file somewhere which are very hard to track down
-
+    
     To see errors coming from retroarch you need to set up your logging settings:
         Logging - Logging Verbosity - ON
             Frontend Logging - 1(Info)
@@ -100,144 +100,117 @@ Presets in Mega_Bezel/Variations
 
 
 -----------------------------------------------------------------------------------------------------------------------------------
------  Parameter Descriptions  ----------------------------------------------------------------------------------------------------
+Parameter Descriptions
 -----------------------------------------------------------------------------------------------------------------------------------
 
-[ --- HSM MEGA BEZEL  20XX-XX-XX-0 --- ]_______________________
+**[ --- HSM MEGA BEZEL  20XX-XX-XX-0 --- ]_______**
 
-[ DEBUG ]  Debug ON - set to 1 to turn Debug On
+**[ FLIP & ROTATE ]______________**
 
+​		**Flip Viewport Vertical** --- Some cores flip the viewport (full monitor area), this flips it back
 
-[ FLIP & ROTATE ]______________________________________________
+​		**Flip Core Image Vertical** --- Some cores flip the core image, this flips it back
 
-    Flip Viewport Vertical --- Some cores flip the viewport (full monitor area), this flips it back
+​		**Rotate CRT Tube** --- Turns the tube 90 degrees counter counter-clockwise
 
-    Flip Core Image Vertical --- Some cores flip the core image, this flips it back
+**[ ASPECT RATIO ]_______________**
 
-    Rotate CRT Tube --- Turns the tube 90 degrees counter counter-clockwise
+​		**Orientation** --- Should the aspect be horizontal or vertical? This does not rotate the image.
+​        			0 - Auto - Chooses vertical vs horizontal based on the core resolution
+​        			1 - Horizontal - uses horizontal aspect
+​        			2 - Vertical - uses vertical aspect
 
+​		**Type** --- Choose type of aspect ratio
+​        			0 - Auto - Choose aspect ratio based on educated guesses about the core resolution
+​        			1 - Explicit - Use the aspect ratio from the [ASPECT]  Explicit Aspect Ratio parameter
+​        			2 - 4:3 (Almost all arcade games are 4:3)
+​        			3 - 3:2
+​        			4 - 16:9
+​        			5 - PAR (The aspect ratio of the pixel resolution)
+​        			6 - Full (The screen will scale to the full viewport)
 
-[ ASPECT RATIO ]_______________________________________________
+​		**Explicit Aspect Ratio** --- Ratio used when [Aspect] Type is set to Explicit or if Auto is chosen and no matching resolution can be found
 
-    Orientation --- Should the aspect be horizontal or vertical? This does not rotate the image.
-            0 - Auto - Chooses vertical vs horizontal based on the core resolution
-            1 - Horizontal - uses horizontal aspect
-            2 - Vertical - uses vertical aspect
+**[SCALING]_______________________________________________**
 
-    Type --- Choose type of aspect ratio
-            0 - Auto - Choose aspect ratio based on educated guesses about the core resolution
-            1 - Explicit - Use the aspect ratio from the [ASPECT]  Explicit Aspect Ratio parameter
-            2 - 4:3 (Almost all arcade games are 4:3)
-            3 - 3:2
-            4 - 16:9
-            5 - PAR (The aspect ratio of the pixel resolution)
-            6 - Full (The screen will scale to the full viewport)
+- **Show Resolution Info**
 
-    Explicit Aspect Ratio --- Ratio used when [Aspect] Type is set to Explicit or if Auto is chosen and no matching resolution can be found
+- **Int Scale Mode**
+  - **0 - Off,** Use Non-Integer Scale
+  - **1 - ShortAxis Integer Scale On** - for the viewport (monitor) in landscape mode this is the vertical axis, If the screen/tube aspect ratio is vertical then integer scale is used for both horizontal and vertical axes
+  - **2 - Integer Scale on both axes**
 
+- **Int Scale Multiple Offset**
+  - Adjusts the size of the screen by increasing the multiple of the core resolution (on both axes) when using integer scale, to make the screen larger or smaller
+- **Int Scale Multiple Offset Long Axis**
+  - Adds an additional multiple offset but for only the long axis, with a horizontal aspect ratio this is the horizontal axis
+- **Int Scale Border Min Height %**
+  - The amount of vertical screen space reserved for the area around the screen when using integer scale
+- **Non-Integer Scale %**
+  - If integer scale isn't used, this sets the vertical size of the vertical percentage of the full viewport
+- **Snap To Int-Scale Tolerance**
+  - Snaps the non-integer scale to the closest integer scale within the tolerance. This allows you to set an approximate size for the screen and have it snap to an integer scale but not if it would be too much different
 
------- [SCALING] -------------------------------------------------------------------------------------------
+**[POSITION]____________________________**
 
-[SCALING]  Int Scale Mode
-            0 - Off, Use Non-Integer Scale
-            1 - ShortAxis Integer Scale On - for the viewport (monitor) in landscape mode this is the vertical axis
-                If the screen/tube aspect ratio is vertical then integer scale is used for both horizontal and vertical axes
-            2 - Integer Scale on both axes
+- **Position X** - Moves the entire screen and frame left and right
+- **Position Y** - Moves the entire screen and frame up and down
 
-[SCALING]  Int Scale Multiple Offset --- Adjusts the size of the screen by increasing the multiple of the core resolution (on both axes) when using integer scale, to make the screen larger or smaller
-
-[SCALING]  Int Scale Multiple Offset Long Axis --- Adds an additional multiple offset but for only the long axis, with a horizontal aspect ratio this is the horizontal axis
-
-[SCALING]  Int Scale Border Min Height % --- The amount of vertical screen space reserved for the area around the screen when using integer scale
-
-[SCALING]  Non-Integer Scale % --- If integer scale isn't used, this sets the vertical size of the vertical percentage of the full viewport
-
-[SCALING]  Snap To Int-Scale Tolerance --- Snaps the non-integer scale to the closest integer scale within the tolerance 
-                                            This allows you to set an approximate size for the screen and have it snap to an integer scale but not if it would be too much different
-
-[ POSITION ]  Position X --- Moves the screen/tube sideways
-
-[ POSITION ]  Position Y --- Moves the screen/tube up and down
-
------- [CROPPING] -------------------------------------------------------------------------------------------
+**[CROPPING]____________________________**
     Cropping allows you to hide edges of the game image which were never meant to be seen 
     Negative values add empty space at the edges of the tube
 
-[CROPPING]  Crop Overscan Top
+- **Crop Overscan Top**
+- **Crop Overscan Bottom**
+- **Crop Overscan Left**
+- **Crop Overscan Right**
 
-[CROPPING]  Crop Overscan Bottom
+**[CORE RES SAMPLING]____________________________**
 
-[CROPPING]  Crop Overscan Left
+- Adjusting core res sampling changes how the CRT perceives the core resolution
+  e.g. If you use a core with 4X internal resolution you can set core res sampling to 0.25 it will appear if it was at 1x resolution
+  To use ScaleFX to smooth the shapes in the core image you will need to set the core res sampling higher than 1, otherwise you will not see the increased smoothing coming from ScaleFX
 
-[CROPPING]  Crop Overscan Right
+- **Scanline Direction Multiplier**
+  - Adjust the sampling in direction of the scanlines, e.g. if the scanlines are horizontal adjust sampling along the horizontal axis
+- **Opposite Direction Multiplier**
+  - Adjust the sampling in direction opposite of the scanlines, e.g. if the scanlines are horizontal adjust sampling along the vertical axis
 
+**[ SCANLINES ]____________________________**
 
------- [SCANLINES & SAMPLING] -------------------------------------------------------------------------------------------
+- **Scanline Direction (GDV & Easymode)**
+  - **0 - Auto** --- Chooses horizontal or vertical scanline direction based on aspect ratio
+  - **1 - Horizontal** scanlines
+  - **2 - Vertical** scanlines
+- **Interlace and Fake Scanlines Trigger Res**
+  - Resolution where the shader should switch into its interlace or high res content mode.
+- **Fake Scanline Opacity**
 
-[SCANLINE DIRECTION]  Guest & Easymode
-            0 - Auto --- Chooses horizontal or vertical scanline direction based on aspect ratio
-            1 - Horizontal scanlines
-            2 - Vertical scanlines
-
-
------- [CORE RES SAMPLING] -------------------------------------------------------------------------------------------
-    Adjusting core res sampling changes how the CRT percieves the core resolution
-    e.g. If you use a core with 4X internal resolution you can set core res sampling to 0.25 it will appear if it was at 1x resolution
-    To use ScaleFX to smooth the shapes in the core image you will need to set the core res sampling higher than 1, 
-    otherwise you will not see the increased smoothing coming from ScaleFX
-
-[CORE RES SAMPLING]  Scanline Dir --- Adjust the sampling in direction of the scanlines, 
-                                        e.g. if the scanlines are horizontal adjust sampling along the horizontal axis
-
-[CORE RES SAMPLING]  Opposite Dir --- Adjust the sampling in direction opposite of the scanlines, 
-                                        e.g. if the scanlines are horizontal adjust sampling along the vertical axis
-
-[INTERLACE]  Trigger Res --- Resolution where the shader should switch into its interlace or high res content mode.
-
-
------- [SPLIT SCREEN] -------------------------------------------------------------------------------------------
-    Split Screen is for those platforms or games with multiple separate screens, like Nintendo DS, 3DS, or Punchout arcade 
-
-[SPLIT SCREEN]  Split Thickness - Distance between screens when using split screen
-
-[SPLIT SCREEN]  Center Fill --- Different methods to fill in the space between the screens
-            0 - None --- Fill the area between the screens with the  
-            1 - Bezel --- Draw 2 Bezels, a separate bezel for each sub-screen
-            2 - Reflect --- In the empty space between the used parts of the screen do a reflection effects
-            3 - Blend --- Blend the image from one screen into the other as we get closer to the center between both screens
-            4 - Fade --- Mirror the image at the center edge of the screen, and fade toward the center
-            5 - Blend and Fade --- Blend the image at the center edges together then blend towards black at the center
-
-
------- [CURVATURE] -------------------------------------------------------------------------------------------
+**[CURVATURE]____________________________**
     Applies tube curvature
 
-[CURVATURE MODE]
-        0 - 2D --- Simplest and fastest curvature
-        1 - 3D Sphere --- Geometric projection from the surface of a sphere to the viewport - Same as CRT-Royale
-        2 - 3D Sphere with adjusted corner mapping --- Very similar to #1
-        3 - 3D Cylindrical Mapping --- Vertically flat curvature like a Trinitron, e.g. PVM or BVM
+- **CURVATURE MODE**
+  - **-1 - Turn Curvature Off**
+  - **0 - 2D** - Simplest and fastest curvature
+  - **1 - 3D Sphere**  -  Geometric projection from the surface of a sphere to the viewport - Same as CRT-Royale
+  - **2 - 3D Sphere with adjusted corner mapping** --- Very similar to #1
+  - **3 - 3D Cylindrical Mapping** --- Vertically flat curvature like a Trinitron, e.g. PVM or BVM
+- **2D Curvature on Long Axis** - Curvature multiple on long axis, for a horizontal aspect ratio this is the horizontal axis
+- **2D Curvature on Short Axis** - Curvature multiple on short axis, for a horizontal aspect ratio this is the vertical axis
+- **3D Radius** - Radius for the sphere the 3D projection is done on, values from 1-4 then to be useful
+- **3D View Distance** - This is the distance of the virtual camera from the Sphere
+- **3D Tilt Angle Y** - Vertical Tilt, with split screen this will tilt both screens towards or away from the center
 
-[2D CURVATURE]  2D Curvature on Long Axis - Curvature multiple on long axis, for a horizontal aspect ratio this is the horizontal axis
+**[ PHOSPHOR PERSISTENCE ]_______________**
 
-[2D CURVATURE]  2D Curvature on Short Axis - Curvature multiple on short axis, for a horizontal aspect ratio this is the vertical axis
+- **Phosphor Persistence**
+  - Positive Values give Neutral colored trails
+  - Negative Values give Blue tinted trails
 
-[3D CURVATURE]  Radius - Radius for the sphere the 3D projection is done on, values from 1-4 then to be useful
+**[ SCANLINES ON BLACK ]_____________**
 
-[3D CURVATURE]  View Distance - This is the distance of the virtual camera from the Sphere
-
-[3D CURVATURE]  Tilt Angle Y - Vertical Tilt, with split screen this will tilt both screens towards or away from the center
-
-
------- [POSITION] -------------------------------------------------------------------------------------------
-
-[POSITION]  Position Offset X - Moves the entire screen and frame left and right
-
-[POSITION]  Position Offset Y - Moves the entire screen and frame up and down
-
-
------- [COLOR] -------------------------------------------------------------------------------------------
-    Color correction, almost all affect core image before it gets to the crt shader
+- **Black Level** 
+  - Defaults to -4 so that the black areas are not 100% black so you get very faint scanlines
 
 [COLOR]  CRT Profile - Overall color adjustment to match particular standards or example crts
         -1 - No adjustment

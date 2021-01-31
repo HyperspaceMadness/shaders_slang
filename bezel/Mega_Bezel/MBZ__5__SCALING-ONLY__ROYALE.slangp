@@ -107,7 +107,6 @@ filter_linear12 = "true"
 scale_type12 = "viewport"
 scale12 = 1
 mipmap_input12 = "true"
-wrap_mode12 = mirrored_repeat
 alias12 = BR_CRTPass
 
 shaders = "13"

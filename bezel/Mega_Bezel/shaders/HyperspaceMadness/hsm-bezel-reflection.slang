@@ -24,6 +24,15 @@ Thanks to:
 
 /////////////// Helper Functions ///////////////
 
+layout(push_constant) uniform Push
+{
+	vec4 BR_MirrorBlurredPassSize;
+	vec4 BR_MirrorReflectionDiffusedPassSize;
+	vec4 BR_MirrorFullscreenGlowPassSize;
+	
+} params;
+
+
 float TUBE_MASK = 0;
 
 float SCREEN_ASPECT = HSM_GetScreenAspect();
@@ -160,7 +169,7 @@ void main()
 	vec4 crt_image_linear = HSM_Linearize(texture(BR_CRTPass, VIEWPORT_COORD.xy), HSM_DEFAULT_CRT_GAMMA);
 	crt_image_linear = HSM_ApplyGamma(crt_image_linear, HSM_DEFAULT_CRT_GAMMA / HSM_DEFAULT_SRGB_GAMMA);
 
-	vec4 blurred_reflection_color = texture(BR_MirrorBlurredPass, VIEWPORT_COORD.xy);
+	vec4 blurred_reflection_color = HHLP_GetBilinearTextureSample(BR_MirrorBlurredPass, VIEWPORT_COORD.xy, params.BR_MirrorBlurredPassSize);
 
 	vec2 screen_curved_coord = HSM_GetCurvedCoord(SCREEN_COORD, 1, SCREEN_ASPECT);
 
@@ -371,13 +380,14 @@ void main()
 		float stoichaic_blur_max = HHLP_QuadraticBezier(outside_ratio_warped, vec2(0, noise_falloff)) * 3;
 		float stoichaic_blur_amount = HSM_REFLECT_NOISE_SAMPLE_DISTANCE;
 
-		vec4 fullscreen_blurred_sampled_color = HSM_GetStoichaicBlurredSample(BR_MirrorFullscreenGlowPass, VIEWPORT_COORD.xy, stoichaic_blur_samples, (1 - corner_mask) * stoichaic_blur_max * 3, stoichaic_blur_amount);
+		// vec4 fullscreen_blurred_sampled_color = HSM_GetStoichaicBlurredSample(BR_MirrorFullscreenGlowPass, VIEWPORT_COORD.xy, stoichaic_blur_samples, (1 - corner_mask) * stoichaic_blur_max * 3, stoichaic_blur_amount);
+		vec4 fullscreen_blurred_sampled_color = HHLP_GetBilinearTextureSample(BR_MirrorFullscreenGlowPass, VIEWPORT_COORD.xy, params.BR_MirrorFullscreenGlowPassSize);
 
 		vec4 corner_reflection_color = fullscreen_blurred_sampled_color;
 		
 		vec4 fullscreen_glow_color = pow(fullscreen_blurred_sampled_color, vec4(HSM_REFLECT_FULLSCREEN_GLOW_GAMMA));
 		
-		vec4 diffused_reflection_color = texture(BR_MirrorReflectionDiffusedPass, VIEWPORT_COORD.xy);
+		vec4 diffused_reflection_color = HHLP_GetBilinearTextureSample(BR_MirrorReflectionDiffusedPass, VIEWPORT_COORD.xy, params.BR_MirrorReflectionDiffusedPassSize);
 		vec4 diffused_reflection_scatter_color = HSM_GetStoichaicBlurredSample(BR_MirrorReflectionDiffusedPass, VIEWPORT_COORD.xy, stoichaic_blur_samples, stoichaic_blur_max, stoichaic_blur_amount);
 		vec4 diffused_reflection_blended_color = mix(diffused_reflection_color, diffused_reflection_scatter_color, HSM_REFLECT_NOISE_AMOUNT);
 

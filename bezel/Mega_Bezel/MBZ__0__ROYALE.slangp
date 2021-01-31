@@ -107,7 +107,6 @@ filter_linear12 = "true"
 scale_type12 = "viewport"
 scale12 = 1
 mipmap_input12 = "true"
-wrap_mode12 = mirrored_repeat
 alias12 = BR_CRTPass
 
 // Screen Scale & Tube Scale Curvature Mapping
@@ -129,13 +128,8 @@ mipmap_input14 = true
 filter_linear14 = true
 scale_type14 = absolute
 float_framebuffer14 = true
-// scale_x14 = 480
-// scale_y14 = 270
-// scale_x14 = 960
-// scale_y14 = 540
 scale_x14 = 800
 scale_y14 = 600
-wrap_mode14 = mirrored_repeat
 float_framebuffer14 = true
 alias14 = BR_MirrorLowResPass
 
@@ -145,14 +139,12 @@ mipmap_input15 = true
 filter_linear15 = true
 float_framebuffer15 = true
 scale_type16 = source
-wrap_mode15 = mirrored_repeat
 
 // Add Blur for the Reflection (Vertical) ----------------------------------------------------------------
 shader16 = shaders/HyperspaceMadness/hsm-blur-outside-screen-vert.slang
 filter_linear16 = false
 scale_type16 = source
 float_framebuffer16 = true
-wrap_mode16 = mirrored_repeat
 alias16 = BR_MirrorBlurredPass
 
 // Reduce resolution ----------------------------------------------------------------
@@ -165,7 +157,6 @@ scale_type17 = absolute
 float_framebuffer17 = true
 scale_x17 = 128
 scale_y17 = 128
-wrap_mode17 = mirrored_repeat
 alias17 = BR_MirrorReflectionDiffusedPass
 
 // Add Diffused glow all around the screen ----------------------------------------------------------------
@@ -178,7 +169,6 @@ scale_type18 = absolute
 float_framebuffer18 = true
 scale_x18 = 12
 scale_y18 = 12
-wrap_mode18 = mirrored_repeat
 alias18 = BR_MirrorFullscreenGlowPass
 
 // Bezel Reflection ----------------------------------------------------------------

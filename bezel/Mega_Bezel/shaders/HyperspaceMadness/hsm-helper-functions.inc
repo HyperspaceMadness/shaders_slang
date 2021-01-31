@@ -98,3 +98,21 @@ float HHLP_EqualsResolution(vec2 in_res, vec2 test_res)
   return  HHLP_EqualsValue(in_res.x, test_res.x, hardcoded_epsilon) * 
           HHLP_EqualsValue(in_res.y, test_res.y, hardcoded_epsilon);
 }
+
+vec4 HHLP_GetBilinearTextureSample(sampler2D in_sampler, vec2 in_coord, vec4 in_size)
+{
+   vec2 uv = in_coord * in_size.xy - 0.5; // Shift by 0.5 since the texel sampling points are in the texel center.
+   vec2 a = fract(uv);
+   vec2 tex = (floor(uv) + 0.5) * in_size.zw; // Build a sampling point which is in the center of the texel.
+
+   // Sample the bilinear footprint.
+   vec4 t0 = textureLodOffset(in_sampler, tex, 0.0, ivec2(0, 0));
+   vec4 t1 = textureLodOffset(in_sampler, tex, 0.0, ivec2(1, 0));
+   vec4 t2 = textureLodOffset(in_sampler, tex, 0.0, ivec2(0, 1));
+   vec4 t3 = textureLodOffset(in_sampler, tex, 0.0, ivec2(1, 1));
+
+   // Bilinear filter.
+   vec4 result = mix(mix(t0, t1, a.x), mix(t2, t3, a.x), a.y);
+
+   return result;
+}

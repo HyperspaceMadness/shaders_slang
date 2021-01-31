@@ -20,6 +20,12 @@ Thanks to:
 /////////////// IMPORTS ///////////////
 #include "hsm-globals-and-all-params.inc"
 
+// Removed because BackgroundImageSize returns vec4(0,0,0,0), this happens with all user defined textures
+// layout(push_constant) uniform Push
+// {
+// 	vec4 BackgroundImageSize;
+// } params;
+
 #define DEFAULT_TUBE_SCALE_V 0.82987
 #define DEFAULT_BEZEL_SCALE_V 0.91159
 
@@ -677,9 +683,13 @@ void main()
 	if (HSM_BG_OPACITY > 0)
 	{
 		if (SCREEN_ASPECT > 1)
-			background_image = texture(BackgroundImage, background_coord).rgba;
+		{
+			background_image = texture(BackgroundImage, background_coord);
+			// Can't do bilinear filtering because BackgroundImageSize returns vec4(0,0,0,0), this happens with all user defined textures
+			// background_image = HHLP_GetBilinearTextureSample(BackgroundImage, background_coord,  params.BackgroundImageSize);
+		}
 		else 
-			background_image = texture(BackgroundVertImage, background_coord).rgba;
+			background_image = texture(BackgroundVertImage, background_coord);
 
 		// Premultiply Alpha
 		background_image = GetPreMultipliedColorLinear(background_image, HSM_BG_SOURCE_MATTE_TYPE, HSM_DEFAULT_SRGB_GAMMA);

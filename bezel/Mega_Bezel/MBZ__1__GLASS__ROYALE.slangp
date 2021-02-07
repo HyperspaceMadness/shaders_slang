@@ -157,10 +157,11 @@ scale_type17 = absolute
 float_framebuffer17 = true
 scale_x17 = 128
 scale_y17 = 128
+wrap_mode17 = mirrored_repeat
 alias17 = BR_MirrorReflectionDiffusedPass
 
 // Add Diffused glow all around the screen ----------------------------------------------------------------
-//      lurred so much that it's non directional
+//      blurred so much that it's non directional
 //      Mipmap option allows downscaling without artifacts
 shader18 = :/shaders/shaders_slang/blurs/blur9x9.slang
 mipmap_input18 = true

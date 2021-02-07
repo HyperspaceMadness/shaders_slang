@@ -83,7 +83,7 @@ scale_y13 = 128
 alias13 = BR_MirrorReflectionDiffusedPass
 
 // Add Diffused glow all around the screen ----------------------------------------------------------------
-//      lurred so much that it's non directional
+//      Blurred so much that it's non directional
 //      Mipmap option allows downscaling without artifacts
 shader14 = :/shaders/shaders_slang/blurs/blur9x9.slang
 mipmap_input14 = true

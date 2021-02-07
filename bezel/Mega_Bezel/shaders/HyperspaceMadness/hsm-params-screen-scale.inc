@@ -8,7 +8,7 @@ Description:
 */
 
 // Screen Scale Required Parameters
-#pragma parameter HSM_MEGA_BEZEL_TITLE					"[ --- HSM MEGA BEZEL  ALPHA.2021-01-23-0 --- ]_________________" 0 0 0.01 0.01
+#pragma parameter HSM_MEGA_BEZEL_TITLE					"[ --- HSM MEGA BEZEL  ALPHA.2021-02-07-0 --- ]_________________" 0 0 0.01 0.01
 
 //---------------------------------------------------------------------------------------------------
 //    FLIP & ROTATE
@@ -207,6 +207,23 @@ float HSM_CURVATURE_3D_TILT_ANGLE_Y = global.HSM_CURVATURE_3D_TILT_ANGLE_Y / 100
 // #pragma parameter HSM_COLOR_NEGATIVE_CROP_BRIGHTNESS		"      Negative Crop Brightness - Def 1.8" 1.8 0 100 0.2
 // #define HSM_COLOR_NEGATIVE_CROP_BRIGHTNESS global.HSM_COLOR_NEGATIVE_CROP_BRIGHTNESS
 
+// Guest Color Profiles
+// [COLOR]  CRT Profile - Overall color adjustment to match particular standards or example crts
+//         -1 - No adjustment
+//         0 - SRGB (Standard color space for computer monitors)
+//         1 - BVM
+//         2 - P22 (P22 common phosphor coloring)
+//         3 - SMPTE-C - North american color standards in the 80s?
+//         4 - Philips Monitor color
+//         5 - Trinitron Monitor
+//         6 - LUT colors from Torridgristle
+
+// [COLOR]  Color Space
+//         0 - SRGB
+//         1 - DCI
+//         2 - Adobe
+//         3 - Rec. 2020
+
 #pragma parameter HSM_COLOR_TITLE							"[ CRT GAMMA ]__________________________________________________" 0 0 0.01 0.01
 
 #pragma parameter HSM_COLOR_CRT_GAMMA   					"      CRT Gamma (Linear to Gamma Space Encode) Def 2.2" 2.2 0.1 5 0.05
@@ -353,7 +370,19 @@ float HSM_TUBE_STATIC_REFLECTION_IMAGE_SCALE = global.HSM_TUBE_STATIC_REFLECTION
 //---------------------------------------------------------------------------------------------------
 #pragma parameter HSM_BEZEL_TITLE								"[ BEZEL ]______________________________________________________" 0 0 0.01 0.01
 
-#pragma parameter HSM_BZL_INNER_CURVATURE_SCALE 				"      Inner Curvature Scale" 100 0 2000 10
+#pragma parameter HSM_BZL_USE_INDEPENDENT_SCALE_AND_CURVATURE 	"      Use Independent Scale & Curvature" 0 0 1 1
+#define HSM_BZL_USE_INDEPENDENT_SCALE_AND_CURVATURE global.HSM_BZL_USE_INDEPENDENT_SCALE_AND_CURVATURE
+
+#pragma parameter HSM_BZL_INDEPENDENT_SCALE 					"      Independent Scale" 82.97 1 200 0.2
+#define HSM_BZL_INDEPENDENT_SCALE global.HSM_BZL_INDEPENDENT_SCALE / 100
+
+#pragma parameter HSM_BZL_INDEPENDENT_CURVATURE_SCALE_LONG_AXIS 		"      Independent Curvature X - Def 100" 100 0 400 5
+#define HSM_BZL_INDEPENDENT_CURVATURE_SCALE_LONG_AXIS global.HSM_BZL_INDEPENDENT_CURVATURE_SCALE_LONG_AXIS / 100
+
+#pragma parameter HSM_BZL_INDEPENDENT_CURVATURE_SCALE_SHORT_AXIS 		"      Independent Curvature Y - Def 100" 100 0 400 5
+#define HSM_BZL_INDEPENDENT_CURVATURE_SCALE_SHORT_AXIS global.HSM_BZL_INDEPENDENT_CURVATURE_SCALE_SHORT_AXIS / 100
+
+#pragma parameter HSM_BZL_INNER_CURVATURE_SCALE 				"      Inner Curvature Scale Multiplier" 100 0 2000 10
 #define HSM_BZL_INNER_CURVATURE_SCALE global.HSM_BZL_INNER_CURVATURE_SCALE / 100
 
 #ifndef HSM_SCREENFX_SCANLINE_RES

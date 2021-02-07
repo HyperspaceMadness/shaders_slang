@@ -308,29 +308,29 @@ void main()
 
 	float vignette_shadow_mask = 0;
 
-	// // ----------------- This section is for modulating amount of reflection on frame inner edge --------------
-	// // Currently removed because of cost
-	// float frame_inner_edge_mask = 1;
-	// vec2 frame_pos_offset = vec2(0, HSM_BZL_OUTER_POSITION_Y);
-	// vec2 bezel_outside_coord = SCREEN_COORD + frame_pos_offset;
+	// ----------------- This section is for modulating amount of reflection on frame inner edge --------------
+	// Currently removed because of cost
+	float frame_inner_edge_mask = 1;
+	vec2 frame_pos_offset = vec2(0, HSM_BZL_OUTER_POSITION_Y);
+	vec2 bezel_outside_coord = SCREEN_COORD + frame_pos_offset;
 
 	// Calculation of Bezel Masks
 	// if (HSM_REFLECT_MASK_TO_BEZEL == 1 || HSM_FRM_INNER_EDGE_THICKNESS > 0)
 	// {
-	// 	float screen_scale_diagonal = sqrt(SCREEN_SCALE.y * SCREEN_SCALE.y + (SCREEN_SCALE.y * SCREEN_ASPECT) * (SCREEN_SCALE.y * SCREEN_ASPECT));
-	// 	vec2 black_edge_scale_offset = HSM_GetTubeScale(SCREEN_SCALE) / SCREEN_SCALE;
-	// 	vec2 outer_bezel_scale = vec2(HSM_BZL_WIDTH / SCREEN_ASPECT + 1, HSM_BZL_HEIGHT + 1);
-	// 	outer_bezel_scale = (outer_bezel_scale - 1) * screen_scale_diagonal + 1;
+		float screen_scale_diagonal = sqrt(SCREEN_SCALE.y * SCREEN_SCALE.y + (SCREEN_SCALE.y * SCREEN_ASPECT) * (SCREEN_SCALE.y * SCREEN_ASPECT));
+		vec2 black_edge_scale_offset = HSM_GetTubeScale(SCREEN_SCALE) / SCREEN_SCALE;
+		vec2 outer_bezel_scale = vec2(HSM_BZL_WIDTH / SCREEN_ASPECT + 1, HSM_BZL_HEIGHT + 1);
+		outer_bezel_scale = (outer_bezel_scale - 1) * screen_scale_diagonal + 1;
 
-	// 	bezel_outside_coord = HSM_GetInverseScaledCoord(bezel_outside_coord, black_edge_scale_offset * outer_bezel_scale) + vec2(0, HSM_BZL_OUTER_POSITION_Y);
+		bezel_outside_coord = HSM_GetInverseScaledCoord(bezel_outside_coord, black_edge_scale_offset * outer_bezel_scale) + vec2(0, HSM_BZL_OUTER_POSITION_Y);
 
-	// 	if (HSM_BZL_OUTER_CURVATURE_SCALE > 0)
-	// 		bezel_outside_coord = HSM_GetCurvedCoord(bezel_outside_coord, HSM_BZL_OUTER_CURVATURE_SCALE, outer_bezel_scale.x * global.OutputSize.x / global.OutputSize.y / outer_bezel_scale.y);
+		if (HSM_BZL_OUTER_CURVATURE_SCALE > 0)
+			bezel_outside_coord = HSM_GetCurvedCoord(bezel_outside_coord, HSM_BZL_OUTER_CURVATURE_SCALE, outer_bezel_scale.x * global.OutputSize.x / global.OutputSize.y / outer_bezel_scale.y);
 
-	// 	frame_inner_edge_mask = (HSM_FRM_INNER_EDGE_THICKNESS == 0) ? 0 : 1 - HSM_GetCornerMask(	(bezel_outside_coord - 0.5) * (1 + (HSM_FRM_INNER_EDGE_THICKNESS / vec2(SCREEN_ASPECT, 1))) + 0.5, 
-	// 																								SCREEN_ASPECT, 
-	// 																								HSM_FRM_INNER_CORNER_RADIUS_SCALE * HSM_BZL_OUTER_CORNER_RADIUS_SCALE * HSM_SCREEN_CORNER_RADIUS, 
-	// 																								HSM_REFLECT_FRAME_INNER_EDGE_SHARPNESS);
+		frame_inner_edge_mask = (HSM_FRM_INNER_EDGE_THICKNESS == 0) ? 0 : 1 - HSM_GetCornerMask(	(bezel_outside_coord - 0.5) * (1 + (HSM_FRM_INNER_EDGE_THICKNESS / vec2(SCREEN_ASPECT, 1))) + 0.5, 
+																									SCREEN_ASPECT, 
+																									HSM_FRM_INNER_CORNER_RADIUS_SCALE * HSM_BZL_OUTER_CORNER_RADIUS_SCALE * HSM_SCREEN_CORNER_RADIUS, 
+																									HSM_REFLECT_FRAME_INNER_EDGE_SHARPNESS);
 	// }
 
 	//----------------------------------------------------
@@ -346,7 +346,7 @@ void main()
 		float fade_out_to_corner = smoothstep(0 + HSM_REFLECT_CORNER_FADE_DISTANCE / 2, 0 - HSM_REFLECT_CORNER_FADE_DISTANCE / 2, outside_ratio_warped);
 		float corner_fade_mask = (top_corner_mask + bottom_corner_mask) * (HSM_REFLECT_CORNER_FADE) * fade_out_to_corner * 2;
 
-		// corner_fade_mask *= 1 - frame_inner_edge_mask;
+		corner_fade_mask *= 1 - frame_inner_edge_mask;
 
 		// Radial fade - fading away from the edges of the screen
 		float radial_fade_speed = 100;
@@ -450,8 +450,8 @@ void main()
 		reflected_color += clamp(edge_fullscreen_glow, 0, 1);
 		reflected_color.a = 1;
 
-		// // Modulate amount of refleciton on frame inner edge
-		// reflected_color.rgb *= (1 - HSM_REFLECT_FRAME_INNER_EDGE_AMOUNT) * (1 - frame_inner_edge_mask) + HSM_REFLECT_FRAME_INNER_EDGE_AMOUNT;
+		// Modulate amount of refleciton on frame inner edge
+		reflected_color.rgb *= (1 - HSM_REFLECT_FRAME_INNER_EDGE_AMOUNT) * (1 - frame_inner_edge_mask) + HSM_REFLECT_FRAME_INNER_EDGE_AMOUNT;
 
 		if (HSM_REFLECT_MASK_TO_BEZEL == 1)
 			reflected_color *= GetBezelMask();

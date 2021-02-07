@@ -142,8 +142,6 @@ vec4 GetColorWithIntro(vec4 in_color, vec2 in_coord)
 
    float frame_count = global.FrameCount;
 
-
-
    float mask_wait = 20 / HSM_INTRO_SPEED;
    
 	float mask_fade_horizontal = 40 / HSM_INTRO_SPEED;
@@ -181,7 +179,7 @@ vec4 GetColorWithIntro(vec4 in_color, vec2 in_coord)
 	{
 		vec2 noise_res = global.OriginalSize.xy;
       noise_res = min(noise_res, vec2(640, 480));
-		vec2 quantized_coord = vec2(floor(in_coord.x * noise_res.x) / noise_res.x, floor(in_coord.y * noise_res.y) / noise_res.y);
+		vec2 quantized_coord = vec2(floor((in_coord.x + 0.01) * noise_res.x) / noise_res.x, floor((in_coord.y + 0.01) * noise_res.y) / noise_res.y);
 
 		float width = (frame_count - mask_wait) / (mask_fade_horizontal/2);
 		float height = (clamp((frame_count - mask_wait - mask_vert_wait) / mask_fade_vertical, 0, 1) + 0.005) * 2;

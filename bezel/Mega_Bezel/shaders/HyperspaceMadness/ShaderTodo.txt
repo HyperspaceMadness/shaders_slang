@@ -26,12 +26,25 @@ Changes:
   * LCD preset fixed artifacts in screen and in reflection 
   * Guest-SM Garbage Pixels fixed
   * Negative Cropping Removed due to performance cost
-
+  * Fixed Moire appearing in reflection, more noticeable in glass preset
+  * Independent curvature for bezel & screen
   *  Performance of Guest-Venom Preset on Nvidia RTX2060:
     *  3840x2160 - ? fps
 
 Mega Bezel Still to Come:
+
+Inner edge sharpness not working
+Need outer edge sharpness
+Need Texture to multiply reflection
+Fix Left edge Noise
+
+  * Examples
+    * Vertical Example - Reflection Only Static BG
+    * Plastic Bezel, Cutout Bezel
+    * Vertical Example - Full Adjustable
+    * Discs of Tron
   * Re-Evaluate Frame Inner Edge Reflection for performance
+  * Try Scaled up version of tube for reflection/glass area
   * Startup Animation - Sprite Sheet
   * Bilinear scale option per layer?
   * Redo Splitscreen with mapping and no dependence on sampling
@@ -50,7 +63,6 @@ Mega Bezel Still to Come:
   * Reflection fade option to have reflection come to 100% at inner frame boundary so you can have a glass like effect outside the bezel
   * Per Layer Scaling of Cutout?
   * Noise Sampling on Tube Highlight
-  * ArsInvictus Example - Cyberbots?
   * Figure out Royale's inconsistent scanlines
   * Aspect Ratio on Images, test if we can get it from the image, DX11 might work
   * When reflection is off still see inner bezel edge reflection

@@ -33,7 +33,7 @@ layout(location = 0) out vec4 FragColor;
 
 void main()
 {
-	vec2 tube_curved_coord = HSM_GetTubeCurvedCoord(SCREEN_COORD, SCREEN_SCALE, SCREEN_ASPECT);
+	vec2 tube_curved_coord = HSM_GetTubeCurvedCoord(SCREEN_COORD, 1, SCREEN_SCALE, SCREEN_ASPECT, 1);
 
 	// float flip_tilt = 0;
 
@@ -96,15 +96,10 @@ void main()
 	// #endif
 
 	vec2 edge_mask_coord = (tube_curved_coord - 0.5) * (1 - (HSM_BZL_INNER_EDGE_THICKNESS / vec2(SCREEN_ASPECT, 1))) + 0.5;
-	float edge_sharpness = 0.99;
-
-	// If this is used in the glass preset adjust the smoothness of the edge of the glass 
-	if (HSM_GLASS_BORDER_ON == 1)
-		edge_sharpness = HSM_BZL_INNER_EDGE_SHARPNESS;
 
 	float outside_tube_mask = 1 - HSM_GetCornerMask(tube_curved_coord, SCREEN_ASPECT, HSM_BZL_INNER_CORNER_RADIUS_SCALE * HSM_SCREEN_CORNER_RADIUS, 0.99);
 
-	float edge_mask =  HSM_GetCornerMask(edge_mask_coord, SCREEN_ASPECT, HSM_BZL_INNER_CORNER_RADIUS_SCALE * HSM_SCREEN_CORNER_RADIUS, edge_sharpness);
+	float edge_mask =  HSM_GetCornerMask(edge_mask_coord, SCREEN_ASPECT, HSM_BZL_INNER_CORNER_RADIUS_SCALE * HSM_SCREEN_CORNER_RADIUS, HSM_BZL_INNER_EDGE_SHARPNESS);
 
 	FragColor = vec4(tube_curved_coord.x, tube_curved_coord.y, outside_tube_mask, edge_mask);
 }

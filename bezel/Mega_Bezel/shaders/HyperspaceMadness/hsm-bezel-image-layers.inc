@@ -419,10 +419,15 @@ void main()
 
 	if (HSM_BZL_OUTER_CURVATURE_SCALE > 0)
 	{
-		bezel_outside_coord = HSM_GetCurvedCoord(bezel_outside_coord, HSM_BZL_OUTER_CURVATURE_SCALE, outer_bezel_scale.x * global.OutputSize.x / global.OutputSize.y / outer_bezel_scale.y);
+		vec2 screen_scale_for_tube = SCREEN_SCALE;
+
+		// if (HSM_BZL_USE_INDEPENDENT_SCALE_AND_CURVATURE == 1)
+		// 	screen_scale_for_tube = SCREEN_SCALE / screen_scale.y * HSM_BZL_INDEPENDENT_SCALE;
+
+		bezel_outside_coord = HSM_GetTubeCurvedCoord(bezel_outside_coord, HSM_BZL_OUTER_CURVATURE_SCALE, screen_scale_for_tube, outer_bezel_scale.x * global.OutputSize.x / global.OutputSize.y / outer_bezel_scale.y, 0);
 
 		if ( HSM_FRM_OUTER_CURVATURE_SCALE > 0)
-			frame_outside_coord = HSM_GetCurvedCoord(frame_outside_coord, HSM_BZL_OUTER_CURVATURE_SCALE * HSM_FRM_OUTER_CURVATURE_SCALE, outer_bezel_scale.x * global.OutputSize.x / global.OutputSize.y / outer_bezel_scale.y);
+			frame_outside_coord = HSM_GetTubeCurvedCoord(frame_outside_coord, HSM_BZL_OUTER_CURVATURE_SCALE * HSM_FRM_OUTER_CURVATURE_SCALE, screen_scale_for_tube, outer_bezel_scale.x * global.OutputSize.x / global.OutputSize.y / outer_bezel_scale.y, 0);
 	}
 
 	OUTSIDE_BEZEL_MASK = 1 - HSM_GetCornerMask(bezel_outside_coord, SCREEN_ASPECT, HSM_FRM_INNER_CORNER_RADIUS_SCALE * HSM_BZL_OUTER_CORNER_RADIUS_SCALE * HSM_SCREEN_CORNER_RADIUS, 0.9);

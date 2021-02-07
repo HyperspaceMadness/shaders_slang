@@ -435,6 +435,12 @@ vec2 HSM_GetFlippedCoordOnSplitAxis(vec2 in_coord, float split_axis_is_horizonta
 // Used for scaling the overlay outside the black edge
 vec2 HSM_GetTubeScale(vec2 screen_scale)
 {
+	// Add switch for independent scale
+	if (HSM_BZL_USE_INDEPENDENT_SCALE_AND_CURVATURE == 1)
+	{
+		screen_scale = screen_scale / screen_scale.y * HSM_BZL_INDEPENDENT_SCALE;
+	}
+
 	return HSM_GetScreenScaleWithEdgeHeight(1.2 * HSM_TUBE_BLACK_EDGE_THICKNESS / 100.0, screen_scale);
 }
 
@@ -593,35 +599,35 @@ vec2 HSM_GetCurvedCoord(vec2 in_coord, float curvature_multiplier, float screen_
 	float tilt_angle_x = HSM_CURVATURE_3D_TILT_ANGLE_X;
 	float pin_inner_edge = 0;
 
-	// If this is split screen with two bezels we need to scale the subsection of the screen (top or bottom)
-	// to the full 0-1 space, do the curvature, then scale back to the subsection of the screen
-	#ifdef HSM_SPLIT_SCREEN_PRESET
-		float split_pos_1 = 0;
-		float split_pos_2 = 0;
-		float split_dist = 0;
-		float split_axis_is_horizontal = 0;
-		HSM_GetSplitInfo(split_pos_1, split_pos_2, split_dist, split_axis_is_horizontal);
+	// // If this is split screen with two bezels we need to scale the subsection of the screen (top or bottom)
+	// // to the full 0-1 space, do the curvature, then scale back to the subsection of the screen
+	// #ifdef HSM_SPLIT_SCREEN_PRESET
+	// 	float split_pos_1 = 0;
+	// 	float split_pos_2 = 0;
+	// 	float split_dist = 0;
+	// 	float split_axis_is_horizontal = 0;
+	// 	HSM_GetSplitInfo(split_pos_1, split_pos_2, split_dist, split_axis_is_horizontal);
 
-		float in_coord_1D = HSM_GetSplitAxisCoord1D(in_coord, split_axis_is_horizontal);
-		float coord_is_on_first_half = HHLP_IsUnderValue(in_coord_1D, 0.5);
+	// 	float in_coord_1D = HSM_GetSplitAxisCoord1D(in_coord, split_axis_is_horizontal);
+	// 	float coord_is_on_first_half = HHLP_IsUnderValue(in_coord_1D, 0.5);
 
-		if (HSM_SPLITSCREEN_CENTER_FILL_MODE == 1)
-		{
-			// If we are using split screen the take the coordinates from each screen and stretch them to 0-1
-			adjusted_coord = HSM_Get0To1CoordFromSplitArea(in_coord, split_pos_1, split_pos_2, split_dist, split_axis_is_horizontal);
+	// 	if (HSM_SPLITSCREEN_CENTER_FILL_MODE == 1)
+	// 	{
+	// 		// If we are using split screen the take the coordinates from each screen and stretch them to 0-1
+	// 		adjusted_coord = HSM_Get0To1CoordFromSplitArea(in_coord, split_pos_1, split_pos_2, split_dist, split_axis_is_horizontal);
 
-			// If the coordinate was on the first screen then flip it on the split axis so we get the opposite tilting effect
-			adjusted_coord = coord_is_on_first_half * HSM_GetFlippedCoordOnSplitAxis(adjusted_coord, split_axis_is_horizontal) + (1 - coord_is_on_first_half) * adjusted_coord;
+	// 		// If the coordinate was on the first screen then flip it on the split axis so we get the opposite tilting effect
+	// 		adjusted_coord = coord_is_on_first_half * HSM_GetFlippedCoordOnSplitAxis(adjusted_coord, split_axis_is_horizontal) + (1 - coord_is_on_first_half) * adjusted_coord;
 
-			// If the screen is horizontal use the main tilt as tilt x, otherwise it's 0
-			tilt_angle_x = split_axis_is_horizontal * HSM_CURVATURE_3D_TILT_ANGLE_Y;
+	// 		// If the screen is horizontal use the main tilt as tilt x, otherwise it's 0
+	// 		tilt_angle_x = split_axis_is_horizontal * HSM_CURVATURE_3D_TILT_ANGLE_Y;
 
-			// If the screen is vertical use the main tilt as tilt x, otherwise it's 0
-			tilt_angle_y = (1 - split_axis_is_horizontal) * HSM_CURVATURE_3D_TILT_ANGLE_Y;
+	// 		// If the screen is vertical use the main tilt as tilt x, otherwise it's 0
+	// 		tilt_angle_y = (1 - split_axis_is_horizontal) * HSM_CURVATURE_3D_TILT_ANGLE_Y;
 
-			pin_inner_edge = 1;
-		}
-	#endif
+	// 		pin_inner_edge = 1;
+	// 	}
+	// #endif
 
 	vec2 curved_coord = vec2(0);
 	if (HSM_CURVATURE_MODE > 0.5)
@@ -651,18 +657,18 @@ vec2 HSM_GetCurvedCoord(vec2 in_coord, float curvature_multiplier, float screen_
 		curved_coord = HSM_Get2DCurvedCoord(adjusted_coord, curvature_values);
 	}
 
-	// If this is split screen we need to scale 0-1 space back to the subsection of the screen
-	#ifdef HSM_SPLIT_SCREEN_PRESET
-		if (HSM_SPLITSCREEN_CENTER_FILL_MODE == 1)
-		{
-			// If the coordinate was originally on the first screen then flip it back
-			curved_coord = coord_is_on_first_half * HSM_GetFlippedCoordOnSplitAxis(curved_coord, split_axis_is_horizontal) + 
-							(1 - coord_is_on_first_half) * curved_coord;
+	// // If this is split screen we need to scale 0-1 space back to the subsection of the screen
+	// #ifdef HSM_SPLIT_SCREEN_PRESET
+	// 	if (HSM_SPLITSCREEN_CENTER_FILL_MODE == 1)
+	// 	{
+	// 		// If the coordinate was originally on the first screen then flip it back
+	// 		curved_coord = coord_is_on_first_half * HSM_GetFlippedCoordOnSplitAxis(curved_coord, split_axis_is_horizontal) + 
+	// 						(1 - coord_is_on_first_half) * curved_coord;
 
-			// If this was processed as split screen scale the 0-1 space back to the split areas
-			curved_coord = HSM_GetSplitAreaCoordFrom0To1(in_coord, curved_coord, split_pos_1, split_pos_2, split_dist, split_axis_is_horizontal);
-		}
-	#endif
+	// 		// If this was processed as split screen scale the 0-1 space back to the split areas
+	// 		curved_coord = HSM_GetSplitAreaCoordFrom0To1(in_coord, curved_coord, split_pos_1, split_pos_2, split_dist, split_axis_is_horizontal);
+	// 	}
+	// #endif
 
 	return curved_coord;
 }
@@ -706,7 +712,7 @@ float HSM_GetCornerMask(vec2 in_coord, float screen_aspect, float corner_radius,
 	return clamp((corner_distance.x - distance) * (edge_sharpness * 500 + 100), 0.0, 1.0);
 }
 
-vec2 HSM_GetTubeCurvedCoord(vec2 screen_coord, vec2 screen_scale, float screen_aspect)
+vec2 HSM_GetTubeCurvedCoord(vec2 screen_coord, float curvature_scale, vec2 screen_scale, float screen_aspect, float apply_black_edge_offset)
 {
 	// Values for split screen
 	float flip_tilt = 0;
@@ -740,7 +746,17 @@ vec2 HSM_GetTubeCurvedCoord(vec2 screen_coord, vec2 screen_scale, float screen_a
 	// vec2 tube_coord = HSM_GetInverseScaledCoord(screen_coord, black_edge_scale_offset);
 
 	// Get the curved coordinate, setting allow_split_screen to off (0)
-	vec2 tube_curved_coord = HSM_GetCurvedCoord(screen_coord, HSM_BZL_INNER_CURVATURE_SCALE, screen_aspect);
+	vec2 tube_curved_coord = vec2(0.5, 0.5);
+
+	if (HSM_BZL_USE_INDEPENDENT_SCALE_AND_CURVATURE == 1)
+	{
+		vec2 curvature_values = screen_aspect < 1 ? vec2(2 * HSM_BZL_INDEPENDENT_CURVATURE_SCALE_SHORT_AXIS * 2 / 100, HSM_BZL_INDEPENDENT_CURVATURE_SCALE_LONG_AXIS * 3 / 100)
+											: vec2(HSM_BZL_INDEPENDENT_CURVATURE_SCALE_LONG_AXIS * 3 / 100, 2 * HSM_BZL_INDEPENDENT_CURVATURE_SCALE_SHORT_AXIS * 2 / 100);
+		curvature_values *= curvature_scale * HSM_BZL_INNER_CURVATURE_SCALE;
+		tube_curved_coord = HSM_Get2DCurvedCoord(screen_coord, curvature_values);
+	}
+	else
+		tube_curved_coord = HSM_GetCurvedCoord(screen_coord, curvature_scale * HSM_BZL_INNER_CURVATURE_SCALE, screen_aspect);
 
 	// if (HSM_SPLITSCREEN_ON == 1)
 	// {
@@ -754,7 +770,8 @@ vec2 HSM_GetTubeCurvedCoord(vec2 screen_coord, vec2 screen_scale, float screen_a
 	// 	}
 	// }
 
-	tube_curved_coord = HSM_GetInverseScaledCoord(tube_curved_coord, black_edge_scale_offset);
+	if (apply_black_edge_offset == 1)
+		tube_curved_coord = HSM_GetInverseScaledCoord(tube_curved_coord, black_edge_scale_offset);
 
 	return tube_curved_coord;
 }
@@ -1106,7 +1123,7 @@ vec4 HSM_GetPostCrtPreppedColor(vec4 in_color_linear, vec2 screen_curved_coord, 
 		out_color = scanline_masked_color;
 	}
 
-	vec2 tube_curved_coord = HSM_GetTubeCurvedCoord(screen_coord, screen_scale, screen_aspect);
+	vec2 tube_curved_coord = HSM_GetTubeCurvedCoord(screen_coord, 1, screen_scale, screen_aspect, 1);
 	vec2 mirrored_tube_coord = HSM_GetMirrorWrappedCoord(tube_curved_coord);
 
 	// Add a Colored Gel image on top of the screen, this is what colors games like space invaders or battlezone

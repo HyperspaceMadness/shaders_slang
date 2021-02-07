@@ -182,7 +182,7 @@ wrap_mode24 = mirrored_repeat
 alias24 = BR_MirrorReflectionDiffusedPass
 
 // Add Diffused glow all around the screen ----------------------------------------------------------------
-//      lurred so much that it's non directional
+//      Blurred so much that it's non directional
 //      Mipmap option allows downscaling without artifacts
 shader25 = :/shaders/shaders_slang/blurs/blur9x9.slang
 mipmap_input25 = true

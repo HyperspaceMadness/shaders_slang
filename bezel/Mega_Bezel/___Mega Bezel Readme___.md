@@ -7,11 +7,11 @@ HyperspaceMadness Mega Bezel Shader Readme
 What does it do?
 ----------------------------------------
 
-    - Adds an auto-generated bezel around the screen with reflection
-    - Enable easier use of bezels and more "natural" presentation
-    - Ease of use for screen scaling and automatic aspect ratio with existing shaders
-    - Provide a consistent set of enhanced features wrapped around the core crt shaders
-    - Layering images to add art and visual effects
+  * Adds an auto-generated bezel around the screen with reflection
+  * Enable easier use of bezels and more "natural" presentation
+  * Ease of use for screen scaling and automatic aspect ratio with existing shaders
+  * Provide a consistent set of enhanced features wrapped around the core crt shaders
+  * Layering images to add art and visual effects
 
 
 
@@ -19,10 +19,10 @@ What does it do?
 How does it work?
 ----------------------------------------
 
-  -In general there is a background image which fills the screen, then the game screen is drawn scaled down with an automatically generated bezel image drawn around the screen. 
-  -The bezel and frame you see around the screen auto generated and not part of the background image
-  -Additional Images can be layered on top to augment the look
-  -Most things can be changed to your taste with adjustment of the parameters, so try them out!
+  * In general there is a background image which fills the screen, then the scaled down game screen with an automatically generated bezel image is drawn on top. 
+  * The bezel and frame you see around the screen auto generated and not part of the background image
+  * Additional Images can be layered on top to augment the look
+  * Most things can be changed to your taste with adjustment of the parameters, so try them out!
 
 
 
@@ -30,14 +30,14 @@ How does it work?
 Installation
 ----------------------------------------
 
-    - If you have previous versions of the Mega Bezel installed:
-        - Delete shaders/shaders_slang/bezel/shaders/HyperspaceMadness
-        - Delete all hsm presets from shaders/shaders_slang/bezel
-        - Inside the .zip is a shaders folder, drop this shaders folder directly over your existing one and everything will go into the right place
-    - Set video driver to Vulcan or GLCore (Vulcan seems faster)
-    - Set video aspect ratio to your monitor aspect ratio, e.g. 16:9
-    - Set integer scale to OFF
-    - Load a preset in the shaders menu, Mega Bezel shaders are found in shaders_slang/bezel/Mega_Bezel
+  * If you have previous versions of the Mega Bezel installed:
+    * Delete shaders/shaders_slang/bezel/shaders/HyperspaceMadness
+    * Delete all hsm presets from shaders/shaders_slang/bezel
+  * Inside the .zip is a shaders folder, drop this shaders folder directly over your existing one and everything will go into the right place
+  * Set video driver to Vulcan or GLCore (Vulcan seems faster)
+  * Set video aspect ratio to your monitor aspect ratio, e.g. 16:9
+  * Set integer scale to OFF
+  * Load a preset in the shaders menu, Mega Bezel shaders are found in shaders_slang/bezel/Mega_Bezel
 
 
 
@@ -45,57 +45,59 @@ Installation
 Choosing a Preset
 ----------------------------------------
 
-    Presets are named/sorted by performance
-        The most flexible and most resource hungry are at the top starting with index 0
-        As the name's index number increases the presets get faster but less flexible
-    
-    - Group 0 BASE - Most flexible shader presets, one preset for each different CRT Shader 
-                     Includes MDAPT, ScaleFX & GTU
-                     The Guest-DrVenom preset is considered the default preset
-    
-    - Group 1 GLASS - Glass presets which show a blurry reflection in the area around the screen 
-                    - Includes MDAPT, ScaleFX & GTU
-                    - Does not include the additional Image Layering.
-    
-    - Group 3 SIMPLE - Same as Base except extra passes before the CRT pass removed 
-                     - (No MDAPT, ScaleFX & GTU)
-                     - Includes only a subset of the image layers (Background and Top Extra Layer)
-    
-    - Group 4 REFLECT_ONLY - Image Layering pass has been removed
-                           - No auto-generated bezel and frame and no image layering
-                           - Includes an image which can be used for the background/bezel which the reflection will appear on top of
-                           - When used with an image which was a snapshot from a default mega bezel preset the reflection masking will match the frame
-                           - Can be used with a standard retroarch overlay
-                           - When used with a standard overlay the retroarch video aspect ratio can be set to something like 4:3 to achieve higher performance
-    
-    - Group 5 SCALING-ONLY - Includes only the screen scaling and screen effects like fake scanlines
-                           - All passes after CRT pass have been removed
+Presets are named/sorted by performance
+The most flexible and most resource hungry are at the top starting with index 0
+As the name's index number increases the presets get faster but less flexible
 
-Presets in Mega_Bezel/Variations
-    - These presets are simple presets referencing one of the presets in the Mega_Bezel folder
-    - They reference the original preset then have adjusted parameters or texture paths
+  * **Group 0 BASE**
+    * Most flexible shader presets, one preset for each different CRT Shader 
+    * Includes MDAPT, ScaleFX & GTU
+    * The Guest-DrVenom preset is considered the default preset
+  * **Group 1 GLASS** - Glass presets which show a blurry reflection in the area around the screen 
+    * Includes MDAPT, ScaleFX & GTU
+    * Does not include the additional Image Layering.
+  * **Group 3 SIMPLE**
+      * Same as Base except extra passes before the CRT pass removed 
+      * No MDAPT, ScaleFX & GTU
+      * Includes only a subset of the image layers (Background and Top Extra Layer)
+  * **Group 4 REFLECT_ONLY**
+    * Image Layering pass has been removed
+    * No auto-generated bezel and frame and no image layering
+    * Includes an image which can be used for the background/bezel which the reflection will appear on top of
+    * When used with an image which was a snapshot from a default mega bezel preset the reflection masking will match the frame
+    * Can be used with a standard Retroarch overlay
+    * When used with a standard overlay the Retroarch video aspect ratio can be set to something like 4:3 to achieve higher performance
+
+  * **Group 5 SCALING-ONLY**
+    * Includes only the screen scaling and screen effects like fake scanlines
+    * All passes after CRT pass have been removed
+
+**Presets in Mega_Bezel/Variations**
+
+  * These presets are simple presets referencing one of the presets in the Mega_Bezel folder
+  * They reference the original preset then have adjusted parameters or texture paths
 
 ----------------------------------------
 Troubleshooting
 ----------------------------------------
 
-    In general if you have difficulties loading the shader try loading it with teh imageviewer core
-        Steps
-            -Add the imageviewer core to retroarch with the online updater
-            -Open an image with this core
-            -Load the shader
-            -If the shader loads correctly then the shader is working.
+ * If you have difficulties loading the shader try loading it with the imageviewer core
+    * **Steps**
+        * Add the imageviewer core to Retroarch with the online updater
+        * Open an image with this core
+        * Load the shader
+        * If the shader loads correctly then the shader is working.
     
-    When using the shader in imageviewer works, but it doesn’t work when using a core, it is possibly related to the core, or the graphics card being overwhelmed by resource usage with both the core demands and the shader demands
-    
-    If you still have difficulties loading the shader with a specific core update the core
-    If you still have difficulties download a new separate version of retroarch and try it there. Sometimes problems lurk in some random config file somewhere which are very hard to track down
-    
-    To see errors coming from retroarch you need to set up your logging settings:
-        Logging - Logging Verbosity - ON
-            Frontend Logging - 1(Info)
-            Log to File - Off 
-        These settings will cause a log window to come up when you launch, and you should see any retroarch errors
+ * When shader works in imageviewer, but doesn’t work when using a core, it is possibly related to the core, or the graphics card being overwhelmed by resource usage with both the core requirements and the shader requirements
+   
+ * If you still have difficulties loading the shader with a specific core update the core
+ * If you still have difficulties download a new separate version of Retroarch and try it there. Sometimes problems lurk in some random config file somewhere which are very hard to track down
+   
+ * To see errors coming from Retroarch you need to set up your logging settings:
+    * Logging - Logging Verbosity - ON
+      * Frontend Logging - 0(Debug)
+      * Log to File - Off
+    * These settings will cause a log window to come up when you launch, and you should see any Retroarch errors, and shader loading details
 
 
 
@@ -103,9 +105,9 @@ Troubleshooting
 Parameter Descriptions
 -----------------------------------------------------------------------------------------------------------------------------------
 
-**[ --- HSM MEGA BEZEL  20XX-XX-XX-0 --- ]_______**
+**[ --- HSM MEGA BEZEL  20XX-XX-XX-0 --- ]______________________________________________________________________**
 
-**[ FLIP & ROTATE ]______________**
+**[ FLIP & ROTATE ]______________________________________________________________________**
 
 ​		**Flip Viewport Vertical** --- Some cores flip the viewport (full monitor area), this flips it back
 
@@ -113,28 +115,27 @@ Parameter Descriptions
 
 ​		**Rotate CRT Tube** --- Turns the tube 90 degrees counter counter-clockwise
 
-**[ ASPECT RATIO ]_______________**
+**[ ASPECT RATIO ]_______________________________________________________________________**
 
-​		**Orientation** --- Should the aspect be horizontal or vertical? This does not rotate the image.
-​        			0 - Auto - Chooses vertical vs horizontal based on the core resolution
-​        			1 - Horizontal - uses horizontal aspect
-​        			2 - Vertical - uses vertical aspect
+​		**Orientation** --- Should the aspect be tall or wide? This does not rotate the image.
+​					**0 - Auto** - Chooses vertical vs horizontal based on the core resolution
+​					**1 - Horizontal** - uses horizontal aspect
+​					**2 - Vertical** - uses vertical aspect
 
 ​		**Type** --- Choose type of aspect ratio
-​        			0 - Auto - Choose aspect ratio based on educated guesses about the core resolution
-​        			1 - Explicit - Use the aspect ratio from the [ASPECT]  Explicit Aspect Ratio parameter
-​        			2 - 4:3 (Almost all arcade games are 4:3)
-​        			3 - 3:2
-​        			4 - 16:9
-​        			5 - PAR (The aspect ratio of the pixel resolution)
-​        			6 - Full (The screen will scale to the full viewport)
+​        			**0 - Auto** - Choose aspect ratio based on educated guesses about the core resolution
+​        			**1 - Explicit** - Use the aspect ratio from the [ASPECT]  Explicit Aspect Ratio parameter
+​        			**2 - 4:3** (Almost all arcade games are 4:3)
+​        			**3 - 3:2**
+​        			**4 - 16:9**
+​        			**5 - PAR** (The aspect ratio of the pixel resolution)
+​        			**6 - Full** (The screen will scale to the full viewport)
 
 ​		**Explicit Aspect Ratio** --- Ratio used when [Aspect] Type is set to Explicit or if Auto is chosen and no matching resolution can be found
 
-**[SCALING]_______________________________________________**
+**[SCALING]_______________________________________________________________________________________________________**
 
 - **Show Resolution Info**
-
 - **Int Scale Mode**
   - **0 - Off,** Use Non-Integer Scale
   - **1 - ShortAxis Integer Scale On** - for the viewport (monitor) in landscape mode this is the vertical axis, If the screen/tube aspect ratio is vertical then integer scale is used for both horizontal and vertical axes
@@ -151,12 +152,12 @@ Parameter Descriptions
 - **Snap To Int-Scale Tolerance**
   - Snaps the non-integer scale to the closest integer scale within the tolerance. This allows you to set an approximate size for the screen and have it snap to an integer scale but not if it would be too much different
 
-**[POSITION]____________________________**
+**[POSITION]____________________________________________________________________________________**
 
 - **Position X** - Moves the entire screen and frame left and right
 - **Position Y** - Moves the entire screen and frame up and down
 
-**[CROPPING]____________________________**
+**[CROPPING]____________________________________________________________________________________**
     Cropping allows you to hide edges of the game image which were never meant to be seen 
     Negative values add empty space at the edges of the tube
 
@@ -165,18 +166,20 @@ Parameter Descriptions
 - **Crop Overscan Left**
 - **Crop Overscan Right**
 
-**[CORE RES SAMPLING]____________________________**
+**[CORE RES SAMPLING]____________________________________________________________________________________**
 
 - Adjusting core res sampling changes how the CRT perceives the core resolution
   e.g. If you use a core with 4X internal resolution you can set core res sampling to 0.25 it will appear if it was at 1x resolution
-  To use ScaleFX to smooth the shapes in the core image you will need to set the core res sampling higher than 1, otherwise you will not see the increased smoothing coming from ScaleFX
+  To use **ScaleFX** to smooth the shapes in the core image you will need to set the core res sampling higher than 1, otherwise you will not see the increased smoothing coming from ScaleFX
 
 - **Scanline Direction Multiplier**
-  - Adjust the sampling in direction of the scanlines, e.g. if the scanlines are horizontal adjust sampling along the horizontal axis
+  - Adjust the sampling in direction of the scanlines
+  - E.G. if the scanlines are horizontal adjust sampling along the horizontal axis
 - **Opposite Direction Multiplier**
-  - Adjust the sampling in direction opposite of the scanlines, e.g. if the scanlines are horizontal adjust sampling along the vertical axis
+  - Adjust the sampling in direction opposite of the scanlines
+  - E.G. if the scanlines are horizontal adjust sampling along the vertical axis
 
-**[ SCANLINES ]____________________________**
+**[ SCANLINES ]____________________________________________________________________________________**
 
 - **Scanline Direction (GDV & Easymode)**
   - **0 - Auto** --- Chooses horizontal or vertical scanline direction based on aspect ratio
@@ -185,8 +188,10 @@ Parameter Descriptions
 - **Interlace and Fake Scanlines Trigger Res**
   - Resolution where the shader should switch into its interlace or high res content mode.
 - **Fake Scanline Opacity**
+  - Opacity of scanlines added on top of the crt image.
+  - These scanlines are not tied to the core image resolution
 
-**[CURVATURE]____________________________**
+**[CURVATURE]____________________________________________________________________________________**
     Applies tube curvature
 
 - **CURVATURE MODE**
@@ -201,218 +206,438 @@ Parameter Descriptions
 - **3D View Distance** - This is the distance of the virtual camera from the Sphere
 - **3D Tilt Angle Y** - Vertical Tilt, with split screen this will tilt both screens towards or away from the center
 
-**[ PHOSPHOR PERSISTENCE ]_______________**
+**[ PHOSPHOR PERSISTENCE ]_______________________________________________________________________**
 
-- **Phosphor Persistence**
-  - Positive Values give Neutral colored trails
-  - Negative Values give Blue tinted trails
+- **Amount**
+  - How long the light trail behind the moving object, affects all colors, 0 is OFF
+- **Red Persistence**
+- **Green Persistence**
+- **Blue Persistence**
 
-**[ SCANLINES ON BLACK ]_____________**
+**[ SCANLINES ON BLACK ]___________________________________________________________________**
 
-- **Black Level** 
-  - Defaults to -4 so that the black areas are not 100% black so you get very faint scanlines
+- **Black Level**
+  * Positive values make darks darker
+  * Negative values make blacks more gray
+  * Defaults to -4 so that the black areas are not 100% black so you get very faint scanlines
 
-[COLOR]  CRT Profile - Overall color adjustment to match particular standards or example crts
-        -1 - No adjustment
-        0 - SRGB (Standard color space for computer monitors)
-        1 - BVM
-        2 - P22 (P22 common phosphor coloring)
-        3 - SMPTE-C - North american color standards in the 80s?
-        4 - Philips Monitor color
-        5 - Trinitron Monitor
-        6 - LUT colors from Torridgristle
+**[ CRT GAMMA ]__________________________________________________________________________________**
 
-[COLOR]  Color Space
-        0 - SRGB
-        1 - DCI
-        2 - Adobe
-        3 - Rec. 2020
+- **CRT Gamma** (Linear to Gamma Space Encode) Def 2.2
 
-[COLOR]  Luminance - Used to brightens or darken the image
+**[ SCREEN VIGNETTE ]________________________________________________________________________**
 
-[COLOR]  Black Level - 
-        Positive values make darks darker
-        Negative values make blacks more gray
-        By default it has a small negative value which makes black just a tiny bit gray which creates very slight scanlines in the black areas of the image
+- **Screen Vignette Opacity** --- Fade out the game screen as we move away from the center of the screen
+- **Screen Vignette Opacity in Reflection** -- How much of the darkening show up in the reflection
 
-[COLOR]  Negative Crop Brightness - This is the brightness of the empty areas which have been revealed at the edges of the tube when negative cropping is used
-        This allows the negative crop area to match the brightness of the black areas of the crt image (which are no longer black because of a negative black level)
+**[ SCREEN EDGE ]________________________________________________________________________**
 
-[COLOR]  CRT Gamma - Gamma applied to the final CRT image
+- **Corner Radius** --- the roundness of the corner of the tube area
+                                          The bezel corner radius follows this, and will match it by default
+- **Edge Sharpness** --- Blends the edge of the game screen image to black, lower values will fade the edge
+- **Black Edge Thickness** --- Distance between the illuminated game screen and the inner edge of the bezel
+  - Set this to 0 or less to remove the black edge
 
-
-[PHOSPHOR PERSISTENCE]  Amount - Adds light trails behind moving objects
-        Positive values give an after image the same color as what was there before
-        Negative values give a bluish after image
-
-
------- [SCREEN FX] -------------------------------------------------------------------------------------------
-    Screen-fx features affect the game screen area (illuminated part of the tube) and are applied after the crt shader 
-
-[SCREEN FX]  Screen Corner Radius --- the roundness of the corner of the tube area
-                                        The bezel corner radius follows this, and will match it by default
-
-[SCREEN FX]  Screen Edge Sharpness --- Blends the edge of the game screen image to black, lower values will fade the edge
-
-[SCREEN FX]  Screen Vignette --- Fade out the game screen as we move away from the center of the screen
-
-[SCREEN FX]  Fake 240p Scanline Opacity --- Opacity of scanlines added on top of the crt image. 
-                                            These scanlines are not tied to the core image resolution
-
-
------- [TUBE] -------------------------------------------------------------------------------------------
+**[ TUBE IMAGES ]________________________________________________________________________**
     The tube is the area from the inner edge of the bezel inward
 
-[TUBE]  Black Edge Thickness --- Distance between the illuminated game screen and the inner edge of the bezel
-                                Set this to 0 or less to remove the black edge
+- **Colored Gel Multiply Amount** - Image applied like a colored gel in photography
+  - Used to make vector games which output black and white colored, E.G Battlezone
+- **Colored Gel Additive Amount** - Image applied as a brightening of the tube area
+  - Used to add color to the screen as if it was the gel being diffusely lit from outside the monitor
+- **Tube Static Reflection Opacity**
+  - This is the shine on the tube which imitates reflection from the environment
+- **Tube Static Reflection Scale**
+  - Scales the tube reflection from the center
+
+**[ CRT IS LAST PASS ]__________________________________________________________________________________________**
+
+- **CRT is Last Pass**
+  - Blacks out outside the screen, used for the scaling only presets
+
+**[ INTRO SEQUENCE ]________________________________________________________________________________________________________**
+​	Animation sequence which plays when the content starts up
+
+- **Show Intro**
+  - 0 - OFF
+  - 1 - When Content Loads
+  - 2 - Repeat
+- **Speed**
+  - Overall speed of the entire intro. 1 is full speed
+
+**[ INTRO LOGO ]________________________________________________________________________________________________________**
+
+- **Logo Blend Mode**
+  - 0 - Off
+  - 1 - Normal Blending
+  - 2 - Additive Blending - Added on as added with a projector
+  - 3 - Multiply Blending - Image is applied by darkening the under layer
+- **Logo Over Solid Color**
+  - 0 - Off - The Logo is layered under the solid color
+  - 1 - ON - The Logo is layered over the solid color
+- **Logo Height (0 for exact resolution)**
+- **Logo Res X**
+  - X Resolution of the logo image
+- **Logo Res Y**
+  - Y Resolution of the logo image
+- **Logo Placement **
+  - 0 - Middle
+  - 1 - Top Left
+  - 2 - Top Right
+  - 3 - Bottom Left
+  - 4 - Bottom Right
+- **Logo Wait Before Start Frames**
+  - How many frames before it starts to fade in
+- **Logo Fade In Frames**
+  - How many frames to fade in
+- **Logo Hold Frames**
+  - How many frames to hold the image at full opacity before the fade out starts
+- **Logo Fade Out Frames**
+  - How many frames to fade out
+
+**[ INTRO SOLID COLOR ]_____________________________________________________________________________________________________**
+
+- **Solid Color Blend Mode**
+  - 0 - Off
+  - 1 - Normal Blending
+  - 2 - Additive Blending - Added on as added with a projector
+  - 3 - Multiply Blending - Image is applied by darkening the under layer
+- **Solid Color Hue**
+- **Solid Color Saturation**
+- **Solid Color Value**
+- **Solid Color Hold Frames**
+  - How many frames to hold the solid color
+- **Solid Color Fade Out Frames**
+  - How many frames to fade out
+
+**[ INTRO STATIC NOISE ]____________________________________________________________________________________________________**
+
+- **Static Noise Blend Mode**
+  - **0 - Off**
+  - **1 - Normal Blending**
+  - **2 - Additive Blending** - Added on as added with a projector
+  - **3 - Multiply Blending** - Image is applied by darkening the under layer
+- **Static Noise Hold Frames**
+  - How many frames to hold the static noise
+- **Static Noise Fade Out Frames**
+  - How many frames to fade out
+
+**[ INTRO SOLID BLACK ]____________________________________________________________________________________________________**
+
+- **Solid Black Hold Frames**
+  - How many frames to hold the solid black before the fade out starts
+- **Solid Black Fade Out Frames**
+  - How many frames to fade out
+
+**[ BEZEL ]_________________________________________________________________________________________________________**
+
+- **Inner Curvature Scale**
+  - Curvature of the inner edge of the bezel. It is a multiplier of the curvature of the tube and is 100 by default and matches the bezel curvature.
+- **Opacity**
+  - At 100 the bezel is fully visible
+- **Blend Mode**
+  - **0 - Off**
+  - **1 - Normal Blending**
+  - **2 - Additive Blending** - Added on as added with a projector
+  - **3 - Multiply Blending** - Image is applied by darkening the under layer
+- **Width**
+  - Thickness of the bezel on the sides of the tube, default is 125
+- **Height**
+  - Thickness of the bezel on the top and bottom of the tube, default is 100
+- **Inner Edge Thickness**
+  - Thickness of edge of inner, default 100
+- **Inner Edge Sharpness** - Def 90
+- **Inner Corner Radius Scale** - Def 50
+  - Roundness of the inner corner of the bezel, it is a multiplier of the roundness of the screen corner
+  - 100 gives you the same roundness as the screen corner
+- **Outer Corner Radius Scale** - Def 100
+  - Roundness of the inner corner of the bezel, it is a multiplier of the roundness of the screen corner
+  - 100 gives you the same roundness as the screen corner
+- **Outer Curvature Scale**
+  - Amount of curvature on the outside of the bezel it is a multiplier of the roundness of the screen corner
+  - Default is 0 which gives a straight edge of the outside of the bezel
+- **Outer Edge Position Y**
+  - This moves the outer edge of the bezel and the frame up and down
+- **Brightness**
+  - Brightness of the bezel, the default is 30 so only 30% brightness
+- **Highlight**
+  - The highlight or shinyness in the middle of the bezel
+- **Opacity of Shadow from Bezel on Tube**
+  - How much of a darkness from the bezel onto the illuminated screen
+  - Only visible when the black ring around the screen is reduced so that the bezel is almost on top of the screen
+
+**[ BEZEL & FRAME COLOR ]___________________________________________________________________________________________________**
+
+- **Hue**
+  - The hue or "color" of the bezel and frame E.G. Blue vs Orange
+- **Saturation**
+  - How saturated or strong the color is
+- **Value/Brightness**
+  - The brightness of the color, default is 10 which is 10%
+- **Noise**
+  - Noise or speckles in the color, default is 30
+
+**[ FRAME ]_________________________________________________________________________________________________________**
+
+- **Opacity**
+  - Opacity of the frame default is 100 which means it is fully visible
+- **Blend Mode** - Default is 1
+  - **0 - Off**
+  - **1 - Normal Blending**
+  - **2 - Additive Blending** - Added on as added with a projector
+  - **3 - Multiply Blending** - Applied by darkening what is underneath
+- **Texture Overlay Opacity (Highlight)**
+  - Opacity of the texture applied on top of base color of the frame
+  - The default texture is a white highlight and so adds a highlight effect to the frame giving it a bit more dimension
+- **Texture Overlay Blend Mode** - Default is 2 so it is additive
+  - **0 - Off**
+  - **1 - Normal Blending**
+  - **2 - Additive Blending** - Added on as added with a projector
+  - **3 - Multiply Blending** - Applied by darkening what is underneath
+- **Inner Edge Thickness**
+  - Thickness of the inner edge of the frame
+- **Inner Corner Radius Scale**
+  - Roundness of the inner corner, 
+- **Thickness**
+  - Base thickness of the frame
+- **Thickness Scale X**
+  - Adjusts the frame thickness of frame at the left and right
+- **Outer Pos Y**
+  - Shift the outside of the frame up and down which can make the top of the frame larger than the bottom or vice versa 
+- **Outer Curvature Scale**
+  - Curvature of the outside of the frame, at 100 it will match the curvature of the inside of the frame
+- **Outer Corner Radius**
+  - Roundness of the frame outer corner
+- **Outer Edge Thickness**
+  - Thickness of the shading on the outer edge
+- **Outer Edge Shading**
+  - Controls the darkness of the shading on the outer edge
+- **Shadow Opacity**
+  - Controls the darkness of the shadow under and around the frame
+- **Shadow Width**
+  - Controls how wide the shadow is around the frame
+
+**[ REFLECTION ]________________________________________________________________________________________________________**
+
+- **Blend Mode** - Default is 2
+  - **0 - Off**
+  - **1 - Normal Blending**
+  - **2 - Additive Blending** - Applied additively to brighten what's underneath
+- **Mask**
+  - **0 - ALL**
+  - **1 - Screen**
+  - **2 - Tube**
+  - **2 - Bezel and Inward**
+  - **3 - Bz**
+  - **4 - Bz+**
+  - **5 - Frm**
+  - **6 - Frm+**
+  - **7 - BG**
+- **Global Amount**
+- **Global Gamma Adjust**
+- **Direct Reflection**
+- **Diffused Reflection**
+- **FullScreen Glow**
+- **FullScreen Glow Gamma**
+- **Bezel Inner Edge Amount**
+- **Bezel Inner Edge Fullscreen Glow**
+- **Frame Inner Edge Amount**
+- **Frame Inner Edge Sharpness**
+
+**[ REFLECTION FADE ]___________________________________________________________________________________________________**
+
+- **Fade Amount**
+- **Radial Fade Width**
+- **Radial Fade Height**
+- **Lateral Outer Fade Position**
+- **Lateral Outer Fade Distance**
+- **Viewport Vignette (For Glass Presets)**
+
+**[ REFLECTION CORNER ]_____________________________________________________________________________________________________**
+
+- **Corner Fade**
+- **Corner Fade Distance**
+- **Corner Inner Spread**
+- **Corner Outer Spread**
+- **Corner Rotation Offset Top**
+- **Corner Rotation Offset Bottom**
+- **Corner Spread Falloff**
+
+**[ REFLECTION BLUR ]___________________________________________________________________________________________________**
+
+- **Blur Samples - 0 for OFF**
+- **Min Blur**
+- **Max Blur**
+
+**[ REFLECTION NOISE ]______________________________________________________________________________________________________**
+
+- **Noise Amount**
+- **Noise Samples (0 for OFF)**
+- **Sample Distance**
+
+**[ GLASS BORDER ]______________________________________________________________________________________________________**
+
+- **Glass Border ON (Glass Preset Only)**
+
+**[ REFLECT ONLY IMAGE LAYER ]__________________________________________________________________________________________________**
+
+- **Opacity**
+- **Blend Mode - Off | Norm | Add | Mult**
+- **Aspect Ratio - Full | 16:9 | 9:16**
+- **Mask Reflection to Bezel**
+
+**[ REFLECTION IS LAST PASS ]___________________________________________________________________________________________________**
+
+- **Reflection is Last Pass (Glass and Reflect Only Presets)**
+- **Mirror Horizontal**
+- **Saturation**
+- **Hue**
+- **Value**
+- **Dithering Noise Samples (Reduces Banding)**
+
+**[ IMAGE LAYERING ]________________________________________________________________________________________________________**
+
+- **Static Layers Gamma Adjust**
+
+**[ LAYER ORDER ]___________________________________________________________________________________________________**
+
+- **Background Image**
+- **Viewport Vignette**
+- **CRT Screen**
+- **Bezel Image**
+- **Bezel (Generated)**
+- **Frame (Generated)**
+- **Cabinet Glass Image**
+- **Decal Image**
+- **Reflection (Generated)**
+- **LED Image**
+- **Top Image**
+
+**[ CUTOUT ]________________________________________________________________________________________________________**
+
+- **Scale Mode - Full | Tube | Bzl | BG | Bzl Img | Decal**
+- **Scale**
+- **Scale X**
+- **Position Y**
+- **Corner Radius - Def 0**
+
+**[ MASK DEBUG ]________________________________________________________________________________________________________**
+
+- **Mask - ALL | Scrn | Tube | Bz- | Bz | Bz+ | Frm | Frm+ | BG**
+
+**[ BACKGROUND LAYER ]______________________________________________________________________________________________________**
+
+- **Opacity**
+- **Blend Mode - Off | Normal | Add | Multiply**
+- **Source Matte Color - Black | White | None**
+- **Mask - ALL | Scrn | Tube | Bz- | Bz | Bz+ | Frm | Frm+ | BG**
+- **Cutout Mask - OFF | ON | Invert**
+- **Brightness**
+- **Apply NightLight & Static Gamma (0 for Backdrop)**
+- **Texture Aspect- Full | Expl. | 4:3 | 3:4 | 16:9 | 9:16**
+- **Explicit Texture Aspect**
+- **Scale Mode - FullScreen | Tube | Bezel**
+- **Keep Aspect**
+- **Scale**
+- **Scale X**
+- **Position Y**
+- **Mirror Wrap**
+
+**[ VIEWPORT VIGNETTE LAYER ]___________________________________________________________________________________________________**
+
+- **Opacity**
+- **Mask - ALL | Scrn | Tube | Bz- | Bz | Bz+ | Frm | Frm+ | BG**
+- **Cutout Mask - OFF | ON | Invert**
+- **Scale Mode- Full | BG | Tube | Bzl | Decal | TopImg**
+- **Scale**
+- **Scale X**
+- **Position Y**
+
+**[ CRT SCREEN LAYER ]______________________________________________________________________________________________________**
+
+- **Blend Mode - Off | Normal | Add (Backdrop)**
+
+**[ BEZEL IMAGE LAYER ]_____________________________________________________________________________________________________**
+
+- **Opacity**
+- **Hue Offset**
+- **Saturation**
+- **Brightness**
+- **Blend Mode -- Off | Normal | Add | Multiply**
+- **Source Matte Color - Black | White | None**
+- **Mask - ALL | Scrn | Tube | Bz- | Bz | Bz+ | Frm | Frm+ | BG**
+- **Cutout Mask - OFF | ON | Invert**
+- **Texture Aspect - Full | Expl.| 4:3 | 3:4 | 16:9 | 9:16**
+- **Explicit Texture Aspect**
+- **Scale Mode - FullScreen | Tube | Bezel | BG**
+- **Keep Aspect**
+- **Scale**
+- **Scale X**
+- **Position Y**
+- **Use Curvature**
+
+**[ CABINET OR CABINET GLASS LAYER ]________________________________________________________________________________________________**
+
+- **Opacity**
+- **Brightness**
+- **Blend Mode - Off | Normal | Add | Multiply**
+- **Source Matte Color - Black | White | None**
+- **Mask - ALL | Scrn | Tube | Bz- | Bz | Bz+ | Frm | Frm+ | BG**
+- **Cutout Mask - OFF | ON | Invert**
+- **TexturAspect- Full | Expl. | 4:3 | 3:4 | 16:9 | 9:16**
+- **Explicit Texture Aspect**
+- **Scale Mode- Full | BG | Tube | Bzl | Decal | TopImg**
+- **Keep Aspect**
+- **Scale**
+- **Scale X**
+- **Position Y**
+
+**[ DECAL LAYER ]___________________________________________________________________________________________________**
+
+- **Opacity**
+- **Blend Mode -- Off | Normal | Add | Multiply**
+- **Source Matte Color - Black | White | None**
+- **Mask - ALL | Scrn | Tube | Bz- | Bz | Bz+ | Frm | Frm+ | BG**
+- **Cutout Mask - OFF | ON | Invert**
+- **TextureAspect- Full | Expl. | 4:3 | 3:4 | 16:9 | 9:16**
+- **xplicit Texture Aspect**
+- **Scale Mode - Full | Tube | Bezel | BG | Bzl Img**
+- **Scale Keep Aspect**
+- **Scale**
+- **Scale X**
+- **Position Y**
+
+**[ LED LAYER ]_________________________________________________________________________________________________________**
+
+- **Opacity**
+- **Blend Mode - Off | Normal | Add | Multiply**
+- **Source Matte Color - Black | White | None**
+- **Mask - ALL | Scrn | Tube | Bz- | Bz | Bz+ | Frm | Frm+ | BG**
+- **Cutout Mask - OFF | ON | Invert**
+- **Texture Aspect- Full | Expl. | 4:3 | 3:4 | 16:9 | 9:16**
+- **Explicit Texture Aspect**
+- **Scale Mode - Full | Tube | Bezel | BG | Bzl Img | Decal**
+- **Scale Keep Aspect**
+- **Scale**
+- **Scale X**
+- **Position Y**
+
+**[ TOP EXTRA LAYER ]___________________________________________________________________________________________________**
+
+- **Opacity**
+- **Blend Mode - Off | Normal | Add | Multiply**
+- **Source Matte Color - Black | White | None**
+- **Mask - ALL | Scrn | Tube | Bz- | Bz | Bz+ | Frm | Frm+ | BG**
+- **Cutout Mask - OFF | ON | Invert**
+- **Texture Aspect- Full | Expl. | 4:3 | 3:4 | 16:9 | 9:16**
+- **Explicit Texture Aspect**
+- **Scale Mode - Full | Tube | Bezel | BG | Bzl Img | Decal**
+- **Scale Keep Aspect**
+- **Scale**
+- **Scale X**
+- **Position Y**
+- **Mirror Wrap**
 
-[TUBE]  Curvature Scale --- By default the bezel matches the tube curvature, this adjusts the bezel curvature on top of this basic curvature
-                            If you set this to 0 the bezel inner edge would have no curvature
-
-[TUBE]  Tube Glass Image Opacity --- Adds a static reflection on top of the tube 
-                                    This comes from an image, the path for the image is set in the preset
-
-[TUBE]  Tube Edge Shadow --- Adds a shadow from the bezel onto the tube
-                            This will appear on top of the game screen when the black edge thicknss 0 or less
-
-
------- [BG IMAGE] -------------------------------------------------------------------------------------------
-
-[BG IMAGE]  Vignette Opacity --- Adds vignette darkening on top of the background image
-
-
------- [BEZEL & FRAME COLOR] -------------------------------------------------------------------------------------------
-
-[BEZEL & FRAME COLOR]  Color Hue --- The color of the bezel, e.g. yellow, blue etc
-
-[BEZEL & FRAME COLOR]  Color Saturation --- How strong the color is
-
-[BEZEL & FRAME COLOR]  Color Value/Brightness --- How bright the color is
-
-[BEZEL & FRAME COLOR]  Blend Color with BG Image --- Blends the color with the background image
-
-[BEZEL & FRAME COLOR]  Noise --- Adds noise into the color of the frame, bezel & highlight
-
-
------- [BEZEL] -------------------------------------------------------------------------------------------
-
-[BEZEL]  Opacity --- Opacity of the bezel 0 hides the bezel
-
-[BEZEL]  Width --- Width of area between the inner edge of the bezel and the inner edge of the frame on the sides of the tube
-
-[BEZEL]  Height --- Height of area between the inner edge of the bezel and the inner edge of the frame on the top and bottom of the tube
-
-[BEZEL]  Inner Corner Radius Scale --- Roundness of the corner on the inside edge of the bezel
-
-[BEZEL]  Outer Corner Radius Scale --- Roundness of the corner on the outside edge of the bezel / inner edge of the frame
-
-[BEZEL]  Inner Edge Thickness --- Thickness the small strip on the inner edge of the bezel, used to catch highlights from the screen reflection
-
-[BEZEL]  Brightness --- Brightness adjustment of the color of the bezel
-
-[BEZEL]  Highlight --- How much static highlight in the middle of the sides and top of the bezel
-
-[BEZEL]  Bezel & BG Gamma Adjust --- Gamma adjustment to brighten or darken the bezel and background
-
-
------- [FRAME] -------------------------------------------------------------------------------------------
-
-[FRAME]   Opacity --- Opacity of the frame 0 hides the frame
-
-[FRAME]   Thickness --- Thickness or width of the frame
-
-[FRAME]   Outer Corner Radius --- Roundness of the outer corner of the frame
-
-[FRAME]   Pos Y Offset --- Vertical offset of the frame relative to the tube
-
-[FRAME]   Shadow Opacity --- Strength of shadow from the frame
-
-[FRAME]   Shadow Width --- How far the shadow extends from the edges of the frame
-
-
------- [REFLECTION BLUR] -------------------------------------------------------------------------------------------
-    Blur applied on the reflection which gets stronger as it gets farther away from the tube  
-
-[REFLECTION BLUR]  Num Samples --- Blur Samples
-
-[REFLECTION BLUR]  Min --- Minimum Blur, the amount of blur at the inside of the bezel
-
-[REFLECTION BLUR]  Max --- Opacity of the frame 0 hides the frame
-
-
------- [REFLECTION NOISE] -------------------------------------------------------------------------------------------
-    Scattering of the reflection rays, gives the effect of surface roughness
-
-[REFLECTION NOISE]   Amount --- This is the amount that the scattered effect is mixed with the simple blurred reflection
-
-[REFLECTION NOISE]   Samples --- Number of scatter samples, more samples means a smoother effect
-
-[REFLECTION NOISE]   Sample Distance --- How far away the scatter samples are taken, higher valu gives a rougher effect
-
-
------- [REFLECTION GLOBAL] -------------------------------------------------------------------------------------------
-
-[REFLECTION GLOBAL]  Global Amount --- How much overall reflection, 0 means no reflection
-
-[REFLECTION GLOBAL]  Global Gamma Adjust --- Gamma adjustment on the reflection
-
-
------- [REFLECTION AMOUNT] -------------------------------------------------------------------------------------------
-
-[REFLECTION AMOUNT]  Inner Edge Amount
-
-[REFLECTION AMOUNT]  Inner Edge Fullscreen Glow
-
-[REFLECTION AMOUNT]  Direct Reflection
-
-[REFLECTION AMOUNT]  Diffused Reflection
-
-[REFLECTION AMOUNT]  FullScreen Glow
-
-[REFLECTION AMOUNT]  FullScreen Glow Gamma
-
-
------- [REFLECTION AMOUNT] -------------------------------------------------------------------------------------------
-
-[REFLECTION FADE]  Fade Amount
-
-[REFLECTION FADE]  Radial Fade Width
-
-[REFLECTION FADE]  Radial Fade Height
-
-[REFLECTION FADE]  Lateral Outer Fade Position
-
-[REFLECTION FADE]  Lateral Outer Fade Distance
-
-
------- [REFLECTION CORNER FADE] -------------------------------------------------------------------------------------------
-
-[REFLECTION CORNER FADE]  Corner Fade
-
-[REFLECTION CORNER FADE]  Corner Fade Distance
-
-[REFLECTION CORNER FADE]  Corner Inner Spread
-
-[REFLECTION CORNER FADE]  Corner Outer Spread
-
-
------- [REFLECTION CORNER FADE] -------------------------------------------------------------------------------------------
-
-[REFLECTION CORNER ROTATION]  Offset Top
-
-[REFLECTION CORNER ROTATION]  Offset Bottom
-
-
------- [TOP IMAGE LAYER] -------------------------------------------------------------------------------------------
-
-[TOP IMAGE LAYER]  Opacity
-
-[TOP IMAGE LAYER]  Blend Mode - Normal, Add, Mult, Under...
-
-[TOP IMAGE LAYER]  Mask - ALL, Tube, Bezel+, Frame+, Frame, BG
-
-
--------------More to Come---------------
 
 -------------------------------------------------------------------
 ------How to Integrate mega-screen-scale into a crt shader------------

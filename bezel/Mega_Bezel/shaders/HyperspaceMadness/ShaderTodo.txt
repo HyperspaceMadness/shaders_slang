@@ -29,22 +29,19 @@ Changes:
   * Fixed Moire appearing in reflection, more noticeable in glass preset
   * Independent curvature for bezel & screen
   *  Performance of Guest-Venom Preset on Nvidia RTX2060:
-    *  3840x2160 - ? fps
+    *  3840x2160 - 80 fps
 
 Mega Bezel Still to Come:
 
-Inner edge sharpness not working
-Need outer edge sharpness
+Adjust outer reflection edge sharpness, shifting mask in and out
 Need Texture to multiply reflection
-Fix Left edge Noise
 
   * Examples
     * Vertical Example - Reflection Only Static BG
     * Plastic Bezel, Cutout Bezel
     * Vertical Example - Full Adjustable
     * Discs of Tron
-  * Re-Evaluate Frame Inner Edge Reflection for performance
-  * Try Scaled up version of tube for reflection/glass area
+  * Try Scaled up version of tube for reflection/glass area, like big blur
   * Startup Animation - Sprite Sheet
   * Bilinear scale option per layer?
   * Redo Splitscreen with mapping and no dependence on sampling

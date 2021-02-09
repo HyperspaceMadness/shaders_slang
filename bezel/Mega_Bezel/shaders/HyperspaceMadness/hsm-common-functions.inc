@@ -721,25 +721,6 @@ vec2 HSM_GetTubeCurvedCoord(vec2 screen_coord, float curvature_scale, vec2 scree
 	float split_dist = 0;
 	float split_axis_is_horizontal = 0;
 
-	// if (HSM_SPLITSCREEN_ON == 1)
-	// {
-	// 	HSM_GetSplitInfo(split_pos_1, split_pos_2, split_dist, split_axis_is_horizontal);
-
-	// 	float coord_1D = HSM_GetSplitAxisCoord1D(screen_coord, split_axis_is_horizontal);
-		
-	// 	// check if we are on the first screen and therfore need to flip the tilt
-	// 	flip_tilt = HHLP_IsUnderValue(coord_1D, 0.5);
-
-	// 	if (HSM_SPLITSCREEN_CENTER_FILL_MODE == 1)
-	// 	{
-	// 		// Get the screen scale for each sub-screen, this helps calculate the correct black edge offset
-	// 		screen_scale = split_axis_is_horizontal * vec2(split_pos_1 * screen_scale.x, screen_scale.y) + (1 - split_axis_is_horizontal) * vec2(screen_scale.x, (1 - split_pos_2) * screen_scale.y);
-
-	// 		// If this was on the first screen then flip it so we get the opposite tilt
-	// 		// screen_coord = flip_tilt * HSM_GetFlippedCoordOnSplitAxis(screen_coord, SCREEN_ASPECT) + (1 - flip_tilt) * screen_coord;
-	// 	}
-	// }
-
 	vec2 black_edge_scale_offset = HSM_GetTubeScale(screen_scale) / screen_scale;
 
 	// Get the tube coord with the black edge added
@@ -757,18 +738,6 @@ vec2 HSM_GetTubeCurvedCoord(vec2 screen_coord, float curvature_scale, vec2 scree
 	}
 	else
 		tube_curved_coord = HSM_GetCurvedCoord(screen_coord, curvature_scale * HSM_BZL_INNER_CURVATURE_SCALE, screen_aspect);
-
-	// if (HSM_SPLITSCREEN_ON == 1)
-	// {
-	// 	if (HSM_SPLITSCREEN_CENTER_FILL_MODE == 1)
-	// 	{
-	// 		// Take the sub-screen area and re-map it to 0-1
-	// 		tube_curved_coord = HSM_Get0To1CoordFromSplitArea(tube_curved_coord, split_pos_1, split_pos_2, split_dist, split_axis_is_horizontal);
-
-	// 		// If this was flipped then flip it back
-	// 		// tube_curved_coord = flip_tilt * HSM_GetFlippedCoordOnSplitAxis(tube_curved_coord, SCREEN_ASPECT) + (1 - flip_tilt) * tube_curved_coord;
-	// 	}
-	// }
 
 	if (apply_black_edge_offset == 1)
 		tube_curved_coord = HSM_GetInverseScaledCoord(tube_curved_coord, black_edge_scale_offset);

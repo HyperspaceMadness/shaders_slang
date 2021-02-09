@@ -19,6 +19,7 @@ Thanks to:
 
 /////////////// IMPORTS ///////////////
 #include "hsm-globals-and-all-params.inc"
+#include "hsm-common-functions-bezel.inc"
 
 // Removed because BackgroundImageSize returns vec4(0,0,0,0), this happens with all user defined textures
 // layout(push_constant) uniform Push
@@ -113,7 +114,7 @@ vec4 PreMultAlphaBlend(vec4 color_under, vec4 color_over)
 
 // Takes a viewport coordinate and gives a new coordinate scaled by the specific scale mode
 // Takes into account the default sizes of each scale mode
-vec2 GetScaledCoord(vec2 viewport_coord, vec2 background_coord, vec2 screen_coord, vec2 bezel_outside_coord, vec2 bezel_image_coord, vec2 decal_coord, float texture_aspect_mode, float explicit_texture_aspect, vec2 scale_offset, vec2 pos_offset, float scale_mode, float keep_aspect)
+vec2 GetScaledCoord(vec2 viewport_coord, vec2 background_coord, vec2 SCREEN_COORD, vec2 bezel_outside_coord, vec2 bezel_image_coord, vec2 decal_coord, float texture_aspect_mode, float explicit_texture_aspect, vec2 scale_offset, vec2 pos_offset, float scale_mode, float keep_aspect)
 {
 	if (texture_aspect_mode == TEXTURE_ASPECT_MODE_VIEWPORT)
 		explicit_texture_aspect = global.OutputSize.x / global.OutputSize.y;
@@ -138,7 +139,7 @@ vec2 GetScaledCoord(vec2 viewport_coord, vec2 background_coord, vec2 screen_coor
 	}
 	else if (scale_mode == IMAGE_SCALE_MODE_SCREEN)
 	{
-		destination_coord = screen_coord;
+		destination_coord = SCREEN_COORD;
 		destination_scale = vec2(1, 1) * (1 / DEFAULT_TUBE_SCALE_V);
 		destination_aspect = (SCREEN_SCALE.x * global.OutputSize.x) / (SCREEN_SCALE.y * global.OutputSize.y);
 	}
@@ -363,72 +364,12 @@ void main()
 	// Get a coordinate offset so it is centered around the corner
 	vec2 outermap_coord_warped_ctr_at_screen_corner = abs(outermap_warped_coord_ctr) - vec2(0.5);
 
+	vec2 bezel_outside_coord = vec2(0.5, 0.5);
+	vec2 frame_outside_coord = vec2(0.5, 0.5);
 
-	float screen_scale_diagonal = sqrt(SCREEN_SCALE.y * SCREEN_SCALE.y + (SCREEN_SCALE.y * SCREEN_ASPECT) * (SCREEN_SCALE.y * SCREEN_ASPECT));
+	HSM_GetBezelCoords(SCREEN_COORD, SCREEN_SCALE, SCREEN_ASPECT, bezel_outside_coord, frame_outside_coord);
 
-	// TODO need to correct for screen aspect of sub screen
-	vec2 outer_bezel_scale = vec2(HSM_BZL_WIDTH / SCREEN_ASPECT + 1, HSM_BZL_HEIGHT + 1);
-
-
-	float screen_aspect = SCREEN_ASPECT;
-	vec2 frame_pos_offset = vec2(0, HSM_BZL_OUTER_POSITION_Y);
-
-	// Need to put this before screen_scale_diagonal?
-	vec2 screen_coord = SCREEN_COORD; //HSM_GetScreenVTexCoord(VIEWPORT_COORD, SCREEN_SCALE);
-	vec2 screen_scale = SCREEN_SCALE;
-	vec2 sub_screen_scale = SCREEN_SCALE;
-	float frame_thickness = HSM_FRM_THICKNESS;
-
-	// if (HSM_SPLITSCREEN_ON == 1)
-	// 	// If we are using split screen with separate frames
-	// 	if (HSM_SPLITSCREEN_CENTER_FILL_MODE == 1)
-	// 	{
-	// 		outer_bezel_scale = split_axis_is_horizontal * vec2((outer_bezel_scale.x - 1) * 2 + 1, outer_bezel_scale.y) + (1 - split_axis_is_horizontal) * vec2(outer_bezel_scale.x, (outer_bezel_scale.y - 1) * 2 + 1);
-			
-	// 		// Adjust the direction of position depending on if the screens are left & Right or Top and Bottom
-	// 		frame_pos_offset *= HSM_SetSplitAxisCoord(vec2(1,1), HSM_BZL_OUTER_POSITION_Y,  split_axis_is_horizontal);
-			
-	// 		// If this is the first screen invert the position offset, so the screens slide toward or away from each other 
-	// 		float in_first_half = HHLP_IsUnderValue(HSM_GetSplitAxisCoord1D(SCREEN_COORD, split_axis_is_horizontal), 0.5);
-	// 		frame_pos_offset *=  in_first_half * 1 + (1 - in_first_half) * -1;
-	// 	}
-
-	outer_bezel_scale = (outer_bezel_scale - 1) * screen_scale_diagonal + 1;
-
-	vec2 bezel_outside_coord = SCREEN_COORD + frame_pos_offset;
-
-	// Only run curved coordinates if requested or we are using tilt
-	if ((HSM_CURVATURE_MODE > 0) && ((HSM_CURVATURE_3D_TILT_ANGLE_X != 0) || (HSM_CURVATURE_3D_TILT_ANGLE_Y != 0)))
-		bezel_outside_coord = HSM_GetCurvedCoord(bezel_outside_coord, 0, outer_bezel_scale.x * global.OutputSize.x / global.OutputSize.y / outer_bezel_scale.y);
-
-	// if (HSM_SPLITSCREEN_ON == 1)
-	// 	if (HSM_SPLITSCREEN_CENTER_FILL_MODE == 1)
-	// 	{
-	// 		// If this was on the first screen then flip it back
-	// 		bezel_outside_coord = HSM_Get0To1CoordFromSplitArea(bezel_outside_coord, split_pos_1, split_pos_2, split_dist, split_axis_is_horizontal);
-	// 		sub_screen_scale = split_axis_is_horizontal * vec2(split_pos_1 * SCREEN_SCALE.x, SCREEN_SCALE.y) + (1 - split_axis_is_horizontal) * vec2(SCREEN_SCALE.x, (1 - split_pos_2) * SCREEN_SCALE.y);
-	// 		frame_thickness *= 2;
-	// 	}
-
-	vec2 black_edge_scale_offset = HSM_GetTubeScale(sub_screen_scale) / sub_screen_scale;
-
-	bezel_outside_coord = HSM_GetInverseScaledCoord(bezel_outside_coord, black_edge_scale_offset * outer_bezel_scale) + vec2(0, HSM_BZL_OUTER_POSITION_Y);
-	vec2 frame_outside_coord = (bezel_outside_coord + vec2(0, HSM_FRM_OUTER_POS_Y) - 0.5) / vec2((frame_thickness * HSM_FRM_THICKNESS_SCALE_X) / (sub_screen_scale.x / sub_screen_scale.y * output_aspect) + 1, frame_thickness + 1) + 0.5;
-
-	FRAME_SCALE = screen_scale * black_edge_scale_offset * outer_bezel_scale;
-
-	if (HSM_BZL_OUTER_CURVATURE_SCALE > 0)
-	{
-		vec2 screen_scale_for_tube = SCREEN_SCALE;
-
-		// if (HSM_BZL_USE_INDEPENDENT_SCALE_AND_CURVATURE == 1)
-		// 	screen_scale_for_tube = SCREEN_SCALE / screen_scale.y * HSM_BZL_INDEPENDENT_SCALE;
-
-		bezel_outside_coord = HSM_GetTubeCurvedCoord(bezel_outside_coord, HSM_BZL_OUTER_CURVATURE_SCALE, screen_scale_for_tube, outer_bezel_scale.x * global.OutputSize.x / global.OutputSize.y / outer_bezel_scale.y, 0);
-
-		if ( HSM_FRM_OUTER_CURVATURE_SCALE > 0)
-			frame_outside_coord = HSM_GetTubeCurvedCoord(frame_outside_coord, HSM_BZL_OUTER_CURVATURE_SCALE * HSM_FRM_OUTER_CURVATURE_SCALE, screen_scale_for_tube, outer_bezel_scale.x * global.OutputSize.x / global.OutputSize.y / outer_bezel_scale.y, 0);
-	}
+	FRAME_SCALE = HSM_GetFrameScale(SCREEN_SCALE, SCREEN_ASPECT);
 
 	OUTSIDE_BEZEL_MASK = 1 - HSM_GetCornerMask(bezel_outside_coord, SCREEN_ASPECT, HSM_FRM_INNER_CORNER_RADIUS_SCALE * HSM_BZL_OUTER_CORNER_RADIUS_SCALE * HSM_SCREEN_CORNER_RADIUS, 0.9);
 
@@ -666,7 +607,7 @@ void main()
 	// Background Image
 	//-----------------------------------------------------------------------------------------
 #ifndef SIMPLE_PRESET
-	vec2 background_coord_no_mirror	= GetScaledCoord(VIEWPORT_COORD, VIEWPORT_COORD, screen_coord, bezel_outside_coord, vec2(0), vec2(0),
+	vec2 background_coord_no_mirror	= GetScaledCoord(VIEWPORT_COORD, VIEWPORT_COORD, SCREEN_COORD, bezel_outside_coord, vec2(0), vec2(0),
 												HSM_BG_TEXTURE_ASPECT_MODE, 
 												HSM_BG_EXPLICIT_TEXTURE_ASPECT, 
 												vec2(HSM_BG_SCALE * HSM_BG_SCALE_X, HSM_BG_SCALE), 
@@ -745,7 +686,7 @@ void main()
 	// Bezel Image
 	//----------------------------------------------------
 	vec4 bezel_image = vec4(0);
-	vec2 screen_coord_for_bezel_image = screen_coord;
+	vec2 screen_coord_for_bezel_image = SCREEN_COORD;
 	
 	if (HSM_BZL_IMG_USE_CURVATURE == 1)
 		screen_coord_for_bezel_image = screen_curved_coord;
@@ -794,7 +735,7 @@ void main()
 	// Frame Decal Image
 	//----------------------------------------------------
 	vec4 decal_image = vec4(0);
-	vec2 decal_coord = GetScaledCoord(VIEWPORT_COORD, background_coord_no_mirror, screen_coord, bezel_outside_coord, bezel_image_coord, vec2(0),
+	vec2 decal_coord = GetScaledCoord(VIEWPORT_COORD, background_coord_no_mirror, SCREEN_COORD, bezel_outside_coord, bezel_image_coord, vec2(0),
 										HSM_DECAL_TEXTURE_ASPECT_MODE, 
 										HSM_DECAL_EXPLICIT_TEXTURE_ASPECT, 
 										vec2(HSM_DECAL_SCALE * HSM_DECAL_SCALE_X, HSM_DECAL_SCALE), 
@@ -824,7 +765,7 @@ void main()
 	vec4 top_image = vec4(0);
 
 #ifndef SIMPLE_PRESET
-	vec2 top_image_coord = GetScaledCoord(VIEWPORT_COORD, background_coord_no_mirror, screen_coord, bezel_outside_coord, bezel_image_coord, decal_coord,
+	vec2 top_image_coord = GetScaledCoord(VIEWPORT_COORD, background_coord_no_mirror, SCREEN_COORD, bezel_outside_coord, bezel_image_coord, decal_coord,
 						HSM_TOP_TEXTURE_ASPECT_MODE, 
 						HSM_TOP_EXPLICIT_TEXTURE_ASPECT, 
 						vec2(HSM_TOP_SCALE * HSM_TOP_SCALE_X, HSM_TOP_SCALE), 
@@ -863,7 +804,7 @@ void main()
 	vec4 cab_glass_image = vec4(0);
 	if (HSM_CAB_GLASS_OPACITY > 0)
 	{
-		vec2 cab_glass_coord = GetScaledCoord(VIEWPORT_COORD, background_coord_no_mirror, screen_coord, bezel_outside_coord, bezel_image_coord, decal_coord,
+		vec2 cab_glass_coord = GetScaledCoord(VIEWPORT_COORD, background_coord_no_mirror, SCREEN_COORD, bezel_outside_coord, bezel_image_coord, decal_coord,
 						HSM_CAB_GLASS_TEXTURE_ASPECT_MODE, 
 						HSM_CAB_GLASS_EXPLICIT_TEXTURE_ASPECT, 
 						vec2(HSM_CAB_GLASS_SCALE * HSM_CAB_GLASS_SCALE_X, HSM_CAB_GLASS_SCALE), 
@@ -900,7 +841,7 @@ void main()
 	vec4 led_image = vec4(0);
 	if (HSM_LED_OPACITY > 0)
 	{
-		vec2 led_coord = GetScaledCoord(VIEWPORT_COORD, background_coord_no_mirror, screen_coord, bezel_outside_coord, bezel_image_coord, decal_coord,
+		vec2 led_coord = GetScaledCoord(VIEWPORT_COORD, background_coord_no_mirror, SCREEN_COORD, bezel_outside_coord, bezel_image_coord, decal_coord,
 						HSM_LED_TEXTURE_ASPECT_MODE, 
 						HSM_LED_EXPLICIT_TEXTURE_ASPECT, 
 						vec2(HSM_LED_SCALE * HSM_LED_SCALE_X, HSM_LED_SCALE), 
@@ -928,7 +869,7 @@ void main()
 #ifndef SIMPLE_PRESET
 	vec2 cutout_coord = (VIEWPORT_COORD - 0.5) * 2 + 0.5;
 	if (HSM_CUTOUT_SCALE_MODE == 1)
-		cutout_coord = GetScaledCoord(screen_coord, vec2(0,0), vec2(0,0), vec2(0,0), vec2(0,0), vec2(0,0),
+		cutout_coord = GetScaledCoord(SCREEN_COORD, vec2(0,0), vec2(0,0), vec2(0,0), vec2(0,0), vec2(0,0),
 								TEXTURE_ASPECT_MODE_VIEWPORT,
 								1,
 								vec2(HSM_CUTOUT_SCALE * HSM_CUTOUT_SCALE_X, HSM_CUTOUT_SCALE), 
@@ -945,7 +886,7 @@ void main()
 										0);
 	else
 	{
-		cutout_coord = (VIEWPORT_COORD - 0.5) / vec2(DEFAULT_BEZEL_SCALE_V * screen_aspect / output_aspect, DEFAULT_BEZEL_SCALE_V) + 0.5;
+		cutout_coord = (VIEWPORT_COORD - 0.5) / vec2(DEFAULT_BEZEL_SCALE_V * SCREEN_ASPECT / output_aspect, DEFAULT_BEZEL_SCALE_V) + 0.5;
 		cutout_coord = GetScaledCoord(cutout_coord, background_coord_no_mirror, screen_coord_for_bezel_image, bezel_outside_coord, bezel_image_coord, decal_coord,
 												TEXTURE_ASPECT_MODE_VIEWPORT,
 												1,
@@ -954,7 +895,7 @@ void main()
 												HSM_CUTOUT_SCALE_MODE, 
 												0);
 		if (HSM_CUTOUT_SCALE_MODE > 2)
-			cutout_coord = (cutout_coord - 0.5) / vec2(DEFAULT_BEZEL_SCALE_V * screen_aspect / output_aspect, DEFAULT_BEZEL_SCALE_V) + 0.5;
+			cutout_coord = (cutout_coord - 0.5) / vec2(DEFAULT_BEZEL_SCALE_V * SCREEN_ASPECT / output_aspect, DEFAULT_BEZEL_SCALE_V) + 0.5;
 
 	}
 
@@ -972,7 +913,7 @@ void main()
 
 	if (HSM_VIEWPORT_VIGNETTE_OPACITY > 0)
 	{
-		vec2 vignette_coord = GetScaledCoord(VIEWPORT_COORD, background_coord_no_mirror, screen_coord, bezel_outside_coord, bezel_image_coord, decal_coord,
+		vec2 vignette_coord = GetScaledCoord(VIEWPORT_COORD, background_coord_no_mirror, SCREEN_COORD, bezel_outside_coord, bezel_image_coord, decal_coord,
 					TEXTURE_ASPECT_MODE_VIEWPORT, 
 					1, 
 					vec2(HSM_VIEWPORT_VIGNETTE_SCALE * HSM_VIEWPORT_VIGNETTE_SCALE_X, HSM_VIEWPORT_VIGNETTE_SCALE), 

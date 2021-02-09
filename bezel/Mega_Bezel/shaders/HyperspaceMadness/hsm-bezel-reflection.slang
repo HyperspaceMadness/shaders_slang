@@ -21,6 +21,7 @@ Thanks to:
 
 /////////////// IMPORTS ///////////////
 #include "hsm-globals-and-reflection-params.inc"
+#include "hsm-common-functions-bezel.inc"
 
 /////////////// Helper Functions ///////////////
 
@@ -130,24 +131,6 @@ layout(set = 0, binding = 9) uniform sampler2D BR_MirrorBlurredPass;
 layout(set = 0, binding = 10) uniform sampler2D BR_MirrorReflectionDiffusedPass;
 layout(set = 0, binding = 11) uniform sampler2D BR_MirrorFullscreenGlowPass;
 layout(set = 0, binding = 12) uniform sampler2D AvgLumPass;
-
-
-float GetBezelMask()
-{
-	float screen_scale_diagonal = sqrt(SCREEN_SCALE.y * SCREEN_SCALE.y + (SCREEN_SCALE.y * SCREEN_ASPECT) * (SCREEN_SCALE.y * SCREEN_ASPECT));
-	vec2 black_edge_scale_offset = HSM_GetTubeScale(SCREEN_SCALE) / SCREEN_SCALE;
-	vec2 outer_bezel_scale = vec2(HSM_BZL_WIDTH / SCREEN_ASPECT + 1, HSM_BZL_HEIGHT + 1);
-	outer_bezel_scale = (outer_bezel_scale - 1) * screen_scale_diagonal + 1;
-
-	vec2 frame_pos_offset = vec2(0, HSM_BZL_OUTER_POSITION_Y);
-	vec2 bezel_outside_coord = SCREEN_COORD + frame_pos_offset;
-	bezel_outside_coord = HSM_GetInverseScaledCoord(bezel_outside_coord, black_edge_scale_offset * outer_bezel_scale) + vec2(0, HSM_BZL_OUTER_POSITION_Y / 100);
-
-	if (HSM_BZL_OUTER_CURVATURE_SCALE > 0)
-		bezel_outside_coord = HSM_GetCurvedCoord(bezel_outside_coord, HSM_BZL_OUTER_CURVATURE_SCALE, outer_bezel_scale.x * global.OutputSize.x / global.OutputSize.y / outer_bezel_scale.y);
-
-	return HSM_GetCornerMask(bezel_outside_coord, SCREEN_ASPECT, HSM_FRM_INNER_CORNER_RADIUS_SCALE * HSM_BZL_OUTER_CORNER_RADIUS_SCALE * HSM_SCREEN_CORNER_RADIUS, 0.9);
-}
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
 void main()
@@ -454,7 +437,16 @@ void main()
 		reflected_color.rgb *= (1 - HSM_REFLECT_FRAME_INNER_EDGE_AMOUNT) * (1 - frame_inner_edge_mask) + HSM_REFLECT_FRAME_INNER_EDGE_AMOUNT;
 
 		if (HSM_REFLECT_MASK_TO_BEZEL == 1)
-			reflected_color *= GetBezelMask();
+		{
+			vec2 bezel_outside_coord = vec2(0.5, 0.5);
+			vec2 frame_outside_coord = vec2(0.5, 0.5);
+
+			HSM_GetBezelCoords(SCREEN_COORD, SCREEN_SCALE, SCREEN_ASPECT, bezel_outside_coord, frame_outside_coord);
+
+			float bezel_mask = HSM_GetCornerMask(bezel_outside_coord, SCREEN_ASPECT, HSM_FRM_INNER_CORNER_RADIUS_SCALE * HSM_BZL_OUTER_CORNER_RADIUS_SCALE * HSM_SCREEN_CORNER_RADIUS, 0.9);
+
+			reflected_color *= bezel_mask;
+		}
 	}
 
     // CRT

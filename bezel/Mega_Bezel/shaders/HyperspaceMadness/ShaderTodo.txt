@@ -28,13 +28,13 @@ Changes:
   * Negative Cropping Removed due to performance cost
   * Fixed Moire appearing in reflection, more noticeable in glass preset
   * Independent curvature for bezel & screen
+  * Scaling of 'reflection' to have similar effect to Big Blur, fun for driving games
   *  Performance of Guest-Venom Preset on Nvidia RTX2060:
     *  3840x2160 - 80 fps
 
 Mega Bezel Still to Come:
 
-Adjust outer reflection edge sharpness, shifting mask in and out
-Need Texture to multiply reflection
+Need Texture to multiply reflection, for textured bezel
 
   * Examples
     * Vertical Example - Reflection Only Static BG
@@ -106,8 +106,8 @@ Retroarch Features
     * Check textures and use default if not found
   * Shader Passes in Sub Menu
   * Shader Textures in Sub Menu - Add ability to set texture overrides in retroarch UI
-  * Override Files to bring in multiple adjustments into one file
-  * Concatenate Presets
+  * Multiple references in one file for adding passes and parameter overrides
+  * Add Shader Preset - In UI Add a shader preset to Concatenate passes at beginning of shader stack
   * Fix loss of current parameter values when retroarch goes from full screen to window
 
   * Video Aspect Ratio which uses Monitor

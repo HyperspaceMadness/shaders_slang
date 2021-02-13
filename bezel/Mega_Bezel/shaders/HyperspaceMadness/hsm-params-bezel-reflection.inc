@@ -204,8 +204,8 @@ float HSM_REFLECT_CORNER_ROTATION_OFFSET_TOP = global.HSM_REFLECT_CORNER_ROTATIO
 #pragma parameter HSM_REFLECT_CORNER_ROTATION_OFFSET_BOTTOM 	"      Corner Rotation Offset Bottom" 0 -90 90 0.5
 float HSM_REFLECT_CORNER_ROTATION_OFFSET_BOTTOM = global.HSM_REFLECT_CORNER_ROTATION_OFFSET_BOTTOM;
 
-// #pragma parameter HSM_REFLECT_CORNER_SPREAD_FALLOFF             "      Corner Spread Falloff"  50 1 200 1
-// float HSM_REFLECT_CORNER_SPREAD_FALLOFF = global.HSM_REFLECT_CORNER_SPREAD_FALLOFF;
+#pragma parameter HSM_REFLECT_CORNER_SPREAD_FALLOFF             "      Corner Spread Falloff"  100 1 200 1
+float HSM_REFLECT_CORNER_SPREAD_FALLOFF = global.HSM_REFLECT_CORNER_SPREAD_FALLOFF;
 
 //---------------------------------------------------------------------------------------------------
 // Reflection Blur
@@ -278,6 +278,6 @@ float HSM_NIGHT_OPACITY = global.HSM_NIGHT_OPACITY / 100;
 
 /////////////// CONSTANT TUNING SETTINGS ///////////////
 
-#ifndef HSM_REFLECT_CORNER_SPREAD_FALLOFF
-    #define HSM_REFLECT_CORNER_SPREAD_FALLOFF 100
-#endif
+// #ifndef HSM_REFLECT_CORNER_SPREAD_FALLOFF
+//     #define HSM_REFLECT_CORNER_SPREAD_FALLOFF 100
+// #endif

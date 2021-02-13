@@ -674,7 +674,11 @@ vec2 HSM_GetCurvedCoord(vec2 in_coord, float curvature_multiplier, float screen_
 }
 
 vec2 HSM_GetMirrorWrappedCoord(vec2 in_coord)
-{
+{	
+	vec2 ctr_coord = in_coord - 0.5;
+	if (abs(ctr_coord.x) > 0.5 || abs(ctr_coord.y) > 0.5 )
+		in_coord = ctr_coord / HSM_SCREEN_REFLECTION_SCALE + 0.5 + vec2(HSM_SCREEN_REFLECTION_POS_X, HSM_SCREEN_REFLECTION_POS_Y);
+
 	in_coord = mod(in_coord, 2);
 	vec2 ctr_mirror_coord = in_coord - 0.5;
 
@@ -705,7 +709,7 @@ float HSM_GetCornerMask(vec2 in_coord, float screen_aspect, float corner_radius,
 {
 	//(0.5 - abs(in_coord - 0.5)) * 2
 	vec2 new_coord = min(in_coord, vec2(1.0) - in_coord) * vec2(screen_aspect, 1);
-	vec2 corner_distance = vec2(max(corner_radius / 1000.0, (1.0 - HSM_SCREEN_EDGE_SHARPNESS * edge_sharpness) * 0.01));
+	vec2 corner_distance = vec2(max(corner_radius / 1000.0, (1.0 - edge_sharpness) * 0.01));
 	new_coord = (corner_distance - min(new_coord, corner_distance));
 	float distance = sqrt(dot(new_coord, new_coord));
 
@@ -1079,9 +1083,12 @@ vec4 HSM_GetPostCrtPreppedColor(vec4 in_color_linear, vec2 screen_curved_coord, 
 	vec2 mirrored_screen_coord = HSM_GetMirrorWrappedCoord(screen_curved_coord);
 	float vignette_factor = HSM_GetScreenVignetteFactor(mirrored_screen_coord, HSM_SCREEN_VIGNETTE);
 
-	// This affects if the vignette shows up in the reflection or not
-	if (HSM_SCREEN_VIGNETTE_IN_REFLECTION == 0)
-		vignette_factor = 1 - ((1 - vignette_factor) * screen_mask);
+	// // This affects if the vignette shows up in the reflection or not
+	// if (HSM_SCREEN_VIGNETTE_IN_REFLECTION == 0)
+	// 	vignette_factor = 1 - ((1 - vignette_factor) * screen_mask);
+
+	float vignette_factor_outside_screen = HSM_SCREEN_VIGNETTE_IN_REFLECTION * vignette_factor + (1 - HSM_SCREEN_VIGNETTE_IN_REFLECTION) * 1;
+	vignette_factor = screen_mask * vignette_factor + (1 - screen_mask) * vignette_factor_outside_screen;
 
 	out_color *= vignette_factor;
 

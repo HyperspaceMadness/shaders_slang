@@ -449,9 +449,7 @@ void main()
 		}
 	}
 
-    // CRT
-	// if (HSM_REFLECT_IS_LAST_PASS == 1)
-	crt_image_linear *= screen_mask;
+	crt_image_linear *= screen_mask * TUBE_MASK;
 
     vec4 frag_color_linear = crt_image_linear;
     

@@ -8,7 +8,7 @@ Description:
 */
 
 // Screen Scale Required Parameters
-#pragma parameter HSM_MEGA_BEZEL_TITLE					"[ --- HSM MEGA BEZEL  ALPHA.2021-02-07-0 --- ]_________________" 0 0 0.01 0.01
+#pragma parameter HSM_MEGA_BEZEL_TITLE					"[ --- HSM MEGA BEZEL  ALPHA.2021-02-13-0 --- ]_________________" 0 0 0.01 0.01
 
 //---------------------------------------------------------------------------------------------------
 //    FLIP & ROTATE
@@ -229,28 +229,39 @@ float HSM_CURVATURE_3D_TILT_ANGLE_Y = global.HSM_CURVATURE_3D_TILT_ANGLE_Y / 100
 #pragma parameter HSM_COLOR_CRT_GAMMA   					"      CRT Gamma (Linear to Gamma Space Encode) Def 2.2" 2.2 0.1 5 0.05
 #define HSM_COLOR_CRT_GAMMA global.HSM_COLOR_CRT_GAMMA
 
+
 #pragma parameter HSM_SCREENVIGNETTE_TITLE					"[ SCREEN VIGNETTE ]____________________________________________" 0 0 0.01 0.01
 
 #pragma parameter HSM_SCREEN_VIGNETTE                		"      Screen Vignette Opacity" 0 0 100 1
-#define HSM_SCREEN_VIGNETTE global.HSM_SCREEN_VIGNETTE / 100
+#define HSM_SCREEN_VIGNETTE global.HSM_SCREEN_VIGNETTE / 200
 
-#pragma parameter HSM_SCREEN_VIGNETTE_IN_REFLECTION     	"      Screen Vignette  Opacity in Reflection" 100 0 100 1
+
+#pragma parameter HSM_REFLECTIONAPPEARANCE_TITLE			"[ REFLECTION APPEARANCE ]______________________________________" 0 0 0.01 0.01
+
+#pragma parameter HSM_SCREEN_VIGNETTE_IN_REFLECTION     	"      Screen Vignette Opacity in Reflection" 100 0 100 1
 float HSM_SCREEN_VIGNETTE_IN_REFLECTION = global.HSM_SCREEN_VIGNETTE_IN_REFLECTION / 100;
 
+#pragma parameter HSM_SCREEN_REFLECTION_SCALE     			"      Screen Reflection Scale" 100 1 300 1
+float HSM_SCREEN_REFLECTION_SCALE = global.HSM_SCREEN_REFLECTION_SCALE / 100;
 
+#pragma parameter HSM_SCREEN_REFLECTION_POS_X     			"      Screen Reflection Pos X" 0 -100 100 1
+float HSM_SCREEN_REFLECTION_POS_X = global.HSM_SCREEN_REFLECTION_POS_X / 600;
+
+#pragma parameter HSM_SCREEN_REFLECTION_POS_Y     			"      Screen Reflection Pos Y" 0 -100 100 1
+float HSM_SCREEN_REFLECTION_POS_Y = global.HSM_SCREEN_REFLECTION_POS_Y / 600;
 
 //---------------------------------------------------------------------------------------------------
 //    SCREEN EDGE
 //---------------------------------------------------------------------------------------------------
 #pragma parameter HSM_SCREEN_EDGE_TITLE							"[ SCREEN EDGE ]________________________________________________" 0 0 0.01 0.01
 
-#pragma parameter HSM_SCREEN_CORNER_RADIUS 						"      Corner Radius - Def 10" 10 0 70 1
+#pragma parameter HSM_SCREEN_CORNER_RADIUS 						"      Corner Radius - Def 10" 10 2 70 1
 #define HSM_SCREEN_CORNER_RADIUS global.HSM_SCREEN_CORNER_RADIUS
 
 #pragma parameter HSM_SCREEN_EDGE_SHARPNESS 					"      Edge Sharpness - Def 40" 40 0 90 1
 #define HSM_SCREEN_EDGE_SHARPNESS global.HSM_SCREEN_EDGE_SHARPNESS / 100
 
-#pragma parameter HSM_TUBE_BLACK_EDGE_THICKNESS 				"      Black Border Thickness - Def 100" 100 -200 800 5
+#pragma parameter HSM_TUBE_BLACK_EDGE_THICKNESS 				"      Black Border Thickness - Def 100" 100 -800 800 5
 #define HSM_TUBE_BLACK_EDGE_THICKNESS global.HSM_TUBE_BLACK_EDGE_THICKNESS / 100
 
 

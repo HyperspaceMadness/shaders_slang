@@ -93,11 +93,11 @@ Troubleshooting
  * If you still have difficulties loading the shader with a specific core update the core
  * If you still have difficulties download a new separate version of Retroarch and try it there. Sometimes problems lurk in some random config file somewhere which are very hard to track down
    
- * To see errors coming from Retroarch you need to set up your logging settings:
-    * Logging - Logging Verbosity - ON
-      * Frontend Logging - 0(Debug)
-      * Log to File - Off
-    * These settings will cause a log window to come up when you launch, and you should see any Retroarch errors, and shader loading details
+ * **To see errors** coming from Retroarch you need to set up your logging settings:
+    * **Logging - Logging Verbosity - ON**
+      * **Frontend Logging - 0(Debug)**
+      * **Log to File - Off**
+    * These settings will **cause a log window to come up** when you launch, and you should see any Retroarch errors, and shader loading details
 
 
 
@@ -228,7 +228,17 @@ Parameter Descriptions
 **[ SCREEN VIGNETTE ]________________________________________________________________________**
 
 - **Screen Vignette Opacity** --- Fade out the game screen as we move away from the center of the screen
-- **Screen Vignette Opacity in Reflection** -- How much of the darkening show up in the reflection
+
+**[ REFLECTION APPEARANCE ]____________________________**__________________________________________
+
+- **Screen Vignette Opacity in Reflection** - How much vignette darkening we will see in the reflection
+- **Screen Reflection Scale**
+  - Scales the reflection from the center
+  - With a larger scale, the image from the screen will appear without mirroring, like the Big Blur preset
+- **Screen Reflection Pos X**
+  - Shift the reflection left or right
+- **Screen Reflection Pos Y**
+  - Shift the reflection up or down
 
 **[ SCREEN EDGE ]________________________________________________________________________**
 
@@ -256,7 +266,7 @@ Parameter Descriptions
   - Blacks out outside the screen, used for the scaling only presets
 
 **[ INTRO SEQUENCE ]________________________________________________________________________________________________________**
-​	Animation sequence which plays when the content starts up
+​	Animation sequence which plays when the content starts up, animation times are in frames. The frame rate for most games 60 fps
 
 - **Show Intro**
   - 0 - OFF
@@ -331,37 +341,59 @@ Parameter Descriptions
 
 **[ BEZEL ]_________________________________________________________________________________________________________**
 
-- **Inner Curvature Scale**
-  - Curvature of the inner edge of the bezel. It is a multiplier of the curvature of the tube and is 100 by default and matches the bezel curvature.
+- **Use Independent Scale & Curvature**
+  - Allows you to adjust the bezel scale independent of the screen
+- **Independent Scale**
+  - Base scale for the bezel default is 82.97 which is the same as the default screen size
+- **Independent Curvature X**
+  - Horizontal curvature for the bezel when in independent mode
+- **Independent Curvature Y**
+  - Vertical curvature for the bezel when in independent mode
+- **Inner Curvature Scale Multiplier**
+  - Multiplier the curvature of the inner edge of the bezel
+  - Default is 100 which will match the tube curvature
+  - Multiplies the curvature in normal and independent mode
+
 - **Opacity**
   - At 100 the bezel is fully visible
+
 - **Blend Mode**
   - **0 - Off**
   - **1 - Normal Blending**
   - **2 - Additive Blending** - Added on as added with a projector
   - **3 - Multiply Blending** - Image is applied by darkening the under layer
+
 - **Width**
   - Thickness of the bezel on the sides of the tube, default is 125
+
 - **Height**
   - Thickness of the bezel on the top and bottom of the tube, default is 100
+
 - **Inner Edge Thickness**
   - Thickness of edge of inner, default 100
+
 - **Inner Edge Sharpness** - Def 90
 - **Inner Corner Radius Scale** - Def 50
   - Roundness of the inner corner of the bezel, it is a multiplier of the roundness of the screen corner
   - 100 gives you the same roundness as the screen corner
+
 - **Outer Corner Radius Scale** - Def 100
   - Roundness of the inner corner of the bezel, it is a multiplier of the roundness of the screen corner
   - 100 gives you the same roundness as the screen corner
+
 - **Outer Curvature Scale**
   - Amount of curvature on the outside of the bezel it is a multiplier of the roundness of the screen corner
   - Default is 0 which gives a straight edge of the outside of the bezel
+
 - **Outer Edge Position Y**
   - This moves the outer edge of the bezel and the frame up and down
+
 - **Brightness**
   - Brightness of the bezel, the default is 30 so only 30% brightness
+
 - **Highlight**
-  - The highlight or shinyness in the middle of the bezel
+  - The highlight or shininess in the middle of the bezel
+
 - **Opacity of Shadow from Bezel on Tube**
   - How much of a darkness from the bezel onto the illuminated screen
   - Only visible when the black ring around the screen is reduced so that the bezel is almost on top of the screen
@@ -419,87 +451,140 @@ Parameter Descriptions
 
 **[ REFLECTION ]________________________________________________________________________________________________________**
 
-- **Blend Mode** - Default is 2
-  - **0 - Off**
+- **Blend Mode** - How the reflection is applied to the layer underneath Default is 2
+  - **0 - Off** - The layer is not shown
   - **1 - Normal Blending**
   - **2 - Additive Blending** - Applied additively to brighten what's underneath
-- **Mask**
-  - **0 - ALL**
-  - **1 - Screen**
+- **Mask** - Mask the reflection with the area inside the:
+  - **0 - ALL** - Whole viewport
+  - **1 - Screen** - Illuminated area of the tube
   - **2 - Tube**
-  - **2 - Bezel and Inward**
-  - **3 - Bz**
-  - **4 - Bz+**
-  - **5 - Frm**
-  - **6 - Frm+**
-  - **7 - BG**
+  - **2 - Bezel and Inward** - Bezel and inward
+  - **3 - Bezel**
+  - **4 - Bezel +** - Bezel and outward
+  - **5 - Frame**
+  - **6 - Frame +** - Frame and outward
+  - **7 - Background**  - Outside the frame
 - **Global Amount**
+  - Overall multiplier on the amount of reflection shown
 - **Global Gamma Adjust**
+  - Gamma adjustment on the reflection, allows you to reduce the amount of reflection in dark areas, or reduce contrast in the reflections
 - **Direct Reflection**
+  - Amount of the most detailed reflection shown
 - **Diffused Reflection**
+  - Amount of a very blurry and diffused reflection shown, helps blend between the main reflection to make a more natural effect
 - **FullScreen Glow**
+  - Amount of a very diffused reflection shown which mimics lighting from the overall brightness of the screen
 - **FullScreen Glow Gamma**
+  - Adjust the gamma of the full screen glow, this has the effect of controlling how bright the screen needs to be to see the fullscreen glow effect 
 - **Bezel Inner Edge Amount**
+  - How much reflection on the small inner edge right at the outside of the tube
 - **Bezel Inner Edge Fullscreen Glow**
+  - Same as above but a non-directional glow from all over the screen
 - **Frame Inner Edge Amount**
 - **Frame Inner Edge Sharpness**
+  - How soft or sharp the reflection is at the inner edge of the frame
 
 **[ REFLECTION FADE ]___________________________________________________________________________________________________**
 
 - **Fade Amount**
+  - At 100 the reflection fades out as it comes away from the screen, at 0 the reflection does not fade and is full strength everywhere  
 - **Radial Fade Width**
+  - The distance away from the sides of the screen where the reflection to completely fades out
 - **Radial Fade Height**
+  - The distance away from the top and bottom of the screen where the reflection to completely fades out
 - **Lateral Outer Fade Position**
+  - When the reflection fades out towards the corners, for example on the bottom bezel the reflection fades out towards the left and right. The position where the fade starts.
 - **Lateral Outer Fade Distance**
+  - For the lateral fade the distance for it to fade out
 - **Viewport Vignette (For Glass Presets)**
+  - Adds a vignette over the entire viewport to darken the areas as it goes towards the edges used to darken the reflection in the glass preset
 
 **[ REFLECTION CORNER ]_____________________________________________________________________________________________________**
 
 - **Corner Fade**
+  - How much should the corner fade out
 - **Corner Fade Distance**
+  - The distance from the corner where the reflection fully fades out
 - **Corner Inner Spread**
+  - How much the inner corner reflection spreads out
 - **Corner Outer Spread**
+  - How much the outer corner reflection spreads out
 - **Corner Rotation Offset Top**
+  - Adjust the rotation of the highlight in the top corners
 - **Corner Rotation Offset Bottom**
+  - Adjust the rotation of the highlight in the bottom corners
 - **Corner Spread Falloff**
+  - Controls the profile of the falloff, small values make falloff faster near the center. 
 
 **[ REFLECTION BLUR ]___________________________________________________________________________________________________**
 
 - **Blur Samples - 0 for OFF**
+  - Default is 12
 - **Min Blur**
+  - What is the least amount of blur in the reflection this is nearest the screen 
 - **Max Blur**
+  - The highest amount of blur in the reflection, this is the farther away from the screen
 
 **[ REFLECTION NOISE ]______________________________________________________________________________________________________**
 
 - **Noise Amount**
+  - How much noise seen in the reflection, gives the effect of the scattered reflection of a slightly textured surface 
 - **Noise Samples (0 for OFF)**
+  - How many samples taken for the effect, more samples the smoother the effect, fewer samples makes the surface look more like it has little bumps in it
 - **Sample Distance**
+  - What is the farthest distance away from the point being drawn where the scattered sample come from
 
 **[ GLASS BORDER ]______________________________________________________________________________________________________**
 
 - **Glass Border ON (Glass Preset Only)**
+  - Changes the appearance of the reflection to look like the glass effect
 
 **[ REFLECT ONLY IMAGE LAYER ]__________________________________________________________________________________________________**
 
 - **Opacity**
-- **Blend Mode - Off | Norm | Add | Mult**
-- **Aspect Ratio - Full | 16:9 | 9:16**
+  - Opacity of the image to be applied
+- **Blend Mode** - Default is Additive
+  - **0 - Off** - Don't show the layer
+  - **1 - Normal Blending**
+  - **2 - Additive Blending** - Applied additively to brighten what's underneath
+- **Aspect Ratio**
+  - **0 - Full** - Use the viewport's aspect ratio
+  - **1 - 16:9** - Show the image with a 16:9 aspect ratio
+  - **2 - 9:16** - Show the image with a 16:9 aspect ratio
 - **Mask Reflection to Bezel**
+  - Limit the reflection to only appear inside the bezel area
+  - Often used with the reflection only preset to show the reflection inside the bezel area shown in the image
 
 **[ REFLECTION IS LAST PASS ]___________________________________________________________________________________________________**
 
-- **Reflection is Last Pass (Glass and Reflect Only Presets)**
+- **Reflection is Last Pass**
+  - Used for glass and reflection only presets
+  - When this is on the final gamma correction is applied at the reflection pass
+
+**[ NIGHT LIGHTING ]____________________________________________________________________**
+
+- **Opacity**
+  - How much of the night lighting darkening effect is applied
 - **Mirror Horizontal**
+  - Mirror the night lighting image
 - **Saturation**
+  - How saturated the night lighting is
 - **Hue**
+  - Shift the hue of the color of the image
 - **Value**
-- **Dithering Noise Samples (Reduces Banding)**
+  - How dark or bright the night lighting is
+- **Dithering Noise Samples**
+  - Reduces Banding
 
 **[ IMAGE LAYERING ]________________________________________________________________________________________________________**
 
 - **Static Layers Gamma Adjust**
+  - Adjust the Gamma on all layers to brighten or darken all of them
 
 **[ LAYER ORDER ]___________________________________________________________________________________________________**
+
+Layer order adjusts the order in which the layers are composited or "layered" on top of each other, the index 0 is the bottom or base layer. If two layers are given the same index they fall back to being composited in the order seen here.
 
 - **Background Image**
 - **Viewport Vignette**
@@ -515,47 +600,180 @@ Parameter Descriptions
 
 **[ CUTOUT ]________________________________________________________________________________________________________**
 
-- **Scale Mode - Full | Tube | Bzl | BG | Bzl Img | Decal**
+Used to cut a rectangular area from the layers, for example cutting out the hole in the bezel art
+
+- **Scale Mode**
+  - Controls if this layer's scaling follows another layer 
+  - **0 - Full** - Scale to the viewport 
+  - **1 - Tube** - Follow the Tube Scaling
+  - **2 - Bezel** - Follow the Bezel Scaling
+  - **3 - Background** - Follow the Background Image Scaling
+  - **4 - Bezel Image** - Follow the Bezel Image Scaling
+  - **5 - Decal Image** - Follow the Decal Image Scaling
 - **Scale**
+  - Scales cutout in both directions
 - **Scale X**
+  - Scales cutout horizontally
 - **Position Y**
+  - Moves the cutout vertically
 - **Corner Radius - Def 0**
+  - Rounds the corner of the cutout
 
 **[ MASK DEBUG ]________________________________________________________________________________________________________**
 
-- **Mask - ALL | Scrn | Tube | Bz- | Bz | Bz+ | Frm | Frm+ | BG**
+- **Mask** - Show the mask as a semi transparent color for the:
+  
+  - **-1 - Cut Out**
+  - **0 - ALL** - Whole viewport
+  - **1 - Screen** - Illuminated area of the tube
+  - **2 - Tube**
+  - **2 - Bezel and Inward** - Bezel and inward
+  - **3 - Bezel**
+  - **4 - Bezel +** - Bezel and outward
+  - **5 - Frame**
+  - **6 - Frame +** - Frame and outward
+  - **7 - Background**  - Outside the frame
+  
+  
+
+## ***Common Layer Parameters***
+
+​	*In the multiple image layers there are many parameters which are repeated from layer to layer, their description is shown here*
+
+- ***Opacity***
+
+  - *Opacity multiplier of the layer being applied. 0 means we will not see the layer because it is fully transparent*
+
+- ***Blend Mode*** *- How the reflection is applied to the layer underneath Default is Additive*
+
+  - ***0 - Off*** *- The layer is not shown*
+  - ***1 - Normal Blending***
+  - ***2 - Additive Blending*** *- Applied additively to brighten what's underneath*
+
+- ***Source Matte Color***
+
+  - *Controls how the image's is interpreted based on the matte color used when the image was stored (what color the image is blended with in the transparent area).* 
+  - *Used to remove white fringing on the edges around transparent areas.*
+  - ***0 - Black***
+    - *The color in the transparent area was black*. Technically this is called Premultiplied alpha. 
+  - ***1 - White***
+    - *The color in the transparent area was white, Use this if you see white fringing on the edges of the transparency where there should be none.*
+  - ***2 - None***
+    - *The image was not blended with any matte color, the only transparency info is in the alpha channel*
+
+- **Mask** - Mask the layer with the area inside the:
+
+  - ***0 - ALL*** *- Whole viewport*
+  - ***1 - Screen*** *- Illuminated area of the tube*
+  - ***2 - Tube***
+  - ***2 - Bezel and Inward*** *- Bezel and inward*
+  - ***3 - Bezel***
+  - ***4 - Bezel +*** *- Bezel and outward*
+  - ***5 - Frame***
+  - ***6 - Frame +*** *- Frame and outward*
+  - ***7 - Background***  *- Outside the frame*
+
+- ***Cutout Mask***
+
+  - ***0 - OFF*** *- Don't cut out any area of the layer*
+  - ***1 - ON*** *- Make the area of the layer INSIDE the cutout mask transparent*
+  - ***2 - Invert*** *- Make the area of the layer OUTSIDE the cutout mask transparent*
+
+- ***Brightness***
+
+  - *Adjust Brightness of the Layer, 100 is no change*
+
+- ***Texture Aspect***
+
+  - *Aspect Ratio of the texture file used for this layer*
+  - ***0 - Full*** *- Use Viewport Aspect*
+  - ***Explicit*** *- Use Explicit Aspect*
+  - ***4:3*** *- Landscape*
+  - ***3:4*** *- Portrait*
+  - ***16:9*** *- Landscape*
+  - ***9:16*** *- Portrait*
+
+- **Explicit Texture Aspect**
+
+  - *The Aspect ratio used when Texture Aspect is set to Explicit*
+
+- ***Scale Mode***
+
+  - *Controls if this layer follows another layer's scaling* 
+  - ***Full / Fullscreen*** *- Scale to the viewport*
+  - ***Tube*** *- Follow the Tube Scaling*
+  - ***Bezel*** *- Follow the Bezel Scaling*
+  - ***Background*** *- Follow the Background Image Scaling*
+  - ***Bezel Image*** *- Follow the Bezel Image Scaling*
+  - ***Decal Image*** *- Follow the Decal Image Scaling*
+  - ***Top Extra Image*** *- Follow the Top Extra Image Scaling*
+
+- **Keep Aspect**
+
+  - *The Layer image should keep its original aspect ratio*
+  - *E.G. If the scale mode was **Tube** and **Keep Aspect** was on regardless of the aspect of the tube the layer's image would stay the aspect ratio set in **Texture Aspect**. If Keep Aspect is off the texture would react to the tube's changes in horizontal aspect.* 
+  - **0 - OFF**
+  - **1 - ON**
+
+- **Scale**
+
+  - *Scales image layer equally in both directions*
+
+- **Scale X**
+
+  - *Scales image layer horizontally*
+
+- **Position Y**
+
+  - *Moves the image layer vertically*
+
+    
 
 **[ BACKGROUND LAYER ]______________________________________________________________________________________________________**
 
 - **Opacity**
-- **Blend Mode - Off | Normal | Add | Multiply**
-- **Source Matte Color - Black | White | None**
-- **Mask - ALL | Scrn | Tube | Bz- | Bz | Bz+ | Frm | Frm+ | BG**
-- **Cutout Mask - OFF | ON | Invert**
+- **Blend Mode**
+- **Source Matte Color**
+- **Mask
+- **Cutout Mask**
 - **Brightness**
 - **Apply NightLight & Static Gamma (0 for Backdrop)**
-- **Texture Aspect- Full | Expl. | 4:3 | 3:4 | 16:9 | 9:16**
+  - Allows Night Lighting and Static gamma to be turned off
+  - Can be used to simulate a backdrop which is self illuminated
+- **Texture Aspect**
 - **Explicit Texture Aspect**
-- **Scale Mode - FullScreen | Tube | Bezel**
+- **Scale Mode**
+  - **0 - FullScreen**
+  - **1 - Tube**
+  - **2 - Bezel**
 - **Keep Aspect**
 - **Scale**
 - **Scale X**
 - **Position Y**
 - **Mirror Wrap**
+  - When ON the image is wrapped when we draw out of the texture bounds
+  - **0 - OFF**
+  - **1 - ON**
 
 **[ VIEWPORT VIGNETTE LAYER ]___________________________________________________________________________________________________**
 
 - **Opacity**
-- **Mask - ALL | Scrn | Tube | Bz- | Bz | Bz+ | Frm | Frm+ | BG**
-- **Cutout Mask - OFF | ON | Invert**
-- **Scale Mode- Full | BG | Tube | Bzl | Decal | TopImg**
+- **Mask**
+- **Cutout Mask**
+- **Scale Mode**
+  - **0 - Full**
+  - **1 - Background**
+  - **2 - Tube**
+  - **3 - Bezel**
+  - **4 - Decal**
+  - **5 - Top Image**
 - **Scale**
 - **Scale X**
 - **Position Y**
 
 **[ CRT SCREEN LAYER ]______________________________________________________________________________________________________**
 
-- **Blend Mode - Off | Normal | Add (Backdrop)**
+- **Blend Mode**
 
 **[ BEZEL IMAGE LAYER ]_____________________________________________________________________________________________________**
 
@@ -563,30 +781,40 @@ Parameter Descriptions
 - **Hue Offset**
 - **Saturation**
 - **Brightness**
-- **Blend Mode -- Off | Normal | Add | Multiply**
-- **Source Matte Color - Black | White | None**
-- **Mask - ALL | Scrn | Tube | Bz- | Bz | Bz+ | Frm | Frm+ | BG**
-- **Cutout Mask - OFF | ON | Invert**
-- **Texture Aspect - Full | Expl.| 4:3 | 3:4 | 16:9 | 9:16**
+- **Blend Mode**
+- **Source Matte Color**
+- **Mask**
+- **Cutout Mask**
+- **Texture Aspect**
 - **Explicit Texture Aspect**
-- **Scale Mode - FullScreen | Tube | Bezel | BG**
+- **Scale Mode**
+  - **0 - FullScreen**
+  - **1 - Tube**
+  - **2 - Bezel**
+  - **3 - Background**
 - **Keep Aspect**
 - **Scale**
 - **Scale X**
 - **Position Y**
 - **Use Curvature**
+  - If Use Curvature is ON then the layer image will follow the screen curvature
 
 **[ CABINET OR CABINET GLASS LAYER ]________________________________________________________________________________________________**
 
 - **Opacity**
 - **Brightness**
-- **Blend Mode - Off | Normal | Add | Multiply**
-- **Source Matte Color - Black | White | None**
-- **Mask - ALL | Scrn | Tube | Bz- | Bz | Bz+ | Frm | Frm+ | BG**
-- **Cutout Mask - OFF | ON | Invert**
-- **TexturAspect- Full | Expl. | 4:3 | 3:4 | 16:9 | 9:16**
+- **Blend Mode**
+- **Source Matte Color**
+- **Mask**
+- **Cutout Mask**
+- **Texture Aspect**
 - **Explicit Texture Aspect**
-- **Scale Mode- Full | BG | Tube | Bzl | Decal | TopImg**
+- **Scale Mode**
+  - **0 - FullScreen**
+  - **1 - Tube**
+  - **2 - Bezel**
+  - **3 - Background**
+  - **4 - Top Image**
 - **Keep Aspect**
 - **Scale**
 - **Scale X**
@@ -595,13 +823,18 @@ Parameter Descriptions
 **[ DECAL LAYER ]___________________________________________________________________________________________________**
 
 - **Opacity**
-- **Blend Mode -- Off | Normal | Add | Multiply**
-- **Source Matte Color - Black | White | None**
-- **Mask - ALL | Scrn | Tube | Bz- | Bz | Bz+ | Frm | Frm+ | BG**
-- **Cutout Mask - OFF | ON | Invert**
-- **TextureAspect- Full | Expl. | 4:3 | 3:4 | 16:9 | 9:16**
-- **xplicit Texture Aspect**
-- **Scale Mode - Full | Tube | Bezel | BG | Bzl Img**
+- **Blend Mode**
+- **Source Matte Color**
+- **Mask**
+- **Cutout Mask**
+- **Texture Aspect**
+- **Explicit Texture Aspect**
+- **Scale Mode**
+  - **0 - Full Screen**
+  - **1 - Tube**
+  - **2 - Bezel**
+  - **3 - Background**
+  - **4 - Bezel Image**
 - **Scale Keep Aspect**
 - **Scale**
 - **Scale X**
@@ -610,13 +843,19 @@ Parameter Descriptions
 **[ LED LAYER ]_________________________________________________________________________________________________________**
 
 - **Opacity**
-- **Blend Mode - Off | Normal | Add | Multiply**
-- **Source Matte Color - Black | White | None**
-- **Mask - ALL | Scrn | Tube | Bz- | Bz | Bz+ | Frm | Frm+ | BG**
-- **Cutout Mask - OFF | ON | Invert**
-- **Texture Aspect- Full | Expl. | 4:3 | 3:4 | 16:9 | 9:16**
+- **Blend Mode**
+- **Source Matte Color**
+- **Mask**
+- **Cutout Mask**
+- **Texture Aspect**
 - **Explicit Texture Aspect**
-- **Scale Mode - Full | Tube | Bezel | BG | Bzl Img | Decal**
+- **Scale Mode**
+  - **0 - Full Screen**
+  - **1 - Tube**
+  - **2 - Bezel**
+  - **3 - Background**
+  - **4 - Bezel Image**
+  - **5 - Decal Image**
 - **Scale Keep Aspect**
 - **Scale**
 - **Scale X**
@@ -625,54 +864,22 @@ Parameter Descriptions
 **[ TOP EXTRA LAYER ]___________________________________________________________________________________________________**
 
 - **Opacity**
-- **Blend Mode - Off | Normal | Add | Multiply**
-- **Source Matte Color - Black | White | None**
-- **Mask - ALL | Scrn | Tube | Bz- | Bz | Bz+ | Frm | Frm+ | BG**
-- **Cutout Mask - OFF | ON | Invert**
-- **Texture Aspect- Full | Expl. | 4:3 | 3:4 | 16:9 | 9:16**
+- **Blend Mode**
+- **Source Matte Color**
+- **Mask**
+- **Cutout Mask**
+- **Texture Aspect**
 - **Explicit Texture Aspect**
-- **Scale Mode - Full | Tube | Bezel | BG | Bzl Img | Decal**
+- **Scale Mode**
+  - **0 - Full Screen**
+  - **1 - Tube**
+  - **2 - Bezel**
+  - **3 - Background**
+  - **4 - Bezel Image**
+  - **5 - Decal Image**
 - **Scale Keep Aspect**
 - **Scale**
 - **Scale X**
 - **Position Y**
 - **Mirror Wrap**
-
-
--------------------------------------------------------------------
-------How to Integrate mega-screen-scale into a crt shader------------
-----------------------------------------
-
-You will need to integrate the screen scaling in your crt so it can share the same screen scaling as the other shaders
-
-- In the crt shader you need to add the include like this:
-
-	#include "hsm-globals-and-screen-scale-params.inc"
-
-
-- In the vertex main function you need to scale and move the initial screen coordinate, E.G.
-
-	void main()
-	{
-		gl_Position = global.MVP * Position;
-		vTexCoord = TexCoord;
-
-		// Add the following line
-		vTexCoord = HSM_GetScreenVTexCoord(vTexCoord);
-	}
-
-
-- Use the curvature function from hsm-mega-bezel-include.inc to add curvature
-
-	vec2 curved_coord = HSM_GetCurvedCoord(vTexCoord, 1);
-
-
-- Use screen scale to multiply OutputSize wherever it is used
-
-	screenScale =  HSM_GetScreenScale();
-	float sample_offset = (global.SourceSize.y * global.OutputSize.w * screenScale.y) * 0.5;
-
-
-- Use crop overscan to adjust the sampling of the image to sample the cropped range
-
-	texcoord  = HSM_GetCropOverscanCoord(texcoord, SourceSize.xy);
+  - When drawing past the edges of the texture use mirror wrapping

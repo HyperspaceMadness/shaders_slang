@@ -177,7 +177,16 @@ float HSM_CURVATURE_3D_TILT_ANGLE_X = global.HSM_CURVATURE_3D_TILT_ANGLE_X / 100
 #pragma parameter HSM_CURVATURE_3D_TILT_ANGLE_Y 			"      3D Tilt Angle Y" 0 -120 120 1
 float HSM_CURVATURE_3D_TILT_ANGLE_Y = global.HSM_CURVATURE_3D_TILT_ANGLE_Y / 100;
 
+//---------------------------------------------------------------------------------------------------
+//    PHOSPHOR PERSISTENCE
+//---------------------------------------------------------------------------------------------------
+#pragma parameter HSM_ANTI_FLICKER_TITLE					"[ ANTI-FLICKER ]_______________________________________________" 0 0 0.01 0.01
 
+#pragma parameter HSM_ANTI_FLICKER_ON 						"      Anti-Flicker ON" 1 0 1 1
+#define HSM_ANTI_FLICKER_ON global.HSM_ANTI_FLICKER_ON
+
+#pragma parameter HSM_ANTI_FLICKER_THRESHOLD 				"      Luma Difference Threshold" 25 0 100 5
+#define HSM_ANTI_FLICKER_THRESHOLD global.HSM_ANTI_FLICKER_THRESHOLD / 100
 
 //---------------------------------------------------------------------------------------------------
 //    PHOSPHOR PERSISTENCE

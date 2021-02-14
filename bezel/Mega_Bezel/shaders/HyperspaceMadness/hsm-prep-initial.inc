@@ -23,8 +23,11 @@ void main()
 layout(location = 0) in vec2 vTexCoord;
 layout(location = 0) out vec4 FragColor;
 layout(set = 0, binding = 2) uniform sampler2D Source;
-layout(set = 0, binding = 3) uniform sampler2D PassFeedback6;
-layout(set = 0, binding = 4) uniform sampler2D IntroImage;
+layout(set = 0, binding = 3) uniform sampler2D OriginalHistory1;
+layout(set = 0, binding = 4) uniform sampler2D OriginalHistory2;
+layout(set = 0, binding = 5) uniform sampler2D OriginalHistory3;
+layout(set = 0, binding = 6) uniform sampler2D PassFeedback6;
+layout(set = 0, binding = 7) uniform sampler2D IntroImage;
 
 #define eps 1e-3
 
@@ -49,6 +52,34 @@ vec4 TextureQuilez(sampler2D in_sampler_2D, vec2 in_texture_size, vec2 p)
 	return texture(in_sampler_2D, p);
 }
 
+vec4 AntiFlicker(vec2 in_coord, vec4 current)
+{
+	// sample the textures
+	vec4 prev1 = texture(OriginalHistory1, in_coord);
+	vec4 prev2 = texture(OriginalHistory2, in_coord);
+	vec4 prev3 = texture(OriginalHistory3, in_coord);
+	
+	// get luma for comparison
+	float cur_lum = dot(current.rgb, vec3(0.2125, 0.7154, 0.0721));
+	float prev1_lum = dot(prev1.rgb, vec3(0.2125, 0.7154, 0.0721));
+	float prev2_lum = dot(prev2.rgb, vec3(0.2125, 0.7154, 0.0721));
+	float prev3_lum = dot(prev3.rgb, vec3(0.2125, 0.7154, 0.0721));
+	
+	// Test whether the luma difference between the pixel in the current frame and that of
+	// the previous frame exceeds the threshold while the difference between the current frame
+	// and 2 frames previous is below the threshold.
+	// Repeat the process for the previous frame's pixel to reduce false-positives
+	bool flicker = (abs(cur_lum - prev1_lum) > HSM_ANTI_FLICKER_THRESHOLD && abs(cur_lum - prev2_lum) < HSM_ANTI_FLICKER_THRESHOLD) &&
+		(abs(prev1_lum - prev2_lum) > HSM_ANTI_FLICKER_THRESHOLD && abs(prev1_lum - prev3_lum) < HSM_ANTI_FLICKER_THRESHOLD);
+	
+	// Average the current frame with the previous frame in linear color space to avoid over-darkening
+	vec4 blended = (pow(current, vec4(2.2)) + pow(prev1, vec4(2.2))) / 2.0;
+	
+	// delinearize the averaged result
+	blended = pow(blended, vec4(1.0 / 2.2));
+	
+	return (!flicker) ? current : blended;
+}
 
 float GetAverageLuma()
 {
@@ -260,6 +291,10 @@ vec4 GetColorWithIntro(vec4 in_color, vec2 in_coord)
 void main()
 {
    FragColor = texture(Source, vTexCoord);
+
+   if (HSM_ANTI_FLICKER_ON == 1)
+      FragColor = AntiFlicker(vTexCoord, FragColor);
+
    // HSM_Linearize(FragColor, HSM_DEFAULT_SRGB_GAMMA);
 
    if (HSM_INTRO_WHEN_TO_SHOW > 0)

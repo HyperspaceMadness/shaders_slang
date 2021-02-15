@@ -185,7 +185,7 @@ shaders = 20
 
 
 // Define textures to be used by the different passes
-textures = "mask_grille_texture_small;mask_slot_texture_small;mask_shadow_texture_small;SamplerLUT1;SamplerLUT2;SamplerLUT3;IntroImage;ColoredGelImage;TubeStaticReflectionImage;ReflectOnlyLayerImage;NightLightingImage"
+textures = "mask_grille_texture_small;mask_slot_texture_small;mask_shadow_texture_small;SamplerLUT1;SamplerLUT2;SamplerLUT3;IntroImage;ColoredGelImage;TubeStaticReflectionImage;ReflectOnlyLayerImage;ReflectionMaskImage;NightLightingImage"
 
 mask_grille_texture_small = "shaders/HyperspaceMadness/hsm-crt-royale/TileableLinearApertureGrille15Wide8And5d5SpacingResizeTo64.png"
 mask_grille_texture_small_wrap_mode = "repeat"
@@ -212,7 +212,7 @@ SamplerLUT3_linear = true
 IntroImage = shaders/HyperspaceMadness/textures/IntroImage_MegaBezelLogo.png
 IntroImage_linear = true
 
-ColoredGelImage = shaders/HyperspaceMadness/textures/Transparent_DummyTexture_16x16.png
+ColoredGelImage = shaders/HyperspaceMadness/textures/Placeholder_Transparent_16x16.png
 ColoredGelImage_linear = true
 
 TubeStaticReflectionImage = shaders/HyperspaceMadness/textures/TubeGlassOverlayImage_3840x2160.png
@@ -220,6 +220,9 @@ TubeStaticReflectionImage_linear = true
 
 ReflectOnlyLayerImage = shaders/HyperspaceMadness/textures/TopLayerImageGradient_3840x2160.png
 ReflectOnlyLayerImage_linear = true
+
+ReflectionMaskImage = shaders/HyperspaceMadness/textures/Placeholder_White_16x16.png
+ReflectionMaskImage_linear = true
 
 NightLightingImage = shaders/HyperspaceMadness/textures/NightLighting_3840x2160.jpg
 NightLightingImage_linear = true

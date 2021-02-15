@@ -63,7 +63,7 @@ float HSM_CAB_GLASS_LAYER_ORDER = global.HSM_CAB_GLASS_LAYER_ORDER;
 #pragma parameter HSM_DECAL_LAYER_ORDER           "      Decal Image"  8 0 12 1
 float HSM_DECAL_LAYER_ORDER = global.HSM_DECAL_LAYER_ORDER;
 
-#pragma parameter HSM_REFLECT_LAYER_ORDER      "      Reflection (Generated)"  9 0 12 1
+#pragma parameter HSM_REFLECT_LAYER_ORDER         "      Reflection (Generated)"  9 0 12 1
 float HSM_REFLECT_LAYER_ORDER = global.HSM_REFLECT_LAYER_ORDER;
 
 #pragma parameter HSM_LED_LAYER_ORDER             "      LED Image"  10 0 12 1
@@ -242,6 +242,15 @@ float HSM_BZL_IMG_POS_Y = global.HSM_BZL_IMG_POS_Y / 100;
 float HSM_BZL_IMG_USE_CURVATURE = global.HSM_BZL_IMG_USE_CURVATURE;
 
 
+#pragma parameter HSM_REFLECT_IMAGE_MASK_SCALING_TITLE	"[ REFLECTION IMAGE MASK ]______________________________________" 0 0 0.01 0.01
+
+#pragma parameter HSM_REFLECT_MASK_IMG_AMOUNT 		    "      Reflection Image Mask Amount" 100 0 100 1
+float HSM_REFLECT_MASK_IMG_AMOUNT = global.HSM_REFLECT_MASK_IMG_AMOUNT / 100;
+
+#pragma parameter HSM_REFLECT_MASK_SCALE_MODE 			"      Scaling Mode - FullScreen | Bezel Image" 0 0 1 1
+float HSM_REFLECT_MASK_SCALE_MODE = global.HSM_REFLECT_MASK_SCALE_MODE;
+
+
 //---------------------------------------------------------------------------------------------------
 //    CAB GLS IMAGE
 //---------------------------------------------------------------------------------------------------
@@ -327,7 +336,6 @@ float HSM_DECAL_SCALE_X = global.HSM_DECAL_SCALE_X / 100;
 
 #pragma parameter HSM_DECAL_POS_Y                       "      Position Y"  0 -100 100 0.1
 float HSM_DECAL_POS_Y = global.HSM_DECAL_POS_Y / 100;
-
 
 //---------------------------------------------------------------------------------------------------
 //    LED IMAGE

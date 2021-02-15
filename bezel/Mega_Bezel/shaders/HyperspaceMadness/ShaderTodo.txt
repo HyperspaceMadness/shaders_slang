@@ -34,7 +34,12 @@ Changes:
 
 Mega Bezel Still to Come:
 
-Need Texture to multiply reflection, for textured bezel
+Independent Bezel Scaling not the same as non-int scale, why?
+Need x Scale for Independent bezel
+Outer reflection corner radius should be independent when in independent mode
+See why very inner edge seems not affected by reflection mask
+Add Reflection Mask to the Reflect Only Preset 
+
 
   * Examples
     * Vertical Example - Reflection Only Static BG
@@ -109,6 +114,8 @@ Retroarch Features
   * Multiple references in one file for adding passes and parameter overrides
   * Add Shader Preset - In UI Add a shader preset to Concatenate passes at beginning of shader stack
   * Fix loss of current parameter values when retroarch goes from full screen to window
+  * Fix MyTextureNameSize for textures
+  * Add History other than OriginalHistory1 ...
 
   * Video Aspect Ratio which uses Monitor
   * Stop Reloading Shader multiple times on Save (Keep optional param)

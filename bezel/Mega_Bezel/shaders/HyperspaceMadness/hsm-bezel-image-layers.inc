@@ -299,6 +299,7 @@ layout(set = 0, binding = 10) uniform sampler2D NightLightingImage;
 layout(set = 0, binding = 11) uniform sampler2D LEDImage;
 layout(set = 0, binding = 12) uniform sampler2D TopLayerImage;
 layout(set = 0, binding = 13) uniform sampler2D TopLayerVertImage;
+layout(set = 0, binding = 14) uniform sampler2D ReflectionMaskImage;
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
 void main()
@@ -728,7 +729,17 @@ void main()
 				bezel_image = BlendMultiply(bezel_image, night_lighting_image, HSM_NIGHT_OPACITY);
 	}
 
+	float reflection_image_mask = 1;
+	
+	if (HSM_REFLECT_MASK_SCALE_MODE == 0)
+		reflection_image_mask = texture(ReflectionMaskImage, VIEWPORT_COORD).r;
+	else
+		reflection_image_mask = texture(ReflectionMaskImage, bezel_image_coord).r;
+
 	vec4 reflection_linear = crt_and_reflection_linear;
+	reflection_linear.rgb *= reflection_image_mask;
+
+	//HSM_REFLECT_MASK_IMG_AMOUNT
 
 #ifndef SIMPLE_PRESET
 	//----------------------------------------------------

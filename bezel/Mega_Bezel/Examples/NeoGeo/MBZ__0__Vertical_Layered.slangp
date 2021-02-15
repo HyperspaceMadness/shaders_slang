@@ -2,14 +2,15 @@
 
 BackgroundImage = textures/full_composite.png
 BackgroundVertImage = ../shaders/HyperspaceMadness/textures/HSM_Duimon_Super_Famicom_3840x2160.png
-ColoredGelImage = ../shaders/HyperspaceMadness/textures/Transparent_DummyTexture_16x16.png
+ColoredGelImage = ../shaders/HyperspaceMadness/textures/Placeholder_Transparent_16x16.png
 CabinetGlassImage = ../shaders/HyperspaceMadness/textures/TubeGlassOverlayImage_Night_3840x2160.png
-BezelImage = ../shaders/HyperspaceMadness/textures/Transparent_DummyTexture_16x16.png
-BezelVertImage = ../shaders/HyperspaceMadness/textures/Transparent_DummyTexture_16x16.png
-DecalImage = ../shaders/HyperspaceMadness/textures/Transparent_DummyTexture_16x16.png
+ReflectionMaskImage = textures/Plastic_Bezel_Reflect_Mask.png
+BezelImage = textures/Plastic_Bezel_Dark.png
+BezelVertImage = textures/Plastic_Bezel_Dark_Vert.png
+DecalImage = textures/full_instruction_cards.png
 NightLightingImage = ../shaders/HyperspaceMadness/textures/NightLighting_3840x2160.jpg
-LEDImage = ../shaders/HyperspaceMadness/textures/Transparent_DummyTexture_16x16.png
-TopLayerImage = ../shaders/HyperspaceMadness/textures/Transparent_DummyTexture_16x16.png
-TopLayerVertImage = ../shaders/HyperspaceMadness/textures/Transparent_DummyTexture_16x16.png
+LEDImage = textures/full_led.png
+TopLayerImage = textures/full_speaker-panel-and-cp.png
+TopLayerVertImage = textures/full_speaker-panel-and-cp.png
 
 HSM_VIEWPORT_VIGNETTE_OPACITY = 0

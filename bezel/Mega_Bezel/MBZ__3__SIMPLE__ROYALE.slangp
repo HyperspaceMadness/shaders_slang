@@ -191,8 +191,8 @@ shaders = 21
 
 
 // Define textures to be used by the different passes
-// textures = "mask_grille_texture_small;mask_slot_texture_small;mask_shadow_texture_small;SamplerLUT1;SamplerLUT2;SamplerLUT3;IntroImage;ColoredGelImage;TubeStaticReflectionImage;ReflectOnlyLayerImage;"
-textures = "mask_grille_texture_small;mask_slot_texture_small;mask_shadow_texture_small;SamplerLUT1;SamplerLUT2;SamplerLUT3;IntroImage;ColoredGelImage;TubeStaticReflectionImage;ReflectOnlyLayerImage;FrameTextureImage;BackgroundImage;BackgroundVertImage;CabinetGlassImage;BezelImage;BezelVertImage;DecalImage;NightLightingImage;LEDImage;TopLayerImage;TopLayerVertImage;"
+// textures = "mask_grille_texture_small;mask_slot_texture_small;mask_shadow_texture_small;SamplerLUT1;SamplerLUT2;SamplerLUT3;IntroImage;ColoredGelImage;TubeStaticReflectionImage;ReflectOnlyLayerImage;ReflectionMaskImage;"
+textures = "mask_grille_texture_small;mask_slot_texture_small;mask_shadow_texture_small;SamplerLUT1;SamplerLUT2;SamplerLUT3;IntroImage;ColoredGelImage;TubeStaticReflectionImage;ReflectOnlyLayerImage;ReflectionMaskImage;FrameTextureImage;BackgroundImage;BackgroundVertImage;CabinetGlassImage;BezelImage;BezelVertImage;DecalImage;NightLightingImage;LEDImage;TopLayerImage;TopLayerVertImage;"
 
 mask_grille_texture_small = "shaders/HyperspaceMadness/hsm-crt-royale/TileableLinearApertureGrille15Wide8And5d5SpacingResizeTo64.png"
 mask_grille_texture_small_wrap_mode = "repeat"
@@ -219,14 +219,17 @@ SamplerLUT3_linear = true
 IntroImage = shaders/HyperspaceMadness/textures/IntroImage_MegaBezelLogo.png
 IntroImage_linear = true
 
-ColoredGelImage = shaders/HyperspaceMadness/textures/Transparent_DummyTexture_16x16.png
+ColoredGelImage = shaders/HyperspaceMadness/textures/Placeholder_Transparent_16x16.png
 ColoredGelImage_linear = true
 
 TubeStaticReflectionImage = shaders/HyperspaceMadness/textures/TubeGlassOverlayImage_3840x2160.png
 TubeStaticReflectionImage_linear = true
 
-ReflectOnlyLayerImage = shaders/HyperspaceMadness/textures/Transparent_DummyTexture_16x16.png
+ReflectOnlyLayerImage = shaders/HyperspaceMadness/textures/Placeholder_Transparent_16x16.png
 ReflectOnlyLayerImage_linear = true
+
+ReflectionMaskImage = shaders/HyperspaceMadness/textures/Placeholder_White_16x16.png
+ReflectionMaskImage_linear = true
 
 FrameTextureImage = shaders/HyperspaceMadness/textures/FrameTexture_2800x2120.png
 FrameTextureImage_linear = true
@@ -237,26 +240,26 @@ BackgroundImage_linear = true
 BackgroundVertImage = shaders/HyperspaceMadness/textures/BackgroundImage_Carbon_3840x2160.png
 BackgroundVertImage_linear = true
 
-CabinetGlassImage = shaders/HyperspaceMadness/textures/Transparent_DummyTexture_16x16.png
+CabinetGlassImage = shaders/HyperspaceMadness/textures/Placeholder_Transparent_16x16.png
 CabinetGlassImage_linear = true
 
-BezelImage = shaders/HyperspaceMadness/textures/Transparent_DummyTexture_16x16.png
+BezelImage = shaders/HyperspaceMadness/textures/Placeholder_Transparent_16x16.png
 BezelImage_linear = true
 
-BezelVertImage = shaders/HyperspaceMadness/textures/Transparent_DummyTexture_16x16.png
+BezelVertImage = shaders/HyperspaceMadness/textures/Placeholder_Transparent_16x16.png
 BezelVertImage_linear = true
 
-DecalImage = shaders/HyperspaceMadness/textures/Transparent_DummyTexture_16x16.png
+DecalImage = shaders/HyperspaceMadness/textures/Placeholder_Transparent_16x16.png
 DecalImage_linear = true
 
 NightLightingImage = shaders/HyperspaceMadness/textures/NightLighting_3840x2160.jpg
 NightLightingImage_linear = true
 
-LEDImage = shaders/HyperspaceMadness/textures/Transparent_DummyTexture_16x16.png
+LEDImage = shaders/HyperspaceMadness/textures/Placeholder_Transparent_16x16.png
 LEDImage_linear = true
 
-TopLayerImage = shaders/HyperspaceMadness/textures/Transparent_DummyTexture_16x16.png
+TopLayerImage = shaders/HyperspaceMadness/textures/Placeholder_Transparent_16x16.png
 TopLayerImage_linear = true
 
-TopLayerVertImage = shaders/HyperspaceMadness/textures/Transparent_DummyTexture_16x16.png
+TopLayerVertImage = shaders/HyperspaceMadness/textures/Placeholder_Transparent_16x16.png
 TopLayerVertImage_linear = true

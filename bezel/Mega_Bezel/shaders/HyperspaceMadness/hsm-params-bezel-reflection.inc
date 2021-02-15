@@ -221,6 +221,7 @@ float HSM_REFLECT_BLUR_MIN = global.HSM_REFLECT_BLUR_MIN / 100;
 #pragma parameter HSM_REFLECT_BLUR_MAX 							    "      Max Blur" 	95 0 100 1
 float HSM_REFLECT_BLUR_MAX = global.HSM_REFLECT_BLUR_MAX / 100;
 
+
 // Reflection Noise
 #pragma parameter HSM_REFLECT_NOISE_TITLE			                "[ REFLECTION NOISE ]___________________________________________" 0 0 0.01 0.01
 
@@ -234,13 +235,10 @@ float HSM_REFLECT_NOISE_SAMPLES = global.HSM_REFLECT_NOISE_SAMPLES;
 float HSM_REFLECT_NOISE_SAMPLE_DISTANCE = global.HSM_REFLECT_NOISE_SAMPLE_DISTANCE / 500;
 
 
-//---------------------------------------------------------------------------------------------------
-//    GLASS BORDER
-//---------------------------------------------------------------------------------------------------
-#pragma parameter HSM_GLASS_BORDER_TITLE			                "[ GLASS BORDER ]_______________________________________________" 0 0 0.01 0.01
+// Reflection Noise
+#pragma parameter HSM_REFLECT_MASK_TITLE			                "[ REFLECTION MASK IMAGE ]______________________________________" 0 0 0.01 0.01
 
-#pragma parameter HSM_GLASS_BORDER_ON                               "      Glass Border ON (Glass Preset Only)" 0 0 1 1
-float HSM_GLASS_BORDER_ON = global.HSM_GLASS_BORDER_ON;
+
 
 
 //---------------------------------------------------------------------------------------------------
@@ -263,10 +261,17 @@ float HSM_REFLECT_MASK_TO_BEZEL = global.HSM_REFLECT_MASK_TO_BEZEL;
 //---------------------------------------------------------------------------------------------------
 // Reflection Is Last Pass
 //---------------------------------------------------------------------------------------------------
-#pragma parameter HSM_REFLECT_LAST_PASS_TITLE			            "[ REFLECTION IS LAST PASS ]____________________________________" 0 0 0.01 0.01
+#pragma parameter HSM_REFLECT_LAST_PASS_TITLE			            "[ REFLECTION AS LAST PASS ]____________________________________" 0 0 0.01 0.01
 
-#pragma parameter HSM_REFLECT_IS_LAST_PASS "      Reflection is Last Pass (Glass and Reflect Only Presets)" 0 0 1 1
+#pragma parameter HSM_REFLECT_IS_LAST_PASS                          "      Reflection is Last Pass (Glass & Reflect Only Presets)" 0 0 1 1
 float HSM_REFLECT_IS_LAST_PASS = global.HSM_REFLECT_IS_LAST_PASS;
+
+#pragma parameter HSM_GLASS_BORDER_ON                               "      Glass Border ON (Glass Preset)" 0 0 1 1
+float HSM_GLASS_BORDER_ON = global.HSM_GLASS_BORDER_ON;
+
+#pragma parameter HSM_REFLECTONLY_REFLECT_MASK_IMG_AMOUNT 		        "      Reflection Image Mask Amt (Glass & Reflect Only Presets)" 100 0 100 1
+float HSM_REFLECTONLY_REFLECT_MASK_IMG_AMOUNT = global.HSM_REFLECTONLY_REFLECT_MASK_IMG_AMOUNT / 100;
+
 
 //---------------------------------------------------------------------------------------------------
 //    NIGHT LIGHTING IMAGE

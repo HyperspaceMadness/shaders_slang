@@ -235,28 +235,35 @@ float HSM_REFLECT_NOISE_SAMPLES = global.HSM_REFLECT_NOISE_SAMPLES;
 float HSM_REFLECT_NOISE_SAMPLE_DISTANCE = global.HSM_REFLECT_NOISE_SAMPLE_DISTANCE / 500;
 
 
-// Reflection Noise
+// Reflection Mask
 #pragma parameter HSM_REFLECT_MASK_TITLE			                "[ REFLECTION MASK IMAGE ]______________________________________" 0 0 0.01 0.01
 
+#pragma parameter HSM_REFLECT_MASK_IMG_AMOUNT 		                "      Reflection Image Mask Amount" 0 0 100 1
+float HSM_REFLECT_MASK_IMG_AMOUNT = global.HSM_REFLECT_MASK_IMG_AMOUNT / 100;
 
+#pragma parameter HSM_REFLECT_MASK_SCALE_MODE 			            "      Scaling Mode (Image Layers Only)- FullScreen | Bezel Img" 0 0 1 1
+float HSM_REFLECT_MASK_SCALE_MODE = global.HSM_REFLECT_MASK_SCALE_MODE;
 
+#pragma parameter HSM_REFLECT_MASK_TO_BEZEL                         "      Mask Reflection to Bezel" 0 0 1 1
+float HSM_REFLECT_MASK_TO_BEZEL = global.HSM_REFLECT_MASK_TO_BEZEL;
 
 //---------------------------------------------------------------------------------------------------
 //    REFLECT ONLY IMAGE LAYER
 //---------------------------------------------------------------------------------------------------
-#pragma parameter HSM_REFLECT_ONLY_IMAGE_TITLE	                    "[ REFLECT ONLY IMAGE LAYER ]___________________________________" 0 0 0.01 0.01
+#pragma parameter HSM_REFLECT_PASS_IMAGE_TITLE	                    "[ REFLECTION PASS IMAGE LAYER ]________________________________" 0 0 0.01 0.01
 
-#pragma parameter HSM_REFLECT_ONLY_IMG_OPACITY 	                    "      Opacity" 0 0 100 0.1
-float HSM_REFLECT_ONLY_IMG_OPACITY = global.HSM_REFLECT_ONLY_IMG_OPACITY / 100;
+#pragma parameter HSM_REFLECT_PASS_IMG_OPACITY 	                    "      Opacity" 0 0 100 0.1
+float HSM_REFLECT_PASS_IMG_OPACITY = global.HSM_REFLECT_PASS_IMG_OPACITY / 100;
 
-#pragma parameter HSM_REFLECT_ONLY_IMG_BLEND_MODE 		            "      Blend Mode - Off | Norm | Add | Mult"  2 0 3 1
-float HSM_REFLECT_ONLY_IMG_BLEND_MODE = global.HSM_REFLECT_ONLY_IMG_BLEND_MODE;
+#pragma parameter HSM_REFLECT_PASS_IMG_BLEND_MODE 		            "      Blend Mode - Off | Norm | Add | Mult"  2 0 3 1
+float HSM_REFLECT_PASS_IMG_BLEND_MODE = global.HSM_REFLECT_PASS_IMG_BLEND_MODE;
 
-#pragma parameter HSM_REFLECT_ONLY_IMG_ASPECT_RATIO 				"      Aspect Ratio - Full | 16:9 | 9:16"  0 0 6 1
-float HSM_REFLECT_ONLY_IMG_ASPECT_RATIO = global.HSM_REFLECT_ONLY_IMG_ASPECT_RATIO;
+#pragma parameter HSM_REFLECT_PASS_IMG_ASPECT_RATIO 				"      Aspect Ratio - Full | 16:9 | 9:16"  0 0 6 1
+float HSM_REFLECT_PASS_IMG_ASPECT_RATIO = global.HSM_REFLECT_PASS_IMG_ASPECT_RATIO;
 
-#pragma parameter HSM_REFLECT_MASK_TO_BEZEL                         "      Mask Reflection to Bezel" 0 0 1 1
-float HSM_REFLECT_MASK_TO_BEZEL = global.HSM_REFLECT_MASK_TO_BEZEL;
+#pragma parameter HSM_REFLECT_PASS_IMG_SHOW_OVER_SCREEN 		    "      Show over Screen"  0 0 1 1
+float HSM_REFLECT_PASS_IMG_SHOW_OVER_SCREEN = global.HSM_REFLECT_PASS_IMG_SHOW_OVER_SCREEN;
+
 
 //---------------------------------------------------------------------------------------------------
 // Reflection Is Last Pass
@@ -266,11 +273,8 @@ float HSM_REFLECT_MASK_TO_BEZEL = global.HSM_REFLECT_MASK_TO_BEZEL;
 #pragma parameter HSM_REFLECT_IS_LAST_PASS                          "      Reflection is Last Pass (Glass & Reflect Only Presets)" 0 0 1 1
 float HSM_REFLECT_IS_LAST_PASS = global.HSM_REFLECT_IS_LAST_PASS;
 
-#pragma parameter HSM_GLASS_BORDER_ON                               "      Glass Border ON (Glass Preset)" 0 0 1 1
+#pragma parameter HSM_GLASS_BORDER_ON                               "      Glass Border ON (For Glass Preset)" 0 0 1 1
 float HSM_GLASS_BORDER_ON = global.HSM_GLASS_BORDER_ON;
-
-#pragma parameter HSM_REFLECTONLY_REFLECT_MASK_IMG_AMOUNT 		        "      Reflection Image Mask Amt (Glass & Reflect Only Presets)" 100 0 100 1
-float HSM_REFLECTONLY_REFLECT_MASK_IMG_AMOUNT = global.HSM_REFLECTONLY_REFLECT_MASK_IMG_AMOUNT / 100;
 
 
 //---------------------------------------------------------------------------------------------------

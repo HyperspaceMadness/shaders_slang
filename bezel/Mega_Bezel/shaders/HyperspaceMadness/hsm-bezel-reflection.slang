@@ -124,13 +124,14 @@ layout(set = 0, binding = 2) uniform sampler2D BR_CRTPass;
 
 layout(set = 0, binding = 5) uniform sampler2D TubeStaticReflectionImage;
 layout(set = 0, binding = 6) uniform sampler2D ColoredGelImage;
-layout(set = 0, binding = 7) uniform sampler2D ReflectOnlyLayerImage;
-layout(set = 0, binding = 8) uniform sampler2D NightLightingImage;
+layout(set = 0, binding = 7) uniform sampler2D ReflectPassLayerImage;
+layout(set = 0, binding = 8) uniform sampler2D ReflectionMaskImage;
+layout(set = 0, binding = 9) uniform sampler2D NightLightingImage;
 
-layout(set = 0, binding = 9) uniform sampler2D BR_MirrorBlurredPass;
-layout(set = 0, binding = 10) uniform sampler2D BR_MirrorReflectionDiffusedPass;
-layout(set = 0, binding = 11) uniform sampler2D BR_MirrorFullscreenGlowPass;
-layout(set = 0, binding = 12) uniform sampler2D AvgLumPass;
+layout(set = 0, binding = 10) uniform sampler2D BR_MirrorBlurredPass;
+layout(set = 0, binding = 11) uniform sampler2D BR_MirrorReflectionDiffusedPass;
+layout(set = 0, binding = 12) uniform sampler2D BR_MirrorFullscreenGlowPass;
+layout(set = 0, binding = 13) uniform sampler2D AvgLumPass;
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
 void main()
@@ -449,6 +450,10 @@ void main()
 		}
 	}
 
+	// Apply the mask image on the reflection, usually used to show the uneven brightness of a bumpy surface
+	if (HSM_REFLECT_IS_LAST_PASS == 1 && HSM_REFLECT_MASK_IMG_AMOUNT > 0)
+		reflected_color *= HSM_REFLECT_MASK_IMG_AMOUNT * texture(ReflectionMaskImage, VIEWPORT_COORD).r + (1 - HSM_REFLECT_MASK_IMG_AMOUNT);
+
 	crt_image_linear *= screen_mask * TUBE_MASK;
 
     vec4 frag_color_linear = crt_image_linear;
@@ -489,30 +494,33 @@ void main()
 
 	frag_color_linear += reflected_color;
 
-	if (HSM_REFLECT_ONLY_IMG_OPACITY > 0)
+	if (HSM_REFLECT_PASS_IMG_OPACITY > 0)
 	{
 		vec2 reflect_only_img_coord = VIEWPORT_COORD;
 		float final_viewport_aspect = global.FinalViewportSize.x/global.FinalViewportSize.y;
 
 		// Image Ratio is 16:9
-		if (HSM_REFLECT_ONLY_IMG_ASPECT_RATIO == 1)
+		if (HSM_REFLECT_PASS_IMG_ASPECT_RATIO == 1)
 			reflect_only_img_coord.x = (VIEWPORT_COORD.x - 0.5) / (1.7777/final_viewport_aspect) + 0.5;
 
 		// Image Ratio is 9:16
-		if (HSM_REFLECT_ONLY_IMG_ASPECT_RATIO == 2)
+		if (HSM_REFLECT_PASS_IMG_ASPECT_RATIO == 2)
 			reflect_only_img_coord.y = (VIEWPORT_COORD.y - 0.5) / (0.5625/final_viewport_aspect) + 0.5;
 
-		vec4 layer_over_reflection_image = texture(ReflectOnlyLayerImage, reflect_only_img_coord);
+		vec4 layer_over_reflection_image = texture(ReflectPassLayerImage, reflect_only_img_coord);
 		layer_over_reflection_image = HSM_Linearize(layer_over_reflection_image, HSM_DEFAULT_SRGB_GAMMA);
-		if (HSM_GLASS_BORDER_ON == 1)
-			layer_over_reflection_image.a *= outside_tube_mask_wider * (1 - edge_mask);
-		else
-			layer_over_reflection_image *= outside_tube_mask;
+		if (HSM_REFLECT_PASS_IMG_SHOW_OVER_SCREEN == 0)
+		{
+			if (HSM_GLASS_BORDER_ON == 1)
+				layer_over_reflection_image.a *= outside_tube_mask_wider * (1 - edge_mask);
+			else
+				layer_over_reflection_image *= outside_tube_mask;
+		}
 
 		if (HSM_NIGHT_OPACITY > 0)
 			layer_over_reflection_image = mix(layer_over_reflection_image, layer_over_reflection_image * texture(NightLightingImage, VIEWPORT_COORD), HSM_NIGHT_OPACITY);
 
-		frag_color_linear = BlendModeLayerMixSimple(frag_color_linear, layer_over_reflection_image, HSM_REFLECT_ONLY_IMG_BLEND_MODE, HSM_REFLECT_ONLY_IMG_OPACITY);
+		frag_color_linear = BlendModeLayerMixSimple(frag_color_linear, layer_over_reflection_image, HSM_REFLECT_PASS_IMG_BLEND_MODE, HSM_REFLECT_PASS_IMG_OPACITY);
 	}
 
 	// Convert from linear to gamma space values

@@ -1,8 +1,7 @@
-#reference "../../MBZ__0__GUEST-DrVENOM.slangp"
+#reference "../../MBZ__4__REFLECT-ONLY__GUEST-DrVENOM.slangp"
 
-BackgroundImage = textures/full_composite.png
-BezelImage = textures/Plastic_Bezel_Dark.png
-ReflectionMaskImage = textures/Plastic_Bezel_Reflect_Mask.png
+ReflectPassLayerImage = textures/full_composite.png
+ReflectionMaskImage = textures/full_Plastic_Bezel_Reflect_Mask.png
 
 HSM_VIEWPORT_VIGNETTE_OPACITY = 0
 HSM_NON_INTEGER_SCALE = "105.169662"
@@ -25,3 +24,4 @@ HSM_REFLECT_FRAME_INNER_EDGE_SHARPNESS = "0.000000"
 HSM_REFLECT_BEZEL_INNER_EDGE_AMOUNT = "66.000000"
 HSM_REFLECT_CORNER_OUTER_SPREAD = "1000.000000"
 HSM_REFLECT_MASK_IMG_AMOUNT = "100.000000"
+HSM_REFLECT_PASS_IMG_OPACITY = "100.000000"

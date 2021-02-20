@@ -236,7 +236,7 @@ shaders = 31
 
 
 // Define textures to be used by the different passes
-textures = "SamplerLUT1;SamplerLUT2;SamplerLUT3;IntroImage;ColoredGelImage;TubeStaticReflectionImage;ReflectOnlyLayerImage;ReflectionMaskImage;FrameTextureImage;BackgroundImage;BackgroundVertImage;CabinetGlassImage;BezelImage;BezelVertImage;DecalImage;NightLightingImage;LEDImage;TopLayerImage;TopLayerVertImage;"
+textures = "SamplerLUT1;SamplerLUT2;SamplerLUT3;IntroImage;ColoredGelImage;TubeStaticReflectionImage;ReflectPassLayerImage;ReflectionMaskImage;FrameTextureImage;BackgroundImage;BackgroundVertImage;CabinetGlassImage;BezelImage;BezelVertImage;DecalImage;NightLightingImage;LEDImage;TopLayerImage;TopLayerVertImage;"
 
 SamplerLUT1 = shaders/HyperspaceMadness/textures/lut/16.png
 SamplerLUT1_linear = true
@@ -254,8 +254,8 @@ ColoredGelImage_linear = true
 TubeStaticReflectionImage = shaders/HyperspaceMadness/textures/TubeGlassOverlayImage_3840x2160.png
 TubeStaticReflectionImage_linear = true
 
-ReflectOnlyLayerImage = shaders/HyperspaceMadness/textures/Placeholder_Transparent_16x16.png
-ReflectOnlyLayerImage_linear = true
+ReflectPassLayerImage = shaders/HyperspaceMadness/textures/Placeholder_Transparent_16x16.png
+ReflectPassLayerImage_linear = true
 
 ReflectionMaskImage = shaders/HyperspaceMadness/textures/Placeholder_White_16x16.png
 ReflectionMaskImage_linear = true

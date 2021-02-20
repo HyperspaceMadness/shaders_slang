@@ -8,19 +8,19 @@
 //---------------------------------------------------------------------------------------------------
 //---------------------------------------------------------------------------------------------------
 
-#pragma parameter HSM_NIGHT_MIRROR_HORZ       "      Mirror Horizontal"  0 0 1 1
+#pragma parameter HSM_NIGHT_MIRROR_HORZ         "      Mirror Horizontal"  0 0 1 1
 float HSM_NIGHT_MIRROR_HORZ = global.HSM_NIGHT_MIRROR_HORZ;
 
-#pragma parameter HSM_NIGHT_SATURATION    "      Saturation"  100 0 300 1
+#pragma parameter HSM_NIGHT_SATURATION          "      Saturation"  100 0 300 1
 float HSM_NIGHT_SATURATION = global.HSM_NIGHT_SATURATION / 100;
 
-#pragma parameter HSM_NIGHT_HUE    "      Hue"  0 -180 180 1
+#pragma parameter HSM_NIGHT_HUE                 "      Hue"  0 -180 180 1
 float HSM_NIGHT_HUE = global.HSM_NIGHT_HUE / 360;
 
-#pragma parameter HSM_NIGHT_VALUE    "      Value"  100 0 400 1
+#pragma parameter HSM_NIGHT_VALUE               "      Value"  100 0 400 1
 float HSM_NIGHT_VALUE = global.HSM_NIGHT_VALUE / 100;
 
-#pragma parameter HSM_NIGHT_DITHERING_SAMPLES  "      Dithering Noise Samples (Reduces Banding)" 0 0 10 1
+#pragma parameter HSM_NIGHT_DITHERING_SAMPLES   "      Dithering Noise Samples (Reduces Banding)" 0 0 10 1
 float HSM_NIGHT_DITHERING_SAMPLES = global.HSM_NIGHT_DITHERING_SAMPLES;
 
 
@@ -33,11 +33,11 @@ float HSM_NIGHT_DITHERING_SAMPLES = global.HSM_NIGHT_DITHERING_SAMPLES;
 //---------------------------------------------------------------------------------------------------
 //    STATIC ELEMENT GAMMA
 //---------------------------------------------------------------------------------------------------
-#pragma parameter HSM_STATIC_LAYERS_GAMMA				"      Static Layers Gamma Adjust" 1 0.01 5 0.01
+#pragma parameter HSM_STATIC_LAYERS_GAMMA		    "      Static Layers Gamma Adjust" 1 0.01 5 0.01
 float HSM_STATIC_LAYERS_GAMMA = global.HSM_STATIC_LAYERS_GAMMA;
 
 
-#pragma parameter HSM_LAYER_ORDER_TITLE			"[ LAYER ORDER ]________________________________________________" 0 0 0.01 0.01
+#pragma parameter HSM_LAYER_ORDER_TITLE			  "[ LAYER ORDER ]________________________________________________" 0 0 0.01 0.01
 
 #pragma parameter HSM_BG_LAYER_ORDER              "      Background Image"  0 0 12 1
 float HSM_BG_LAYER_ORDER = global.HSM_BG_LAYER_ORDER;
@@ -240,15 +240,6 @@ float HSM_BZL_IMG_POS_Y = global.HSM_BZL_IMG_POS_Y / 100;
 
 #pragma parameter HSM_BZL_IMG_USE_CURVATURE             "      Use Curvature"  0 0 1 1
 float HSM_BZL_IMG_USE_CURVATURE = global.HSM_BZL_IMG_USE_CURVATURE;
-
-
-#pragma parameter HSM_REFLECT_IMAGE_MASK_SCALING_TITLE	"[ REFLECTION IMAGE MASK ]______________________________________" 0 0 0.01 0.01
-
-#pragma parameter HSM_REFLECT_MASK_IMG_AMOUNT 		    "      Reflection Image Mask Amount" 100 0 100 1
-float HSM_REFLECT_MASK_IMG_AMOUNT = global.HSM_REFLECT_MASK_IMG_AMOUNT / 100;
-
-#pragma parameter HSM_REFLECT_MASK_SCALE_MODE 			"      Scaling Mode - FullScreen | Bezel Image" 0 0 1 1
-float HSM_REFLECT_MASK_SCALE_MODE = global.HSM_REFLECT_MASK_SCALE_MODE;
 
 
 //---------------------------------------------------------------------------------------------------

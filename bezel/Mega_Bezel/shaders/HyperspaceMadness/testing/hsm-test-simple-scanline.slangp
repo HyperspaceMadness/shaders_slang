@@ -93,7 +93,7 @@ BackgroundImage = shaders/HyperspaceMadness/textures/BackgroundImage_Carbon_3840
 BackgroundVertImage = shaders/HyperspaceMadness/textures/BackgroundImage_Carbon_3840x2160.png
 ColoredGelImage = shaders/HyperspaceMadness/textures/Placeholder_Transparent_16x16.png
 TubeStaticReflectionImage = shaders/HyperspaceMadness/textures/TubeGlassOverlayImage_3840x2160.png
-ReflectOnlyLayerImage = shaders/HyperspaceMadness/textures/Placeholder_Transparent_16x16.pngBezelImage = shaders/HyperspaceMadness/textures/Placeholder_Transparent_16x16.png
+ReflectPassLayerImage = shaders/HyperspaceMadness/textures/Placeholder_Transparent_16x16.pngBezelImage = shaders/HyperspaceMadness/textures/Placeholder_Transparent_16x16.png
 BezelVertImage = shaders/HyperspaceMadness/textures/Placeholder_Transparent_16x16.png
 DecalImage = shaders/HyperspaceMadness/textures/Placeholder_Transparent_16x16.png
 NightLightingImage = shaders/HyperspaceMadness/textures/NightLighting_3840x2160.jpg

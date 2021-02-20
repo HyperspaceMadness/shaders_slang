@@ -32,7 +32,7 @@ alias4 = "BR_CRTPass"
 shaders = 5
 
 // Define textures to be used by the different passes
-textures = "DMG0ColorPaletteImage;DMG1ColorPaletteImage;DMG2ColorPaletteImage;PocketColorPaletteImage;LightColorPaletteImage;CustomColorPaletteImage;LCDBackgroundImage;IntroImage;ColoredGelImage;TubeStaticReflectionImage;ReflectOnlyLayerImage;ReflectionMaskImage;FrameTextureImage;BackgroundImage;BackgroundVertImage;CabinetGlassImage;BezelImage;BezelVertImage;DecalImage;NightLightingImage;LEDImage;TopLayerImage;TopLayerVertImage;"
+textures = "DMG0ColorPaletteImage;DMG1ColorPaletteImage;DMG2ColorPaletteImage;PocketColorPaletteImage;LightColorPaletteImage;CustomColorPaletteImage;LCDBackgroundImage;IntroImage;ColoredGelImage;TubeStaticReflectionImage;ReflectPassLayerImage;ReflectionMaskImage;FrameTextureImage;BackgroundImage;BackgroundVertImage;CabinetGlassImage;BezelImage;BezelVertImage;DecalImage;NightLightingImage;LEDImage;TopLayerImage;TopLayerVertImage;"
 
 DMG0ColorPaletteImage = ../shaders/HyperspaceMadness/hsm-gameboy/palette-gameboy-dmg-0.png
 DMG0ColorPaletteImage_linear = false
@@ -64,8 +64,8 @@ ColoredGelImage_linear = true
 TubeStaticReflectionImage = ../shaders/HyperspaceMadness/textures/TubeGlassOverlayImage_3840x2160.png
 TubeStaticReflectionImage_linear = true
 
-ReflectOnlyLayerImage = ../shaders/HyperspaceMadness/textures/Placeholder_Transparent_16x16.png
-ReflectOnlyLayerImage_linear = true
+ReflectPassLayerImage = ../shaders/HyperspaceMadness/textures/Placeholder_Transparent_16x16.png
+ReflectPassLayerImage_linear = true
 
 FrameTextureImage = ../shaders/HyperspaceMadness/textures/FrameTexture_2800x2120.png
 FrameTextureImage_linear = true

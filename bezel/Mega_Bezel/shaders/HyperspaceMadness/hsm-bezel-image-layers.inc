@@ -729,17 +729,17 @@ void main()
 				bezel_image = BlendMultiply(bezel_image, night_lighting_image, HSM_NIGHT_OPACITY);
 	}
 
-	float reflection_image_mask = 1;
-	
-	if (HSM_REFLECT_MASK_SCALE_MODE == 0)
-		reflection_image_mask = texture(ReflectionMaskImage, VIEWPORT_COORD).r;
-	else
-		reflection_image_mask = texture(ReflectionMaskImage, bezel_image_coord).r;
-
 	vec4 reflection_linear = crt_and_reflection_linear;
-	reflection_linear.rgb *= reflection_image_mask;
+	
+	// Apply the mask image on the reflection, usually used to show the uneven brightness of a bumpy surface
+	if (HSM_REFLECT_MASK_IMG_AMOUNT > 0)
+	{
+		vec2 reflection_image_coord = VIEWPORT_COORD;
+		if (HSM_REFLECT_MASK_SCALE_MODE == 1)
+			reflection_image_coord = bezel_image_coord;
 
-	//HSM_REFLECT_MASK_IMG_AMOUNT
+		reflection_linear *= HSM_REFLECT_MASK_IMG_AMOUNT * texture(ReflectionMaskImage, reflection_image_coord).r + (1 - HSM_REFLECT_MASK_IMG_AMOUNT);
+	}
 
 #ifndef SIMPLE_PRESET
 	//----------------------------------------------------

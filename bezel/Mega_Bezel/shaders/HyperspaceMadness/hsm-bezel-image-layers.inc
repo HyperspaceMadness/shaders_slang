@@ -267,7 +267,6 @@ layout(location = 8) in vec3 BEZEL_FRAME_ORIGINAL_COLOR_RGB;
 layout(location = 0) out vec4 FragColor;
 
 // Pass Framebuffer Textures
-layout(set = 0, binding = 1) uniform sampler2D BR_MappingPass;
 layout(set = 0, binding = 2) uniform sampler2D BR_CRTAndReflectionPass;
 
 // Image Textures from disk
@@ -288,7 +287,7 @@ layout(set = 0, binding = 14) uniform sampler2D InfoCachePass;
 //////////////////////////////////////////////////////////////////////////////////////////////////
 void main()
 {
-	HSM_GetCachedScreenValues(VIEWPORT_COORD, InfoCachePass, SCREEN_ASPECT, SCREEN_SCALE, TUBE_SCALE, SCREEN_POS_OFFSET, AVERAGE_LUMA);
+	HSM_UpdateGlobalScreenValuesFromCache(InfoCachePass, VIEWPORT_COORD);
 	SCREEN_COORD = HSM_GetVTexCoordWithArgs(VIEWPORT_COORD, SCREEN_SCALE, SCREEN_POS_OFFSET);
 
 	//----------------------------------------------------
@@ -309,7 +308,7 @@ void main()
 	vec2 tube_coord_warped = vec2(0, 0);
 	float outside_tube_mask = 0;
 	float edge_mask = 0;
-	HSM_GetCachedCurvedValues(BR_MappingPass, VIEWPORT_COORD.xy, tube_coord_warped, outside_tube_mask, edge_mask);
+	HSM_GetCachedCurvedValues(VIEWPORT_COORD.xy, tube_coord_warped, outside_tube_mask, edge_mask);
 	TUBE_MASK = 1 - outside_tube_mask;
 
 	vec2 tube_warped_coord_ctr = tube_coord_warped - 0.5;

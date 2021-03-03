@@ -448,16 +448,16 @@ vec4 HSM_GetColorForScreenInfoCache(vec2 viewport_coord, sampler2D original_pass
 	return out_color;
 }
 
-vec4 HSM_GetCachedScreenValues(vec2 viewport_coord, sampler2D in_cache_pass, inout float screen_aspect, inout vec2 screen_scale, inout vec2 tube_scale, inout vec2 pos_offset, inout float average_luma)
+vec4 HSM_UpdateGlobalScreenValuesFromCache(sampler2D in_cache_pass, vec2 viewport_coord)
 {
 	vec4 texture_sample_1 = texture(in_cache_pass, vec2(0.25, 0.25));
-	screen_scale = texture_sample_1.rg;
-	screen_aspect = texture_sample_1.b;
-	average_luma = texture_sample_1.a;
+	SCREEN_SCALE = texture_sample_1.rg;
+	SCREEN_ASPECT = texture_sample_1.b;
+	AVERAGE_LUMA = texture_sample_1.a;
 
 	vec4 texture_sample_2 = texture(in_cache_pass, vec2(0.75, 0.25));
-	tube_scale = texture_sample_2.rg;
-	pos_offset = texture_sample_2.ba;
+	TUBE_SCALE = texture_sample_2.rg;
+	SCREEN_POS_OFFSET = texture_sample_2.ba;
 	
 	return vec4(0);
 }
@@ -788,17 +788,6 @@ vec2 HSM_GetMirrorWrappedCoord(vec2 in_coord)
 	return ctr_mirror_coord + 0.5;
 }
 
-// Returns curved coordinates for the coordinate supplied
-// Cached coordinate comes from the mapping pass texture supplied
-// x & y are the curved tube coordinates
-vec4 HSM_GetCachedCurvedValues(sampler2D in_mapping_pass, vec2 in_coord, inout vec2 out_curved_coord, inout float outside_tube_mask, inout float edge_mask)
-{
-	vec4 texture_sample = texture(in_mapping_pass, in_coord);
-	out_curved_coord = texture_sample.xy;
-	outside_tube_mask = texture_sample.z;
-	edge_mask = texture_sample.w;
-	return texture_sample;
-}
 
 // Borrowed from cgwg's crt-geom, under GPL
 float HSM_GetCornerMask(vec2 in_coord, float screen_aspect, float corner_radius, float edge_sharpness)
@@ -845,6 +834,8 @@ vec2 HSM_GetTubeCurvedCoord(vec2 screen_coord, float curvature_scale, vec2 scree
 
 	return tube_curved_coord;
 }
+
+
 
 vec3 HSM_RGBtoHSV(vec3 c)
 {

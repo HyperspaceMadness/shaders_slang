@@ -2,6 +2,7 @@
 //#define ShowPlacementGuide
 
 #include "hsm-globals-and-reflection-params.inc"
+#include "hsm-common-functions-bezel.inc"
 
 #pragma stage vertex
 layout(location = 0) in vec4 Position;
@@ -24,7 +25,6 @@ layout(location = 0) out vec4 FragColor;
 
 layout(set = 0, binding = 2) uniform sampler2D Source;
 layout(set = 0, binding = 3) uniform sampler2D BR_MirrorLowResPass;
-layout(set = 0, binding = 4) uniform sampler2D BR_MappingPass;
 
 float clamp_0_1(float in_value)
 {
@@ -38,7 +38,7 @@ void main()
 		vec2 tube_coord_warped = vec2(0, 0);
 		float outside_tube_mask = 0;
 		float edge_mask = 0;
-		HSM_GetCachedCurvedValues(BR_MappingPass, VIEWPORT_COORD.xy, tube_coord_warped, outside_tube_mask, edge_mask);
+		HSM_GetCachedCurvedValues(VIEWPORT_COORD.xy, tube_coord_warped, outside_tube_mask, edge_mask);
 
 		vec2 tube_warped_coord_ctr = tube_coord_warped - 0.5;
 

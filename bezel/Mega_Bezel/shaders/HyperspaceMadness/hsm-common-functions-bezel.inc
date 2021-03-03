@@ -54,3 +54,22 @@ float HSM_GetBezelCoords(vec2 screen_coord, vec2 screen_scale, vec2 tube_scale, 
 
 	return 0;
 }
+
+// Returns curved coordinates for the coordinate supplied
+// Cached coordinate comes from the mapping pass texture supplied
+// x & y are the curved tube coordinates
+vec4 HSM_GetCachedCurvedValues(vec2 in_coord, inout vec2 out_curved_coord, inout float outside_tube_mask, inout float edge_mask)
+{
+	// vec4 texture_sample = texture(in_mapping_pass, in_coord);
+	// out_curved_coord = texture_sample.xy;
+	// outside_tube_mask = texture_sample.z;
+	// edge_mask = texture_sample.w;
+
+	vec4 texture_sample = vec4(0);
+	out_curved_coord = HSM_GetTubeCurvedCoord(SCREEN_COORD, 1, SCREEN_SCALE, TUBE_SCALE, SCREEN_ASPECT, 1);
+	vec2 edge_mask_coord = (out_curved_coord - 0.5) * (1 - (HSM_BZL_INNER_EDGE_THICKNESS / vec2(SCREEN_ASPECT, 1))) + 0.5;
+	outside_tube_mask = 1 - HSM_GetCornerMask(out_curved_coord, SCREEN_ASPECT, HSM_BZL_INNER_CORNER_RADIUS_SCALE * HSM_SCREEN_CORNER_RADIUS, 0.99);
+	edge_mask =  HSM_GetCornerMask(edge_mask_coord, SCREEN_ASPECT, HSM_BZL_INNER_CORNER_RADIUS_SCALE * HSM_SCREEN_CORNER_RADIUS, HSM_BZL_INNER_EDGE_SHARPNESS);
+
+	return texture_sample;
+}

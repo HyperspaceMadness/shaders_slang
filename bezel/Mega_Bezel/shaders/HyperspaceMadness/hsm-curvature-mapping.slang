@@ -2,6 +2,7 @@
 
 // Import Screen Scale Functions and parameters
 #include "hsm-globals-and-reflection-params.inc"
+#include "hsm-common-functions-bezel.inc"
 
 #pragma stage vertex
 layout(location = 0) in vec4 Position;
@@ -25,13 +26,8 @@ layout(set = 0, binding = 1) uniform sampler2D InfoCachePass;
 void main()
 {
 	// HSM Added
-	float average_luma = 0;
-	float SCREEN_ASPECT = 1;
-	vec2 SCREEN_SCALE = vec2(0.5);
-	vec2 SCREEN_POS = vec2(0.5);
-	vec2 TUBE_SCALE = vec2(0.5);
-	HSM_GetCachedScreenValues(vTexCoord, InfoCachePass, SCREEN_ASPECT, SCREEN_SCALE, TUBE_SCALE, SCREEN_POS, average_luma);
-	vec2 SCREEN_COORD = HSM_GetVTexCoordWithArgs(vTexCoord, SCREEN_SCALE, SCREEN_POS);
+	HSM_UpdateGlobalScreenValuesFromCache(InfoCachePass, vTexCoord);
+	SCREEN_COORD = HSM_GetVTexCoordWithArgs(vTexCoord, SCREEN_SCALE, SCREEN_POS_OFFSET);
 
 	vec2 tube_curved_coord = HSM_GetTubeCurvedCoord(SCREEN_COORD, 1, SCREEN_SCALE, TUBE_SCALE, SCREEN_ASPECT, 1);
 

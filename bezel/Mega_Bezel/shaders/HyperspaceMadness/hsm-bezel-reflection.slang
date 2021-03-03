@@ -108,7 +108,6 @@ layout(location = 6) in vec2 VIEWPORT_COORD;
 layout(location = 0) out vec4 FragColor;
 
 // Pass Framebuffer Textures
-layout(set = 0, binding = 1) uniform sampler2D BR_MappingPass;
 layout(set = 0, binding = 2) uniform sampler2D BR_CRTPass;
 
 layout(set = 0, binding = 5) uniform sampler2D TubeStaticReflectionImage;
@@ -126,13 +125,13 @@ layout(set = 0, binding = 14) uniform sampler2D ScreenPlacementImage;
 //////////////////////////////////////////////////////////////////////////////////////////////////
 void main()
 {
-	HSM_GetCachedScreenValues(VIEWPORT_COORD, InfoCachePass, SCREEN_ASPECT, SCREEN_SCALE, TUBE_SCALE, SCREEN_POS_OFFSET, AVERAGE_LUMA);
+	HSM_UpdateGlobalScreenValuesFromCache(InfoCachePass, VIEWPORT_COORD);
 	SCREEN_COORD = HSM_GetVTexCoordWithArgs(VIEWPORT_COORD, SCREEN_SCALE, SCREEN_POS_OFFSET);
 	
 	vec2 tube_coord_warped = vec2(0, 0);
 	float outside_tube_mask = 0;
 	float edge_mask = 0;
-	HSM_GetCachedCurvedValues(BR_MappingPass, VIEWPORT_COORD.xy, tube_coord_warped, outside_tube_mask, edge_mask);
+	HSM_GetCachedCurvedValues(VIEWPORT_COORD.xy, tube_coord_warped, outside_tube_mask, edge_mask);
 	TUBE_MASK = 1 - outside_tube_mask;
 
 	vec2 tube_warped_coord_ctr = tube_coord_warped - 0.5;

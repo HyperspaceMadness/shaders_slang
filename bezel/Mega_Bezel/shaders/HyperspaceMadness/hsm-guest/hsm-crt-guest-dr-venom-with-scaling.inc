@@ -553,7 +553,7 @@ void main()
 	*/
 	
 	// HSM Added
-	HSM_GetCachedScreenValues(vTexCoord, InfoCachePass, SCREEN_ASPECT, SCREEN_SCALE, TUBE_SCALE, SCREEN_POS_OFFSET, AVERAGE_LUMA);
+	HSM_UpdateGlobalScreenValuesFromCache(InfoCachePass, vTexCoord);
 	SCREEN_COORD = HSM_GetVTexCoordWithArgs(vTexCoord, SCREEN_SCALE, SCREEN_POS_OFFSET);
 	USE_VERTICAL_SCANLINES = HSM_GetUseVerticalScanlines(SCREEN_ASPECT);
 

@@ -33,11 +33,7 @@ layout(push_constant) uniform Push
 	
 } params;
 
-
 float TUBE_MASK = 0;
-
-float SCREEN_ASPECT = HSM_GetScreenAspect();
-vec2 SCREEN_SCALE = HSM_GetScreenScale(SCREEN_ASPECT);
 
 //TODO remove this and replace with simpler calls
 float GetFade(float current_position, float corner_position, float fade_distance)
@@ -84,15 +80,12 @@ vec4 BlendModeLayerMixSimple(vec4 color_under, vec4 color_over, float blend_mode
 	return out_color;
 }
 
-
-
 //////////////////////////////////////////////////////////////////////////////////////////////////
 #pragma stage vertex
 
 layout(location = 0) in vec4 Position;
 layout(location = 1) in vec2 TexCoord;
 
-layout(location = 3) out vec2 SCREEN_COORD;
 layout(location = 6) out vec2 VIEWPORT_COORD;
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
@@ -104,22 +97,18 @@ void main()
 	if (HSM_FLIP_VIEWPORT_VERTICAL > 0.5)
 		vTexCoord.y =  1 - vTexCoord.y;
 
-	SCREEN_COORD = HSM_GetScreenVTexCoord(vTexCoord, SCREEN_SCALE);
-
 	VIEWPORT_COORD = vTexCoord * 1.0001;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
 #pragma stage fragment
 
-layout(location = 3) in vec2 SCREEN_COORD;
 layout(location = 6) in vec2 VIEWPORT_COORD;
 
 layout(location = 0) out vec4 FragColor;
 
 // Pass Framebuffer Textures
 layout(set = 0, binding = 1) uniform sampler2D BR_MappingPass;
-
 layout(set = 0, binding = 2) uniform sampler2D BR_CRTPass;
 
 layout(set = 0, binding = 5) uniform sampler2D TubeStaticReflectionImage;
@@ -131,11 +120,15 @@ layout(set = 0, binding = 9) uniform sampler2D NightLightingImage;
 layout(set = 0, binding = 10) uniform sampler2D BR_MirrorBlurredPass;
 layout(set = 0, binding = 11) uniform sampler2D BR_MirrorReflectionDiffusedPass;
 layout(set = 0, binding = 12) uniform sampler2D BR_MirrorFullscreenGlowPass;
-layout(set = 0, binding = 13) uniform sampler2D AvgLumPass;
+layout(set = 0, binding = 13) uniform sampler2D InfoCachePass;
+layout(set = 0, binding = 14) uniform sampler2D ScreenPlacementImage;
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
 void main()
 {
+	HSM_GetCachedScreenValues(VIEWPORT_COORD, InfoCachePass, SCREEN_ASPECT, SCREEN_SCALE, TUBE_SCALE, SCREEN_POS_OFFSET, AVERAGE_LUMA);
+	SCREEN_COORD = HSM_GetVTexCoordWithArgs(VIEWPORT_COORD, SCREEN_SCALE, SCREEN_POS_OFFSET);
+	
 	vec2 tube_coord_warped = vec2(0, 0);
 	float outside_tube_mask = 0;
 	float edge_mask = 0;
@@ -144,7 +137,7 @@ void main()
 
 	vec2 tube_warped_coord_ctr = tube_coord_warped - 0.5;
 
-	float avg_lum_mult = smoothstep(0.01, 0.5, pow(texture(AvgLumPass, VIEWPORT_COORD).a, 1.3));
+	float avg_lum_mult = smoothstep(0.01, 0.5, pow(AVERAGE_LUMA, 1.3));
 
 	//----------------------------------------------------
 	// CRT Pass
@@ -302,7 +295,7 @@ void main()
 	// if (HSM_REFLECT_MASK_TO_BEZEL == 1 || HSM_FRM_INNER_EDGE_THICKNESS > 0)
 	// {
 		float screen_scale_diagonal = sqrt(SCREEN_SCALE.y * SCREEN_SCALE.y + (SCREEN_SCALE.y * SCREEN_ASPECT) * (SCREEN_SCALE.y * SCREEN_ASPECT));
-		vec2 black_edge_scale_offset = HSM_GetTubeScale(SCREEN_SCALE) / SCREEN_SCALE;
+		vec2 black_edge_scale_offset = TUBE_SCALE / SCREEN_SCALE;
 		vec2 outer_bezel_scale = vec2(HSM_BZL_WIDTH / SCREEN_ASPECT + 1, HSM_BZL_HEIGHT + 1);
 		outer_bezel_scale = (outer_bezel_scale - 1) * screen_scale_diagonal + 1;
 
@@ -442,7 +435,7 @@ void main()
 			vec2 bezel_outside_coord = vec2(0.5, 0.5);
 			vec2 frame_outside_coord = vec2(0.5, 0.5);
 
-			HSM_GetBezelCoords(SCREEN_COORD, SCREEN_SCALE, SCREEN_ASPECT, bezel_outside_coord, frame_outside_coord);
+			HSM_GetBezelCoords(SCREEN_COORD, SCREEN_SCALE, TUBE_SCALE, SCREEN_ASPECT, bezel_outside_coord, frame_outside_coord);
 
 			float bezel_mask = HSM_GetCornerMask(bezel_outside_coord, SCREEN_ASPECT, HSM_FRM_INNER_CORNER_RADIUS_SCALE * HSM_BZL_OUTER_CORNER_RADIUS_SCALE * HSM_SCREEN_CORNER_RADIUS, 0.9);
 
@@ -528,5 +521,28 @@ void main()
 		FragColor = HSM_ApplyGamma(clamp(frag_color_linear, 0, 1), HSM_DEFAULT_SRGB_GAMMA);
 	else
 		FragColor = frag_color_linear;
-	
+
+	// Markup to Draw Found Top and Bottom of tube area in the image
+	// float num_samples = 60;
+	// float screen_top_y_pos = 1;
+	// float screen_bottom_y_pos = 0;
+
+	// for (int i=0; i < num_samples; i++)
+	// {
+	// 	float y_pos = i * 1 / num_samples;
+	// 	float image_alpha = texture(ScreenPlacementImage, vec2(0.5, y_pos)).a;
+	// 	if (image_alpha < 0.5)
+	// 	{
+	// 		screen_top_y_pos = min(screen_top_y_pos, y_pos);
+	// 		screen_bottom_y_pos = max(screen_bottom_y_pos, y_pos);
+	// 	}
+		
+	// }
+
+	// if (VIEWPORT_COORD.y < screen_top_y_pos + 0.001 && VIEWPORT_COORD.y > screen_top_y_pos - 0.001)
+	// 	FragColor = vec4(1, 0, 0, 1);
+
+	// if (VIEWPORT_COORD.y < screen_bottom_y_pos + 0.001 && VIEWPORT_COORD.y > screen_bottom_y_pos - 0.001)
+	// 	FragColor = vec4(0, 1, 0, 1);
+
 }

@@ -3,12 +3,12 @@
 //      Add Color Correction
 //      Calculate Average Luminance and put in alpha channel
 //      Debug Drawing of the resolution & screen scaling info
-shader0 = shaders/HyperspaceMadness/hsm-prep-initial.slang
+shader0 = shaders/HyperspaceMadness/hsm-prep-intro.slang
 float_framebuffer0 = true
 
 // Color Correction with Dogway's awesome Grade shader
 shader1 = shaders/HyperspaceMadness/hsm-dogway/hsm-grade.slang
-alias1  = AvgLumPass
+alias1  = "ColorCorrectPass"
 
 // De-Dithering - Mdapt
 shader2 = shaders/HyperspaceMadness/hsm-mdapt/hsm-mdapt-pass0.slang
@@ -197,7 +197,7 @@ shaders = 28
 
 
 // Define textures to be used by the different passes
-textures = "SamplerLUT1;SamplerLUT2;SamplerLUT3;IntroImage;ColoredGelImage;TubeStaticReflectionImage;ReflectPassLayerImage;ReflectionMaskImage;FrameTextureImage;BackgroundImage;BackgroundVertImage;CabinetGlassImage;BezelImage;BezelVertImage;DecalImage;NightLightingImage;LEDImage;TopLayerImage;TopLayerVertImage;"
+textures = "SamplerLUT1;SamplerLUT2;SamplerLUT3;IntroImage;ScreenPlacementImage;ColoredGelImage;TubeStaticReflectionImage;ReflectPassLayerImage;ReflectionMaskImage;FrameTextureImage;BackgroundImage;BackgroundVertImage;CabinetGlassImage;BezelImage;BezelVertImage;DecalImage;NightLightingImage;LEDImage;TopLayerImage;TopLayerVertImage;"
 
 SamplerLUT1 = shaders/HyperspaceMadness/textures/lut/16.png
 SamplerLUT1_linear = true
@@ -208,6 +208,9 @@ SamplerLUT3_linear = true
 
 IntroImage = shaders/HyperspaceMadness/textures/IntroImage_MegaBezelLogo.png
 IntroImage_linear = true
+
+ScreenPlacementImage = shaders/HyperspaceMadness/textures/Placeholder_Transparent_16x16.png
+ScreenPlacementImage_linear = false
 
 ColoredGelImage = shaders/HyperspaceMadness/textures/Placeholder_Transparent_16x16.png
 ColoredGelImage_linear = true

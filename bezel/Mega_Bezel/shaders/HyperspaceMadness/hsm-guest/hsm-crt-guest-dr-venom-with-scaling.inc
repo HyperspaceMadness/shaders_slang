@@ -255,10 +255,6 @@ layout(std140, set = 0, binding = 0) uniform UBO
 
 // Calculate values for fragment stage
 vec2 CROPPED_ORIGINAL_SIZE = HSM_GetCroppedRotatedOriginalSizeWithCoreResMult();
-float SCREEN_ASPECT = HSM_GetScreenAspect();
-vec2 SCREEN_SCALE = HSM_GetScreenScale(SCREEN_ASPECT);
-float USE_VERTICAL_SCANLINES = HSM_GetUseVerticalScanlines(SCREEN_ASPECT);
-
 
 #pragma stage vertex
 
@@ -266,19 +262,16 @@ layout(location = 0) in vec4 Position;
 layout(location = 1) in vec2 TexCoord;
 
 layout(location = 0) out vec2 vTexCoord;
-layout(location = 4) out vec2 SCREEN_COORD;
 
 void main()
 {
 	gl_Position = global.MVP * Position;
 	vTexCoord = TexCoord * 1.00001;
-	SCREEN_COORD = HSM_GetScreenVTexCoord(vTexCoord, SCREEN_SCALE);
 }
 
 #pragma stage fragment
 
 layout(location = 0) in vec2 vTexCoord;
-layout(location = 4) in vec2 SCREEN_COORD;
 
 layout(location = 0) out vec4 FragColor;
 
@@ -286,18 +279,19 @@ layout(set = 0, binding = 2) uniform sampler2D Source;
 layout(set = 0, binding = 3) uniform sampler2D LinearizePass;
 
 // HSM Removed
-// layout(set = 0, binding = 4) uniform sampler2D AvgLumPass;
+// layout(set = 0, binding = 4) uniform sampler2D ColorCorrectPass;
 
 layout(set = 0, binding = 4) uniform sampler2D GlowPass;
 
 // HSM Added
-layout(set = 0, binding = 5) uniform sampler2D ColoredGelImage;
-layout(set = 0, binding = 6) uniform sampler2D TubeStaticReflectionImage;
+layout(set = 0, binding = 5) uniform sampler2D InfoCachePass;
+layout(set = 0, binding = 6) uniform sampler2D ColoredGelImage;
+layout(set = 0, binding = 7) uniform sampler2D TubeStaticReflectionImage;
 
 #define Texture Source
 
 // HSM Removed
-// #define PassPrev5Texture AvgLumPass
+// #define PassPrev5Texture ColorCorrectPass
 
 #define PassPrev4Texture LinearizePass
 #define PassPrev2Texture GlowPass
@@ -558,6 +552,11 @@ void main()
 	 vec2 pos0 = Warp(TEX0.xy*(TextureSize.xy/InputSize.xy))*(InputSize.xy/TextureSize.xy);
 	*/
 	
+	// HSM Added
+	HSM_GetCachedScreenValues(vTexCoord, InfoCachePass, SCREEN_ASPECT, SCREEN_SCALE, TUBE_SCALE, SCREEN_POS_OFFSET, AVERAGE_LUMA);
+	SCREEN_COORD = HSM_GetVTexCoordWithArgs(vTexCoord, SCREEN_SCALE, SCREEN_POS_OFFSET);
+	USE_VERTICAL_SCANLINES = HSM_GetUseVerticalScanlines(SCREEN_ASPECT);
+
 	// HSM Removed
 	float TATE = USE_VERTICAL_SCANLINES;
 
@@ -813,7 +812,7 @@ void main()
 	FragColor = vec4(color, 1);
 	
 	// Prep and add output gamma
-	FragColor = HSM_GetPostCrtPreppedColor(FragColor, screen_curved_coord, SCREEN_COORD, SCREEN_ASPECT, SCREEN_SCALE, ColoredGelImage, TubeStaticReflectionImage);
+	FragColor = HSM_GetPostCrtPreppedColor(FragColor, screen_curved_coord, SCREEN_COORD, SCREEN_ASPECT, SCREEN_SCALE, TUBE_SCALE, ColoredGelImage, TubeStaticReflectionImage);
 	// End Addition
 }
 

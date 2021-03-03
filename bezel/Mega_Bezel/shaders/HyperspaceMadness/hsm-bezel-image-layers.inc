@@ -27,9 +27,6 @@ Thanks to:
 // 	vec4 BackgroundImageSize;
 // } params;
 
-#define DEFAULT_TUBE_SCALE_V 0.82987
-#define DEFAULT_BEZEL_SCALE_V 0.91159
-
 /////////////// DEFINES ///////////////
 
 #define MASK_MODE_ALL 0
@@ -79,12 +76,6 @@ float SOURCE_MATTE_WHITE = 1;
 float SOURCE_MATTE_NONE = 2;
 
 float MAX_LAYER_ORDER = 12;
-
-float SCREEN_ASPECT = HSM_GetScreenAspect();
-vec2 SCREEN_SCALE = HSM_GetScreenScale(SCREEN_ASPECT);
-vec2 TUBE_SCALE = HSM_GetTubeScale(SCREEN_SCALE);
-vec2 FRAME_SCALE = vec2(1);
-vec2 BACKGROUND_SCALE = vec2(1);
 
 
 vec4 GetPreMultipliedColorLinear(vec4 in_color, float matte_type, float encoded_gamma)
@@ -249,8 +240,6 @@ float GetFade(float current_position, float corner_position, float fade_distance
 layout(location = 0) in vec4 Position;
 layout(location = 1) in vec2 TexCoord;
 
-layout(location = 0) out vec2 VIEWPORT_WITH_POS_OFFSET_COORD;
-layout(location = 3) out vec2 SCREEN_COORD;
 layout(location = 6) out vec2 VIEWPORT_COORD;
 layout(location = 8) out vec3 BEZEL_FRAME_ORIGINAL_COLOR_RGB;
 
@@ -263,10 +252,6 @@ void main()
 	if (HSM_FLIP_VIEWPORT_VERTICAL > 0.5)
 		vTexCoord.y =  1 - vTexCoord.y;
 
-	VIEWPORT_WITH_POS_OFFSET_COORD = HSM_GetCoordWithPositionOffset(vTexCoord * 1.0001);
-
-	SCREEN_COORD = HSM_GetScreenVTexCoord(vTexCoord, SCREEN_SCALE);
-
 	VIEWPORT_COORD = vTexCoord * 1.0001;
 
 	// Not sure why we need linearize this but it seems to have a smoother range this way
@@ -276,8 +261,6 @@ void main()
 //////////////////////////////////////////////////////////////////////////////////////////////////
 #pragma stage fragment
 
-layout(location = 0) in vec2 VIEWPORT_WITH_POS_OFFSET_COORD;
-layout(location = 3) in vec2 SCREEN_COORD;
 layout(location = 6) in vec2 VIEWPORT_COORD;
 layout(location = 8) in vec3 BEZEL_FRAME_ORIGINAL_COLOR_RGB;
 
@@ -298,12 +281,16 @@ layout(set = 0, binding = 9)  uniform sampler2D DecalImage;
 layout(set = 0, binding = 10) uniform sampler2D NightLightingImage;
 layout(set = 0, binding = 11) uniform sampler2D LEDImage;
 layout(set = 0, binding = 12) uniform sampler2D TopLayerImage;
-layout(set = 0, binding = 13) uniform sampler2D TopLayerVertImage;
-layout(set = 0, binding = 14) uniform sampler2D ReflectionMaskImage;
+// layout(set = 0, binding = 13) uniform sampler2D TopLayerVertImage;
+layout(set = 0, binding = 13) uniform sampler2D ReflectionMaskImage;
+layout(set = 0, binding = 14) uniform sampler2D InfoCachePass;
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
 void main()
 {
+	HSM_GetCachedScreenValues(VIEWPORT_COORD, InfoCachePass, SCREEN_ASPECT, SCREEN_SCALE, TUBE_SCALE, SCREEN_POS_OFFSET, AVERAGE_LUMA);
+	SCREEN_COORD = HSM_GetVTexCoordWithArgs(VIEWPORT_COORD, SCREEN_SCALE, SCREEN_POS_OFFSET);
+
 	//----------------------------------------------------
 	// CRT Pass
 	//----------------------------------------------------
@@ -368,9 +355,9 @@ void main()
 	vec2 bezel_outside_coord = vec2(0.5, 0.5);
 	vec2 frame_outside_coord = vec2(0.5, 0.5);
 
-	HSM_GetBezelCoords(SCREEN_COORD, SCREEN_SCALE, SCREEN_ASPECT, bezel_outside_coord, frame_outside_coord);
+	HSM_GetBezelCoords(SCREEN_COORD, SCREEN_SCALE, TUBE_SCALE, SCREEN_ASPECT, bezel_outside_coord, frame_outside_coord);
 
-	FRAME_SCALE = HSM_GetFrameScale(SCREEN_SCALE, SCREEN_ASPECT);
+	FRAME_SCALE = HSM_GetFrameScale(SCREEN_SCALE, TUBE_SCALE, SCREEN_ASPECT);
 
 	OUTSIDE_BEZEL_MASK = 1 - HSM_GetCornerMask(bezel_outside_coord, SCREEN_ASPECT, HSM_FRM_INNER_CORNER_RADIUS_SCALE * HSM_BZL_OUTER_CORNER_RADIUS_SCALE * HSM_SCREEN_CORNER_RADIUS, 0.9);
 
@@ -791,9 +778,12 @@ void main()
 
 	if (HSM_TOP_OPACITY > 0)
 	{
+		// // Get the top image color and masking values if needed
+		// top_image = SCREEN_ASPECT < 1 ? texture(TopLayerVertImage, top_image_coord):
+		// 								texture(TopLayerImage,     top_image_coord);
+
 		// Get the top image color and masking values if needed
-		top_image = SCREEN_ASPECT < 1 ? texture(TopLayerVertImage, top_image_coord):
-										texture(TopLayerImage,     top_image_coord);
+		top_image = texture(TopLayerImage,     top_image_coord);
 
 		// Premultiply Alpha
 		top_image = GetPreMultipliedColorLinear(top_image, HSM_TOP_SOURCE_MATTE_TYPE, HSM_DEFAULT_SRGB_GAMMA);

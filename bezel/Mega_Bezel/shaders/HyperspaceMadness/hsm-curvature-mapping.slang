@@ -8,32 +8,32 @@ layout(location = 0) in vec4 Position;
 layout(location = 1) in vec2 TexCoord;
 
 layout(location = 0) out vec2 vTexCoord;
-layout(location = 1) out float SCREEN_ASPECT;
-layout(location = 2) out vec2 SCREEN_SCALE;
-layout(location = 3) out vec2 SCREEN_COORD;
 
 void main()
 {
 	gl_Position = global.MVP * Position;
 	vTexCoord = TexCoord * 1.0001;
-
-	// Coordinate in the space which includes the entire glass area including the illuminated screen and black line around it 
-	SCREEN_ASPECT = HSM_GetScreenAspect();
-	SCREEN_SCALE = HSM_GetScreenScale(SCREEN_ASPECT);
-	SCREEN_COORD = HSM_GetScreenVTexCoord(vTexCoord, SCREEN_SCALE);
 }
 
 #pragma stage fragment
 layout(location = 0) in vec2 vTexCoord;
-layout(location = 1) in float SCREEN_ASPECT;
-layout(location = 2) in vec2 SCREEN_SCALE;
-layout(location = 3) in vec2 SCREEN_COORD;
 
 layout(location = 0) out vec4 FragColor;
 
+layout(set = 0, binding = 1) uniform sampler2D InfoCachePass;
+
 void main()
 {
-	vec2 tube_curved_coord = HSM_GetTubeCurvedCoord(SCREEN_COORD, 1, SCREEN_SCALE, SCREEN_ASPECT, 1);
+	// HSM Added
+	float average_luma = 0;
+	float SCREEN_ASPECT = 1;
+	vec2 SCREEN_SCALE = vec2(0.5);
+	vec2 SCREEN_POS = vec2(0.5);
+	vec2 TUBE_SCALE = vec2(0.5);
+	HSM_GetCachedScreenValues(vTexCoord, InfoCachePass, SCREEN_ASPECT, SCREEN_SCALE, TUBE_SCALE, SCREEN_POS, average_luma);
+	vec2 SCREEN_COORD = HSM_GetVTexCoordWithArgs(vTexCoord, SCREEN_SCALE, SCREEN_POS);
+
+	vec2 tube_curved_coord = HSM_GetTubeCurvedCoord(SCREEN_COORD, 1, SCREEN_SCALE, TUBE_SCALE, SCREEN_ASPECT, 1);
 
 	// float flip_tilt = 0;
 

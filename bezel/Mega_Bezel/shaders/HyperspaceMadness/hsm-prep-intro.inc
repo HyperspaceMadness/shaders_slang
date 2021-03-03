@@ -2,32 +2,27 @@
 
 #include "hsm-text.inc"
 
-const float hag_afterglow_persistence = 0.5;
-const float hag_afterglow_saturation = 0.1;
-
-float SCREEN_ASPECT = HSM_GetScreenAspect();
-vec2 SCREEN_SCALE = HSM_GetScreenScale(SCREEN_ASPECT);
-
 #pragma stage vertex
 layout(location = 0) in vec4 Position;
 layout(location = 1) in vec2 TexCoord;
-layout(location = 0) out vec2 vTexCoord;
+layout(location = 0) out vec2 VIEWPORT_COORD;
 
 void main()
 {
    gl_Position = global.MVP * Position;
-   vTexCoord = TexCoord;
+   VIEWPORT_COORD = TexCoord * 1.00001;
 }
 
 #pragma stage fragment
-layout(location = 0) in vec2 vTexCoord;
+layout(location = 0) in vec2 VIEWPORT_COORD;
 layout(location = 0) out vec4 FragColor;
-layout(set = 0, binding = 2) uniform sampler2D Source;
+layout(set = 0, binding = 2) uniform sampler2D Original;
 layout(set = 0, binding = 3) uniform sampler2D OriginalHistory1;
 layout(set = 0, binding = 4) uniform sampler2D OriginalHistory2;
 layout(set = 0, binding = 5) uniform sampler2D OriginalHistory3;
 layout(set = 0, binding = 6) uniform sampler2D PassFeedback6;
 layout(set = 0, binding = 7) uniform sampler2D IntroImage;
+layout(set = 0, binding = 8) uniform sampler2D InfoCachePass;
 
 #define eps 1e-3
 
@@ -81,29 +76,6 @@ vec4 AntiFlicker(vec2 in_coord, vec4 current)
 	return (!flicker) ? current : blended;
 }
 
-float GetAverageLuma()
-{
-   //////// Calculate Average Luminance ////////// 
-   float m = max(log2(global.SourceSize.x), log2(global.SourceSize.y));
-	m = max(m - 1.0, 1.0);
-	
-	float luma_total = 0.0;
-	
-	float num_samples = 5;
-	float sample_dist = 1 / (num_samples - 1);
-	vec4 tex_sample = vec4(0);
-	for (float i = 0; i <= num_samples; i++)
-	{
-		for (float j = 0; j <= num_samples; j++)
-		{
-			tex_sample = textureLod(Source, vec2(sample_dist * i, sample_dist * j), m);
-			luma_total += max(0.0, (tex_sample.r + tex_sample.g + tex_sample.g) / 3);
-			// luma_total += max(0.0, length(tex_sample.rgb));
-		}
-	}
-	luma_total = pow(0.577350269 * luma_total / (num_samples * num_samples), 0.6);
-   return luma_total;
-}
 
 // Fixes Undefined values with different GPU vendors. 
 // Keeps values within a safe range
@@ -145,8 +117,8 @@ vec4 ApplyLUT(vec4 in_color, sampler2D in_LUT)
 
 vec4 AddText(vec2 in_coord, vec4 in_color)
 {
-   float screen_aspect = HSM_GetScreenAspect();
-   vec2 screen_scale = HSM_GetScreenScale(screen_aspect);
+   float screen_aspect = SCREEN_ASPECT;
+   vec2 screen_scale = SCREEN_SCALE;
    vec2 screen_size = HSM_GetScreenSize(screen_scale);
    vec2 int_scale_mult = HSM_GetIntegerScaleMult(screen_size);
    vec2 original_size = HSM_GetRotatedRawOriginalSize();
@@ -290,28 +262,49 @@ vec4 GetColorWithIntro(vec4 in_color, vec2 in_coord)
 
 void main()
 {
-   FragColor = texture(Source, vTexCoord);
+	HSM_GetCachedScreenValues(VIEWPORT_COORD, InfoCachePass, SCREEN_ASPECT, SCREEN_SCALE, TUBE_SCALE, SCREEN_POS_OFFSET, AVERAGE_LUMA);
+	SCREEN_COORD = HSM_GetVTexCoordWithArgs(VIEWPORT_COORD, SCREEN_SCALE, SCREEN_POS_OFFSET);
+
+   FragColor = texture(Original, VIEWPORT_COORD);
 
    if (HSM_ANTI_FLICKER_ON == 1)
-      FragColor = AntiFlicker(vTexCoord, FragColor);
+      FragColor = AntiFlicker(VIEWPORT_COORD, FragColor);
 
    // HSM_Linearize(FragColor, HSM_DEFAULT_SRGB_GAMMA);
 
    if (HSM_INTRO_WHEN_TO_SHOW > 0)
-      FragColor = GetColorWithIntro(FragColor, vTexCoord);
+      FragColor = GetColorWithIntro(FragColor, VIEWPORT_COORD);
 
    // Apply black level & gamma with input as non linearized
    FragColor = HSM_ApplyBlackLevel(FragColor, 0);
 
-   // Phosphor Persistence
-   // FragColor = HSM_ApplyPhosphorPersistence(FragColor, PassFeedback6, vTexCoord);
+   // //--------------------------------------------------------------------------------------------
+   // // Save values in the alpha of the different quadrants of the screen
+   // //    Top Left is Average Luma
+   // //    Bottom Left is Y position of the center of the screen
+   // //    Bottom Right is height of the screen as a percentage of the full height of the screen
 
-   // Put Average Luminance in the alpha channel
-   FragColor.a = GetAverageLuma();
+   // // Put the average luma in the top left quadrant
+   // if (VIEWPORT_COORD.x < 0.5 && VIEWPORT_COORD.y < 0.5)
+   //    // Put Average Luminance in the alpha channel
+   //    FragColor.a = GetAverageLuma();
+
+   // if (VIEWPORT_COORD.y > 0.5)
+   // {
+   //    // Look at the alpha of the placement image to get the automatic position and height of the screen
+   //    vec2 screen_y_pos_and_height = GetScreenPlacementYPosAndHeight(sampler2D in_sampler_2D, float num_samples);
+
+   //    // Put the y position of the center of the screen in the bottom left quadrant
+   //    if (VIEWPORT_COORD.x < 0.5)
+   //       FragColor.a = screen_y_pos_and_height.x;
+   //    // Put the y position of the center of the screen in the bottom right quadrant
+   //    if (VIEWPORT_COORD.x > 0.5)
+   //       FragColor.a = screen_y_pos_and_height.y;
+   // }
    
    //////// Draw text to show out_colorolutions ////////// 
    if (HSM_RESOLUTION_DEBUG_ON == 1)
-      FragColor = AddText(vTexCoord, FragColor);
+      FragColor = AddText(VIEWPORT_COORD, FragColor);
 
    // FragColor = HSM_Delinearize(FragColor, HSM_DEFAULT_SRGB_GAMMA);
 }

@@ -1,20 +1,28 @@
-// Add Mega Bezel Params & Initial Prep
-//      Add Mega Bezel parameters at the beginning of the list for easy access
-//      Add Color Correction
-//      Calculate Average Luminance and put in alpha channel
-//      Debug Drawing of the resolution & screen scaling info
-shader0 = shaders/HyperspaceMadness/hsm-prep-initial-reflection-only.slang
+// Add Mega Bezel parameters at the beginning of the list for easy access
+// A very small pass at 1/8th scale to cache values which are consistent across the frame
+// Read back these values later for better performance
+shader0 = shaders/HyperspaceMadness/hsm-prep-info-cache-reflection-only.slang
 float_framebuffer0 = true
+scale_type0 = source
+scale0 = 0.125
+alias0  = "InfoCachePass"
+
+// Add Intro Animation
+// Scale is 8 to get back to the original core size
+shader1 = shaders/HyperspaceMadness/hsm-prep-intro.slang
+float_framebuffer1 = true
+scale_type1 = source
+scale1 = 8
 
 // Color Correction with Dogway's awesome Grade shader
-shader1 = shaders/HyperspaceMadness/hsm-dogway/hsm-grade.slang
-alias1  = AvgLumPass
+shader2 = shaders/HyperspaceMadness/hsm-dogway/hsm-grade.slang
+alias2 = "ColorCorrectPass"
 
-shader2 = shaders/HyperspaceMadness/hsm-phosphor-persistence.slang
-filter_linear2 = false
-scale_type2 = source
-scale2 = 1.0
-alias2 = "PersistencePass"
+shader3 = shaders/HyperspaceMadness/hsm-phosphor-persistence.slang
+filter_linear3 = false
+scale_type3 = source
+scale3 = 1.0
+alias3 = "PersistencePass"
 
 // Linearize Color ----------------------------------------------------------------
 shader3 = shaders/HyperspaceMadness/hsm-guest/hsm-guest-linearize.slang
@@ -137,7 +145,7 @@ shaders = 15
 
 
 // Define textures to be used by the different passes
-textures = "SamplerLUT1;SamplerLUT2;SamplerLUT3;IntroImage;ColoredGelImage;TubeStaticReflectionImage;ReflectPassLayerImage;ReflectionMaskImage;NightLightingImage;"
+textures = "SamplerLUT1;SamplerLUT2;SamplerLUT3;IntroImage;ScreenPlacementImage;ColoredGelImage;TubeStaticReflectionImage;ReflectPassLayerImage;ReflectionMaskImage;NightLightingImage;"
 
 SamplerLUT1 = shaders/HyperspaceMadness/textures/lut/16.png
 SamplerLUT1_linear = true
@@ -148,6 +156,9 @@ SamplerLUT3_linear = true
 
 IntroImage = shaders/HyperspaceMadness/textures/IntroImage_MegaBezelLogo.png
 IntroImage_linear = true
+
+ScreenPlacementImage = shaders/HyperspaceMadness/textures/Placeholder_Transparent_16x16.png
+ScreenPlacementImage_linear = false
 
 ColoredGelImage = shaders/HyperspaceMadness/textures/Placeholder_Transparent_16x16.png
 ColoredGelImage_linear = true

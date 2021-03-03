@@ -1,11 +1,13 @@
 #reference "../../MBZ__4__REFLECT-ONLY__GUEST-DrVENOM.slangp"
 
+ScreenPlacementImage = textures/full_composite.png
 ReflectPassLayerImage = textures/full_composite.png
 ReflectionMaskImage = textures/full_Plastic_Bezel_Reflect_Mask.png
 
 HSM_VIEWPORT_VIGNETTE_OPACITY = 0
 HSM_NON_INTEGER_SCALE = "105.169662"
-HSM_SCREEN_POSITION_Y = "-59.000000"
+// HSM_SCREEN_POSITION_Y = "-59.000000"
+HSM_USE_PLACEMENT_IMAGE_SCREEN_SCALE_AND_POS = "1.000000
 HSM_CURVATURE_2D_SCALE_LONG_AXIS = "100.000000"
 HSM_CURVATURE_2D_SCALE_SHORT_AXIS = "100.000000"
 HSM_TUBE_BLACK_EDGE_THICKNESS = "25.000000"

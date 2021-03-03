@@ -68,14 +68,24 @@ float HSM_INT_SCALE_BORDER_MIN_HEIGHT = global.HSM_INT_SCALE_BORDER_MIN_HEIGHT;
 #pragma parameter HSM_NON_INTEGER_SCALE 				"      Non-Integer Scale %" 82.97 1 200 0.2
 float HSM_NON_INTEGER_SCALE = global.HSM_NON_INTEGER_SCALE;
 
-#pragma parameter HSM_SNAP_TO_INT_SCALE_TOLERANCE 		"      Snap To Int-Scale Tolerance - Suggested 0.1" 0 0 3 0.01
-float HSM_SNAP_TO_INT_SCALE_TOLERANCE = global.HSM_SNAP_TO_INT_SCALE_TOLERANCE;
+//---------------------------------------------------------------------------------------------------
+//    Extended Scale
+//---------------------------------------------------------------------------------------------------
+#pragma parameter HSM_SCREEN_EXTENDED_SCALE_TITLE				"[ EXTENDED SCALING ]___________________________________________" 0 0 0.01 0.01
 
+#pragma parameter HSM_USE_PLACEMENT_IMAGE_SCREEN_SCALE_AND_POS 	"      Use Scale & Y Pos from Placement Image" 0 0 1 1
+float HSM_USE_PLACEMENT_IMAGE_SCREEN_SCALE_AND_POS = global.HSM_USE_PLACEMENT_IMAGE_SCREEN_SCALE_AND_POS;
+
+#pragma parameter HSM_NON_INTEGER_SCALE_OFFSET 					"      Non-Integer Scale Offset" 100 5 200 1
+float HSM_NON_INTEGER_SCALE_OFFSET = global.HSM_NON_INTEGER_SCALE_OFFSET / 100;
+
+#pragma parameter HSM_SNAP_TO_INT_SCALE_TOLERANCE 				"      Snap To Int-Scale Tolerance - Suggested 0.1" 0 0 3 0.01
+float HSM_SNAP_TO_INT_SCALE_TOLERANCE = global.HSM_SNAP_TO_INT_SCALE_TOLERANCE;
 
 //---------------------------------------------------------------------------------------------------
 //    Position
 //---------------------------------------------------------------------------------------------------
-#pragma parameter HSM_SCREEN_POSITION_TITLE				"[ POSITION ]___________________________________________________" 0 0 0.01 0.01
+#pragma parameter HSM_SCREEN_POSITION_TITLE				"[ POSITION OFFSET ]____________________________________________" 0 0 0.01 0.01
 
 #pragma parameter HSM_SCREEN_POSITION_X 				"      Position X" 0 -250 250 1
 float HSM_SCREEN_POSITION_X = global.HSM_SCREEN_POSITION_X / 1000;
@@ -206,13 +216,14 @@ float HSM_CURVATURE_3D_TILT_ANGLE_Y = global.HSM_CURVATURE_3D_TILT_ANGLE_Y / 100
 #define HSM_PHOSPHOR_PERSISTENCE_BLUE global.HSM_PHOSPHOR_PERSISTENCE_BLUE / 100
 
 //---------------------------------------------------------------------------------------------------
-//    COLOR & Persistence
+//    Black Level
 //---------------------------------------------------------------------------------------------------
 #pragma parameter HSM_COLOR_AND_PERSISTENCE_TITLE			"[ SCANLINES ON BLACK ]_________________________________________" 0 0 0.01 0.01
 
 #pragma parameter HSM_COLOR_BLACK_LEVEL 					"      Black Level - Def -4" -4 -100 100 1
 #define HSM_COLOR_BLACK_LEVEL global.HSM_COLOR_BLACK_LEVEL / 100
 
+// Not in use because negative cropping is disabled
 // #pragma parameter HSM_COLOR_NEGATIVE_CROP_BRIGHTNESS		"      Negative Crop Brightness - Def 1.8" 1.8 0 100 0.2
 // #define HSM_COLOR_NEGATIVE_CROP_BRIGHTNESS global.HSM_COLOR_NEGATIVE_CROP_BRIGHTNESS
 
@@ -233,7 +244,7 @@ float HSM_CURVATURE_3D_TILT_ANGLE_Y = global.HSM_CURVATURE_3D_TILT_ANGLE_Y / 100
 //         2 - Adobe
 //         3 - Rec. 2020
 
-#pragma parameter HSM_COLOR_TITLE							"[ CRT GAMMA ]__________________________________________________" 0 0 0.01 0.01
+#pragma parameter HSM_GAMMA_TITLE							"[ CRT GAMMA ]__________________________________________________" 0 0 0.01 0.01
 
 #pragma parameter HSM_COLOR_CRT_GAMMA   					"      CRT Gamma (Linear to Gamma Space Encode) Def 2.2" 2.2 0.1 5 0.05
 #define HSM_COLOR_CRT_GAMMA global.HSM_COLOR_CRT_GAMMA
@@ -295,6 +306,10 @@ float HSM_TUBE_STATIC_REFLECTION_IMAGE_SCALE = global.HSM_TUBE_STATIC_REFLECTION
 // #pragma parameter HSM_TUBE_STATIC_REFLECTION_IMAGE_DITHERING_SAMPLES  "[ TUBE IMAGES ]   Tube Static Reflection Noise Samples (Reduces Banding)" 0 0 10 1
 // float HSM_TUBE_STATIC_REFLECTION_IMAGE_DITHERING_SAMPLES = global.HSM_TUBE_STATIC_REFLECTION_IMAGE_DITHERING_SAMPLES;
 
+
+//---------------------------------------------------------------------------------------------------
+//    CRT is Last Pass
+//---------------------------------------------------------------------------------------------------
 #pragma parameter HSM_CRTLASTPASS_TITLE							"[ CRT IS LAST PASS ]___________________________________________" 0 0 0.01 0.01
 
 #pragma parameter HSM_CRT_IS_LAST_PASS 							"      CRT is Last Pass" 0 0 1 1
@@ -385,15 +400,16 @@ float HSM_TUBE_STATIC_REFLECTION_IMAGE_SCALE = global.HSM_TUBE_STATIC_REFLECTION
 #define HSM_INTRO_SOLID_BLACK_FADE_OUT global.HSM_INTRO_SOLID_BLACK_FADE_OUT
 
 
-//---------------------------------------------------------------------------------------------------
-//    Tube / Inner Bezel Curvature
-//---------------------------------------------------------------------------------------------------
-#pragma parameter HSM_BEZEL_TITLE								"[ BEZEL ]______________________________________________________" 0 0 0.01 0.01
 
-#pragma parameter HSM_BZL_USE_INDEPENDENT_SCALE_AND_CURVATURE 	"      Use Independent Scale & Curvature" 0 0 1 1
+//---------------------------------------------------------------------------------------------------
+//    Bezel Independent Scale
+//---------------------------------------------------------------------------------------------------
+#pragma parameter HSM_BEZEL_INDEPENDENT_TITLE								"[ BEZEL INDEPENDENT SCALE & CURVATURE ]________________________" 0 0 0.01 0.01
+
+#pragma parameter HSM_BZL_USE_INDEPENDENT_SCALE_AND_CURVATURE 			"      Use Independent Scale & Curvature" 0 0 1 1
 #define HSM_BZL_USE_INDEPENDENT_SCALE_AND_CURVATURE global.HSM_BZL_USE_INDEPENDENT_SCALE_AND_CURVATURE
 
-#pragma parameter HSM_BZL_INDEPENDENT_SCALE 					"      Independent Scale" 82.97 1 200 0.
+#pragma parameter HSM_BZL_INDEPENDENT_SCALE 							"      Independent Scale (When scale from image is not used)" 82.97 1 200 0.1
 #define HSM_BZL_INDEPENDENT_SCALE global.HSM_BZL_INDEPENDENT_SCALE / 100
 
 #pragma parameter HSM_BZL_INDEPENDENT_CURVATURE_SCALE_LONG_AXIS 		"      Independent Curvature X - Def 100" 100 0 400 5
@@ -401,6 +417,16 @@ float HSM_TUBE_STATIC_REFLECTION_IMAGE_SCALE = global.HSM_TUBE_STATIC_REFLECTION
 
 #pragma parameter HSM_BZL_INDEPENDENT_CURVATURE_SCALE_SHORT_AXIS 		"      Independent Curvature Y - Def 100" 100 0 400 5
 #define HSM_BZL_INDEPENDENT_CURVATURE_SCALE_SHORT_AXIS global.HSM_BZL_INDEPENDENT_CURVATURE_SCALE_SHORT_AXIS / 100
+
+
+
+//---------------------------------------------------------------------------------------------------
+//    Bezel General
+//---------------------------------------------------------------------------------------------------
+#pragma parameter HSM_BEZEL_GENERAL_TITLE						"[ BEZEL GENERAL ]______________________________________________" 0 0 0.01 0.01 
+
+#pragma parameter HSM_BZL_SCALE_OFFSET 							"      Scale Offset" 100 1 200 0.1
+#define HSM_BZL_SCALE_OFFSET global.HSM_BZL_SCALE_OFFSET / 100
 
 #pragma parameter HSM_BZL_INNER_CURVATURE_SCALE 				"      Inner Curvature Scale Multiplier" 100 0 2000 10
 #define HSM_BZL_INNER_CURVATURE_SCALE global.HSM_BZL_INNER_CURVATURE_SCALE / 100

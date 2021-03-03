@@ -8,7 +8,7 @@ float_framebuffer0 = true
 
 // Color Correction with Dogway's awesome Grade shader
 shader1 = shaders/HyperspaceMadness/hsm-dogway/hsm-grade.slang
-alias1  = AvgLumPass
+alias1  = "ColorCorrectPass"
 
 // Linearize the input based on CRT gamma and bob interlaced fields.
 // (Bobbing ensures we can immediately blur without getting artifacts.)
@@ -185,7 +185,7 @@ shaders = 20
 
 
 // Define textures to be used by the different passes
-textures = "mask_grille_texture_small;mask_slot_texture_small;mask_shadow_texture_small;SamplerLUT1;SamplerLUT2;SamplerLUT3;IntroImage;ColoredGelImage;TubeStaticReflectionImage;ReflectPassLayerImage;ReflectionMaskImage;NightLightingImage"
+textures = "mask_grille_texture_small;mask_slot_texture_small;mask_shadow_texture_small;SamplerLUT1;SamplerLUT2;SamplerLUT3;IntroImage;ScreenPlacementImage;ColoredGelImage;TubeStaticReflectionImage;ReflectPassLayerImage;ReflectionMaskImage;NightLightingImage"
 
 mask_grille_texture_small = "shaders/HyperspaceMadness/hsm-crt-royale/TileableLinearApertureGrille15Wide8And5d5SpacingResizeTo64.png"
 mask_grille_texture_small_wrap_mode = "repeat"
@@ -211,6 +211,9 @@ SamplerLUT3_linear = true
 
 IntroImage = shaders/HyperspaceMadness/textures/IntroImage_MegaBezelLogo.png
 IntroImage_linear = true
+
+ScreenPlacementImage = shaders/HyperspaceMadness/textures/Placeholder_Transparent_16x16.png
+ScreenPlacementImage_linear = false
 
 ColoredGelImage = shaders/HyperspaceMadness/textures/Placeholder_Transparent_16x16.png
 ColoredGelImage_linear = true

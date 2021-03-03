@@ -3,9 +3,9 @@
 //      Add Color Correction
 //      Calculate Average Luminance and put in alpha channel
 //      Debug Drawing of the resolution & screen scaling info
-shader0 = shaders/HyperspaceMadness/hsm-prep-initial.slang
+shader0 = shaders/HyperspaceMadness/hsm-prep-intro.slang
 float_framebuffer0 = true
-alias0  = AvgLumPass
+alias0  = "ColorCorrectPass"
 
 // De-Dithering - Mdapt
 shader1 = shaders/HyperspaceMadness/hsm-mdapt/hsm-mdapt-pass0.slang
@@ -85,7 +85,7 @@ float_framebuffer18 = true
 shaders = 19
 
 // Define textures to be used by the different passes
-textures = "SamplerLUT3;BackgroundVertImage;IntroImage;ColoredGelImage;TubeStaticReflectionImage;CabinetGlassImage;BezelImage;BezelVertImage;DecalImage;NightLightingImage;LEDImage;TopLayerImage;TopLayerVertImage;"
+textures = "SamplerLUT3;BackgroundVertImage;IntroImage;ScreenPlacementImage;ColoredGelImage;TubeStaticReflectionImage;CabinetGlassImage;BezelImage;BezelVertImage;DecalImage;NightLightingImage;LEDImage;TopLayerImage;TopLayerVertImage;"
 SamplerLUT3 = shaders/HyperspaceMadness/textures/lut/other1_32.png
 SamplerLUT3_linear = true
 

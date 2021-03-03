@@ -1,6 +1,7 @@
 #reference "../../MBZ__0__GUEST-DrVENOM.slangp"
 
 BackgroundImage = textures/full_composite.png
+ScreenPlacementImage = textures/full_composite.png
 BezelImage = textures/Plastic_Bezel_Dark.png
 ReflectionMaskImage = textures/Plastic_Bezel_Reflect_Mask.png
 

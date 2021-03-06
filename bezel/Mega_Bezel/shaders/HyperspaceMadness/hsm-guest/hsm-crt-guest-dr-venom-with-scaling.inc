@@ -247,14 +247,10 @@ layout(std140, set = 0, binding = 0) uniform UBO
 // #define SourceSize global.SourceSize
 // HSM Added
 #define SourceSize CROPPED_ORIGINAL_SIZE
-// #define SourceSize HSM_GetCroppedRotatedOriginalSizeWithCoreResMult()
 // End Addition
 
 #define OutputSize global.OutputSize
 #define gl_FragCoord (vTexCoord * OutputSize.xy)
-
-// Calculate values for fragment stage
-vec2 CROPPED_ORIGINAL_SIZE = HSM_GetCroppedRotatedOriginalSizeWithCoreResMult();
 
 #pragma stage vertex
 
@@ -810,7 +806,7 @@ void main()
 	FragColor = vec4(color, 1);
 	
 	// Prep and add output gamma
-	FragColor = HSM_GetPostCrtPreppedColor(FragColor, screen_curved_coord, SCREEN_COORD, SCREEN_ASPECT, SCREEN_SCALE, TUBE_SCALE, ColoredGelImage, TubeStaticReflectionImage);
+	FragColor = HSM_GetPostCrtPreppedColor(FragColor, screen_curved_coord, ColoredGelImage, TubeStaticReflectionImage);
 	// End Addition
 }
 

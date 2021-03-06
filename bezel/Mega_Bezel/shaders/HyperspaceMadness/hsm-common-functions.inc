@@ -422,33 +422,6 @@ vec2 HSM_GetScreenPlacementYPosAndHeight(sampler2D in_sampler_2D, float num_samp
 }
 
 
-vec4 HSM_GetColorForScreenInfoCache(vec2 viewport_coord, sampler2D original_pass, sampler2D screen_placement_image)
-{
-	vec2 screen_pos_and_height = HSM_GetScreenPlacementYPosAndHeight(screen_placement_image, 60);
-
-	float screen_aspect = HSM_GetScreenAspect();
-	vec2 screen_scale = HSM_GetScreenScale(screen_aspect, screen_pos_and_height.y);
-	vec2 tube_scale = HSM_GetTubeScale(screen_scale, screen_pos_and_height.y);
-	vec2 pos_offset = HSM_GetPositionOffset(vec2(0.5, screen_pos_and_height.x));
-
-	vec4 out_color = vec4(0);
-
-	if (viewport_coord.x < 0.5)
-	{
-		out_color.rg = screen_scale;
-		out_color.b = screen_aspect;
-		out_color.a = HSM_GetAverageLuma(original_pass, global.OriginalSize.xy);
-	}
-	else
-	{
-		out_color.rg = tube_scale;
-		out_color.ba = pos_offset;
-	}
-
-	return out_color;
-}
-
-
 vec2 HSM_GetCoordWithPositionOffset(vec2 in_coord, vec2 position_offset)
 {
 	return in_coord - position_offset;
@@ -464,6 +437,41 @@ vec2 HSM_GetScreenVTexCoord(vec2 in_coord, vec2 in_screen_scale, vec2 position_o
 	return HSM_GetVTexCoordWithArgs(in_coord, in_screen_scale, position_offset);
 }
 
+vec4 HSM_GetColorForScreenInfoCache(vec2 viewport_coord, sampler2D original_pass, sampler2D screen_placement_image)
+{
+	vec4 out_color = vec4(0);
+
+	if (viewport_coord.y < 0.5)
+	{
+		vec2 screen_pos_and_height = HSM_GetScreenPlacementYPosAndHeight(screen_placement_image, 60);
+		float screen_aspect = HSM_GetScreenAspect();
+		vec2 screen_scale = HSM_GetScreenScale(screen_aspect, screen_pos_and_height.y);
+
+		if (viewport_coord.x < 0.5)
+		{
+			out_color.rg = screen_scale;
+			out_color.b = screen_aspect;
+			out_color.a = HSM_GetAverageLuma(original_pass, global.OriginalSize.xy);
+		}
+		else
+		{
+			vec2 tube_scale = HSM_GetTubeScale(screen_scale, screen_pos_and_height.y);
+			vec2 pos_offset = HSM_GetPositionOffset(vec2(0.5, screen_pos_and_height.x));
+			out_color.rg = tube_scale;
+			out_color.ba = pos_offset;
+		}
+	}
+	else
+	{
+		if (viewport_coord.x < 0.5)
+		{
+			vec2 cropped_original_size = HSM_GetCroppedRotatedOriginalSizeWithCoreResMult();
+			out_color.rg = cropped_original_size;
+		}
+	}
+	return out_color;
+}
+
 vec4 HSM_UpdateGlobalScreenValuesFromCache(sampler2D in_cache_pass, vec2 viewport_coord)
 {
 	vec4 texture_sample_1 = texture(in_cache_pass, vec2(0.25, 0.25));
@@ -476,6 +484,9 @@ vec4 HSM_UpdateGlobalScreenValuesFromCache(sampler2D in_cache_pass, vec2 viewpor
 	SCREEN_POS_OFFSET = texture_sample_2.ba;
 	SCREEN_COORD = HSM_GetVTexCoordWithArgs(viewport_coord, SCREEN_SCALE, SCREEN_POS_OFFSET);
 	USE_VERTICAL_SCANLINES = HSM_GetUseVerticalScanlines(SCREEN_ASPECT);
+
+	vec4 texture_sample_3 = texture(in_cache_pass, vec2(0.25, 0.75));
+	CROPPED_ORIGINAL_SIZE = texture_sample_3.rg;
 
 	return vec4(0);
 }
@@ -791,7 +802,6 @@ vec2 HSM_GetMirrorWrappedCoord(vec2 in_coord)
 	return ctr_mirror_coord + 0.5;
 }
 
-
 // Borrowed from cgwg's crt-geom, under GPL
 float HSM_GetCornerMask(vec2 in_coord, float screen_aspect, float corner_radius, float edge_sharpness)
 // returns 0.0 - 1.0 value used for masking the corner so it looks round
@@ -837,8 +847,6 @@ vec2 HSM_GetTubeCurvedCoord(vec2 screen_coord, float curvature_scale, vec2 scree
 
 	return tube_curved_coord;
 }
-
-
 
 vec3 HSM_RGBtoHSV(vec3 c)
 {
@@ -1160,11 +1168,11 @@ vec4 HSM_BlendModeLayerMix(vec4 color_under, vec4 color_over, float blend_mode, 
 	return out_color;
 }
 
-vec4 HSM_GetPostCrtPreppedColor(vec4 in_color_linear, vec2 screen_curved_coord, vec2 screen_coord, float screen_aspect, vec2 screen_scale, vec2 tube_scale, in sampler2D gel_image_sampler, in sampler2D tube_highlight_image_sampler)
+vec4 HSM_GetPostCrtPreppedColor(vec4 in_color_linear, vec2 screen_curved_coord, in sampler2D gel_image_sampler, in sampler2D tube_highlight_image_sampler)
 {
 	vec4 out_color = in_color_linear;
-	float screen_mask = HSM_GetCornerMask((screen_curved_coord - 0.5) * 0.999 + 0.5, screen_aspect, HSM_SCREEN_CORNER_RADIUS, 0.9);
-	float screen_edge_mask = HSM_GetCornerMask(screen_curved_coord, screen_aspect, HSM_SCREEN_CORNER_RADIUS, HSM_SCREEN_EDGE_SHARPNESS);
+	float screen_mask = HSM_GetCornerMask((screen_curved_coord - 0.5) * 0.999 + 0.5, SCREEN_ASPECT, HSM_SCREEN_CORNER_RADIUS, 0.9);
+	float screen_edge_mask = HSM_GetCornerMask(screen_curved_coord, SCREEN_ASPECT, HSM_SCREEN_CORNER_RADIUS, HSM_SCREEN_EDGE_SHARPNESS);
 	screen_edge_mask = 1 - ((1 - screen_edge_mask) * screen_mask);
 
 	// out_color *= screen_edge_mask;
@@ -1183,12 +1191,12 @@ vec4 HSM_GetPostCrtPreppedColor(vec4 in_color_linear, vec2 screen_curved_coord, 
 
 	if (HSM_SCANLINE_FAKE_SCANLINE_OPACITY > 0)
 	{
-		vec4 scanline_masked_color = HSM_ApplyScanlineMask(out_color, screen_coord, screen_scale);
+		vec4 scanline_masked_color = HSM_ApplyScanlineMask(out_color, SCREEN_COORD, SCREEN_SCALE);
 		// out_color = mix(out_color, scanline_masked_color, screen_mask);
 		out_color = scanline_masked_color;
 	}
 
-	vec2 tube_curved_coord = HSM_GetTubeCurvedCoord(screen_coord, 1, screen_scale, tube_scale, screen_aspect, 1);
+	vec2 tube_curved_coord = HSM_GetTubeCurvedCoord(SCREEN_COORD, 1, SCREEN_SCALE, TUBE_SCALE, SCREEN_ASPECT, 1);
 	vec2 mirrored_tube_coord = HSM_GetMirrorWrappedCoord(tube_curved_coord);
 
 	// Add a Colored Gel image on top of the screen, this is what colors games like space invaders or battlezone

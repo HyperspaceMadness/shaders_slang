@@ -89,23 +89,23 @@ layout(push_constant) uniform Push
 //                                                                       //
 ///////////////////////////////////////////////////////////////////////////
 
-vec2 CROPPED_ORIGINAL_SIZE = HSM_GetCroppedRotatedOriginalSizeWithCoreResMult();
-float SCREEN_ASPECT = HSM_GetScreenAspect();
-vec2 SCREEN_SCALE = HSM_GetScreenScale(SCREEN_ASPECT);
+vec2 MY_CROPPED_ORIGINAL_SIZE = HSM_GetCroppedRotatedOriginalSizeWithCoreResMult();
+float MY_SCREEN_ASPECT = HSM_GetScreenAspect();
+vec2 MY_SCREEN_SCALE = HSM_GetScreenScale(MY_SCREEN_ASPECT, 0.83);
 
 #pragma stage vertex
 layout(location = 0) in vec4 Position;
 layout(location = 1) in vec2 TexCoord;
 layout(location = 0) out vec2 vTexCoord;
 layout(location = 1) out vec2 texel;
-layout(location = 2) out vec2 SCREEN_COORD;
+layout(location = 2) out vec2 MY_SCREEN_COORD;
 
 void main()
 {
     gl_Position = global.MVP * Position;
     vTexCoord = TexCoord * 1.0001;
     
-	SCREEN_COORD = HSM_GetScreenVTexCoord(vTexCoord, SCREEN_SCALE);
+	MY_SCREEN_COORD = HSM_GetScreenVTexCoord(vTexCoord, MY_SCREEN_SCALE, HSM_GetPositionOffset(vec2(0.5,0.5)));
 
     texel = params.SourceSize.zw;
 }
@@ -117,10 +117,10 @@ void main()
 #pragma stage fragment
 layout(location = 0) in vec2 vTexCoord;
 layout(location = 1) in vec2 texel;
-layout(location = 2) in vec2 SCREEN_COORD;
+layout(location = 2) in vec2 MY_SCREEN_COORD;
 layout(location = 0) out vec4 FragColor;
 layout(set = 0, binding = 1) uniform sampler2D Source;
-layout(set = 0, binding = 2) uniform sampler2D PassOutput1;
+layout(set = 0, binding = 2) uniform sampler2D ColorCorrectPass;
 layout(set = 0, binding = 3) uniform sampler2D DMG0ColorPaletteImage;
 layout(set = 0, binding = 4) uniform sampler2D DMG1ColorPaletteImage;
 layout(set = 0, binding = 5) uniform sampler2D DMG2ColorPaletteImage;
@@ -163,7 +163,7 @@ void main()
     if (params.gameboy_color_palette == 5)
         bg_color = texture(CustomColorPaletteImage, vec2(0.25, 0.5));
 
-	vec2 screen_curved_coord = HSM_GetCurvedCoord(SCREEN_COORD, 1, SCREEN_ASPECT);
+	vec2 screen_curved_coord = HSM_GetCurvedCoord(MY_SCREEN_COORD, 1, MY_SCREEN_ASPECT);
 	vec2 screen_curved_coord_mirrored = HSM_GetMirrorWrappedCoord(screen_curved_coord);
     // End Addition
 
@@ -171,8 +171,8 @@ void main()
     tex = (tex + 0.5) * params.PassOutputSize1.zw;
     
     // Sample all the relevant textures
-    vec4 foreground = texture(PassOutput1, tex - screen_offset);
-    vec4 background = texture(LCDBackgroundImage, SCREEN_COORD);
+    vec4 foreground = texture(ColorCorrectPass, tex - screen_offset);
+    vec4 background = texture(LCDBackgroundImage, MY_SCREEN_COORD);
     vec4 shadows    = texture(Source, vTexCoord - (shadow_offset + screen_offset));
     vec4 background_color = bg_color;
 
@@ -206,6 +206,6 @@ void main()
     FragColor = HSM_Linearize(out_color, HSM_DEFAULT_CRT_GAMMA);
 
     // Prep and add output gamma
-	FragColor = HSM_GetPostCrtPreppedColor(FragColor, screen_curved_coord, SCREEN_COORD, SCREEN_ASPECT, SCREEN_SCALE, ColoredGelImage, TubeStaticReflectionImage);
+	FragColor = HSM_GetPostCrtPreppedColor(FragColor, screen_curved_coord, ColoredGelImage, TubeStaticReflectionImage);
 	// End Addition
 }

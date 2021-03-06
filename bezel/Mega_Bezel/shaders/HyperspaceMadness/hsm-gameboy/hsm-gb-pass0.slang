@@ -56,9 +56,9 @@ layout(push_constant) uniform Push
 //                                                                       //
 ///////////////////////////////////////////////////////////////////////////
 
-vec2 CROPPED_ORIGINAL_SIZE = HSM_GetCroppedRotatedOriginalSizeWithCoreResMult();
-float SCREEN_ASPECT = HSM_GetScreenAspect();
-vec2 SCREEN_SCALE = HSM_GetScreenScale(SCREEN_ASPECT);
+vec2 MY_CROPPED_ORIGINAL_SIZE = HSM_GetCroppedRotatedOriginalSizeWithCoreResMult();
+float MY_SCREEN_ASPECT = HSM_GetScreenAspect();
+vec2 MY_SCREEN_SCALE = HSM_GetScreenScale(MY_SCREEN_ASPECT, 0.83);
 
 ////////////////////////////////////////////////////////////////////////////////
 // Vertex shader                                                              //
@@ -71,7 +71,6 @@ layout(location = 1) in vec2 TexCoord;
 layout(location = 0) out vec2 vTexCoord;
 layout(location = 2) out vec2 dot_size;
 layout(location = 3) out vec2 one_texel;
-layout(location = 4) out vec2 SCREEN_COORD;
 
 ////////////////////////////////////////////////////////////////////////////////
 // Vertex definitions                                                         //
@@ -91,18 +90,18 @@ void main()
 
     // // HSM Added
     // pixels per source texel
-    float video_scale_factor = floor(SCREEN_SCALE.y * params.OutputSize.y * params.SourceSize.w);
+    float video_scale_factor = floor(MY_SCREEN_SCALE.y * params.OutputSize.y * params.SourceSize.w);
 
     // Size of screen pixels in output pixels
-	vec2 scaled_video_out = params.OutputSize.xy * SCREEN_SCALE;
+	vec2 scaled_video_out = params.OutputSize.xy * MY_SCREEN_SCALE;
 
     // Remaps position to integer scaled output
-    gl_Position = global.MVP * Position / vec4( vec2(SCREEN_SCALE * params.OutputSize.xy / scaled_video_out), 1.0, 1.0 );   
+    gl_Position = global.MVP * Position / vec4( vec2(MY_SCREEN_SCALE * params.OutputSize.xy / scaled_video_out), 1.0, 1.0 );   
     vTexCoord = TexCoord * 1.0001;
-    SCREEN_COORD = HSM_GetVTexCoordWithArgs(vTexCoord, SCREEN_SCALE, HSM_GetPositionOffset());
+    MY_SCREEN_SCALE = HSM_GetVTexCoordWithArgs(vTexCoord, MY_SCREEN_SCALE, HSM_GetPositionOffset(vec2(0.5, 0.5)));
 
     // Pixel size inside source
-    dot_size = 1 / CROPPED_ORIGINAL_SIZE;
+    dot_size = 1 / MY_CROPPED_ORIGINAL_SIZE;
     
     // Pixel size relative to final
     one_texel = 1.0 / scaled_video_out;
@@ -116,7 +115,7 @@ void main()
 layout(location = 0) in vec2 vTexCoord;
 layout(location = 2) in vec2 dot_size;
 layout(location = 3) in vec2 one_texel;
-layout(location = 4) in vec2 SCREEN_COORD;
+layout(location = 4) in vec2 MY_SCREEN_COORD;
 
 layout(location = 0) out vec4 FragColor;
 
@@ -170,7 +169,7 @@ void main()
     if (params.gameboy_color_palette == 5)
         foreground_color = texture(CustomColorPaletteImage, vec2(0.75, 0.5)).rgb;
 
-    vec2 screen_curved_coord = HSM_GetCurvedCoord(SCREEN_COORD, 1, SCREEN_ASPECT);
+    vec2 screen_curved_coord = HSM_GetCurvedCoord(MY_SCREEN_SCALE, 1, MY_SCREEN_ASPECT);
 	vec2 screen_curved_coord_mirrored = HSM_GetMirrorWrappedCoord(screen_curved_coord);
 
     // Determine if the corrent texel lies on a dot or in the space between dots

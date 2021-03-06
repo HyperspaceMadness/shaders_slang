@@ -48,10 +48,6 @@ layout(push_constant) uniform Push
 //                                                                       //
 ///////////////////////////////////////////////////////////////////////////
 
-vec2 CROPPED_ORIGINAL_SIZE = HSM_GetCroppedRotatedOriginalSizeWithCoreResMult();
-float SCREEN_ASPECT = HSM_GetScreenAspect();
-vec2 SCREEN_SCALE = HSM_GetScreenScale(SCREEN_ASPECT);
-
 ////////////////////////////////////////////////////////////////////////////////
 // Vertex shader                                                              //
 ////////////////////////////////////////////////////////////////////////////////

@@ -35,12 +35,7 @@ void main()
 {
 	if (HSM_REFLECT_BLUR_NUM_SAMPLES > 0)
 	{
-		vec2 tube_coord_warped = vec2(0, 0);
-		float outside_tube_mask = 0;
-		float edge_mask = 0;
-		HSM_GetCachedCurvedValues(VIEWPORT_COORD.xy, tube_coord_warped, outside_tube_mask, edge_mask);
-
-		vec2 tube_warped_coord_ctr = tube_coord_warped - 0.5;
+		vec2 tube_warped_coord_ctr = HSM_GetTubeCurvedCoord(SCREEN_COORD, 1, SCREEN_SCALE, TUBE_SCALE, SCREEN_ASPECT, 1) - 0.5;
 
 		//----------------------------------------------------
 		//  Calculate Outside mapping Coords
@@ -70,14 +65,6 @@ void main()
 		float blur_midpoint = 0.12;
 		float hbl_sharpness_falloff_speed = 1;
 		blur_ratio = HHLP_QuadraticBezier (clamp_0_1(blur_ratio - blur_midpoint), vec2(0.05, hbl_sharpness_falloff_speed));
-
-		// float in_split_screen_area = 0;
-		// if (HSM_SPLITSCREEN_ON == 1)
-		// {
-		// 	in_split_screen_area = HSM_GetSplitScreenAreaGradient(tube_coord_warped, 1.5, 0);
-		// 	blur_ratio = (1 - outside_tube_mask) * HHLP_EasePowerInOut(0.5 + HSM_GetSplitScreenAreaGradient(tube_coord_warped, 0.2, 1.5), 2) + outside_tube_mask * blur_ratio;
-		// }
-
 		blur_ratio = HSM_REFLECT_BLUR_MIN + blur_ratio * (HSM_REFLECT_BLUR_MAX - HSM_REFLECT_BLUR_MIN);
 
 		vec3 col = vec3(0.0);

@@ -263,8 +263,7 @@ vec4 GetColorWithIntro(vec4 in_color, vec2 in_coord)
 void main()
 {
 	HSM_UpdateGlobalScreenValuesFromCache(InfoCachePass, VIEWPORT_COORD);
-	SCREEN_COORD = HSM_GetVTexCoordWithArgs(VIEWPORT_COORD, SCREEN_SCALE, SCREEN_POS_OFFSET);
-
+   
    FragColor = texture(Original, VIEWPORT_COORD);
 
    if (HSM_ANTI_FLICKER_ON == 1)

@@ -267,6 +267,7 @@ layout(location = 8) in vec3 BEZEL_FRAME_ORIGINAL_COLOR_RGB;
 layout(location = 0) out vec4 FragColor;
 
 // Pass Framebuffer Textures
+layout(set = 0, binding = 1) uniform sampler2D InfoCachePass;
 layout(set = 0, binding = 2) uniform sampler2D BR_CRTAndReflectionPass;
 
 // Image Textures from disk
@@ -282,13 +283,12 @@ layout(set = 0, binding = 11) uniform sampler2D LEDImage;
 layout(set = 0, binding = 12) uniform sampler2D TopLayerImage;
 // layout(set = 0, binding = 13) uniform sampler2D TopLayerVertImage;
 layout(set = 0, binding = 13) uniform sampler2D ReflectionMaskImage;
-layout(set = 0, binding = 14) uniform sampler2D InfoCachePass;
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
 void main()
 {
 	HSM_UpdateGlobalScreenValuesFromCache(InfoCachePass, VIEWPORT_COORD);
-	SCREEN_COORD = HSM_GetVTexCoordWithArgs(VIEWPORT_COORD, SCREEN_SCALE, SCREEN_POS_OFFSET);
+	// SCREEN_COORD = HSM_GetVTexCoordWithArgs(VIEWPORT_COORD, SCREEN_SCALE, SCREEN_POS_OFFSET);
 
 	//----------------------------------------------------
 	// CRT Pass
@@ -305,21 +305,15 @@ void main()
 		return;
 	}
 
-	vec2 tube_coord_warped = vec2(0, 0);
-	float outside_tube_mask = 0;
-	float edge_mask = 0;
-	HSM_GetCachedCurvedValues(VIEWPORT_COORD.xy, tube_coord_warped, outside_tube_mask, edge_mask);
-	TUBE_MASK = 1 - outside_tube_mask;
-
-	vec2 tube_warped_coord_ctr = tube_coord_warped - 0.5;
-
-
 	vec2 screen_curved_coord = HSM_GetCurvedCoord(SCREEN_COORD, 1, SCREEN_ASPECT);
+	
+	vec2 tube_coord_warped = HSM_GetTubeCurvedCoord(SCREEN_COORD, 1, SCREEN_SCALE, TUBE_SCALE, SCREEN_ASPECT, 1);
+	vec2 tube_warped_coord_ctr = tube_coord_warped - 0.5;
+	vec2 edge_mask_coord = tube_warped_coord_ctr * (1 - (HSM_BZL_INNER_EDGE_THICKNESS / vec2(SCREEN_ASPECT, 1))) + 0.5;
+	float edge_mask =  HSM_GetCornerMask(edge_mask_coord, SCREEN_ASPECT, HSM_BZL_INNER_CORNER_RADIUS_SCALE * HSM_SCREEN_CORNER_RADIUS, HSM_BZL_INNER_EDGE_SHARPNESS);
 
-	float split_pos_1 = 0;
-	float split_pos_2 = 0;
-	float split_dist = 0;
-	float split_axis_is_horizontal = 0;
+	float outside_tube_mask = 1 - HSM_GetCornerMask(tube_coord_warped, SCREEN_ASPECT, HSM_BZL_INNER_CORNER_RADIUS_SCALE * HSM_SCREEN_CORNER_RADIUS, 0.99);
+	TUBE_MASK = 1 - outside_tube_mask;
 
 	// Shrink the mask by 0.001 to clip off outer edge
 	SCREEN_MASK = HSM_GetCornerMask(((screen_curved_coord - 0.5) * 1.001) + 0.5, SCREEN_ASPECT, HSM_SCREEN_CORNER_RADIUS, HSM_SCREEN_EDGE_SHARPNESS);
@@ -555,7 +549,7 @@ void main()
 	if (HSM_GLASS_BORDER_ON == 1)
 		OUTSIDE_TUBE_MASK_FOR_IMAGE = clamp(outside_tube_mask - edge_mask, 0, 1);
 	else
-		OUTSIDE_TUBE_MASK_FOR_IMAGE = 1 - HSM_GetCornerMask((tube_coord_warped - 0.5) * 1.003 + 0.5, SCREEN_ASPECT, HSM_FRM_OUTER_CORNER_RADIUS, 1);
+		OUTSIDE_TUBE_MASK_FOR_IMAGE = 1 - HSM_GetCornerMask(tube_warped_coord_ctr * 1.003 + 0.5, SCREEN_ASPECT, HSM_FRM_OUTER_CORNER_RADIUS, 1);
 
 
 	//-----------------------------------------------------------------------------------------

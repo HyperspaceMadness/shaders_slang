@@ -448,19 +448,6 @@ vec4 HSM_GetColorForScreenInfoCache(vec2 viewport_coord, sampler2D original_pass
 	return out_color;
 }
 
-vec4 HSM_UpdateGlobalScreenValuesFromCache(sampler2D in_cache_pass, vec2 viewport_coord)
-{
-	vec4 texture_sample_1 = texture(in_cache_pass, vec2(0.25, 0.25));
-	SCREEN_SCALE = texture_sample_1.rg;
-	SCREEN_ASPECT = texture_sample_1.b;
-	AVERAGE_LUMA = texture_sample_1.a;
-
-	vec4 texture_sample_2 = texture(in_cache_pass, vec2(0.75, 0.25));
-	TUBE_SCALE = texture_sample_2.rg;
-	SCREEN_POS_OFFSET = texture_sample_2.ba;
-	
-	return vec4(0);
-}
 
 vec2 HSM_GetCoordWithPositionOffset(vec2 in_coord, vec2 position_offset)
 {
@@ -475,6 +462,22 @@ vec2 HSM_GetVTexCoordWithArgs(vec2 in_coord, vec2 in_scale, vec2 position_offset
 vec2 HSM_GetScreenVTexCoord(vec2 in_coord, vec2 in_screen_scale, vec2 position_offset)
 {
 	return HSM_GetVTexCoordWithArgs(in_coord, in_screen_scale, position_offset);
+}
+
+vec4 HSM_UpdateGlobalScreenValuesFromCache(sampler2D in_cache_pass, vec2 viewport_coord)
+{
+	vec4 texture_sample_1 = texture(in_cache_pass, vec2(0.25, 0.25));
+	SCREEN_SCALE = texture_sample_1.rg;
+	SCREEN_ASPECT = texture_sample_1.b;
+	AVERAGE_LUMA = texture_sample_1.a;
+
+	vec4 texture_sample_2 = texture(in_cache_pass, vec2(0.75, 0.25));
+	TUBE_SCALE = texture_sample_2.rg;
+	SCREEN_POS_OFFSET = texture_sample_2.ba;
+	SCREEN_COORD = HSM_GetVTexCoordWithArgs(viewport_coord, SCREEN_SCALE, SCREEN_POS_OFFSET);
+	USE_VERTICAL_SCANLINES = HSM_GetUseVerticalScanlines(SCREEN_ASPECT);
+
+	return vec4(0);
 }
 
 float HSM_GetSplitAxisIsHorizontal()

@@ -108,33 +108,32 @@ layout(location = 6) in vec2 VIEWPORT_COORD;
 layout(location = 0) out vec4 FragColor;
 
 // Pass Framebuffer Textures
+layout(set = 0, binding = 1) uniform sampler2D InfoCachePass;
 layout(set = 0, binding = 2) uniform sampler2D BR_CRTPass;
+layout(set = 0, binding = 3) uniform sampler2D BR_MirrorBlurredPass;
+layout(set = 0, binding = 4) uniform sampler2D BR_MirrorReflectionDiffusedPass;
+layout(set = 0, binding = 5) uniform sampler2D BR_MirrorFullscreenGlowPass;
 
-layout(set = 0, binding = 5) uniform sampler2D TubeStaticReflectionImage;
-layout(set = 0, binding = 6) uniform sampler2D ColoredGelImage;
-layout(set = 0, binding = 7) uniform sampler2D ReflectPassLayerImage;
-layout(set = 0, binding = 8) uniform sampler2D ReflectionMaskImage;
-layout(set = 0, binding = 9) uniform sampler2D NightLightingImage;
-
-layout(set = 0, binding = 10) uniform sampler2D BR_MirrorBlurredPass;
-layout(set = 0, binding = 11) uniform sampler2D BR_MirrorReflectionDiffusedPass;
-layout(set = 0, binding = 12) uniform sampler2D BR_MirrorFullscreenGlowPass;
-layout(set = 0, binding = 13) uniform sampler2D InfoCachePass;
-layout(set = 0, binding = 14) uniform sampler2D ScreenPlacementImage;
+// Image Textures from Disk
+layout(set = 0, binding = 6) uniform sampler2D TubeStaticReflectionImage;
+layout(set = 0, binding = 7) uniform sampler2D ColoredGelImage;
+layout(set = 0, binding = 8) uniform sampler2D ReflectPassLayerImage;
+layout(set = 0, binding = 9) uniform sampler2D ReflectionMaskImage;
+layout(set = 0, binding = 10) uniform sampler2D NightLightingImage;
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
 void main()
 {
 	HSM_UpdateGlobalScreenValuesFromCache(InfoCachePass, VIEWPORT_COORD);
-	SCREEN_COORD = HSM_GetVTexCoordWithArgs(VIEWPORT_COORD, SCREEN_SCALE, SCREEN_POS_OFFSET);
-	
-	vec2 tube_coord_warped = vec2(0, 0);
-	float outside_tube_mask = 0;
-	float edge_mask = 0;
-	HSM_GetCachedCurvedValues(VIEWPORT_COORD.xy, tube_coord_warped, outside_tube_mask, edge_mask);
+
+	vec2 tube_coord_warped = HSM_GetTubeCurvedCoord(SCREEN_COORD, 1, SCREEN_SCALE, TUBE_SCALE, SCREEN_ASPECT, 1);
+	vec2 tube_coord_warped_ctr = tube_coord_warped - 0.5;
+
+	float outside_tube_mask = 1 - HSM_GetCornerMask(tube_coord_warped, SCREEN_ASPECT, HSM_BZL_INNER_CORNER_RADIUS_SCALE * HSM_SCREEN_CORNER_RADIUS, 0.99);
 	TUBE_MASK = 1 - outside_tube_mask;
 
-	vec2 tube_warped_coord_ctr = tube_coord_warped - 0.5;
+	vec2 edge_mask_coord = tube_coord_warped_ctr * (1 - (HSM_BZL_INNER_EDGE_THICKNESS / vec2(SCREEN_ASPECT, 1))) + 0.5;
+	float edge_mask =  HSM_GetCornerMask(edge_mask_coord, SCREEN_ASPECT, HSM_BZL_INNER_CORNER_RADIUS_SCALE * HSM_SCREEN_CORNER_RADIUS, HSM_BZL_INNER_EDGE_SHARPNESS);
 
 	float avg_lum_mult = smoothstep(0.01, 0.5, pow(AVERAGE_LUMA, 1.3));
 
@@ -171,8 +170,8 @@ void main()
 
 	// Get a range width from the outer tube edge to the outer edge of the outermap
 	float outermap_range = 0.5 * (outermap_scale.y) * 0.7;
-	vec2 outermap_warped_coord_ctr = tube_warped_coord_ctr;
-	vec2 outermap_coord = tube_warped_coord_ctr + 0.5;
+	vec2 outermap_warped_coord_ctr = tube_coord_warped_ctr;
+	vec2 outermap_coord = tube_coord_warped_ctr + 0.5;
 	vec2 outermap_screen_size_from_center = vec2(0.5, 0.5);
 	vec2 outermap_warped_outside_screen_vector = (outermap_warped_coord_ctr - clamp(outermap_warped_coord_ctr, -0.490, 0.490)) * vec2(1 / SCREEN_ASPECT, 1);
 	float outside_ratio_warped = clamp(length(outermap_warped_outside_screen_vector) / outermap_range, 0, 1);
@@ -244,8 +243,8 @@ void main()
 	float top_corner_mask = corner_mask * top_half_mask;
 	float bottom_corner_mask = corner_mask * (1 - top_half_mask);
 
-	float outside_tube_mask_wider = 1 - HSM_GetCornerMask(tube_warped_coord_ctr * 0.996 + 0.5, SCREEN_ASPECT, HSM_BZL_INNER_CORNER_RADIUS_SCALE * HSM_SCREEN_CORNER_RADIUS, screen_edge_sharpness);
-	float tube_shadow_mask = HSM_GetCornerMask(tube_warped_coord_ctr + 0.5, SCREEN_ASPECT, HSM_BZL_INNER_CORNER_RADIUS_SCALE * HSM_SCREEN_CORNER_RADIUS, 0);
+	float outside_tube_mask_wider = 1 - HSM_GetCornerMask(tube_coord_warped_ctr * 0.996 + 0.5, SCREEN_ASPECT, HSM_BZL_INNER_CORNER_RADIUS_SCALE * HSM_SCREEN_CORNER_RADIUS, screen_edge_sharpness);
+	float tube_shadow_mask = HSM_GetCornerMask(tube_coord_warped_ctr + 0.5, SCREEN_ASPECT, HSM_BZL_INNER_CORNER_RADIUS_SCALE * HSM_SCREEN_CORNER_RADIUS, 0);
 	float tube_edge_shadow_mult = HSM_BZL_INNER_EDGE_SHADOW * (tube_shadow_mask) + (1 - HSM_BZL_INNER_EDGE_SHADOW);
 
 	crt_image_linear.rgb *= tube_edge_shadow_mult * (1 - outside_tube_mask_wider);
@@ -522,6 +521,7 @@ void main()
 		FragColor = frag_color_linear;
 
 	// Markup to Draw Found Top and Bottom of tube area in the image
+	// // Need to add this above layout(set = 0, binding = 14) uniform sampler2D ScreenPlacementImage;
 	// float num_samples = 60;
 	// float screen_top_y_pos = 1;
 	// float screen_bottom_y_pos = 0;

@@ -554,8 +554,6 @@ void main()
 	
 	// HSM Added
 	HSM_UpdateGlobalScreenValuesFromCache(InfoCachePass, vTexCoord);
-	SCREEN_COORD = HSM_GetVTexCoordWithArgs(vTexCoord, SCREEN_SCALE, SCREEN_POS_OFFSET);
-	USE_VERTICAL_SCANLINES = HSM_GetUseVerticalScanlines(SCREEN_ASPECT);
 
 	// HSM Removed
 	float TATE = USE_VERTICAL_SCANLINES;

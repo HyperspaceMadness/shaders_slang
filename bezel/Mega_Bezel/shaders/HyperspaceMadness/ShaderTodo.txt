@@ -34,6 +34,7 @@ Changes:
 
 Mega Bezel Still to Come:
 
+Replace ReflectPassLayerImage with BackgroundImage
 Use BG Image for Screen Placement
 Independent Bezel Scaling not the same as non-int scale, why?
 Need x Scale for Independent bezel

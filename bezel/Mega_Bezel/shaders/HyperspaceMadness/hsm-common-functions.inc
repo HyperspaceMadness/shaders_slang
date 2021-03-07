@@ -239,7 +239,7 @@ vec2 HSM_GetScreenScale(float screen_aspect, float screen_height_from_image)
 				screen_height = (diagonal_length * 1) / sqrt(screen_aspect * screen_aspect + 1 * 1);
 			}
 
-			if (HSM_USE_PLACEMENT_IMAGE_SCREEN_SCALE_AND_POS == 1)
+			if (USE_IMAGE_FOR_PLACEMENT == 1)
 				screen_height = screen_height_from_image;
 
 			screen_height *= HSM_NON_INTEGER_SCALE_OFFSET;
@@ -360,7 +360,7 @@ vec2 HSM_GetTubeScale(vec2 screen_scale, float image_placement_screen_height)
 	// Add switch for independent scale
 	if (HSM_BZL_USE_INDEPENDENT_SCALE_AND_CURVATURE == 1)
 	{
-		if (HSM_USE_PLACEMENT_IMAGE_SCREEN_SCALE_AND_POS == 0)
+		if (USE_IMAGE_FOR_PLACEMENT == 0)
 			screen_scale = screen_scale / screen_scale.y * HSM_BZL_INDEPENDENT_SCALE;
 		else
 			screen_scale = screen_scale / screen_scale.y * image_placement_screen_height;
@@ -371,7 +371,7 @@ vec2 HSM_GetTubeScale(vec2 screen_scale, float image_placement_screen_height)
 
 vec2 HSM_GetPositionOffset(vec2 placement_image_pos )
 {
-	if (HSM_USE_PLACEMENT_IMAGE_SCREEN_SCALE_AND_POS == 0)
+	if (USE_IMAGE_FOR_PLACEMENT == 0)
 		placement_image_pos = vec2(0.5);
 	float output_aspect_ratio = global.FinalViewportSize.x / global.FinalViewportSize.y;
 	vec2 pos_offset = vec2(HSM_SCREEN_POSITION_X / output_aspect_ratio, HSM_SCREEN_POSITION_Y) + (placement_image_pos - 0.5);

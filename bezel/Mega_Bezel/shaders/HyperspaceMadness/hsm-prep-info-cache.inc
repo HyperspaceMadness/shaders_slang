@@ -14,9 +14,17 @@ void main()
 layout(location = 0) in vec2 vTexCoord;
 layout(location = 0) out vec4 FragColor;
 layout(set = 0, binding = 1) uniform sampler2D Source;
-layout(set = 0, binding = 2) uniform sampler2D ScreenPlacementImage;
+// layout(set = 0, binding = 2) uniform sampler2D BackgroundImage;
+layout(set = 0, binding = 3) uniform sampler2D ScreenPlacementImage;
 
 void main()
 {
-	FragColor = HSM_GetColorForScreenInfoCache(vTexCoord, Source, ScreenPlacementImage);
+   // if (HSM_IMAGE_CHOICE_FOR_PLACEMENT == 1)
+   // {
+	   FragColor = HSM_GetColorForScreenInfoCache(vTexCoord, Source, ScreenPlacementImage);
+   // }
+   // else
+   // {
+	//    FragColor = HSM_GetColorForScreenInfoCache(vTexCoord, Source, BackgroundImage);
+   // }
 }

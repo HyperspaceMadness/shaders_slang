@@ -75,77 +75,68 @@ scale9 = 1.0
 float_framebuffer9 = true
 alias9 = BR_CRTPass
 
-// Tube Scale Curvature Mapping
-// Write mapping into the pass, of the 4 channels, x & y are tube warped coord and z & w are outside tube mask and edge mask
-shader10 = shaders/HyperspaceMadness/hsm-curvature-mapping.slang
-mipmap_input10 = true
-filter_linear10 = true
-scale_type10 = viewport
-float_framebuffer10 = true
-alias10 = BR_MappingPass
-
 // Reduce Resolution  ----------------------------------------------------------------
 //      Reduce the resolution to a small static size regardless of final resolution
 //      Allows consistent look and faster at different final resolutions for blur
 //      Mipmap option allows downscaling without artifacts
-shader11 = shaders/HyperspaceMadness/hsm-linearize-crt.slang
-mipmap_input11 = true
-filter_linear11 = true
-scale_type11 = absolute
-float_framebuffer11 = true
-scale_x11 = 800
-scale_y11 = 600
-float_framebuffer11 = true
-alias11 = BR_MirrorLowResPass
+shader10 = shaders/HyperspaceMadness/hsm-linearize-crt.slang
+mipmap_input10 = true
+filter_linear10 = true
+scale_type10 = absolute
+float_framebuffer10 = true
+scale_x10 = 800
+scale_y10 = 600
+float_framebuffer10 = true
+alias10 = BR_MirrorLowResPass
 
 // Add Blur for the Reflection (Horizontal) ----------------------------------------------------------------
-shader12 = shaders/HyperspaceMadness/hsm-blur-outside-screen-horiz.slang
-mipmap_input12 = true
-filter_linear12 = true
-float_framebuffer12 = true
-scale_type12 = source
+shader11 = shaders/HyperspaceMadness/hsm-blur-outside-screen-horiz.slang
+mipmap_input11 = true
+filter_linear11 = true
+float_framebuffer11 = true
+scale_type11 = source
 
 // Add Blur for the Reflection (Vertical) ----------------------------------------------------------------
-shader13 = shaders/HyperspaceMadness/hsm-blur-outside-screen-vert.slang
-filter_linear13 = false
-scale_type13 = source
-float_framebuffer13 = true
-alias13 = BR_MirrorBlurredPass
+shader12 = shaders/HyperspaceMadness/hsm-blur-outside-screen-vert.slang
+filter_linear12 = false
+scale_type12 = source
+float_framebuffer12 = true
+alias12 = BR_MirrorBlurredPass
 
 // Reduce resolution ----------------------------------------------------------------
 // Reduced to a very small amount so we can create a blur which will create a glow from the screen
 //      Mipmap option allows smoother downscaling
+shader13 = :/shaders/shaders_slang/blurs/blur9x9.slang
+mipmap_input13 = true
+filter_linear13 = true
+scale_type13 = absolute
+float_framebuffer13 = true
+scale_x13 = 128
+scale_y13 = 128
+alias13 = BR_MirrorReflectionDiffusedPass
+
+// Add Diffused glow all around the screen ----------------------------------------------------------------
+//      Blurred so much that it's non directional
+//      Mipmap option allows downscaling without artifacts
 shader14 = :/shaders/shaders_slang/blurs/blur9x9.slang
 mipmap_input14 = true
 filter_linear14 = true
 scale_type14 = absolute
 float_framebuffer14 = true
-scale_x14 = 128
-scale_y14 = 128
-alias14 = BR_MirrorReflectionDiffusedPass
-
-// Add Diffused glow all around the screen ----------------------------------------------------------------
-//      Blurred so much that it's non directional
-//      Mipmap option allows downscaling without artifacts
-shader15 = :/shaders/shaders_slang/blurs/blur9x9.slang
-mipmap_input15 = true
-filter_linear15 = true
-scale_type15 = absolute
-float_framebuffer15 = true
-scale_x15 = 12
-scale_y15 = 12
-alias15 = BR_MirrorFullscreenGlowPass
+scale_x14 = 12
+scale_y14 = 12
+alias14 = BR_MirrorFullscreenGlowPass
 
 // Bezel Reflection ----------------------------------------------------------------
 
-shader16 = shaders/HyperspaceMadness/hsm-bezel-reflection.slang
-mipmap_input16 = true
-filter_linear16 = true
-scale_type16 = viewport
-float_framebuffer16 = false
+shader15 = shaders/HyperspaceMadness/hsm-bezel-reflection.slang
+mipmap_input15 = true
+filter_linear15 = true
+scale_type15 = viewport
+float_framebuffer15 = false
 
 // Define how many shaders will be used from this list
-shaders = 17
+shaders = 16
 
 
 // Define textures to be used by the different passes

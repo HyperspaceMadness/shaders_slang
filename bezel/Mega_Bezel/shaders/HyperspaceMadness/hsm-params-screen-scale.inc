@@ -73,8 +73,11 @@ float HSM_NON_INTEGER_SCALE = global.HSM_NON_INTEGER_SCALE;
 //---------------------------------------------------------------------------------------------------
 #pragma parameter HSM_SCREEN_EXTENDED_SCALE_TITLE				"[ EXTENDED SCALING ]___________________________________________" 0 0 0.01 0.01
 
-#pragma parameter HSM_USE_PLACEMENT_IMAGE_SCREEN_SCALE_AND_POS 	"      Use Scale & Y Pos from Placement Image" 0 0 1 1
-float HSM_USE_PLACEMENT_IMAGE_SCREEN_SCALE_AND_POS = global.HSM_USE_PLACEMENT_IMAGE_SCREEN_SCALE_AND_POS;
+#pragma parameter USE_IMAGE_FOR_PLACEMENT 						"      Use Image For Placement (Scale & Y Pos)" 0 0 1 1
+float USE_IMAGE_FOR_PLACEMENT = global.USE_IMAGE_FOR_PLACEMENT;
+
+#pragma parameter HSM_IMAGE_CHOICE_FOR_PLACEMENT 				"      Image For Placement - BackgroundImage | PlacementImage" 0 0 1 1
+float HSM_IMAGE_CHOICE_FOR_PLACEMENT = global.HSM_IMAGE_CHOICE_FOR_PLACEMENT;
 
 #pragma parameter HSM_NON_INTEGER_SCALE_OFFSET 					"      Non-Integer Scale Offset" 100 5 200 1
 float HSM_NON_INTEGER_SCALE_OFFSET = global.HSM_NON_INTEGER_SCALE_OFFSET / 100;

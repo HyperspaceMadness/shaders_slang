@@ -125,66 +125,57 @@ scale_type22 = viewport
 float_framebuffer22 = true
 alias22 = BR_CRTPass
 
-// Tube Scale Curvature Mapping
-// Write mapping into the pass, of the 4 channels, x & y are tube warped coord and z & w are outside tube mask and edge mask
-shader23 = shaders/HyperspaceMadness/hsm-curvature-mapping.slang
-mipmap_input23 = true
-filter_linear23 = true
-scale_type23 = viewport
-float_framebuffer23 = true
-alias23 = BR_MappingPass
-
 // Reduce Resolution  ----------------------------------------------------------------
 //      Reduce the resolution to a small static size regardless of final resolution
 //      Allows consistent look and faster at different final resolutions for blur
 //      Mipmap option allows downscaling without artifacts
-shader24 = shaders/HyperspaceMadness/hsm-linearize-crt.slang
-mipmap_input24 = true
-filter_linear24 = true
-scale_type24 = absolute
-float_framebuffer24 = true
-scale_x24 = 800
-scale_y24 = 600
-float_framebuffer24 = true
-alias24 = BR_MirrorLowResPass
+shader23 = shaders/HyperspaceMadness/hsm-linearize-crt.slang
+mipmap_input23 = true
+filter_linear23 = true
+scale_type23 = absolute
+float_framebuffer23 = true
+scale_x23 = 800
+scale_y23 = 600
+float_framebuffer23 = true
+alias23 = BR_MirrorLowResPass
 
 // Add Blur for the Reflection (Horizontal) ----------------------------------------------------------------
-shader25 = shaders/HyperspaceMadness/hsm-blur-outside-screen-horiz.slang
-mipmap_input25 = true
-filter_linear25 = true
-float_framebuffer25 = true
-scale_type25 = source
+shader24 = shaders/HyperspaceMadness/hsm-blur-outside-screen-horiz.slang
+mipmap_input24 = true
+filter_linear24 = true
+float_framebuffer24 = true
+scale_type24 = source
 
 // Add Blur for the Reflection (Vertical) ----------------------------------------------------------------
-shader26 = shaders/HyperspaceMadness/hsm-blur-outside-screen-vert.slang
-filter_linear26 = false
-scale_type26 = source
-float_framebuffer26 = true
-alias26 = BR_MirrorBlurredPass
+shader25 = shaders/HyperspaceMadness/hsm-blur-outside-screen-vert.slang
+filter_linear25 = false
+scale_type25 = source
+float_framebuffer25 = true
+alias25 = BR_MirrorBlurredPass
 
 // Reduce resolution ----------------------------------------------------------------
 // Reduced to a very small amount so we can create a blur which will create a glow from the screen
 //      Mipmap option allows smoother downscaling
+shader26 = :/shaders/shaders_slang/blurs/blur9x9.slang
+mipmap_input26 = true
+filter_linear26 = true
+scale_type26 = absolute
+float_framebuffer26 = true
+scale_x26 = 128
+scale_y26 = 128
+alias26 = BR_MirrorReflectionDiffusedPass
+
+// Add Diffused glow all around the screen ----------------------------------------------------------------
+//      Blurred so much that it's non directional
+//      Mipmap option allows downscaling without artifacts
 shader27 = :/shaders/shaders_slang/blurs/blur9x9.slang
 mipmap_input27 = true
 filter_linear27 = true
 scale_type27 = absolute
 float_framebuffer27 = true
-scale_x27 = 128
-scale_y27 = 128
-alias27 = BR_MirrorReflectionDiffusedPass
-
-// Add Diffused glow all around the screen ----------------------------------------------------------------
-//      Blurred so much that it's non directional
-//      Mipmap option allows downscaling without artifacts
-shader28 = :/shaders/shaders_slang/blurs/blur9x9.slang
-mipmap_input28 = true
-filter_linear28 = true
-scale_type28 = absolute
-float_framebuffer28 = true
-scale_x28 = 12
-scale_y28 = 12
-alias28 = BR_MirrorFullscreenGlowPass
+scale_x27 = 12
+scale_y27 = 12
+alias27 = BR_MirrorFullscreenGlowPass
 
 // Bezel Reflection ----------------------------------------------------------------
 //      Uses these previous passes:
@@ -194,23 +185,23 @@ alias28 = BR_MirrorFullscreenGlowPass
 //          BR_MirrorFullscreenGlowPass
 //      Blur passes are in linearized color space, and CRT Pass already has gamma encoded in it
 
-shader29 = shaders/HyperspaceMadness/hsm-bezel-reflection.slang
-mipmap_input29 = true
-filter_linear29 = true
-scale_type29 = viewport
-float_framebuffer29 = true
-alias29 = BR_CRTAndReflectionPass
+shader28 = shaders/HyperspaceMadness/hsm-bezel-reflection.slang
+mipmap_input28 = true
+filter_linear28 = true
+scale_type28 = viewport
+float_framebuffer28 = true
+alias28 = BR_CRTAndReflectionPass
 
 // Bezel Reflection ----------------------------------------------------------------
 
-shader30 = shaders/HyperspaceMadness/hsm-bezel-image-layers.slang
-mipmap_input30 = true
-filter_linear30 = true
-scale_type30 = viewport
-float_framebuffer30 = false
+shader29 = shaders/HyperspaceMadness/hsm-bezel-image-layers.slang
+mipmap_input29 = true
+filter_linear29 = true
+scale_type29 = viewport
+float_framebuffer29 = false
 
 // Define how many shaders will be used from this list
-shaders = 31
+shaders = 30
 
 // Define textures to be used by the different passes
 textures = "SamplerLUT1;SamplerLUT2;SamplerLUT3;IntroImage;ScreenPlacementImage;ColoredGelImage;TubeStaticReflectionImage;ReflectPassLayerImage;ReflectionMaskImage;FrameTextureImage;BackgroundImage;BackgroundVertImage;CabinetGlassImage;BezelImage;BezelVertImage;DecalImage;NightLightingImage;LEDImage;TopLayerImage;TopLayerVertImage;"

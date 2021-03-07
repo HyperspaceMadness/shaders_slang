@@ -75,18 +75,11 @@ layout(push_constant) uniform Push
 // HSM Removed
 // #define frametexture frametexture
 
-// Calculate values for fragment stage
-vec2 CROPPED_ORIGINAL_SIZE = HSM_GetCroppedRotatedOriginalSizeWithCoreResMult();
-float SCREEN_ASPECT = HSM_GetScreenAspect();
-vec2 SCREEN_SCALE = HSM_GetScreenScale(SCREEN_ASPECT);
-float USE_VERTICAL_SCANLINES = HSM_GetUseVerticalScanlines(SCREEN_ASPECT);
-
 #pragma stage vertex
 layout(location = 0) in vec4 Position;
 layout(location = 1) in vec2 TexCoord;
 
 layout(location = 0) out vec2 vTexCoord;
-layout(location = 4) out vec2 SCREEN_COORD;
 
 void main()
 {
@@ -94,19 +87,19 @@ void main()
     // gl_Position = global.MVP * modpos;
     gl_Position = global.MVP * Position;
     vTexCoord = TexCoord;
-    SCREEN_COORD = HSM_GetScreenVTexCoord(vTexCoord, SCREEN_SCALE);
 }
 
 #pragma stage fragment
 layout(location = 0) in vec2 vTexCoord;
-layout(location = 4) in vec2 SCREEN_COORD;
 
 layout(location = 0) out vec4 FragColor;
 
-layout(set = 0, binding = 1) uniform sampler2D accum1;
-layout(set = 0, binding = 2) uniform sampler2D blur2;
-layout(set = 0, binding = 5) uniform sampler2D ColoredGelImage;
-layout(set = 0, binding = 6) uniform sampler2D TubeStaticReflectionImage;
+layout(set = 0, binding = 1) uniform sampler2D InfoCachePass;
+layout(set = 0, binding = 2) uniform sampler2D accum1;
+layout(set = 0, binding = 3) uniform sampler2D blur2;
+
+layout(set = 0, binding = 4) uniform sampler2D ColoredGelImage;
+layout(set = 0, binding = 5) uniform sampler2D TubeStaticReflectionImage;
 
 vec3 tsample( sampler2D samp, vec2 tc, float offs, vec2 resolution )
     {
@@ -154,6 +147,8 @@ float rand(vec2 co)
 
 void main()
 {
+    HSM_UpdateGlobalScreenValuesFromCache(InfoCachePass, vTexCoord);
+
    // stop time variable so the screen doesn't wiggle
     float time = 1.0;
     vec2 uv = SCREEN_COORD.xy;
@@ -276,5 +271,5 @@ void main()
     // HSM Added
     FragColor = clamp(FragColor, 0, 1);
     FragColor = HSM_Linearize(FragColor, HSM_DEFAULT_CRT_GAMMA);
-    FragColor = HSM_GetPostCrtPreppedColor(FragColor, screen_curved_coord, SCREEN_COORD, SCREEN_ASPECT, SCREEN_SCALE, ColoredGelImage, TubeStaticReflectionImage);
+    FragColor = HSM_GetPostCrtPreppedColor(FragColor, screen_curved_coord, ColoredGelImage, TubeStaticReflectionImage);
 }

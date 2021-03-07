@@ -34,6 +34,7 @@ Changes:
 
 Mega Bezel Still to Come:
 
+Use BG Image for Screen Placement
 Independent Bezel Scaling not the same as non-int scale, why?
 Need x Scale for Independent bezel
 Outer reflection corner radius should be independent when in independent mode

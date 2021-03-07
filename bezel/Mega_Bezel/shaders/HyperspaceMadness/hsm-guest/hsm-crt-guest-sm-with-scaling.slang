@@ -191,46 +191,31 @@ layout(location = 0) in vec4 Position;
 layout(location = 1) in vec2 TexCoord;
 
 layout(location = 0) out vec2 vTexCoord;
-layout(location = 1) out vec2 CROPPED_ORIGINAL_SIZE;
-layout(location = 2) out float SCREEN_ASPECT;
-layout(location = 3) out vec2 SCREEN_SCALE;
-layout(location = 4) out vec2 SCREEN_COORD;
-layout(location = 5) out float USE_VERTICAL_SCANLINES;
 
 void main()
 {
 	gl_Position = global.MVP * Position;
 	vTexCoord = TexCoord;
-
-	CROPPED_ORIGINAL_SIZE = HSM_GetCroppedRotatedOriginalSizeWithCoreResMult();
-	SCREEN_ASPECT = HSM_GetScreenAspect();
-	SCREEN_SCALE = HSM_GetScreenScale(SCREEN_ASPECT);
-	SCREEN_COORD = HSM_GetScreenVTexCoord(vTexCoord, SCREEN_SCALE);
-	USE_VERTICAL_SCANLINES = HSM_GetUseVerticalScanlines(SCREEN_ASPECT);
 }
 
 #pragma stage fragment
 layout(location = 0) in vec2 vTexCoord;
-layout(location = 1) in vec2 CROPPED_ORIGINAL_SIZE;
-layout(location = 2) in float SCREEN_ASPECT;
-layout(location = 3) in vec2 SCREEN_SCALE;
-layout(location = 4) in vec2 SCREEN_COORD;
-layout(location = 5) in float USE_VERTICAL_SCANLINES;
 
 layout(location = 0) out vec4 FragColor;
 
-layout(set = 0, binding = 2) uniform sampler2D Source;
+layout(set = 0, binding = 1) uniform sampler2D Source;
 // HSM Removed
 // layout(set = 0, binding = 3) uniform sampler2D WPPass; 
 // layout(set = 0, binding = 4) uniform sampler2D RotPass; 
 // layout(set = 0, binding = 5) uniform sampler2D LinPass; 
 
 // HSM Added
+layout(set = 0, binding = 2) uniform sampler2D InfoCachePass; 
 layout(set = 0, binding = 3) uniform sampler2D LinearizePass; 
 #define LinPass LinearizePass
 
-layout(set = 0, binding = 5) uniform sampler2D ColoredGelImage;
-layout(set = 0, binding = 6) uniform sampler2D TubeStaticReflectionImage;
+layout(set = 0, binding = 4) uniform sampler2D ColoredGelImage;
+layout(set = 0, binding = 5) uniform sampler2D TubeStaticReflectionImage;
 
 
 float st(float x)
@@ -317,6 +302,8 @@ void main()
 	*/ 
 
 	// HSM Added
+	HSM_UpdateGlobalScreenValuesFromCache(InfoCachePass, vTexCoord);
+
 	vec2 tex = vTexCoord.xy * 1.00001;
 
 	vec4 SourceSize1 = vec4(CROPPED_ORIGINAL_SIZE, 1 / CROPPED_ORIGINAL_SIZE);
@@ -609,6 +596,6 @@ void main()
 
 	// // HSM Addition
 	FragColor = vec4(color, 1.0);
-	FragColor = HSM_GetPostCrtPreppedColor(FragColor, screen_curved_coord, SCREEN_COORD, SCREEN_ASPECT, SCREEN_SCALE, ColoredGelImage, TubeStaticReflectionImage);
+	FragColor = HSM_GetPostCrtPreppedColor(FragColor, screen_curved_coord, ColoredGelImage, TubeStaticReflectionImage);
 	// // End Addition
 }

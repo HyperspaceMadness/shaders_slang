@@ -1,6 +1,6 @@
 #reference "../MBZ__4__REFLECT-ONLY__GUEST-DrVENOM.slangp"
 
-ReflectPassLayerImage = ../shaders/HyperspaceMadness/textures/Baked_Frame_Background.png
+BackgroundImage = ../shaders/HyperspaceMadness/textures/Baked_Frame_Background.png
 
 // Parameters
 HSM_ASPECT_RATIO_MODE = 2

@@ -97,13 +97,6 @@ scale_y11 = 12
 alias11 = BR_MirrorFullscreenGlowPass
 
 // Bezel Reflection ----------------------------------------------------------------
-//      Uses these previous passes:
-//          BR_CRTPass
-//          BR_MirrorBlurredPass
-//          BR_MirrorReflectionDiffusedPass
-//          BR_MirrorFullscreenGlowPass
-//      Blur passes are in linearized color space, and CRT Pass already has gamma encoded in it
-
 shader12 = shaders/HyperspaceMadness/hsm-bezel-reflection.slang
 mipmap_input12 = true
 filter_linear12 = true
@@ -123,7 +116,7 @@ float_framebuffer13 = false
 shaders = 14
 
 // Define textures to be used by the different passes
-textures = "DMG0ColorPaletteImage;DMG1ColorPaletteImage;DMG2ColorPaletteImage;PocketColorPaletteImage;LightColorPaletteImage;CustomColorPaletteImage;LCDBackgroundImage;IntroImage;ScreenPlacementImage;ColoredGelImage;TubeStaticReflectionImage;ReflectPassLayerImage;ReflectionMaskImage;FrameTextureImage;BackgroundImage;BackgroundVertImage;CabinetGlassImage;BezelImage;BezelVertImage;DecalImage;NightLightingImage;LEDImage;TopLayerImage;TopLayerVertImage;"
+textures = "DMG0ColorPaletteImage;DMG1ColorPaletteImage;DMG2ColorPaletteImage;PocketColorPaletteImage;LightColorPaletteImage;CustomColorPaletteImage;LCDBackgroundImage;IntroImage;ScreenPlacementImage;ColoredGelImage;TubeStaticReflectionImage;BackgroundImage;ReflectionMaskImage;FrameTextureImage;CabinetGlassImage;BezelImage;BezelVertImage;DecalImage;NightLightingImage;LEDImage;TopLayerImage;"
 
 DMG0ColorPaletteImage = shaders/HyperspaceMadness/hsm-gameboy/palette-gameboy-dmg-0.png
 DMG0ColorPaletteImage_linear = false
@@ -158,8 +151,7 @@ ColoredGelImage_linear = true
 TubeStaticReflectionImage = shaders/HyperspaceMadness/textures/TubeGlassOverlayImage_3840x2160.png
 TubeStaticReflectionImage_linear = true
 
-ReflectPassLayerImage = shaders/HyperspaceMadness/textures/Placeholder_Transparent_16x16.png
-ReflectPassLayerImage_linear = true
+
 
 ReflectionMaskImage = shaders/HyperspaceMadness/textures/Placeholder_White_16x16.png
 ReflectionMaskImage_linear = true
@@ -169,9 +161,6 @@ FrameTextureImage_linear = true
 
 BackgroundImage = shaders/HyperspaceMadness/textures/BackgroundImage_Carbon_3840x2160.png
 BackgroundImage_linear = true
-
-BackgroundVertImage = shaders/HyperspaceMadness/textures/BackgroundImage_Carbon_3840x2160.png
-BackgroundVertImage_linear = true
 
 CabinetGlassImage = shaders/HyperspaceMadness/textures/Placeholder_Transparent_16x16.png
 CabinetGlassImage_linear = true
@@ -193,9 +182,6 @@ LEDImage_linear = true
 
 TopLayerImage = shaders/HyperspaceMadness/textures/Placeholder_Transparent_16x16.png
 TopLayerImage_linear = true
-
-TopLayerVertImage = shaders/HyperspaceMadness/textures/Placeholder_Transparent_16x16.png
-TopLayerVertImage_linear = true
 
 HSM_INT_SCALE_MODE = "2.000000"
 HSM_INT_SCALE_BORDER_MIN_HEIGHT = "10.500000"

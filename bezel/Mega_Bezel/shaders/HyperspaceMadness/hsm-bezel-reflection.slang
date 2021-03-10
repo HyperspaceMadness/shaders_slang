@@ -117,7 +117,7 @@ layout(set = 0, binding = 5) uniform sampler2D BR_MirrorFullscreenGlowPass;
 // Image Textures from Disk
 layout(set = 0, binding = 6) uniform sampler2D TubeStaticReflectionImage;
 layout(set = 0, binding = 7) uniform sampler2D ColoredGelImage;
-layout(set = 0, binding = 8) uniform sampler2D ReflectPassLayerImage;
+layout(set = 0, binding = 8) uniform sampler2D BackgroundImage;
 layout(set = 0, binding = 9) uniform sampler2D ReflectionMaskImage;
 layout(set = 0, binding = 10) uniform sampler2D NightLightingImage;
 
@@ -498,7 +498,7 @@ void main()
 		if (HSM_REFLECT_PASS_IMG_ASPECT_RATIO == 2)
 			reflect_only_img_coord.y = (VIEWPORT_COORD.y - 0.5) / (0.5625/final_viewport_aspect) + 0.5;
 
-		vec4 layer_over_reflection_image = texture(ReflectPassLayerImage, reflect_only_img_coord);
+		vec4 layer_over_reflection_image = texture(BackgroundImage, reflect_only_img_coord);
 		layer_over_reflection_image = HSM_Linearize(layer_over_reflection_image, HSM_DEFAULT_SRGB_GAMMA);
 		if (HSM_REFLECT_PASS_IMG_SHOW_OVER_SCREEN == 0)
 		{

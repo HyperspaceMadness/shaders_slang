@@ -85,18 +85,16 @@ float_framebuffer18 = true
 shaders = 19
 
 // Define textures to be used by the different passes
-textures = "SamplerLUT3;BackgroundVertImage;IntroImage;ScreenPlacementImage;ColoredGelImage;TubeStaticReflectionImage;CabinetGlassImage;BezelImage;BezelVertImage;DecalImage;NightLightingImage;LEDImage;TopLayerImage;TopLayerVertImage;"
+textures = "SamplerLUT3;IntroImage;ScreenPlacementImage;ColoredGelImage;TubeStaticReflectionImage;CabinetGlassImage;BezelImage;BezelVertImage;DecalImage;NightLightingImage;LEDImage;TopLayerImage;"
 SamplerLUT3 = shaders/HyperspaceMadness/textures/lut/other1_32.png
 SamplerLUT3_linear = true
 
 BackgroundImage = shaders/HyperspaceMadness/textures/BackgroundImage_Carbon_3840x2160.png
-BackgroundVertImage = shaders/HyperspaceMadness/textures/BackgroundImage_Carbon_3840x2160.png
 ColoredGelImage = shaders/HyperspaceMadness/textures/Placeholder_Transparent_16x16.png
 TubeStaticReflectionImage = shaders/HyperspaceMadness/textures/TubeGlassOverlayImage_3840x2160.png
-ReflectPassLayerImage = shaders/HyperspaceMadness/textures/Placeholder_Transparent_16x16.pngBezelImage = shaders/HyperspaceMadness/textures/Placeholder_Transparent_16x16.png
+BezelImage = shaders/HyperspaceMadness/textures/Placeholder_Transparent_16x16.png
 BezelVertImage = shaders/HyperspaceMadness/textures/Placeholder_Transparent_16x16.png
 DecalImage = shaders/HyperspaceMadness/textures/Placeholder_Transparent_16x16.png
 NightLightingImage = shaders/HyperspaceMadness/textures/NightLighting_3840x2160.jpg
 LEDImage = shaders/HyperspaceMadness/textures/Placeholder_Transparent_16x16.png
 TopLayerImage = shaders/HyperspaceMadness/textures/Placeholder_Transparent_16x16.png
-TopLayerVertImage = shaders/HyperspaceMadness/textures/Placeholder_Transparent_16x16.png

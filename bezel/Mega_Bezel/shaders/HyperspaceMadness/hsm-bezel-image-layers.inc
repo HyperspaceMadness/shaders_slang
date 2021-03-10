@@ -272,7 +272,6 @@ layout(set = 0, binding = 2) uniform sampler2D BR_CRTAndReflectionPass;
 
 // Image Textures from disk
 layout(set = 0, binding = 3)  uniform sampler2D BackgroundImage;
-layout(set = 0, binding = 4)  uniform sampler2D BackgroundVertImage;
 layout(set = 0, binding = 5)  uniform sampler2D CabinetGlassImage;
 layout(set = 0, binding = 6)  uniform sampler2D BezelImage;
 layout(set = 0, binding = 7)  uniform sampler2D BezelVertImage;
@@ -281,7 +280,6 @@ layout(set = 0, binding = 9)  uniform sampler2D DecalImage;
 layout(set = 0, binding = 10) uniform sampler2D NightLightingImage;
 layout(set = 0, binding = 11) uniform sampler2D LEDImage;
 layout(set = 0, binding = 12) uniform sampler2D TopLayerImage;
-// layout(set = 0, binding = 13) uniform sampler2D TopLayerVertImage;
 layout(set = 0, binding = 13) uniform sampler2D ReflectionMaskImage;
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
@@ -609,14 +607,7 @@ void main()
 	vec4 background_image = vec4(0);
 	if (HSM_BG_OPACITY > 0)
 	{
-		if (SCREEN_ASPECT > 1)
-		{
-			background_image = texture(BackgroundImage, background_coord);
-			// Can't do bilinear filtering because BackgroundImageSize returns vec4(0,0,0,0), this happens with all user defined textures
-			// background_image = HHLP_GetBilinearTextureSample(BackgroundImage, background_coord,  params.BackgroundImageSize);
-		}
-		else 
-			background_image = texture(BackgroundVertImage, background_coord);
+		background_image = texture(BackgroundImage, background_coord);
 
 		// Premultiply Alpha
 		background_image = GetPreMultipliedColorLinear(background_image, HSM_BG_SOURCE_MATTE_TYPE, HSM_DEFAULT_SRGB_GAMMA);
@@ -771,10 +762,6 @@ void main()
 
 	if (HSM_TOP_OPACITY > 0)
 	{
-		// // Get the top image color and masking values if needed
-		// top_image = SCREEN_ASPECT < 1 ? texture(TopLayerVertImage, top_image_coord):
-		// 								texture(TopLayerImage,     top_image_coord);
-
 		// Get the top image color and masking values if needed
 		top_image = texture(TopLayerImage,     top_image_coord);
 

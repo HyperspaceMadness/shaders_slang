@@ -76,9 +76,6 @@ float HSM_NON_INTEGER_SCALE = global.HSM_NON_INTEGER_SCALE;
 #pragma parameter USE_IMAGE_FOR_PLACEMENT 						"      Use Image For Placement (Scale & Y Pos)" 0 0 1 1
 float USE_IMAGE_FOR_PLACEMENT = global.USE_IMAGE_FOR_PLACEMENT;
 
-#pragma parameter HSM_IMAGE_CHOICE_FOR_PLACEMENT 				"      Image For Placement - BackgroundImage | PlacementImage" 0 0 1 1
-float HSM_IMAGE_CHOICE_FOR_PLACEMENT = global.HSM_IMAGE_CHOICE_FOR_PLACEMENT;
-
 #pragma parameter HSM_NON_INTEGER_SCALE_OFFSET 					"      Non-Integer Scale Offset" 100 5 200 1
 float HSM_NON_INTEGER_SCALE_OFFSET = global.HSM_NON_INTEGER_SCALE_OFFSET / 100;
 

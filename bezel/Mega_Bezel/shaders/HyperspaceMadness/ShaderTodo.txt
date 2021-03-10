@@ -4,7 +4,19 @@
 Mega Bezel is updated to V 2020-XX-XX
 
 Changes:
+  All Presets
+  * Royale Removed
   * Colored Gel Image 
+  * Added Header/Title Params for section breaks
+  * LCD preset fixed artifacts in screen and in reflection 
+  * Guest-SM Garbage Pixels fixed
+  * Negative Cropping Removed due to performance cost
+  * Fixed Moire appearing in reflection, more noticeable in glass preset
+  * Independent curvature for bezel & screen
+  * Scaling of 'reflection' to have similar effect to Big Blur, fun for driving games
+  * Glass and Reflection Only Presets are now simpler and faster
+    * Some Parameters which aren't used in these presets removed
+  Full Presets:
   * Image Layers
     * Expanded and conformed the image layers
     * Added Scaling, Blending modes and Mask Modes to a number of layers
@@ -20,24 +32,14 @@ Changes:
     * Static Gamma now properly applied to all static elements
     * Image Cutout for Top Image 
     * Added Frame Highlight with @duimon's highlight graphic
-  * Glass and Reflection Only Presets are now simpler and faster
-    * Some Parameters which aren't used in these presets removed
-  * Added Header/Title Params for section breaks
-  * LCD preset fixed artifacts in screen and in reflection 
-  * Guest-SM Garbage Pixels fixed
-  * Negative Cropping Removed due to performance cost
-  * Fixed Moire appearing in reflection, more noticeable in glass preset
-  * Independent curvature for bezel & screen
-  * Scaling of 'reflection' to have similar effect to Big Blur, fun for driving games
+
   *  Performance of Guest-Venom Preset on Nvidia RTX2060:
-    *  3840x2160 - 80 fps
+    *  3840x2160 - 88 fps
 
 Mega Bezel Still to Come:
 
-Replace ReflectPassLayerImage with BackgroundImage
-Use BG Image for Screen Placement
 Independent Bezel Scaling not the same as non-int scale, why?
-Need x Scale for Independent bezel
+Need x Scale for screen size of Independent bezel
 Outer reflection corner radius should be independent when in independent mode
 See why very inner edge seems not affected by reflection mask
 Add Reflection Mask to the Reflect Only Preset 

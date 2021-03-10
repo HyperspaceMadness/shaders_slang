@@ -179,13 +179,6 @@ scale_y27 = 12
 alias27 = BR_MirrorFullscreenGlowPass
 
 // Bezel Reflection ----------------------------------------------------------------
-//      Uses these previous passes:
-//          BR_CRTPass
-//          BR_MirrorBlurredPass
-//          BR_MirrorReflectionDiffusedPass
-//          BR_MirrorFullscreenGlowPass
-//      Blur passes are in linearized color space, and CRT Pass already has gamma encoded in it
-
 // Float Framebuffer is TRUE here on purpose, otherwise we get banding
 shader28 = shaders/HyperspaceMadness/hsm-bezel-reflection.slang
 filter_linear28 = true
@@ -194,13 +187,6 @@ float_framebuffer28 = true
 alias28 = BR_CRTAndReflectionPass
 
 // Bezel Reflection ----------------------------------------------------------------
-//      Uses these previous passes:
-//          BR_CRTPass
-//          BR_MirrorBlurredPass
-//          BR_MirrorReflectionDiffusedPass
-//          BR_MirrorFullscreenGlowPass
-//      Blur passes are in linearized color space, and CRT Pass already has gamma encoded in it
-
 shader29 = shaders/HyperspaceMadness/hsm-bezel-image-layers.slang
 filter_linear29 = true
 scale_type29 = viewport
@@ -210,7 +196,7 @@ shaders = 30
 
 
 // Define textures to be used by the different passes
-textures = "SamplerLUT1;SamplerLUT2;SamplerLUT3;IntroImage;ScreenPlacementImage;ColoredGelImage;TubeStaticReflectionImage;ReflectPassLayerImage;ReflectionMaskImage;FrameTextureImage;BackgroundImage;BackgroundVertImage;CabinetGlassImage;BezelImage;BezelVertImage;DecalImage;NightLightingImage;LEDImage;TopLayerImage;TopLayerVertImage;"
+textures = "SamplerLUT1;SamplerLUT2;SamplerLUT3;IntroImage;ScreenPlacementImage;BackgroundImage;ColoredGelImage;TubeStaticReflectionImage;ReflectionMaskImage;FrameTextureImage;CabinetGlassImage;BezelImage;BezelVertImage;DecalImage;NightLightingImage;LEDImage;TopLayerImage;"
 
 SamplerLUT1 = shaders/HyperspaceMadness/textures/lut/16.png
 SamplerLUT1_linear = true
@@ -231,9 +217,6 @@ ColoredGelImage_linear = true
 TubeStaticReflectionImage = shaders/HyperspaceMadness/textures/TubeGlassOverlayImage_3840x2160.png
 TubeStaticReflectionImage_linear = true
 
-ReflectPassLayerImage = shaders/HyperspaceMadness/textures/Placeholder_Transparent_16x16.png
-ReflectPassLayerImage_linear = true
-
 ReflectionMaskImage = shaders/HyperspaceMadness/textures/Placeholder_White_16x16.png
 ReflectionMaskImage_linear = true
 
@@ -242,9 +225,6 @@ FrameTextureImage_linear = true
 
 BackgroundImage = shaders/HyperspaceMadness/textures/BackgroundImage_Carbon_3840x2160.png
 BackgroundImage_linear = true
-
-BackgroundVertImage = shaders/HyperspaceMadness/textures/BackgroundImage_Carbon_3840x2160.png
-BackgroundVertImage_linear = true
 
 CabinetGlassImage = shaders/HyperspaceMadness/textures/Placeholder_Transparent_16x16.png
 CabinetGlassImage_linear = true
@@ -266,6 +246,3 @@ LEDImage_linear = true
 
 TopLayerImage = shaders/HyperspaceMadness/textures/Placeholder_Transparent_16x16.png
 TopLayerImage_linear = true
-
-TopLayerVertImage = shaders/HyperspaceMadness/textures/Placeholder_Transparent_16x16.png
-TopLayerVertImage_linear = true

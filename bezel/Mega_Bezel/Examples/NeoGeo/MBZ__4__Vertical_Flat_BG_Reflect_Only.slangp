@@ -1,7 +1,7 @@
 #reference "../../MBZ__4__REFLECT-ONLY__GUEST-DrVENOM.slangp"
 
 ScreenPlacementImage = textures/full_composite.png
-ReflectPassLayerImage = textures/full_composite.png
+BackgroundImage = textures/full_composite.png
 ReflectionMaskImage = textures/full_Plastic_Bezel_Reflect_Mask.png
 
 HSM_VIEWPORT_VIGNETTE_OPACITY = 0

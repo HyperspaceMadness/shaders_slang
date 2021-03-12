@@ -41,45 +41,6 @@ float GetFade(float current_position, float corner_position, float fade_distance
 	return smoothstep(corner_position + fade_distance / 2, corner_position - fade_distance / 2, current_position);
 }
 
-/* Composite one image over top another using the alpha to blend
- * It is expected that the input colors have been already premultiplied
- * which means their rgb has already been multiplied by their alpha */
-vec4 PreMultAlphaBlend(vec4 color_under, vec4 color_over)
-{
-	vec4 out_color = vec4(color_over.rgb + (color_under.rgb * (1 - color_over.a)), clamp(color_under.a + color_over.a, 0, 1));
-	return out_color;
-}
-
-// Assumes Opacity is already encoded in alpha
-vec4 BlendModeLayerMixSimple(vec4 color_under, vec4 color_over, float blend_mode, float layer_opacity)
-{
-	if (blend_mode == BLEND_MODE_OFF || layer_opacity == 0)
-		return color_under;
-	
-	color_over.a *= layer_opacity;
-	
-	vec4 out_color = vec4(0);
-
-	if (blend_mode == BLEND_MODE_NORMAL)
-	{
-		
-		color_over.rgb *= color_over.a;
-		out_color = PreMultAlphaBlend(color_under, color_over);
-	}
-	else
-	{
-		vec4 blend_color = color_under; 
-		if (blend_mode == BLEND_MODE_ADD)  	 		blend_color.rgb = color_under.rgb + color_over.rgb ;
-		if (blend_mode == BLEND_MODE_MULTIPLY)  	blend_color.rgb = color_under.rgb * color_over.rgb ;
-
-		// return vec4(mix(color_under.rgb, blend_color.rgb, color_over.a), 1); //
-
-		out_color = vec4(clamp(mix(color_under.rgb, blend_color.rgb, color_over.a), 0, 1), color_under.a);
-		// return out_color;
-	}
-	return out_color;
-}
-
 //////////////////////////////////////////////////////////////////////////////////////////////////
 #pragma stage vertex
 
@@ -481,37 +442,35 @@ void main()
 	}
 
 	// Clamp otherwise we get artifacts (blue overlays of brighter parts of image)
-	frag_color_linear = clamp(frag_color_linear, 0, 1);
+	frag_color_linear = clamp(frag_color_linear, 0, 1) + reflected_color;
 
-	frag_color_linear += reflected_color;
-
-	if (HSM_REFLECT_PASS_IMG_OPACITY > 0)
+	if (HSM_BASIC_BG_IMG_OPACITY > 0 && HSM_REFLECT_IS_LAST_PASS == 1)
 	{
-		vec2 reflect_only_img_coord = VIEWPORT_COORD;
+		vec2 background_img_coord = VIEWPORT_COORD;
 		float final_viewport_aspect = global.FinalViewportSize.x/global.FinalViewportSize.y;
 
 		// Image Ratio is 16:9
-		if (HSM_REFLECT_PASS_IMG_ASPECT_RATIO == 1)
-			reflect_only_img_coord.x = (VIEWPORT_COORD.x - 0.5) / (1.7777/final_viewport_aspect) + 0.5;
+		if (HSM_BASIC_BG_IMG_ASPECT_RATIO == 1)
+			background_img_coord.x = (VIEWPORT_COORD.x - 0.5) / (1.7777/final_viewport_aspect) + 0.5;
 
 		// Image Ratio is 9:16
-		if (HSM_REFLECT_PASS_IMG_ASPECT_RATIO == 2)
-			reflect_only_img_coord.y = (VIEWPORT_COORD.y - 0.5) / (0.5625/final_viewport_aspect) + 0.5;
+		if (HSM_BASIC_BG_IMG_ASPECT_RATIO == 2)
+			background_img_coord.y = (VIEWPORT_COORD.y - 0.5) / (0.5625/final_viewport_aspect) + 0.5;
 
-		vec4 layer_over_reflection_image = texture(BackgroundImage, reflect_only_img_coord);
-		layer_over_reflection_image = HSM_Linearize(layer_over_reflection_image, HSM_DEFAULT_SRGB_GAMMA);
-		if (HSM_REFLECT_PASS_IMG_SHOW_OVER_SCREEN == 0)
+		vec4 background_image_color = texture(BackgroundImage, background_img_coord);
+		background_image_color = HSM_Linearize(background_image_color, HSM_DEFAULT_SRGB_GAMMA);
+		if (HSM_BASIC_BG_IMG_SHOW_OVER_SCREEN == 0)
 		{
 			if (HSM_GLASS_BORDER_ON == 1)
-				layer_over_reflection_image.a *= outside_tube_mask_wider * (1 - edge_mask);
+				background_image_color.a *= outside_tube_mask_wider * (1 - edge_mask);
 			else
-				layer_over_reflection_image *= outside_tube_mask;
+				background_image_color *= outside_tube_mask;
 		}
 
 		if (HSM_NIGHT_OPACITY > 0)
-			layer_over_reflection_image = mix(layer_over_reflection_image, layer_over_reflection_image * texture(NightLightingImage, VIEWPORT_COORD), HSM_NIGHT_OPACITY);
+			background_image_color = mix(background_image_color, background_image_color * texture(NightLightingImage, VIEWPORT_COORD), HSM_NIGHT_OPACITY);
 
-		frag_color_linear = BlendModeLayerMixSimple(frag_color_linear, layer_over_reflection_image, HSM_REFLECT_PASS_IMG_BLEND_MODE, HSM_REFLECT_PASS_IMG_OPACITY);
+		frag_color_linear = HSM_BlendModeLayerMix(frag_color_linear, background_image_color, HSM_BASIC_BG_IMG_BLEND_MODE, HSM_BASIC_BG_IMG_OPACITY);
 	}
 
 	// Convert from linear to gamma space values

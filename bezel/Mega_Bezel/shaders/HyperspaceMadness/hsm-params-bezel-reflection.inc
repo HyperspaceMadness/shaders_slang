@@ -24,9 +24,6 @@ float HSM_BZL_INNER_EDGE_THICKNESS = global.HSM_BZL_INNER_EDGE_THICKNESS  * 0.00
 #pragma parameter HSM_BZL_INNER_EDGE_SHARPNESS		    "      Inner Edge Sharpness - Def 95" 95 0 90 5
 float HSM_BZL_INNER_EDGE_SHARPNESS = global.HSM_BZL_INNER_EDGE_SHARPNESS  / 100;
 
-#pragma parameter HSM_BZL_INNER_CORNER_RADIUS_SCALE	    "      Inner Corner Radius Scale - Def 50" 50 0 100 1
-float HSM_BZL_INNER_CORNER_RADIUS_SCALE = global.HSM_BZL_INNER_CORNER_RADIUS_SCALE / 100;
-
 #pragma parameter HSM_BZL_OUTER_CORNER_RADIUS_SCALE 	"      Outer Corner Radius Scale - Def 100" 100 0 1000 1
 float HSM_BZL_OUTER_CORNER_RADIUS_SCALE = global.HSM_BZL_OUTER_CORNER_RADIUS_SCALE / 100;
 
@@ -246,24 +243,6 @@ float HSM_REFLECT_MASK_SCALE_MODE = global.HSM_REFLECT_MASK_SCALE_MODE;
 
 #pragma parameter HSM_REFLECT_MASK_TO_BEZEL                         "      Mask Reflection to Bezel" 0 0 1 1
 float HSM_REFLECT_MASK_TO_BEZEL = global.HSM_REFLECT_MASK_TO_BEZEL;
-
-//---------------------------------------------------------------------------------------------------
-//    REFLECT ONLY IMAGE LAYER
-//---------------------------------------------------------------------------------------------------
-#pragma parameter HSM_REFLECT_PASS_IMAGE_TITLE	                    "[ REFLECTION PASS IMAGE LAYER ]________________________________" 0 0 0.01 0.01
-
-#pragma parameter HSM_REFLECT_PASS_IMG_OPACITY 	                    "      Opacity" 0 0 100 0.1
-float HSM_REFLECT_PASS_IMG_OPACITY = global.HSM_REFLECT_PASS_IMG_OPACITY / 100;
-
-#pragma parameter HSM_REFLECT_PASS_IMG_BLEND_MODE 		            "      Blend Mode - Off | Norm | Add | Mult"  2 0 3 1
-float HSM_REFLECT_PASS_IMG_BLEND_MODE = global.HSM_REFLECT_PASS_IMG_BLEND_MODE;
-
-#pragma parameter HSM_REFLECT_PASS_IMG_ASPECT_RATIO 				"      Aspect Ratio - Full | 16:9 | 9:16"  0 0 6 1
-float HSM_REFLECT_PASS_IMG_ASPECT_RATIO = global.HSM_REFLECT_PASS_IMG_ASPECT_RATIO;
-
-#pragma parameter HSM_REFLECT_PASS_IMG_SHOW_OVER_SCREEN 		    "      Show over Screen"  0 0 1 1
-float HSM_REFLECT_PASS_IMG_SHOW_OVER_SCREEN = global.HSM_REFLECT_PASS_IMG_SHOW_OVER_SCREEN;
-
 
 //---------------------------------------------------------------------------------------------------
 // Reflection Is Last Pass

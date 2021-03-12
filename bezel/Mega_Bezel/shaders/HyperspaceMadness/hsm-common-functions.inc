@@ -1168,7 +1168,8 @@ vec4 HSM_BlendModeLayerMix(vec4 color_under, vec4 color_over, float blend_mode, 
 	return out_color;
 }
 
-vec4 HSM_GetPostCrtPreppedColor(vec4 in_color_linear, vec2 screen_curved_coord, in sampler2D gel_image_sampler, in sampler2D tube_highlight_image_sampler)
+
+vec4 HSM_GetPostCrtPreppedColor(vec4 in_color_linear, vec2 VIEWPORT_COORD, vec2 screen_curved_coord, in sampler2D ColoredGelImage, in sampler2D TubeStaticReflectionImage, in sampler2D BackgroundImage)
 {
 	vec4 out_color = in_color_linear;
 	float screen_mask = HSM_GetCornerMask((screen_curved_coord - 0.5) * 0.999 + 0.5, SCREEN_ASPECT, HSM_SCREEN_CORNER_RADIUS, 0.9);
@@ -1202,7 +1203,7 @@ vec4 HSM_GetPostCrtPreppedColor(vec4 in_color_linear, vec2 screen_curved_coord, 
 	// Add a Colored Gel image on top of the screen, this is what colors games like space invaders or battlezone
 	if (HSM_TUBE_COLORED_GEL_IMAGE_MULTIPLY_AMOUNT > 0 || HSM_TUBE_COLORED_GEL_IMAGE_ADDITIVE_AMOUNT > 0)
 	{
-		vec4 gel_image = texture(gel_image_sampler, mirrored_tube_coord);
+		vec4 gel_image = texture(ColoredGelImage, mirrored_tube_coord);
 		gel_image = HSM_Linearize(gel_image, HSM_DEFAULT_SRGB_GAMMA);
 
 		if (HSM_TUBE_COLORED_GEL_IMAGE_MULTIPLY_AMOUNT > 0)
@@ -1221,7 +1222,7 @@ vec4 HSM_GetPostCrtPreppedColor(vec4 in_color_linear, vec2 screen_curved_coord, 
 		// float blur_amount = 0.2;
 		// vec4 tube_highlight_image = HSM_GetStoichaicBlurredSample(TubeStaticReflectionImage, tube_highlight_coord, HSM_TUBE_STATIC_REFLECTION_IMAGE_DITHERING_SAMPLES, blur_max_size, blur_amount);
 		
-		vec4 tube_highlight_image = texture(tube_highlight_image_sampler, tube_highlight_coord);
+		vec4 tube_highlight_image = texture(TubeStaticReflectionImage, tube_highlight_coord);
 		tube_highlight_image = HSM_Linearize(tube_highlight_image, HSM_DEFAULT_SRGB_GAMMA);
 
 		out_color.rgb += HSM_TUBE_STATIC_REFLECTION_IMAGE_OPACITY * tube_highlight_image.a * tube_highlight_image.rgb;
@@ -1231,7 +1232,33 @@ vec4 HSM_GetPostCrtPreppedColor(vec4 in_color_linear, vec2 screen_curved_coord, 
 
 	// If we are not using this with the bezel we want to mask outside the screen
 	if (HSM_CRT_IS_LAST_PASS == 1)
+	{
 		out_color *= screen_mask;
+
+		if (HSM_BASIC_BG_IMG_OPACITY > 0)
+		{
+			vec2 background_img_coord = VIEWPORT_COORD;
+			float final_viewport_aspect = global.FinalViewportSize.x/global.FinalViewportSize.y;
+
+			// Image Ratio is 16:9
+			if (HSM_BASIC_BG_IMG_ASPECT_RATIO == 1)
+				background_img_coord.x = (VIEWPORT_COORD.x - 0.5) / (1.7777/final_viewport_aspect) + 0.5;
+
+			// Image Ratio is 9:16
+			if (HSM_BASIC_BG_IMG_ASPECT_RATIO == 2)
+				background_img_coord.y = (VIEWPORT_COORD.y - 0.5) / (0.5625/final_viewport_aspect) + 0.5;
+
+			vec4 background_image_color = texture(BackgroundImage, background_img_coord);
+			background_image_color = HSM_Linearize(background_image_color, HSM_DEFAULT_SRGB_GAMMA);
+			if (HSM_BASIC_BG_IMG_SHOW_OVER_SCREEN == 0)
+			{
+				float outside_tube_mask = 1 - HSM_GetCornerMask(tube_curved_coord, SCREEN_ASPECT, HSM_BZL_INNER_CORNER_RADIUS_SCALE * HSM_SCREEN_CORNER_RADIUS, 0.99);
+				background_image_color *= outside_tube_mask;
+			}
+
+			out_color = HSM_BlendModeLayerMix(out_color, background_image_color, HSM_BASIC_BG_IMG_BLEND_MODE, HSM_BASIC_BG_IMG_OPACITY);
+		}
+	}
 
 	// Apply the final Gamma
 	out_color = HSM_Delinearize(out_color, HSM_COLOR_CRT_GAMMA);

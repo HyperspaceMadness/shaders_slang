@@ -370,6 +370,6 @@ void main()
 
   // HSM Added Prep and add output gamma
   FragColor = HSM_Linearize(FragColor, HSM_DEFAULT_SRGB_GAMMA);
-	FragColor = HSM_GetPostCrtPreppedColor(FragColor, screen_curved_coord, SCREEN_COORD, SCREEN_ASPECT, SCREEN_SCALE, ColoredGelImage, TubeStaticReflectionImage);
+	FragColor = HSM_GetPostCrtPreppedColor(FragColor, vTexCoord, screen_curved_coord, SCREEN_COORD, SCREEN_ASPECT, SCREEN_SCALE, ColoredGelImage, TubeStaticReflectionImage);
 	// End Addition
 }

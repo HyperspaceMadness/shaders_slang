@@ -162,7 +162,7 @@ ReflectionMaskImage_linear = true
 FrameTextureImage = shaders/HyperspaceMadness/textures/FrameTexture_2800x2120.png
 FrameTextureImage_linear = true
 
-BackgroundImage = shaders/HyperspaceMadness/textures/BackgroundImage_Carbon_3840x2160.png
+BackgroundImage = shaders/HyperspaceMadness/textures/Baked_Frame_Carbonfiber_Background.png
 BackgroundImage_linear = true
 
 CabinetGlassImage = shaders/HyperspaceMadness/textures/Placeholder_Transparent_16x16.png
@@ -188,3 +188,4 @@ TopLayerImage_linear = true
 
 // Parameters
 HSM_REFLECT_IS_LAST_PASS = 1
+HSM_BASIC_BG_IMG_OPACITY = 100

@@ -164,6 +164,6 @@ void main()
     // Linearize so it is linear when it goes to the post prep
     FragColor = HSM_Linearize(FragColor, HSM_DEFAULT_CRT_GAMMA - 1.05);
 
-    FragColor = HSM_GetPostCrtPreppedColor(FragColor, screen_curved_coord, ColoredGelImage, TubeStaticReflectionImage);
+    FragColor = HSM_GetPostCrtPreppedColor(FragColor, vTexCoord, screen_curved_coord, ColoredGelImage, TubeStaticReflectionImage);
     // End Addition
 }

@@ -271,5 +271,5 @@ void main()
     // HSM Added
     FragColor = clamp(FragColor, 0, 1);
     FragColor = HSM_Linearize(FragColor, HSM_DEFAULT_CRT_GAMMA);
-    FragColor = HSM_GetPostCrtPreppedColor(FragColor, screen_curved_coord, ColoredGelImage, TubeStaticReflectionImage);
+    FragColor = HSM_GetPostCrtPreppedColor(FragColor, vTexCoord, screen_curved_coord, ColoredGelImage, TubeStaticReflectionImage);
 }

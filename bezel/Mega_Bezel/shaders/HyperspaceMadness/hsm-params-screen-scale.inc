@@ -307,6 +307,26 @@ float HSM_TUBE_STATIC_REFLECTION_IMAGE_SCALE = global.HSM_TUBE_STATIC_REFLECTION
 // float HSM_TUBE_STATIC_REFLECTION_IMAGE_DITHERING_SAMPLES = global.HSM_TUBE_STATIC_REFLECTION_IMAGE_DITHERING_SAMPLES;
 
 
+
+//---------------------------------------------------------------------------------------------------
+//    BASIC BACKGROUND IMAGE LAYER
+//---------------------------------------------------------------------------------------------------
+#pragma parameter HSM_BASIC_BG_IMG_TITLE	                    "[ BASIC BACKGROUND IMAGE LAYER ]_______________________________" 0 0 0.01 0.01
+
+#pragma parameter HSM_BASIC_BG_IMG_OPACITY 	                    "      Opacity" 0 0 100 0.1
+float HSM_BASIC_BG_IMG_OPACITY = global.HSM_BASIC_BG_IMG_OPACITY / 100;
+
+#pragma parameter HSM_BASIC_BG_IMG_BLEND_MODE 		            "      Blend Mode - Off | Norm | Add | Mult"  2 0 3 1
+float HSM_BASIC_BG_IMG_BLEND_MODE = global.HSM_BASIC_BG_IMG_BLEND_MODE;
+
+#pragma parameter HSM_BASIC_BG_IMG_ASPECT_RATIO 				"      Aspect Ratio - Full | 16:9 | 9:16"  0 0 6 1
+float HSM_BASIC_BG_IMG_ASPECT_RATIO = global.HSM_BASIC_BG_IMG_ASPECT_RATIO;
+
+#pragma parameter HSM_BASIC_BG_IMG_SHOW_OVER_SCREEN 		    "      Show over Screen"  0 0 1 1
+float HSM_BASIC_BG_IMG_SHOW_OVER_SCREEN = global.HSM_BASIC_BG_IMG_SHOW_OVER_SCREEN;
+
+
+
 //---------------------------------------------------------------------------------------------------
 //    CRT is Last Pass
 //---------------------------------------------------------------------------------------------------
@@ -430,6 +450,9 @@ float HSM_TUBE_STATIC_REFLECTION_IMAGE_SCALE = global.HSM_TUBE_STATIC_REFLECTION
 
 #pragma parameter HSM_BZL_INNER_CURVATURE_SCALE 				"      Inner Curvature Scale Multiplier" 100 0 2000 10
 #define HSM_BZL_INNER_CURVATURE_SCALE global.HSM_BZL_INNER_CURVATURE_SCALE / 100
+
+#pragma parameter HSM_BZL_INNER_CORNER_RADIUS_SCALE	    "      Inner Corner Radius Scale - Def 50" 50 0 100 1
+float HSM_BZL_INNER_CORNER_RADIUS_SCALE = global.HSM_BZL_INNER_CORNER_RADIUS_SCALE / 100;
 
 #ifndef HSM_SCREENFX_SCANLINE_RES
 	#define HSM_SCREENFX_SCANLINE_RES 240

@@ -1,4 +1,4 @@
-#reference "../../Presets/MBZ__0__GUEST-DrVENOM.slangp"
+#reference "../../Presets/Base/MBZ__0__ADVANCED_GUEST-DrVENOM.slangp"
 
 BackgroundImage = textures/full_composite.png
 ScreenPlacementImage = textures/full_composite.png
@@ -6,7 +6,7 @@ BezelImage = textures/Plastic_Bezel_Dark.png
 ReflectionMaskImage = textures/Plastic_Bezel_Reflect_Mask.png
 
 HSM_VIEWPORT_VIGNETTE_OPACITY = 0
-HSM_NON_INTEGER_SCALE = "105.169662"
+HSM_NON_INTEGER_SCALE = "35.53"
 HSM_SCREEN_POSITION_Y = "-59.000000"
 HSM_CURVATURE_2D_SCALE_LONG_AXIS = "100.000000"
 HSM_CURVATURE_2D_SCALE_SHORT_AXIS = "100.000000"

@@ -1,4 +1,4 @@
-#reference "../../MBZ__4__REFLECT-ONLY__GUEST-DrVENOM.slangp"
+#reference "../../Presets/Base/MBZ__4__REFLECT-ONLY__GUEST-DrVENOM.slangp"
 
 ScreenPlacementImage = textures/full_composite.png
 BackgroundImage = textures/full_composite.png

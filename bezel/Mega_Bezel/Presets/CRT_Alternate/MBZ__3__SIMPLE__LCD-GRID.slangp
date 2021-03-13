@@ -1,0 +1,183 @@
+// Add Mega Bezel parameters at the beginning of the list for easy access
+// A very small pass at 1/8th scale to cache values which are consistent across the frame
+// Read back these values later for better performance
+shader0 = ../../shaders/HyperspaceMadness/hsm-prep-info-cache.slang
+float_framebuffer0 = true
+scale_type0 = source
+scale0 = 0.125
+alias0  = "InfoCachePass"
+
+// Add Intro Animation
+shader1 = ../../shaders/HyperspaceMadness/hsm-prep-intro.slang
+float_framebuffer1 = true
+scale_type1 = source
+scale1 = 8
+
+// Color Correction with Dogway's awesome Grade shader
+shader2 = ../../shaders/HyperspaceMadness/hsm-dogway/hsm-grade.slang
+alias2  = "ColorCorrectPass"
+
+shader3 = ../../shaders/HyperspaceMadness/hsm-phosphor-persistence.slang
+filter_linear3 = false
+scale_type3 = source
+scale3 = 1.0
+alias3 = "PersistencePass"
+
+shader4 = ../../shaders/HyperspaceMadness/hsm-lcd-cgwg/hsm-lcd-grid-v2.slang
+filter_linear4 = "false"
+scale_type4 = "viewport"
+scale4 = "1.0"
+wrap_mode4 = mirrored_repeat
+alias4 = BR_CRTPassAlternate
+
+shader5 = ../../shaders/HyperspaceMadness/hsm-lcd-cgwg/hsm-gba-color.slang
+mipmap_input5 = true
+filter_linear5 = true
+scale_type5 = viewport
+scale5 = 1.0
+float_framebuffer5 = true
+alias5 = BR_CRTPass
+
+// Reduce Resolution  ----------------------------------------------------------------
+//      Reduce the resolution to a small static size regardless of final resolution
+//      Allows consistent look and faster at different final resolutions for blur
+//      Mipmap option allows downscaling without artifacts
+shader6 = ../../shaders/HyperspaceMadness/hsm-linearize-crt-alternate.slang
+mipmap_input6 = true
+filter_linear6 = true
+scale_type6 = absolute
+float_framebuffer6 = true
+scale_x6 = 800
+scale_y6 = 600
+float_framebuffer6 = true
+alias6 = BR_MirrorLowResPass
+
+// Add Blur for the Reflection (Horizontal) ----------------------------------------------------------------
+shader7 = ../../shaders/HyperspaceMadness/hsm-blur-outside-screen-horiz.slang
+mipmap_input7 = true
+filter_linear7 = true
+float_framebuffer7 = true
+scale_type7 = source
+
+// Add Blur for the Reflection (Vertical) ----------------------------------------------------------------
+shader8 = ../../shaders/HyperspaceMadness/hsm-blur-outside-screen-vert.slang
+filter_linear8 = false
+scale_type8 = source
+float_framebuffer8 = true
+alias8 = BR_MirrorBlurredPass
+
+// Reduce resolution ----------------------------------------------------------------
+// Reduced to a very small amount so we can create a blur which will create a glow from the screen
+//      Mipmap option allows smoother downscaling
+shader9 = :/shaders/shaders_slang/blurs/blur9x9.slang
+mipmap_input9 = true
+filter_linear9 = true
+scale_type9 = absolute
+float_framebuffer9 = true
+scale_x9 = 128
+scale_y9 = 128
+alias9 = BR_MirrorReflectionDiffusedPass
+
+// Add Diffused glow all around the screen ----------------------------------------------------------------
+//      Blurred so much that it's non directional
+//      Mipmap option allows downscaling without artifacts
+shader10 = :/shaders/shaders_slang/blurs/blur9x9.slang
+mipmap_input10 = true
+filter_linear10 = true
+scale_type10 = absolute
+float_framebuffer10 = true
+scale_x10 = 12
+scale_y10 = 12
+alias10 = BR_MirrorFullscreenGlowPass
+
+// Bezel Reflection ----------------------------------------------------------------
+shader11 = ../../shaders/HyperspaceMadness/hsm-bezel-reflection.slang
+mipmap_input11 = true
+filter_linear11 = true
+scale_type11 = viewport
+float_framebuffer11 = true
+alias11 = BR_CRTAndReflectionPass
+
+shader12 = ../../shaders/HyperspaceMadness/hsm-bezel-image-layers-simple.slang
+mipmap_input12 = true
+filter_linear12 = true
+scale_type12 = viewport
+float_framebuffer12 = false
+
+// Define how many shaders will be used from this list
+shaders = 13
+
+
+// Define textures to be used by the different passes
+textures = "SamplerLUT1;SamplerLUT2;SamplerLUT3;IntroImage;ScreenPlacementImage;ColoredGelImage;TubeStaticReflectionImage;BackgroundImage;ReflectionMaskImage;FrameTextureImage;CabinetGlassImage;BezelImage;BezelVertImage;DecalImage;NightLightingImage;LEDImage;TopLayerImage;"
+
+SamplerLUT1 = ../../shaders/HyperspaceMadness/textures/lut/16.png
+SamplerLUT1_linear = true
+SamplerLUT2 = ../../shaders/HyperspaceMadness/textures/lut/64.png
+SamplerLUT2_linear = true
+SamplerLUT3 = ../../shaders/HyperspaceMadness/textures/lut/other1_32.png
+SamplerLUT3_linear = true
+
+IntroImage = ../../shaders/HyperspaceMadness/textures/IntroImage_MegaBezelLogo.png
+IntroImage_linear = true
+
+ScreenPlacementImage = ../../shaders/HyperspaceMadness/textures/Placeholder_Transparent_16x16.png
+ScreenPlacementImage_linear = false
+
+ColoredGelImage = ../../shaders/HyperspaceMadness/textures/Placeholder_Transparent_16x16.png
+ColoredGelImage_linear = true
+
+TubeStaticReflectionImage = ../../shaders/HyperspaceMadness/textures/TubeGlassOverlayImage_3840x2160.png
+TubeStaticReflectionImage_linear = true
+
+
+
+ReflectionMaskImage = ../../shaders/HyperspaceMadness/textures/Placeholder_White_16x16.png
+ReflectionMaskImage_linear = true
+
+FrameTextureImage = ../../shaders/HyperspaceMadness/textures/FrameTexture_2800x2120.png
+FrameTextureImage_linear = true
+
+BackgroundImage = ../../shaders/HyperspaceMadness/textures/BackgroundImage_Carbon_3840x2160.png
+BackgroundImage_linear = true
+
+CabinetGlassImage = ../../shaders/HyperspaceMadness/textures/Placeholder_Transparent_16x16.png
+CabinetGlassImage_linear = true
+
+BezelImage = ../../shaders/HyperspaceMadness/textures/Placeholder_Transparent_16x16.png
+BezelImage_linear = true
+
+BezelVertImage = ../../shaders/HyperspaceMadness/textures/Placeholder_Transparent_16x16.png
+BezelVertImage_linear = true
+
+DecalImage = ../../shaders/HyperspaceMadness/textures/Placeholder_Transparent_16x16.png
+DecalImage_linear = true
+
+NightLightingImage = ../../shaders/HyperspaceMadness/textures/NightLighting_3840x2160.jpg
+NightLightingImage_linear = true
+
+LEDImage = ../../shaders/HyperspaceMadness/textures/Placeholder_Transparent_16x16.png
+LEDImage_linear = true
+
+TopLayerImage = ../../shaders/HyperspaceMadness/textures/Placeholder_Transparent_16x16.png
+TopLayerImage_linear = true
+
+
+// Parameters
+HSM_ASPECT_RATIO_EXPLICIT = 1.5
+HSM_INT_SCALE_MODE = 2
+HSM_INT_SCALE_BORDER_MIN_HEIGHT = 15
+HSM_CURVATURE_MODE = -1
+HSM_COLOR_CRT_PROFILE = 0
+HSM_TUBE_BLACK_EDGE_THICKNESS = 50
+HSM_BZL_WIDTH = 160
+HSM_BZL_HEIGHT = 150
+HSM_FRM_THICKNESS = 100
+
+LCD_RSUBPIX_R = 0.75
+LCD_GSUBPIX_G = 0.75
+LCD_BSUBPIX_B = 0.75
+LCD_GAIN = 1.5
+LCD_GAMMA = 2.2
+LCD_BLACK_LEVEL = 0
+LCD_BGR = 1

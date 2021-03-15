@@ -560,10 +560,10 @@ void main()
 				frame_layer = clamp(bezel_and_frame_rgba * FRAME_MASK, 0, 1);
 		}
 		
+		frag_color_linear = HSM_BlendModeLayerMix(frag_color_linear, background_image_color, HSM_BASIC_BG_IMG_BLEND_MODE, HSM_BASIC_BG_IMG_OPACITY);
 		frag_color_linear = HSM_BlendModeLayerMix(frag_color_linear, bezel_layer, BLEND_MODE_NORMAL, 1);
 		frag_color_linear += reflected_color;
 		frag_color_linear = HSM_BlendModeLayerMix(frag_color_linear, frame_layer, BLEND_MODE_NORMAL, 1);
-		frag_color_linear = HSM_BlendModeLayerMix(frag_color_linear, background_image_color, HSM_BASIC_BG_IMG_BLEND_MODE, HSM_BASIC_BG_IMG_OPACITY);
 
 		FragColor = HSM_ApplyGamma(clamp(frag_color_linear, 0, 1), HSM_DEFAULT_SRGB_GAMMA);
 	}

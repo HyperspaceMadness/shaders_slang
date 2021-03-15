@@ -35,7 +35,7 @@ void main()
 {
 	if (HSM_REFLECT_BLUR_NUM_SAMPLES > 0)
 	{
-		vec2 tube_warped_coord_ctr = HSM_GetTubeCurvedCoord(SCREEN_COORD, 1, SCREEN_SCALE, TUBE_SCALE, SCREEN_ASPECT, 1) - 0.5;
+		vec2 tube_curved_coord_ctr = HSM_GetTubeCurvedCoord(SCREEN_COORD, 1, SCREEN_SCALE, TUBE_SCALE, SCREEN_ASPECT, 1) - 0.5;
 
 		//----------------------------------------------------
 		//  Calculate Outside mapping Coords
@@ -53,7 +53,7 @@ void main()
 
 		// Get a range width from the outer tube edge to the outer edge of the outermap
 		float outermap_range = 0.5 * (outermap_scale.y) * 0.7;
-		vec2 outermap_warped_coord_ctr = tube_warped_coord_ctr;
+		vec2 outermap_warped_coord_ctr = tube_curved_coord_ctr;
 		vec2 outermap_warped_outside_screen_vector = outermap_warped_coord_ctr - clamp(outermap_warped_coord_ctr, -0.490, 0.490);
 		float outside_ratio_warped = clamp(length(outermap_warped_outside_screen_vector) / outermap_range, 0, 1);
 

@@ -257,6 +257,15 @@ float HSM_GLASS_BORDER_ON = global.HSM_GLASS_BORDER_ON;
 
 
 //---------------------------------------------------------------------------------------------------
+//    STATIC ELEMENT GAMMA
+//---------------------------------------------------------------------------------------------------
+#pragma parameter HSM_STATIC_GAMMA_TITLE "[ STATIC IMAGE LAYER GAMMA ]___________________________________" 0 0 0.01 0.01
+
+#pragma parameter HSM_STATIC_LAYERS_GAMMA		    "      Static Layers Gamma Adjust" 1 0.01 5 0.01
+float HSM_STATIC_LAYERS_GAMMA = global.HSM_STATIC_LAYERS_GAMMA;
+
+
+//---------------------------------------------------------------------------------------------------
 //    NIGHT LIGHTING IMAGE
 //---------------------------------------------------------------------------------------------------
 #pragma parameter HSM_NIGHT_LIGHTING_TITLE "[ NIGHT LIGHTING ]_____________________________________________" 0 0 0.01 0.01

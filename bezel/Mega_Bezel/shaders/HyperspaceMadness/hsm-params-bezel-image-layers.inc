@@ -27,14 +27,7 @@ float HSM_NIGHT_DITHERING_SAMPLES = global.HSM_NIGHT_DITHERING_SAMPLES;
 //---------------------------------------------------------------------------------------------------
 //    IMAGE LAYERING START
 //---------------------------------------------------------------------------------------------------
-#pragma parameter HSM_IMAGE_LAYERING_TITLE "[ IMAGE LAYERING ]_____________________________________________" 0 0 0.01 0.01
-
-
-//---------------------------------------------------------------------------------------------------
-//    STATIC ELEMENT GAMMA
-//---------------------------------------------------------------------------------------------------
-#pragma parameter HSM_STATIC_LAYERS_GAMMA		    "      Static Layers Gamma Adjust" 1 0.01 5 0.01
-float HSM_STATIC_LAYERS_GAMMA = global.HSM_STATIC_LAYERS_GAMMA;
+#pragma parameter HSM_ADVANCED_LAYERING_TITLE "[ ADVANCED IMAGE LAYERS ]______________________________________" 0 0 0.01 0.01
 
 
 #pragma parameter HSM_LAYER_ORDER_TITLE			  "[ LAYER ORDER ]________________________________________________" 0 0 0.01 0.01

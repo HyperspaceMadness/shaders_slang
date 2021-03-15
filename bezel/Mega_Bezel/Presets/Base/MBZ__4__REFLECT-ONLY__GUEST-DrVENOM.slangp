@@ -140,7 +140,7 @@ shaders = 16
 
 
 // Define textures to be used by the different passes
-textures = "SamplerLUT1;SamplerLUT2;SamplerLUT3;IntroImage;ScreenPlacementImage;ColoredGelImage;TubeStaticReflectionImage;BackgroundImage;ReflectionMaskImage;NightLightingImage;"
+textures = "SamplerLUT1;SamplerLUT2;SamplerLUT3;IntroImage;ScreenPlacementImage;ColoredGelImage;TubeStaticReflectionImage;BackgroundImage;ReflectionMaskImage;NightLightingImage;;FrameTextureImage;LEDImage;TopLayerImage;"
 
 SamplerLUT1 = ../../shaders/HyperspaceMadness/textures/lut/16.png
 SamplerLUT1_linear = true
@@ -167,8 +167,17 @@ BackgroundImage_linear = true
 ReflectionMaskImage = ../../shaders/HyperspaceMadness/textures/Placeholder_White_16x16.png
 ReflectionMaskImage_linear = true
 
+FrameTextureImage = ../../shaders/HyperspaceMadness/textures/FrameTexture_2800x2120.png
+FrameTextureImage_linear = true
+
 NightLightingImage = ../../shaders/HyperspaceMadness/textures/NightLighting_3840x2160.jpg
 NightLightingImage_linear = true
+
+LEDImage = ../../shaders/HyperspaceMadness/textures/Placeholder_Transparent_16x16.png
+LEDImage_linear = true
+
+TopLayerImage = ../../shaders/HyperspaceMadness/textures/Placeholder_Transparent_16x16.png
+TopLayerImage_linear = true
 
 // Parameters
 HSM_REFLECT_IS_LAST_PASS = 1

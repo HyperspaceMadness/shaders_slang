@@ -347,13 +347,30 @@ layout(std140, set = 0, binding = 0) uniform UBO
 } global;
 
 /////////////// DEFINES ///////////////
-#define BLEND_MODE_OFF 0
-#define BLEND_MODE_NORMAL 1
-#define BLEND_MODE_ADD 2
-#define BLEND_MODE_MULTIPLY 3
 
 #define DEFAULT_TUBE_SCALE_V 0.82987
 #define DEFAULT_BEZEL_SCALE_V 0.91159
+
+float BLEND_MODE_OFF = 0;
+float BLEND_MODE_NORMAL = 1;
+float BLEND_MODE_ADD = 2;
+float BLEND_MODE_MULTIPLY = 3;
+
+float SOURCE_MATTE_PREMULTIPLIED = 0;
+float SOURCE_MATTE_WHITE = 1;
+float SOURCE_MATTE_NONE = 2;
+
+float SCREEN_MASK = 0;
+float TUBE_MASK = 0;
+float BEZEL_MASK = 0;
+float INSIDE_BEZEL_MASK = 0;
+float OUTSIDE_TUBE_MASK_FOR_IMAGE = 0;
+float FRAME_MASK = 0;
+float FRAME_MASK_FOR_IMAGE = 0;
+float OUTSIDE_BEZEL_MASK = 0;
+float OUTSIDE_FRAME_MASK_FOR_IMAGE = 0;
+float OUTSIDE_FRAME_MASK = 0;
+float CUTOUT_MASK = 0;
 
 float SCREEN_ASPECT = 1;
 vec2 SCREEN_SCALE = vec2(1);

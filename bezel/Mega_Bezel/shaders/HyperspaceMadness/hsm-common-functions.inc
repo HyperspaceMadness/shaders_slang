@@ -1130,6 +1130,22 @@ vec4 HSM_ApplyScanlineMask(vec4 in_color, vec2 in_coord, vec2 screen_scale)
 	return clamp(masked_color, 0, 1);
 }
 
+vec4 HSM_GetPreMultipliedColorLinear(vec4 in_color, float matte_type, float encoded_gamma)
+{
+	vec4 out_color = in_color;
+
+	if (matte_type == SOURCE_MATTE_WHITE)
+		out_color.rgb = clamp(out_color.rgb - (1 - out_color.a), 0, 1);
+
+	out_color = HSM_Linearize(out_color, encoded_gamma);
+
+	// If the color was not already premultiplied (matted with black) premultiply it now
+	if (matte_type == SOURCE_MATTE_NONE)
+		out_color.rgb *= out_color.a;
+
+	return out_color;
+}
+
 /* Composite one image over top another using the alpha to blend
  * It is expected that the input colors have been already premultiplied
  * which means their rgb has already been multiplied by their alpha */
@@ -1137,6 +1153,12 @@ vec4 HSM_PreMultAlphaBlend(vec4 color_under, vec4 color_over)
 {
 	vec4 out_color = vec4(color_over.rgb + (color_under.rgb * (1 - color_over.a)), clamp(color_under.a + color_over.a, 0, 1));
 	return out_color;
+}
+
+vec4 HSM_BlendMultiply(vec4 color_under, vec4 color_over, float opacity)
+{
+	float final_opacity = color_over.a * opacity;
+	return vec4(color_under.rgb * (final_opacity * color_over.rgb + (1 - final_opacity) * vec3(1)), color_under.a);
 }
 
 // Assumes Opacity is already encoded in alpha
@@ -1167,7 +1189,6 @@ vec4 HSM_BlendModeLayerMix(vec4 color_under, vec4 color_over, float blend_mode, 
 	}
 	return out_color;
 }
-
 
 vec4 HSM_GetPostCrtPreppedColor(vec4 in_color_linear, vec2 VIEWPORT_COORD, vec2 screen_curved_coord, in sampler2D ColoredGelImage, in sampler2D TubeStaticReflectionImage, in sampler2D BackgroundImage)
 {

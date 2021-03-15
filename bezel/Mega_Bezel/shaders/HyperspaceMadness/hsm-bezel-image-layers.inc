@@ -59,49 +59,9 @@ Thanks to:
 
 /////////////// Helper Functions ///////////////
 
-float SCREEN_MASK = 0;
-float TUBE_MASK = 0;
-float BEZEL_MASK = 0;
-float INSIDE_BEZEL_MASK = 0;
-float OUTSIDE_TUBE_MASK_FOR_IMAGE = 0;
-float FRAME_MASK = 0;
-float FRAME_MASK_FOR_IMAGE = 0;
-float OUTSIDE_BEZEL_MASK = 0;
-float OUTSIDE_FRAME_MASK_FOR_IMAGE = 0;
-float OUTSIDE_FRAME_MASK = 0;
-float CUTOUT_MASK = 0;
 
-float SOURCE_MATTE_PREMULTIPLIED = 0;
-float SOURCE_MATTE_WHITE = 1;
-float SOURCE_MATTE_NONE = 2;
 
 float MAX_LAYER_ORDER = 12;
-
-
-vec4 GetPreMultipliedColorLinear(vec4 in_color, float matte_type, float encoded_gamma)
-{
-	vec4 out_color = in_color;
-
-	if (matte_type == SOURCE_MATTE_WHITE)
-		out_color.rgb = clamp(out_color.rgb - (1 - out_color.a), 0, 1);
-
-	out_color = HSM_Linearize(out_color, encoded_gamma);
-
-	// If the color was not already premultiplied (matted with black) premultiply it now
-	if (matte_type == SOURCE_MATTE_NONE)
-		out_color.rgb *= out_color.a;
-
-	return out_color;
-}
-
-/* Composite one image over top another using the alpha to blend
- * It is expected that the input colors have been already premultiplied
- * which means their rgb has already been multiplied by their alpha */
-vec4 PreMultAlphaBlend(vec4 color_under, vec4 color_over)
-{
-	vec4 out_color = vec4(color_over.rgb + (color_under.rgb * (1 - color_over.a)), clamp(color_under.a + color_over.a, 0, 1));
-	return out_color;
-}
 
 // Takes a viewport coordinate and gives a new coordinate scaled by the specific scale mode
 // Takes into account the default sizes of each scale mode
@@ -187,14 +147,8 @@ float GetMask(float mask_mode)
 	return mask;
 }
 
-vec4 BlendMultiply(vec4 color_under, vec4 color_over, float opacity)
-{
-	float final_opacity = color_over.a * opacity;
-	return vec4(color_under.rgb * (final_opacity * color_over.rgb + (1 - final_opacity) * vec3(1)), color_under.a);
-}
-
 // Assumes Opacity is already encoded in alpha
-vec4 BlendModeLayerMix(vec4 color_under, vec4 color_over, float blend_mode, float mask_mode, float cutout_mode, float layer_opacity)
+vec4 BlendModeMaskLayerMix(vec4 color_under, vec4 color_over, float blend_mode, float mask_mode, float cutout_mode, float layer_opacity)
 {
 	if (blend_mode == 0)
 		return color_under;
@@ -215,7 +169,7 @@ vec4 BlendModeLayerMix(vec4 color_under, vec4 color_over, float blend_mode, floa
 	if (blend_mode == BLEND_MODE_NORMAL)
 	{
 		color_over.rgb *= color_over.a;
-		out_color = PreMultAlphaBlend(color_under, color_over);
+		out_color = HSM_PreMultAlphaBlend(color_under, color_over);
 	}
 	else
 	{
@@ -253,9 +207,6 @@ void main()
 		vTexCoord.y =  1 - vTexCoord.y;
 
 	VIEWPORT_COORD = vTexCoord * 1.0001;
-
-	// Not sure why we need linearize this but it seems to have a smoother range this way
-	BEZEL_FRAME_ORIGINAL_COLOR_RGB = HSM_Linearize(vec4(HSM_HSVtoRGB(vec3(HSM_BZL_COLOR_HUE, HSM_BZL_COLOR_SATURATION, HSM_BZL_COLOR_VALUE)), 1), HSM_DEFAULT_SRGB_GAMMA).rgb;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
@@ -305,12 +256,12 @@ void main()
 
 	vec2 screen_curved_coord = HSM_GetCurvedCoord(SCREEN_COORD, 1, SCREEN_ASPECT);
 	
-	vec2 tube_coord_warped = HSM_GetTubeCurvedCoord(SCREEN_COORD, 1, SCREEN_SCALE, TUBE_SCALE, SCREEN_ASPECT, 1);
-	vec2 tube_warped_coord_ctr = tube_coord_warped - 0.5;
-	vec2 edge_mask_coord = tube_warped_coord_ctr * (1 - (HSM_BZL_INNER_EDGE_THICKNESS / vec2(SCREEN_ASPECT, 1))) + 0.5;
+	vec2 tube_curved_coord = HSM_GetTubeCurvedCoord(SCREEN_COORD, 1, SCREEN_SCALE, TUBE_SCALE, SCREEN_ASPECT, 1);
+	vec2 tube_curved_coord_ctr = tube_curved_coord - 0.5;
+	vec2 edge_mask_coord = tube_curved_coord_ctr * (1 - (HSM_BZL_INNER_EDGE_THICKNESS / vec2(SCREEN_ASPECT, 1))) + 0.5;
 	float edge_mask =  HSM_GetCornerMask(edge_mask_coord, SCREEN_ASPECT, HSM_BZL_INNER_CORNER_RADIUS_SCALE * HSM_SCREEN_CORNER_RADIUS, HSM_BZL_INNER_EDGE_SHARPNESS);
 
-	float outside_tube_mask = 1 - HSM_GetCornerMask(tube_coord_warped, SCREEN_ASPECT, HSM_BZL_INNER_CORNER_RADIUS_SCALE * HSM_SCREEN_CORNER_RADIUS, 0.99);
+	float outside_tube_mask = 1 - HSM_GetCornerMask(tube_curved_coord, SCREEN_ASPECT, HSM_BZL_INNER_CORNER_RADIUS_SCALE * HSM_SCREEN_CORNER_RADIUS, 0.99);
 	TUBE_MASK = 1 - outside_tube_mask;
 
 	// Shrink the mask by 0.001 to clip off outer edge
@@ -333,13 +284,13 @@ void main()
 	// Get a range width from the outer tube edge to the outer edge of the outermap
 	float outermap_range = 0.5 * outermap_scale * 0.7;
 	vec2 outermap_screen_size_from_center = vec2(0.5, 0.5);
-	vec2 outermap_warped_outside_screen_vector = (tube_warped_coord_ctr - clamp(tube_warped_coord_ctr, -0.490, 0.490)) * vec2(1 / SCREEN_ASPECT, 1);
+	vec2 outermap_warped_outside_screen_vector = (tube_curved_coord_ctr - clamp(tube_curved_coord_ctr, -0.490, 0.490)) * vec2(1 / SCREEN_ASPECT, 1);
 	float output_aspect = global.OutputSize.x / global.OutputSize.y;
 	float outside_ratio_warped = clamp(length(outermap_warped_outside_screen_vector) / outermap_range, 0, 1);
 	vec2 outermap_screen_corner_ctr_coord = vec2(0.5, -0.5);
 
 	// Get a coordinate offset so it is centered around the corner
-	vec2 outermap_coord_warped_ctr_at_screen_corner = abs(tube_warped_coord_ctr) - vec2(0.5);
+	vec2 outermap_coord_warped_ctr_at_screen_corner = abs(tube_curved_coord_ctr) - vec2(0.5);
 
 	vec2 bezel_outside_coord = vec2(0.5, 0.5);
 	vec2 frame_outside_coord = vec2(0.5, 0.5);
@@ -357,7 +308,7 @@ void main()
 
 	// Get amount to shift the point at the outer corner to match the overall position offset
 	vec2 pos_shift_offset = vec2(0, HSM_BZL_OUTER_POSITION_Y) * SCREEN_SCALE.y / outermap_scale;
-	pos_shift_offset *= tube_coord_warped.y > 0.5 ? 1 : -1;
+	pos_shift_offset *= tube_curved_coord.y > 0.5 ? 1 : -1;
 
 	// Get the direction vector from the inner corner of the bezel pointing at the outer corner 
 	vec2 corner_crease_dir = (outermap_screen_corner_ctr_coord + pos_shift_offset) / vec2(HSM_BZL_HEIGHT + 1, HSM_BZL_WIDTH + 1) - (outermap_screen_corner_ctr_coord) ;
@@ -398,7 +349,7 @@ void main()
 	// Get the distance to this shifted crease
 	float distance_from_crease_shifted = HHLP_GetDistanceToLine(corner_coord_shifted.x, corner_coord_shifted.y, 1, corner_crease_dir_shifted.y / corner_crease_dir_shifted.x, 0 );
 
-	float top_half_mask = smoothstep(0.55, 0.5, tube_coord_warped.y);
+	float top_half_mask = smoothstep(0.55, 0.5, tube_curved_coord.y);
 
 	// Get a mask which transitions between sides and top/bottom at the corner crease  
 	float top_bottom_vs_sides_mask = dot(normalize(corner_coord_shifted), normalize(corner_crease_dir_shifted)) > 0 ? 1 - smoothstep(0, corner_fade_width / 2, distance_from_crease_shifted) : 1;
@@ -417,8 +368,8 @@ void main()
 																										SCREEN_ASPECT, 
 																										HSM_FRM_INNER_CORNER_RADIUS_SCALE * HSM_BZL_OUTER_CORNER_RADIUS_SCALE * HSM_SCREEN_CORNER_RADIUS, 
 																										0.9);
-	float outside_tube_mask_wider = 1 - HSM_GetCornerMask(tube_warped_coord_ctr * 0.996 + 0.5, SCREEN_ASPECT, HSM_BZL_INNER_CORNER_RADIUS_SCALE * HSM_SCREEN_CORNER_RADIUS, 0.9);
-	float tube_shadow_mask = HSM_GetCornerMask(tube_warped_coord_ctr + 0.5, SCREEN_ASPECT, HSM_BZL_INNER_CORNER_RADIUS_SCALE * HSM_SCREEN_CORNER_RADIUS, 0);
+	float outside_tube_mask_wider = 1 - HSM_GetCornerMask(tube_curved_coord_ctr * 0.996 + 0.5, SCREEN_ASPECT, HSM_BZL_INNER_CORNER_RADIUS_SCALE * HSM_SCREEN_CORNER_RADIUS, 0.9);
+	float tube_shadow_mask = HSM_GetCornerMask(tube_curved_coord_ctr + 0.5, SCREEN_ASPECT, HSM_BZL_INNER_CORNER_RADIUS_SCALE * HSM_SCREEN_CORNER_RADIUS, 0);
 	float tube_edge_shadow_mult = HSM_BZL_INNER_EDGE_SHADOW * (tube_shadow_mask) + (1 - HSM_BZL_INNER_EDGE_SHADOW);
 
 	crt_linear.rgb *= tube_edge_shadow_mult * (1 - outside_tube_mask_wider);
@@ -468,7 +419,7 @@ void main()
 	float hmbz_frame_brightness = 100;
 
 	vec3 base_color = BEZEL_FRAME_ORIGINAL_COLOR_RGB;
-	float noise_mask = clamp(fract(sin(dot(tube_warped_coord_ctr + vec2(0.5, 0.5) + 1, vec2(12.9898, 78.233))) * 43758.5453), 0, 1);
+	float noise_mask = clamp(fract(sin(dot(tube_curved_coord_ctr + vec2(0.5, 0.5) + 1, vec2(12.9898, 78.233))) * 43758.5453), 0, 1);
 	vec3 base_color_with_noise = mix(base_color, 1.5 * base_color * noise_mask, HSM_BZL_NOISE);
 	vec3 top_color = hmbz_bezel_brightness_top * HSM_BZL_BRIGHTNESS * base_color_with_noise;
 	vec3 bottom_color = hmbz_bezel_brightness_bottom * HSM_BZL_BRIGHTNESS * base_color_with_noise;
@@ -481,19 +432,19 @@ void main()
 	vec3 bezel_diffuse_color = mix(sides_color, top_color, top_mask);
 	bezel_diffuse_color = mix(bezel_diffuse_color, bottom_color, bottom_mask);
 
-	float top_center_highlight_mask 	= hmbz_bezel_highlight_top * top_mask * HHLP_QuadraticBezier(smoothstep(hmbz_bezel_highlight_width, 0, abs(tube_warped_coord_ctr.x)), vec2(0.5, hmbz_bezel_highlight_falloff_speed));
-	float bottom_center_highlight_mask 	= hmbz_bezel_highlight_bottom * bottom_mask * HHLP_QuadraticBezier(smoothstep(hmbz_bezel_highlight_width, 0, abs(tube_warped_coord_ctr.x)), vec2(0.5, hmbz_bezel_highlight_falloff_speed));
-	float sides_highlight_mask 			= hmbz_bezel_highlight_sides * sides_mask * HHLP_QuadraticBezier(smoothstep(hmbz_bezel_highlight_width, 0, abs(tube_warped_coord_ctr.y)), vec2(0.5, hmbz_bezel_highlight_falloff_speed));
+	float top_center_highlight_mask 	= hmbz_bezel_highlight_top * top_mask * HHLP_QuadraticBezier(smoothstep(hmbz_bezel_highlight_width, 0, abs(tube_curved_coord_ctr.x)), vec2(0.5, hmbz_bezel_highlight_falloff_speed));
+	float bottom_center_highlight_mask 	= hmbz_bezel_highlight_bottom * bottom_mask * HHLP_QuadraticBezier(smoothstep(hmbz_bezel_highlight_width, 0, abs(tube_curved_coord_ctr.x)), vec2(0.5, hmbz_bezel_highlight_falloff_speed));
+	float sides_highlight_mask 			= hmbz_bezel_highlight_sides * sides_mask * HHLP_QuadraticBezier(smoothstep(hmbz_bezel_highlight_width, 0, abs(tube_curved_coord_ctr.y)), vec2(0.5, hmbz_bezel_highlight_falloff_speed));
 
-	float edge_top_center_highlight_mask 		= hmbz_bezel_highlight_top * top_mask * HHLP_QuadraticBezier(smoothstep(hmbz_bezel_edge_highlight_width, 0, abs(tube_warped_coord_ctr.x)), vec2(0.8, 0));
-	float edge_bottom_center_highlight_mask 	= hmbz_bezel_highlight_bottom * bottom_mask * HHLP_QuadraticBezier(smoothstep(hmbz_bezel_edge_highlight_width, 0, abs(tube_warped_coord_ctr.x)), vec2(0.8, 0));
-	float edge_sides_highlight_mask 			= hmbz_bezel_highlight_sides * sides_mask * HHLP_QuadraticBezier(smoothstep(hmbz_bezel_edge_highlight_width, 0, abs(tube_warped_coord_ctr.y)), vec2(0.8, 0));
+	float edge_top_center_highlight_mask 		= hmbz_bezel_highlight_top * top_mask * HHLP_QuadraticBezier(smoothstep(hmbz_bezel_edge_highlight_width, 0, abs(tube_curved_coord_ctr.x)), vec2(0.8, 0));
+	float edge_bottom_center_highlight_mask 	= hmbz_bezel_highlight_bottom * bottom_mask * HHLP_QuadraticBezier(smoothstep(hmbz_bezel_edge_highlight_width, 0, abs(tube_curved_coord_ctr.x)), vec2(0.8, 0));
+	float edge_sides_highlight_mask 			= hmbz_bezel_highlight_sides * sides_mask * HHLP_QuadraticBezier(smoothstep(hmbz_bezel_edge_highlight_width, 0, abs(tube_curved_coord_ctr.y)), vec2(0.8, 0));
 
 	if (HSM_GLASS_BORDER_ON == 1)
 	{
-		edge_top_center_highlight_mask 		= 0.6 * top_mask * HHLP_QuadraticBezier(smoothstep(hmbz_bezel_edge_highlight_width, 0, abs(tube_warped_coord_ctr.x)), vec2(0.8, 1));
-		edge_bottom_center_highlight_mask 	= bottom_mask * HHLP_QuadraticBezier(smoothstep(hmbz_bezel_edge_highlight_width, 0, abs(tube_warped_coord_ctr.x)), vec2(0.8, 1));
-		edge_sides_highlight_mask 			= 0.7 * sides_mask * HHLP_QuadraticBezier(smoothstep(hmbz_bezel_edge_highlight_width, 0, abs(tube_warped_coord_ctr.y)), vec2(0.8, 1));
+		edge_top_center_highlight_mask 		= 0.6 * top_mask * HHLP_QuadraticBezier(smoothstep(hmbz_bezel_edge_highlight_width, 0, abs(tube_curved_coord_ctr.x)), vec2(0.8, 1));
+		edge_bottom_center_highlight_mask 	= bottom_mask * HHLP_QuadraticBezier(smoothstep(hmbz_bezel_edge_highlight_width, 0, abs(tube_curved_coord_ctr.x)), vec2(0.8, 1));
+		edge_sides_highlight_mask 			= 0.7 * sides_mask * HHLP_QuadraticBezier(smoothstep(hmbz_bezel_edge_highlight_width, 0, abs(tube_curved_coord_ctr.y)), vec2(0.8, 1));
 	}
 
 	float edge_highlight_mask 	= hmbz_bezel_highlight_edge * edge_mask * (edge_top_center_highlight_mask + edge_bottom_center_highlight_mask + edge_sides_highlight_mask);
@@ -515,16 +466,13 @@ void main()
 	if (HSM_FRM_TEXTURE_OPACITY > 0)
 	{
 		vec4 frame_texture_color = HSM_Linearize(texture(FrameTextureImage, frame_outside_coord), HSM_DEFAULT_SRGB_GAMMA);
-		frame_diffuse_color = BlendModeLayerMix(vec4(frame_diffuse_color, 1), frame_texture_color, HSM_FRM_TEXTURE_BLEND_MODE, MASK_MODE_ALL, CUTOUT_MODE_OFF, HSM_FRM_TEXTURE_OPACITY).rgb;
+		frame_diffuse_color = BlendModeMaskLayerMix(vec4(frame_diffuse_color, 1), frame_texture_color, HSM_FRM_TEXTURE_BLEND_MODE, MASK_MODE_ALL, CUTOUT_MODE_OFF, HSM_FRM_TEXTURE_OPACITY).rgb;
 	}
 
 	frame_diffuse_color = mix(frame_diffuse_color, outside_frame_color, OUTSIDE_FRAME_MASK);
 
 	// Composite in color from outside the bezel
 	vec3 bezel_and_frame_rgb = mix(bezel_color, frame_diffuse_color, OUTSIDE_BEZEL_MASK);
-
-
-
 
 	float frame_edge = 0.495;
 
@@ -540,7 +488,7 @@ void main()
 	if (HSM_GLASS_BORDER_ON == 1)
 		OUTSIDE_TUBE_MASK_FOR_IMAGE = clamp(outside_tube_mask - edge_mask, 0, 1);
 	else
-		OUTSIDE_TUBE_MASK_FOR_IMAGE = 1 - HSM_GetCornerMask(tube_warped_coord_ctr * 1.003 + 0.5, SCREEN_ASPECT, HSM_FRM_OUTER_CORNER_RADIUS, 1);
+		OUTSIDE_TUBE_MASK_FOR_IMAGE = 1 - HSM_GetCornerMask(tube_curved_coord_ctr * 1.003 + 0.5, SCREEN_ASPECT, HSM_FRM_OUTER_CORNER_RADIUS, 1);
 
 
 	//-----------------------------------------------------------------------------------------
@@ -603,7 +551,7 @@ void main()
 		background_image = texture(BackgroundImage, background_coord);
 
 		// Premultiply Alpha
-		background_image = GetPreMultipliedColorLinear(background_image, HSM_BG_SOURCE_MATTE_TYPE, HSM_DEFAULT_SRGB_GAMMA);
+		background_image = HSM_GetPreMultipliedColorLinear(background_image, HSM_BG_SOURCE_MATTE_TYPE, HSM_DEFAULT_SRGB_GAMMA);
 
 		// Premultiply background color
 		background_image.rgb *= HSM_BG_BRIGHTNESS;
@@ -615,7 +563,7 @@ void main()
 		// NIGHT LIGHTING
 		if (HSM_BG_APPLY_ADJUSTMENT == 1)
 			if (HSM_NIGHT_OPACITY > 0)
-				background_image = BlendMultiply(background_image, night_lighting_image, HSM_NIGHT_OPACITY);
+				background_image = HSM_BlendMultiply(background_image, night_lighting_image, HSM_NIGHT_OPACITY);
 	}
 
 	//----------------------------------------------------
@@ -635,7 +583,7 @@ void main()
 		// NIGHT LIGHTING
 		if (HSM_NIGHT_OPACITY > 0)
 			if (HSM_BZL_IMG_BLEND_MODE != BLEND_MODE_ADD)
-				bezel_and_frame_rgba = BlendMultiply(bezel_and_frame_rgba, night_lighting_image, HSM_NIGHT_OPACITY);
+				bezel_and_frame_rgba = HSM_BlendMultiply(bezel_and_frame_rgba, night_lighting_image, HSM_NIGHT_OPACITY);
 
 		if (HSM_BZL_OPACITY > 0 )
 			if (HSM_FRM_OPACITY > 0)
@@ -669,7 +617,7 @@ void main()
 										  texture(BezelImage,     bezel_image_coord);
 
 		// Premultiply Alpha
-		bezel_image = GetPreMultipliedColorLinear(bezel_image, HSM_BZL_SOURCE_MATTE_TYPE, HSM_DEFAULT_SRGB_GAMMA);
+		bezel_image = HSM_GetPreMultipliedColorLinear(bezel_image, HSM_BZL_SOURCE_MATTE_TYPE, HSM_DEFAULT_SRGB_GAMMA);
 
 		// Adjust Brightness
 		bezel_image.rgb *= HSM_BZL_IMG_BRIGHTNESS;
@@ -690,7 +638,7 @@ void main()
 		// NIGHT LIGHTING
 		if (HSM_NIGHT_OPACITY > 0)
 			if (HSM_BZL_IMG_BLEND_MODE != BLEND_MODE_ADD)
-				bezel_image = BlendMultiply(bezel_image, night_lighting_image, HSM_NIGHT_OPACITY);
+				bezel_image = HSM_BlendMultiply(bezel_image, night_lighting_image, HSM_NIGHT_OPACITY);
 	}
 
 	vec4 reflection_linear = crt_and_reflection_linear;
@@ -722,7 +670,7 @@ void main()
 		decal_image = texture(DecalImage, decal_coord);
 		
 		// Premultiply Alpha
-		decal_image = GetPreMultipliedColorLinear(decal_image, HSM_DECAL_SOURCE_MATTE_TYPE, HSM_DEFAULT_SRGB_GAMMA);
+		decal_image = HSM_GetPreMultipliedColorLinear(decal_image, HSM_DECAL_SOURCE_MATTE_TYPE, HSM_DEFAULT_SRGB_GAMMA);
 
 		// STATIC GAMMA
 		if (HSM_STATIC_LAYERS_GAMMA != 1)
@@ -731,7 +679,7 @@ void main()
 		// NIGHT LIGHTING
 		if (HSM_NIGHT_OPACITY > 0)
 			if (HSM_DECAL_BLEND_MODE != BLEND_MODE_ADD)
-				decal_image = BlendMultiply(decal_image, night_lighting_image, HSM_NIGHT_OPACITY);
+				decal_image = HSM_BlendMultiply(decal_image, night_lighting_image, HSM_NIGHT_OPACITY);
 	}
 #else
 	vec2 decal_coord = background_coord;
@@ -759,7 +707,7 @@ void main()
 		top_image = texture(TopLayerImage,     top_image_coord);
 
 		// Premultiply Alpha
-		top_image = GetPreMultipliedColorLinear(top_image, HSM_TOP_SOURCE_MATTE_TYPE, HSM_DEFAULT_SRGB_GAMMA);
+		top_image = HSM_GetPreMultipliedColorLinear(top_image, HSM_TOP_SOURCE_MATTE_TYPE, HSM_DEFAULT_SRGB_GAMMA);
 
 		// STATIC GAMMA
 		if (HSM_STATIC_LAYERS_GAMMA != 1)
@@ -768,7 +716,7 @@ void main()
 		// NIGHT LIGHTING
 		if (HSM_NIGHT_OPACITY > 0)
 				if (HSM_TOP_BLEND_MODE != BLEND_MODE_ADD)
-					top_image = BlendMultiply(top_image, night_lighting_image, HSM_NIGHT_OPACITY);
+					top_image = HSM_BlendMultiply(top_image, night_lighting_image, HSM_NIGHT_OPACITY);
 	}
 
 #ifndef SIMPLE_PRESET
@@ -793,7 +741,7 @@ void main()
 		cab_glass_image = texture(CabinetGlassImage, cab_glass_coord.xy);
 
 		// Premultiply Alpha
-		cab_glass_image = GetPreMultipliedColorLinear(cab_glass_image, HSM_CAB_GLASS_SOURCE_MATTE_TYPE, HSM_DEFAULT_SRGB_GAMMA);
+		cab_glass_image = HSM_GetPreMultipliedColorLinear(cab_glass_image, HSM_CAB_GLASS_SOURCE_MATTE_TYPE, HSM_DEFAULT_SRGB_GAMMA);
 
 		// Adjust Brightness
 		cab_glass_image.rgb *= HSM_CAB_GLASS_BRIGHTNESS;
@@ -805,7 +753,7 @@ void main()
 		// NIGHT LIGHTING
 		if (HSM_NIGHT_OPACITY > 0)
 			if (HSM_CAB_GLASS_BLEND_MODE != BLEND_MODE_ADD)
-				cab_glass_image = BlendMultiply(cab_glass_image, night_lighting_image, HSM_NIGHT_OPACITY);
+				cab_glass_image = HSM_BlendMultiply(cab_glass_image, night_lighting_image, HSM_NIGHT_OPACITY);
 	}
 
 	//-----------------------------------------------------------------------------------------
@@ -826,7 +774,7 @@ void main()
 		led_image = texture(LEDImage, led_coord);
 
 		// Premultiply Alpha
-		led_image = GetPreMultipliedColorLinear(led_image, HSM_LED_SOURCE_MATTE_TYPE, HSM_DEFAULT_SRGB_GAMMA);
+		led_image = HSM_GetPreMultipliedColorLinear(led_image, HSM_LED_SOURCE_MATTE_TYPE, HSM_DEFAULT_SRGB_GAMMA);
 
 		// STATIC GAMMA
 		if (HSM_STATIC_LAYERS_GAMMA != 1)
@@ -909,7 +857,7 @@ void main()
 	{
 		// BACKGROUND
 		if (HSM_BG_LAYER_ORDER == i)
-			frag_color_linear = BlendModeLayerMix(frag_color_linear, 
+			frag_color_linear = BlendModeMaskLayerMix(frag_color_linear, 
 													background_image, 
 													HSM_BG_BLEND_MODE, 
 													HSM_BG_MASK_MODE, 
@@ -919,7 +867,7 @@ void main()
 #ifndef SIMPLE_PRESET
 		// VIGNETTE
 		if (HSM_VIEWPORT_VIGNETTE_LAYER_ORDER == i)
-			frag_color_linear = BlendModeLayerMix(frag_color_linear, 
+			frag_color_linear = BlendModeMaskLayerMix(frag_color_linear, 
 													vignette_layer, 
 													BLEND_MODE_NORMAL, 
 													HSM_VIEWPORT_VIGNETTE_MASK_MODE, 
@@ -929,7 +877,7 @@ void main()
 
 		// CRT SCREEN
 		if (HSM_CRT_LAYER_ORDER == i)
-			frag_color_linear = BlendModeLayerMix(frag_color_linear, 
+			frag_color_linear = BlendModeMaskLayerMix(frag_color_linear, 
 													crt_linear, 
 													HSM_CRT_SCREEN_BLEND_MODE, 
 													MASK_MODE_ALL, 
@@ -940,7 +888,7 @@ void main()
 		// BEZEL IMAGE
 		if (HSM_BZL_IMG_LAYER_ORDER == i)
 			if (HSM_BZL_IMG_OPACITY > 0)
-				frag_color_linear = BlendModeLayerMix(frag_color_linear, 
+				frag_color_linear = BlendModeMaskLayerMix(frag_color_linear, 
 														bezel_image, 
 														HSM_BZL_IMG_BLEND_MODE, 
 														HSM_BZL_IMG_MASK_MODE, 
@@ -951,7 +899,7 @@ void main()
 		// GENERATED BEZEL LAYER
 		if (HSM_BZL_LAYER_ORDER == i)
 			if (HSM_BZL_OPACITY > 0)
-				frag_color_linear = BlendModeLayerMix(frag_color_linear, 
+				frag_color_linear = BlendModeMaskLayerMix(frag_color_linear, 
 														bezel_layer, 
 														HSM_BZL_BLEND_MODE, 
 														MASK_MODE_ALL, 
@@ -963,7 +911,7 @@ void main()
 			if (HSM_FRM_OPACITY > 0)
 			{
 				if (HSM_FRM_SHADOW_OPACITY > 0)
-					frag_color_linear = BlendModeLayerMix(frag_color_linear, 
+					frag_color_linear = BlendModeMaskLayerMix(frag_color_linear, 
 															frame_shadow_layer, 
 															BLEND_MODE_NORMAL, 
 															MASK_MODE_OUTSIDE_BEZEL,
@@ -972,7 +920,7 @@ void main()
 
 
 				// GENERATED FRAME LAYER
-				frag_color_linear = BlendModeLayerMix(frag_color_linear, 
+				frag_color_linear = BlendModeMaskLayerMix(frag_color_linear, 
 														frame_layer, 
 														HSM_FRM_BLEND_MODE, 
 														MASK_MODE_ALL, 
@@ -984,7 +932,7 @@ void main()
 		// CABINET GLASS
 		if (HSM_CAB_GLASS_LAYER_ORDER == i)
 			if (HSM_CAB_GLASS_OPACITY > 0)
-				frag_color_linear = BlendModeLayerMix(frag_color_linear, 
+				frag_color_linear = BlendModeMaskLayerMix(frag_color_linear, 
 														cab_glass_image, 
 														HSM_CAB_GLASS_BLEND_MODE, 
 														HSM_CAB_GLASS_MASK_MODE, 
@@ -994,7 +942,7 @@ void main()
 		// DECAL IMAGE
 		if (HSM_DECAL_LAYER_ORDER == i)
 			if (HSM_DECAL_OPACITY > 0)
-				frag_color_linear = BlendModeLayerMix(frag_color_linear, 
+				frag_color_linear = BlendModeMaskLayerMix(frag_color_linear, 
 														decal_image, 
 														HSM_DECAL_BLEND_MODE, 
 														HSM_DECAL_MASK_MODE, 
@@ -1004,7 +952,7 @@ void main()
 		// LED IMAGE
 		if (HSM_LED_LAYER_ORDER == i)
 			if (HSM_LED_OPACITY > 0)
-				frag_color_linear = BlendModeLayerMix(frag_color_linear, 
+				frag_color_linear = BlendModeMaskLayerMix(frag_color_linear, 
 														led_image, 
 														HSM_LED_BLEND_MODE, 
 														HSM_LED_MASK_MODE, 
@@ -1016,7 +964,7 @@ void main()
 		if (HSM_REFLECT_LAYER_ORDER == i)
 			if (HSM_REFLECT_BLEND_MODE > -1)
 				if (HSM_REFLECT_GLOBAL_AMOUNT > 0)
-					frag_color_linear = BlendModeLayerMix(frag_color_linear, 
+					frag_color_linear = BlendModeMaskLayerMix(frag_color_linear, 
 															reflection_linear, 
 															HSM_REFLECT_BLEND_MODE, 
 															HSM_REFLECT_MASK_MODE, 
@@ -1026,7 +974,7 @@ void main()
 		// Top Layer
 		if (HSM_TOP_LAYER_ORDER == i)
 			if (HSM_TOP_OPACITY > 0)
-				frag_color_linear = BlendModeLayerMix(frag_color_linear, 
+				frag_color_linear = BlendModeMaskLayerMix(frag_color_linear, 
 														top_image, 
 														HSM_TOP_BLEND_MODE, 
 														HSM_TOP_MASK_MODE, 
@@ -1046,8 +994,8 @@ void main()
 		else
 			debug_mask = GetMask(HSM_LAYERING_DEBUG_MASK_MODE);
 
-		frag_color_linear = PreMultAlphaBlend(frag_color_linear, vec4(1, 0, 0, 1) * 0.15 * debug_mask);
-		frag_color_linear = PreMultAlphaBlend(frag_color_linear, vec4(0.05, 0.05, 0.05, 1) * 0.15 * (1 - debug_mask));
+		frag_color_linear = HSM_PreMultAlphaBlend(frag_color_linear, vec4(1, 0, 0, 1) * 0.15 * debug_mask);
+		frag_color_linear = HSM_PreMultAlphaBlend(frag_color_linear, vec4(0.05, 0.05, 0.05, 1) * 0.15 * (1 - debug_mask));
 		frag_color_linear = clamp(frag_color_linear, 0, 1);
 	}
 

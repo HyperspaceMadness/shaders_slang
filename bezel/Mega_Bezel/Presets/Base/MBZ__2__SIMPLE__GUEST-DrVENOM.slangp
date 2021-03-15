@@ -8,6 +8,7 @@ scale0 = 0.125
 alias0  = "InfoCachePass"
 
 // Add Intro Animation
+// Scale is 8 to get back to the original core size
 shader1 = ../../shaders/HyperspaceMadness/hsm-prep-intro.slang
 float_framebuffer1 = true
 scale_type1 = source
@@ -15,7 +16,7 @@ scale1 = 8
 
 // Color Correction with Dogway's awesome Grade shader
 shader2 = ../../shaders/HyperspaceMadness/hsm-dogway/hsm-grade.slang
-alias2  = "ColorCorrectPass"
+alias2 = "ColorCorrectPass"
 
 shader3 = ../../shaders/HyperspaceMadness/hsm-phosphor-persistence.slang
 filter_linear3 = false
@@ -72,7 +73,6 @@ filter_linear9 = true
 scale_type9 = viewport
 scale9 = 1.0
 float_framebuffer9 = true
-wrap_mode9 = mirrored_repeat
 alias9 = BR_CRTPass
 
 // Reduce Resolution  ----------------------------------------------------------------
@@ -133,21 +133,14 @@ shader15 = ../../shaders/HyperspaceMadness/hsm-bezel-reflection.slang
 mipmap_input15 = true
 filter_linear15 = true
 scale_type15 = viewport
-float_framebuffer15 = true
-alias15 = BR_CRTAndReflectionPass
-
-shader16 = ../../shaders/HyperspaceMadness/hsm-bezel-image-layers-simple.slang
-mipmap_input16 = true
-filter_linear16 = true
-scale_type16 = viewport
-float_framebuffer16 = false
+float_framebuffer15 = false
 
 // Define how many shaders will be used from this list
-shaders = 17
+shaders = 16
 
 
 // Define textures to be used by the different passes
-textures = "SamplerLUT1;SamplerLUT2;SamplerLUT3;IntroImage;ScreenPlacementImage;ColoredGelImage;TubeStaticReflectionImage;BackgroundImage;ReflectionMaskImage;FrameTextureImage;CabinetGlassImage;BezelImage;BezelVertImage;DecalImage;NightLightingImage;LEDImage;TopLayerImage;"
+textures = "SamplerLUT1;SamplerLUT2;SamplerLUT3;IntroImage;ScreenPlacementImage;ColoredGelImage;TubeStaticReflectionImage;BackgroundImage;ReflectionMaskImage;NightLightingImage;FrameTextureImage;LEDImage;TopLayerImage;"
 
 SamplerLUT1 = ../../shaders/HyperspaceMadness/textures/lut/16.png
 SamplerLUT1_linear = true
@@ -168,26 +161,14 @@ ColoredGelImage_linear = true
 TubeStaticReflectionImage = ../../shaders/HyperspaceMadness/textures/TubeGlassOverlayImage_3840x2160.png
 TubeStaticReflectionImage_linear = true
 
+BackgroundImage = ../../shaders/HyperspaceMadness/textures/Baked_Frame_Carbonfiber_Background.png
+BackgroundImage_linear = true
+
 ReflectionMaskImage = ../../shaders/HyperspaceMadness/textures/Placeholder_White_16x16.png
 ReflectionMaskImage_linear = true
 
 FrameTextureImage = ../../shaders/HyperspaceMadness/textures/FrameTexture_2800x2120.png
 FrameTextureImage_linear = true
-
-BackgroundImage = ../../shaders/HyperspaceMadness/textures/BackgroundImage_Carbon_3840x2160.png
-BackgroundImage_linear = true
-
-CabinetGlassImage = ../../shaders/HyperspaceMadness/textures/Placeholder_Transparent_16x16.png
-CabinetGlassImage_linear = true
-
-BezelImage = ../../shaders/HyperspaceMadness/textures/Placeholder_Transparent_16x16.png
-BezelImage_linear = true
-
-BezelVertImage = ../../shaders/HyperspaceMadness/textures/Placeholder_Transparent_16x16.png
-BezelVertImage_linear = true
-
-DecalImage = ../../shaders/HyperspaceMadness/textures/Placeholder_Transparent_16x16.png
-DecalImage_linear = true
 
 NightLightingImage = ../../shaders/HyperspaceMadness/textures/NightLighting_3840x2160.jpg
 NightLightingImage_linear = true
@@ -197,3 +178,7 @@ LEDImage_linear = true
 
 TopLayerImage = ../../shaders/HyperspaceMadness/textures/Placeholder_Transparent_16x16.png
 TopLayerImage_linear = true
+
+// Parameters
+HSM_REFLECT_IS_LAST_PASS = 1
+HSM_BASIC_BG_IMG_OPACITY = 100

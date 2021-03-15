@@ -1,7 +1,7 @@
 // Add Mega Bezel parameters at the beginning of the list for easy access
 // A very small pass at 1/8th scale to cache values which are consistent across the frame
 // Read back these values later for better performance
-shader0 = ../../shaders/HyperspaceMadness/hsm-prep-info-cache-screen-scale-only.slang
+shader0 = ../../shaders/HyperspaceMadness/hsm-prep-info-cache.slang
 float_framebuffer0 = true
 scale_type0 = source
 scale0 = 0.125

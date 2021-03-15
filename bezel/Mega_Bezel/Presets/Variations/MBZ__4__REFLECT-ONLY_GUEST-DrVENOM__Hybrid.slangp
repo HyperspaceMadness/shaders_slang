@@ -1,4 +1,4 @@
-#reference "../base/MBZ__4__REFLECT-ONLY__GUEST-DrVENOM.slangp"
+#reference "../base/MBZ__2__SIMPLE__GUEST-DrVENOM.slangp"
 
 BackgroundImage = ../../shaders/HyperspaceMadness/textures/Baked_Frame_MegaBezel_Background.png
 

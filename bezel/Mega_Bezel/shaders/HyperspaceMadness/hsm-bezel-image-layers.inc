@@ -207,6 +207,8 @@ void main()
 		vTexCoord.y =  1 - vTexCoord.y;
 
 	VIEWPORT_COORD = vTexCoord * 1.0001;
+	// Not sure why we need linearize this but it seems to have a smoother range this way
+	BEZEL_FRAME_ORIGINAL_COLOR_RGB = HSM_Linearize(vec4(HSM_HSVtoRGB(vec3(HSM_BZL_COLOR_HUE, HSM_BZL_COLOR_SATURATION, HSM_BZL_COLOR_VALUE)), 1), HSM_DEFAULT_SRGB_GAMMA).rgb;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////

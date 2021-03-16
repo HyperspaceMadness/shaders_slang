@@ -80,7 +80,9 @@ layout(set = 0, binding = 7) uniform sampler2D ColoredGelImage;
 layout(set = 0, binding = 8) uniform sampler2D BackgroundImage;
 layout(set = 0, binding = 9) uniform sampler2D ReflectionMaskImage;
 layout(set = 0, binding = 10) uniform sampler2D NightLightingImage;
-layout(set = 0, binding = 11)  uniform sampler2D FrameTextureImage;
+layout(set = 0, binding = 11) uniform sampler2D LEDImage;
+layout(set = 0, binding = 12)  uniform sampler2D FrameTextureImage;
+layout(set = 0, binding = 13)  uniform sampler2D TopLayerImage;
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
 void main()
@@ -501,40 +503,48 @@ void main()
 
 	vec4 night_lighting_image = texture(NightLightingImage, VIEWPORT_COORD);
 
+	vec2 image_coord = VIEWPORT_COORD;
+	float final_viewport_aspect = global.FinalViewportSize.x/global.FinalViewportSize.y;
+
+	// Image Ratio is 16:9
+	if (HSM_BASIC_BG_IMG_ASPECT_RATIO == 1)
+		image_coord.x = (VIEWPORT_COORD.x - 0.5) / (1.7777/final_viewport_aspect) + 0.5;
+
+	// Image Ratio is 9:16
+	if (HSM_BASIC_BG_IMG_ASPECT_RATIO == 2)
+		image_coord.y = (VIEWPORT_COORD.y - 0.5) / (0.5625/final_viewport_aspect) + 0.5;
+
 	// Convert from linear to gamma space values
 	if (HSM_REFLECT_IS_LAST_PASS == 1)
 	{
-		vec4 background_image_color = vec4(0);
+		vec4 bg_layer = texture(BackgroundImage, image_coord);
+		bg_layer = HSM_Linearize(bg_layer, HSM_DEFAULT_SRGB_GAMMA);
 
-		if (HSM_BASIC_BG_IMG_OPACITY > 0)
+		vec4 led_layer = texture(LEDImage, image_coord);
+		led_layer = HSM_Linearize(led_layer, HSM_DEFAULT_SRGB_GAMMA);
+
+		vec4 top_layer = texture(TopLayerImage, image_coord);
+		top_layer = HSM_Linearize(led_layer, HSM_DEFAULT_SRGB_GAMMA);
+
+		if (HSM_STATIC_LAYERS_GAMMA != 1)
 		{
-			vec2 background_img_coord = VIEWPORT_COORD;
-			float final_viewport_aspect = global.FinalViewportSize.x/global.FinalViewportSize.y;
+			bg_layer = HSM_ApplyGamma(bg_layer, HSM_STATIC_LAYERS_GAMMA);
+			led_layer = HSM_ApplyGamma(led_layer, HSM_STATIC_LAYERS_GAMMA);
+			top_layer = HSM_ApplyGamma(top_layer, HSM_STATIC_LAYERS_GAMMA);
+		}
 
-			// Image Ratio is 16:9
-			if (HSM_BASIC_BG_IMG_ASPECT_RATIO == 1)
-				background_img_coord.x = (VIEWPORT_COORD.x - 0.5) / (1.7777/final_viewport_aspect) + 0.5;
+		if (HSM_BASIC_BG_IMG_SHOW_OVER_SCREEN == 0)
+		{
+			if (HSM_GLASS_BORDER_ON == 1)
+				bg_layer.a *= outside_tube_mask_wider * (1 - edge_mask);
+			else
+				bg_layer *= outside_tube_mask;
+		}
 
-			// Image Ratio is 9:16
-			if (HSM_BASIC_BG_IMG_ASPECT_RATIO == 2)
-				background_img_coord.y = (VIEWPORT_COORD.y - 0.5) / (0.5625/final_viewport_aspect) + 0.5;
-
-			background_image_color = texture(BackgroundImage, background_img_coord);
-			background_image_color = HSM_Linearize(background_image_color, HSM_DEFAULT_SRGB_GAMMA);
-
-			if (HSM_STATIC_LAYERS_GAMMA != 1)
-				background_image_color = HSM_ApplyGamma(background_image_color, HSM_STATIC_LAYERS_GAMMA);
-
-			if (HSM_BASIC_BG_IMG_SHOW_OVER_SCREEN == 0)
-			{
-				if (HSM_GLASS_BORDER_ON == 1)
-					background_image_color.a *= outside_tube_mask_wider * (1 - edge_mask);
-				else
-					background_image_color *= outside_tube_mask;
-			}
-
-			if (HSM_NIGHT_OPACITY > 0)
-				background_image_color = mix(background_image_color, background_image_color * night_lighting_image, HSM_NIGHT_OPACITY);
+		if (HSM_NIGHT_OPACITY > 0)
+		{
+			bg_layer = mix(bg_layer, bg_layer * night_lighting_image, HSM_NIGHT_OPACITY);
+			top_layer = mix(top_layer, top_layer * night_lighting_image, HSM_NIGHT_OPACITY);
 		}
 
 		vec4 bezel_layer = vec4(0);
@@ -559,11 +569,25 @@ void main()
 			if (HSM_FRM_OPACITY > 0 )
 				frame_layer = clamp(bezel_and_frame_rgba * FRAME_MASK, 0, 1);
 		}
+
+		vec4 frame_shadow_layer = vec4(0);
+		if (HSM_FRM_OPACITY > 0.001)
+			frame_shadow_layer.a = HHLP_QuadraticBezier(smoothstep(HSM_FRM_SHADOW_WIDTH, 0, dist_outside_frame), vec2(1, 0)) * OUTSIDE_BEZEL_MASK;
 		
-		frag_color_linear = HSM_BlendModeLayerMix(frag_color_linear, background_image_color, HSM_BASIC_BG_IMG_BLEND_MODE, HSM_BASIC_BG_IMG_OPACITY);
-		frag_color_linear = HSM_BlendModeLayerMix(frag_color_linear, bezel_layer, BLEND_MODE_NORMAL, 1);
+	// vec4 vignette_layer = vec4(0);
+	// if (HSM_VIEWPORT_VIGNETTE_OPACITY > 0)
+	// {
+	// 	vignette_layer.a += 0.75 * HHLP_QuadraticBezier(1 - HSM_GetVignetteFactor(VIEWPORT_COORD, HSM_VIEWPORT_VIGNETTE_OPACITY), vec2(1, 0.5)) * OUTSIDE_BEZEL_MASK;
+	// }
+
+		frag_color_linear = HSM_BlendModeLayerMix(frag_color_linear, bg_layer, HSM_BASIC_BG_IMG_BLEND_MODE, HSM_BASIC_BG_IMG_OPACITY);
+		// frag_color_linear = HSM_BlendModeLayerMix(frag_color_linear, vignette_layer, BLEND_MODE_NORMAL, 1);
+		frag_color_linear = HSM_BlendModeLayerMix(frag_color_linear, frame_shadow_layer, BLEND_MODE_NORMAL, HSM_FRM_SHADOW_OPACITY);
+		frag_color_linear = HSM_BlendModeLayerMix(frag_color_linear, led_layer, BLEND_MODE_ADD, HSM_SIMPLE_LED_IMG_OPACITY);
+		frag_color_linear = HSM_BlendModeLayerMix(frag_color_linear, bezel_layer, BLEND_MODE_NORMAL, HSM_BZL_OPACITY);
 		frag_color_linear += reflected_color;
-		frag_color_linear = HSM_BlendModeLayerMix(frag_color_linear, frame_layer, BLEND_MODE_NORMAL, 1);
+		frag_color_linear = HSM_BlendModeLayerMix(frag_color_linear, frame_layer, BLEND_MODE_NORMAL, HSM_FRM_OPACITY);
+		frag_color_linear = HSM_BlendModeLayerMix(frag_color_linear, top_layer, BLEND_MODE_ADD, HSM_SIMPLE_TOP_IMG_OPACITY);
 
 		FragColor = HSM_ApplyGamma(clamp(frag_color_linear, 0, 1), HSM_DEFAULT_SRGB_GAMMA);
 	}

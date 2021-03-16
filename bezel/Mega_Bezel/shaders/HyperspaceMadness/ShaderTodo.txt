@@ -38,19 +38,19 @@ Changes:
 
 Mega Bezel Still to Come:
 
-Independent Bezel Scaling not the same as non-int scale, why?
-Need x Scale for screen size of Independent bezel
-Outer reflection corner radius should be independent when in independent mode
-See why very inner edge seems not affected by reflection mask
-Add Reflection Mask to the Reflect Only Preset 
-
-
+  * Split settings into screen-scale, basic-border-only, reflection, simple-only, image-layers
+  * Reorg Resolution Debug so core res is on top, screen & viewport should be on bottom
+  * Move Resolution Debug to be top justified
+  * Try to improve Auto Aspect for Eur Playstation, Catch H == 576 as 1.33 
+  * Add LED & Top Layer image, (Decal?) to Simple preset
+  * Independent Bezel Scaling not the same as non-int scale, why? Maybe only in Portrait Res
+  * Need x Scale for screen size of Independent bezel
+  * Outer reflection corner radius should be independent when in independent mode
+  * See why very inner edge seems not affected by reflection mask
   * Examples
-    * Vertical Example - Reflection Only Static BG
-    * Plastic Bezel, Cutout Bezel
-    * Vertical Example - Full Adjustable
+    * Cutout Bezel
+    * Vertical Example - Full Adjustable, Plastic Bezel
     * Discs of Tron
-  * Try Scaled up version of tube for reflection/glass area, like big blur
   * Startup Animation - Sprite Sheet
   * Bilinear scale option per layer?
   * Redo Splitscreen with mapping and no dependence on sampling

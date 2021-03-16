@@ -348,6 +348,7 @@ float HSM_BASIC_BG_IMG_SHOW_OVER_SCREEN = global.HSM_BASIC_BG_IMG_SHOW_OVER_SCRE
 #pragma parameter HSM_INTRO_SPEED     							"      Speed"  100 1 500 5
 #define HSM_INTRO_SPEED (global.HSM_INTRO_SPEED / 100)
 
+
 #pragma parameter HSM_INTRO_LOGO_TITLE							"[ INTRO LOGO ]_________________________________________________" 0 0 0.01 0.01
 
 #pragma parameter HSM_INTRO_LOGO_BLEND_MODE        				"      Logo Blend Mode - Off | Norm | Add | Mult"  1 0 3 1
@@ -380,6 +381,7 @@ float HSM_BASIC_BG_IMG_SHOW_OVER_SCREEN = global.HSM_BASIC_BG_IMG_SHOW_OVER_SCRE
 #pragma parameter HSM_INTRO_LOGO_FADE_OUT       				"      Logo Fade Out Frames"  80 0 600 5
 #define HSM_INTRO_LOGO_FADE_OUT global.HSM_INTRO_LOGO_FADE_OUT
 
+
 #pragma parameter HSM_INTRO_LOGO_SOLID_TITLE					"[ INTRO SOLID COLOR ]__________________________________________" 0 0 0.01 0.01
 
 #pragma parameter HSM_INTRO_SOLID_COLOR_BLEND_MODE      		"      Solid Color Blend Mode - Off | Norm | Add | Mult"  1 0 3 1
@@ -399,6 +401,7 @@ float HSM_BASIC_BG_IMG_SHOW_OVER_SCREEN = global.HSM_BASIC_BG_IMG_SHOW_OVER_SCRE
 
 #pragma parameter HSM_INTRO_SOLID_COLOR_FADE_OUT        		"      Solid Color Fade Out Frames"  40 0 600 5
 #define HSM_INTRO_SOLID_COLOR_FADE_OUT global.HSM_INTRO_SOLID_COLOR_FADE_OUT
+
 
 #pragma parameter HSM_INTRO_NOISE_TITLE							"[ INTRO STATIC NOISE ]_________________________________________" 0 0 0.01 0.01
 

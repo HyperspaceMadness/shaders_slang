@@ -198,6 +198,9 @@ layout(std140, set = 0, binding = 0) uniform UBO
 	float HSM_GLASS_BORDER_ON;
 
 	float HSM_STATIC_LAYERS_GAMMA;
+	float HSM_SIMPLE_IMG_ASPECT_RATIO;
+	float HSM_SIMPLE_LED_IMG_OPACITY;
+	float HSM_SIMPLE_TOP_IMG_OPACITY;
 	
 	// Night Lighting
 	float HSM_NIGHT_OPACITY;

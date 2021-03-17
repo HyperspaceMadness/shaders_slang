@@ -76,20 +76,20 @@ float_framebuffer16 = true
 // // To use the ntsc-adaptive you will need to comment out the scale-fx passes
 // // and uncomment the following
 
-// shader9 = :/shaders/shaders_slang/stock.slang
-// shader11 = :/shaders/shaders_slang/stock.slang
-// shader12 = :/shaders/shaders_slang/stock.slang
-// shader13 = :/shaders/shaders_slang/stock.slang
-// shader14 = :/shaders/shaders_slang/stock.slang
+// shader9 = ../../../../stock.slang
+// shader11 = ../../../../stock.slang
+// shader12 = ../../../../stock.slang
+// shader13 = ../../../../stock.slang
+// shader14 = ../../../../stock.slang
 
-// shader15 = :\shaders\shaders_slang\ntsc\shaders\ntsc-adaptive\ntsc-pass1.slang
+// shader15 = ../../../../ntsc/shaders/ntsc-adaptive/ntsc-pass1.slang
 // scale_type15 = source
 // scale_x15 = 4.0
 // filter_linear15 = false
 // scale_type15 = 1.0
 // float_framebuffer15 = true
 
-// shader16 = :\shaders\shaders_slang\ntsc\shaders\ntsc-adaptive\ntsc-pass2.slang
+// shader16 = ../../../../ntsc/shaders/ntsc-adaptive/ntsc-pass2.slang
 // scale_type16 = source
 // scale_x16 = 0.5
 // scale_y16 = 1.0
@@ -187,7 +187,7 @@ alias26 = BR_MirrorBlurredPass
 // Reduce resolution ----------------------------------------------------------------
 // Reduced to a very small amount so we can create a blur which will create a glow from the screen
 //      Mipmap option allows smoother downscaling
-shader27 = :/shaders/shaders_slang/blurs/blur9x9.slang
+shader27 = ../../../../blurs/blur9x9.slang
 mipmap_input27 = true
 filter_linear27 = true
 scale_type27 = absolute
@@ -198,7 +198,7 @@ alias27 = BR_MirrorReflectionDiffusedPass
 // Add Diffused glow all around the screen ----------------------------------------------------------------
 //      Blurred so much that it's non directional
 //      Mipmap option allows downscaling without artifacts
-shader28 = :/shaders/shaders_slang/blurs/blur9x9.slang
+shader28 = ../../../../blurs/blur9x9.slang
 mipmap_input28 = true
 filter_linear28 = true
 scale_type28 = absolute

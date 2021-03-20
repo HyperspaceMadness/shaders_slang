@@ -1,7 +1,7 @@
 // Add Mega Bezel parameters at the beginning of the list for easy access
 // A very small pass at 1/8th scale to cache values which are consistent across the frame
 // Read back these values later for better performance
-shader0 = ../../shaders/HyperspaceMadness/hsm-prep-info-cache-reflection-only.slang
+shader0 = ../../shaders/HyperspaceMadness/hsm-prep-info-cache-basic-border.slang
 float_framebuffer0 = true
 scale_type0 = source
 scale0 = 0.125
@@ -58,7 +58,7 @@ float_framebuffer7 = true
 // Guest's Awesome Shader!!! Guest-SM (Scanline Mask)
 //      Guest's Awesome Shader!!!
 //      Has been slightly altered to use the same scaling as the rest of the shders for the bezel & reflection
-shader8 = ../../shaders/HyperspaceMadness/hsm-guest/hsm-crt-guest-sm-with-scaling.slang
+shader8 = ../../shaders/HyperspaceMadness/hsm-guest/hsm-crt-guest-sm-with-scaling-basic-border.slang
 mipmap_input8 = true
 filter_linear8 = true
 scale_type8 = viewport
@@ -66,70 +66,8 @@ scale8 = 1.0
 float_framebuffer8 = true
 alias8 = BR_CRTPass
 
-// Reduce Resolution  ----------------------------------------------------------------
-//      Reduce the resolution to a small static size regardless of final resolution
-//      Allows consistent look and faster at different final resolutions for blur
-//      Mipmap option allows downscaling without artifacts
-shader9 = ../../shaders/HyperspaceMadness/hsm-linearize-crt.slang
-mipmap_input9 = true
-filter_linear9 = true
-scale_type9 = absolute
-float_framebuffer9 = true
-scale_x9 = 800
-scale_y9 = 600
-float_framebuffer9 = true
-alias9 = BR_MirrorLowResPass
-
-// Add Blur for the Reflection (Horizontal) ----------------------------------------------------------------
-shader10 = ../../shaders/HyperspaceMadness/hsm-blur-outside-screen-horiz.slang
-mipmap_input10 = true
-filter_linear10 = true
-float_framebuffer10 = true
-scale_type11 = source
-
-// Add Blur for the Reflection (Vertical) ----------------------------------------------------------------
-shader11 = ../../shaders/HyperspaceMadness/hsm-blur-outside-screen-vert.slang
-filter_linear11 = false
-scale_type11 = source
-float_framebuffer11 = true
-alias11 = BR_MirrorBlurredPass
-
-// Reduce resolution ----------------------------------------------------------------
-// Reduced to a very small amount so we can create a blur which will create a glow from the screen
-//      Mipmap option allows smoother downscaling
-shader12 = ../../../../blurs/blur9x9.slang
-mipmap_input12 = true
-filter_linear12 = true
-scale_type12 = absolute
-float_framebuffer12 = true
-scale_x12 = 128
-scale_y12 = 128
-alias12 = BR_MirrorReflectionDiffusedPass
-
-// Add Diffused glow all around the screen ----------------------------------------------------------------
-//      Blurred so much that it's non directional
-//      Mipmap option allows downscaling without artifacts
-shader13 = ../../../../blurs/blur9x9.slang
-mipmap_input13 = true
-filter_linear13 = true
-scale_type13 = absolute
-float_framebuffer13 = true
-scale_x13 = 12
-scale_y13 = 12
-alias13 = BR_MirrorFullscreenGlowPass
-
-
-// Bezel Reflection ----------------------------------------------------------------
-
-shader14 = ../../shaders/HyperspaceMadness/hsm-bezel-reflection.slang
-mipmap_input14 = true
-filter_linear14 = true
-scale_type14 = viewport
-float_framebuffer14 = true
-alias14 = BR_CRTAndReflectionPass
-
 // Define how many shaders will be used from this list
-shaders = 15
+shaders = 9
 
 
 // Define textures to be used by the different passes
@@ -185,7 +123,3 @@ LEDImage_linear = true
 
 TopLayerImage = ../../shaders/HyperspaceMadness/textures/Placeholder_Transparent_16x16.png
 TopLayerImage_linear = true
-
-// Parameters
-HSM_REFLECT_IS_LAST_PASS = 1
-HSM_BG_OPACITY = 100

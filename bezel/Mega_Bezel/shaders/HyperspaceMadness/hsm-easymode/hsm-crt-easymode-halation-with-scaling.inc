@@ -5,10 +5,6 @@ License: GPL
 Addition of hsm-mega-screen-scale by HyperspaceMadness remimcgill@hotmail.com
 */
 
-// HSM Added
-#include "../hsm-globals-and-screen-scale-params.inc"
-// End Addition
-
 layout(push_constant) uniform Push
 {
 	// HSM Removed
@@ -169,8 +165,9 @@ layout(set = 0, binding = 1) uniform sampler2D Source;
 layout(set = 0, binding = 2) uniform sampler2D InfoCachePass;
 layout(set = 0, binding = 3) uniform sampler2D ORIG_LINEARIZED;
 
-layout(set = 0, binding = 4) uniform sampler2D ColoredGelImage;
-layout(set = 0, binding = 5) uniform sampler2D TubeStaticReflectionImage;
+layout(set = 0, binding = 4) uniform sampler2D BackgroundImage;
+layout(set = 0, binding = 5) uniform sampler2D ColoredGelImage;
+layout(set = 0, binding = 6) uniform sampler2D TubeStaticReflectionImage;
 
 void main()
 {
@@ -350,6 +347,6 @@ void main()
     FragColor = vec4(col, 1);
 
 	// HSM Added Prep and add output gamma
-	FragColor = HSM_GetPostCrtPreppedColor(FragColor, vTexCoord, screen_curved_coord, ColoredGelImage, TubeStaticReflectionImage);
+	FragColor = HSM_GetPostCrtPreppedColor(FragColor, vTexCoord, screen_curved_coord, ColoredGelImage, TubeStaticReflectionImage, BackgroundImage);
 	// End Addition
 }

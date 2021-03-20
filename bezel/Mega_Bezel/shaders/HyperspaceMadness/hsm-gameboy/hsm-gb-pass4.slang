@@ -128,8 +128,10 @@ layout(set = 0, binding = 6) uniform sampler2D PocketColorPaletteImage;
 layout(set = 0, binding = 7) uniform sampler2D LightColorPaletteImage;
 layout(set = 0, binding = 8) uniform sampler2D CustomColorPaletteImage;
 layout(set = 0, binding = 9) uniform sampler2D LCDBackgroundImage;
-layout(set = 0, binding = 10) uniform sampler2D ColoredGelImage;
-layout(set = 0, binding = 11) uniform sampler2D TubeStaticReflectionImage;
+layout(set = 0, binding = 10) uniform sampler2D BackgroundImage;
+layout(set = 0, binding = 11) uniform sampler2D ColoredGelImage;
+layout(set = 0, binding = 12) uniform sampler2D TubeStaticReflectionImage;
+layout(set = 0, binding = 13) uniform sampler2D InfoCachePass;
 
 // #define bg_color texture(DMG0ColorPaletteImage, vec2(0.25, 0.5)) 
 
@@ -149,6 +151,8 @@ layout(set = 0, binding = 11) uniform sampler2D TubeStaticReflectionImage;
 void main()
 {
     // HSM Added
+    HSM_UpdateGlobalScreenValuesFromCache(InfoCachePass, vTexCoord);
+
     vec4 bg_color = vec4(0, 0, 0, 1);
     if (params.gameboy_color_palette == 0)
         bg_color = texture(DMG0ColorPaletteImage, vec2(0.25, 0.5));
@@ -206,6 +210,6 @@ void main()
     FragColor = HSM_Linearize(out_color, HSM_DEFAULT_CRT_GAMMA);
 
     // Prep and add output gamma
-	FragColor = HSM_GetPostCrtPreppedColor(FragColor, screen_curved_coord, ColoredGelImage, TubeStaticReflectionImage);
+	FragColor = HSM_GetPostCrtPreppedColor(FragColor, vTexCoord, screen_curved_coord, ColoredGelImage, TubeStaticReflectionImage, BackgroundImage);
 	// End Addition
 }

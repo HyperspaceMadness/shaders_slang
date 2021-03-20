@@ -241,9 +241,6 @@ float HSM_REFLECT_MASK_IMG_AMOUNT = global.HSM_REFLECT_MASK_IMG_AMOUNT / 100;
 #pragma parameter HSM_REFLECT_MASK_SCALE_MODE 			            "      Scaling Mode (Image Layers Only)- FullScreen | Bezel Img" 0 0 1 1
 float HSM_REFLECT_MASK_SCALE_MODE = global.HSM_REFLECT_MASK_SCALE_MODE;
 
-#pragma parameter HSM_REFLECT_MASK_TO_BEZEL                         "      Mask Reflection to Bezel" 0 0 1 1
-float HSM_REFLECT_MASK_TO_BEZEL = global.HSM_REFLECT_MASK_TO_BEZEL;
-
 //---------------------------------------------------------------------------------------------------
 // Reflection Is Last Pass
 //---------------------------------------------------------------------------------------------------

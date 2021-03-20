@@ -446,20 +446,16 @@ void main()
 
 		// Modulate amount of refleciton on frame inner edge
 		reflected_color.rgb *= (1 - HSM_REFLECT_FRAME_INNER_EDGE_AMOUNT) * (1 - frame_inner_edge_mask) + HSM_REFLECT_FRAME_INNER_EDGE_AMOUNT;
-
-		if (HSM_REFLECT_MASK_TO_BEZEL == 1)
-		{
-			float bezel_mask = HSM_GetCornerMask(bezel_outside_coord, SCREEN_ASPECT, HSM_FRM_INNER_CORNER_RADIUS_SCALE * HSM_BZL_OUTER_CORNER_RADIUS_SCALE * HSM_SCREEN_CORNER_RADIUS, 0.9);
-
-			reflected_color *= bezel_mask;
-		}
 	}
 
-	#ifdef IS_SIMPLE_PRESET
+#ifdef IS_SIMPLE_PRESET
+	float bezel_mask = HSM_GetCornerMask(bezel_outside_coord, SCREEN_ASPECT, HSM_FRM_INNER_CORNER_RADIUS_SCALE * HSM_BZL_OUTER_CORNER_RADIUS_SCALE * HSM_SCREEN_CORNER_RADIUS, 0.9);
+	reflected_color *= bezel_mask;
+#endif
+
 	// Apply the mask image on the reflection, usually used to show the uneven brightness of a bumpy surface
 	if (HSM_REFLECT_MASK_IMG_AMOUNT > 0)
 		reflected_color *= HSM_REFLECT_MASK_IMG_AMOUNT * texture(ReflectionMaskImage, VIEWPORT_COORD).r + (1 - HSM_REFLECT_MASK_IMG_AMOUNT);
-	#endif
 
 	crt_linear *= SCREEN_MASK * TUBE_MASK;
 
@@ -558,14 +554,12 @@ FragColor = frag_color_linear + reflected_color;
 		if (HSM_NIGHT_OPACITY > 0)
 			bezel_and_frame_rgba = HSM_BlendMultiply(bezel_and_frame_rgba, night_lighting_image, HSM_NIGHT_OPACITY);
 
-		if (HSM_BZL_OPACITY > 0 )
-			if (HSM_FRM_OPACITY > 0)
-				bezel_layer = clamp(bezel_and_frame_rgba * FRAME_AND_BEZEL_MASK, 0, 1);
-			else
-				bezel_layer = clamp(bezel_and_frame_rgba * BEZEL_MASK, 0, 1);
-
-		if (HSM_FRM_OPACITY > 0 )
-			frame_layer = clamp(bezel_and_frame_rgba * FRAME_MASK, 0, 1);
+		// Mask out the area outside the frame
+		bezel_layer = bezel_and_frame_rgba * (1 - OUTSIDE_FRAME_MASK);
+		// Layer this on top of the shadow
+		bezel_layer = HSM_BlendModeLayerMix(frame_shadow_layer, bezel_layer, BLEND_MODE_NORMAL, HSM_FRM_SHADOW_OPACITY);
+		// Adjust the masks for the transparency of each portion, Bezel and from the frame outwards
+		bezel_layer = clamp(bezel_layer * (BEZEL_MASK * HSM_BZL_OPACITY + OUTSIDE_BEZEL_MASK * HSM_FRM_OPACITY), 0, 1);
 	}
 
 	// vec4 vignette_layer = vec4(0);
@@ -576,11 +570,9 @@ FragColor = frag_color_linear + reflected_color;
 
 	frag_color_linear = HSM_BlendModeLayerMix(frag_color_linear, bg_layer, HSM_BG_BLEND_MODE, HSM_BG_OPACITY);
 	// frag_color_linear = HSM_BlendModeLayerMix(frag_color_linear, vignette_layer, BLEND_MODE_NORMAL, 1);
-	frag_color_linear = HSM_BlendModeLayerMix(frag_color_linear, frame_shadow_layer, BLEND_MODE_NORMAL, HSM_FRM_SHADOW_OPACITY);
 	frag_color_linear = HSM_BlendModeLayerMix(frag_color_linear, led_layer, BLEND_MODE_ADD, HSM_LED_OPACITY);
-	frag_color_linear = HSM_BlendModeLayerMix(frag_color_linear, bezel_layer, BLEND_MODE_NORMAL, HSM_BZL_OPACITY);
+	frag_color_linear = HSM_BlendModeLayerMix(frag_color_linear, bezel_layer, BLEND_MODE_NORMAL, 1);
 	frag_color_linear += reflected_color;
-	frag_color_linear = HSM_BlendModeLayerMix(frag_color_linear, frame_layer, BLEND_MODE_NORMAL, HSM_FRM_OPACITY);
 	frag_color_linear = HSM_BlendModeLayerMix(frag_color_linear, top_layer, BLEND_MODE_ADD, HSM_TOP_OPACITY);
 
 	FragColor = HSM_ApplyGamma(clamp(frag_color_linear, 0, 1), HSM_DEFAULT_SRGB_GAMMA);

@@ -101,8 +101,9 @@ float HSM_GetScreenAspect()
 	
 	if (HSM_ASPECT_RATIO_MODE == 0)
 	{
-		// If the vertical res is larger than 500 is is probably a modern square pixel resolution
-		if (raw_original_size.y > 500) horizontal_aspect = core_aspect_horizontal;
+		// If the vertical res is larger than 580 is is probably a modern square pixel resolution
+		// 576 seems to be PAL vertical resolution used sometimes
+		if (raw_original_size.y > 580) horizontal_aspect = core_aspect_horizontal;
 		else if (HSM_MatchResolution(nintendo_gameboy_advance_res, 	raw_original_size)) horizontal_aspect = core_aspect_horizontal;
 		else if (HSM_MatchResolution(nintendo_gameboy_res, 			raw_original_size)) horizontal_aspect = core_aspect_horizontal;
 		else if (HSM_MatchResolution(nintendo_ds_top_bottom_res, 	raw_original_size)) horizontal_aspect = core_aspect_horizontal;

@@ -1,7 +1,7 @@
 #version 450
 
 #include "hsm-globals.inc"
-#include "hsm-params-screen-scale.inc"
+#include "hsm-params-0-screen-scale.inc"
 #include "hsm-common-functions.inc"
 
 #pragma stage vertex

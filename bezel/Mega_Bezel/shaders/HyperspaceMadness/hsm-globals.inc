@@ -1,5 +1,5 @@
 /*   
-hsm-globals-and-all-params.inc
+hsm-globals-and-advanced-params.inc
 
 Globals for screen scale and bezel
 */
@@ -55,6 +55,7 @@ layout(std140, set = 0, binding = 0) uniform UBO
 	float HSM_CURVATURE_3D_VIEW_DIST;
 	float HSM_CURVATURE_3D_TILT_ANGLE_X;
 	float HSM_CURVATURE_3D_TILT_ANGLE_Y;
+
 	float HSM_INTRO_LOGO_BLEND_MODE;
 	float HSM_INTRO_NOISE_BLEND_MODE;
 	float HSM_INTRO_NOISE_HOLD;
@@ -89,6 +90,7 @@ layout(std140, set = 0, binding = 0) uniform UBO
 
 	float HSM_ANTI_FLICKER_ON;
 	float HSM_ANTI_FLICKER_THRESHOLD;
+	
 	float HSM_PHOSPHOR_PERSISTENCE_BLEND;
 	float HSM_PHOSPHOR_PERSISTENCE_RED;
 	float HSM_PHOSPHOR_PERSISTENCE_GREEN;
@@ -181,14 +183,11 @@ layout(std140, set = 0, binding = 0) uniform UBO
 	float HSM_REFLECT_NOISE_SAMPLES;
 	float HSM_REFLECT_NOISE_SAMPLE_DISTANCE;
 
-
 	// Blur Stuff
 	float HSM_REFLECT_BLUR_NUM_SAMPLES;
 	float HSM_REFLECT_BLUR_MIN;
 	float HSM_REFLECT_BLUR_MAX;
 	
-	float HSM_BASIC_BG_IMG_OPACITY;
-	float HSM_BASIC_BG_IMG_BLEND_MODE;
 	float HSM_BASIC_BG_IMG_ASPECT_RATIO;
 	float HSM_BASIC_BG_IMG_SHOW_OVER_SCREEN;
 	float HSM_REFLECT_MASK_TO_BEZEL;
@@ -199,9 +198,8 @@ layout(std140, set = 0, binding = 0) uniform UBO
 
 	float HSM_STATIC_LAYERS_GAMMA;
 	float HSM_SIMPLE_IMG_ASPECT_RATIO;
-	float HSM_SIMPLE_LED_IMG_OPACITY;
-	float HSM_SIMPLE_TOP_IMG_OPACITY;
-	
+	float HSM_SIMPLE_BG_IMG_SHOW_OVER_SCREEN;
+
 	// Night Lighting
 	float HSM_NIGHT_OPACITY;
 	float HSM_NIGHT_MIRROR_HORZ;
@@ -224,8 +222,6 @@ layout(std140, set = 0, binding = 0) uniform UBO
 	float HSM_TOP_LAYER_ORDER;
 
 	// Image Background
-	float HSM_BG_OPACITY;
-	float HSM_BG_BRIGHTNESS;
 	float HSM_VIEWPORT_VIGNETTE_OPACITY;
 	float HSM_VIEWPORT_VIGNETTE_MASK_MODE;
 	float HSM_VIEWPORT_VIGNETTE_CUTOUT_MODE;
@@ -233,6 +229,9 @@ layout(std140, set = 0, binding = 0) uniform UBO
 	float HSM_VIEWPORT_VIGNETTE_SCALE;
 	float HSM_VIEWPORT_VIGNETTE_SCALE_X;
 	float HSM_VIEWPORT_VIGNETTE_POS_Y;
+
+	float HSM_BG_OPACITY;
+	float HSM_BG_BRIGHTNESS;
 	float HSM_BG_APPLY_ADJUSTMENT;
 	float HSM_BG_BLEND_MODE;
 	float HSM_BG_SOURCE_MATTE_TYPE;

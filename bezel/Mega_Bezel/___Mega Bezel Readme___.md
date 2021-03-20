@@ -2,6 +2,8 @@
 HyperspaceMadness Mega Bezel Shader Readme
 ------------------------------------------------------------------------------------------------------------
 
+Find more conversation about the shader here:
+https://forums.libretro.com/t/hsm-mega-bezel-reflection-shader-feedback-and-updates
 
 ----------------------------------------
 What does it do?
@@ -49,28 +51,24 @@ Presets are named/sorted by performance
 The most flexible and most resource hungry are at the top starting with index 0
 As the name's index number increases the presets get faster but less flexible
 
-  * **Group 0 BASE**
+  * **Group 1 ADVANCED**
     * Most flexible shader presets, one preset for each different CRT Shader 
     * Includes MDAPT, ScaleFX & GTU
     * The Guest-DrVenom preset is considered the default preset
-  * **Group 1 GLASS** - Glass presets which show a blurry reflection in the area around the screen 
+  * **Group 2 GLASS** - Glass presets which show a blurry reflection in the area around the screen 
     * Includes MDAPT, ScaleFX & GTU
-    * Does not include the additional Image Layering.
+    * Reflection is the last pass
+    * Does not include advanced image layering.
   * **Group 3 SIMPLE**
       * Same as Base except extra passes before the CRT pass removed 
       * No MDAPT, ScaleFX & GTU
-      * Includes only a subset of the image layers (Background and Top Extra Layer)
-  * **Group 4 REFLECT_ONLY**
-    * Image Layering pass has been removed
-    * No auto-generated bezel and frame and no image layering
-    * Includes an image which can be used for the background/bezel which the reflection will appear on top of
-    * When used with an image which was a snapshot from a default mega bezel preset the reflection masking will match the frame
-    * Can be used with a standard Retroarch overlay
-    * When used with a standard overlay the Retroarch video aspect ratio can be set to something like 4:3 to achieve higher performance
-
-  * **Group 5 SCALING-ONLY**
-    * Includes only the screen scaling and screen effects like fake scanlines
-    * All passes after CRT pass have been removed
+      * Includes some of image layers with basic settings to adjust application
+      * Reflection is the last pass
+      * Does not include advanced image layering.
+  * **Group 4 BASIC-BORDER**
+    * Includes the screen scaling and screen effects like fake scanlines
+    * Includes a Background image to function similarly to how a RetroArch overlay does
+    * The CRT pass is the last pass
 
 **Presets in Mega_Bezel/Variations**
 
@@ -88,10 +86,10 @@ Troubleshooting
         * Load the shader
         * If the shader loads correctly then the shader is working.
     
- * When shader works in imageviewer, but doesn’t work when using a core, it is possibly related to the core, or the graphics card being overwhelmed by resource usage with both the core requirements and the shader requirements
+ * When the shader works in imageviewer, but doesn’t work when using a core, it is probably related to the core, or the graphics card being overwhelmed by resource usage with both the core requirements and the shader requirements
    
  * If you still have difficulties loading the shader with a specific core update the core
- * If you still have difficulties download a new separate version of Retroarch and try it there. Sometimes problems lurk in some random config file somewhere which are very hard to track down
+ * If you still have difficulties download a new separate version of Retroarch and try it there. Sometimes problems lurk in a random config file which is very hard to track down
    
  * **To see errors** coming from Retroarch you need to set up your logging settings:
     * **Logging - Logging Verbosity - ON**
@@ -99,6 +97,15 @@ Troubleshooting
       * **Log to File - Off**
     * These settings will **cause a log window to come up** when you launch, and you should see any Retroarch errors, and shader loading details
 
+ * If the Screen is changing size unexpectedly
+    * If the screen changes size when loading a game or switching between different parts of the game e.g. gameplay vs cinematic, this is because of the interaction between the different resolutions the core is outputting on different screens and the shader's integer scale or automatic aspect ratio settings.
+    * To fix
+      * Make sure Integer Scale is OFF in the RetroArch Video Settings
+      * If BOTH the HEIGHT and WIDTH of the screen size are changing size
+        * Set the Integer scale mode to OFF (0)
+      * If ONLY the WIDTH of the screen is changing size (the HEIGHT stays constant)
+        * Set the Aspect Ratio Type to Explicit (1) This will use the explicit aspect ratio number instead of guessing
+        * If this solves your issue please consider posting on the thread at the top of this document the issue you had so that we can improve the auto aspect ratio in the future
 
 
 -----------------------------------------------------------------------------------------------------------------------------------

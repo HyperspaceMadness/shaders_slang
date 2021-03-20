@@ -38,11 +38,13 @@ Changes:
 
 Mega Bezel Still to Come:
 
+  * Make shader paths local rather than using ":/" this helps some linux users
   * Split settings into screen-scale, basic-border-only, reflection, simple-only, image-layers
   * Reorg Resolution Debug so core res is on top, screen & viewport should be on bottom
   * Move Resolution Debug to be top justified
   * Try to improve Auto Aspect for Eur Playstation, Catch H == 576 as 1.33 
   * Add LED & Top Layer image, (Decal?) to Simple preset
+  * Add Sharp Pixel Preset - No CRT Processing
   * Independent Bezel Scaling not the same as non-int scale, why? Maybe only in Portrait Res
   * Need x Scale for screen size of Independent bezel
   * Outer reflection corner radius should be independent when in independent mode

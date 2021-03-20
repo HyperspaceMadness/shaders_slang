@@ -1,7 +1,7 @@
 // Add Mega Bezel parameters at the beginning of the list for easy access
 // A very small pass at 1/8th scale to cache values which are consistent across the frame
 // Read back these values later for better performance
-shader0 = ../../shaders/HyperspaceMadness/hsm-prep-info-cache.slang
+shader0 = ../../shaders/HyperspaceMadness/hsm-prep-info-cache-glass.slang
 float_framebuffer0 = true
 scale_type0 = source
 scale0 = 0.125
@@ -76,11 +76,11 @@ float_framebuffer16 = true
 // // To use the ntsc-adaptive you will need to comment out the scale-fx passes
 // // and uncomment the following
 
-// shader9 = :/shaders/shaders_slang/stock.slang
-// shader11 = :/shaders/shaders_slang/stock.slang
-// shader12 = :/shaders/shaders_slang/stock.slang
-// shader13 = :/shaders/shaders_slang/stock.slang
-// shader14 = :/shaders/shaders_slang/stock.slang
+// shader9 = ../../../../stock.slang
+// shader11 = ../../../../stock.slang
+// shader12 = ../../../../stock.slang
+// shader13 = ../../../../stock.slang
+// shader14 = ../../../../stock.slang
 
 // shader15 = :\shaders\shaders_slang\ntsc\shaders\ntsc-adaptive\ntsc-pass1.slang
 // scale_type15 = source
@@ -187,7 +187,7 @@ alias26 = BR_MirrorBlurredPass
 // Reduce resolution ----------------------------------------------------------------
 // Reduced to a very small amount so we can create a blur which will create a glow from the screen
 //      Mipmap option allows smoother downscaling
-shader27 = :/shaders/shaders_slang/blurs/blur9x9.slang
+shader27 = ../../../../blurs/blur9x9.slang
 mipmap_input27 = true
 filter_linear27 = true
 scale_type27 = absolute
@@ -198,7 +198,7 @@ alias27 = BR_MirrorReflectionDiffusedPass
 // Add Diffused glow all around the screen ----------------------------------------------------------------
 //      Blurred so much that it's non directional
 //      Mipmap option allows downscaling without artifacts
-shader28 = :/shaders/shaders_slang/blurs/blur9x9.slang
+shader28 = ../../../../blurs/blur9x9.slang
 mipmap_input28 = true
 filter_linear28 = true
 scale_type28 = absolute
@@ -208,7 +208,7 @@ alias28 = BR_MirrorFullscreenGlowPass
 
 
 // Bezel Reflection ----------------------------------------------------------------
-shader29 = ../../shaders/HyperspaceMadness/hsm-bezel-reflection.slang
+shader29 = ../../shaders/HyperspaceMadness/hsm-bezel-reflection-glass.slang
 scale_type29 = viewport
 float_framebuffer29 = true
 alias29 = BR_CRTAndReflectionPass
@@ -261,7 +261,7 @@ TopLayerImage_linear = true
 // Parameters
 HSM_SCREEN_EDGE_SHARPNESS = "90.0000"
 HSM_TUBE_BLACK_EDGE_THICKNESS = -7
-HSM_BASIC_BG_IMG_OPACITY = "1.000000"
+HSM_BG_OPACITY = "1.000000"
 HSM_GLASS_BORDER_ON = "1.000000"
 HSM_BZL_WIDTH = 3000
 HSM_BZL_HEIGHT = 3000

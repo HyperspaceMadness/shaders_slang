@@ -24,7 +24,7 @@
 */
 
 // HSM Added
-#include "../hsm-globals-and-screen-scale-params.inc"
+
 // End Addition
 
 layout(push_constant) uniform Push

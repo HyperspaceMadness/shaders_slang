@@ -18,7 +18,7 @@ Thanks to:
 */
 
 /////////////// IMPORTS ///////////////
-#include "hsm-globals-and-all-params.inc"
+#include "hsm-globals-and-advanced-params.inc"
 #include "hsm-common-functions-bezel.inc"
 
 // Removed because BackgroundImageSize returns vec4(0,0,0,0), this happens with all user defined textures
@@ -248,13 +248,6 @@ void main()
 	vec4 crt_and_reflection_linear = texture(BR_CRTAndReflectionPass, VIEWPORT_COORD.xy); // HSM_Linearize(texture(BR_CRTAndReflectionPass, VIEWPORT_COORD.xy), HSM_DEFAULT_CRT_GAMMA);
 	crt_and_reflection_linear.a = 1;
 	vec4 crt_linear = crt_and_reflection_linear;
-
-	// If the reflection was supposed to be the last pass just return the sample for this layer
-	if (HSM_REFLECT_IS_LAST_PASS == 1)
-	{
-		FragColor = crt_and_reflection_linear;
-		return;
-	}
 
 	vec2 screen_curved_coord = HSM_GetCurvedCoord(SCREEN_COORD, 1, SCREEN_ASPECT);
 	

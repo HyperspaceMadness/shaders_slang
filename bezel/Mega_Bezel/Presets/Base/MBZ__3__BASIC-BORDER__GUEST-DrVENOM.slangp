@@ -1,7 +1,7 @@
 // Add Mega Bezel parameters at the beginning of the list for easy access
 // A very small pass at 1/8th scale to cache values which are consistent across the frame
 // Read back these values later for better performance
-shader0 = ../../shaders/HyperspaceMadness/hsm-prep-info-cache.slang
+shader0 = ../../shaders/HyperspaceMadness/hsm-prep-info-cache-basic-border.slang
 float_framebuffer0 = true
 scale_type0 = source
 scale0 = 0.125
@@ -67,7 +67,7 @@ alias8 = GlowPass
 // CRT Shader - Guest-Venom ----------------------------------------------------------------
 //      Guest's Awesome Shader!!!
 //      Has been slightly altered to use the same scaling as the rest of the shders for the bezel & reflection
-shader9 = ../../shaders/HyperspaceMadness/hsm-guest/hsm-crt-guest-dr-venom-with-scaling.slang
+shader9 = ../../shaders/HyperspaceMadness/hsm-guest/hsm-crt-guest-dr-venom-with-scaling-basic-border.slang
 mipmap_input9 = true
 filter_linear9 = true
 scale_type9 = viewport
@@ -106,4 +106,4 @@ BackgroundImage_linear = true
 
 // Parameters
 HSM_CRT_IS_LAST_PASS = 1
-HSM_BASIC_BG_IMG_OPACITY = 100
+HSM_BG_OPACITY = 100

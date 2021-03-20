@@ -1,8 +1,9 @@
 #reference "../../Presets/Base/MBZ__2__SIMPLE__GUEST-DrVENOM.slangp"
 
-ScreenPlacementImage = textures/full_composite.png
-BackgroundImage = textures/full_composite.png
-ReflectionMaskImage = textures/full_Plastic_Bezel_Reflect_Mask.png
+BackgroundImage = textures/Playstation.png
+LEDImage = textures/Playstation_LED.png
+TopLayerImage = ../../shaders/HyperspaceMadness/textures/Placeholder_Transparent_16x16.pointing
+
 
 HSM_VIEWPORT_VIGNETTE_OPACITY = 0
 HSM_NON_INTEGER_SCALE = "105.169662"
@@ -26,4 +27,4 @@ HSM_REFLECT_FRAME_INNER_EDGE_SHARPNESS = "0.000000"
 HSM_REFLECT_BEZEL_INNER_EDGE_AMOUNT = "66.000000"
 HSM_REFLECT_CORNER_OUTER_SPREAD = "1000.000000"
 HSM_REFLECT_MASK_IMG_AMOUNT = "100.000000"
-HSM_BASIC_BG_IMG_OPACITY = "100.000000"
+HSM_BG_OPACITY = "100.000000"

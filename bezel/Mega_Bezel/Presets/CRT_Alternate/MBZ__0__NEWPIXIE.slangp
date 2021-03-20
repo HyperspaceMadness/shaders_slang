@@ -1,7 +1,7 @@
 // Add Mega Bezel parameters at the beginning of the list for easy access
 // A very small pass at 1/8th scale to cache values which are consistent across the frame
 // Read back these values later for better performance
-shader0 = ../../shaders/HyperspaceMadness/hsm-prep-info-cache.slang
+shader0 = ../../shaders/HyperspaceMadness/hsm-prep-info-cache-advanced.slang
 float_framebuffer0 = true
 scale_type0 = source
 scale0 = 0.125
@@ -30,7 +30,7 @@ shader8 = ../../shaders/HyperspaceMadness/hsm-sgenpt-mix/hsm-sgenpt-mix.slang
 shader9 = ../../shaders/HyperspaceMadness/hsm-ps1dither/hsm-PS1-Undither-BoxBlur.slang
 alias9 = refpass
 
-shader10 = :/shaders/shaders_slang/stock.slang
+shader10 = ../../../../stock.slang
 
 // GTU TV Processing
 shader11 = ../../shaders/HyperspaceMadness/hsm-gtu/hsm-gtu-pass1.slang
@@ -65,7 +65,7 @@ scale_type13 = source
 scale13 = 1.0
 alias13 = "PersistencePass"
 
-shader14 = :/shaders/shaders_slang/stock.slang
+shader14 = ../../../../stock.slang
 
 shader15 = ../../shaders/HyperspaceMadness/hsm-newpixie/hsm-newpixie-accumulate.slang
 filter_linear15 = true
@@ -117,7 +117,7 @@ alias21 = BR_MirrorBlurredPass
 // Reduce resolution ----------------------------------------------------------------
 // Reduced to a very small amount so we can create a blur which will create a glow from the screen
 //      Mipmap option allows smoother downscaling
-shader22 = :/shaders/shaders_slang/blurs/blur9x9.slang
+shader22 = ../../../../blurs/blur9x9.slang
 mipmap_input22 = true
 filter_linear22 = true
 scale_type22 = absolute
@@ -129,7 +129,7 @@ alias22 = BR_MirrorReflectionDiffusedPass
 // Add Diffused glow all around the screen ----------------------------------------------------------------
 //      Blurred so much that it's non directional
 //      Mipmap option allows downscaling without artifacts
-shader23 = :/shaders/shaders_slang/blurs/blur9x9.slang
+shader23 = ../../../../blurs/blur9x9.slang
 mipmap_input23 = true
 filter_linear23 = true
 scale_type23 = absolute

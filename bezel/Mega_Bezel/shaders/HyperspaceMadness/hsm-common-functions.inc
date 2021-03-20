@@ -1251,12 +1251,13 @@ vec4 HSM_GetPostCrtPreppedColor(vec4 in_color_linear, vec2 VIEWPORT_COORD, vec2 
 
 	out_color.a = in_color_linear.a;
 
+	#ifdef IS_BASIC_BORDER_PRESET
+
 	// If we are not using this with the bezel we want to mask outside the screen
-	if (HSM_CRT_IS_LAST_PASS == 1)
 	{
 		out_color *= screen_mask;
 
-		if (HSM_BASIC_BG_IMG_OPACITY > 0)
+		if (HSM_BG_OPACITY > 0)
 		{
 			vec2 background_img_coord = VIEWPORT_COORD;
 			float final_viewport_aspect = global.FinalViewportSize.x/global.FinalViewportSize.y;
@@ -1277,9 +1278,11 @@ vec4 HSM_GetPostCrtPreppedColor(vec4 in_color_linear, vec2 VIEWPORT_COORD, vec2 
 				background_image_color *= outside_tube_mask;
 			}
 
-			out_color = HSM_BlendModeLayerMix(out_color, background_image_color, HSM_BASIC_BG_IMG_BLEND_MODE, HSM_BASIC_BG_IMG_OPACITY);
+			out_color = HSM_BlendModeLayerMix(out_color, background_image_color, HSM_BG_BLEND_MODE, HSM_BG_OPACITY);
 		}
 	}
+
+	#endif
 
 	// Apply the final Gamma
 	out_color = HSM_Delinearize(out_color, HSM_COLOR_CRT_GAMMA);

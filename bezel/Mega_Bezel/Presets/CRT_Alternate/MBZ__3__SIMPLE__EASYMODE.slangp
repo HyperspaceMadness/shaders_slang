@@ -1,7 +1,7 @@
 // Add Mega Bezel parameters at the beginning of the list for easy access
 // A very small pass at 1/8th scale to cache values which are consistent across the frame
 // Read back these values later for better performance
-shader0 = ../../shaders/HyperspaceMadness/hsm-prep-info-cache.slang
+shader0 = ../../shaders/HyperspaceMadness/hsm-prep-info-cache-advanced.slang
 float_framebuffer0 = true
 scale_type0 = source
 scale0 = 0.125
@@ -78,7 +78,7 @@ alias11 = BR_MirrorBlurredPass
 // Reduce resolution ----------------------------------------------------------------
 // Reduced to a very small amount so we can create a blur which will create a glow from the screen
 //      Mipmap option allows smoother downscaling
-shader12 = :/shaders/shaders_slang/blurs/blur9x9.slang
+shader12 = ../../../../blurs/blur9x9.slang
 mipmap_input12 = true
 filter_linear12 = true
 scale_type12 = absolute
@@ -90,7 +90,7 @@ alias12 = BR_MirrorReflectionDiffusedPass
 // Add Diffused glow all around the screen ----------------------------------------------------------------
 //      Blurred so much that it's non directional
 //      Mipmap option allows downscaling without artifacts
-shader13 = :/shaders/shaders_slang/blurs/blur9x9.slang
+shader13 = ../../../../blurs/blur9x9.slang
 mipmap_input13 = true
 filter_linear13 = true
 scale_type13 = absolute

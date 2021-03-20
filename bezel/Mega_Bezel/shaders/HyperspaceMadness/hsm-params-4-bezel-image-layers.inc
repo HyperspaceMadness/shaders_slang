@@ -8,6 +8,23 @@
 //---------------------------------------------------------------------------------------------------
 //---------------------------------------------------------------------------------------------------
 
+//---------------------------------------------------------------------------------------------------
+//    STATIC ELEMENT GAMMA
+//---------------------------------------------------------------------------------------------------
+#pragma parameter HSM_STATIC_GAMMA_TITLE "[ STATIC IMAGE LAYER GAMMA ]___________________________________" 0 0 0.01 0.01
+
+#pragma parameter HSM_STATIC_LAYERS_GAMMA		    "      Static Layers Gamma Adjust" 1 0.01 5 0.01
+float HSM_STATIC_LAYERS_GAMMA = global.HSM_STATIC_LAYERS_GAMMA;
+
+
+//---------------------------------------------------------------------------------------------------
+//    NIGHT LIGHTING IMAGE
+//---------------------------------------------------------------------------------------------------
+#pragma parameter HSM_NIGHT_LIGHTING_TITLE "[ NIGHT LIGHTING ]_____________________________________________" 0 0 0.01 0.01
+
+#pragma parameter HSM_NIGHT_OPACITY       "      Opacity"  0 0 100 1
+float HSM_NIGHT_OPACITY = global.HSM_NIGHT_OPACITY / 100;
+
 #pragma parameter HSM_NIGHT_MIRROR_HORZ         "      Mirror Horizontal"  0 0 1 1
 float HSM_NIGHT_MIRROR_HORZ = global.HSM_NIGHT_MIRROR_HORZ;
 

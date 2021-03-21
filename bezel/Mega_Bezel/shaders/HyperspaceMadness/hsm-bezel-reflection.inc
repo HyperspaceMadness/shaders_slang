@@ -518,7 +518,7 @@ FragColor = frag_color_linear + reflected_color;
 	led_layer = HSM_Linearize(led_layer, HSM_DEFAULT_SRGB_GAMMA);
 
 	vec4 top_layer = texture(TopLayerImage, image_coord);
-	top_layer = HSM_Linearize(led_layer, HSM_DEFAULT_SRGB_GAMMA);
+	top_layer = HSM_Linearize(top_layer, HSM_DEFAULT_SRGB_GAMMA);
 
 	if (HSM_STATIC_LAYERS_GAMMA != 1)
 	{
@@ -570,10 +570,10 @@ FragColor = frag_color_linear + reflected_color;
 
 	frag_color_linear = HSM_BlendModeLayerMix(frag_color_linear, bg_layer, HSM_BG_BLEND_MODE, HSM_BG_OPACITY);
 	// frag_color_linear = HSM_BlendModeLayerMix(frag_color_linear, vignette_layer, BLEND_MODE_NORMAL, 1);
-	frag_color_linear = HSM_BlendModeLayerMix(frag_color_linear, led_layer, BLEND_MODE_ADD, HSM_LED_OPACITY);
+	frag_color_linear = HSM_BlendModeLayerMix(frag_color_linear, led_layer, HSM_LED_BLEND_MODE, HSM_LED_OPACITY);
 	frag_color_linear = HSM_BlendModeLayerMix(frag_color_linear, bezel_layer, BLEND_MODE_NORMAL, 1);
 	frag_color_linear += reflected_color;
-	frag_color_linear = HSM_BlendModeLayerMix(frag_color_linear, top_layer, BLEND_MODE_ADD, HSM_TOP_OPACITY);
+	frag_color_linear = HSM_BlendModeLayerMix(frag_color_linear, top_layer, HSM_TOP_BLEND_MODE, HSM_TOP_OPACITY);
 
 	FragColor = HSM_ApplyGamma(clamp(frag_color_linear, 0, 1), HSM_DEFAULT_SRGB_GAMMA);
 #endif

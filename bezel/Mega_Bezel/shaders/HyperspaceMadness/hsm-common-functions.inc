@@ -1264,16 +1264,16 @@ vec4 HSM_GetPostCrtPreppedColor(vec4 in_color_linear, vec2 VIEWPORT_COORD, vec2 
 			float final_viewport_aspect = global.FinalViewportSize.x/global.FinalViewportSize.y;
 
 			// Image Ratio is 16:9
-			if (HSM_BASIC_BG_IMG_ASPECT_RATIO == 1)
+			if (HSM_SIMPLE_IMG_ASPECT_RATIO == 1)
 				background_img_coord.x = (VIEWPORT_COORD.x - 0.5) / (1.7777/final_viewport_aspect) + 0.5;
 
 			// Image Ratio is 9:16
-			if (HSM_BASIC_BG_IMG_ASPECT_RATIO == 2)
+			if (HSM_SIMPLE_IMG_ASPECT_RATIO == 2)
 				background_img_coord.y = (VIEWPORT_COORD.y - 0.5) / (0.5625/final_viewport_aspect) + 0.5;
 
 			vec4 background_image_color = texture(BackgroundImage, background_img_coord);
 			background_image_color = HSM_Linearize(background_image_color, HSM_DEFAULT_SRGB_GAMMA);
-			if (HSM_BASIC_BG_IMG_SHOW_OVER_SCREEN == 0)
+			if (HSM_SIMPLE_BG_IMG_SHOW_OVER_SCREEN == 0)
 			{
 				float outside_tube_mask = 1 - HSM_GetCornerMask(tube_curved_coord, SCREEN_ASPECT, HSM_BZL_INNER_CORNER_RADIUS_SCALE * HSM_SCREEN_CORNER_RADIUS, 0.99);
 				background_image_color *= outside_tube_mask;

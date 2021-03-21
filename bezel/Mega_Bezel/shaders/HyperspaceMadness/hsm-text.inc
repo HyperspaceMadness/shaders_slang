@@ -311,65 +311,13 @@ float DrawResolutions(vec2 uv, vec2 viewport_size, vec2 screen_size, vec2 origin
     col += GetChar(ch_0, uv);
     col += GetChar(ch_3, uv);
     col += GetChar(ch_dsh, uv);
-    col += GetChar(ch_2, uv);
-    col += GetChar(ch_0, uv);
+    col += GetChar(ch_1, uv);
+    col += GetChar(ch_9, uv);
     col += GetChar(ch_dsh, uv);
     col += GetChar(ch_0, uv);
-
-    //Viewport Resolution
-    printPos = vec2(2, 2.0 + STRHEIGHT(9));
-    
-    TEXT_MODE = NORMAL;  
-
-    col += GetChar(ch_spc, uv);
-    col += GetChar(ch_V, uv);
-    col += GetChar(ch_i, uv);
-    col += GetChar(ch_e, uv);
-    col += GetChar(ch_w, uv);
-    col += GetChar(ch_p, uv);
-    col += GetChar(ch_o, uv);
-    col += GetChar(ch_r, uv);
-    col += GetChar(ch_t, uv);
-    col += GetChar(ch_spc, uv);
-    col += GetChar(ch_dsh, uv);
-    col += GetChar(ch_dsh, uv);
-    col += GetChar(ch_dsh, uv);
-    col += GetChar(ch_dsh, uv);
-    col += GetChar(ch_dsh, uv);
-    col += GetChar(ch_spc, uv);
-    col += print_integer(viewport_size.x,0, uv); 
-    col += GetChar(ch_spc, uv);
-    col += GetChar(ch_x, uv);
-    col += GetChar(ch_spc, uv);
-    col += print_integer(viewport_size.y,0, uv); 
-
-    //Screen Resolution
-    printPos = vec2(2, 2.0 + STRHEIGHT(8));
-
-    col += GetChar(ch_spc, uv);
-    col += GetChar(ch_S, uv);
-    col += GetChar(ch_c, uv);
-    col += GetChar(ch_r, uv);
-    col += GetChar(ch_e, uv);
-    col += GetChar(ch_e, uv);
-    col += GetChar(ch_n, uv);
-    col += GetChar(ch_spc, uv);
-    col += GetChar(ch_dsh, uv);
-    col += GetChar(ch_dsh, uv);
-    col += GetChar(ch_dsh, uv);
-    col += GetChar(ch_dsh, uv);
-    col += GetChar(ch_dsh, uv);
-    col += GetChar(ch_dsh, uv);
-    col += GetChar(ch_dsh, uv);
-    col += GetChar(ch_spc, uv);
-    col += print_integer(screen_size.x,0, uv);
-    col += GetChar(ch_spc, uv);
-    col += GetChar(ch_x, uv);
-    col += GetChar(ch_spc, uv);
-    col += print_integer(screen_size.y,0, uv);
 
     //Core Resolution
-    printPos = vec2(2, 2.0 + STRHEIGHT(7));
+    printPos = vec2(2, 2.0 + STRHEIGHT(9));
     
     col += GetChar(ch_spc, uv);
     col += GetChar(ch_C, uv);
@@ -395,7 +343,7 @@ float DrawResolutions(vec2 uv, vec2 viewport_size, vec2 screen_size, vec2 origin
     col += print_integer(original_size.y,0, uv);
 
     //Core Resolution Cropped
-    printPos = vec2(2, 2.0 + STRHEIGHT(6));
+    printPos = vec2(2, 2.0 + STRHEIGHT(8));
     
     col += GetChar(ch_spc, uv);
     col += GetChar(ch_C, uv);
@@ -422,7 +370,7 @@ float DrawResolutions(vec2 uv, vec2 viewport_size, vec2 screen_size, vec2 origin
 
 
     //Sampling Resolution
-    printPos = vec2(2, 2.0 + STRHEIGHT(5));
+    printPos = vec2(2, 2.0 + STRHEIGHT(7));
     
     col += GetChar(ch_spc, uv);
     col += GetChar(ch_S, uv);
@@ -448,7 +396,7 @@ float DrawResolutions(vec2 uv, vec2 viewport_size, vec2 screen_size, vec2 origin
     col += print_integer(sampling_res.y,0, uv);
 
     //Int Scale Horizontal
-    printPos = vec2(2, 2.0 + STRHEIGHT(4));
+    printPos = vec2(2, 2.0 + STRHEIGHT(6));
     
     col += GetChar(ch_spc, uv);
     col += GetChar(ch_I, uv);
@@ -470,7 +418,7 @@ float DrawResolutions(vec2 uv, vec2 viewport_size, vec2 screen_size, vec2 origin
     col += print_number(int_mult.x, uv, 3);
     
     //Int Scale Vertical
-    printPos = vec2(2, 2.0 + STRHEIGHT(3));
+    printPos = vec2(2, 2.0 + STRHEIGHT(5));
     
     col += GetChar(ch_spc, uv);
     col += GetChar(ch_I, uv);
@@ -492,7 +440,7 @@ float DrawResolutions(vec2 uv, vec2 viewport_size, vec2 screen_size, vec2 origin
     col += print_number(int_mult.y, uv, 3);
 
     //Non-Int Scale Percent
-    printPos = vec2(2, 2.0 + STRHEIGHT(2));
+    printPos = vec2(2, 2.0 + STRHEIGHT(4));
     
     col += GetChar(ch_spc, uv);
     col += GetChar(ch_N, uv);
@@ -514,7 +462,7 @@ float DrawResolutions(vec2 uv, vec2 viewport_size, vec2 screen_size, vec2 origin
     col += print_number(screen_size.y / viewport_size.y * 100, uv, 3);
 
     //Final Aspect Ratio
-    printPos = vec2(2, 2.0 + STRHEIGHT(1));
+    printPos = vec2(2, 2.0 + STRHEIGHT(3));
     
     col += GetChar(ch_spc, uv);
     col += GetChar(ch_F, uv);
@@ -534,6 +482,59 @@ float DrawResolutions(vec2 uv, vec2 viewport_size, vec2 screen_size, vec2 origin
     
     col += GetChar(ch_spc, uv);
     col += print_number(screen_size.x/screen_size.y > 1 ? screen_size.x/screen_size.y : screen_size.y/screen_size.x, uv, 2);
+
+    //Screen Resolution
+    printPos = vec2(2, 2.0 + STRHEIGHT(2));
+
+    col += GetChar(ch_spc, uv);
+    col += GetChar(ch_S, uv);
+    col += GetChar(ch_c, uv);
+    col += GetChar(ch_r, uv);
+    col += GetChar(ch_e, uv);
+    col += GetChar(ch_e, uv);
+    col += GetChar(ch_n, uv);
+    col += GetChar(ch_spc, uv);
+    col += GetChar(ch_dsh, uv);
+    col += GetChar(ch_dsh, uv);
+    col += GetChar(ch_dsh, uv);
+    col += GetChar(ch_dsh, uv);
+    col += GetChar(ch_dsh, uv);
+    col += GetChar(ch_dsh, uv);
+    col += GetChar(ch_dsh, uv);
+    col += GetChar(ch_spc, uv);
+    col += print_integer(screen_size.x,0, uv);
+    col += GetChar(ch_spc, uv);
+    col += GetChar(ch_x, uv);
+    col += GetChar(ch_spc, uv);
+    col += print_integer(screen_size.y,0, uv);
+
+
+    //Viewport Resolution
+    printPos = vec2(2, 2.0 + STRHEIGHT(1));
+    
+    TEXT_MODE = NORMAL;  
+
+    col += GetChar(ch_spc, uv);
+    col += GetChar(ch_V, uv);
+    col += GetChar(ch_i, uv);
+    col += GetChar(ch_e, uv);
+    col += GetChar(ch_w, uv);
+    col += GetChar(ch_p, uv);
+    col += GetChar(ch_o, uv);
+    col += GetChar(ch_r, uv);
+    col += GetChar(ch_t, uv);
+    col += GetChar(ch_spc, uv);
+    col += GetChar(ch_dsh, uv);
+    col += GetChar(ch_dsh, uv);
+    col += GetChar(ch_dsh, uv);
+    col += GetChar(ch_dsh, uv);
+    col += GetChar(ch_dsh, uv);
+    col += GetChar(ch_spc, uv);
+    col += print_integer(viewport_size.x,0, uv); 
+    col += GetChar(ch_spc, uv);
+    col += GetChar(ch_x, uv);
+    col += GetChar(ch_spc, uv);
+    col += print_integer(viewport_size.y,0, uv); 
 
     return col;
 }

@@ -24,7 +24,7 @@ float HSM_LED_BLEND_MODE = global.HSM_LED_BLEND_MODE;
 #pragma parameter HSM_TOP_OPACITY 	            "      Top Extra Image Opacity" 0 0 100 0.1
 float HSM_TOP_OPACITY = global.HSM_TOP_OPACITY / 100;
 
-#pragma parameter HSM_TOP_BLEND_MODE 		    "      Top Extra Image Blend Mode - Off | Norm | Add | Mult"  2 0 3 1
+#pragma parameter HSM_TOP_BLEND_MODE 		    "      Top Extra Image Blend Mode - Off | Norm | Add | Mult"  1 0 3 1
 float HSM_TOP_BLEND_MODE = global.HSM_TOP_BLEND_MODE;
 
 // //---------------------------------------------------------------------------------------------------

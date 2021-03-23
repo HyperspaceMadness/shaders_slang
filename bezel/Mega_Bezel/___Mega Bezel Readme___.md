@@ -59,7 +59,7 @@ As the name's index number increases the presets get faster but less flexible
     * Includes MDAPT, ScaleFX & GTU
     * Reflection is the last pass
     * Does not include advanced image layering.
-  * **Group 3 SIMPLE**
+  * **Group 3 STANDARD**
       * Same as Base except extra passes before the CRT pass removed 
       * No MDAPT, ScaleFX & GTU
       * Includes some of image layers with basic settings to adjust application

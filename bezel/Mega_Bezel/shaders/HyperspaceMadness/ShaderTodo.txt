@@ -38,17 +38,16 @@ Changes:
 
 Mega Bezel Still to Come:
 
-  * Make shader paths local rather than using ":/" this helps some linux users
+  * Add Images and Readme to root of the Repo
   * Split settings into screen-scale, basic-border-only, reflection, simple-only, image-layers
-  * Reorg Resolution Debug so core res is on top, screen & viewport should be on bottom
-  * Move Resolution Debug to be top justified
-  * Try to improve Auto Aspect for Eur Playstation, Catch H == 576 as 1.33 
-  * Add LED & Top Layer image, (Decal?) to Simple preset
-  * Add Sharp Pixel Preset - No CRT Processing
+  * Add Cutout to Simple Preset?
+  * Add additional layers to Simple preset?
+  * Add Sharp Pixel Preset - No CRT Processing, Options for reflection area, fancy bilinear filter
   * Independent Bezel Scaling not the same as non-int scale, why? Maybe only in Portrait Res
   * Need x Scale for screen size of Independent bezel
   * Outer reflection corner radius should be independent when in independent mode
   * See why very inner edge seems not affected by reflection mask
+  * Strange Inner edge brightness 
   * Examples
     * Cutout Bezel
     * Vertical Example - Full Adjustable, Plastic Bezel
@@ -71,10 +70,10 @@ Mega Bezel Still to Come:
   * Reflection fade option to have reflection come to 100% at inner frame boundary so you can have a glass like effect outside the bezel
   * Per Layer Scaling of Cutout?
   * Noise Sampling on Tube Highlight
-  * Figure out Royale's inconsistent scanlines
   * Aspect Ratio on Images, test if we can get it from the image, DX11 might work
   * When reflection is off still see inner bezel edge reflection
-  * Guess Resolution for Core Sampling Multiplier?
+  * Guess Resolution for Core Sampling Multiplier?, Set target vertical downsampled resolution, try to get multiple.
+  * Move Resolution Debug to be top justified
 
   * Black edge should scale with tube (It's much larger when the tube scaling is smaller)
   

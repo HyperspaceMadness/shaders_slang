@@ -11,9 +11,9 @@
 //---------------------------------------------------------------------------------------------------
 //    STATIC ELEMENT GAMMA
 //---------------------------------------------------------------------------------------------------
-#pragma parameter HSM_STATIC_GAMMA_TITLE "[ STATIC IMAGE LAYER GAMMA ]___________________________________" 0 0 0.01 0.01
+#pragma parameter HSM_STATIC_GAMMA_TITLE        "[ STATIC IMAGE LAYER GAMMA ]___________________________________" 0 0 0.01 0.01
 
-#pragma parameter HSM_STATIC_LAYERS_GAMMA		    "      Static Layers Gamma Adjust" 1 0.01 5 0.01
+#pragma parameter HSM_STATIC_LAYERS_GAMMA		"      Static Layers Gamma Adjust" 1 0.01 5 0.01
 float HSM_STATIC_LAYERS_GAMMA = global.HSM_STATIC_LAYERS_GAMMA;
 
 
@@ -22,7 +22,7 @@ float HSM_STATIC_LAYERS_GAMMA = global.HSM_STATIC_LAYERS_GAMMA;
 //---------------------------------------------------------------------------------------------------
 #pragma parameter HSM_NIGHT_LIGHTING_TITLE "[ NIGHT LIGHTING ]_____________________________________________" 0 0 0.01 0.01
 
-#pragma parameter HSM_NIGHT_OPACITY       "      Opacity"  0 0 100 1
+#pragma parameter HSM_NIGHT_OPACITY             "      Opacity"  0 0 100 1
 float HSM_NIGHT_OPACITY = global.HSM_NIGHT_OPACITY / 100;
 
 #pragma parameter HSM_NIGHT_MIRROR_HORZ         "      Mirror Horizontal"  0 0 1 1
@@ -44,7 +44,7 @@ float HSM_NIGHT_DITHERING_SAMPLES = global.HSM_NIGHT_DITHERING_SAMPLES;
 //---------------------------------------------------------------------------------------------------
 //    IMAGE LAYERING START
 //---------------------------------------------------------------------------------------------------
-#pragma parameter HSM_ADVANCED_LAYERING_TITLE "[ ADVANCED IMAGE LAYERS ]______________________________________" 0 0 0.01 0.01
+#pragma parameter HSM_ADVANCED_LAYERING_TITLE     "[ ADVANCED IMAGE LAYERS ]______________________________________" 0 0 0.01 0.01
 
 
 #pragma parameter HSM_LAYER_ORDER_TITLE			  "[ LAYER ORDER ]________________________________________________" 0 0 0.01 0.01
@@ -124,7 +124,7 @@ float HSM_BG_OPACITY = global.HSM_BG_OPACITY / 100;
 #pragma parameter HSM_BG_BLEND_MODE               "      Blend Mode - Off | Normal | Add | Multiply"  1 -1 2 1
 float HSM_BG_BLEND_MODE = global.HSM_BG_BLEND_MODE;
 
-#pragma parameter HSM_BG_SOURCE_MATTE_TYPE              "      Source Matte Color - Black | White | None"  0 0 2 1
+#pragma parameter HSM_BG_SOURCE_MATTE_TYPE        "      Source Matte Color - Black | White | None"  0 0 2 1
 float HSM_BG_SOURCE_MATTE_TYPE = global.HSM_BG_SOURCE_MATTE_TYPE;
 
 #pragma parameter HSM_BG_MASK_MODE                "    Mask - ALL | Scrn | Tube | Bz- | Bz | Bz+ | Frm | Frm+ | BG" 0 0 8 1
@@ -166,35 +166,35 @@ float HSM_BG_MIRROR_WRAP = global.HSM_BG_MIRROR_WRAP;
 //---------------------------------------------------------------------------------------------------
 //    VIEWPORT VIGNETTE
 //---------------------------------------------------------------------------------------------------
-#pragma parameter HSM_VIEWPORT_VIGNETTE_TITLE			    "[ VIEWPORT VIGNETTE LAYER ]____________________________________" 0 0 0.01 0.01
+#pragma parameter HSM_VIEWPORT_VIGNETTE_TITLE		"[ VIEWPORT VIGNETTE LAYER ]____________________________________" 0 0 0.01 0.01
 
-#pragma parameter HSM_VIEWPORT_VIGNETTE_OPACITY            "      Opacity" 50 0 100 2
+#pragma parameter HSM_VIEWPORT_VIGNETTE_OPACITY     "      Opacity" 50 0 100 2
 float HSM_VIEWPORT_VIGNETTE_OPACITY = global.HSM_VIEWPORT_VIGNETTE_OPACITY / 100;
 
-#pragma parameter HSM_VIEWPORT_VIGNETTE_MASK_MODE          "Mask - ALL | Scrn | Tube | Bz- | Bz | Bz+ | Frm | Frm+ | BG" 5 0 8 1
+#pragma parameter HSM_VIEWPORT_VIGNETTE_MASK_MODE   "Mask - ALL | Scrn | Tube | Bz- | Bz | Bz+ | Frm | Frm+ | BG" 5 0 8 1
 float HSM_VIEWPORT_VIGNETTE_MASK_MODE = global.HSM_VIEWPORT_VIGNETTE_MASK_MODE;
 
-#pragma parameter HSM_VIEWPORT_VIGNETTE_CUTOUT_MODE        "      Cutout Mask - OFF | ON | Invert" 0 0 2 1
+#pragma parameter HSM_VIEWPORT_VIGNETTE_CUTOUT_MODE  "      Cutout Mask - OFF | ON | Invert" 0 0 2 1
 float HSM_VIEWPORT_VIGNETTE_CUTOUT_MODE = global.HSM_VIEWPORT_VIGNETTE_CUTOUT_MODE;
 
-#pragma parameter HSM_VIEWPORT_VIGNETTE_SCALE_MODE         "      Scale Mode- Full | BG | Tube | Bzl | Decal | TopImg" 0 0 5 1
+#pragma parameter HSM_VIEWPORT_VIGNETTE_SCALE_MODE   "      Scale Mode- Full | BG | Tube | Bzl | Decal | TopImg" 0 0 5 1
 float HSM_VIEWPORT_VIGNETTE_SCALE_MODE = global.HSM_VIEWPORT_VIGNETTE_SCALE_MODE;
 
-#pragma parameter HSM_VIEWPORT_VIGNETTE_SCALE                 "      Scale" 100 0 1000 0.1
+#pragma parameter HSM_VIEWPORT_VIGNETTE_SCALE        "      Scale" 100 0 1000 0.1
 float HSM_VIEWPORT_VIGNETTE_SCALE = global.HSM_VIEWPORT_VIGNETTE_SCALE / 100;
 
-#pragma parameter HSM_VIEWPORT_VIGNETTE_SCALE_X               "      Scale X" 100 0 1000 0.1
+#pragma parameter HSM_VIEWPORT_VIGNETTE_SCALE_X      "      Scale X" 100 0 1000 0.1
 float HSM_VIEWPORT_VIGNETTE_SCALE_X = global.HSM_VIEWPORT_VIGNETTE_SCALE_X / 100;
 
-#pragma parameter HSM_VIEWPORT_VIGNETTE_POS_Y                 "      Position Y"  0 -100 100 0.1
+#pragma parameter HSM_VIEWPORT_VIGNETTE_POS_Y        "      Position Y"  0 -100 100 0.1
 float HSM_VIEWPORT_VIGNETTE_POS_Y = global.HSM_VIEWPORT_VIGNETTE_POS_Y / 100;
 
 //---------------------------------------------------------------------------------------------------
 //    CRT Layer
 //---------------------------------------------------------------------------------------------------
-#pragma parameter HSM_CRT_TITLE			                    "[ CRT SCREEN LAYER ]___________________________________________" 0 0 0.01 0.01
+#pragma parameter HSM_CRT_TITLE			             "[ CRT SCREEN LAYER ]___________________________________________" 0 0 0.01 0.01
 
-#pragma parameter HSM_CRT_SCREEN_BLEND_MODE                 "      Blend Mode - Off | Normal | Add (Backdrop)" 1 0 3 1
+#pragma parameter HSM_CRT_SCREEN_BLEND_MODE          "      Blend Mode - Off | Normal | Add (Backdrop)" 1 0 3 1
 float HSM_CRT_SCREEN_BLEND_MODE = global.HSM_CRT_SCREEN_BLEND_MODE;
 
 
@@ -266,7 +266,7 @@ float HSM_CAB_GLASS_BRIGHTNESS = global.HSM_CAB_GLASS_BRIGHTNESS / 100;
 #pragma parameter HSM_CAB_GLASS_BLEND_MODE                  "      Blend Mode - Off | Normal | Add | Multiply"  1 0 3 1
 float HSM_CAB_GLASS_BLEND_MODE = global.HSM_CAB_GLASS_BLEND_MODE;
 
-#pragma parameter HSM_CAB_GLASS_SOURCE_MATTE_TYPE                 "      Source Matte Color - Black | White | None"  0 0 2 1
+#pragma parameter HSM_CAB_GLASS_SOURCE_MATTE_TYPE           "      Source Matte Color - Black | White | None"  0 0 2 1
 float HSM_CAB_GLASS_SOURCE_MATTE_TYPE = global.HSM_CAB_GLASS_SOURCE_MATTE_TYPE;
 
 #pragma parameter HSM_CAB_GLASS_MASK_MODE                   "    Mask - ALL | Scrn | Tube | Bz- | Bz | Bz+ | Frm | Frm+ | BG" 0 0 8 1
@@ -308,7 +308,7 @@ float HSM_DECAL_OPACITY = global.HSM_DECAL_OPACITY / 100;
 #pragma parameter HSM_DECAL_BLEND_MODE                  "      Blend Mode -  Off | Normal | Add | Multiply"  1 0 3 1
 float HSM_DECAL_BLEND_MODE = global.HSM_DECAL_BLEND_MODE;
 
-#pragma parameter HSM_DECAL_SOURCE_MATTE_TYPE                 "      Source Matte Color - Black | White | None"  0 0 2 1
+#pragma parameter HSM_DECAL_SOURCE_MATTE_TYPE           "      Source Matte Color - Black | White | None"  0 0 2 1
 float HSM_DECAL_SOURCE_MATTE_TYPE = global.HSM_DECAL_SOURCE_MATTE_TYPE;
 
 #pragma parameter HSM_DECAL_MASK_MODE                   "    Mask - ALL | Scrn | Tube | Bz- | Bz | Bz+ | Frm | Frm+ | BG"   0 0 8 1
@@ -349,7 +349,7 @@ float HSM_LED_OPACITY = global.HSM_LED_OPACITY / 100;
 #pragma parameter HSM_LED_BLEND_MODE                    "      Blend Mode - Off | Normal | Add | Multiply"  2 0 3 1
 float HSM_LED_BLEND_MODE = global.HSM_LED_BLEND_MODE;
 
-#pragma parameter HSM_LED_SOURCE_MATTE_TYPE                   "      Source Matte Color - Black | White | None"  0 0 2 1
+#pragma parameter HSM_LED_SOURCE_MATTE_TYPE             "      Source Matte Color - Black | White | None"  0 0 2 1
 float HSM_LED_SOURCE_MATTE_TYPE = global.HSM_LED_SOURCE_MATTE_TYPE;
 
 #pragma parameter HSM_LED_MASK_MODE                     "    Mask - ALL | Scrn | Tube | Bz- | Bz | Bz+ | Frm | Frm+ | BG"   8 0 8 1
@@ -391,7 +391,7 @@ float HSM_TOP_OPACITY = global.HSM_TOP_OPACITY / 100;
 #pragma parameter HSM_TOP_BLEND_MODE                    "      Blend Mode - Off | Normal | Add | Multiply"  1 0 3 1
 float HSM_TOP_BLEND_MODE = global.HSM_TOP_BLEND_MODE;
 
-#pragma parameter HSM_TOP_SOURCE_MATTE_TYPE                   "      Source Matte Color - Black | White | None"  0 0 2 1
+#pragma parameter HSM_TOP_SOURCE_MATTE_TYPE             "      Source Matte Color - Black | White | None"  0 0 2 1
 float HSM_TOP_SOURCE_MATTE_TYPE = global.HSM_TOP_SOURCE_MATTE_TYPE;
 
 #pragma parameter HSM_TOP_MASK_MODE                     "    Mask - ALL | Scrn | Tube | Bz- | Bz | Bz+ | Frm | Frm+ | BG"   0 0 8 1

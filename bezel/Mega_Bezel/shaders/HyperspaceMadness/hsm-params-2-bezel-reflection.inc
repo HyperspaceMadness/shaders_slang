@@ -117,30 +117,30 @@ float HSM_FRM_SHADOW_WIDTH = global.HSM_FRM_SHADOW_WIDTH / 1000;
 //---------------------------------------------------------------------------------------------------
 //    REFLECTION
 //---------------------------------------------------------------------------------------------------
-#pragma parameter HSM_REFLECTION_TITLE			            "[ REFLECTION ]_________________________________________________" 0 0 0.01 0.01
+#pragma parameter HSM_REFLECTION_TITLE			                "[ REFLECTION ]_________________________________________________" 0 0 0.01 0.01
 
-#pragma parameter HSM_REFLECT_BLEND_MODE                    "      Blend Mode -  Off | Normal | Add"  2 0 2 1
+#pragma parameter HSM_REFLECT_BLEND_MODE                        "      Blend Mode -  Off | Normal | Add"  2 0 2 1
 float HSM_REFLECT_BLEND_MODE = global.HSM_REFLECT_BLEND_MODE;
 
-#pragma parameter HSM_REFLECT_MASK_MODE                     "  Mask - ALL | Screen | Tube | Bz- | Bz | Bz+ | Frm | Frm+ | BG"   4 0 8 1
+#pragma parameter HSM_REFLECT_MASK_MODE                         "  Mask - ALL | Screen | Tube | Bz- | Bz | Bz+ | Frm | Frm+ | BG"   4 0 8 1
 float HSM_REFLECT_MASK_MODE = global.HSM_REFLECT_MASK_MODE;
 
-#pragma parameter HSM_REFLECT_GLOBAL_AMOUNT 				"      Global Amount" 40 0 300 2
+#pragma parameter HSM_REFLECT_GLOBAL_AMOUNT 				    "      Global Amount" 40 0 300 2
 float HSM_REFLECT_GLOBAL_AMOUNT = global.HSM_REFLECT_GLOBAL_AMOUNT / 100;
 
-#pragma parameter HSM_REFLECT_GLOBAL_GAMMA_ADJUST 			"      Global Gamma Adjust" 1.2 0.25 3 0.05
+#pragma parameter HSM_REFLECT_GLOBAL_GAMMA_ADJUST 			    "      Global Gamma Adjust" 1.2 0.25 3 0.05
 float HSM_REFLECT_GLOBAL_GAMMA_ADJUST = global.HSM_REFLECT_GLOBAL_GAMMA_ADJUST;
 
-#pragma parameter HSM_REFLECT_DIRECT_AMOUNT 				"      Direct Reflection" 150 0 300 2
+#pragma parameter HSM_REFLECT_DIRECT_AMOUNT 				    "      Direct Reflection" 150 0 300 2
 float HSM_REFLECT_DIRECT_AMOUNT = global.HSM_REFLECT_DIRECT_AMOUNT / 100;
 
-#pragma parameter HSM_REFLECT_DIFFUSED_AMOUNT 				"      Diffused Reflection" 50 0 300 2
+#pragma parameter HSM_REFLECT_DIFFUSED_AMOUNT 				    "      Diffused Reflection" 50 0 300 2
 float HSM_REFLECT_DIFFUSED_AMOUNT = global.HSM_REFLECT_DIFFUSED_AMOUNT / 100;
 
-#pragma parameter HSM_REFLECT_FULLSCREEN_GLOW 				"      FullScreen Glow" 75 0 600 0.5
+#pragma parameter HSM_REFLECT_FULLSCREEN_GLOW 				    "      FullScreen Glow" 75 0 600 0.5
 float HSM_REFLECT_FULLSCREEN_GLOW = global.HSM_REFLECT_FULLSCREEN_GLOW / 100;
 
-#pragma parameter HSM_REFLECT_FULLSCREEN_GLOW_GAMMA 		"      FullScreen Glow Gamma" 3 0 5 0.02
+#pragma parameter HSM_REFLECT_FULLSCREEN_GLOW_GAMMA 		    "      FullScreen Glow Gamma" 3 0 5 0.02
 float HSM_REFLECT_FULLSCREEN_GLOW_GAMMA = global.HSM_REFLECT_FULLSCREEN_GLOW_GAMMA;
 
 #pragma parameter HSM_REFLECT_BEZEL_INNER_EDGE_AMOUNT 			"      Bezel Inner Edge Amount" 90 0 300 2
@@ -149,10 +149,10 @@ float HSM_REFLECT_BEZEL_INNER_EDGE_AMOUNT = global.HSM_REFLECT_BEZEL_INNER_EDGE_
 #pragma parameter HSM_REFLECT_BEZEL_INNER_EDGE_FULLSCREEN_GLOW 	"      Bezel Inner Edge Fullscreen Glow" 40 0 1000 1
 float HSM_REFLECT_BEZEL_INNER_EDGE_FULLSCREEN_GLOW = global.HSM_REFLECT_BEZEL_INNER_EDGE_FULLSCREEN_GLOW / 100;
 
-#pragma parameter HSM_REFLECT_FRAME_INNER_EDGE_AMOUNT 		"      Frame Inner Edge Amount" 50 0 300 2
+#pragma parameter HSM_REFLECT_FRAME_INNER_EDGE_AMOUNT 		    "      Frame Inner Edge Amount" 50 0 300 2
 float HSM_REFLECT_FRAME_INNER_EDGE_AMOUNT = global.HSM_REFLECT_FRAME_INNER_EDGE_AMOUNT / 100;
 
-#pragma parameter HSM_REFLECT_FRAME_INNER_EDGE_SHARPNESS 	"      Frame Inner Edge Sharpness" 90 0 90 2
+#pragma parameter HSM_REFLECT_FRAME_INNER_EDGE_SHARPNESS 	    "      Frame Inner Edge Sharpness" 90 0 90 2
 float HSM_REFLECT_FRAME_INNER_EDGE_SHARPNESS = global.HSM_REFLECT_FRAME_INNER_EDGE_SHARPNESS / 100;
 
 

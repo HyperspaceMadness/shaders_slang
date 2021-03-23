@@ -1,4 +1,4 @@
-#reference "../../Base/MBZ__2__SIMPLE__GUEST-DrVENOM.slangp"
+#reference "../../Base/MBZ__2__STANDARD__GUEST-DrVENOM.slangp"
 
 BackgroundImage = textures/Playstation.png
 LEDImage = textures/Playstation_LED.png

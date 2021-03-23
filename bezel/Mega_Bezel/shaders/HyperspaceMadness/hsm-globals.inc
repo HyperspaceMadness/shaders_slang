@@ -194,8 +194,8 @@ layout(std140, set = 0, binding = 0) uniform UBO
 	float HSM_GLASS_BORDER_ON;
 
 	float HSM_STATIC_LAYERS_GAMMA;
-	float HSM_SIMPLE_IMG_ASPECT_RATIO;
-	float HSM_SIMPLE_BG_IMG_SHOW_OVER_SCREEN;
+	float HSM_STANDARD_IMG_ASPECT_RATIO;
+	float HSM_STANDARD_BG_SHOW_OVER_SCREEN;
 
 	// Night Lighting
 	float HSM_NIGHT_OPACITY;

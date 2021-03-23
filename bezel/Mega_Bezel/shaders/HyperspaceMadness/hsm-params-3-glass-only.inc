@@ -8,9 +8,9 @@ Description:
 */
 
 //---------------------------------------------------------------------------------------------------
-//    SIMPLE BACKGROUND IMAGE LAYER
+//    STANDARD BACKGROUND IMAGE LAYER
 //---------------------------------------------------------------------------------------------------
-#pragma parameter HSM_SIMPLE_IMG_TITLE	                    "[ SIMPLE IMAGE LAYERS ]_______________________________" 0 0 0.01 0.01
+#pragma parameter HSM_STANDARD_IMG_TITLE	                    "[ STANDARD IMAGE LAYERS ]______________________________________" 0 0 0.01 0.01
 
 #pragma parameter HSM_BG_OPACITY 	            "      Background Image Opacity" 0 0 100 0.1
 float HSM_BG_OPACITY = global.HSM_BG_OPACITY / 100;

@@ -1,7 +1,7 @@
 // Add Mega Bezel parameters at the beginning of the list for easy access
 // A very small pass at 1/8th scale to cache values which are consistent across the frame
 // Read back these values later for better performance
-shader0 = ../../shaders/HyperspaceMadness/hsm-prep-info-cache-simple.slang
+shader0 = ../../shaders/HyperspaceMadness/hsm-prep-info-cache-standard.slang
 float_framebuffer0 = true
 scale_type0 = source
 scale0 = 0.125
@@ -178,7 +178,7 @@ scale_y27 = 12
 alias27 = BR_MirrorFullscreenGlowPass
 
 // Bezel Reflection ----------------------------------------------------------------
-shader28 = ../../shaders/HyperspaceMadness/hsm-bezel-reflection-simple.slang
+shader28 = ../../shaders/HyperspaceMadness/hsm-bezel-reflection-standard.slang
 mipmap_input28 = true
 filter_linear28 = true
 scale_type28 = viewport

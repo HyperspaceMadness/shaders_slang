@@ -448,7 +448,7 @@ void main()
 		reflected_color.rgb *= (1 - HSM_REFLECT_FRAME_INNER_EDGE_AMOUNT) * (1 - frame_inner_edge_mask) + HSM_REFLECT_FRAME_INNER_EDGE_AMOUNT;
 	}
 
-#ifdef IS_SIMPLE_PRESET
+#ifdef IS_STANDARD_PRESET
 	float bezel_mask = HSM_GetCornerMask(bezel_outside_coord, SCREEN_ASPECT, HSM_FRM_INNER_CORNER_RADIUS_SCALE * HSM_BZL_OUTER_CORNER_RADIUS_SCALE * HSM_SCREEN_CORNER_RADIUS, 0.9);
 	reflected_color *= bezel_mask;
 #endif
@@ -502,13 +502,13 @@ void main()
 
 FragColor = frag_color_linear + reflected_color;
 
-#ifdef IS_SIMPLE_PRESET
+#ifdef IS_STANDARD_PRESET
 	// Image Ratio is 16:9
-	if (HSM_SIMPLE_IMG_ASPECT_RATIO == 1)
+	if (HSM_STANDARD_IMG_ASPECT_RATIO == 1)
 		image_coord.x = (VIEWPORT_COORD.x - 0.5) / (1.7777/final_viewport_aspect) + 0.5;
 
 	// Image Ratio is 9:16
-	if (HSM_SIMPLE_IMG_ASPECT_RATIO == 2)
+	if (HSM_STANDARD_IMG_ASPECT_RATIO == 2)
 		image_coord.y = (VIEWPORT_COORD.y - 0.5) / (0.5625/final_viewport_aspect) + 0.5;
 
 	vec4 bg_layer = texture(BackgroundImage, image_coord);
@@ -527,7 +527,7 @@ FragColor = frag_color_linear + reflected_color;
 		top_layer = HSM_ApplyGamma(top_layer, HSM_STATIC_LAYERS_GAMMA);
 	}
 
-	if (HSM_SIMPLE_BG_IMG_SHOW_OVER_SCREEN == 0)
+	if (HSM_STANDARD_BG_SHOW_OVER_SCREEN == 0)
 	{
 		if (HSM_GLASS_BORDER_ON == 1)
 			bg_layer.a *= outside_tube_mask_wider * (1 - edge_mask);

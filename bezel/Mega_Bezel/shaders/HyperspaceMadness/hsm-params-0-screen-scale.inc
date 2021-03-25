@@ -144,16 +144,35 @@ float HSM_SCANLINE_DIRECTION = global.HSM_SCANLINE_DIRECTION;
 #endif
 
 
-// //---------------------------------------------------------------------------------------------------
-// //    SPLIT SCREEN
-// //---------------------------------------------------------------------------------------------------
-// #pragma parameter HSM_SPLITSCREEN_TITLE					"[ SPLIT SCREEN ]_______________________________________________" 0 0 0.01 0.01
+//---------------------------------------------------------------------------------------------------
+//    DUAL SCREEN
+//---------------------------------------------------------------------------------------------------
+#pragma parameter HSM_DUALSCREEN_TITLE								"[ DUAL SCREEN ]_______________________________________________" 0 0 0.01 0.01
 
-// #pragma parameter HSM_SPLITSCREEN_MODE					"      Split Screen Mode" 0 0 1 1
-// float HSM_SPLITSCREEN_MODE = global.HSM_SPLITSCREEN_MODE;
+#pragma parameter HSM_DUALSCREEN_MODE								"      Dual Screen Mode - OFF | VERTICAL | HORIZONTAL" 0 0 2 1
+float HSM_DUALSCREEN_MODE = global.HSM_DUALSCREEN_MODE;
 
-// #pragma parameter HSM_SPLITSCREEN_SPLIT_LOCATION			"      Split Location" 0 0 256 2
-// float HSM_SPLITSCREEN_SPLIT_LOCATION = global.HSM_SPLITSCREEN_SPLIT_LOCATION;
+#pragma parameter HSM_DUALSCREEN_CORE_IMAGE_SPLIT_MODE				"      Core Image Split Mode  - AUTO | VERTICAL | HORIZONTAL" 0 0 2 1
+float HSM_DUALSCREEN_CORE_IMAGE_SPLIT_MODE = global.HSM_DUALSCREEN_CORE_IMAGE_SPLIT_MODE;
+
+// Add Controls to adjust where the core image is cropped
+
+#pragma parameter HSM_DUALSCREEN_VIEWPORT_SPLIT_LOCATION			"      Viewport Split Location" 0 -500 500 1
+float HSM_DUALSCREEN_VIEWPORT_SPLIT_LOCATION = global.HSM_DUALSCREEN_VIEWPORT_SPLIT_LOCATION / 1000;
+
+#pragma parameter HSM_DUALSCREEN_2ND_SCREEN_INDEPENDENT_SCALE		"      2nd Screen Use Independent Scale" 0 0 1 1
+float HSM_DUALSCREEN_2ND_SCREEN_INDEPENDENT_SCALE = global.HSM_DUALSCREEN_2ND_SCREEN_INDEPENDENT_SCALE;
+
+#pragma parameter HSM_DUALSCREEN_2ND_SCREEN_SCALE_OFFSET			"      2nd Screen Scale Offset" 100 1 500 0.5
+float HSM_DUALSCREEN_2ND_SCREEN_SCALE_OFFSET = global.HSM_DUALSCREEN_2ND_SCREEN_SCALE_OFFSET / 100;
+
+#pragma parameter HSM_DUALSCREEN_2ND_SCREEN_POS_X					"      2nd Screen Pos X" 0 -250 250 1
+float HSM_DUALSCREEN_2ND_SCREEN_POS_X = global.HSM_DUALSCREEN_2ND_SCREEN_POS_X / 1000;
+
+#pragma parameter HSM_DUALSCREEN_2ND_SCREEN_POS_Y					"      2nd Screen Pos Y" 0 -250 250 1
+float HSM_DUALSCREEN_2ND_SCREEN_POS_Y = global.HSM_DUALSCREEN_2ND_SCREEN_POS_Y / 1000;
+
+
 
 // // TODO add Split Position, also auto set position, catches for 3DS
 

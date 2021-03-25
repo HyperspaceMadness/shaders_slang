@@ -103,7 +103,7 @@ void main()
 		vec4 blurred_color = vec4(col / k_total, 1.0);
 
 		// // If this is used in a split screen preset and blending of the center area is requested add that to the 
-		// if (HSM_SPLITSCREEN_ON == 1)
+		// if (HSM_DUALSCREEN_ON == 1)
 		// 	blend_with_unblurred = clamp(blend_with_unblurred + in_split_screen_area, 0, 1);
 
 		vec4 unblurred_color = texture(BR_MirrorLowResPass, vTexCoord);

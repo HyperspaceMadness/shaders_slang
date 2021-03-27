@@ -34,6 +34,7 @@ shader10 = ../../shaders/HyperspaceMadness/hsm-lcd-cgwg/hsm-lcd-grid-v2.slang
 filter_linear10 = "false"
 scale_type10 = "viewport"
 scale10 = "1.0"
+
 alias10 = BR_CRTPassAlternate
 
 shader11 = ../../shaders/HyperspaceMadness/hsm-lcd-cgwg/hsm-gba-color.slang

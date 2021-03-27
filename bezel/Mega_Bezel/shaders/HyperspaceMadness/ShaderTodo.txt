@@ -38,10 +38,10 @@ Changes:
 
 Mega Bezel Still to Come:
 
+  * 
   * Add Images and Readme to root of the Repo
-  * Split settings into screen-scale, basic-border-only, reflection, simple-only, image-layers
-  * Add Cutout to Simple Preset?
-  * Add additional layers to Simple preset?
+  * Add Cutout to Simple Preset? 
+  * Inverse Cutout on Frame/Bezel? Shadow from Cutout?
   * Add Sharp Pixel Preset - No CRT Processing, Options for reflection area, fancy bilinear filter
   * Independent Bezel Scaling not the same as non-int scale, why? Maybe only in Portrait Res
   * Need x Scale for screen size of Independent bezel

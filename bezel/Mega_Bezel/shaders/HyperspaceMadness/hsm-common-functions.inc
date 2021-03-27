@@ -199,12 +199,6 @@ vec2 HSM_GetCroppedRotatedOriginalSizeWithCoreResMult()
 {
 	vec2 cropped_original_size = HSM_GetCroppedSize(HSM_GetRotatedOriginalSizeWithCoreResMult());
 
-	if (HSM_DUALSCREEN_MODE == 1)
-		cropped_original_size.y *= 0.5;
-		
-	if (HSM_DUALSCREEN_MODE == 2)
-		cropped_original_size.x *= 0.5;
-
 	return cropped_original_size;
 }
 
@@ -614,6 +608,7 @@ vec4 HSM_UpdateGlobalScreenValuesFromCache(sampler2D in_cache_pass, vec2 viewpor
 	sample_coord = vec2(0.675, 0.125);
 	vec4 texture_sample_3 = texture(in_cache_pass, sample_coord);
 	CROPPED_ORIGINAL_SIZE = texture_sample_3.rg;
+	// SAMPLE_AREA_START_IN_PIXELS = texture_sample_3.ba;
 
 	// If we are in the section of the viewport which is the second screen
 	if (screen_index == 2)

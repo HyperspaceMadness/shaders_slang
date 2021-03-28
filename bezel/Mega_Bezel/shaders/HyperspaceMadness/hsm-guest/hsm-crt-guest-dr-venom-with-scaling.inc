@@ -246,7 +246,7 @@ layout(std140, set = 0, binding = 0) uniform UBO
 // HSM Removed
 // #define SourceSize global.SourceSize
 // HSM Added
-#define SourceSize CROPPED_ORIGINAL_SIZE
+#define SourceSize CROPPED_ROTATED_ORIGINAL_SIZE_WITH_CORE_RES_MULT
 // End Addition
 
 #define OutputSize global.OutputSize

@@ -44,7 +44,7 @@ layout(location = 3) out vec3 v_stretch;
 layout(location = 4) out vec2 v_one;
 layout(location = 5) out vec2 ilfac;
 layout(location = 6) out vec2 TextureSize;
-layout(location = 7) out vec2 CROPPED_ORIGINAL_SIZE;
+layout(location = 7) out vec2 CROPPED_ROTATED_ORIGINAL_SIZE_WITH_CORE_RES_MULT;
 layout(location = 8) out float SCREEN_ASPECT;
 layout(location = 9) out vec2 SCREEN_SCALE;
 layout(location = 10) out vec2 SCREEN_COORD;
@@ -101,7 +101,7 @@ void main()
    v_texCoord = TexCoord;
   
   // HSM Added
-  CROPPED_ORIGINAL_SIZE = HSM_GetCroppedRotatedOriginalSizeWithCoreResMult();
+  CROPPED_ROTATED_ORIGINAL_SIZE_WITH_CORE_RES_MULT = HSM_GetCroppedRotatedOriginalSizeWithCoreResMult();
 	SCREEN_ASPECT = HSM_GetScreenAspect();
 	SCREEN_SCALE = HSM_GetScreenScale(SCREEN_ASPECT);
 	SCREEN_COORD = HSM_GetScreenVTexCoord(v_texCoord, SCREEN_SCALE);
@@ -122,7 +122,7 @@ void main()
   // ilfac = vec2(1.0, clamp(floor(global.SourceSize.y/200.0),  1.0, 2.0));
 
   // HSM Added
-  TextureSize = CROPPED_ORIGINAL_SIZE;
+  TextureSize = CROPPED_ROTATED_ORIGINAL_SIZE_WITH_CORE_RES_MULT;
   
   // ilfac = vec2(1.0, clamp(floor(TextureSize.y/200.0),  1.0, 2.0));
   ilfac = vec2(1.0, clamp(floor(TextureSize.y/200.0),  1.0, 2.0));
@@ -142,7 +142,7 @@ layout(location = 4) in vec2 v_one;
 layout(location = 5) in vec2 ilfac;
 layout(location = 6) in vec2 TextureSize;
 layout(location = 0) out vec4 FragColor;
-layout(location = 7) in vec2 CROPPED_ORIGINAL_SIZE;
+layout(location = 7) in vec2 CROPPED_ROTATED_ORIGINAL_SIZE_WITH_CORE_RES_MULT;
 layout(location = 8) in float SCREEN_ASPECT;
 layout(location = 9) in vec2 SCREEN_SCALE;
 layout(location = 10) in vec2 SCREEN_COORD;

@@ -108,7 +108,7 @@ void main()
 
 	vec2 screen_curved_coord = HSM_GetCurvedCoord(SCREEN_COORD, 1, SCREEN_ASPECT);
     vec2 curved_coord = HSM_GetMirrorWrappedCoord(screen_curved_coord);
-    vec2 texelSize = 1 / CROPPED_ORIGINAL_SIZE;
+    vec2 texelSize = 1 / CROPPED_ROTATED_ORIGINAL_SIZE_WITH_CORE_RES_MULT;
     // End Addition
 
     vec2 range = global.OutputSize.zw / SCREEN_SCALE;

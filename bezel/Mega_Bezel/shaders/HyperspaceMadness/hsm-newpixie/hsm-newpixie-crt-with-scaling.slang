@@ -224,7 +224,7 @@ void main()
     // HSM Added
     vec2 mixed_uv_for_scanline = mix( curved_uv, uv, 0.4 );
     mixed_uv_for_scanline.y = 1 - mixed_uv_for_scanline.y;
-    float scans = clamp( 0.35 + 0.18 * sin(6.0 * time - mixed_uv_for_scanline.y * CROPPED_ORIGINAL_SIZE.y * 8), 0.0, 1.0);
+    float scans = clamp( 0.35 + 0.18 * sin(6.0 * time - mixed_uv_for_scanline.y * CROPPED_ROTATED_ORIGINAL_SIZE_WITH_CORE_RES_MULT.y * 8), 0.0, 1.0);
 
     float s = pow(scans,0.9);
 

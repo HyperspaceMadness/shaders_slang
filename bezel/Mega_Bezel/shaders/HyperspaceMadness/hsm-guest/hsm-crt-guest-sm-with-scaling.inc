@@ -301,7 +301,7 @@ void main()
 
 	vec2 tex = vTexCoord.xy * 1.00001;
 
-	vec4 SourceSize1 = vec4(CROPPED_ORIGINAL_SIZE, 1 / CROPPED_ORIGINAL_SIZE);
+	vec4 SourceSize1 = vec4(CROPPED_ROTATED_ORIGINAL_SIZE_WITH_CORE_RES_MULT, 1 / CROPPED_ROTATED_ORIGINAL_SIZE_WITH_CORE_RES_MULT);
 
 	float factor = global.OutputSize.y / SourceSize1.y;	
 

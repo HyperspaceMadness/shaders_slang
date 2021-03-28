@@ -120,10 +120,10 @@ vec4 AddText(vec2 in_coord, vec4 in_color)
    float screen_aspect = SCREEN_ASPECT;
    vec2 screen_scale = SCREEN_SCALE;
    vec2 screen_size = HSM_GetScreenSize(screen_scale);
-   vec2 int_scale_mult = HSM_GetIntegerScaleMult(screen_size);
-   vec2 original_size = HSM_GetRotatedRawOriginalSize();
-   vec2 cropped_original_size = HSM_GetCroppedRotatedOriginalSize();
-   vec2 cropped_original_size_with_core_res_mult = HSM_GetCroppedRotatedOriginalSizeWithCoreResMult();
+   vec2 int_scale_mult = HSM_GetIntegerScaleMult(screen_size, SCREEN_INDEX);
+   vec2 original_size = HSM_GetRotatedOriginalSize(SCREEN_INDEX);
+   vec2 cropped_original_size = HSM_GetCroppedRotatedOriginalSize(SCREEN_INDEX);
+   vec2 cropped_original_size_with_core_res_mult = CROPPED_ROTATED_ORIGINAL_SIZE_WITH_CORE_RES_MULT;
    
    if (abs(HSM_FLIP_VIEWPORT_VERTICAL - HSM_FLIP_CORE_VERTICAL) > 0.5) in_coord.y = 1 - in_coord.y;
    

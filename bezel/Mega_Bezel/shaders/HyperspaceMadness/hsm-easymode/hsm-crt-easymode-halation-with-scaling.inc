@@ -178,7 +178,7 @@ void main()
     // TODO implement Cropping
     // HSM Added
     HSM_UpdateGlobalScreenValuesFromCache(InfoCachePass, vTexCoord);
-    vec2 tex_size = CROPPED_ORIGINAL_SIZE;
+    vec2 tex_size = CROPPED_ROTATED_ORIGINAL_SIZE_WITH_CORE_RES_MULT;
     // End Addition
 
     vec2 midpoint = vec2(0.5, 0.5);

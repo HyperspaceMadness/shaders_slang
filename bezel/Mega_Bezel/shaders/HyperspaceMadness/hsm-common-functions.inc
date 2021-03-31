@@ -38,13 +38,9 @@ vec2 HSM_GetCroppedSize(vec2 in_size){
 				in_size.y - HSM_CROP_OVERSCAN_TOP - HSM_CROP_OVERSCAN_BOTTOM);
 }
 
-vec2 HSM_GetSampleAreaStartInRawPixels(float screen_index)
+// Returns 1 for vertical split, 2 for horizontal split
+float HSM_Get_Core_Image_Split_Direction()
 {
-	vec2 raw_original_size = HSM_GetRawOriginalSize();
-	vec2 sample_start_coord = vec2(0);
-
-	if (screen_index == 2)
-	{
 		float core_image_split_direction = 1;
 
 		if (HSM_DUALSCREEN_CORE_IMAGE_SPLIT_MODE == 0)
@@ -53,18 +49,29 @@ vec2 HSM_GetSampleAreaStartInRawPixels(float screen_index)
 				core_image_split_direction = 1;
 			if (HSM_DUALSCREEN_MODE == 2)
 				core_image_split_direction = 2;
-
 		}
 		else
 		{
 			core_image_split_direction = HSM_DUALSCREEN_CORE_IMAGE_SPLIT_MODE;
 		}
+		return core_image_split_direction;
+}
 
-		if (core_image_split_direction == 1)
+vec2 HSM_GetSampleAreaStartInRawPixels(float screen_index)
+{
+	vec2 raw_original_size = HSM_GetRawOriginalSize();
+	vec2 sample_start_coord = vec2(0);
+
+	if (screen_index == 2)
+	{
+		if (HSM_Get_Core_Image_Split_Direction() == 1)
 			sample_start_coord = vec2(0, raw_original_size.y / 2);
 		else
 			sample_start_coord = vec2(raw_original_size.x / 2, 0);
 	}
+
+	sample_start_coord += vec2(HSM_CROP_OVERSCAN_LEFT, HSM_CROP_OVERSCAN_TOP);
+
 	return sample_start_coord;
 }
 
@@ -73,11 +80,13 @@ vec2 HSM_GetOriginalSize(float screen_index)
 {
 	vec2 original_size = global.OriginalSize.xy;
 
-	if (HSM_DUALSCREEN_MODE == 1)
-		original_size.y *= 0.5;
-
-	if (HSM_DUALSCREEN_MODE == 2)
-		original_size.x *= 0.5;
+	if (HSM_DUALSCREEN_MODE > 0)
+	{
+		if (HSM_Get_Core_Image_Split_Direction() == 1)
+			original_size.y *= 0.5;
+		else
+			original_size.x *= 0.5;
+	}
 
 	return original_size;
 }
@@ -109,16 +118,20 @@ bool HSM_MatchResolution(vec2 in_res, vec2 match_res)
 float HSM_GetScreenAspect(float screen_index)
 {
 	float epsilon = 0.002;
-	vec2 raw_original_size = HSM_GetOriginalSize(screen_index);
+	vec2 original_size = HSM_GetOriginalSize(screen_index);
 	vec2 rotated_original_size = HSM_GetCroppedRotatedOriginalSize(screen_index);
 	float core_aspect_ratio = rotated_original_size.x / rotated_original_size.y;
 	float core_aspect_horizontal = (core_aspect_ratio < 1) ? 1 / core_aspect_ratio : core_aspect_ratio;
 	float horizontal_aspect = 0;
 
+	vec2 sony_psp = 						vec2(480, 272);
 	vec2 nintendo_gameboy_advance_res = 	vec2(240, 160);
 	vec2 nintendo_gameboy_res = 			vec2(160, 144);
+	vec2 nintendo_ds_res = 					vec2(256, 192);
 	vec2 nintendo_ds_top_bottom_res = 		vec2(256, 384);
 	vec2 nintendo_ds_side_by_side_res = 	vec2(512, 192);
+	vec2 nintendo_3ds_top_res = 			vec2(400, 240);
+	vec2 nintendo_3ds_bottom_res = 			vec2(320, 240);
 	vec2 nintendo_3ds_top_bottom_res = 		vec2(400, 480);
 	vec2 nintendo_3ds_side_by_side_res = 	vec2(720, 240);
 	vec2 atari_lynx_res = 					vec2(160, 102);
@@ -129,16 +142,20 @@ float HSM_GetScreenAspect(float screen_index)
 	{
 		// If the vertical res is larger than 580 is is probably a modern square pixel resolution
 		// 576 seems to be PAL vertical resolution used sometimes
-		if (raw_original_size.y > 580) horizontal_aspect = core_aspect_horizontal;
-		else if (HSM_MatchResolution(nintendo_gameboy_advance_res, 	raw_original_size)) horizontal_aspect = core_aspect_horizontal;
-		else if (HSM_MatchResolution(nintendo_gameboy_res, 			raw_original_size)) horizontal_aspect = core_aspect_horizontal;
-		else if (HSM_MatchResolution(nintendo_ds_top_bottom_res, 	raw_original_size)) horizontal_aspect = core_aspect_horizontal;
-		else if (HSM_MatchResolution(nintendo_ds_side_by_side_res, 	raw_original_size)) horizontal_aspect = core_aspect_horizontal;
-		else if (HSM_MatchResolution(nintendo_3ds_top_bottom_res, 	raw_original_size)) horizontal_aspect = core_aspect_horizontal;
-		else if (HSM_MatchResolution(nintendo_3ds_side_by_side_res, raw_original_size)) horizontal_aspect = core_aspect_horizontal;
-		else if (HSM_MatchResolution(atari_lynx_res, 				raw_original_size)) horizontal_aspect = core_aspect_horizontal;
-		else if (HSM_MatchResolution(atari_2600_res, 				raw_original_size)) horizontal_aspect = 1.333;
-		else if (HSM_MatchResolution(atari_2600_crop_res, 			raw_original_size)) horizontal_aspect = 1.333;
+		if (original_size.y > 580) horizontal_aspect = core_aspect_horizontal;
+		else if (HSM_MatchResolution(sony_psp, 						original_size)) horizontal_aspect = core_aspect_horizontal;
+		else if (HSM_MatchResolution(nintendo_gameboy_advance_res, 	original_size)) horizontal_aspect = core_aspect_horizontal;
+		else if (HSM_MatchResolution(nintendo_gameboy_res, 			original_size)) horizontal_aspect = core_aspect_horizontal;
+		else if (HSM_MatchResolution(nintendo_ds_res, 				original_size)) horizontal_aspect = core_aspect_horizontal;
+		else if (HSM_MatchResolution(nintendo_ds_top_bottom_res, 	original_size)) horizontal_aspect = core_aspect_horizontal;
+		else if (HSM_MatchResolution(nintendo_ds_side_by_side_res, 	original_size)) horizontal_aspect = core_aspect_horizontal;
+		else if (HSM_MatchResolution(nintendo_3ds_top_res, 			original_size)) horizontal_aspect = core_aspect_horizontal;
+		else if (HSM_MatchResolution(nintendo_3ds_bottom_res, 		original_size)) horizontal_aspect = core_aspect_horizontal;
+		else if (HSM_MatchResolution(nintendo_3ds_top_bottom_res, 	original_size)) horizontal_aspect = core_aspect_horizontal;
+		else if (HSM_MatchResolution(nintendo_3ds_side_by_side_res, original_size)) horizontal_aspect = core_aspect_horizontal;
+		else if (HSM_MatchResolution(atari_lynx_res, 				original_size)) horizontal_aspect = core_aspect_horizontal;
+		else if (HSM_MatchResolution(atari_2600_res, 				original_size)) horizontal_aspect = 1.333;
+		else if (HSM_MatchResolution(atari_2600_crop_res, 			original_size)) horizontal_aspect = 1.333;
 		// Fall back to the explicit ratio
 		else horizontal_aspect = HSM_ASPECT_RATIO_EXPLICIT;
 	}
@@ -151,26 +168,6 @@ float HSM_GetScreenAspect(float screen_index)
 		else if (HSM_ASPECT_RATIO_MODE == 6) horizontal_aspect = global.FinalViewportSize.x / global.FinalViewportSize.y;
 		else horizontal_aspect = 1.333;
 
-	// // Version of the above as straight computation to test performance, but actually reduces performance from 160fps to 150fps
-	// // If the vertical res is larger than 500 is is probably a modern square pixel resolution
-	// float is_square_pixel_res = 	HHLP_IsOverValue(raw_original_size.y, 500) +
-	// 								HHLP_EqualsResolution(nintendo_gameboy_advance_res, raw_original_size) +
-	// 								HHLP_EqualsResolution(nintendo_gameboy_res, raw_original_size) +
-	// 								HHLP_EqualsResolution(nintendo_ds_top_bottom_res, raw_original_size) +
-	// 								HHLP_EqualsResolution(nintendo_ds_side_by_side_res, raw_original_size) +
-	// 								HHLP_EqualsResolution(nintendo_3ds_top_bottom_res, raw_original_size) +
-	// 								HHLP_EqualsResolution(nintendo_3ds_side_by_side_res, raw_original_size) +
-	// 								HHLP_EqualsResolution(atari_lynx_res, raw_original_size);
-    //
-	// horizontal_aspect = HHLP_EqualsValue(HSM_ASPECT_RATIO_MODE, 0, epsilon) * (is_square_pixel_res * core_aspect_horizontal + 
-	// 																			(1 - is_square_pixel_res) * HSM_ASPECT_RATIO_EXPLICIT) +
-	// 					HHLP_EqualsValue(HSM_ASPECT_RATIO_MODE, 1, epsilon) * HSM_ASPECT_RATIO_EXPLICIT +
-	// 					HHLP_EqualsValue(HSM_ASPECT_RATIO_MODE, 2, epsilon) * 1.3333 +
-	// 					HHLP_EqualsValue(HSM_ASPECT_RATIO_MODE, 3, epsilon) * 1.5 +
-	// 					HHLP_EqualsValue(HSM_ASPECT_RATIO_MODE, 4, epsilon) * 1.7777 +
-	// 					HHLP_EqualsValue(HSM_ASPECT_RATIO_MODE, 5, epsilon) * core_aspect_horizontal +
-	// 					HHLP_EqualsValue(HSM_ASPECT_RATIO_MODE, 6, epsilon) * global.FinalViewportSize.x / global.FinalViewportSize.y;
-
 	// Find what the vertical aspect would be, either the current horizontal_aspect (if it's already vertical)
 	// Or changing the horizontal aspect to vertical by taking the reciprocal
 	float vertical_aspect = 1 / horizontal_aspect;
@@ -179,7 +176,7 @@ float HSM_GetScreenAspect(float screen_index)
 	if (HSM_ASPECT_RATIO_ORIENTATION < 0.5)
 	{
 		// Catch for Atari 2600 - Stella Emulator which would otherwise show up as a vertical aspect ratio
-		if (HSM_MatchResolution(atari_2600_res, raw_original_size) || (HSM_MatchResolution(atari_2600_crop_res, raw_original_size))) final_orientation = 1;
+		if (HSM_MatchResolution(atari_2600_res, original_size) || (HSM_MatchResolution(atari_2600_crop_res, original_size))) final_orientation = 1;
 		else
 		{
 			final_orientation = (HSM_GetIsOriginalSizeVertical(screen_index) > 0.5) ? 2 : 1;
@@ -234,8 +231,8 @@ vec2 HSM_GetCroppedRotatedOriginalSizeWithCoreResMult(float screen_index)
 
 int HSM_GetScreenIndex(vec2 viewport_coord)
 {
-	// if (HSM_DUALSCREEN_MODE == 0)
-	// 	return 1;
+	if (HSM_DUALSCREEN_MODE == 0)
+		return 1;
 	if (HSM_DUALSCREEN_MODE == 1)
 		return (viewport_coord.y < 0.5 + HSM_DUALSCREEN_VIEWPORT_SPLIT_LOCATION) ? 1 : 2;
 	if (HSM_DUALSCREEN_MODE == 2)
@@ -299,6 +296,12 @@ vec2 HSM_GetScreenScale(float screen_aspect, float screen_height_from_image)
 		// Get the maximum height that the integer scale needs to fit into
 		float viewport_res_y_without_border = global.FinalViewportSize.y - 2 * (HSM_INT_SCALE_BORDER_MIN_HEIGHT / 100) * global.FinalViewportSize.y;
 		float viewport_res_x_without_border = global.FinalViewportSize.x - 2 * (HSM_INT_SCALE_BORDER_MIN_HEIGHT / 100) * global.FinalViewportSize.x;
+
+		if (HSM_DUALSCREEN_MODE == 1)
+			viewport_res_y_without_border = global.FinalViewportSize.y / 2 - 0.5 * (HSM_INT_SCALE_BORDER_MIN_HEIGHT / 100) * global.FinalViewportSize.y;
+
+		if (HSM_DUALSCREEN_MODE == 2)
+			viewport_res_x_without_border *= global.FinalViewportSize.x / 2 - 0.5 * (HSM_INT_SCALE_BORDER_MIN_HEIGHT / 100) * global.FinalViewportSize.x;
 
 		// If the viewport is taller than it is wide then get the height from the corresponding available width
 		if (viewport_is_vertical) viewport_res_y_without_border = viewport_res_x_without_border / screen_aspect;
@@ -416,15 +419,29 @@ vec2 HSM_GetTubeScale(vec2 screen_scale, float image_placement_screen_height)
 	return HSM_GetScreenScaleWithEdgeHeight(1.2 * HSM_TUBE_BLACK_EDGE_THICKNESS / 100.0, screen_scale * HSM_BZL_SCALE_OFFSET);
 }
 
-vec2 HSM_GetPositionOffset(vec2 placement_image_pos )
+vec2 HSM_GetPositionOffset(vec2 placement_image_pos, vec2 screen_scale )
 {
 	vec2 screen_center_pos = vec2(0.5, 0.5);
 	
 	if (HSM_DUALSCREEN_MODE == 1)
-		screen_center_pos = vec2(0.5, (0.5 + HSM_DUALSCREEN_VIEWPORT_SPLIT_LOCATION) / 2);
+	{
+		if (HSM_DUALSCREEN_SHIFT_POSITION_WITH_SCALE == 1)
+			screen_center_pos = vec2(0.5, 0.5 + HSM_DUALSCREEN_VIEWPORT_SPLIT_LOCATION - screen_scale.y * 1.17 / 2);
+		else
+			screen_center_pos = vec2(0.5, 0.25);
+
+		screen_center_pos.y -= HSM_DUALSCREEN_POSITION_OFFSET_BETWEEN_SCREENS;
+	}
 
 	if (HSM_DUALSCREEN_MODE == 2)
-		screen_center_pos = vec2((0.5 + HSM_DUALSCREEN_VIEWPORT_SPLIT_LOCATION) / 2, 0.5);
+	{
+		if (HSM_DUALSCREEN_SHIFT_POSITION_WITH_SCALE == 1)
+			screen_center_pos = vec2(0.5 + HSM_DUALSCREEN_VIEWPORT_SPLIT_LOCATION - screen_scale.x * 1.17 / 2, 0.5);
+		else
+			screen_center_pos = vec2(0.25, 0.5);
+
+		screen_center_pos.x -= HSM_DUALSCREEN_POSITION_OFFSET_BETWEEN_SCREENS;
+	}
 
 	vec2 center_offset = screen_center_pos - vec2(0.5, 0.5);
 
@@ -438,18 +455,33 @@ vec2 HSM_GetPositionOffset(vec2 placement_image_pos )
 	return pos_offset;
 }
 
-vec2 HSM_GetPositionOffsetFor2ndScreen()
+vec2 HSM_GetPositionOffsetFor2ndScreen(vec2 screen_scale)
 {
 	float output_aspect_ratio = global.FinalViewportSize.x / global.FinalViewportSize.y;
 	vec2 pos_offset = vec2(HSM_DUALSCREEN_2ND_SCREEN_POS_X / output_aspect_ratio, HSM_DUALSCREEN_2ND_SCREEN_POS_Y);
 
 	vec2 screen_center_pos = vec2(0.5, 0.5);
 	
+	
 	if (HSM_DUALSCREEN_MODE == 1)
-		screen_center_pos = vec2(0.5, 1 - (0.5 - HSM_DUALSCREEN_VIEWPORT_SPLIT_LOCATION) / 2);
+	{
+		if (HSM_DUALSCREEN_SHIFT_POSITION_WITH_SCALE == 1)
+			screen_center_pos = vec2(0.5, 0.5 + HSM_DUALSCREEN_VIEWPORT_SPLIT_LOCATION + screen_scale.y * 1.17 / 2);
+		else
+			screen_center_pos = vec2(0.5, 0.75);
+
+		screen_center_pos.y += HSM_DUALSCREEN_POSITION_OFFSET_BETWEEN_SCREENS;
+	}
 
 	if (HSM_DUALSCREEN_MODE == 2)
-		screen_center_pos = vec2(1 - (0.5 - HSM_DUALSCREEN_VIEWPORT_SPLIT_LOCATION) / 2, 0.5);
+	{
+		if (HSM_DUALSCREEN_SHIFT_POSITION_WITH_SCALE == 1)
+			screen_center_pos = vec2(0.5 + HSM_DUALSCREEN_VIEWPORT_SPLIT_LOCATION + screen_scale.x * 1.17 / 2, 0.5);
+		else
+			screen_center_pos = vec2(0.75, 0.5);
+
+		screen_center_pos.x += HSM_DUALSCREEN_POSITION_OFFSET_BETWEEN_SCREENS;
+	}
 
 	vec2 center_offset = screen_center_pos - vec2(0.5, 0.5);
 	pos_offset += center_offset;
@@ -557,12 +589,12 @@ vec4 HSM_GetColorForScreenInfoCache(vec2 viewport_coord, sampler2D original_pass
 	float screen_aspect = HSM_GetScreenAspect(1);
 	vec2 screen_scale = HSM_GetScreenScale(screen_aspect, screen_pos_and_height.y);
 	vec2 tube_scale = HSM_GetTubeScale(screen_scale, screen_pos_and_height.y);
-	vec2 pos_offset = HSM_GetPositionOffset(vec2(0.5, screen_pos_and_height.x));
+	vec2 pos_offset = HSM_GetPositionOffset(vec2(0.5, screen_pos_and_height.x), screen_scale);
 
 	float screen_aspect_2nd_screen = HSM_GetScreenAspect(2);
 	vec2 screen_scale_2nd_screen = HSM_GetScreenScaleFor2ndScreen(screen_scale);
 	vec2 tube_scale_2nd_screen = HSM_GetTubeScale(screen_scale_2nd_screen, DEFAULT_TUBE_SCALE_V);
-	vec2 pos_offset_2nd_screen = HSM_GetPositionOffsetFor2ndScreen();
+	vec2 pos_offset_2nd_screen = HSM_GetPositionOffsetFor2ndScreen(screen_scale_2nd_screen);
 
 	vec2 cropped_original_size_with_core_res_mult = HSM_GetCroppedRotatedOriginalSizeWithCoreResMult(1);
 	vec2 cropped_original_size = HSM_GetCroppedRotatedOriginalSize(1);
@@ -650,6 +682,7 @@ vec4 HSM_GetColorForScreenInfoCache(vec2 viewport_coord, sampler2D original_pass
 vec4 HSM_UpdateGlobalScreenValuesFromCache(sampler2D in_cache_pass, vec2 viewport_coord)
 {
 	SCREEN_INDEX = HSM_GetScreenIndex(viewport_coord);
+	ROTATED_RAW_ORIGINAL_SIZE = HSM_GetRotatedRawOriginalSize();
 
 	vec2 sample_coord = vec2(0);
 	vec4 texture_sample = vec4(0);
@@ -1202,18 +1235,17 @@ vec4 HSM_GetStoichaicBlurredSample(sampler2D in_sampler, vec2 in_coord, float nu
 vec4 HSM_GetCroppedTexSample(sampler2D in_sampler, vec2 in_screen_coord)
 {
 	vec2 raw_original_size = HSM_GetRotatedRawOriginalSize();
-	vec2 cropped_size = HSM_GetCroppedRotatedOriginalSize(1);
-
-// vec2 CROPPED_ROTATED_ORIGINAL_SIZE = vec2(1);
-// vec2 SAMPLE_AREA_START_RAW_PIXEL_COORD = vec2(1);
+	vec2 cropped_size = CROPPED_ROTATED_ORIGINAL_SIZE;
 
 	// Flip the coordinate vertically if desired
 	in_screen_coord.x = HSM_FLIP_CORE_HORIZONTAL * (1 - in_screen_coord.x) + (1 - HSM_FLIP_CORE_HORIZONTAL) * in_screen_coord.x;
 	in_screen_coord.y = abs(HSM_FLIP_VIEWPORT_VERTICAL - HSM_FLIP_CORE_VERTICAL) * (1 - in_screen_coord.y) + (1 - abs(HSM_FLIP_VIEWPORT_VERTICAL - HSM_FLIP_CORE_VERTICAL)) * in_screen_coord.y;
-
-	vec2 px_coord = in_screen_coord * cropped_size;
 		
-	vec2 sample_coord = (px_coord + vec2(HSM_CROP_OVERSCAN_LEFT, HSM_CROP_OVERSCAN_TOP)) / raw_original_size;
+	// vec2 sample_coord = (px_coord + vec2(HSM_CROP_OVERSCAN_LEFT, HSM_CROP_OVERSCAN_TOP)) / raw_original_size;
+
+	vec2 px_coord = SAMPLE_AREA_START_RAW_PIXEL_COORD + in_screen_coord * cropped_size;
+
+	vec2 sample_coord = px_coord / raw_original_size;
 	sample_coord =  HSM_RotateCoordinate(sample_coord, HSM_ROTATE_CORE_IMAGE);
 	
 	vec4 out_color = texture(in_sampler, sample_coord);

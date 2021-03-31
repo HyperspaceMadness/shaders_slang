@@ -37,7 +37,7 @@ layout(push_constant) uniform Push
 
 #define outgamma 2.2
 
-#define fetch_offset(coord, offset) (pow(vec3(param.LCD_GAIN) * texelFetchOffset(Source, (coord), 0, (offset)).rgb + vec3(param.LCD_BLACK_LEVEL), vec3(param.LCD_GAMMA)) + vec3(param.LCD_AMBIENT))
+
 
 #pragma stage vertex
 layout(location = 0) in vec4 Position;
@@ -61,6 +61,20 @@ layout(set = 0, binding = 5) uniform sampler2D ColoredGelImage;
 layout(set = 0, binding = 6) uniform sampler2D TubeStaticReflectionImage;
 
 layout(location = 0) out vec4 FragColor;
+
+vec3 fetch_offset(sampler2D in_sampler, vec2 coord, vec2 offset) 
+{
+    offset = vec2(0);
+    vec2 texel_size = 1 / CROPPED_ROTATED_ORIGINAL_SIZE;
+    vec2 pixel_coord = SAMPLE_AREA_START_RAW_PIXEL_COORD + coord * CROPPED_ROTATED_ORIGINAL_SIZE + offset;
+    vec2 raw_coord = pixel_coord / ROTATED_RAW_ORIGINAL_SIZE;
+
+
+    vec3 out_rgb = HSM_GetCroppedTexSample(in_sampler, coord + offset * texel_size).rgb;
+    out_rgb = pow(vec3(param.LCD_GAIN) * out_rgb, vec3(param.LCD_GAMMA));
+    out_rgb += vec3(param.LCD_AMBIENT);
+    return out_rgb;
+}
 
 // integral of (1 - x^2 - x^4 + x^6)^2
 float coeffs_x[7] = float[](1.0, -2.0/3.0, -1.0/5.0, 4.0/7.0, -1.0/9.0, -2.0/11.0, 1.0/13.0);
@@ -86,23 +100,8 @@ float intsmear(float x, float dx, float d, float coeffs[7])
     return d * ( intsmear_func(zh,coeffs) - intsmear_func(zl,coeffs) )/dx;
 }
 
-// TODO this is not working yet
-// vec3 fetch_offset(vec2 coord, vec2 pixel_offset)
-// {
-//     vec2 offset = pixel_offset * 1/global.SourceSize.xy;
-//     vec3 color = texelFetchOffset(Source, (coord), 0, (pixel_offset)).rgb;
-//     // vec3 color = HSM_GetCroppedTexSample(Source, coord + offset).rgb;
-//     return pow(vec3(param.LCD_GAIN) * color + vec3(param.LCD_BLACK_LEVEL), vec3(param.LCD_GAMMA)) + vec3(param.LCD_AMBIENT);
-// }
-
 void main()
 {
-    // TODO Add Support for Cropping?
-    /* HSM Removed
-    vec2 texelSize = global.SourceSize.zw;
-    float2 range = IN.video_size / (IN.output_size * IN.texture_size);
-    */
-
     // HSM Added
 	HSM_UpdateGlobalScreenValuesFromCache(InfoCachePass, vTexCoord);
 
@@ -141,18 +140,14 @@ void main()
     tcol = intsmear(subpix    ,rsubpix, 0.63, coeffs_y);
     bcol = intsmear(subpix-1.0,rsubpix, 0.63, coeffs_y);
 
-    vec3 topLeftColor     = fetch_offset(tli, ivec2(0,0)) * lcol * vec3(tcol);
-    vec3 bottomRightColor = fetch_offset(tli, ivec2(1,1)) * rcol * vec3(bcol);
-    vec3 bottomLeftColor  = fetch_offset(tli, ivec2(0,1)) * lcol * vec3(bcol);
-    vec3 topRightColor    = fetch_offset(tli, ivec2(1,0)) * rcol * vec3(tcol);
+    vec3 topLeftColor     = fetch_offset(Source, curved_coord, ivec2(-1, -1)) * lcol * vec3(tcol);
+    vec3 bottomRightColor = fetch_offset(Source, curved_coord, ivec2( 1,  1)) * rcol * vec3(bcol);
+    vec3 bottomLeftColor  = fetch_offset(Source, curved_coord, ivec2(-1,  1)) * lcol * vec3(bcol);
+    vec3 topRightColor    = fetch_offset(Source, curved_coord, ivec2( 1, -1)) * rcol * vec3(tcol);
 
     vec3 averageColor = topLeftColor + bottomRightColor + bottomLeftColor + topRightColor;
 
     averageColor = mat3(cred, cgreen, cblue) * averageColor;
-
-    /* HSM Removed
-    FragColor = vec4(pow(averageColor, vec3(1.0/outgamma)),0.0);
-    */
 
     // HSM Added
     FragColor = vec4(averageColor, 1);

@@ -1,4 +1,4 @@
-#reference "../base/MBZ__1__ADVANCED__GUEST-DrVENOM.slangp"
+#reference "../base/MBZ__2__STANDARD__GUEST-DrVENOM.slangp"
 
 HSM_CROP_OVERSCAN_TOP = 15
 HSM_CROP_OVERSCAN_BOTTOM = 15

@@ -8,7 +8,7 @@ Description:
 */
 
 // Screen Scale Required Parameters
-#pragma parameter HSM_MEGA_BEZEL_TITLE					"[ --- HSM MEGA BEZEL  ALPHA.2021-02-13-0 --- ]_________________" 0 0 0.01 0.01
+#pragma parameter HSM_MEGA_BEZEL_TITLE					"[ --- HSM MEGA BEZEL 0.9.00 2021-04-02 --- ]" 0 0 0.01 0.01
 
 //---------------------------------------------------------------------------------------------------
 //    FLIP & ROTATE
@@ -155,9 +155,13 @@ float HSM_DUALSCREEN_MODE = global.HSM_DUALSCREEN_MODE;
 #pragma parameter HSM_DUALSCREEN_CORE_IMAGE_SPLIT_MODE				"      Core Image Split Mode  - AUTO | VERTICAL | HORIZONTAL" 1 0 2 1
 float HSM_DUALSCREEN_CORE_IMAGE_SPLIT_MODE = global.HSM_DUALSCREEN_CORE_IMAGE_SPLIT_MODE;
 
-// Add Controls to adjust where the core image is cropped
+#pragma parameter HSM_DUALSCREEN_CORE_IMAGE_SPLIT_OFFSET			"      Core Image Split Offset" 0 -128 128 1
+float HSM_DUALSCREEN_CORE_IMAGE_SPLIT_OFFSET = global.HSM_DUALSCREEN_CORE_IMAGE_SPLIT_OFFSET;
 
-#pragma parameter HSM_DUALSCREEN_VIEWPORT_SPLIT_LOCATION			"      Viewport Split Location" 0 -500 500 1
+#pragma parameter HSM_DUALSCREEN_2ND_SCREEN_SIDES_CROP				"      Crop Edges of 2nd Screen" 0 0 256 1
+float HSM_DUALSCREEN_2ND_SCREEN_SIDES_CROP = global.HSM_DUALSCREEN_2ND_SCREEN_SIDES_CROP;
+
+#pragma parameter HSM_DUALSCREEN_VIEWPORT_SPLIT_LOCATION			"      Viewport Split Offset" 0 -500 500 1
 float HSM_DUALSCREEN_VIEWPORT_SPLIT_LOCATION = global.HSM_DUALSCREEN_VIEWPORT_SPLIT_LOCATION / 1000;
 
 #pragma parameter HSM_DUALSCREEN_SHIFT_POSITION_WITH_SCALE			"      Shift Position with Screen Scale" 1 0 1 1
@@ -166,7 +170,10 @@ float HSM_DUALSCREEN_SHIFT_POSITION_WITH_SCALE = global.HSM_DUALSCREEN_SHIFT_POS
 #pragma parameter HSM_DUALSCREEN_POSITION_OFFSET_BETWEEN_SCREENS	"      Position Offset Between Screens" 0 -250 250 1
 float HSM_DUALSCREEN_POSITION_OFFSET_BETWEEN_SCREENS = global.HSM_DUALSCREEN_POSITION_OFFSET_BETWEEN_SCREENS / 1000;
 
-#pragma parameter HSM_DUALSCREEN_2ND_SCREEN_INDEPENDENT_SCALE		"      2nd Screen Use Independent Scale And Position" 0 0 1 1
+#pragma parameter HSM_DUALSCREEN_2ND_SCREEN_ASPECT_RATIO_MODE		"      2nd Screen Aspect Ratio Mode - Same as 1st Screen | PAR" 0 0 1 1
+float HSM_DUALSCREEN_2ND_SCREEN_ASPECT_RATIO_MODE = global.HSM_DUALSCREEN_2ND_SCREEN_ASPECT_RATIO_MODE;
+
+#pragma parameter HSM_DUALSCREEN_2ND_SCREEN_INDEPENDENT_SCALE		"      2nd Screen Use Independent Scale" 0 0 1 1
 float HSM_DUALSCREEN_2ND_SCREEN_INDEPENDENT_SCALE = global.HSM_DUALSCREEN_2ND_SCREEN_INDEPENDENT_SCALE;
 
 #pragma parameter HSM_DUALSCREEN_2ND_SCREEN_SCALE_OFFSET			"      2nd Screen Scale Offset" 100 1 500 0.5

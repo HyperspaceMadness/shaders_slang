@@ -224,6 +224,7 @@ void main()
 
 	// Get color for the frame area outside of the bezel
 	vec2 frame_outside_coord_ctr = frame_outside_coord - 0.5;
+	float SHADOW_OUTSIDE_FRAME_MASK = 1 - HSM_GetCornerMask(frame_outside_coord_ctr * 1.01 + 0.5, SCREEN_ASPECT, HSM_FRM_OUTER_CORNER_RADIUS, 1);
 	OUTSIDE_FRAME_MASK = 1 - HSM_GetCornerMask(frame_outside_coord_ctr + 0.5, SCREEN_ASPECT, HSM_FRM_OUTER_CORNER_RADIUS, 1);
 	OUTSIDE_FRAME_MASK_FOR_IMAGE = 1 - HSM_GetCornerMask(frame_outside_coord_ctr * 0.999 + 0.5, SCREEN_ASPECT, HSM_FRM_OUTER_CORNER_RADIUS, 1);
 	// Get masks for shadows, from frame as well as sides and top and bottom of viewport
@@ -327,8 +328,8 @@ void main()
 	float dist_outside_frame = length(clamp(abs(frame_outside_coord_ctr) - frame_edge, 0, 1) * vec2(SCREEN_ASPECT, 1));
 
 	vec4 frame_shadow_layer = vec4(0);
-	frame_shadow_layer.a = HHLP_QuadraticBezier(smoothstep(HSM_FRM_SHADOW_WIDTH, 0, dist_outside_frame), vec2(1, 0)) * outside_tube_mask;
-
+	frame_shadow_layer.a = SHADOW_OUTSIDE_FRAME_MASK * HHLP_QuadraticBezier(smoothstep(HSM_FRM_SHADOW_WIDTH, 0, dist_outside_frame), vec2(1, 0));
+	
 	//----------------------------------------------------
 	// Reflection
 	//----------------------------------------------------
@@ -516,6 +517,8 @@ FragColor = frag_color_linear + reflected_color;
 
 	vec4 led_layer = texture(LEDImage, image_coord);
 	led_layer = HSM_Linearize(led_layer, HSM_DEFAULT_SRGB_GAMMA);
+	if (HSM_STANDARD_LED_SHOW_OVER_FRAME == 0)
+		led_layer *= OUTSIDE_FRAME_MASK;
 
 	vec4 top_layer = texture(TopLayerImage, image_coord);
 	top_layer = HSM_Linearize(top_layer, HSM_DEFAULT_SRGB_GAMMA);
@@ -541,6 +544,9 @@ FragColor = frag_color_linear + reflected_color;
 		top_layer = mix(top_layer, top_layer * night_lighting_image, HSM_NIGHT_OPACITY);
 	}
 
+	if (HSM_STANDARD_BG_SHOW_OVER_SCREEN == 0)
+		bg_layer *= outside_tube_mask_wider;
+
 	vec4 bezel_layer = vec4(0);
 	vec4 frame_layer = vec4(0);
 	if (HSM_BZL_OPACITY > 0 || HSM_FRM_OPACITY > 0)
@@ -557,7 +563,7 @@ FragColor = frag_color_linear + reflected_color;
 		// Mask out the area outside the frame
 		bezel_layer = bezel_and_frame_rgba * (1 - OUTSIDE_FRAME_MASK);
 		// Layer this on top of the shadow
-		bezel_layer = HSM_BlendModeLayerMix(frame_shadow_layer, bezel_layer, BLEND_MODE_NORMAL, HSM_FRM_SHADOW_OPACITY);
+		bezel_layer = HSM_BlendModeLayerMix(frame_shadow_layer * HSM_FRM_SHADOW_OPACITY, bezel_layer, BLEND_MODE_NORMAL, 1);
 		// Adjust the masks for the transparency of each portion, Bezel and from the frame outwards
 		bezel_layer = clamp(bezel_layer * (BEZEL_MASK * HSM_BZL_OPACITY + OUTSIDE_BEZEL_MASK * HSM_FRM_OPACITY), 0, 1);
 	}
@@ -570,8 +576,8 @@ FragColor = frag_color_linear + reflected_color;
 
 	frag_color_linear = HSM_BlendModeLayerMix(frag_color_linear, bg_layer, HSM_BG_BLEND_MODE, HSM_BG_OPACITY);
 	// frag_color_linear = HSM_BlendModeLayerMix(frag_color_linear, vignette_layer, BLEND_MODE_NORMAL, 1);
-	frag_color_linear = HSM_BlendModeLayerMix(frag_color_linear, led_layer, HSM_LED_BLEND_MODE, HSM_LED_OPACITY);
 	frag_color_linear = HSM_BlendModeLayerMix(frag_color_linear, bezel_layer, BLEND_MODE_NORMAL, 1);
+	frag_color_linear = HSM_BlendModeLayerMix(frag_color_linear, led_layer, HSM_LED_BLEND_MODE, HSM_LED_OPACITY);
 	frag_color_linear += reflected_color;
 	frag_color_linear = HSM_BlendModeLayerMix(frag_color_linear, top_layer, HSM_TOP_BLEND_MODE, HSM_TOP_OPACITY);
 

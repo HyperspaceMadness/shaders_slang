@@ -20,24 +20,6 @@ vec2 HSM_GetRotatedRawOriginalSize()
 	return HSM_ROTATE_CORE_IMAGE * global.OriginalSize.yx + (1 - HSM_ROTATE_CORE_IMAGE) * global.OriginalSize.xy;
 }
 
-float HSM_GetSplitScreenAmount()
-{
-	#ifdef HSM_SPLIT_SCREEN_PRESET
-		vec2 original_size = global.OriginalSize.xy;
-		float is_horizontal = HHLP_IsOverValue(original_size.x / original_size.y, 1);
-
-		// Split screen amount should be smaller when the aspect is horizontal
-		return is_horizontal * HSM_DUALSCREEN_AMOUNT / 2 + (1 - is_horizontal) * HSM_DUALSCREEN_AMOUNT;
-	#else
-		return 0;
-	#endif
-}
-
-vec2 HSM_GetCroppedSize(vec2 in_size){
-	return vec2(in_size.x - HSM_CROP_OVERSCAN_RIGHT - HSM_CROP_OVERSCAN_LEFT,
-				in_size.y - HSM_CROP_OVERSCAN_TOP - HSM_CROP_OVERSCAN_BOTTOM);
-}
-
 // Returns 1 for vertical split, 2 for horizontal split
 float HSM_Get_Core_Image_Split_Direction()
 {
@@ -57,7 +39,37 @@ float HSM_Get_Core_Image_Split_Direction()
 		return core_image_split_direction;
 }
 
-vec2 HSM_GetSampleAreaStartInRawPixels(float screen_index)
+vec2 HSM_GetCroppedSize(vec2 in_size, float screen_index){
+	vec2 out_size = in_size;
+
+	if (HSM_DUALSCREEN_MODE > 0)
+		if (HSM_Get_Core_Image_Split_Direction() == 1)
+		{
+			if (screen_index == 1)
+				out_size.y += HSM_DUALSCREEN_CORE_IMAGE_SPLIT_OFFSET;
+			else
+			{
+				out_size.y -= HSM_DUALSCREEN_CORE_IMAGE_SPLIT_OFFSET;
+				out_size.x -= 2 * HSM_DUALSCREEN_2ND_SCREEN_SIDES_CROP;
+			}
+		}
+		else
+		{
+			if (screen_index == 1)
+				out_size.x += HSM_DUALSCREEN_CORE_IMAGE_SPLIT_OFFSET;
+			else
+			{
+				out_size.x -= HSM_DUALSCREEN_CORE_IMAGE_SPLIT_OFFSET;
+				out_size.y -= 2 * HSM_DUALSCREEN_2ND_SCREEN_SIDES_CROP;
+			}
+		}
+
+	if (screen_index == 1)
+		out_size -= vec2(HSM_CROP_OVERSCAN_RIGHT + HSM_CROP_OVERSCAN_LEFT, HSM_CROP_OVERSCAN_TOP + HSM_CROP_OVERSCAN_BOTTOM);
+	return out_size;
+}
+
+vec2 HSM_GetSampleAreaStartPixelCoord(float screen_index)
 {
 	vec2 raw_original_size = HSM_GetRawOriginalSize();
 	vec2 sample_start_coord = vec2(0);
@@ -65,12 +77,18 @@ vec2 HSM_GetSampleAreaStartInRawPixels(float screen_index)
 	if (screen_index == 2)
 	{
 		if (HSM_Get_Core_Image_Split_Direction() == 1)
-			sample_start_coord = vec2(0, raw_original_size.y / 2);
+		{
+			sample_start_coord = vec2(0, raw_original_size.y / 2 + HSM_DUALSCREEN_CORE_IMAGE_SPLIT_OFFSET);
+			sample_start_coord.x += HSM_DUALSCREEN_2ND_SCREEN_SIDES_CROP;
+		}
 		else
-			sample_start_coord = vec2(raw_original_size.x / 2, 0);
+		{
+			sample_start_coord = vec2(raw_original_size.x / 2 + HSM_DUALSCREEN_CORE_IMAGE_SPLIT_OFFSET, 0);
+			sample_start_coord.y += HSM_DUALSCREEN_2ND_SCREEN_SIDES_CROP;
+		}
 	}
-
-	sample_start_coord += vec2(HSM_CROP_OVERSCAN_LEFT, HSM_CROP_OVERSCAN_TOP);
+	if (screen_index == 1)
+		sample_start_coord += vec2(HSM_CROP_OVERSCAN_LEFT, HSM_CROP_OVERSCAN_TOP);
 
 	return sample_start_coord;
 }
@@ -81,12 +99,10 @@ vec2 HSM_GetOriginalSize(float screen_index)
 	vec2 original_size = global.OriginalSize.xy;
 
 	if (HSM_DUALSCREEN_MODE > 0)
-	{
 		if (HSM_Get_Core_Image_Split_Direction() == 1)
 			original_size.y *= 0.5;
 		else
 			original_size.x *= 0.5;
-	}
 
 	return original_size;
 }
@@ -99,7 +115,7 @@ vec2 HSM_GetRotatedOriginalSize(float screen_index)
 
 vec2 HSM_GetCroppedRotatedOriginalSize(float screen_index)
 {
-	return HSM_GetCroppedSize(HSM_GetRotatedOriginalSize(screen_index));
+	return HSM_GetCroppedSize(HSM_GetRotatedOriginalSize(screen_index), screen_index);
 }
 
 float HSM_GetIsOriginalSizeVertical(float screen_index)
@@ -113,7 +129,6 @@ bool HSM_MatchResolution(vec2 in_res, vec2 match_res)
 {
 	return (in_res == match_res);
 }
-
 
 float HSM_GetScreenAspect(float screen_index)
 {
@@ -196,9 +211,6 @@ float HSM_GetFinalViewportAspectRatio()
 float HSM_GetUseVerticalScanlines(float screen_aspect)
 {
 	float auto_use_vert_scanlines = screen_aspect < 1 ? 1 : 0;
-	#ifdef HSM_SPLIT_SCREEN_PRESET
-		auto_use_vert_scanlines = 0;
-	#endif
 	return HSM_SCANLINE_DIRECTION < 1 ? auto_use_vert_scanlines : (HSM_SCANLINE_DIRECTION < 2 ? 0 : 1);
 }
 
@@ -224,7 +236,7 @@ vec2 HSM_GetRotatedOriginalSizeWithCoreResMult(float screen_index)
 // TODO need to have aspect adjusted when in dual screen
 vec2 HSM_GetCroppedRotatedOriginalSizeWithCoreResMult(float screen_index)
 {
-	vec2 cropped_original_size = HSM_GetCroppedSize(HSM_GetRotatedOriginalSizeWithCoreResMult(screen_index));
+	vec2 cropped_original_size = HSM_GetCroppedSize(HSM_GetRotatedOriginalSizeWithCoreResMult(screen_index), screen_index);
 
 	return cropped_original_size;
 }
@@ -343,9 +355,15 @@ vec2 HSM_GetScreenScale(float screen_aspect, float screen_height_from_image)
 	}
 }
 
-vec2 HSM_GetScreenScaleFor2ndScreen(vec2 screen_scale)
+vec2 HSM_GetScreenScaleFor2ndScreen(vec2 screen_scale, float screen_aspect)
 {
 	vec2 out_screen_scale = screen_scale;
+	
+	if (HSM_DUALSCREEN_2ND_SCREEN_ASPECT_RATIO_MODE == 1)
+	{
+		float output_aspect = global.FinalViewportSize.x / global.FinalViewportSize.y;
+		out_screen_scale = vec2(screen_scale.y * screen_aspect / output_aspect, screen_scale.y);
+	}
 
 	if (HSM_DUALSCREEN_2ND_SCREEN_INDEPENDENT_SCALE == 1)
 		out_screen_scale = (out_screen_scale / out_screen_scale.y) * DEFAULT_TUBE_SCALE_V * 0.5;
@@ -591,18 +609,19 @@ vec4 HSM_GetColorForScreenInfoCache(vec2 viewport_coord, sampler2D original_pass
 	vec2 tube_scale = HSM_GetTubeScale(screen_scale, screen_pos_and_height.y);
 	vec2 pos_offset = HSM_GetPositionOffset(vec2(0.5, screen_pos_and_height.x), screen_scale);
 
-	float screen_aspect_2nd_screen = HSM_GetScreenAspect(2);
-	vec2 screen_scale_2nd_screen = HSM_GetScreenScaleFor2ndScreen(screen_scale);
+	vec2 cropped_size = HSM_GetCroppedRotatedOriginalSize(2);
+	float screen_aspect_2nd_screen = HSM_DUALSCREEN_2ND_SCREEN_ASPECT_RATIO_MODE == 0 ? screen_aspect : cropped_size.x / cropped_size.y;
+	vec2 screen_scale_2nd_screen = HSM_GetScreenScaleFor2ndScreen(screen_scale, screen_aspect_2nd_screen);
 	vec2 tube_scale_2nd_screen = HSM_GetTubeScale(screen_scale_2nd_screen, DEFAULT_TUBE_SCALE_V);
 	vec2 pos_offset_2nd_screen = HSM_GetPositionOffsetFor2ndScreen(screen_scale_2nd_screen);
 
 	vec2 cropped_original_size_with_core_res_mult = HSM_GetCroppedRotatedOriginalSizeWithCoreResMult(1);
 	vec2 cropped_original_size = HSM_GetCroppedRotatedOriginalSize(1);
-	vec2 sample_area_start_raw_pixel_coord = HSM_GetSampleAreaStartInRawPixels(1);
+	vec2 sample_area_start_raw_pixel_coord = HSM_GetSampleAreaStartPixelCoord(1);
 
 	vec2 cropped_original_size_with_core_res_mult_2nd_screen = HSM_GetCroppedRotatedOriginalSizeWithCoreResMult(2);
 	vec2 cropped_original_size_2nd_screen = HSM_GetCroppedRotatedOriginalSize(2);
-	vec2 sample_area_start_in_raw_pixels_2nd_screen = HSM_GetSampleAreaStartInRawPixels(2);
+	vec2 sample_area_start_in_raw_pixels_2nd_screen = HSM_GetSampleAreaStartPixelCoord(2);
 
 	vec4 sample_2d_range = vec4(0);
 	sample_2d_range = vec4(0, 0, 0.25, 0.25);
@@ -750,70 +769,6 @@ vec4 HSM_UpdateGlobalScreenValuesFromCache(sampler2D in_cache_pass, vec2 viewpor
 	return vec4(0);
 }
 
-float HSM_GetSplitAxisIsHorizontal()
-{
-	vec2 original_size = HSM_GetRotatedRawOriginalSize();
-	return HHLP_IsOverValue(original_size.x/original_size.y, 1);
-}
-
-float HSM_GetSplitAxisCoord1D(vec2 in_coord, float split_axis_is_horizontal)
-{
-	return split_axis_is_horizontal * in_coord.x + (1 - split_axis_is_horizontal) * in_coord.y;
-}
-
-vec2 HSM_SetSplitAxisCoord(vec2 in_coord, float new_coord_1D, float split_axis_is_horizontal)
-{
-	return split_axis_is_horizontal * vec2(new_coord_1D, in_coord.y) + (1 - split_axis_is_horizontal) * vec2(in_coord.x, new_coord_1D);
-}
-
-float HSM_GetSplitInfo(inout float split_pos_1, inout float split_pos_2, inout float split_dist, inout float split_axis_is_horizontal)
-{
-	split_axis_is_horizontal = HSM_GetSplitAxisIsHorizontal();
-
-	vec2 original_size = HSM_GetRotatedRawOriginalSize();
-	vec2 cropped_size = HSM_GetCroppedRotatedOriginalSize(1);
-
-	float cropped_size_1D = HSM_GetSplitAxisCoord1D(cropped_size, split_axis_is_horizontal);
-	float split_screen_amount = HSM_GetSplitScreenAmount();
-	float half_orig_size = HSM_GetSplitAxisCoord1D(original_size, split_axis_is_horizontal) * 0.5;
-	float edge_crop = split_axis_is_horizontal * HSM_CROP_OVERSCAN_LEFT + (1 - split_axis_is_horizontal) * HSM_CROP_OVERSCAN_TOP;
-
-	split_pos_1 = (edge_crop + half_orig_size) / cropped_size_1D;
-	split_pos_2 = (edge_crop + half_orig_size + split_screen_amount) / cropped_size_1D;
-	split_dist = split_screen_amount / cropped_size_1D;
-
-	return 1;
-}
-
-vec2 HSM_Get0To1CoordFromSplitArea(vec2 in_coord, float split_pos_1, float split_pos_2, float split_dist, float split_axis_is_horizontal)
-{
-	vec2 original_size = HSM_GetRotatedRawOriginalSize();
-	float in_coord_1D = HSM_GetSplitAxisCoord1D(in_coord, split_axis_is_horizontal);
-
-	float adjusted_coord_1D = 	HHLP_IsUnderValue(in_coord_1D, 0.5) * in_coord_1D / split_pos_1 + 
-								HHLP_IsOverValue(in_coord_1D, 0.5) * (in_coord_1D - split_pos_2) / (1 - split_pos_2);
-							
-	return HSM_SetSplitAxisCoord(in_coord, adjusted_coord_1D, split_axis_is_horizontal);
-}
-
-vec2 HSM_GetSplitAreaCoordFrom0To1(vec2 zone_test_coord, vec2 in_coord, float split_pos_1, float split_pos_2, float split_dist, float split_axis_is_horizontal)
-{
-	float zone_test_coord_1D = HSM_GetSplitAxisCoord1D(zone_test_coord, split_axis_is_horizontal);
-	float in_coord_1D = HSM_GetSplitAxisCoord1D(in_coord, split_axis_is_horizontal);
-
-	float adjusted_coord_1D = 	HHLP_IsUnderValue(zone_test_coord_1D, 0.5) * in_coord_1D * split_pos_1 + 
-								HHLP_IsOverValue(zone_test_coord_1D, 0.5) * (in_coord_1D * (1 - split_pos_2) + split_pos_2);
-
-	return HSM_SetSplitAxisCoord(in_coord, adjusted_coord_1D, split_axis_is_horizontal);
-}
-
-vec2 HSM_GetFlippedCoordOnSplitAxis(vec2 in_coord, float split_axis_is_horizontal)
-{
-	float flipped_coord_1D = -1 * (HSM_GetSplitAxisCoord1D(in_coord, split_axis_is_horizontal) - 0.5) + 0.5;
-	return HSM_SetSplitAxisCoord(in_coord, flipped_coord_1D, split_axis_is_horizontal);
-}
-
-
 vec2 HSM_GetCurvatureScales(float screen_aspect)
 {
 	vec2 curvature_scales = screen_aspect < 1 ? vec2(HSM_CURVATURE_2D_SCALE_SHORT_AXIS, HSM_CURVATURE_2D_SCALE_LONG_AXIS)
@@ -929,33 +884,6 @@ vec2 HSM_Get2DCurvedCoord(vec2 in_coord, vec2 curvature_values)
 	return HSM_GetCrtPiCurvedCoord(in_coord, curvature_values);
 }
 
-// TODO Use GetSplitInfo instead or recalculating
-float HSM_GetSplitScreenAreaGradient(vec2 in_cropped_coord, float center_thickness, float gradient_thickness_mult)
-{
-	vec2 original_size = HSM_GetRotatedRawOriginalSize();
-	vec2 cropped_size = HSM_GetCroppedRotatedOriginalSize(1);
-
-	vec2 px_coord = in_cropped_coord * cropped_size;
-
-	float is_horizontal = HHLP_IsOverValue(original_size.x / original_size.y, 1);
-	float split_screen_amount = HSM_GetSplitScreenAmount();
-
-	float px_pos = is_horizontal * px_coord.x + (1 - is_horizontal) * px_coord.y;
-	float half_orig_size = is_horizontal * original_size.x * 0.5 + (1 - is_horizontal) * original_size.y * 0.5;
-	float edge_crop = is_horizontal * HSM_CROP_OVERSCAN_LEFT + (1 - is_horizontal) * HSM_CROP_OVERSCAN_TOP;
-
-	float cropped_split_px_pos1 = edge_crop + half_orig_size;
-	float cropped_split_px_pos2 = edge_crop + half_orig_size + split_screen_amount;
-	float cropped_split_px_pos_middle = edge_crop + half_orig_size + split_screen_amount / 2;
-
-	float dist_from_center = abs(px_pos - cropped_split_px_pos_middle);
-	// float center_gradient = smoothstep(dist_from_center, center_thickness * split_screen_amount / 2, center_thickness * split_screen_amount / 2 + gradient_thickness_mult * split_screen_amount / 2 + 0.0001);
-	float center_gradient = 1 - smoothstep(	center_thickness * split_screen_amount / 2, 
-											center_thickness * split_screen_amount / 2 + gradient_thickness_mult * split_screen_amount / 2 + 0.01, 
-											dist_from_center);
-	return center_gradient;
-}
-
 vec2 HSM_GetCurvedCoord(vec2 in_coord, float curvature_multiplier, float screen_aspect)
 {
 	if (HSM_CURVATURE_MODE == -1)
@@ -968,36 +896,6 @@ vec2 HSM_GetCurvedCoord(vec2 in_coord, float curvature_multiplier, float screen_
 	float tilt_angle_y = HSM_CURVATURE_3D_TILT_ANGLE_Y;
 	float tilt_angle_x = HSM_CURVATURE_3D_TILT_ANGLE_X;
 	float pin_inner_edge = 0;
-
-	// // If this is split screen with two bezels we need to scale the subsection of the screen (top or bottom)
-	// // to the full 0-1 space, do the curvature, then scale back to the subsection of the screen
-	// #ifdef HSM_SPLIT_SCREEN_PRESET
-	// 	float split_pos_1 = 0;
-	// 	float split_pos_2 = 0;
-	// 	float split_dist = 0;
-	// 	float split_axis_is_horizontal = 0;
-	// 	HSM_GetSplitInfo(split_pos_1, split_pos_2, split_dist, split_axis_is_horizontal);
-
-	// 	float in_coord_1D = HSM_GetSplitAxisCoord1D(in_coord, split_axis_is_horizontal);
-	// 	float coord_is_on_first_half = HHLP_IsUnderValue(in_coord_1D, 0.5);
-
-	// 	if (HSM_DUALSCREEN_CENTER_FILL_MODE == 1)
-	// 	{
-	// 		// If we are using split screen the take the coordinates from each screen and stretch them to 0-1
-	// 		adjusted_coord = HSM_Get0To1CoordFromSplitArea(in_coord, split_pos_1, split_pos_2, split_dist, split_axis_is_horizontal);
-
-	// 		// If the coordinate was on the first screen then flip it on the split axis so we get the opposite tilting effect
-	// 		adjusted_coord = coord_is_on_first_half * HSM_GetFlippedCoordOnSplitAxis(adjusted_coord, split_axis_is_horizontal) + (1 - coord_is_on_first_half) * adjusted_coord;
-
-	// 		// If the screen is horizontal use the main tilt as tilt x, otherwise it's 0
-	// 		tilt_angle_x = split_axis_is_horizontal * HSM_CURVATURE_3D_TILT_ANGLE_Y;
-
-	// 		// If the screen is vertical use the main tilt as tilt x, otherwise it's 0
-	// 		tilt_angle_y = (1 - split_axis_is_horizontal) * HSM_CURVATURE_3D_TILT_ANGLE_Y;
-
-	// 		pin_inner_edge = 1;
-	// 	}
-	// #endif
 
 	vec2 curved_coord = vec2(0);
 	if (HSM_CURVATURE_MODE > 0.5)
@@ -1026,19 +924,6 @@ vec2 HSM_GetCurvedCoord(vec2 in_coord, float curvature_multiplier, float screen_
 		vec2 curvature_values = curvature_multiplier * HSM_GetCurvatureValues(screen_aspect);
 		curved_coord = HSM_Get2DCurvedCoord(adjusted_coord, curvature_values);
 	}
-
-	// // If this is split screen we need to scale 0-1 space back to the subsection of the screen
-	// #ifdef HSM_SPLIT_SCREEN_PRESET
-	// 	if (HSM_DUALSCREEN_CENTER_FILL_MODE == 1)
-	// 	{
-	// 		// If the coordinate was originally on the first screen then flip it back
-	// 		curved_coord = coord_is_on_first_half * HSM_GetFlippedCoordOnSplitAxis(curved_coord, split_axis_is_horizontal) + 
-	// 						(1 - coord_is_on_first_half) * curved_coord;
-
-	// 		// If this was processed as split screen scale the 0-1 space back to the split areas
-	// 		curved_coord = HSM_GetSplitAreaCoordFrom0To1(in_coord, curved_coord, split_pos_1, split_pos_2, split_dist, split_axis_is_horizontal);
-	// 	}
-	// #endif
 
 	return curved_coord;
 }
@@ -1076,19 +961,12 @@ float HSM_GetCornerMask(vec2 in_coord, float screen_aspect, float corner_radius,
 
 vec2 HSM_GetTubeCurvedCoord(vec2 screen_coord, float curvature_scale, vec2 screen_scale, vec2 tube_scale, float screen_aspect, float apply_black_edge_offset)
 {
-	// Values for split screen
-	float flip_tilt = 0;
-	float split_pos_1 = 0;
-	float split_pos_2 = 0;
-	float split_dist = 0;
-	float split_axis_is_horizontal = 0;
-
 	vec2 black_edge_scale_offset = tube_scale / screen_scale;
 
 	// Get the tube coord with the black edge added
 	// vec2 tube_coord = HSM_GetInverseScaledCoord(screen_coord, black_edge_scale_offset);
 
-	// Get the curved coordinate, setting allow_split_screen to off (0)
+	// Get the curved coordinate
 	vec2 tube_curved_coord = vec2(0.5, 0.5);
 
 	if (HSM_BZL_USE_INDEPENDENT_SCALE_AND_CURVATURE == 1)
@@ -1259,10 +1137,6 @@ vec4 HSM_GetCroppedTexSample(sampler2D in_sampler, vec2 in_screen_coord)
 	// float negative_crop = HSM_IsInNegativeCropArea(sample_coord);
 	// out_color = negative_crop * negative_crop_color + (1 - negative_crop) * out_color;
 
-	// #ifdef HSM_SPLIT_SCREEN_BLEND_CENTER_PRESET
-	// 	out_color = in_split_area * vec4(0) + (1 - in_split_area) * out_color;
-	// #endif
-
 	return out_color;
 }
 
@@ -1325,17 +1199,6 @@ vec4 HSM_ApplyScanlineMask(vec4 in_color, vec2 in_coord, vec2 screen_scale)
 	float scan_axis_screen_scale_res = use_vert_scanlines * screen_size.x + (1 - use_vert_scanlines) * screen_size.y;
 	
 	float simulated_scanline_res = HSM_SCREENFX_SCANLINE_RES;
-
-	#ifdef HSM_SPLIT_SCREEN_PRESET
-		if (use_vert_scanlines == 0 && screen_scale.x / screen_scale.y < 1 )
-		{
-			simulated_scanline_res = HSM_SCREENFX_SCANLINE_RES * 2;
-		}
-		if (use_vert_scanlines == 1 && screen_scale.x / screen_scale.y > 1 )
-		{
-			simulated_scanline_res = HSM_SCREENFX_SCANLINE_RES * 2;
-		}
-	#endif
 
 	float scanline_size = ceil(scan_axis_screen_scale_res / simulated_scanline_res);
 

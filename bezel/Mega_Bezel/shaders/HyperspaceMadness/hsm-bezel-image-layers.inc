@@ -373,6 +373,7 @@ void main()
 
 	// Get color for the frame area outside of the bezel
 	vec2 frame_outside_coord_ctr = frame_outside_coord - 0.5;
+	float SHADOW_OUTSIDE_FRAME_MASK = 1 - HSM_GetCornerMask(frame_outside_coord_ctr * 1.01 + 0.5, SCREEN_ASPECT, HSM_FRM_OUTER_CORNER_RADIUS, 1);
 	OUTSIDE_FRAME_MASK = 1 - HSM_GetCornerMask(frame_outside_coord_ctr + 0.5, SCREEN_ASPECT, HSM_FRM_OUTER_CORNER_RADIUS, 1);
 	OUTSIDE_FRAME_MASK_FOR_IMAGE = 1 - HSM_GetCornerMask(frame_outside_coord_ctr * 0.999 + 0.5, SCREEN_ASPECT, HSM_FRM_OUTER_CORNER_RADIUS, 1);
 	// Get masks for shadows, from frame as well as sides and top and bottom of viewport
@@ -478,7 +479,7 @@ void main()
 
 	vec4 frame_shadow_layer = vec4(0);
 	if (HSM_FRM_OPACITY > 0.001)
-		frame_shadow_layer.a = HHLP_QuadraticBezier(smoothstep(HSM_FRM_SHADOW_WIDTH, 0, dist_outside_frame), vec2(1, 0));
+		frame_shadow_layer.a = SHADOW_OUTSIDE_FRAME_MASK * HHLP_QuadraticBezier(smoothstep(HSM_FRM_SHADOW_WIDTH, 0, dist_outside_frame), vec2(1, 0));
 
 	if (HSM_GLASS_BORDER_ON == 1)
 		OUTSIDE_TUBE_MASK_FOR_IMAGE = clamp(outside_tube_mask - edge_mask, 0, 1);
@@ -521,7 +522,6 @@ void main()
 	//-----------------------------------------------------------------------------------------
 	// Background Image
 	//-----------------------------------------------------------------------------------------
-#ifndef STANDARD_PRESET
 	vec2 background_coord_no_mirror	= GetScaledCoord(VIEWPORT_COORD, VIEWPORT_COORD, SCREEN_COORD, bezel_outside_coord, vec2(0), vec2(0),
 												HSM_BG_TEXTURE_ASPECT_MODE, 
 												HSM_BG_EXPLICIT_TEXTURE_ASPECT, 
@@ -532,10 +532,7 @@ void main()
 	vec2 background_coord = background_coord_no_mirror;
 	if (HSM_BG_MIRROR_WRAP == 1)
 		background_coord = HSM_GetMirrorWrapCoord(background_coord);
-#else
-	vec2 background_coord_no_mirror	= VIEWPORT_COORD;
-	vec2 background_coord	= background_coord_no_mirror;
-#endif
+
 
 	//-----------------------------------------------------------------------------------------
 	// BACKGROUND
@@ -648,7 +645,6 @@ void main()
 		reflection_linear *= HSM_REFLECT_MASK_IMG_AMOUNT * texture(ReflectionMaskImage, reflection_image_coord).r + (1 - HSM_REFLECT_MASK_IMG_AMOUNT);
 	}
 
-#ifndef STANDARD_PRESET
 	//----------------------------------------------------
 	// Frame Decal Image
 	//----------------------------------------------------
@@ -676,13 +672,9 @@ void main()
 			if (HSM_DECAL_BLEND_MODE != BLEND_MODE_ADD)
 				decal_image = HSM_BlendMultiply(decal_image, night_lighting_image, HSM_NIGHT_OPACITY);
 	}
-#else
-	vec2 decal_coord = background_coord;
-#endif
 
 	vec4 top_image = vec4(0);
 
-#ifndef STANDARD_PRESET
 	vec2 top_image_coord = GetScaledCoord(VIEWPORT_COORD, background_coord_no_mirror, SCREEN_COORD, bezel_outside_coord, bezel_image_coord, decal_coord,
 						HSM_TOP_TEXTURE_ASPECT_MODE, 
 						HSM_TOP_EXPLICIT_TEXTURE_ASPECT, 
@@ -692,9 +684,6 @@ void main()
 						HSM_TOP_SCALE_KEEP_ASPECT);
 	if (HSM_TOP_MIRROR_WRAP == 1)
 		top_image_coord = HSM_GetMirrorWrapCoord(top_image_coord);
-#else
-	vec2 top_image_coord = VIEWPORT_COORD;
-#endif
 
 	if (HSM_TOP_OPACITY > 0)
 	{
@@ -714,7 +703,6 @@ void main()
 					top_image = HSM_BlendMultiply(top_image, night_lighting_image, HSM_NIGHT_OPACITY);
 	}
 
-#ifndef STANDARD_PRESET
 	//----------------------------------------------------
 	// Cabinet Glass Image
 	//----------------------------------------------------
@@ -775,15 +763,12 @@ void main()
 		if (HSM_STATIC_LAYERS_GAMMA != 1)
 			led_image = HSM_ApplyGamma(led_image, HSM_STATIC_LAYERS_GAMMA);
 	}
-#endif
-
 
 	//-----------------------------------------------------------------------------------------
 	// CUTOUT MASK
 	//-----------------------------------------------------------------------------------------
 	CUTOUT_MASK = 1;
 
-#ifndef STANDARD_PRESET
 	vec2 cutout_coord = (VIEWPORT_COORD - 0.5) * 2 + 0.5;
 	if (HSM_CUTOUT_SCALE_MODE == 1)
 		cutout_coord = GetScaledCoord(SCREEN_COORD, vec2(0,0), vec2(0,0), vec2(0,0), vec2(0,0), vec2(0,0),
@@ -840,7 +825,6 @@ void main()
 
 		vignette_layer.a += 0.75 * HHLP_QuadraticBezier(1 - HSM_GetVignetteFactor(vignette_coord, HSM_VIEWPORT_VIGNETTE_OPACITY), vec2(1, 0.5));
 	}
-#endif
 
 	//-----------------------------------------------------------------------------------------
 	// COMPOSITE ALL LAYERS
@@ -859,7 +843,6 @@ void main()
 													HSM_BG_CUTOUT_MODE,
 													HSM_BG_OPACITY);
 
-#ifndef STANDARD_PRESET
 		// VIGNETTE
 		if (HSM_VIEWPORT_VIGNETTE_LAYER_ORDER == i)
 			frag_color_linear = BlendModeMaskLayerMix(frag_color_linear, 
@@ -868,7 +851,6 @@ void main()
 													HSM_VIEWPORT_VIGNETTE_MASK_MODE, 
 													HSM_VIEWPORT_VIGNETTE_CUTOUT_MODE,
 													HSM_VIEWPORT_VIGNETTE_OPACITY);
-#endif
 
 		// CRT SCREEN
 		if (HSM_CRT_LAYER_ORDER == i)
@@ -879,7 +861,6 @@ void main()
 													0, 
 													1);
 
-#ifndef STANDARD_PRESET
 		// BEZEL IMAGE
 		if (HSM_BZL_IMG_LAYER_ORDER == i)
 			if (HSM_BZL_IMG_OPACITY > 0)
@@ -889,8 +870,6 @@ void main()
 														HSM_BZL_IMG_MASK_MODE, 
 														HSM_BZL_IMG_CUTOUT_MODE, 
 														HSM_BZL_IMG_OPACITY);
-#endif
-
 		// GENERATED BEZEL LAYER
 		if (HSM_BZL_LAYER_ORDER == i)
 			if (HSM_BZL_OPACITY > 0)
@@ -923,7 +902,6 @@ void main()
 														HSM_FRM_OPACITY);
 			}
 
-#ifndef STANDARD_PRESET
 		// CABINET GLASS
 		if (HSM_CAB_GLASS_LAYER_ORDER == i)
 			if (HSM_CAB_GLASS_OPACITY > 0)
@@ -953,7 +931,6 @@ void main()
 														HSM_LED_MASK_MODE, 
 														HSM_LED_CUTOUT_MODE, 
 														HSM_LED_OPACITY);
-#endif
 
 		// REFLECTION
 		if (HSM_REFLECT_LAYER_ORDER == i)

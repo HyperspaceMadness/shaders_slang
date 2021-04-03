@@ -12,16 +12,19 @@ float HSM_BG_OPACITY = global.HSM_BG_OPACITY / 100;
 #pragma parameter HSM_BG_BLEND_MODE 		        "      Background Blend Mode - Off | Norm | Add | Mult"  2 0 3 1
 float HSM_BG_BLEND_MODE = global.HSM_BG_BLEND_MODE;
 
-#pragma parameter HSM_STANDARD_BG_SHOW_OVER_SCREEN 	"      Show Background over Screen" 0 0 1 1
+#pragma parameter HSM_STANDARD_BG_SHOW_OVER_SCREEN 	"      Background Show over Screen" 0 0 1 1
 float HSM_STANDARD_BG_SHOW_OVER_SCREEN = global.HSM_STANDARD_BG_SHOW_OVER_SCREEN / 100;
 
-#pragma parameter HSM_LED_OPACITY 	                "      LED Image Opacity" 0 0 100 0.1
+#pragma parameter HSM_LED_OPACITY 	                "      LED Image Opacity" 100 0 100 0.1
 float HSM_LED_OPACITY = global.HSM_LED_OPACITY / 100;
 
 #pragma parameter HSM_LED_BLEND_MODE 		        "      LED Blend Mode - Off | Norm | Add | Mult"  2 0 3 1
 float HSM_LED_BLEND_MODE = global.HSM_LED_BLEND_MODE;
 
-#pragma parameter HSM_TOP_OPACITY 	                "      Top Extra Image Opacity" 0 0 100 0.1
+#pragma parameter HSM_STANDARD_LED_SHOW_OVER_FRAME 	"      LED Show over Frame" 0 0 1 1
+float HSM_STANDARD_LED_SHOW_OVER_FRAME = global.HSM_STANDARD_LED_SHOW_OVER_FRAME;
+
+#pragma parameter HSM_TOP_OPACITY 	                "      Top Extra Image Opacity" 100 0 100 0.1
 float HSM_TOP_OPACITY = global.HSM_TOP_OPACITY / 100;
 
 #pragma parameter HSM_TOP_BLEND_MODE 		        "      Top Extra Image Blend Mode - Off | Norm | Add | Mult"  1 0 3 1

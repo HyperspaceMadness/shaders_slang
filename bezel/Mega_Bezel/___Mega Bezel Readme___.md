@@ -563,11 +563,42 @@ Parameter Descriptions
   - Limit the reflection to only appear inside the bezel area
   - Often used with the reflection only preset to show the reflection inside the bezel area shown in the image
 
-**[ REFLECTION IS LAST PASS ]___________________________________________________________________________________________________**
+**[ DUAL SCREEN ]____________________________________________________________**
 
-- **Reflection is Last Pass**
-  - Used for glass and reflection only presets
-  - When this is on the final gamma correction is applied at the reflection pass
+- **Dual Screen Mode**
+  - **0 - OFF** - Single Screen
+  - **1 - VERTICAL** - Split into 2 screens one on the top and one on the bottom
+  - **2 - HORIZONTAL** - Split into 2 screens one on the left and one on the right
+- **Core Image Split Mode**
+  - **0 - AUTO**
+  - **1 - VERTICAL**
+  - **2 - HORIZONTAL**
+- Core Image Split Offset
+- Crop Edges of 2nd Screen
+- Viewport Split Offset
+- Shift Position with Screen Scale
+- Position Offset Between Screens
+- 2nd Screen Aspect Ratio Mode - Same as 1st Screen | PAR
+- 2nd Screen Use Independent Scale
+- 2nd Screen Scale Offset
+- 2nd Screen Pos X
+- 2nd Screen Pos Y
+
+
+
+**[ STANDARD IMAGE LAYERS ]__________________________________________**
+
+- Aspect Ratio
+  - Full
+  - 16:9
+  - 9:16
+- Background Image Opacity
+- Background Blend Mode 
+- Show Background over Screen
+- LED Image Opacity
+- LED Blend Mode
+- Top Extra Image Opacity
+- Top Extra Image Blend Mode
 
 **[ NIGHT LIGHTING ]____________________________________________________________________**
 
@@ -584,7 +615,7 @@ Parameter Descriptions
 - **Dithering Noise Samples**
   - Reduces Banding
 
-**[ IMAGE LAYERING ]________________________________________________________________________________________________________**
+**[ STATIC IMAGE LAYER GAMMA  ]________________________________________________________________________________________________________**
 
 - **Static Layers Gamma Adjust**
   - Adjust the Gamma on all layers to brighten or darken all of them

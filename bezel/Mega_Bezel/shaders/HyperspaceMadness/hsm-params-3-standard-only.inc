@@ -21,9 +21,6 @@ float HSM_LED_OPACITY = global.HSM_LED_OPACITY / 100;
 #pragma parameter HSM_LED_BLEND_MODE 		        "      LED Blend Mode - Off | Norm | Add | Mult"  2 0 3 1
 float HSM_LED_BLEND_MODE = global.HSM_LED_BLEND_MODE;
 
-#pragma parameter HSM_STANDARD_LED_SHOW_OVER_FRAME 	"      LED Show over Frame" 0 0 1 1
-float HSM_STANDARD_LED_SHOW_OVER_FRAME = global.HSM_STANDARD_LED_SHOW_OVER_FRAME;
-
 #pragma parameter HSM_TOP_OPACITY 	                "      Top Extra Image Opacity" 100 0 100 0.1
 float HSM_TOP_OPACITY = global.HSM_TOP_OPACITY / 100;
 

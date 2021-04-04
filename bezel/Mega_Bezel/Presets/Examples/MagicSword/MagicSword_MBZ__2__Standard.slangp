@@ -1,14 +1,19 @@
-#reference "../../Base/MBZ__2__STANDARD__GUEST-DrVENOM.slangp"
+#reference "../../MBZ__2__STANDARD.slangp"
 
 ScreenPlacementImage = textures/msword-cpo.png
 TopLayerImage = textures/msword-cpo.png
 BackgroundImage = ../../../shaders/HyperspaceMadness/textures/Placeholder_Transparent_16x16.png
 
 HSM_VIEWPORT_VIGNETTE_OPACITY = 0
-HSM_NON_INTEGER_SCALE_OFFSET = "86.000000"
+USE_IMAGE_FOR_PLACEMENT = "1.000000"
+HSM_NON_INTEGER_SCALE_OFFSET = "89.699944"
+HSM_SCREEN_POSITION_Y = "-1.000000"
 HSM_SCREEN_POSITION_X = "5.000000"
-HSM_SCREEN_POSITION_Y = "-51.000000"
+
 HSM_TUBE_BLACK_EDGE_THICKNESS = "30.000000"
+
 HSM_BZL_WIDTH = "582.000000"
 HSM_BZL_HEIGHT = "577.000000"
 HSM_BZL_COLOR_VALUE = "4.800005"
+
+HSM_STANDARD_IMG_ASPECT_RATIO = "2.000000"

@@ -1,4 +1,4 @@
-#reference "../base/MBZ__2__STANDARD__GUEST-DrVENOM.slangp"
+#reference "../MBZ__2__STANDARD.slangp"
 
 HSM_ROTATE_CORE_IMAGE = 0
 HSM_CORE_RES_SAMPLING_MULT_SCANLINE_DIR = 200

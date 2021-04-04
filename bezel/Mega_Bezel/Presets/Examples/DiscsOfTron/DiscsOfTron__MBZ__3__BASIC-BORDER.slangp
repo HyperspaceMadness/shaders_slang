@@ -1,4 +1,4 @@
-#reference "../../Base/MBZ__3__BASIC-BORDER__GUEST-DrVENOM.slangp"
+#reference "../../MBZ__3__BASIC-BORDER.slangp"
 
 BackgroundImage = textures/DOT_Flat.png
 TopLayerImage = textures/DOT_Bezel_Combined.png

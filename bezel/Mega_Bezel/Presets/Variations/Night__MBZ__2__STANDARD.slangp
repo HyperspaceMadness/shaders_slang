@@ -1,4 +1,4 @@
-#reference "../base/MBZ__2__STANDARD__GUEST-DrVENOM.slangp"
+#reference "../MBZ__2__STANDARD.slangp"
 
 BackgroundImage = ../../shaders/HyperspaceMadness/textures/HSM_Duimon_Super_Famicom_3840x2160.png
 ColoredGelImage = ../../shaders/HyperspaceMadness/textures/Placeholder_Transparent_16x16.png

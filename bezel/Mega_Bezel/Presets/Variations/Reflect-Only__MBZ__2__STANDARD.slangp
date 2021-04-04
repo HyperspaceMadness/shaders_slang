@@ -1,4 +1,4 @@
-#reference "../base/MBZ__2__STANDARD__GUEST-DrVENOM.slangp"
+#reference "../MBZ__2__STANDARD.slangp"
 
 BackgroundImage = ../../shaders/HyperspaceMadness/textures/Placeholder_Transparent_16x16.png
 BackgroundVertImage = ../../shaders/HyperspaceMadness/textures/Placeholder_Transparent_16x16.png

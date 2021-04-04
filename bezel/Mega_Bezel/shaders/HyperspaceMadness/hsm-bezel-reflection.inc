@@ -511,7 +511,7 @@ FragColor = frag_color_linear + reflected_color;
 
 	// Image Ratio is 9:16
 	if (HSM_STANDARD_IMG_ASPECT_RATIO == 2)
-		image_coord.y = (VIEWPORT_COORD.y - 0.5) / (0.5625/final_viewport_aspect) + 0.5;
+		image_coord.x = (VIEWPORT_COORD.x - 0.5) / (0.5625/final_viewport_aspect) + 0.5;
 
 	vec4 bg_layer = vec4(0);
 	if (SCREEN_ASPECT > 1) 
@@ -523,8 +523,6 @@ FragColor = frag_color_linear + reflected_color;
 
 	vec4 led_layer = texture(LEDImage, image_coord);
 	led_layer = HSM_Linearize(led_layer, HSM_DEFAULT_SRGB_GAMMA);
-	if (HSM_STANDARD_LED_SHOW_OVER_FRAME == 0)
-		led_layer *= OUTSIDE_FRAME_MASK;
 
 	vec4 top_layer = texture(TopLayerImage, image_coord);
 	top_layer = HSM_Linearize(top_layer, HSM_DEFAULT_SRGB_GAMMA);
@@ -582,8 +580,8 @@ FragColor = frag_color_linear + reflected_color;
 
 	frag_color_linear = HSM_BlendModeLayerMix(frag_color_linear, bg_layer, HSM_BG_BLEND_MODE, HSM_BG_OPACITY);
 	// frag_color_linear = HSM_BlendModeLayerMix(frag_color_linear, vignette_layer, BLEND_MODE_NORMAL, 1);
-	frag_color_linear = HSM_BlendModeLayerMix(frag_color_linear, bezel_layer, BLEND_MODE_NORMAL, 1);
 	frag_color_linear = HSM_BlendModeLayerMix(frag_color_linear, led_layer, HSM_LED_BLEND_MODE, HSM_LED_OPACITY);
+	frag_color_linear = HSM_BlendModeLayerMix(frag_color_linear, bezel_layer, BLEND_MODE_NORMAL, 1);
 	frag_color_linear += reflected_color;
 	frag_color_linear = HSM_BlendModeLayerMix(frag_color_linear, top_layer, HSM_TOP_BLEND_MODE, HSM_TOP_OPACITY);
 

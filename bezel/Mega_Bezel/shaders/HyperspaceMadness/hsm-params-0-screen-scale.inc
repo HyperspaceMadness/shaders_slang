@@ -76,7 +76,7 @@ float HSM_NON_INTEGER_SCALE = global.HSM_NON_INTEGER_SCALE;
 #pragma parameter USE_IMAGE_FOR_PLACEMENT 						"      Use Image For Placement (Scale & Y Pos)" 0 0 1 1
 float USE_IMAGE_FOR_PLACEMENT = global.USE_IMAGE_FOR_PLACEMENT;
 
-#pragma parameter HSM_NON_INTEGER_SCALE_OFFSET 					"      Non-Integer Scale Offset" 100 5 200 1
+#pragma parameter HSM_NON_INTEGER_SCALE_OFFSET 					"      Non-Integer Scale Offset" 100 5 400 0.1
 float HSM_NON_INTEGER_SCALE_OFFSET = global.HSM_NON_INTEGER_SCALE_OFFSET / 100;
 
 #pragma parameter HSM_SNAP_TO_INT_SCALE_TOLERANCE 				"      Snap To Int-Scale Tolerance - Suggested 0.1" 0 0 3 0.01
@@ -304,7 +304,7 @@ float HSM_SCREEN_REFLECTION_POS_Y = global.HSM_SCREEN_REFLECTION_POS_Y / 600;
 //---------------------------------------------------------------------------------------------------
 #pragma parameter HSM_SCREEN_EDGE_TITLE							"[ SCREEN EDGE ]________________________________________________" 0 0 0.01 0.01
 
-#pragma parameter HSM_SCREEN_CORNER_RADIUS 						"      Corner Radius - Def 10" 10 2 70 1
+#pragma parameter HSM_SCREEN_CORNER_RADIUS 						"      Corner Radius - Def 10" 10 4 500 1
 #define HSM_SCREEN_CORNER_RADIUS global.HSM_SCREEN_CORNER_RADIUS
 
 #pragma parameter HSM_SCREEN_EDGE_SHARPNESS 					"      Edge Sharpness - Def 40" 40 0 90 1
@@ -334,18 +334,6 @@ float HSM_TUBE_STATIC_REFLECTION_IMAGE_SCALE = global.HSM_TUBE_STATIC_REFLECTION
 
 // #pragma parameter HSM_TUBE_STATIC_REFLECTION_IMAGE_DITHERING_SAMPLES  "[ TUBE IMAGES ]   Tube Static Reflection Noise Samples (Reduces Banding)" 0 0 10 1
 // float HSM_TUBE_STATIC_REFLECTION_IMAGE_DITHERING_SAMPLES = global.HSM_TUBE_STATIC_REFLECTION_IMAGE_DITHERING_SAMPLES;
-
-
-
-//---------------------------------------------------------------------------------------------------
-//    CRT is Last Pass
-//---------------------------------------------------------------------------------------------------
-#pragma parameter HSM_CRTLASTPASS_TITLE							"[ CRT IS LAST PASS ]___________________________________________" 0 0 0.01 0.01
-
-#pragma parameter HSM_CRT_IS_LAST_PASS 							"      CRT is Last Pass" 0 0 1 1
-#define HSM_CRT_IS_LAST_PASS global.HSM_CRT_IS_LAST_PASS
-
-
 
 //---------------------------------------------------------------------------------------------------
 //    INTRO IMAGE
@@ -461,10 +449,10 @@ float HSM_TUBE_STATIC_REFLECTION_IMAGE_SCALE = global.HSM_TUBE_STATIC_REFLECTION
 #pragma parameter HSM_BZL_SCALE_OFFSET 							"      Scale Offset" 100 1 200 0.1
 #define HSM_BZL_SCALE_OFFSET global.HSM_BZL_SCALE_OFFSET / 100
 
-#pragma parameter HSM_BZL_INNER_CURVATURE_SCALE 				"      Inner Curvature Scale Multiplier" 100 0 2000 10
+#pragma parameter HSM_BZL_INNER_CURVATURE_SCALE 				"      Inner Curvature Scale Multiplier" 100 0 8000 10
 #define HSM_BZL_INNER_CURVATURE_SCALE global.HSM_BZL_INNER_CURVATURE_SCALE / 100
 
-#pragma parameter HSM_BZL_INNER_CORNER_RADIUS_SCALE	    "      Inner Corner Radius Scale - Def 50" 50 0 100 1
+#pragma parameter HSM_BZL_INNER_CORNER_RADIUS_SCALE	    "      Inner Corner Radius Scale - Def 50" 50 0 8000 1
 float HSM_BZL_INNER_CORNER_RADIUS_SCALE = global.HSM_BZL_INNER_CORNER_RADIUS_SCALE / 100;
 
 #ifndef HSM_SCREENFX_SCANLINE_RES

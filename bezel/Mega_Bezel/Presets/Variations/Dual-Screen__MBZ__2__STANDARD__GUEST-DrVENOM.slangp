@@ -1,4 +1,4 @@
-#reference "../base/MBZ__2__STANDARD__GUEST-DrVENOM.slangp"
+#reference "../MBZ__2__STANDARD.slangp"
 
 HSM_DUALSCREEN_MODE = 1
 HSM_ASPECT_RATIO_EXPLICIT = 1.333

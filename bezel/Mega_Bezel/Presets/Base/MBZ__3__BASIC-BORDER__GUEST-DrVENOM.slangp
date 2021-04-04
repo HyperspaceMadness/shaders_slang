@@ -80,7 +80,7 @@ shaders = 10
 
 
 // Define textures to be used by the different passes
-textures = "SamplerLUT1;SamplerLUT2;SamplerLUT3;IntroImage;ScreenPlacementImage;ColoredGelImage;TubeStaticReflectionImage;BackgroundImage;"
+textures = "SamplerLUT1;SamplerLUT2;SamplerLUT3;IntroImage;ScreenPlacementImage;ColoredGelImage;TubeStaticReflectionImage;BackgroundImage;BackgroundVertImage;"
 
 SamplerLUT1 = ../../shaders/HyperspaceMadness/textures/lut/16.png
 SamplerLUT1_linear = true
@@ -103,6 +103,9 @@ TubeStaticReflectionImage_linear = true
 
 BackgroundImage = ../../shaders/HyperspaceMadness/textures/Baked_Frame_Carbonfiber_Background.png
 BackgroundImage_linear = true
+
+BackgroundVertImage = ../../shaders/HyperspaceMadness/textures/Baked_Frame_Carbonfiber_Background_Vert.png
+BackgroundVertImage_linear = true
 
 // Parameters
 HSM_CRT_IS_LAST_PASS = 1

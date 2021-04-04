@@ -1287,7 +1287,7 @@ vec4 HSM_BlendModeLayerMix(vec4 color_under, vec4 color_over, float blend_mode, 
 	return out_color;
 }
 
-vec4 HSM_GetPostCrtPreppedColor(vec4 in_color_linear, vec2 VIEWPORT_COORD, vec2 screen_curved_coord, in sampler2D ColoredGelImage, in sampler2D TubeStaticReflectionImage, in sampler2D BackgroundImage)
+vec4 HSM_GetPostCrtPreppedColor(vec4 in_color_linear, vec2 VIEWPORT_COORD, vec2 screen_curved_coord, in sampler2D ColoredGelImage, in sampler2D TubeStaticReflectionImage, in sampler2D BackgroundImage, in sampler2D BackgroundVertImage)
 {
 	vec4 out_color = in_color_linear;
 	float screen_mask = HSM_GetCornerMask((screen_curved_coord - 0.5) * 0.999 + 0.5, SCREEN_ASPECT, HSM_SCREEN_CORNER_RADIUS, 0.9);
@@ -1367,7 +1367,12 @@ vec4 HSM_GetPostCrtPreppedColor(vec4 in_color_linear, vec2 VIEWPORT_COORD, vec2 
 			if (HSM_STANDARD_IMG_ASPECT_RATIO == 2)
 				background_img_coord.y = (VIEWPORT_COORD.y - 0.5) / (0.5625/final_viewport_aspect) + 0.5;
 
-			vec4 background_image_color = texture(BackgroundImage, background_img_coord);
+			vec4 background_image_color = vec4(0);
+			if (SCREEN_ASPECT > 1) 
+				background_image_color = texture(BackgroundImage, background_img_coord);
+			else
+				background_image_color = texture(BackgroundVertImage, background_img_coord);
+
 			background_image_color = HSM_Linearize(background_image_color, HSM_DEFAULT_SRGB_GAMMA);
 			if (HSM_STANDARD_BG_SHOW_OVER_SCREEN == 0)
 			{

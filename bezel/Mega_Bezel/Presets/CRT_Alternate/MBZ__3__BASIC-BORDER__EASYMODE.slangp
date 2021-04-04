@@ -51,7 +51,7 @@ alias8 = BR_CRTPass
 shaders = 9
 
 // Define textures to be used by the different passes
-textures = "SamplerLUT1;SamplerLUT2;SamplerLUT3;IntroImage;ScreenPlacementImage;ColoredGelImage;TubeStaticReflectionImage;BackgroundImage;ReflectionMaskImage;FrameTextureImage;CabinetGlassImage;BezelImage;BezelVertImage;DecalImage;NightLightingImage;LEDImage;TopLayerImage;"
+textures = "SamplerLUT1;SamplerLUT2;SamplerLUT3;IntroImage;ScreenPlacementImage;ColoredGelImage;TubeStaticReflectionImage;BackgroundImage;BackgroundVertImage;ReflectionMaskImage;FrameTextureImage;CabinetGlassImage;BezelImage;BezelVertImage;DecalImage;NightLightingImage;LEDImage;TopLayerImage;"
 
 SamplerLUT1 = ../../shaders/HyperspaceMadness/textures/lut/16.png
 SamplerLUT1_linear = true
@@ -72,8 +72,6 @@ ColoredGelImage_linear = true
 TubeStaticReflectionImage = ../../shaders/HyperspaceMadness/textures/TubeGlassOverlayImage_3840x2160.png
 TubeStaticReflectionImage_linear = true
 
-
-
 ReflectionMaskImage = ../../shaders/HyperspaceMadness/textures/Placeholder_White_16x16.png
 ReflectionMaskImage_linear = true
 
@@ -82,6 +80,9 @@ FrameTextureImage_linear = true
 
 BackgroundImage = ../../shaders/HyperspaceMadness/textures/Baked_Frame_Carbonfiber_Background.png
 BackgroundImage_linear = true
+
+BackgroundVertImage = ../../shaders/HyperspaceMadness/textures/Baked_Frame_Carbonfiber_Background.png
+BackgroundVertImage_linear = true
 
 CabinetGlassImage = ../../shaders/HyperspaceMadness/textures/Placeholder_Transparent_16x16.png
 CabinetGlassImage_linear = true

@@ -113,7 +113,7 @@ shaders = 18
 
 
 // Define textures to be used by the different passes
-textures = "SamplerLUT1;SamplerLUT2;SamplerLUT3;IntroImage;ScreenPlacementImage;ColoredGelImage;TubeStaticReflectionImage;BackgroundImage;ReflectionMaskImage;FrameTextureImage;CabinetGlassImage;BezelImage;BezelVertImage;DecalImage;NightLightingImage;LEDImage;TopLayerImage;"
+textures = "SamplerLUT1;SamplerLUT2;SamplerLUT3;IntroImage;ScreenPlacementImage;ColoredGelImage;TubeStaticReflectionImage;BackgroundImage;BackgroundVertImage;ReflectionMaskImage;FrameTextureImage;CabinetGlassImage;BezelImage;BezelVertImage;DecalImage;NightLightingImage;LEDImage;TopLayerImage;"
 
 SamplerLUT1 = ../../shaders/HyperspaceMadness/textures/lut/16.png
 SamplerLUT1_linear = true
@@ -145,6 +145,9 @@ FrameTextureImage_linear = true
 BackgroundImage = ../../shaders/HyperspaceMadness/textures/BackgroundImage_Carbon_3840x2160.png
 BackgroundImage_linear = true
 
+BackgroundVertImage = ../../shaders/HyperspaceMadness/textures/BackgroundImage_Carbon_3840x2160.png
+BackgroundVertImage_linear = true
+
 CabinetGlassImage = ../../shaders/HyperspaceMadness/textures/Placeholder_Transparent_16x16.png
 CabinetGlassImage_linear = true
 
@@ -172,6 +175,7 @@ HSM_ASPECT_RATIO_EXPLICIT = 1.5
 HSM_INT_SCALE_MODE = 2
 HSM_INT_SCALE_BORDER_MIN_HEIGHT = 15
 HSM_CURVATURE_MODE = -1
+HSM_SCREEN_CORNER_RADIUS = 4
 HSM_COLOR_CRT_PROFILE = 0
 HSM_TUBE_BLACK_EDGE_THICKNESS = 50
 HSM_BZL_WIDTH = 160
@@ -181,7 +185,7 @@ HSM_FRM_THICKNESS = 100
 LCD_RSUBPIX_R = 0.75
 LCD_GSUBPIX_G = 0.75
 LCD_BSUBPIX_B = 0.75
-LCD_GAIN = 2
+LCD_GAIN = 1.8
 LCD_GAMMA = 2.2
 LCD_BLACK_LEVEL = 0
 LCD_BGR = 1

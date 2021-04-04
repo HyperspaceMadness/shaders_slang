@@ -68,16 +68,21 @@ Changes:
     * Image Cutout for Top Image
 
   *  Performance of Base presets at 3840x2160 on Nvidia RTX2060:
-    *  
+    *  BASIC-BORDER - 280 FPS
 
 Mega Bezel Still to Come:
 
+  * Fix bezel corner param range
+  * Fix frame inner edge color not picking up HSV, (Advanced Preset?)
+  * Reorg Presets so we have base presets which reference the CRT presets
+  * 
   * Fix bright area of screen showing outside the black line when bezel is hidde
   * HSV for Background
   * Dual Screen
     * Put Logo on Screen 1
     * Combine frame shadows
   * Add Mode to show masks and color for output for a basic-border preset
+  * Performance test a Reflection Only preset
   * Add Images and Readme to root of the Repo
   * Update Doc Readme
   * Add Cutout to Simple Preset? 
@@ -149,13 +154,15 @@ Mega Bezel Still to Come:
 
 Retroarch Features
 
+
+  * Shader Textures in Sub Menu - Add ability to set texture overrides in retroarch UI
+  * Next/Previous Shader sometimes uses different directories
   * Replace Text, for shader type, game & core, content directory
     core_name
     game_name
     [shadertype], [gamename], [corename], [contentdirectory]
     * Check textures and use default if not found
   * Shader Passes in Sub Menu
-  * Shader Textures in Sub Menu - Add ability to set texture overrides in retroarch UI
   * Multiple references in one file for adding passes and parameter overrides
   * Add Shader Preset - In UI Add a shader preset to Concatenate passes at beginning of shader stack
   * Fix loss of current parameter values when retroarch goes from full screen to window

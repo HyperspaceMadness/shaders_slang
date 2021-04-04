@@ -75,11 +75,12 @@ layout(set = 0, binding = 5) uniform sampler2D BR_MirrorFullscreenGlowPass;
 layout(set = 0, binding = 6) uniform sampler2D TubeStaticReflectionImage;
 layout(set = 0, binding = 7) uniform sampler2D ColoredGelImage;
 layout(set = 0, binding = 8) uniform sampler2D BackgroundImage;
-layout(set = 0, binding = 9) uniform sampler2D ReflectionMaskImage;
-layout(set = 0, binding = 10) uniform sampler2D NightLightingImage;
-layout(set = 0, binding = 11) uniform sampler2D LEDImage;
-layout(set = 0, binding = 12)  uniform sampler2D FrameTextureImage;
-layout(set = 0, binding = 13)  uniform sampler2D TopLayerImage;
+layout(set = 0, binding = 9)  uniform sampler2D BackgroundVertImage;
+layout(set = 0, binding = 10) uniform sampler2D ReflectionMaskImage;
+layout(set = 0, binding = 11) uniform sampler2D NightLightingImage;
+layout(set = 0, binding = 12) uniform sampler2D LEDImage;
+layout(set = 0, binding = 13)  uniform sampler2D FrameTextureImage;
+layout(set = 0, binding = 14)  uniform sampler2D TopLayerImage;
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
 void main()
@@ -512,7 +513,12 @@ FragColor = frag_color_linear + reflected_color;
 	if (HSM_STANDARD_IMG_ASPECT_RATIO == 2)
 		image_coord.y = (VIEWPORT_COORD.y - 0.5) / (0.5625/final_viewport_aspect) + 0.5;
 
-	vec4 bg_layer = texture(BackgroundImage, image_coord);
+	vec4 bg_layer = vec4(0);
+	if (SCREEN_ASPECT > 1) 
+		bg_layer = texture(BackgroundImage, image_coord);
+	else
+		bg_layer = texture(BackgroundVertImage, image_coord);
+
 	bg_layer = HSM_Linearize(bg_layer, HSM_DEFAULT_SRGB_GAMMA);
 
 	vec4 led_layer = texture(LEDImage, image_coord);

@@ -225,6 +225,7 @@ layout(set = 0, binding = 2) uniform sampler2D BR_CRTAndReflectionPass;
 
 // Image Textures from disk
 layout(set = 0, binding = 3)  uniform sampler2D BackgroundImage;
+layout(set = 0, binding = 4)  uniform sampler2D BackgroundVertImage;
 layout(set = 0, binding = 5)  uniform sampler2D CabinetGlassImage;
 layout(set = 0, binding = 6)  uniform sampler2D BezelImage;
 layout(set = 0, binding = 7)  uniform sampler2D BezelVertImage;
@@ -540,7 +541,10 @@ void main()
 	vec4 background_image = vec4(0);
 	if (HSM_BG_OPACITY > 0)
 	{
-		background_image = texture(BackgroundImage, background_coord);
+		if (SCREEN_ASPECT > 1) 
+			background_image = texture(BackgroundImage, background_coord);
+		else
+			background_image = texture(BackgroundVertImage, background_coord);
 
 		// Premultiply Alpha
 		background_image = HSM_GetPreMultipliedColorLinear(background_image, HSM_BG_SOURCE_MATTE_TYPE, HSM_DEFAULT_SRGB_GAMMA);

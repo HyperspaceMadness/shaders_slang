@@ -284,6 +284,7 @@ layout(set = 0, binding = 5) uniform sampler2D InfoCachePass;
 layout(set = 0, binding = 6) uniform sampler2D ColoredGelImage;
 layout(set = 0, binding = 7) uniform sampler2D TubeStaticReflectionImage;
 layout(set = 0, binding = 8) uniform sampler2D BackgroundImage;
+layout(set = 0, binding = 9)  uniform sampler2D BackgroundVertImage;
 
 #define Texture Source
 
@@ -807,7 +808,7 @@ void main()
 	FragColor = vec4(color, 1);
 	
 	// Prep and add output gamma
-	FragColor = HSM_GetPostCrtPreppedColor(FragColor, vTexCoord, screen_curved_coord, ColoredGelImage, TubeStaticReflectionImage, BackgroundImage);
+	FragColor = HSM_GetPostCrtPreppedColor(FragColor, vTexCoord, screen_curved_coord, ColoredGelImage, TubeStaticReflectionImage, BackgroundImage, BackgroundVertImage);
 	// End Addition
 }
 

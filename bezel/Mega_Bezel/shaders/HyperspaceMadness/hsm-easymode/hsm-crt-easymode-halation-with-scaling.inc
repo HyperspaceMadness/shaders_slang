@@ -165,9 +165,10 @@ layout(set = 0, binding = 1) uniform sampler2D Source;
 layout(set = 0, binding = 2) uniform sampler2D InfoCachePass;
 layout(set = 0, binding = 3) uniform sampler2D ORIG_LINEARIZED;
 
-layout(set = 0, binding = 4) uniform sampler2D BackgroundImage;
-layout(set = 0, binding = 5) uniform sampler2D ColoredGelImage;
-layout(set = 0, binding = 6) uniform sampler2D TubeStaticReflectionImage;
+layout(set = 0, binding = 4) uniform sampler2D ColoredGelImage;
+layout(set = 0, binding = 5) uniform sampler2D TubeStaticReflectionImage;
+layout(set = 0, binding = 6) uniform sampler2D BackgroundImage;
+layout(set = 0, binding = 7) uniform sampler2D BackgroundVertImage;
 
 void main()
 {
@@ -347,6 +348,6 @@ void main()
     FragColor = vec4(col, 1);
 
 	// HSM Added Prep and add output gamma
-	FragColor = HSM_GetPostCrtPreppedColor(FragColor, vTexCoord, screen_curved_coord, ColoredGelImage, TubeStaticReflectionImage, BackgroundImage);
+	FragColor = HSM_GetPostCrtPreppedColor(FragColor, vTexCoord, screen_curved_coord, ColoredGelImage, TubeStaticReflectionImage, BackgroundImage, BackgroundVertImage);
 	// End Addition
 }

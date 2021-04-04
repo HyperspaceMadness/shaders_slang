@@ -76,10 +76,8 @@ Changes:
 
 Mega Bezel Still to Come:
 
-  * Shift Intro to the end?
   * Fix frame inner edge color not picking up HSV, (Advanced Preset?)
-  * Fix STANDARD Image Aspect when it is 9:16
-  * Fix bright area of screen showing outside the black line when bezel is hidde
+  * Fix bright area of screen showing outside the black line when bezel is hidden
   * HSV for Background?
   * Dual Screen
     * Put Logo on Screen 1

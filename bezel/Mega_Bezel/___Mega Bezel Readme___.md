@@ -51,26 +51,34 @@ Presets are named/sorted by performance
 The most flexible and most resource hungry are at the top starting with index 0
 As the name's index number increases the presets get faster but less flexible
 
-  * **Group 1 ADVANCED**
+**Presets in Mega_Bezel / Presets**
+
+- All of the presets in the root of the Presets folder use @guest.r's awesome Guest-DrVenom CRT shader
+
+  * **MBZ______1______ADVANCED**
     * Most flexible shader presets, one preset for each different CRT Shader 
+    * Guest-DrVenom preset is considered the default preset
     * Includes MDAPT, ScaleFX & GTU
-    * The Guest-DrVenom preset is considered the default preset
-  * **Group 2 GLASS** - Glass presets which show a blurry reflection in the area around the screen 
-    * Includes MDAPT, ScaleFX & GTU
+  * **MBZ______2______GLASS** - Glass presets which show a blurry reflection in the area around the screen 
     * Reflection is the last pass
     * Does not include advanced image layering.
-  * **Group 3 STANDARD**
-      * Same as Base except extra passes before the CRT pass removed 
-      * No MDAPT, ScaleFX & GTU
-      * Includes some of image layers with basic settings to adjust application
+    * Includes MDAPT, ScaleFX & GTU
+  * **MBZ______2______STANDARD**
+      * Includes the basic image layering
       * Reflection is the last pass
-      * Does not include advanced image layering.
-  * **Group 4 BASIC-BORDER**
+      * Includes MDAPT, ScaleFX & GTU
+  * **MBZ______3______BASIC-BORDER**
+    * No Reflections
     * Includes the screen scaling and screen effects like fake scanlines
     * Includes a Background image to function similarly to how a RetroArch overlay does
     * The CRT pass is the last pass
 
-**Presets in Mega_Bezel/Variations**
+**Presets in Mega_Bezel / Presets / Base_CRT_Presets**
+
+- Includes presets using different crt shaders for the screen
+- Look here for the LCD preset
+
+**Presets in Mega_Bezel / Presets / Variations**
 
   * These presets are simple presets referencing one of the presets in the Mega_Bezel folder
   * They reference the original preset then have adjusted parameters or texture paths
@@ -79,31 +87,29 @@ As the name's index number increases the presets get faster but less flexible
 Troubleshooting
 ----------------------------------------
 
- * If you have difficulties loading the shader try loading it with the imageviewer core
+ * **If you have difficulties loading the shader** try loading it with the imageviewer core
     * **Steps**
         * Add the imageviewer core to Retroarch with the online updater
         * Open an image with this core
         * Load the shader
         * If the shader loads correctly then the shader is working.
-    
- * When the shader works in imageviewer, but doesn’t work when using a core, it is probably related to the core, or the graphics card being overwhelmed by resource usage with both the core requirements and the shader requirements
-   
- * If you still have difficulties loading the shader with a specific core update the core
- * If you still have difficulties download a new separate version of Retroarch and try it there. Sometimes problems lurk in a random config file which is very hard to track down
-   
+        
+     * When the shader works in imageviewer, but doesn’t work when using a core, it is probably related to the core, or the graphics card being overwhelmed by resource usage with both the core requirements and the shader requirements
+       
+     * If you still have difficulties loading the shader with a specific core update the core
+     * If you still have difficulties download a new separate version of Retroarch and try it there. Sometimes problems lurk in a random config file which is very hard to track down
  * **To see errors** coming from Retroarch you need to set up your logging settings:
     * **Logging - Logging Verbosity - ON**
       * **Frontend Logging - 0(Debug)**
       * **Log to File - Off**
     * These settings will **cause a log window to come up** when you launch, and you should see any Retroarch errors, and shader loading details
-
- * If the Screen is changing size unexpectedly
+ * **If the Screen is changing size unexpectedly**
     * If the screen changes size when loading a game or switching between different parts of the game e.g. gameplay vs cinematic, this is because of the interaction between the different resolutions the core is outputting on different screens and the shader's integer scale or automatic aspect ratio settings.
-    * To fix
-      * Make sure Integer Scale is OFF in the RetroArch Video Settings
-      * If BOTH the HEIGHT and WIDTH of the screen size are changing size
+    * **To fix**
+      * **Make sure Integer Scale is OFF in the RetroArch Video Settings**
+      * **If BOTH the HEIGHT and WIDTH of the screen size are changing size**
         * Set the Integer scale mode to OFF (0)
-      * If ONLY the WIDTH of the screen is changing size (the HEIGHT stays constant)
+      * **If ONLY the WIDTH of the screen is changing size** (the HEIGHT stays constant)
         * Set the Aspect Ratio Type to Explicit (1) This will use the explicit aspect ratio number instead of guessing
         * If this solves your issue please consider posting on the thread at the top of this document the issue you had so that we can improve the auto aspect ratio in the future
 
@@ -165,8 +171,7 @@ Parameter Descriptions
 - **Position Y** - Moves the entire screen and frame up and down
 
 **[CROPPING]____________________________________________________________________________________**
-    Cropping allows you to hide edges of the game image which were never meant to be seen 
-    Negative values add empty space at the edges of the tube
+    Cropping allows you to hide edges of the game image which were never meant to be seen
 
 - **Crop Overscan Top**
 - **Crop Overscan Bottom**
@@ -175,7 +180,7 @@ Parameter Descriptions
 
 **[CORE RES SAMPLING]____________________________________________________________________________________**
 
-- Adjusting core res sampling changes how the CRT perceives the core resolution
+- **Adjusting core res sampling changes how the CRT perceives the core resolution**
   e.g. If you use a core with 4X internal resolution you can set core res sampling to 0.25 it will appear if it was at 1x resolution
   To use **ScaleFX** to smooth the shapes in the core image you will need to set the core res sampling higher than 1, otherwise you will not see the increased smoothing coming from ScaleFX
 
@@ -271,61 +276,6 @@ Parameter Descriptions
 
 - **CRT is Last Pass**
   - Blacks out outside the screen, used for the scaling only presets
-
-**[ INTRO SEQUENCE ]________________________________________________________________________________________________________**
-​	Animation sequence which plays when the content starts up, animation times are in frames. The frame rate for most games 60 fps
-
-- **Show Intro**
-  - 0 - OFF
-  - 1 - When Content Loads
-  - 2 - Repeat
-- **Speed**
-  - Overall speed of the entire intro. 1 is full speed
-
-**[ INTRO LOGO ]________________________________________________________________________________________________________**
-
-- **Logo Blend Mode**
-  - 0 - Off
-  - 1 - Normal Blending
-  - 2 - Additive Blending - Added on as added with a projector
-  - 3 - Multiply Blending - Image is applied by darkening the under layer
-- **Logo Over Solid Color**
-  - 0 - Off - The Logo is layered under the solid color
-  - 1 - ON - The Logo is layered over the solid color
-- **Logo Height (0 for exact resolution)**
-- **Logo Res X**
-  - X Resolution of the logo image
-- **Logo Res Y**
-  - Y Resolution of the logo image
-- **Logo Placement **
-  - 0 - Middle
-  - 1 - Top Left
-  - 2 - Top Right
-  - 3 - Bottom Left
-  - 4 - Bottom Right
-- **Logo Wait Before Start Frames**
-  - How many frames before it starts to fade in
-- **Logo Fade In Frames**
-  - How many frames to fade in
-- **Logo Hold Frames**
-  - How many frames to hold the image at full opacity before the fade out starts
-- **Logo Fade Out Frames**
-  - How many frames to fade out
-
-**[ INTRO SOLID COLOR ]_____________________________________________________________________________________________________**
-
-- **Solid Color Blend Mode**
-  - 0 - Off
-  - 1 - Normal Blending
-  - 2 - Additive Blending - Added on as added with a projector
-  - 3 - Multiply Blending - Image is applied by darkening the under layer
-- **Solid Color Hue**
-- **Solid Color Saturation**
-- **Solid Color Value**
-- **Solid Color Hold Frames**
-  - How many frames to hold the solid color
-- **Solid Color Fade Out Frames**
-  - How many frames to fade out
 
 **[ INTRO STATIC NOISE ]____________________________________________________________________________________________________**
 
@@ -545,23 +495,7 @@ Parameter Descriptions
 **[ GLASS BORDER ]______________________________________________________________________________________________________**
 
 - **Glass Border ON (Glass Preset Only)**
-  - Changes the appearance of the reflection to look like the glass effect
-
-**[ REFLECT ONLY IMAGE LAYER ]__________________________________________________________________________________________________**
-
-- **Opacity**
-  - Opacity of the image to be applied
-- **Blend Mode** - Default is Additive
-  - **0 - Off** - Don't show the layer
-  - **1 - Normal Blending**
-  - **2 - Additive Blending** - Applied additively to brighten what's underneath
-- **Aspect Ratio**
-  - **0 - Full** - Use the viewport's aspect ratio
-  - **1 - 16:9** - Show the image with a 16:9 aspect ratio
-  - **2 - 9:16** - Show the image with a 16:9 aspect ratio
-- **Mask Reflection to Bezel**
-  - Limit the reflection to only appear inside the bezel area
-  - Often used with the reflection only preset to show the reflection inside the bezel area shown in the image
+  - Changes the appearance of the reflection to look like the glass effect, this is here for technical reasons, not very useful to change interactively
 
 **[ DUAL SCREEN ]____________________________________________________________**
 
@@ -569,36 +503,142 @@ Parameter Descriptions
   - **0 - OFF** - Single Screen
   - **1 - VERTICAL** - Split into 2 screens one on the top and one on the bottom
   - **2 - HORIZONTAL** - Split into 2 screens one on the left and one on the right
+  
 - **Core Image Split Mode**
   - **0 - AUTO**
   - **1 - VERTICAL**
   - **2 - HORIZONTAL**
-- Core Image Split Offset
-- Crop Edges of 2nd Screen
-- Viewport Split Offset
-- Shift Position with Screen Scale
-- Position Offset Between Screens
-- 2nd Screen Aspect Ratio Mode - Same as 1st Screen | PAR
-- 2nd Screen Use Independent Scale
-- 2nd Screen Scale Offset
-- 2nd Screen Pos X
-- 2nd Screen Pos Y
+  
+- **Core Image Split Offset**
 
+  - Adjusts where we split the core image into two
+  - This is an offset in pixels from the center
 
+- **Crop Edges of 2nd Screen**
+
+  - This crops the edges perpendicular to split
+  - Useful in situations like  the 3DS where when in a top/bottom emulator layout the bottom area has black areas at left and right of the screen 
+  - Value in Pixels
+
+- **Viewport Split Offset**
+
+  - Sets where the viewport split placed. The split defines the area where one screen or the other appears
+  - Value is a percentage from the center of the screen
+
+- **Scale Screens from Center of Split**
+
+  - 0 - OFF - The screens will scale their center
+  - 1 - ON - The screens will scale from the split position rather than from their own centers
+
+- **Position Offset Between Screens**
+
+  - Positive values move screens apart
+  - Negative values move screens closer to each other
+
+- **2nd Screen Aspect Ratio Mode**
+
+  - 0 - Use the same Aspect ratio as the first Screen
+  - 1 - PAR (Uses the square pixel aspect of the bottom screen's resolution)
+
+- **2nd Screen Use Independent Scale**
+
+  - Don't affect the second screen with the scale of the first
+
+- **2nd Screen Scale Offset**
+
+  - Increase or Decrease scale of second screen
+
+- **2nd Screen Pos X**
+
+  - Move the second screen Horizontally
+
+- **2nd Screen Pos Y**
+
+  - Move the second screen Vertically
+
+  
+
+## **BASIC-BORDER Presets Only**
+
+**[ BASIC BACKGROUND IMAGE LAYER ]__________________________________________**
+
+- **Aspect Ratio**
+
+  - **Full** - Image fills the viewport
+  - **16:9** - For landscape aspect images
+  - **9:16** - For portrait aspect images
+
+- **Background Image Opacity**
+
+- **Background Blend Mode** - Default is Additive
+
+  - **Off** - Image is not applied
+  - **Normal**
+  - **Additive** - Adds the image as if it is being projected on top
+  - **Multiply** - Image is applied as if it was a colored plastic film
+
+- **Background Show over Screen**
+
+  - Background is applied on top of the screen
+
+  - Since the default blend mode is additive this gives a backdrop effect
+
+    
+
+## **GLASS Presets Only**
+
+**[ GLASS IMAGE LAYER ]__________________________________________**
+
+- **Background Image Opacity**
+
+- **Background Blend Mode** - Default is Additive
+
+  - **Off** - Image is not applied
+
+  - **Normal**
+
+  - **Additive** - Adds the image as if it is being projected on top
+
+  - **Multiply** - Image is applied as if it was a colored plastic film
+
+    
+
+## **STANDARD Presets Only**
 
 **[ STANDARD IMAGE LAYERS ]__________________________________________**
 
-- Aspect Ratio
-  - Full
-  - 16:9
-  - 9:16
-- Background Image Opacity
-- Background Blend Mode 
-- Show Background over Screen
-- LED Image Opacity
-- LED Blend Mode
-- Top Extra Image Opacity
-- Top Extra Image Blend Mode
+- **Aspect Ratio**
+  - **Full** - Image fills the viewport
+  - **16:9** - For landscape aspect images
+  - **9:16** - For portrait aspect images
+- **Background Image Opacity**
+- **Background Blend Mode** - Default is Additive
+  - **Off** - Image is not applied
+  - **Normal**
+  - **Additive** - Adds the image as if it is being projected on top
+  - **Multiply** - Image is applied as if it was a colored plastic film
+- **Background Show over Screen**
+  - Background is applied on top of the screen
+  - Since the default blend mode is additive this gives a backdrop effect
+- **LED Image Opacity**
+- **LED Blend Mode**
+- **Top Extra Image Opacity**
+- **Top Extra Image Blend Mode**
+
+**[ STATIC IMAGE LAYER GAMMA  ]________________________________________________________________________________________________________**
+
+- **Static Layers Gamma Adjust**
+  - Adjust the Gamma on all layers to brighten or darken all of them
+
+**[ NIGHT LIGHTING ]____________________________________________________________________**
+
+- **Opacity**
+
+  - How much of the night lighting darkening effect is applied
+
+  
+
+## **ADVANCED Presets Only**
 
 **[ NIGHT LIGHTING ]____________________________________________________________________**
 
@@ -772,7 +812,7 @@ Used to cut a rectangular area from the layers, for example cutting out the hole
 - **Opacity**
 - **Blend Mode**
 - **Source Matte Color**
-- **Mask
+- **Mask**
 - **Cutout Mask**
 - **Brightness**
 - **Apply NightLight & Static Gamma (0 for Backdrop)**
@@ -921,3 +961,58 @@ Used to cut a rectangular area from the layers, for example cutting out the hole
 - **Position Y**
 - **Mirror Wrap**
   - When drawing past the edges of the texture use mirror wrapping
+
+**[ INTRO SEQUENCE ]________________________________________________________________________________________________________**
+​	Animation sequence which plays when the content starts up, animation times are in frames. The frame rate for most games 60 fps
+
+- **Show Intro**
+  - 0 - OFF
+  - 1 - When Content Loads
+  - 2 - Repeat
+- **Speed**
+  - Overall speed of the entire intro. 1 is full speed
+
+**[ INTRO LOGO ]________________________________________________________________________________________________________**
+
+- **Logo Blend Mode**
+  - 0 - Off
+  - 1 - Normal Blending
+  - 2 - Additive Blending - Added on as added with a projector
+  - 3 - Multiply Blending - Image is applied by darkening the under layer
+- **Logo Over Solid Color**
+  - 0 - Off - The Logo is layered under the solid color
+  - 1 - ON - The Logo is layered over the solid color
+- **Logo Height (0 for exact resolution)**
+- **Logo Res X**
+  - X Resolution of the logo image
+- **Logo Res Y**
+  - Y Resolution of the logo image
+- **Logo Placement **
+  - 0 - Middle
+  - 1 - Top Left
+  - 2 - Top Right
+  - 3 - Bottom Left
+  - 4 - Bottom Right
+- **Logo Wait Before Start Frames**
+  - How many frames before it starts to fade in
+- **Logo Fade In Frames**
+  - How many frames to fade in
+- **Logo Hold Frames**
+  - How many frames to hold the image at full opacity before the fade out starts
+- **Logo Fade Out Frames**
+  - How many frames to fade out
+
+**[ INTRO SOLID COLOR ]_____________________________________________________________________________________________________**
+
+- **Solid Color Blend Mode**
+  - 0 - Off
+  - 1 - Normal Blending
+  - 2 - Additive Blending - Added on as added with a projector
+  - 3 - Multiply Blending - Image is applied by darkening the under layer
+- **Solid Color Hue**
+- **Solid Color Saturation**
+- **Solid Color Value**
+- **Solid Color Hold Frames**
+  - How many frames to hold the solid color
+- **Solid Color Fade Out Frames**
+  - How many frames to fade out

@@ -1,4 +1,4 @@
-#reference "../../MBZ__2__STANDARD.slangp"
+#reference ":/shaders/shaders_slang/bezel/Mega_Bezel/Presets/MBZ__2__STANDARD.slangp"
 
 ScreenPlacementImage = textures/msword-cpo.png
 TopLayerImage = textures/msword-cpo.png

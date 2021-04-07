@@ -57,7 +57,7 @@ void main()
 		vec2 outermap_warped_outside_screen_vector = outermap_warped_coord_ctr - clamp(outermap_warped_coord_ctr, -0.490, 0.490);
 		float outside_ratio_warped = clamp(length(outermap_warped_outside_screen_vector) / outermap_range, 0, 1);
 
-		float hbl_sharpness_falloff_distance = 7;
+		float hbl_sharpness_falloff_distance = 7 * HSM_REFLECT_BLUR_FALLOFF_DISTANCE;
 		if (HSM_GLASS_BORDER_ON == 1)
 			hbl_sharpness_falloff_distance = 20;
 

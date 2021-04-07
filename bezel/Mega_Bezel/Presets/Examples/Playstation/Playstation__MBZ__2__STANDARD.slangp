@@ -1,4 +1,4 @@
-#reference "../../MBZ__2__STANDARD.slangp"
+#reference ":/shaders/shaders_slang/bezel/Mega_Bezel/Presets/MBZ__2__STANDARD.slangp"
 
 BackgroundImage = textures/Playstation.png
 LEDImage = textures/Playstation_LED.png

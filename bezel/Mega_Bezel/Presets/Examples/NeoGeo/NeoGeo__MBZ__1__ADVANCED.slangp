@@ -1,4 +1,4 @@
-#reference "../../MBZ__1__ADVANCED.slangp"
+#reference ":/shaders/shaders_slang/bezel/Mega_Bezel/Presets/MBZ__1__ADVANCED.slangp"
 
 ScreenPlacementImage = textures/full_composite.png
 BackgroundImage = textures/full_marquee.png

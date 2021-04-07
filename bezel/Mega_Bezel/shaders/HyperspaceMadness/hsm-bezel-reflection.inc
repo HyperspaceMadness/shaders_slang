@@ -592,10 +592,25 @@ FragColor = frag_color_linear + reflected_color;
 	vec4 bg_layer = texture(BackgroundImage, image_coord);
 	bg_layer = HSM_Linearize(bg_layer, HSM_DEFAULT_SRGB_GAMMA);
 
-	// if (HSM_GLASS_BORDER_ON == 1)
+	bg_layer.a *= outside_tube_mask_wider * (1 - edge_mask);
+
+	frag_color_linear = HSM_BlendModeLayerMix(frag_color_linear, bg_layer, HSM_BG_BLEND_MODE, HSM_BG_OPACITY);
+	frag_color_linear += reflected_color;
+	FragColor = HSM_ApplyGamma(clamp(frag_color_linear, 0, 1), HSM_DEFAULT_SRGB_GAMMA);
+#endif
+
+#ifdef IS_BASICBORDERWITHREFLECT_PRESET
+	reflected_color *= 1 - OUTSIDE_BEZEL_MASK;
+
+	vec4 bg_layer = vec4(0);
+	if (SCREEN_ASPECT > 1)
+		bg_layer = texture(BackgroundImage, VIEWPORT_COORD);
+	else
+		bg_layer = texture(BackgroundVertImage, VIEWPORT_COORD);
+	bg_layer = HSM_Linearize(bg_layer, HSM_DEFAULT_SRGB_GAMMA);
+
+	if (HSM_STANDARD_BG_SHOW_OVER_SCREEN == 0)
 		bg_layer.a *= outside_tube_mask_wider * (1 - edge_mask);
-	// else
-	// 	bg_layer *= outside_tube_mask;
 
 	frag_color_linear = HSM_BlendModeLayerMix(frag_color_linear, bg_layer, HSM_BG_BLEND_MODE, HSM_BG_OPACITY);
 	frag_color_linear += reflected_color;

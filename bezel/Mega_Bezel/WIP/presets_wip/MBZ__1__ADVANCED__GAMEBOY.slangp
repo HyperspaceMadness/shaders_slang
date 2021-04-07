@@ -4,14 +4,14 @@
 shader0 = ../../shaders/HyperspaceMadness/hsm-prep-info-cache-advanced.slang
 float_framebuffer0 = true
 scale_type0 = source
-scale0 = 0.125
+scale0 = 1
 alias0  = "InfoCachePass"
 
 // Add Intro Animation
 shader1 = ../../shaders/HyperspaceMadness/hsm-prep-intro.slang
 float_framebuffer1 = true
 scale_type1 = source
-scale1 = 8
+scale1 = 1
 alias1  = "ColorCorrectPass"
 
 shader2 = ../../shaders/HyperspaceMadness/hsm-gameboy/hsm-gb-pass0.slang

@@ -1,0 +1,13 @@
+#reference "../MBZ__3__BASIC-BORDER-WITH-REFLECT.slangp"
+
+BackgroundImage = ../../shaders/HyperspaceMadness/textures/Placeholder_Transparent_16x16.png
+BackgroundVertImage = ../../shaders/HyperspaceMadness/textures/Placeholder_Transparent_16x16.png
+NightLightingImage = ../../shaders/HyperspaceMadness/textures/Placeholder_Transparent_16x16.png
+FrameTextureImage = ../../shaders/HyperspaceMadness/textures/Placeholder_Transparent_16x16.png
+
+// Parameters
+HSM_BZL_OPACITY = "0.000000"
+HSM_BZL_WIDTH = "350.000000"
+HSM_BZL_HEIGHT = "200.000000"
+HSM_FRM_OPACITY = "0.000000"
+HSM_BG_OPACITY = "0.000000"

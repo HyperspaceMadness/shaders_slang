@@ -218,6 +218,10 @@ float HSM_REFLECT_BLUR_MIN = global.HSM_REFLECT_BLUR_MIN / 100;
 #pragma parameter HSM_REFLECT_BLUR_MAX 							    "      Max Blur" 	95 0 100 1
 float HSM_REFLECT_BLUR_MAX = global.HSM_REFLECT_BLUR_MAX / 100;
 
+// #pragma parameter HSM_REFLECT_BLUR_FALLOFF_DISTANCE 				"      Falloff Distance" 	100 0 500 1
+// float HSM_REFLECT_BLUR_FALLOFF_DISTANCE = global.HSM_REFLECT_BLUR_FALLOFF_DISTANCE / 100;
+
+float HSM_REFLECT_BLUR_FALLOFF_DISTANCE = 1;
 
 // Reflection Noise
 #pragma parameter HSM_REFLECT_NOISE_TITLE			                "[ REFLECTION NOISE ]___________________________________________" 0 0 0.01 0.01

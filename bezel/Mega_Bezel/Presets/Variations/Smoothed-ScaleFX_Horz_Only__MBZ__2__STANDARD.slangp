@@ -1,6 +1,7 @@
 #reference "../MBZ__2__STANDARD.slangp"
 
 BackgroundImage = ../../shaders/HyperspaceMadness/textures/HSM_Duimon_Super_Famicom_3840x2160.png
+BackgroundVertImage = ../../shaders/HyperspaceMadness/textures/HSM_Duimon_Super_Famicom_3840x2160.png
 
 HSM_CORE_RES_SAMPLING_MULT_SCANLINE_DIR = "200"
 HSM_SCANLINE_INTERLACE_TRIGGER_RES = "800.000000"

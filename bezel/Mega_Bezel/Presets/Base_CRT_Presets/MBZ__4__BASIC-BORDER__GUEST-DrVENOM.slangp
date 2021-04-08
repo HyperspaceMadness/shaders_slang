@@ -108,4 +108,4 @@ BackgroundVertImage = ../../shaders/HyperspaceMadness/textures/Baked_Frame_Carbo
 BackgroundVertImage_linear = true
 
 // Parameters
-HSM_BG_OPACITY = 100
+HSM_ASPECT_RATIO_MODE = 1

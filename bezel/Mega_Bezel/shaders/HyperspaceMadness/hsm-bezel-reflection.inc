@@ -494,13 +494,12 @@ void main()
 		frag_color_linear += black_edge_mask * HSM_TUBE_STATIC_REFLECTION_IMAGE_OPACITY * tube_highlight_image * tube_highlight_image.a;
 	}
 
-	// Clamp otherwise we get artifacts (blue overlays of brighter parts of image)
-	frag_color_linear = clamp(frag_color_linear, 0, 1);
+// Clamp otherwise we get artifacts (blue overlays of brighter parts of image)
+frag_color_linear = clamp(frag_color_linear, 0, 1);
 
-	vec4 night_lighting_image = texture(NightLightingImage, VIEWPORT_COORD);
 
-	vec2 image_coord = VIEWPORT_COORD;
-	float final_viewport_aspect = global.FinalViewportSize.x/global.FinalViewportSize.y;
+vec2 image_coord = VIEWPORT_COORD;
+float final_viewport_aspect = global.FinalViewportSize.x/global.FinalViewportSize.y;
 
 FragColor = frag_color_linear + reflected_color;
 
@@ -542,8 +541,14 @@ FragColor = frag_color_linear + reflected_color;
 			bg_layer *= outside_tube_mask;
 	}
 
+	// TODO Shift down and do all night lighting at once
+	// Add Switch for Night Lighing on BG?
+	vec4 night_lighting_image = vec4(0);
 	if (HSM_NIGHT_OPACITY > 0)
 	{
+		night_lighting_image = texture(NightLightingImage, VIEWPORT_COORD);
+		night_lighting_image = HSM_Linearize(night_lighting_image, HSM_DEFAULT_SRGB_GAMMA);
+
 		bg_layer = mix(bg_layer, bg_layer * night_lighting_image, HSM_NIGHT_OPACITY);
 		top_layer = mix(top_layer, top_layer * night_lighting_image, HSM_NIGHT_OPACITY);
 	}
@@ -602,11 +607,19 @@ FragColor = frag_color_linear + reflected_color;
 #ifdef IS_BASICBORDERWITHREFLECT_PRESET
 	reflected_color *= 1 - OUTSIDE_BEZEL_MASK;
 
+	// Image Ratio is 16:9
+	if (HSM_STANDARD_IMG_ASPECT_RATIO == 1)
+		image_coord.x = (VIEWPORT_COORD.x - 0.5) / (1.7777/final_viewport_aspect) + 0.5;
+
+	// Image Ratio is 9:16
+	if (HSM_STANDARD_IMG_ASPECT_RATIO == 2)
+		image_coord.x = (VIEWPORT_COORD.x - 0.5) / (0.5625/final_viewport_aspect) + 0.5;
+
 	vec4 bg_layer = vec4(0);
-	if (SCREEN_ASPECT > 1)
-		bg_layer = texture(BackgroundImage, VIEWPORT_COORD);
+	if (SCREEN_ASPECT > 1) 
+		bg_layer = texture(BackgroundImage, image_coord);
 	else
-		bg_layer = texture(BackgroundVertImage, VIEWPORT_COORD);
+		bg_layer = texture(BackgroundVertImage, image_coord);
 	bg_layer = HSM_Linearize(bg_layer, HSM_DEFAULT_SRGB_GAMMA);
 
 	if (HSM_STANDARD_BG_SHOW_OVER_SCREEN == 0)

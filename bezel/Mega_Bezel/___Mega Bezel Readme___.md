@@ -33,7 +33,6 @@ Installation
 ----------------------------------------
 
   * If you have previous versions of the Mega Bezel installed:
-    * Delete shaders/shaders_slang/bezel/shaders/HyperspaceMadness
     * Delete all hsm presets from shaders/shaders_slang/bezel
   * Inside the .zip is a shaders folder, drop this shaders folder directly over your existing one and everything will go into the right place
   * Set video driver to Vulcan or GLCore (Vulcan seems faster)

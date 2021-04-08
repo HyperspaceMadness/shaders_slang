@@ -1359,28 +1359,29 @@ vec4 HSM_GetPostCrtPreppedColor(vec4 in_color_linear, vec2 VIEWPORT_COORD, vec2 
 			vec2 background_img_coord = VIEWPORT_COORD;
 			float final_viewport_aspect = global.FinalViewportSize.x/global.FinalViewportSize.y;
 
+			vec2 image_coord = VIEWPORT_COORD;
 			// Image Ratio is 16:9
 			if (HSM_STANDARD_IMG_ASPECT_RATIO == 1)
-				background_img_coord.x = (VIEWPORT_COORD.x - 0.5) / (1.7777/final_viewport_aspect) + 0.5;
+				image_coord.x = (VIEWPORT_COORD.x - 0.5) / (1.7777/final_viewport_aspect) + 0.5;
 
 			// Image Ratio is 9:16
 			if (HSM_STANDARD_IMG_ASPECT_RATIO == 2)
-				background_img_coord.y = (VIEWPORT_COORD.y - 0.5) / (0.5625/final_viewport_aspect) + 0.5;
+				image_coord.x = (VIEWPORT_COORD.x - 0.5) / (0.5625/final_viewport_aspect) + 0.5;
 
-			vec4 background_image_color = vec4(0);
+			vec4 bg_layer = vec4(0);
 			if (SCREEN_ASPECT > 1) 
-				background_image_color = texture(BackgroundImage, background_img_coord);
+				bg_layer = texture(BackgroundImage, image_coord);
 			else
-				background_image_color = texture(BackgroundVertImage, background_img_coord);
+				bg_layer = texture(BackgroundVertImage, image_coord);
+			bg_layer = HSM_Linearize(bg_layer, HSM_DEFAULT_SRGB_GAMMA);
 
-			background_image_color = HSM_Linearize(background_image_color, HSM_DEFAULT_SRGB_GAMMA);
 			if (HSM_STANDARD_BG_SHOW_OVER_SCREEN == 0)
 			{
 				float outside_tube_mask = 1 - HSM_GetCornerMask(tube_curved_coord, SCREEN_ASPECT, HSM_BZL_INNER_CORNER_RADIUS_SCALE * HSM_SCREEN_CORNER_RADIUS, 0.99);
-				background_image_color *= outside_tube_mask;
+				bg_layer *= outside_tube_mask;
 			}
 
-			out_color = HSM_BlendModeLayerMix(out_color, background_image_color, HSM_BG_BLEND_MODE, HSM_BG_OPACITY);
+			out_color = HSM_BlendModeLayerMix(out_color, bg_layer, HSM_BG_BLEND_MODE, HSM_BG_OPACITY);
 		}
 	}
 

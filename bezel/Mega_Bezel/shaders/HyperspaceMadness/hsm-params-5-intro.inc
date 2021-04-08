@@ -19,7 +19,7 @@ License: GPL
 
 #pragma parameter HSM_INTRO_LOGO_TITLE							"[ INTRO LOGO ]_________________________________________________" 0 0 0.01 0.01
 
-#pragma parameter HSM_INTRO_LOGO_BLEND_MODE        				"      Logo Blend Mode - Off | Norm | Add | Mult"  1 0 3 1
+#pragma parameter HSM_INTRO_LOGO_BLEND_MODE        				"      Logo Blend Mode - OFF | NORM | ADD | MULT"  1 0 3 1
 #define HSM_INTRO_LOGO_BLEND_MODE global.HSM_INTRO_LOGO_BLEND_MODE
 
 #pragma parameter HSM_INTRO_LOGO_OVER_SOLID_COLOR       		"      Logo Over Solid Color - Off | ON"  1 0 1 1
@@ -52,7 +52,7 @@ License: GPL
 
 #pragma parameter HSM_INTRO_LOGO_SOLID_TITLE					"[ INTRO SOLID COLOR ]__________________________________________" 0 0 0.01 0.01
 
-#pragma parameter HSM_INTRO_SOLID_COLOR_BLEND_MODE      		"      Solid Color Blend Mode - Off | Norm | Add | Mult"  1 0 3 1
+#pragma parameter HSM_INTRO_SOLID_COLOR_BLEND_MODE      		"      Solid Color Blend Mode - OFF | NORM | ADD | MULT"  1 0 3 1
 #define HSM_INTRO_SOLID_COLOR_BLEND_MODE global.HSM_INTRO_SOLID_COLOR_BLEND_MODE
 
 #pragma parameter HSM_INTRO_SOLID_COLOR_HUE     				"      Solid Color Hue"  0 0 360 1
@@ -73,7 +73,7 @@ License: GPL
 
 #pragma parameter HSM_INTRO_NOISE_TITLE							"[ INTRO STATIC NOISE ]_________________________________________" 0 0 0.01 0.01
 
-#pragma parameter HSM_INTRO_NOISE_BLEND_MODE        			"      Static Noise Blend Mode - Off | Norm | Add | Mult"  1 0 3 1
+#pragma parameter HSM_INTRO_NOISE_BLEND_MODE        			"      Static Noise Blend Mode - OFF | NORM | ADD | MULT"  1 0 3 1
 #define HSM_INTRO_NOISE_BLEND_MODE global.HSM_INTRO_NOISE_BLEND_MODE
 
 #pragma parameter HSM_INTRO_NOISE_HOLD     						"      Static Noise Hold Frames"  80 0 600 5

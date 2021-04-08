@@ -8,7 +8,7 @@ Description:
 */
 
 // Screen Scale Required Parameters
-#pragma parameter HSM_MEGA_BEZEL_TITLE					"[ --- HSM MEGA BEZEL 0.9.01 2021-04-06 --- ]" 0 0 0.01 0.01
+#pragma parameter HSM_MEGA_BEZEL_TITLE					"[ --- HSM MEGA BEZEL 0.9.02 2021-04-07 --- ]" 0 0 0.01 0.01
 
 //---------------------------------------------------------------------------------------------------
 //    FLIP & ROTATE
@@ -117,10 +117,10 @@ float HSM_CROP_OVERSCAN_RIGHT = global.HSM_CROP_OVERSCAN_RIGHT;
 //---------------------------------------------------------------------------------------------------
 #pragma parameter HSM_SAMPLING_TITLE								"[ CORE RES SAMPLING ]__________________________________________" 0 0 0.01 0.01
 
-#pragma parameter HSM_CORE_RES_SAMPLING_MULT_SCANLINE_DIR			"      Scanline Direction Multiplier"  100 25 1600 25
+#pragma parameter HSM_CORE_RES_SAMPLING_MULT_SCANLINE_DIR			"      Scanline Direction Multiplier (X for Horizontal Scanline)"  100 25 1600 25
 float HSM_CORE_RES_SAMPLING_MULT_SCANLINE_DIR = global.HSM_CORE_RES_SAMPLING_MULT_SCANLINE_DIR / 100;
 
-#pragma parameter HSM_CORE_RES_SAMPLING_MULT_OPPOSITE_DIR			"      Opposite Direction Multiplier"  100 25 1600 25
+#pragma parameter HSM_CORE_RES_SAMPLING_MULT_OPPOSITE_DIR			"      Opposite Direction Multiplier (Y for Vertical Scanlines)"  100 25 1600 25
 float HSM_CORE_RES_SAMPLING_MULT_OPPOSITE_DIR = global.HSM_CORE_RES_SAMPLING_MULT_OPPOSITE_DIR / 100;
 
 

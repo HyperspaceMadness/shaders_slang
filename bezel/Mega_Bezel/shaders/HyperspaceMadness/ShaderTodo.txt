@@ -1,25 +1,29 @@
 
 
 
-Mega Bezel is updated to V 0.9.01 2020-XX-XX
+Mega Bezel is updated to V 0.9.02 2020-04-07
 
 Changes:
-  All Presets
-  * Fixed Resolution issue with core resolutions not divisible by 8 E.G. FFVII Menu
-  * Added BASIC-BORDER-WITH-REFLECTION, same as BASIC-BORDER but with Reflection
-  
+  * Reduced passes of BASIC-BORDER-WITH-REFLECTION, performance increased by 6%
+  * Night Lighting not at full strength (Not Linearized...)
+  * Added Aspect Ratio for the background image in the BASIC-BORDER
+
   *  Performance of Base presets at 3840x2160 on Nvidia RTX2060:
-    *  ADVANCED -                     80 FPS   -  No comparable old preset
+    *  ADVANCED -                      80 FPS  -  No comparable old preset
     *  GLASS -                        150 FPS  -  Old Glass Preset        128 FPS
     *  STANDARD -                     135 FPS  -  Old Full Preset         140 FPS
-    *  BASIC-BORDER-WITH-REFLECTION - 156 FPS  -  Old Reflect Only Preset 165 FPS
+    *  BASIC-BORDER-WITH-REFLECTION - 166 FPS  -  Old Reflect Only Preset 165 FPS
     *  BASIC-BORDER -                 295 FPS  -  Old Screen Scale Preset 370 FPS
 
 Mega Bezel Still to Come:
 
 V1 TODO
+
+  * Fix LCD Shader
+  * Add Image Aspect Ratio to Basic Border and Basic Border with reflection
+  * Add Scale with Frame for Top Image & Decal, Scale offset
   * Fix Reflection so the blur is more similar to the original version
-  * Performance Test no scaling on first passes
+  * Local vs FullScreen Blur on Corner reflection?
   * Test performance for Reflection Only, or BASIC-BORDER + Reflection presets
   * Fix frame inner edge color not picking up HSV, (Advanced Preset?)
   * Fix bright area of screen showing outside the black line when bezel is hidden

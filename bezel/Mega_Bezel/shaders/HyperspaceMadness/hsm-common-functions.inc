@@ -1324,11 +1324,15 @@ vec4 HSM_GetPostCrtPreppedColor(vec4 in_color_linear, vec2 VIEWPORT_COORD, vec2 
 		vec4 gel_image = texture(ColoredGelImage, mirrored_tube_coord);
 		gel_image = HSM_Linearize(gel_image, HSM_DEFAULT_SRGB_GAMMA);
 
-		if (HSM_TUBE_COLORED_GEL_IMAGE_MULTIPLY_AMOUNT > 0)
-			out_color = mix(out_color, out_color * gel_image, gel_image.a * HSM_TUBE_COLORED_GEL_IMAGE_MULTIPLY_AMOUNT);
+		if (HSM_TUBE_COLORED_GEL_IMAGE_NORMAL_AMOUNT > 0)
+			out_color = HSM_BlendModeLayerMix(out_color, gel_image, BLEND_MODE_NORMAL, HSM_TUBE_COLORED_GEL_IMAGE_NORMAL_AMOUNT);
 
 		if (HSM_TUBE_COLORED_GEL_IMAGE_ADDITIVE_AMOUNT > 0)
 			out_color = mix(out_color, out_color + gel_image, gel_image.a * HSM_TUBE_COLORED_GEL_IMAGE_ADDITIVE_AMOUNT);
+
+		if (HSM_TUBE_COLORED_GEL_IMAGE_MULTIPLY_AMOUNT > 0)
+			out_color = mix(out_color, out_color * gel_image, gel_image.a * HSM_TUBE_COLORED_GEL_IMAGE_MULTIPLY_AMOUNT);
+
 	}
 
 	if (HSM_TUBE_STATIC_REFLECTION_IMAGE_OPACITY > 0)
@@ -1356,23 +1360,25 @@ vec4 HSM_GetPostCrtPreppedColor(vec4 in_color_linear, vec2 VIEWPORT_COORD, vec2 
 
 		if (HSM_BG_OPACITY > 0)
 		{
-			vec2 background_img_coord = VIEWPORT_COORD;
+			vec2 bg_image_coord = VIEWPORT_COORD;
 			float final_viewport_aspect = global.FinalViewportSize.x/global.FinalViewportSize.y;
 
-			vec2 image_coord = VIEWPORT_COORD;
-			// Image Ratio is 16:9
-			if (HSM_STANDARD_IMG_ASPECT_RATIO == 1)
-				image_coord.x = (VIEWPORT_COORD.x - 0.5) / (1.7777/final_viewport_aspect) + 0.5;
+			float explicit_texture_aspect = global.OutputSize.x / global.OutputSize.y;
+			if (HSM_STANDARD_IMG_ASPECT_RATIO_MODE == 1)
+				explicit_texture_aspect = HSM_STANDARD_IMG_ASPECT_RATIO_EXPLICIT;
+			if (HSM_STANDARD_IMG_ASPECT_RATIO_MODE == 2)
+				explicit_texture_aspect = 1.7777;
+			if (HSM_STANDARD_IMG_ASPECT_RATIO_MODE == 3)
+				explicit_texture_aspect = 0.5625;
 
-			// Image Ratio is 9:16
-			if (HSM_STANDARD_IMG_ASPECT_RATIO == 2)
-				image_coord.x = (VIEWPORT_COORD.x - 0.5) / (0.5625/final_viewport_aspect) + 0.5;
+			// Correct image coordinate for image aspect ratio
+			bg_image_coord.x = (VIEWPORT_COORD.x - 0.5) / (explicit_texture_aspect/final_viewport_aspect) + 0.5;
 
 			vec4 bg_layer = vec4(0);
 			if (SCREEN_ASPECT > 1) 
-				bg_layer = texture(BackgroundImage, image_coord);
+				bg_layer = texture(BackgroundImage, bg_image_coord);
 			else
-				bg_layer = texture(BackgroundVertImage, image_coord);
+				bg_layer = texture(BackgroundVertImage, bg_image_coord);
 			bg_layer = HSM_Linearize(bg_layer, HSM_DEFAULT_SRGB_GAMMA);
 
 			if (HSM_STANDARD_BG_SHOW_OVER_SCREEN == 0)

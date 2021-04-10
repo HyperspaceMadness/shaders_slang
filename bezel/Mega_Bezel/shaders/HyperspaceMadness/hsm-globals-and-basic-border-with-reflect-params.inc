@@ -1,4 +1,4 @@
-#define IS_BASICBORDERWITHREFLECT_PRESET
+#define IS_BASIC_BORDER_WITH_REFLECT_PRESET
 
 #include "hsm-globals.inc"
 #include "hsm-params-0-screen-scale.inc"

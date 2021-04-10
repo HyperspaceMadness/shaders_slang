@@ -121,7 +121,7 @@ float HSM_LAYERING_DEBUG_MASK_MODE = global.HSM_LAYERING_DEBUG_MASK_MODE;
 #pragma parameter HSM_BG_OPACITY                  "      Opacity" 100 0 100 1
 float HSM_BG_OPACITY = global.HSM_BG_OPACITY / 100;
 
-#pragma parameter HSM_BG_BLEND_MODE               "      Blend Mode - Off | Normal | Add | Multiply"  1 -1 2 1
+#pragma parameter HSM_BG_BLEND_MODE               "      Blend Mode - OFF | NORMAL | ADD | MULTIPLY"  1 -1 2 1
 float HSM_BG_BLEND_MODE = global.HSM_BG_BLEND_MODE;
 
 #pragma parameter HSM_BG_SOURCE_MATTE_TYPE        "      Source Matte Color - Black | White | None"  0 0 2 1
@@ -194,7 +194,7 @@ float HSM_VIEWPORT_VIGNETTE_POS_Y = global.HSM_VIEWPORT_VIGNETTE_POS_Y / 100;
 //---------------------------------------------------------------------------------------------------
 #pragma parameter HSM_CRT_TITLE			             "[ CRT SCREEN LAYER ]___________________________________________" 0 0 0.01 0.01
 
-#pragma parameter HSM_CRT_SCREEN_BLEND_MODE          "      Blend Mode - Off | Normal | Add (Backdrop)" 1 0 3 1
+#pragma parameter HSM_CRT_SCREEN_BLEND_MODE          "      Blend Mode - OFF | NORMAL | ADD (Backdrop) | MULT" 1 0 3 1
 float HSM_CRT_SCREEN_BLEND_MODE = global.HSM_CRT_SCREEN_BLEND_MODE;
 
 
@@ -215,7 +215,7 @@ float HSM_BZL_IMG_SATURATION = global.HSM_BZL_IMG_SATURATION / 100;
 #pragma parameter HSM_BZL_IMG_BRIGHTNESS                "      Brightness" 100 0 200 1
 float HSM_BZL_IMG_BRIGHTNESS = global.HSM_BZL_IMG_BRIGHTNESS / 100;
 
-#pragma parameter HSM_BZL_IMG_BLEND_MODE                "      Blend Mode -  Off | Normal | Add | Multiply"  1 0 3 1
+#pragma parameter HSM_BZL_IMG_BLEND_MODE                "      Blend Mode -  OFF | NORMAL | ADD | MULTIPLY"  1 0 3 1
 float HSM_BZL_IMG_BLEND_MODE = global.HSM_BZL_IMG_BLEND_MODE;
 
 #pragma parameter HSM_BZL_SOURCE_MATTE_TYPE             "      Source Matte Color - Black | White | None"  0 0 2 1
@@ -263,7 +263,7 @@ float HSM_CAB_GLASS_OPACITY = global.HSM_CAB_GLASS_OPACITY / 100;
 #pragma parameter HSM_CAB_GLASS_BRIGHTNESS                  "      Brightness" 100 0 400 1
 float HSM_CAB_GLASS_BRIGHTNESS = global.HSM_CAB_GLASS_BRIGHTNESS / 100;
 
-#pragma parameter HSM_CAB_GLASS_BLEND_MODE                  "      Blend Mode - Off | Normal | Add | Multiply"  1 0 3 1
+#pragma parameter HSM_CAB_GLASS_BLEND_MODE                  "      Blend Mode - OFF | NORMAL | ADD | MULTIPLY"  1 0 3 1
 float HSM_CAB_GLASS_BLEND_MODE = global.HSM_CAB_GLASS_BLEND_MODE;
 
 #pragma parameter HSM_CAB_GLASS_SOURCE_MATTE_TYPE           "      Source Matte Color - Black | White | None"  0 0 2 1
@@ -305,7 +305,7 @@ float HSM_CAB_GLASS_POS_Y = global.HSM_CAB_GLASS_POS_Y / 100;
 #pragma parameter HSM_DECAL_OPACITY                     "      Opacity"  100 0 100 5
 float HSM_DECAL_OPACITY = global.HSM_DECAL_OPACITY / 100;
 
-#pragma parameter HSM_DECAL_BLEND_MODE                  "      Blend Mode -  Off | Normal | Add | Multiply"  1 0 3 1
+#pragma parameter HSM_DECAL_BLEND_MODE                  "      Blend Mode -  OFF | NORMAL | ADD | MULTIPLY"  1 0 3 1
 float HSM_DECAL_BLEND_MODE = global.HSM_DECAL_BLEND_MODE;
 
 #pragma parameter HSM_DECAL_SOURCE_MATTE_TYPE           "      Source Matte Color - Black | White | None"  0 0 2 1
@@ -346,7 +346,7 @@ float HSM_DECAL_POS_Y = global.HSM_DECAL_POS_Y / 100;
 #pragma parameter HSM_LED_OPACITY                       "      Opacity"  100 0 100 1
 float HSM_LED_OPACITY = global.HSM_LED_OPACITY / 100;
 
-#pragma parameter HSM_LED_BLEND_MODE                    "      Blend Mode - Off | Normal | Add | Multiply"  2 0 3 1
+#pragma parameter HSM_LED_BLEND_MODE                    "      Blend Mode - OFF | NORMAL | ADD | MULTIPLY"  2 0 3 1
 float HSM_LED_BLEND_MODE = global.HSM_LED_BLEND_MODE;
 
 #pragma parameter HSM_LED_SOURCE_MATTE_TYPE             "      Source Matte Color - Black | White | None"  0 0 2 1
@@ -388,7 +388,7 @@ float HSM_LED_POS_Y = global.HSM_LED_POS_Y / 100;
 #pragma parameter HSM_TOP_OPACITY                       "      Opacity"  100 0 100 0.1
 float HSM_TOP_OPACITY = global.HSM_TOP_OPACITY / 100;
 
-#pragma parameter HSM_TOP_BLEND_MODE                    "      Blend Mode - Off | Normal | Add | Multiply"  1 0 3 1
+#pragma parameter HSM_TOP_BLEND_MODE                    "      Blend Mode - OFF | NORMAL | ADD | MULTIPLY"  1 0 3 1
 float HSM_TOP_BLEND_MODE = global.HSM_TOP_BLEND_MODE;
 
 #pragma parameter HSM_TOP_SOURCE_MATTE_TYPE             "      Source Matte Color - Black | White | None"  0 0 2 1

@@ -218,7 +218,7 @@ shaders = 30
 
 
 // Define textures to be used by the different passes
-textures = "SamplerLUT1;SamplerLUT2;SamplerLUT3;IntroImage;ScreenPlacementImage;ColoredGelImage;TubeStaticReflectionImage;BackgroundImage;BackgroundVertImage;ReflectionMaskImage;NightLightingImage;FrameTextureImage;LEDImage;TopLayerImage;"
+textures = "SamplerLUT1;SamplerLUT2;SamplerLUT3;IntroImage;ScreenPlacementImage;ColoredGelImage;TubeStaticReflectionImage;BackgroundImage;BackgroundVertImage;ReflectionMaskImage;DecalImage;NightLightingImage;FrameTextureImage;LEDImage;TopLayerImage;"
 
 SamplerLUT1 = ../../shaders/HyperspaceMadness/textures/lut/16.png
 SamplerLUT1_linear = true
@@ -245,9 +245,6 @@ BackgroundImage_linear = true
 BackgroundVertImage = ../../shaders/HyperspaceMadness/textures/BackgroundImage_Carbon_3840x2160.png
 BackgroundVertImage_linear = true
 
-BackgroundVertImage = ../../shaders/HyperspaceMadness/textures/BackgroundImage_Carbon_3840x2160.png
-BackgroundVertImage_linear = true
-
 ReflectionMaskImage = ../../shaders/HyperspaceMadness/textures/Placeholder_White_16x16.png
 ReflectionMaskImage_linear = true
 
@@ -259,6 +256,9 @@ NightLightingImage_linear = true
 
 LEDImage = ../../shaders/HyperspaceMadness/textures/Placeholder_Transparent_16x16.png
 LEDImage_linear = true
+
+DecalImage = ../../shaders/HyperspaceMadness/textures/Placeholder_Transparent_16x16.png
+DecalImage_linear = true
 
 TopLayerImage = ../../shaders/HyperspaceMadness/textures/Placeholder_Transparent_16x16.png
 TopLayerImage_linear = true

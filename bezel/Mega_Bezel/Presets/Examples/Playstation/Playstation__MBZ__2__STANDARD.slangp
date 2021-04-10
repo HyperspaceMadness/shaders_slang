@@ -2,10 +2,14 @@
 
 BackgroundImage = textures/Playstation.png
 LEDImage = textures/Playstation_LED.png
-TopLayerImage = ../../../shaders/HyperspaceMadness/textures/Placeholder_Transparent_16x16.png
+DecalImage = textures/MarkIII_Decal.png
+TopLayerImage = textures/Playstation_Top.png
 
 HSM_BZL_COLOR_HUE = "210.000000"
 HSM_BZL_COLOR_SATURATION = "68.000000"
 HSM_BZL_COLOR_VALUE = "37.200073"
 HSM_NIGHT_OPACITY = "75.000000"
 HSM_LED_OPACITY = "50.000000"
+HSM_STANDARD_DECAL_SCALE_WITH_FRAME = 1
+HSM_STANDARD_TOP_SCALE_WITH_FRAME = 1
+HSM_TOP_BLEND_MODE = 2

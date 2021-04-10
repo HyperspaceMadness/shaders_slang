@@ -65,6 +65,8 @@ void main()
 		float blur_midpoint = 0.12;
 		float hbl_sharpness_falloff_speed = 1;
 		blur_ratio = HHLP_QuadraticBezier (clamp_0_1(blur_ratio - blur_midpoint), vec2(0.05, hbl_sharpness_falloff_speed));
+
+
 		blur_ratio = HSM_REFLECT_BLUR_MIN + blur_ratio * (HSM_REFLECT_BLUR_MAX - HSM_REFLECT_BLUR_MIN);
 
 		vec3 col = vec3(0.0);

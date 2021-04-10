@@ -1,24 +1,27 @@
 
 
 
-Mega Bezel is updated to V 0.9.02 2020-04-07
+Mega Bezel is updated to V 0.9.03 2020-04-10
 
 Changes:
-  * Reduced passes of BASIC-BORDER-WITH-REFLECTION, performance increased by 6%
-  * Night Lighting not at full strength (Not Linearized...)
   * Added Aspect Ratio for the background image in the BASIC-BORDER
+  * Added Decal image to STANDARD and Decal and Top Image can be made to scale along with the frame
+    * The Playstation Example shows the scaling with the frame
+  * Added a Normal blending amount for the gel image
+  * Added Battlezone as an example of use of the gel image, both STANDARD and BASIC-BORDER versions
 
   *  Performance of Base presets at 3840x2160 on Nvidia RTX2060:
     *  ADVANCED -                      80 FPS  -  No comparable old preset
     *  GLASS -                        150 FPS  -  Old Glass Preset        128 FPS
     *  STANDARD -                     135 FPS  -  Old Full Preset         140 FPS
-    *  BASIC-BORDER-WITH-REFLECTION - 166 FPS  -  Old Reflect Only Preset 165 FPS
+    *  BASIC-BORDER-WITH-REFLECTION - 175 FPS  -  Old Reflect Only Preset 165 FPS
     *  BASIC-BORDER -                 295 FPS  -  Old Screen Scale Preset 370 FPS
 
 Mega Bezel Still to Come:
 
 V1 TODO
-
+  * Scale Decal, LED & Top Image, add scaling original height, LED over frame * Decal
+  * Upside Down Logo - Flip with Core Image Flip
   * Fix LCD Shader
   * Add Image Aspect Ratio to Basic Border and Basic Border with reflection
   * Add Scale with Frame for Top Image & Decal, Scale offset
@@ -41,6 +44,7 @@ V1 TODO
 Examples
   * Punch Out
 
+  * Split background (Background and Bezel image?) and shift halves to far left and right
   * Add Sharp Pixel Preset - No CRT Processing, Options for reflection area, Adjustable Quilez Sharpening?
   * Independent Bezel Scaling not the same as non-int scale, why? Maybe only in Portrait Res
   * Need x Scale for screen size of Independent bezel

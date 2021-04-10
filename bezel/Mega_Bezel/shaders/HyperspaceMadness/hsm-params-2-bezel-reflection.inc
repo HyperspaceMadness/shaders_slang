@@ -245,11 +245,6 @@ float HSM_REFLECT_MASK_IMG_AMOUNT = global.HSM_REFLECT_MASK_IMG_AMOUNT / 100;
 #pragma parameter HSM_REFLECT_MASK_SCALE_MODE 			            "      Scaling Mode (Image Layers Only)- FullScreen | Bezel Img" 0 0 1 1
 float HSM_REFLECT_MASK_SCALE_MODE = global.HSM_REFLECT_MASK_SCALE_MODE;
 
-//---------------------------------------------------------------------------------------------------
-// Reflection Is Last Pass
-//---------------------------------------------------------------------------------------------------
-#pragma parameter HSM_REFLECT_LAST_PASS_TITLE			            "[ REFLECTION AS LAST PASS ]____________________________________" 0 0 0.01 0.01
-
 #pragma parameter HSM_GLASS_BORDER_ON                               "      Glass Border ON (For Glass Preset)" 0 0 1 1
 float HSM_GLASS_BORDER_ON = global.HSM_GLASS_BORDER_ON;
 

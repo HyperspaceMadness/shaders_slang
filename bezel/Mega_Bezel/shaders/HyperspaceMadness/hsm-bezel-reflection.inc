@@ -77,10 +77,14 @@ layout(set = 0, binding = 7) uniform sampler2D ColoredGelImage;
 layout(set = 0, binding = 8) uniform sampler2D BackgroundImage;
 layout(set = 0, binding = 9)  uniform sampler2D BackgroundVertImage;
 layout(set = 0, binding = 10) uniform sampler2D ReflectionMaskImage;
+
+#ifdef IS_STANDARD_PRESET
 layout(set = 0, binding = 11) uniform sampler2D NightLightingImage;
 layout(set = 0, binding = 12) uniform sampler2D LEDImage;
 layout(set = 0, binding = 13)  uniform sampler2D FrameTextureImage;
 layout(set = 0, binding = 14)  uniform sampler2D TopLayerImage;
+layout(set = 0, binding = 15) uniform sampler2D DecalImage;
+#endif
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
 void main()
@@ -235,6 +239,9 @@ void main()
 	FRAME_MASK_FOR_IMAGE = OUTSIDE_BEZEL_MASK * (1 - OUTSIDE_FRAME_MASK_FOR_IMAGE);
 	float FRAME_AND_BEZEL_MASK = outside_tube_mask * (1 - OUTSIDE_FRAME_MASK);
 
+float edge_highlight_mask = 0;
+
+#ifndef IS_BASIC_BORDER_WITH_REFLECT_PRESET
 	// ----------------------------------------------------
 	// Generated Bezel
 	// ----------------------------------------------------
@@ -295,7 +302,7 @@ void main()
 		edge_sides_highlight_mask 			= 0.7 * sides_mask * HHLP_QuadraticBezier(smoothstep(hmbz_bezel_edge_highlight_width, 0, abs(tube_curved_coord_ctr.y)), vec2(0.8, 1));
 	}
 
-	float edge_highlight_mask 	= hmbz_bezel_highlight_edge * edge_mask * (edge_top_center_highlight_mask + edge_bottom_center_highlight_mask + edge_sides_highlight_mask);
+	edge_highlight_mask 	= hmbz_bezel_highlight_edge * edge_mask * (edge_top_center_highlight_mask + edge_bottom_center_highlight_mask + edge_sides_highlight_mask);
 
 	// Combine all the individual highlights into one mask
 	float combined_highlight_mask = (1 + 2.5 * HSM_BZL_NOISE) * (1 - noise_mask * 2.5 * HSM_BZL_NOISE) * (top_center_highlight_mask + bottom_center_highlight_mask + sides_highlight_mask);
@@ -311,16 +318,19 @@ void main()
 	float frame_outer_edge_width = HSM_FRM_OUTER_EDGE_THICKNESS;
 	vec3 frame_diffuse_color = mix(frame_color, (1 - HSM_FRM_OUTER_EDGE_SHADING) * frame_color, smoothstep(frame_outer_edge_width, 0, dist_inside_outer_edge));
 	
+#ifdef IS_STANDARD_PRESET
 	if (HSM_FRM_TEXTURE_OPACITY > 0)
 	{
 		vec4 frame_texture_color = HSM_Linearize(texture(FrameTextureImage, frame_outside_coord), HSM_DEFAULT_SRGB_GAMMA);
 		frame_diffuse_color = HSM_BlendModeLayerMix(vec4(frame_diffuse_color, 1), frame_texture_color, HSM_FRM_TEXTURE_BLEND_MODE, HSM_FRM_TEXTURE_OPACITY).rgb;
 	}
+#endif
 
 	frame_diffuse_color = mix(frame_diffuse_color, outside_frame_color, OUTSIDE_FRAME_MASK);
 
 	// Composite in color from outside the bezel
 	vec3 bezel_and_frame_rgb = mix(bezel_color, frame_diffuse_color, OUTSIDE_BEZEL_MASK);
+
 
 	float frame_edge = 0.495;
 
@@ -330,7 +340,8 @@ void main()
 
 	vec4 frame_shadow_layer = vec4(0);
 	frame_shadow_layer.a = SHADOW_OUTSIDE_FRAME_MASK * HHLP_QuadraticBezier(smoothstep(HSM_FRM_SHADOW_WIDTH, 0, dist_outside_frame), vec2(1, 0));
-	
+#endif
+
 	//----------------------------------------------------
 	// Reflection
 	//----------------------------------------------------
@@ -450,7 +461,7 @@ void main()
 		reflected_color.rgb *= (1 - HSM_REFLECT_FRAME_INNER_EDGE_AMOUNT) * (1 - frame_inner_edge_mask) + HSM_REFLECT_FRAME_INNER_EDGE_AMOUNT;
 	}
 
-#ifdef IS_STANDARD_PRESET
+#ifndef IS_ADVANCED_PRESET
 	float bezel_mask = HSM_GetCornerMask(bezel_outside_coord, SCREEN_ASPECT, HSM_FRM_INNER_CORNER_RADIUS_SCALE * HSM_BZL_OUTER_CORNER_RADIUS_SCALE * HSM_SCREEN_CORNER_RADIUS, 0.9);
 	reflected_color *= bezel_mask;
 #endif
@@ -462,7 +473,7 @@ void main()
 	crt_linear *= SCREEN_MASK * TUBE_MASK;
 
     vec4 frag_color_linear = crt_linear;
-    
+
 	float black_edge_mask = TUBE_MASK * (1 - SCREEN_MASK);
 
 	// Add a Colored Gel image on top of the screen, this is what colors games like space invaders or battlezone
@@ -470,9 +481,13 @@ void main()
 	{
 		vec4 gel_image = texture(ColoredGelImage, tube_curved_coord);
 		gel_image = HSM_Linearize(gel_image, HSM_DEFAULT_SRGB_GAMMA);
+		gel_image *= black_edge_mask;
 
 		if (HSM_TUBE_COLORED_GEL_IMAGE_ADDITIVE_AMOUNT > 0)
-			frag_color_linear += black_edge_mask * gel_image * gel_image.a * HSM_TUBE_COLORED_GEL_IMAGE_ADDITIVE_AMOUNT;
+			frag_color_linear += gel_image * gel_image.a * HSM_TUBE_COLORED_GEL_IMAGE_ADDITIVE_AMOUNT;
+
+		// if (HSM_TUBE_COLORED_GEL_IMAGE_NORMAL_AMOUNT > 0)
+		// 	HSM_BlendModeLayerMix(frag_color_linear, gel_image, BLEND_MODE_NORMAL, HSM_TUBE_COLORED_GEL_IMAGE_NORMAL_AMOUNT);
 	}
 
 	// TUBE HIGHLIGHT
@@ -498,38 +513,64 @@ void main()
 frag_color_linear = clamp(frag_color_linear, 0, 1);
 
 
-vec2 image_coord = VIEWPORT_COORD;
+vec2 bg_image_coord = VIEWPORT_COORD;
 float final_viewport_aspect = global.FinalViewportSize.x/global.FinalViewportSize.y;
 
 FragColor = frag_color_linear + reflected_color;
 
 #ifdef IS_STANDARD_PRESET
-	// Image Ratio is 16:9
-	if (HSM_STANDARD_IMG_ASPECT_RATIO == 1)
-		image_coord.x = (VIEWPORT_COORD.x - 0.5) / (1.7777/final_viewport_aspect) + 0.5;
 
-	// Image Ratio is 9:16
-	if (HSM_STANDARD_IMG_ASPECT_RATIO == 2)
-		image_coord.x = (VIEWPORT_COORD.x - 0.5) / (0.5625/final_viewport_aspect) + 0.5;
+	float explicit_texture_aspect = global.OutputSize.x / global.OutputSize.y;
+	if (HSM_STANDARD_IMG_ASPECT_RATIO_MODE == 1)
+		explicit_texture_aspect = HSM_STANDARD_IMG_ASPECT_RATIO_EXPLICIT;
+	if (HSM_STANDARD_IMG_ASPECT_RATIO_MODE == 2)
+		explicit_texture_aspect = 1.7777;
+	if (HSM_STANDARD_IMG_ASPECT_RATIO_MODE == 3)
+		explicit_texture_aspect = 0.5625;
+
+	// Correct image coordinate for image aspect ratio
+	bg_image_coord.x = (VIEWPORT_COORD.x - 0.5) / (explicit_texture_aspect/final_viewport_aspect) + 0.5;
+
+	// vec2 destination_pos_offset = pos_offset;
+	vec2 destination_coord = bezel_outside_coord;
+	vec2 destination_scale = vec2(1, 1) * (1 / DEFAULT_BEZEL_SCALE_V);
+	float destination_aspect = (FRAME_SCALE.x * global.OutputSize.x) / (FRAME_SCALE.y * global.OutputSize.y);
+
+	// Find the aspect difference so the image can be shown without distortion
+	// vec2 destination_size = destination_scale * global.OutputSize.xy;
+	float aspect_difference = explicit_texture_aspect / destination_aspect;
+
+	destination_scale *= vec2(aspect_difference, 1);
+	// destination_scale *= scale_offset;
+
+	vec2 image_scaled_with_frame_coord = HSM_GetInverseScaledCoord(destination_coord, destination_scale);
+	// image_scaled_with_frame_coord += vec2(destination_pos_offset.x, destination_pos_offset.y);
+
+	vec2 decal_image_coord = HSM_STANDARD_DECAL_SCALE_WITH_FRAME == 1 ? image_scaled_with_frame_coord : bg_image_coord;
+	vec2 top_image_coord = HSM_STANDARD_TOP_SCALE_WITH_FRAME == 1 ? image_scaled_with_frame_coord : bg_image_coord;
 
 	vec4 bg_layer = vec4(0);
 	if (SCREEN_ASPECT > 1) 
-		bg_layer = texture(BackgroundImage, image_coord);
+		bg_layer = texture(BackgroundImage, bg_image_coord);
 	else
-		bg_layer = texture(BackgroundVertImage, image_coord);
+		bg_layer = texture(BackgroundVertImage, bg_image_coord);
 
 	bg_layer = HSM_Linearize(bg_layer, HSM_DEFAULT_SRGB_GAMMA);
 
-	vec4 led_layer = texture(LEDImage, image_coord);
+	vec4 led_layer = texture(LEDImage, bg_image_coord);
 	led_layer = HSM_Linearize(led_layer, HSM_DEFAULT_SRGB_GAMMA);
 
-	vec4 top_layer = texture(TopLayerImage, image_coord);
+	vec4 decal_layer = texture(DecalImage, decal_image_coord);
+	decal_layer = HSM_Linearize(decal_layer, HSM_DEFAULT_SRGB_GAMMA);
+
+	vec4 top_layer = texture(TopLayerImage, top_image_coord);
 	top_layer = HSM_Linearize(top_layer, HSM_DEFAULT_SRGB_GAMMA);
 
 	if (HSM_STATIC_LAYERS_GAMMA != 1)
 	{
 		bg_layer = HSM_ApplyGamma(bg_layer, HSM_STATIC_LAYERS_GAMMA);
 		led_layer = HSM_ApplyGamma(led_layer, HSM_STATIC_LAYERS_GAMMA);
+		decal_layer = HSM_ApplyGamma(led_layer, HSM_STATIC_LAYERS_GAMMA);
 		top_layer = HSM_ApplyGamma(top_layer, HSM_STATIC_LAYERS_GAMMA);
 	}
 
@@ -550,6 +591,7 @@ FragColor = frag_color_linear + reflected_color;
 		night_lighting_image = HSM_Linearize(night_lighting_image, HSM_DEFAULT_SRGB_GAMMA);
 
 		bg_layer = mix(bg_layer, bg_layer * night_lighting_image, HSM_NIGHT_OPACITY);
+		decal_layer = mix(decal_layer, decal_layer * night_lighting_image, HSM_NIGHT_OPACITY);
 		top_layer = mix(top_layer, top_layer * night_lighting_image, HSM_NIGHT_OPACITY);
 	}
 
@@ -588,13 +630,14 @@ FragColor = frag_color_linear + reflected_color;
 	frag_color_linear = HSM_BlendModeLayerMix(frag_color_linear, led_layer, HSM_LED_BLEND_MODE, HSM_LED_OPACITY);
 	frag_color_linear = HSM_BlendModeLayerMix(frag_color_linear, bezel_layer, BLEND_MODE_NORMAL, 1);
 	frag_color_linear += reflected_color;
+	frag_color_linear = HSM_BlendModeLayerMix(frag_color_linear, decal_layer, HSM_DECAL_BLEND_MODE, HSM_DECAL_OPACITY);
 	frag_color_linear = HSM_BlendModeLayerMix(frag_color_linear, top_layer, HSM_TOP_BLEND_MODE, HSM_TOP_OPACITY);
 
 	FragColor = HSM_ApplyGamma(clamp(frag_color_linear, 0, 1), HSM_DEFAULT_SRGB_GAMMA);
 #endif
 
 #ifdef IS_GLASS_PRESET
-	vec4 bg_layer = texture(BackgroundImage, image_coord);
+	vec4 bg_layer = texture(BackgroundImage, bg_image_coord);
 	bg_layer = HSM_Linearize(bg_layer, HSM_DEFAULT_SRGB_GAMMA);
 
 	bg_layer.a *= outside_tube_mask_wider * (1 - edge_mask);
@@ -604,22 +647,25 @@ FragColor = frag_color_linear + reflected_color;
 	FragColor = HSM_ApplyGamma(clamp(frag_color_linear, 0, 1), HSM_DEFAULT_SRGB_GAMMA);
 #endif
 
-#ifdef IS_BASICBORDERWITHREFLECT_PRESET
+#ifdef IS_BASIC_BORDER_WITH_REFLECT_PRESET
 	reflected_color *= 1 - OUTSIDE_BEZEL_MASK;
 
-	// Image Ratio is 16:9
-	if (HSM_STANDARD_IMG_ASPECT_RATIO == 1)
-		image_coord.x = (VIEWPORT_COORD.x - 0.5) / (1.7777/final_viewport_aspect) + 0.5;
+	float explicit_texture_aspect = global.OutputSize.x / global.OutputSize.y;
+	if (HSM_STANDARD_IMG_ASPECT_RATIO_MODE == 1)
+		explicit_texture_aspect = HSM_STANDARD_IMG_ASPECT_RATIO_EXPLICIT;
+	if (HSM_STANDARD_IMG_ASPECT_RATIO_MODE == 2)
+		explicit_texture_aspect = 1.7777;
+	if (HSM_STANDARD_IMG_ASPECT_RATIO_MODE == 3)
+		explicit_texture_aspect = 0.5625;
 
-	// Image Ratio is 9:16
-	if (HSM_STANDARD_IMG_ASPECT_RATIO == 2)
-		image_coord.x = (VIEWPORT_COORD.x - 0.5) / (0.5625/final_viewport_aspect) + 0.5;
+	// Correct image coordinate for image aspect ratio
+	bg_image_coord.x = (VIEWPORT_COORD.x - 0.5) / (explicit_texture_aspect/final_viewport_aspect) + 0.5;
 
 	vec4 bg_layer = vec4(0);
 	if (SCREEN_ASPECT > 1) 
-		bg_layer = texture(BackgroundImage, image_coord);
+		bg_layer = texture(BackgroundImage, bg_image_coord);
 	else
-		bg_layer = texture(BackgroundVertImage, image_coord);
+		bg_layer = texture(BackgroundVertImage, bg_image_coord);
 	bg_layer = HSM_Linearize(bg_layer, HSM_DEFAULT_SRGB_GAMMA);
 
 	if (HSM_STANDARD_BG_SHOW_OVER_SCREEN == 0)

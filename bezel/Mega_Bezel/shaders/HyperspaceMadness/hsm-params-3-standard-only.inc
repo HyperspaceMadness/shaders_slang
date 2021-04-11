@@ -15,6 +15,9 @@ float HSM_BG_OPACITY = global.HSM_BG_OPACITY / 100;
 #pragma parameter HSM_BG_BLEND_MODE 		        "      Background Blend Mode - OFF | NORM | ADD | MULT"  2 0 3 1
 float HSM_BG_BLEND_MODE = global.HSM_BG_BLEND_MODE;
 
+#pragma parameter HSM_VIEWPORT_VIGNETTE_OPACITY     "      Background Vignette Opacity" 0 0 100 2
+float HSM_VIEWPORT_VIGNETTE_OPACITY = global.HSM_VIEWPORT_VIGNETTE_OPACITY / 100;
+
 #pragma parameter HSM_STANDARD_BG_SHOW_OVER_SCREEN 	"      Background Show over Screen" 0 0 1 1
 float HSM_STANDARD_BG_SHOW_OVER_SCREEN = global.HSM_STANDARD_BG_SHOW_OVER_SCREEN / 100;
 
@@ -30,8 +33,14 @@ float HSM_DECAL_OPACITY = global.HSM_DECAL_OPACITY / 100;
 #pragma parameter HSM_DECAL_BLEND_MODE 		          "      Decal Blend Mode - OFF | NORM | ADD | MULT"  2 0 3 1
 float HSM_DECAL_BLEND_MODE = global.HSM_DECAL_BLEND_MODE;
 
+// #pragma parameter HSM_STANDARD_DECAL_SHOW_UNDER_FRAME "      Decal Show Under Frame"  0 0 1 1
+// float HSM_STANDARD_DECAL_SHOW_UNDER_FRAME = global.HSM_STANDARD_DECAL_SHOW_UNDER_FRAME;
+
 #pragma parameter HSM_STANDARD_DECAL_SCALE_WITH_FRAME "      Decal Scale With Frame - OFF | ON"  0 0 1 1
 float HSM_STANDARD_DECAL_SCALE_WITH_FRAME = global.HSM_STANDARD_DECAL_SCALE_WITH_FRAME;
+
+#pragma parameter HSM_DECAL_SCALE 	                "      Decal Scale" 100 1 300 0.1
+float HSM_DECAL_SCALE = global.HSM_DECAL_SCALE / 100;
 
 #pragma parameter HSM_TOP_OPACITY 	                "      Top Extra Image Opacity" 100 0 100 0.1
 float HSM_TOP_OPACITY = global.HSM_TOP_OPACITY / 100;
@@ -42,14 +51,8 @@ float HSM_TOP_BLEND_MODE = global.HSM_TOP_BLEND_MODE;
 #pragma parameter HSM_STANDARD_TOP_SCALE_WITH_FRAME "      Top Extra Image Scale With Frame - OFF | ON"  0 0 1 1
 float HSM_STANDARD_TOP_SCALE_WITH_FRAME = global.HSM_STANDARD_TOP_SCALE_WITH_FRAME;
 
-
-// //---------------------------------------------------------------------------------------------------
-// //    VIEWPORT VIGNETTE
-// //---------------------------------------------------------------------------------------------------
-// #pragma parameter HSM_VIEWPORT_VIGNETTE_TITLE			    "[ VIEWPORT VIGNETTE LAYER ]____________________________________" 0 0 0.01 0.01
-
-// #pragma parameter HSM_VIEWPORT_VIGNETTE_OPACITY            "      Opacity" 50 0 100 2
-// float HSM_VIEWPORT_VIGNETTE_OPACITY = global.HSM_VIEWPORT_VIGNETTE_OPACITY / 100;
+#pragma parameter HSM_TOP_SCALE 	                "      Top Scale" 100 1 300 0.1
+float HSM_TOP_SCALE = global.HSM_TOP_SCALE / 100;
 
 //---------------------------------------------------------------------------------------------------
 //    STATIC ELEMENT GAMMA

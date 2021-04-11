@@ -1319,19 +1319,19 @@ vec4 HSM_GetPostCrtPreppedColor(vec4 in_color_linear, vec2 VIEWPORT_COORD, vec2 
 	vec2 mirrored_tube_coord = HSM_GetMirrorWrappedCoord(tube_curved_coord);
 
 	// Add a Colored Gel image on top of the screen, this is what colors games like space invaders or battlezone
-	if (HSM_TUBE_COLORED_GEL_IMAGE_MULTIPLY_AMOUNT > 0 || HSM_TUBE_COLORED_GEL_IMAGE_ADDITIVE_AMOUNT > 0)
+	if (HSM_TUBE_COLORED_GEL_IMAGE_MULTIPLY_AMOUNT > 0 || HSM_TUBE_COLORED_GEL_IMAGE_ADDITIVE_AMOUNT > 0 || HSM_TUBE_COLORED_GEL_IMAGE_NORMAL_AMOUNT > 0)
 	{
 		vec4 gel_image = texture(ColoredGelImage, mirrored_tube_coord);
 		gel_image = HSM_Linearize(gel_image, HSM_DEFAULT_SRGB_GAMMA);
 
-		if (HSM_TUBE_COLORED_GEL_IMAGE_NORMAL_AMOUNT > 0)
-			out_color = HSM_BlendModeLayerMix(out_color, gel_image, BLEND_MODE_NORMAL, HSM_TUBE_COLORED_GEL_IMAGE_NORMAL_AMOUNT);
+		if (HSM_TUBE_COLORED_GEL_IMAGE_MULTIPLY_AMOUNT > 0)
+			out_color = mix(out_color, out_color * gel_image, gel_image.a * HSM_TUBE_COLORED_GEL_IMAGE_MULTIPLY_AMOUNT);
 
 		if (HSM_TUBE_COLORED_GEL_IMAGE_ADDITIVE_AMOUNT > 0)
 			out_color = mix(out_color, out_color + gel_image, gel_image.a * HSM_TUBE_COLORED_GEL_IMAGE_ADDITIVE_AMOUNT);
 
-		if (HSM_TUBE_COLORED_GEL_IMAGE_MULTIPLY_AMOUNT > 0)
-			out_color = mix(out_color, out_color * gel_image, gel_image.a * HSM_TUBE_COLORED_GEL_IMAGE_MULTIPLY_AMOUNT);
+		if (HSM_TUBE_COLORED_GEL_IMAGE_NORMAL_AMOUNT > 0)
+			out_color = HSM_BlendModeLayerMix(out_color, gel_image, BLEND_MODE_NORMAL, HSM_TUBE_COLORED_GEL_IMAGE_NORMAL_AMOUNT);
 
 	}
 

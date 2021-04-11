@@ -509,14 +509,14 @@ float edge_highlight_mask = 0;
 		frag_color_linear += black_edge_mask * HSM_TUBE_STATIC_REFLECTION_IMAGE_OPACITY * tube_highlight_image * tube_highlight_image.a;
 	}
 
-// Clamp otherwise we get artifacts (blue overlays of brighter parts of image)
-frag_color_linear = clamp(frag_color_linear, 0, 1);
+	// Clamp otherwise we get artifacts (blue overlays of brighter parts of image)
+	frag_color_linear = clamp(frag_color_linear, 0, 1);
 
 
-vec2 bg_image_coord = VIEWPORT_COORD;
-float final_viewport_aspect = global.FinalViewportSize.x/global.FinalViewportSize.y;
+	vec2 bg_image_coord = VIEWPORT_COORD;
+	float final_viewport_aspect = global.FinalViewportSize.x/global.FinalViewportSize.y;
 
-FragColor = frag_color_linear + reflected_color;
+	FragColor = frag_color_linear + reflected_color;
 
 #ifdef IS_STANDARD_PRESET
 
@@ -530,6 +530,8 @@ FragColor = frag_color_linear + reflected_color;
 
 	// Correct image coordinate for image aspect ratio
 	bg_image_coord.x = (VIEWPORT_COORD.x - 0.5) / (explicit_texture_aspect/final_viewport_aspect) + 0.5;
+	vec2 decal_image_coord = bg_image_coord;
+	vec2 top_image_coord = bg_image_coord;
 
 	// vec2 destination_pos_offset = pos_offset;
 	vec2 destination_coord = bezel_outside_coord;
@@ -546,8 +548,11 @@ FragColor = frag_color_linear + reflected_color;
 	vec2 image_scaled_with_frame_coord = HSM_GetInverseScaledCoord(destination_coord, destination_scale);
 	// image_scaled_with_frame_coord += vec2(destination_pos_offset.x, destination_pos_offset.y);
 
-	vec2 decal_image_coord = HSM_STANDARD_DECAL_SCALE_WITH_FRAME == 1 ? image_scaled_with_frame_coord : bg_image_coord;
-	vec2 top_image_coord = HSM_STANDARD_TOP_SCALE_WITH_FRAME == 1 ? image_scaled_with_frame_coord : bg_image_coord;
+	decal_image_coord = HSM_STANDARD_DECAL_SCALE_WITH_FRAME == 1 ? image_scaled_with_frame_coord : bg_image_coord;
+	decal_image_coord = (decal_image_coord - 0.5) / HSM_DECAL_SCALE + 0.5;
+
+	top_image_coord = HSM_STANDARD_TOP_SCALE_WITH_FRAME == 1 ? image_scaled_with_frame_coord : bg_image_coord;
+	top_image_coord = (top_image_coord - 0.5) / HSM_TOP_SCALE + 0.5;
 
 	vec4 bg_layer = vec4(0);
 	if (SCREEN_ASPECT > 1) 
@@ -591,8 +596,10 @@ FragColor = frag_color_linear + reflected_color;
 		night_lighting_image = HSM_Linearize(night_lighting_image, HSM_DEFAULT_SRGB_GAMMA);
 
 		bg_layer = mix(bg_layer, bg_layer * night_lighting_image, HSM_NIGHT_OPACITY);
-		decal_layer = mix(decal_layer, decal_layer * night_lighting_image, HSM_NIGHT_OPACITY);
-		top_layer = mix(top_layer, top_layer * night_lighting_image, HSM_NIGHT_OPACITY);
+		if (HSM_DECAL_BLEND_MODE == BLEND_MODE_ADD)
+			decal_layer = mix(decal_layer, decal_layer * night_lighting_image, HSM_NIGHT_OPACITY);
+		if (HSM_TOP_BLEND_MODE == BLEND_MODE_ADD)
+			top_layer = mix(top_layer, top_layer * night_lighting_image, HSM_NIGHT_OPACITY);
 	}
 
 	if (HSM_STANDARD_BG_SHOW_OVER_SCREEN == 0)
@@ -619,14 +626,14 @@ FragColor = frag_color_linear + reflected_color;
 		bezel_layer = clamp(bezel_layer * (BEZEL_MASK * HSM_BZL_OPACITY + OUTSIDE_BEZEL_MASK * HSM_FRM_OPACITY), 0, 1);
 	}
 
-	// vec4 vignette_layer = vec4(0);
-	// if (HSM_VIEWPORT_VIGNETTE_OPACITY > 0)
-	// {
-	// 	vignette_layer.a += 0.75 * HHLP_QuadraticBezier(1 - HSM_GetVignetteFactor(VIEWPORT_COORD, HSM_VIEWPORT_VIGNETTE_OPACITY), vec2(1, 0.5)) * OUTSIDE_BEZEL_MASK;
-	// }
+	vec4 vignette_layer = vec4(0);
+	if (HSM_VIEWPORT_VIGNETTE_OPACITY > 0)
+	{
+		vignette_layer.a += 0.75 * HHLP_QuadraticBezier(1 - HSM_GetVignetteFactor(VIEWPORT_COORD, HSM_VIEWPORT_VIGNETTE_OPACITY), vec2(1, 0.5)) * OUTSIDE_BEZEL_MASK;
+	}
 
 	frag_color_linear = HSM_BlendModeLayerMix(frag_color_linear, bg_layer, HSM_BG_BLEND_MODE, HSM_BG_OPACITY);
-	// frag_color_linear = HSM_BlendModeLayerMix(frag_color_linear, vignette_layer, BLEND_MODE_NORMAL, 1);
+	frag_color_linear = HSM_BlendModeLayerMix(frag_color_linear, vignette_layer, BLEND_MODE_NORMAL, 1);
 	frag_color_linear = HSM_BlendModeLayerMix(frag_color_linear, led_layer, HSM_LED_BLEND_MODE, HSM_LED_OPACITY);
 	frag_color_linear = HSM_BlendModeLayerMix(frag_color_linear, bezel_layer, BLEND_MODE_NORMAL, 1);
 	frag_color_linear += reflected_color;

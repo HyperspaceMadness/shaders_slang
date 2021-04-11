@@ -168,7 +168,7 @@ float HSM_BG_MIRROR_WRAP = global.HSM_BG_MIRROR_WRAP;
 //---------------------------------------------------------------------------------------------------
 #pragma parameter HSM_VIEWPORT_VIGNETTE_TITLE		"[ VIEWPORT VIGNETTE LAYER ]____________________________________" 0 0 0.01 0.01
 
-#pragma parameter HSM_VIEWPORT_VIGNETTE_OPACITY     "      Opacity" 50 0 100 2
+#pragma parameter HSM_VIEWPORT_VIGNETTE_OPACITY     "      Opacity" 0 0 100 2
 float HSM_VIEWPORT_VIGNETTE_OPACITY = global.HSM_VIEWPORT_VIGNETTE_OPACITY / 100;
 
 #pragma parameter HSM_VIEWPORT_VIGNETTE_MASK_MODE   "Mask - ALL | Scrn | Tube | Bz- | Bz | Bz+ | Frm | Frm+ | BG" 5 0 8 1

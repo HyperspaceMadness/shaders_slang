@@ -117,6 +117,9 @@ vec4 ApplyLUT(vec4 in_color, sampler2D in_LUT)
 
 vec4 AddText(vec2 in_coord, vec4 in_color)
 {
+   in_coord.y = abs(HSM_FLIP_VIEWPORT_VERTICAL - HSM_FLIP_CORE_VERTICAL) > 0.5 ? 1 - in_coord.y : in_coord.y;
+   in_coord.x = HSM_FLIP_CORE_HORIZONTAL > 0.5 ? 1 - in_coord.x : in_coord.x;
+
    float screen_aspect = SCREEN_ASPECT;
    vec2 screen_scale = SCREEN_SCALE;
    vec2 screen_size = HSM_GetScreenSize(screen_scale);
@@ -124,8 +127,6 @@ vec4 AddText(vec2 in_coord, vec4 in_color)
    vec2 original_size = HSM_GetRotatedOriginalSize(SCREEN_INDEX);
    vec2 cropped_original_size = HSM_GetCroppedRotatedOriginalSize(SCREEN_INDEX);
    vec2 cropped_original_size_with_core_res_mult = CROPPED_ROTATED_ORIGINAL_SIZE_WITH_CORE_RES_MULT;
-   
-   if (abs(HSM_FLIP_VIEWPORT_VERTICAL - HSM_FLIP_CORE_VERTICAL) > 0.5) in_coord.y = 1 - in_coord.y;
    
    vec4 out_color = in_color;
    out_color = mix(out_color, vec4(0, 0, 0, 1), GetTextMask(in_coord + 2 * vec2(1/global.OutputSize.x, 0), global.FinalViewportSize.xy, screen_size, original_size, cropped_original_size, cropped_original_size_with_core_res_mult, int_scale_mult, global.OriginalSize.xy));
@@ -142,6 +143,9 @@ vec4 AddText(vec2 in_coord, vec4 in_color)
 vec4 GetColorWithIntro(vec4 in_color, vec2 in_coord)
 {
    vec4 out_color = in_color;
+
+   in_coord.y = abs(HSM_FLIP_VIEWPORT_VERTICAL - HSM_FLIP_CORE_VERTICAL) > 0.5 ? 1 - in_coord.y : in_coord.y;
+   in_coord.x = HSM_FLIP_CORE_HORIZONTAL > 0.5 ? 1 - in_coord.x : in_coord.x;
 
    float frame_count = global.FrameCount;
 

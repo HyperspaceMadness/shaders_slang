@@ -42,6 +42,9 @@ float HSM_STANDARD_DECAL_SCALE_WITH_FRAME = global.HSM_STANDARD_DECAL_SCALE_WITH
 #pragma parameter HSM_DECAL_SCALE 	                "      Decal Scale" 100 1 300 0.1
 float HSM_DECAL_SCALE = global.HSM_DECAL_SCALE / 100;
 
+#pragma parameter HSM_DECAL_POS_Y                       "      Decal Position Y"  0 -100 100 0.1
+float HSM_DECAL_POS_Y = global.HSM_DECAL_POS_Y / 100;
+
 #pragma parameter HSM_TOP_OPACITY 	                "      Top Extra Image Opacity" 100 0 100 0.1
 float HSM_TOP_OPACITY = global.HSM_TOP_OPACITY / 100;
 
@@ -53,6 +56,9 @@ float HSM_STANDARD_TOP_SCALE_WITH_FRAME = global.HSM_STANDARD_TOP_SCALE_WITH_FRA
 
 #pragma parameter HSM_TOP_SCALE 	                "      Top Scale" 100 1 300 0.1
 float HSM_TOP_SCALE = global.HSM_TOP_SCALE / 100;
+
+#pragma parameter HSM_TOP_POS_Y                     "      Top Position Y"  0 -100 100 0.1
+float HSM_TOP_POS_Y = global.HSM_TOP_POS_Y / 100;
 
 //---------------------------------------------------------------------------------------------------
 //    STATIC ELEMENT GAMMA

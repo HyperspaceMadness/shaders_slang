@@ -549,9 +549,11 @@ float edge_highlight_mask = 0;
 	// image_scaled_with_frame_coord += vec2(destination_pos_offset.x, destination_pos_offset.y);
 
 	decal_image_coord = HSM_STANDARD_DECAL_SCALE_WITH_FRAME == 1 ? image_scaled_with_frame_coord : bg_image_coord;
+	decal_image_coord.y += HSM_DECAL_POS_Y;
 	decal_image_coord = (decal_image_coord - 0.5) / HSM_DECAL_SCALE + 0.5;
 
 	top_image_coord = HSM_STANDARD_TOP_SCALE_WITH_FRAME == 1 ? image_scaled_with_frame_coord : bg_image_coord;
+	top_image_coord.y += HSM_TOP_POS_Y;
 	top_image_coord = (top_image_coord - 0.5) / HSM_TOP_SCALE + 0.5;
 
 	vec4 bg_layer = vec4(0);
@@ -596,8 +598,10 @@ float edge_highlight_mask = 0;
 		night_lighting_image = HSM_Linearize(night_lighting_image, HSM_DEFAULT_SRGB_GAMMA);
 
 		bg_layer = mix(bg_layer, bg_layer * night_lighting_image, HSM_NIGHT_OPACITY);
+
 		if (HSM_DECAL_BLEND_MODE == BLEND_MODE_ADD)
 			decal_layer = mix(decal_layer, decal_layer * night_lighting_image, HSM_NIGHT_OPACITY);
+
 		if (HSM_TOP_BLEND_MODE == BLEND_MODE_ADD)
 			top_layer = mix(top_layer, top_layer * night_lighting_image, HSM_NIGHT_OPACITY);
 	}

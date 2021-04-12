@@ -320,14 +320,14 @@ float HSM_SCREEN_REFLECTION_POS_Y = global.HSM_SCREEN_REFLECTION_POS_Y / 600;
 //---------------------------------------------------------------------------------------------------
 #pragma parameter HSM_TUBE_IMAGES_TITLE							"[ TUBE IMAGES ]________________________________________________" 0 0 0.01 0.01
 
-#pragma parameter HSM_TUBE_COLORED_GEL_IMAGE_NORMAL_AMOUNT  	"      Colored Gel Normal Amount" 0 0 100 0.05
-float HSM_TUBE_COLORED_GEL_IMAGE_NORMAL_AMOUNT = global.HSM_TUBE_COLORED_GEL_IMAGE_NORMAL_AMOUNT / 100;
+#pragma parameter HSM_TUBE_COLORED_GEL_IMAGE_MULTIPLY_AMOUNT  	"      Colored Gel Multiply Amount" 0 0 100 1
+float HSM_TUBE_COLORED_GEL_IMAGE_MULTIPLY_AMOUNT = global.HSM_TUBE_COLORED_GEL_IMAGE_MULTIPLY_AMOUNT / 100;
 
 #pragma parameter HSM_TUBE_COLORED_GEL_IMAGE_ADDITIVE_AMOUNT  	"      Colored Gel Additive Amount" 0 0 100 0.05
 float HSM_TUBE_COLORED_GEL_IMAGE_ADDITIVE_AMOUNT = global.HSM_TUBE_COLORED_GEL_IMAGE_ADDITIVE_AMOUNT / 100;
 
-#pragma parameter HSM_TUBE_COLORED_GEL_IMAGE_MULTIPLY_AMOUNT  	"      Colored Gel Multiply Amount" 0 0 100 5
-float HSM_TUBE_COLORED_GEL_IMAGE_MULTIPLY_AMOUNT = global.HSM_TUBE_COLORED_GEL_IMAGE_MULTIPLY_AMOUNT / 100;
+#pragma parameter HSM_TUBE_COLORED_GEL_IMAGE_NORMAL_AMOUNT  	"      Colored Gel Normal Amount" 0 0 100 1
+float HSM_TUBE_COLORED_GEL_IMAGE_NORMAL_AMOUNT = global.HSM_TUBE_COLORED_GEL_IMAGE_NORMAL_AMOUNT / 100;
 
 #pragma parameter HSM_TUBE_STATIC_REFLECTION_IMAGE_OPACITY  	"      Tube Static Reflection Opacity" 0 0 100 0.1
 float HSM_TUBE_STATIC_REFLECTION_IMAGE_OPACITY = global.HSM_TUBE_STATIC_REFLECTION_IMAGE_OPACITY / 100;

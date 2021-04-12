@@ -1,14 +1,15 @@
 
 
 
-Mega Bezel is updated to V 0.9.03 2020-04-10
+Mega Bezel is updated to V 0.9.04 2020-04-11
 
 Changes:
-  * Added Aspect Ratio for the background image in the BASIC-BORDER
-  * Added Decal image to STANDARD and Decal and Top Image can be made to scale along with the frame
-    * The Playstation Example shows the scaling with the frame
-  * Added a Normal blending amount for the gel image
-  * Added Battlezone as an example of use of the gel image, both STANDARD and BASIC-BORDER versions
+*  Fixed Upside Down Intro Logo
+*  Optional Vignette added for background
+*  Decal and Top image can scale with frame if desired
+*  Scale offset and Pos y offset for Decal and Top Image
+*  No Night lighting added for Decal or Top image when they are in additive mode
+
 
   *  Performance of Base presets at 3840x2160 on Nvidia RTX2060:
     *  ADVANCED -                      80 FPS  -  No comparable old preset

@@ -22,6 +22,9 @@ License: GPL
 #pragma parameter HSM_INTRO_LOGO_BLEND_MODE        				"      Logo Blend Mode - OFF | NORM | ADD | MULT"  1 0 3 1
 #define HSM_INTRO_LOGO_BLEND_MODE global.HSM_INTRO_LOGO_BLEND_MODE
 
+// #pragma parameter HSM_INTRO_LOGO_FLIP_VERTICAL        				"      Logo Flip Vertical"  0 0 1 1
+// #define HSM_INTRO_LOGO_FLIP_VERTICAL global.HSM_INTRO_LOGO_FLIP_VERTICAL
+
 #pragma parameter HSM_INTRO_LOGO_OVER_SOLID_COLOR       		"      Logo Over Solid Color - Off | ON"  1 0 1 1
 #define HSM_INTRO_LOGO_OVER_SOLID_COLOR global.HSM_INTRO_LOGO_OVER_SOLID_COLOR
 

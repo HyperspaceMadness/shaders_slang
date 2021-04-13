@@ -144,6 +144,8 @@ vec4 GetColorWithIntro(vec4 in_color, vec2 in_coord)
 {
    vec4 out_color = in_color;
 
+   // in_coord.y = HSM_INTRO_LOGO_FLIP_VERTICAL > 0.5 ? 1 - in_coord.y : in_coord.y;
+
    in_coord.y = abs(HSM_FLIP_VIEWPORT_VERTICAL - HSM_FLIP_CORE_VERTICAL) > 0.5 ? 1 - in_coord.y : in_coord.y;
    in_coord.x = HSM_FLIP_CORE_HORIZONTAL > 0.5 ? 1 - in_coord.x : in_coord.x;
 

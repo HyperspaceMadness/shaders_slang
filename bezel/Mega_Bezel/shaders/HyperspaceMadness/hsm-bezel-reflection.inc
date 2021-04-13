@@ -599,10 +599,10 @@ float edge_highlight_mask = 0;
 
 		bg_layer = mix(bg_layer, bg_layer * night_lighting_image, HSM_NIGHT_OPACITY);
 
-		if (HSM_DECAL_BLEND_MODE == BLEND_MODE_ADD)
+		if (HSM_DECAL_BLEND_MODE != BLEND_MODE_ADD)
 			decal_layer = mix(decal_layer, decal_layer * night_lighting_image, HSM_NIGHT_OPACITY);
 
-		if (HSM_TOP_BLEND_MODE == BLEND_MODE_ADD)
+		if (HSM_TOP_BLEND_MODE != BLEND_MODE_ADD)
 			top_layer = mix(top_layer, top_layer * night_lighting_image, HSM_NIGHT_OPACITY);
 	}
 

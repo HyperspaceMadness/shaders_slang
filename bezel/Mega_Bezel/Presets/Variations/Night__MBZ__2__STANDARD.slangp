@@ -1,14 +1,6 @@
 #reference "../MBZ__2__STANDARD.slangp"
 
 BackgroundImage = ../../shaders/HyperspaceMadness/textures/HSM_Duimon_Super_Famicom_3840x2160.png
-ColoredGelImage = ../../shaders/HyperspaceMadness/textures/Placeholder_Transparent_16x16.png
-CabinetGlassImage = ../../shaders/HyperspaceMadness/textures/TubeGlassOverlayImage_Night_3840x2160.png
-BezelImage = ../../shaders/HyperspaceMadness/textures/Placeholder_Transparent_16x16.png
-BezelVertImage = ../../shaders/HyperspaceMadness/textures/Placeholder_Transparent_16x16.png
-DecalImage = ../../shaders/HyperspaceMadness/textures/Placeholder_Transparent_16x16.png
-NightLightingImage = ../../shaders/HyperspaceMadness/textures/NightLighting_3840x2160.jpg
-LEDImage = ../../shaders/HyperspaceMadness/textures/Placeholder_Transparent_16x16.png
-TopLayerImage = ../../shaders/HyperspaceMadness/textures/Placeholder_Transparent_16x16.png
 
 HSM_VIEWPORT_VIGNETTE_OPACITY = 0
 HSM_BZL_COLOR_VALUE = 30

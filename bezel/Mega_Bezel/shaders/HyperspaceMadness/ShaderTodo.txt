@@ -1,10 +1,11 @@
 
 
 
-Mega Bezel is updated to V 0.9.05 2020-04-12
+Mega Bezel is updated to V 0.9.06 2020-04-XX
 
 Changes:
-*  Fixed Where nightlighting was not being applied properly
+*  STANDARD preset: Fixed Black Edge on outer edge of the frame
+
 
   *  Performance of Base presets at 3840x2160 on Nvidia RTX2060:
     *  ADVANCED -                      80 FPS  -  No comparable old preset

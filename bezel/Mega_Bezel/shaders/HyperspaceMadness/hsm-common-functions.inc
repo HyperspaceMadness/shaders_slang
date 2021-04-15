@@ -549,7 +549,6 @@ vec2 HSM_GetScreenPlacementYPosAndHeight(sampler2D in_sampler_2D, float num_samp
    return vec2((screen_top_y_pos + screen_bottom_y_pos) / 2, screen_bottom_y_pos - screen_top_y_pos);
 }
 
-
 vec2 HSM_GetCoordWithPositionOffset(vec2 in_coord, vec2 position_offset)
 {
 	return in_coord - position_offset;
@@ -599,29 +598,60 @@ int HSM_IsCoordIn2DRange(vec2 in_coord, vec4 in_2d_range)
 			in_coord.y < in_2d_range.w ) ? 1 : 0;
 }
 
+// // HSM_CROP_BLACK_ONLY
+// vec4 HSM_GetBlackCropStartCoordAndSize(sampler2D in_sampler_2D, vec2 sample_start_pixel_coord, vec2 original_size, float num_samples)
+// {
+// 	float screen_top_y_pos = 1;
+// 	float screen_bottom_y_pos = 0;
+// 	float screen_left_x_pos = 1;
+// 	float screen_right_x_pos = 0;
+
+// 	for (int i=0; i < num_samples; i++)
+// 	{
+// 		float y_pos = i * 1 / num_samples;
+// 		float brightness = length(texture(in_sampler_2D, vec2(0.5, y_pos)).rgb);
+// 		if (brightness > 0)
+// 		{
+// 			screen_top_y_pos = min(screen_top_y_pos, y_pos);
+// 			screen_bottom_y_pos = max(screen_bottom_y_pos, y_pos);
+// 		}
+
+// 		float x_pos = i * 1 / num_samples;
+// 		float brightness = length(texture(in_sampler_2D, vec2(x_pos, 0.5)).rgb);
+// 		if (brightness > 0)
+// 		{
+// 			screen_left_x_pos = min(screen_left_x_pos, x_pos);
+// 			screen_right_x_pos = max(screen_right_x_pos, x_pos);
+// 		}
+// 	}
+//    return vec4(screen_left_x_pos, screen_top_y_pos, screen_right_x_pos, screen_bottom_y_pos);
+// }
+
 vec4 HSM_GetColorForScreenInfoCache(vec2 viewport_coord, sampler2D original_pass, sampler2D screen_placement_image)
 {
 	vec4 out_color = vec4(0);
 
+	// First Screen
 	vec2 screen_pos_and_height = HSM_GetScreenPlacementYPosAndHeight(screen_placement_image, 60);
 	float screen_aspect = HSM_GetScreenAspect(1);
 	vec2 screen_scale = HSM_GetScreenScale(screen_aspect, screen_pos_and_height.y);
 	vec2 tube_scale = HSM_GetTubeScale(screen_scale, screen_pos_and_height.y);
 	vec2 pos_offset = HSM_GetPositionOffset(vec2(0.5, screen_pos_and_height.x), screen_scale);
 
-	vec2 cropped_size = HSM_GetCroppedRotatedOriginalSize(2);
-	float screen_aspect_2nd_screen = HSM_DUALSCREEN_2ND_SCREEN_ASPECT_RATIO_MODE == 0 ? screen_aspect : cropped_size.x / cropped_size.y;
-	vec2 screen_scale_2nd_screen = HSM_GetScreenScaleFor2ndScreen(screen_scale, screen_aspect_2nd_screen);
-	vec2 tube_scale_2nd_screen = HSM_GetTubeScale(screen_scale_2nd_screen, DEFAULT_TUBE_SCALE_V);
-	vec2 pos_offset_2nd_screen = HSM_GetPositionOffsetFor2ndScreen(screen_scale_2nd_screen);
-
 	vec2 cropped_original_size_with_core_res_mult = HSM_GetCroppedRotatedOriginalSizeWithCoreResMult(1);
 	vec2 cropped_original_size = HSM_GetCroppedRotatedOriginalSize(1);
 	vec2 sample_area_start_raw_pixel_coord = HSM_GetSampleAreaStartPixelCoord(1);
 
+	// Second Screen
 	vec2 cropped_original_size_with_core_res_mult_2nd_screen = HSM_GetCroppedRotatedOriginalSizeWithCoreResMult(2);
 	vec2 cropped_original_size_2nd_screen = HSM_GetCroppedRotatedOriginalSize(2);
 	vec2 sample_area_start_in_raw_pixels_2nd_screen = HSM_GetSampleAreaStartPixelCoord(2);
+
+	float screen_aspect_2nd_screen = HSM_DUALSCREEN_2ND_SCREEN_ASPECT_RATIO_MODE == 0 ? screen_aspect : cropped_original_size_2nd_screen.x / cropped_original_size_2nd_screen.y;
+	vec2 screen_scale_2nd_screen = HSM_GetScreenScaleFor2ndScreen(screen_scale, screen_aspect_2nd_screen);
+	vec2 tube_scale_2nd_screen = HSM_GetTubeScale(screen_scale_2nd_screen, DEFAULT_TUBE_SCALE_V);
+	vec2 pos_offset_2nd_screen = HSM_GetPositionOffsetFor2ndScreen(screen_scale_2nd_screen);
+
 
 	vec4 sample_2d_range = vec4(0);
 	sample_2d_range = vec4(0, 0, 0.25, 0.25);

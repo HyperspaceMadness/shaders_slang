@@ -58,6 +58,7 @@ layout(std140, set = 0, binding = 0) uniform UBO
 	float HSM_CROP_OVERSCAN_BOTTOM;
 	float HSM_CROP_OVERSCAN_LEFT;
 	float HSM_CROP_OVERSCAN_RIGHT;
+float HSM_CROP_BLACK_ONLY;
 
 	float HSM_CURVATURE_MODE;
 	float HSM_CURVATURE_3D_RADIUS;

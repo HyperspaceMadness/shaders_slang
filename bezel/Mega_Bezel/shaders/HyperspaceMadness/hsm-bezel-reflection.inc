@@ -624,11 +624,12 @@ float edge_highlight_mask = 0;
 
 		// Mask out the area outside the frame
 		bezel_layer = bezel_and_frame_rgba * (1 - OUTSIDE_FRAME_MASK);
-		// Layer this on top of the shadow
-		bezel_layer = HSM_BlendModeLayerMix(frame_shadow_layer * HSM_FRM_SHADOW_OPACITY, bezel_layer, BLEND_MODE_NORMAL, 1);
+		
 		// Adjust the masks for the transparency of each portion, Bezel and from the frame outwards
-		// bezel_layer = clamp(bezel_layer * (BEZEL_MASK * HSM_BZL_OPACITY + OUTSIDE_BEZEL_MASK * HSM_FRM_OPACITY), 0, 1);
 		bezel_layer *= clamp(HSM_BZL_OPACITY * BEZEL_MASK + HSM_FRM_OPACITY * FRAME_MASK, 0, 1);
+
+		// Layer this on top of the shadow
+		bezel_layer = HSM_BlendModeLayerMix(frame_shadow_layer * HSM_FRM_SHADOW_OPACITY * HSM_FRM_OPACITY, bezel_layer, BLEND_MODE_NORMAL, 1);
 	}
 
 	vec4 vignette_layer = vec4(0);

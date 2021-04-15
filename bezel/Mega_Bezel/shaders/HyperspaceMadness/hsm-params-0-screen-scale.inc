@@ -111,6 +111,9 @@ float HSM_CROP_OVERSCAN_LEFT = global.HSM_CROP_OVERSCAN_LEFT;
 #pragma parameter HSM_CROP_OVERSCAN_RIGHT 				"      Crop Overscan Right" 0 0 256 1
 float HSM_CROP_OVERSCAN_RIGHT = global.HSM_CROP_OVERSCAN_RIGHT;
 
+// #pragma parameter HSM_CROP_BLACK_ONLY 					"      Only Crop Black" 0 0 1 1
+// float HSM_CROP_BLACK_ONLY = global.HSM_CROP_BLACK_ONLY;
+
 
 //---------------------------------------------------------------------------------------------------
 //    CORE RES SAMPLING

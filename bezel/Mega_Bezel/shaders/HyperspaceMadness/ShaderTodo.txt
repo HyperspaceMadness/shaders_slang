@@ -1,26 +1,36 @@
-
-
-
 Mega Bezel is updated to V 0.9.06 2020-04-XX
 
 Changes:
 *  STANDARD preset: Fixed Black Edge on outer edge of the frame
+*  Fixed Reflection so it would be like it was in the previous version, more diffused as it moves outward
+  * You can create more mirror-like reflection can be made by reducing [ REFLECTION BLUR ]_________ / Max Blur to 0
+* HD-CORE presets added to experimental folder 
+  * Experimental means they are new and may change significantly in the near future, (names may change, individual presets may disappear, passes inside may be adjusted)
+* Reflection Blur Falloff Distance, an easy way to control how quickly the reflection gets blurry
 
-
-  *  Performance of Base presets at 3840x2160 on Nvidia RTX2060:
-    *  ADVANCED -                      80 FPS  -  No comparable old preset
-    *  GLASS -                        150 FPS  -  Old Glass Preset        128 FPS
-    *  STANDARD -                     135 FPS  -  Old Full Preset         140 FPS
-    *  BASIC-BORDER-WITH-REFLECTION - 175 FPS  -  Old Reflect Only Preset 165 FPS
-    *  BASIC-BORDER -                 295 FPS  -  Old Screen Scale Preset 370 FPS
+*  Performance of Base presets at 3840x2160 on Nvidia RTX2060:
+  *  ADVANCED -                      80 FPS  -  No comparable old preset
+  *  GLASS -                        150 FPS  -  Old Glass Preset        128 FPS
+  *  STANDARD -                     135 FPS  -  Old Full Preset         140 FPS
+  *  STANDARD-HD-CORE -             105 FPS
+  *  BASIC-BORDER-WITH-REFLECTION - 175 FPS  -  Old Reflect Only Preset 165 FPS
+  *  BASIC-BORDER -                 295 FPS  -  Old Screen Scale Preset 370 FPS
+*  Performance on HD-CORE E.G. 1920x1080:
+  *  ADVANCED -                     60 FPS 
+  *  ADVANCED-HD-CORE -             70 FPS 
+  *  STANDARD -                     85 FPS 
+  *  STANDARD-HD-CORE -             100 FPS 
+  *  BASIC-BORDER-WITH-REFLECTION - 126 FPS 
+  *  BASIC-BORDER                 - 180 FPS 
 
 Mega Bezel Still to Come:
 
 V1 TODO
+  * Enable HSM_REFLECT_BLUR_FALLOFF_DISTANCE ?
+  * Night Lighting Add Scaling
   * Need an Preset for HD content, Vector Content
   * LED over Frame?
   * Fix LCD Shader
-  * Fix Reflection so the blur is more similar to the original version
   * Local vs FullScreen Blur on Corner reflection?
   * Test performance for Reflection Only, or BASIC-BORDER + Reflection presets
   * Fix frame inner edge color not picking up HSV, (Advanced Preset?)

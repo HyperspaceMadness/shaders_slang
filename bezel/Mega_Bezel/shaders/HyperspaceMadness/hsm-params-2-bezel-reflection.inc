@@ -125,7 +125,7 @@ float HSM_REFLECT_BLEND_MODE = global.HSM_REFLECT_BLEND_MODE;
 #pragma parameter HSM_REFLECT_MASK_MODE                         "  Mask - ALL | Screen | Tube | Bz- | Bz | Bz+ | Frm | Frm+ | BG"   4 0 8 1
 float HSM_REFLECT_MASK_MODE = global.HSM_REFLECT_MASK_MODE;
 
-#pragma parameter HSM_REFLECT_GLOBAL_AMOUNT 				    "      Global Amount" 40 0 300 2
+#pragma parameter HSM_REFLECT_GLOBAL_AMOUNT 				    "      Global Amount" 40 0 300 1
 float HSM_REFLECT_GLOBAL_AMOUNT = global.HSM_REFLECT_GLOBAL_AMOUNT / 100;
 
 #pragma parameter HSM_REFLECT_GLOBAL_GAMMA_ADJUST 			    "      Global Gamma Adjust" 1.2 0.25 3 0.05
@@ -165,10 +165,10 @@ float HSM_REFLECT_FRAME_INNER_EDGE_SHARPNESS = global.HSM_REFLECT_FRAME_INNER_ED
 float HSM_REFLECT_FADE_AMOUNT = global.HSM_REFLECT_FADE_AMOUNT / 100;
 
 #pragma parameter HSM_REFLECT_RADIAL_FADE_WIDTH 			    "      Radial Fade Width" 100 0 1000 1
-float HSM_REFLECT_RADIAL_FADE_WIDTH = global.HSM_REFLECT_RADIAL_FADE_WIDTH / 500;
+float HSM_REFLECT_RADIAL_FADE_WIDTH = global.HSM_REFLECT_RADIAL_FADE_WIDTH / 350;
 
 #pragma parameter HSM_REFLECT_RADIAL_FADE_HEIGHT 				"      Radial Fade Height" 100 0 1000 1
-float HSM_REFLECT_RADIAL_FADE_HEIGHT = global.HSM_REFLECT_RADIAL_FADE_HEIGHT / 500;
+float HSM_REFLECT_RADIAL_FADE_HEIGHT = global.HSM_REFLECT_RADIAL_FADE_HEIGHT / 350;
 
 #pragma parameter HSM_REFLECT_LATERAL_OUTER_FADE_POSITION 		"      Lateral Outer Fade Position" -18 -500 500 0.5
 float HSM_REFLECT_LATERAL_OUTER_FADE_POSITION = global.HSM_REFLECT_LATERAL_OUTER_FADE_POSITION / -1000;
@@ -218,10 +218,10 @@ float HSM_REFLECT_BLUR_MIN = global.HSM_REFLECT_BLUR_MIN / 100;
 #pragma parameter HSM_REFLECT_BLUR_MAX 							    "      Max Blur" 	95 0 100 1
 float HSM_REFLECT_BLUR_MAX = global.HSM_REFLECT_BLUR_MAX / 100;
 
-// #pragma parameter HSM_REFLECT_BLUR_FALLOFF_DISTANCE 				"      Falloff Distance" 	100 0 500 1
-// float HSM_REFLECT_BLUR_FALLOFF_DISTANCE = global.HSM_REFLECT_BLUR_FALLOFF_DISTANCE / 100;
+#pragma parameter HSM_REFLECT_BLUR_FALLOFF_DISTANCE 				"      Falloff Distance" 	100 0 500 1
+float HSM_REFLECT_BLUR_FALLOFF_DISTANCE = global.HSM_REFLECT_BLUR_FALLOFF_DISTANCE / 100;
 
-float HSM_REFLECT_BLUR_FALLOFF_DISTANCE = 1;
+// float HSM_REFLECT_BLUR_FALLOFF_DISTANCE = 1;
 
 // Reflection Noise
 #pragma parameter HSM_REFLECT_NOISE_TITLE			                "[ REFLECTION NOISE ]___________________________________________" 0 0 0.01 0.01

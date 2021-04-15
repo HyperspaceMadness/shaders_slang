@@ -1,8 +1,7 @@
 
 //#define ShowPlacementGuide
 
-#include "hsm-globals-and-reflection-params.inc"
-#include "hsm-common-functions-bezel.inc"
+#include "hsm-screen-scale-and-bezel-with-globals.inc"
 
 #pragma stage vertex
 layout(location = 0) in vec4 Position;
@@ -25,7 +24,7 @@ layout(location = 0) out vec4 FragColor;
 
 layout(set = 0, binding = 2) uniform sampler2D Source;
 layout(set = 0, binding = 3) uniform sampler2D BR_MirrorLowResPass;
-layout(set = 0, binding = 4) uniform sampler2D InfoCachePass;
+layout(set = 0, binding = 4) uniform sampler2D BR_MappingPass;
 
 float clamp_0_1(float in_value)
 {
@@ -34,11 +33,14 @@ float clamp_0_1(float in_value)
 
 void main()
 {
-	if (HSM_REFLECT_BLUR_NUM_SAMPLES > 0)
+	if (HBR_BLUR_NUM_SAMPLES > 0)
 	{
-		HSM_UpdateGlobalScreenValuesFromCache(InfoCachePass, VIEWPORT_COORD);
+		vec2 tube_coord_warped = vec2(0, 0);
+		float outside_tube_mask = 0;
+		float edge_mask = 0;
+		HSS_GetCachedCurvedValues(BR_MappingPass, VIEWPORT_COORD.xy, tube_coord_warped, outside_tube_mask, edge_mask);
 
-		vec2 tube_curved_coord_ctr = HSM_GetTubeCurvedCoord(SCREEN_COORD, 1, SCREEN_SCALE, TUBE_SCALE, SCREEN_ASPECT, 1) - 0.5;
+		vec2 tube_warped_coord_ctr = tube_coord_warped - 0.5;
 
 		//----------------------------------------------------
 		//  Calculate Outside mapping Coords
@@ -56,21 +58,27 @@ void main()
 
 		// Get a range width from the outer tube edge to the outer edge of the outermap
 		float outermap_range = 0.5 * (outermap_scale.y) * 0.7;
-		vec2 outermap_warped_coord_ctr = tube_curved_coord_ctr;
+		vec2 outermap_warped_coord_ctr = tube_warped_coord_ctr;
 		vec2 outermap_warped_outside_screen_vector = outermap_warped_coord_ctr - clamp(outermap_warped_coord_ctr, -0.490, 0.490);
 		float outside_ratio_warped = clamp(length(outermap_warped_outside_screen_vector) / outermap_range, 0, 1);
 
-		float hbl_sharpness_falloff_distance = 7 * HSM_REFLECT_BLUR_FALLOFF_DISTANCE;
-		if (HSM_GLASS_BORDER_ON == 1)
-			hbl_sharpness_falloff_distance = 20;
+		#ifdef GLASS_PRESET
+			float hbl_sharpness_falloff_distance = 20;
+		#else
+			float hbl_sharpness_falloff_distance = 7;
+		#endif
 
 		float blur_ratio = clamp_0_1(outside_ratio_warped / (hbl_sharpness_falloff_distance / 100));
 		float blur_midpoint = 0.12;
 		float hbl_sharpness_falloff_speed = 1;
 		blur_ratio = HHLP_QuadraticBezier (clamp_0_1(blur_ratio - blur_midpoint), vec2(0.05, hbl_sharpness_falloff_speed));
 
+		#ifdef HSM_SPLIT_SCREEN_PRESET
+			float in_split_screen_area = HSS_GetSplitScreenAreaGradient(tube_coord_warped, 1.5, 0);
+			blur_ratio = (1 - outside_tube_mask) * HHLP_EasePowerInOut(0.5 + HSS_GetSplitScreenAreaGradient(tube_coord_warped, 0.2, 1.5), 2) + outside_tube_mask * blur_ratio;
+		#endif
 
-		blur_ratio = HSM_REFLECT_BLUR_MIN + blur_ratio * (HSM_REFLECT_BLUR_MAX - HSM_REFLECT_BLUR_MIN);
+		blur_ratio = HBR_BLUR_MIN + blur_ratio * (HBR_BLUR_MAX - HBR_BLUR_MIN);
 
 		vec3 col = vec3(0.0);
 		
@@ -95,7 +103,7 @@ void main()
 		float blend_with_unblurred = smoothstep(-0.3, 0.3, HHLP_QuadraticBezier(blur_ratio, vec2(0.5, 0.5)));
 
 		float k_total = 0.;
-		for (float i = -HSM_REFLECT_BLUR_NUM_SAMPLES; i <= HSM_REFLECT_BLUR_NUM_SAMPLES; i++)
+		for (float i = -HBR_BLUR_NUM_SAMPLES; i <= HBR_BLUR_NUM_SAMPLES; i++)
 		{
 			float k = exp(-blur_falloff * (i) * (i));
 			k_total += k;
@@ -106,6 +114,11 @@ void main()
 			col += k * sampled_color.rgb;
 		}
 		vec4 blurred_color = vec4(col / k_total, 1.0);
+
+		// If this is used in a split screen preset and blending of the center area is requested add that to the 
+		#ifdef HSM_SPLIT_SCREEN_PRESET
+			blend_with_unblurred = clamp(blend_with_unblurred + in_split_screen_area, 0, 1);
+		#endif
 
 		vec4 unblurred_color = texture(BR_MirrorLowResPass, vTexCoord);
 		FragColor = mix(unblurred_color, blurred_color, blend_with_unblurred);

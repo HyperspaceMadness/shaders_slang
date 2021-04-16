@@ -33,8 +33,8 @@ Installation
 ----------------------------------------
 
   * If you have previous versions of the Mega Bezel installed:
-    * Delete all hsm presets from shaders/shaders_slang/bezel
-  * Inside the .zip is a shaders folder, drop this shaders folder directly over your existing one and everything will go into the right place
+    * Delete all hsm presets from shaders/shaders_slang/bezel/Mega_Bezel
+  * Inside the .zip is a bezel folder, copy this bezel folder inside the Retroarch/shaders/shaders_slang folder
   * Set video driver to Vulcan or GLCore (Vulcan seems faster)
   * Set video aspect ratio to your monitor aspect ratio, e.g. 16:9
   * Set integer scale to OFF
@@ -81,6 +81,12 @@ As the name's index number increases the presets get faster but less flexible
 
   * These presets are simple presets referencing one of the presets in the Mega_Bezel folder
   * They reference the original preset then have adjusted parameters or texture paths
+
+**Presets in Mega_Bezel / Presets / Experimental**
+
+  * These presets are work in progress and therfore 
+  * Use at your own risk!
+  * These may disappear, be renamed, or change behavior at any future release
 
 ----------------------------------------
 Troubleshooting

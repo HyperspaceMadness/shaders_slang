@@ -970,7 +970,8 @@ vec4 HSM_GetBlackCropStartCoordAndSize(sampler2D in_sampler_2D, vec2 sample_star
 	for (int i=0; i < num_samples; i++)
 	{
 		float y_pos = i * 1 / num_samples;
-		float brightness = length(texture(in_sampler_2D, vec2(0.5, y_pos)).rgb);
+		vec4 tex_sample = HSM_GetTexSampleFromSampleStartAndSize(in_sampler_2D, vec2(0.5, y_pos), sample_start_pixel_coord, window_size);
+		float brightness = tex_sample.r + tex_sample.g + tex_sample.b;
 		if (brightness > 0)
 		{
 			screen_top_y_pos = min(screen_top_y_pos, y_pos);
@@ -985,7 +986,13 @@ vec4 HSM_GetBlackCropStartCoordAndSize(sampler2D in_sampler_2D, vec2 sample_star
 			screen_right_x_pos = max(screen_right_x_pos, x_pos);
 		}
 	}
-   return vec4(screen_left_x_pos, screen_top_y_pos, screen_right_x_pos, screen_bottom_y_pos);
+
+	float final_crop_left = min(ceil(screen_left_x_pos * window_size.x), HSM_CROP_OVERSCAN_LEFT);
+	float final_crop_top = min(ceil(screen_top_y_pos * window_size.y), HSM_CROP_OVERSCAN_TOP);
+	float final_crop_right = min(ceil((1 - screen_right_x_pos) * window_size.x), HSM_CROP_OVERSCAN_RIGHT);
+	float final_crop_bottom = min(ceil((1 - screen_bottom_y_pos) * window_size.y), HSM_CROP_OVERSCAN_BOTTOM);
+
+	return vec4(sample_start_pixel_coord.x + final_crop_left, sample_start_pixel_coord.y + final_crop_top, window_size.x - final_crop_left - final_crop_right, window_size.y - final_crop_top - final_crop_bottom);
 }
 
 vec4 HSM_GetColorForScreenInfoCache(vec2 viewport_coord, sampler2D original_pass, sampler2D screen_placement_image)
@@ -999,13 +1006,36 @@ vec4 HSM_GetColorForScreenInfoCache(vec2 viewport_coord, sampler2D original_pass
 	vec2 tube_scale = HSM_GetTubeScale(screen_scale, screen_pos_and_height.y);
 	vec2 pos_offset = HSM_GetPositionOffset(vec2(0.5, screen_pos_and_height.x), screen_scale);
 
-	vec2 rotated_original_size = HSM_GetRotatedOriginalSize(1);
-	vec2 sample_area_start_raw_pixel_coord = HSM_GetSampleAreaStartPixelCoord(1);
+	vec2 cropped_original_size_with_core_res_mult = vec2(100);
+	vec2 cropped_original_size = vec2(100);
+	vec2 cropped_sample_area_start_pixel_coord = vec2(100);
 
-	
-	vec2 cropped_original_size_with_core_res_mult = HSM_GetCroppedRotatedOriginalSizeWithCoreResMult(1);
-	vec2 cropped_original_size = HSM_GetCroppedRotatedOriginalSize(1);
-	vec2 cropped_sample_area_start_raw_pixel_coord = HSM_GetSampleAreaStartPixelCoord(1) + vec2(HSM_CROP_OVERSCAN_LEFT, HSM_CROP_OVERSCAN_TOP);
+	vec2 original_size = HSM_GetRotatedOriginalSize(1);
+	vec2 rotated_original_size = HSM_GetRotatedOriginalSize(1);
+	vec2 sample_area_start_pixel_coord = HSM_GetSampleAreaStartPixelCoord(1);
+
+	if (HSM_CROP_MODE == 0)
+	{
+		cropped_original_size_with_core_res_mult = HSM_GetRotatedOriginalSizeWithCoreResMult(1);
+		cropped_original_size = original_size;
+		cropped_sample_area_start_pixel_coord = sample_area_start_pixel_coord;
+	}
+	if (HSM_CROP_MODE == 1)
+	{
+		vec4 sample_start_and_size = HSM_GetBlackCropStartCoordAndSize(original_pass, sample_area_start_pixel_coord, rotated_original_size, 60);
+		cropped_original_size = sample_start_and_size.zw;
+		cropped_sample_area_start_pixel_coord = sample_start_and_size.xy;
+
+		vec2 sampling_mult = HSM_GetCoreSamplingResMult();
+		sampling_mult = HSM_ROTATE_CORE_IMAGE == 1 ? sampling_mult.yx : sampling_mult.xy;
+		cropped_original_size_with_core_res_mult = ceil(rotated_original_size * sampling_mult.xy);
+	}
+	if (HSM_CROP_MODE == 2)
+	{
+		cropped_original_size_with_core_res_mult = HSM_GetCroppedRotatedOriginalSizeWithCoreResMult(1);
+		cropped_original_size = HSM_GetCroppedRotatedOriginalSize(1);
+		cropped_sample_area_start_pixel_coord = HSM_GetSampleAreaStartPixelCoord(1) + vec2(HSM_CROP_OVERSCAN_LEFT, HSM_CROP_OVERSCAN_TOP);
+	}
 
 	// Second Screen
 	vec2 cropped_original_size_with_core_res_mult_2nd_screen = HSM_GetCroppedRotatedOriginalSizeWithCoreResMult(2);
@@ -1056,7 +1086,7 @@ vec4 HSM_GetColorForScreenInfoCache(vec2 viewport_coord, sampler2D original_pass
 	if (HSM_IsCoordIn2DRange(viewport_coord, sample_2d_range) == 1)
 	{
 		out_color.rg = cropped_original_size;
-		out_color.ba = cropped_sample_area_start_raw_pixel_coord;
+		out_color.ba = cropped_sample_area_start_pixel_coord;
 	}
 
 	// 6th Sample

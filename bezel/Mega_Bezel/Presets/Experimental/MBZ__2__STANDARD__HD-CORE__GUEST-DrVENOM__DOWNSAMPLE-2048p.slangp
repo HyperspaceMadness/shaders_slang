@@ -18,8 +18,8 @@ shader2 = ../../shaders/HyperspaceMadness/hsm-dogway/hsm-grade.slang
 alias2  = "ColorCorrectPass"
 mipmap_input2 = true
 scale_type2 = absolute
-scale_x2 = 960
-scale_y2 = 720
+scale_x2 = 2048
+scale_y2 = 2048
 
 shader3 = ../../shaders/HyperspaceMadness/hsm-phosphor-persistence.slang
 filter_linear3 = false

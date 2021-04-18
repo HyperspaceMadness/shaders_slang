@@ -1,13 +1,9 @@
-Mega Bezel is updated to V 0.9.06 2020-04-15
+Mega Bezel is updated to V 0.9.07 2021-04-XX
 
 Changes:
-*  Reflection
-  * Fixed Reflection so it would be like it was in the previous version, more diffused as it moves outward
-  * You can create more mirror-like reflection can be made by reducing [ REFLECTION BLUR ]_________ / Max Blur to 0
-  * Reflection Blur Falloff Distance, an easy way to control how quickly the reflection gets blurry
-*  STANDARD preset: Fixed Black Edge on outer edge of the frame
-* HD-CORE presets added to experimental folder 
-  * Experimental means they are new and may change significantly in the near future, (names may change, individual presets may disappear, passes inside may be adjusted)
+*  Put back in performance optimization for the info caching step in the first pass
+  *  This is what caused the FFVII menu artifact before so let me know if anything similar happens
+*  Added Crop Mode so you can choose to only crop black
 
 *  Performance of Base presets at 3840x2160 on Nvidia RTX2060:
   *  ADVANCED -                      80 FPS  -  No comparable old preset
@@ -27,7 +23,10 @@ Changes:
 Mega Bezel Still to Come:
 
 V1 TODO
-  * Enable HSM_REFLECT_BLUR_FALLOFF_DISTANCE ?
+  * If Resolution is 0 output black
+  * First Pass for Downscaling, Anti-Flicker needs to go here because of OriginalHistory1
+  * Add Downscale res to res debug
+  * HD-CORE presets, try 2048, and Viewport
   * Night Lighting Add Scaling
   * Need an Preset for HD content, Vector Content
   * LED over Frame?

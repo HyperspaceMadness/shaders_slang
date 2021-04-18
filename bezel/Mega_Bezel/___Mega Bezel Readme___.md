@@ -107,16 +107,37 @@ Troubleshooting
     * **Logging - Logging Verbosity - ON**
       * **Frontend Logging - 0(Debug)**
       * **Log to File - Off**
-    * These settings will **cause a log window to come up** when you launch, and you should see any Retroarch errors, and shader loading details
+    
+* These settings will **cause a log window to come up** when you launch, and you should see any Retroarch errors, and shader loading details
+
  * **If the Screen is changing size unexpectedly**
     * If the screen changes size when loading a game or switching between different parts of the game e.g. gameplay vs cinematic, this is because of the interaction between the different resolutions the core is outputting on different screens and the shader's integer scale or automatic aspect ratio settings.
-    * **To fix**
-      * **Make sure Integer Scale is OFF in the RetroArch Video Settings**
-      * **If BOTH the HEIGHT and WIDTH of the screen size are changing size**
-        * Set the Integer scale mode to OFF (0)
-      * **If ONLY the WIDTH of the screen is changing size** (the HEIGHT stays constant)
-        * Set the Aspect Ratio Type to Explicit (1) This will use the explicit aspect ratio number instead of guessing
-        * If this solves your issue please consider posting on the thread at the top of this document the issue you had so that we can improve the auto aspect ratio in the future
+    
+* **To fix**
+  
+  * **Make sure Integer Scale is OFF in the RetroArch Video Settings**
+  * **If BOTH the HEIGHT and WIDTH of the screen size are changing size**
+    
+    * Set the Integer scale mode to OFF (0)
+  * **If ONLY the WIDTH of the screen is changing size** (the HEIGHT stays constant)
+    * Set the Aspect Ratio Type to Explicit (1) This will use the explicit aspect ratio number instead of guessing
+    
+    * If this solves your issue please consider posting on the thread at the top of this document the issue you had so that we can improve the auto aspect ratio in the future
+    
+      
+
+----------------------------------------
+
+Bug Reporting
+----------------------------------------
+
+- When reporting a bug, please post images of the issue if it is at all visual in nature. This often helps communicate the issue better & quicker, even if the issue seems simple.
+
+- Please make sure you are using the latest version of the shader when reporting bugs
+
+- If you are having any issues with the shader not loading or crashing please include a log (See above for turning on logs)
+
+  
 
 
 -----------------------------------------------------------------------------------------------------------------------------------

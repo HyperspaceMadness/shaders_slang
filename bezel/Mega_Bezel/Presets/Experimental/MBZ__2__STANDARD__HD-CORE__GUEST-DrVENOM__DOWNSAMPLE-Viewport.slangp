@@ -4,20 +4,22 @@
 shader0 = ../../shaders/HyperspaceMadness/hsm-prep-info-cache-standard.slang
 float_framebuffer0 = true
 scale_type0 = source
-scale0 = 1
+scale_y0 = 0.0625
 alias0  = "InfoCachePass"
 
 // Add Intro Animation
 shader1 = ../../shaders/HyperspaceMadness/hsm-prep-intro.slang
 float_framebuffer1 = true
+scale_type1 = source
+scale_y1 = 16
 
 // Color Correction with Dogway's awesome Grade shader
 shader2 = ../../shaders/HyperspaceMadness/hsm-dogway/hsm-grade.slang
 alias2  = "ColorCorrectPass"
 mipmap_input2 = true
-scale_type2 = absolute
-scale_x2 = 2880
-scale_y2 = 2160
+scale_type2 = viewport
+scale_x2 = 1
+scale_y2 = 1
 
 shader3 = ../../shaders/HyperspaceMadness/hsm-phosphor-persistence.slang
 filter_linear3 = false

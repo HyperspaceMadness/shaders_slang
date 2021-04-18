@@ -4,14 +4,14 @@
 shader0 = ../../shaders/HyperspaceMadness/hsm-prep-info-cache-basic-border-with-reflect.slang
 float_framebuffer0 = true
 scale_type0 = source
-scale0 = 1
+scale_y0 = 0.0625
 alias0  = "InfoCachePass"
 
 // Add Intro Animation
 shader1 = ../../shaders/HyperspaceMadness/hsm-prep-intro.slang
 float_framebuffer1 = true
 scale_type1 = source
-scale1 = 1
+scale_y1 = 16
 
 // Color Correction with Dogway's awesome Grade shader
 shader2 = ../../shaders/HyperspaceMadness/hsm-dogway/hsm-grade.slang

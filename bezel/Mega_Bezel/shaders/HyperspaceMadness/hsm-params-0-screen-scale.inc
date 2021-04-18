@@ -99,6 +99,9 @@ float HSM_SCREEN_POSITION_Y = -1 * global.HSM_SCREEN_POSITION_Y / 1000;
 //---------------------------------------------------------------------------------------------------
 #pragma parameter HSM_CROPPING_TITLE					"[ CROPPING ]___________________________________________________" 0 0 0.01 0.01
 
+#pragma parameter HSM_CROP_MODE 						"      Crop Mode  -  OFF | CROP BLACK ONLY | CROP ANY" 1 0 2 1
+float HSM_CROP_MODE = global.HSM_CROP_MODE;
+
 #pragma parameter HSM_CROP_OVERSCAN_TOP 				"      Crop Overscan Top" 0 0 256 1
 float HSM_CROP_OVERSCAN_TOP = global.HSM_CROP_OVERSCAN_TOP;
 
@@ -111,19 +114,16 @@ float HSM_CROP_OVERSCAN_LEFT = global.HSM_CROP_OVERSCAN_LEFT;
 #pragma parameter HSM_CROP_OVERSCAN_RIGHT 				"      Crop Overscan Right" 0 0 256 1
 float HSM_CROP_OVERSCAN_RIGHT = global.HSM_CROP_OVERSCAN_RIGHT;
 
-// #pragma parameter HSM_CROP_BLACK_ONLY 					"      Only Crop Black" 0 0 1 1
-// float HSM_CROP_BLACK_ONLY = global.HSM_CROP_BLACK_ONLY;
-
 
 //---------------------------------------------------------------------------------------------------
 //    CORE RES SAMPLING
 //---------------------------------------------------------------------------------------------------
 #pragma parameter HSM_SAMPLING_TITLE								"[ CORE RES SAMPLING ]__________________________________________" 0 0 0.01 0.01
 
-#pragma parameter HSM_CORE_RES_SAMPLING_MULT_SCANLINE_DIR			"      Scanline Direction Multiplier (X for Horizontal Scanline)"  100 25 1600 25
+#pragma parameter HSM_CORE_RES_SAMPLING_MULT_SCANLINE_DIR			"      Scanline Direction Multiplier (X for Horiz Scanline)"  100 25 1600 25
 float HSM_CORE_RES_SAMPLING_MULT_SCANLINE_DIR = global.HSM_CORE_RES_SAMPLING_MULT_SCANLINE_DIR / 100;
 
-#pragma parameter HSM_CORE_RES_SAMPLING_MULT_OPPOSITE_DIR			"      Opposite Direction Multiplier (Y for Vertical Scanlines)"  100 25 1600 25
+#pragma parameter HSM_CORE_RES_SAMPLING_MULT_OPPOSITE_DIR			"      Opposite Direction Multiplier (Y for Horiz Scanlines)"  100 25 1600 25
 float HSM_CORE_RES_SAMPLING_MULT_OPPOSITE_DIR = global.HSM_CORE_RES_SAMPLING_MULT_OPPOSITE_DIR / 100;
 
 

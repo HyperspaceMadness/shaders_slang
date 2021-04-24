@@ -270,15 +270,20 @@ void main()
 {
 	HSM_UpdateGlobalScreenValuesFromCache(InfoCachePass, VIEWPORT_COORD);
    
-   FragColor = texture(Original, VIEWPORT_COORD);
+	// Flip the coordinate vertically if desired
+   vec2 viewport_coord_adjusted = VIEWPORT_COORD;
+	viewport_coord_adjusted.x = HSM_FLIP_CORE_HORIZONTAL * (1 - viewport_coord_adjusted.x) + (1 - HSM_FLIP_CORE_HORIZONTAL) * viewport_coord_adjusted.x;
+	viewport_coord_adjusted.y = abs(HSM_FLIP_VIEWPORT_VERTICAL - HSM_FLIP_CORE_VERTICAL) * (1 - viewport_coord_adjusted.y) + (1 - abs(HSM_FLIP_VIEWPORT_VERTICAL - HSM_FLIP_CORE_VERTICAL)) * viewport_coord_adjusted.y;
+
+   FragColor = texture(Original, viewport_coord_adjusted);
 
    if (HSM_ANTI_FLICKER_ON == 1)
-      FragColor = AntiFlicker(VIEWPORT_COORD, FragColor);
+      FragColor = AntiFlicker(viewport_coord_adjusted, FragColor);
 
    // HSM_Linearize(FragColor, HSM_DEFAULT_SRGB_GAMMA);
 
    if (HSM_INTRO_WHEN_TO_SHOW > 0)
-      FragColor = GetColorWithIntro(FragColor, VIEWPORT_COORD);
+      FragColor = GetColorWithIntro(FragColor, viewport_coord_adjusted);
 
    // Apply black level & gamma with input as non linearized
    FragColor = HSM_ApplyBlackLevel(FragColor, 0);
@@ -309,7 +314,7 @@ void main()
    
    //////// Draw text to show out_colorolutions ////////// 
    if (HSM_RESOLUTION_DEBUG_ON == 1)
-      FragColor = AddText(VIEWPORT_COORD, FragColor);
+      FragColor = AddText(viewport_coord_adjusted, FragColor);
 
    // FragColor = HSM_Delinearize(FragColor, HSM_DEFAULT_SRGB_GAMMA);
 }

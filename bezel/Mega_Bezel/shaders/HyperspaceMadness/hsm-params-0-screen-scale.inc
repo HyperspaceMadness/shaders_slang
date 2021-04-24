@@ -99,7 +99,7 @@ float HSM_SCREEN_POSITION_Y = -1 * global.HSM_SCREEN_POSITION_Y / 1000;
 //---------------------------------------------------------------------------------------------------
 #pragma parameter HSM_CROPPING_TITLE					"[ CROPPING ]___________________________________________________" 0 0 0.01 0.01
 
-#pragma parameter HSM_CROP_MODE 						"      Crop Mode  -  OFF | CROP BLACK ONLY | CROP ANY" 1 0 2 1
+#pragma parameter HSM_CROP_MODE 						"      Crop Mode  -  OFF | CROP BLACK ONLY | CROP ANY" 2 0 2 1
 float HSM_CROP_MODE = global.HSM_CROP_MODE;
 
 #pragma parameter HSM_CROP_OVERSCAN_TOP 				"      Crop Overscan Top" 0 0 256 1
@@ -158,6 +158,9 @@ float HSM_DUALSCREEN_MODE = global.HSM_DUALSCREEN_MODE;
 #pragma parameter HSM_DUALSCREEN_CORE_IMAGE_SPLIT_MODE				"      Core Image Split Mode  - AUTO | VERTICAL | HORIZONTAL" 1 0 2 1
 float HSM_DUALSCREEN_CORE_IMAGE_SPLIT_MODE = global.HSM_DUALSCREEN_CORE_IMAGE_SPLIT_MODE;
 
+#pragma parameter HSM_DUALSCREEN_CORE_IMAGE_SWAP_SCREENS			"      Core Image Swap Screen Content" 0 0 1 1
+float HSM_DUALSCREEN_CORE_IMAGE_SWAP_SCREENS = global.HSM_DUALSCREEN_CORE_IMAGE_SWAP_SCREENS;
+
 #pragma parameter HSM_DUALSCREEN_CORE_IMAGE_SPLIT_OFFSET			"      Core Image Split Offset" 0 -128 128 1
 float HSM_DUALSCREEN_CORE_IMAGE_SPLIT_OFFSET = global.HSM_DUALSCREEN_CORE_IMAGE_SPLIT_OFFSET;
 
@@ -170,7 +173,7 @@ float HSM_DUALSCREEN_VIEWPORT_SPLIT_LOCATION = global.HSM_DUALSCREEN_VIEWPORT_SP
 #pragma parameter HSM_DUALSCREEN_SHIFT_POSITION_WITH_SCALE			"      Scale Screens from Center of Split" 1 0 1 1
 float HSM_DUALSCREEN_SHIFT_POSITION_WITH_SCALE = global.HSM_DUALSCREEN_SHIFT_POSITION_WITH_SCALE;
 
-#pragma parameter HSM_DUALSCREEN_POSITION_OFFSET_BETWEEN_SCREENS	"      Position Offset Between Screens" 0 -250 250 1
+#pragma parameter HSM_DUALSCREEN_POSITION_OFFSET_BETWEEN_SCREENS	"      Position Offset Between Screens" 0 -250 250 0.2
 float HSM_DUALSCREEN_POSITION_OFFSET_BETWEEN_SCREENS = global.HSM_DUALSCREEN_POSITION_OFFSET_BETWEEN_SCREENS / 1000;
 
 #pragma parameter HSM_DUALSCREEN_2ND_SCREEN_ASPECT_RATIO_MODE		"      2nd Screen Aspect Ratio Mode - Same as 1st Screen | PAR" 0 0 1 1

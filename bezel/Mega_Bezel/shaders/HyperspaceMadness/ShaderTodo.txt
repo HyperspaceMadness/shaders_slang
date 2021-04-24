@@ -3,7 +3,9 @@ Mega Bezel is updated to V 0.9.07 2021-04-XX
 Changes:
 *  Put back in performance optimization for the info caching step in the first pass
   *  This is what caused the FFVII menu artifact before so let me know if anything similar happens
-*  Added Crop Mode so you can choose to only crop black
+* Added Crop Mode so you can choose between no cropping, only crop black and full cropping
+* If Resolution is 0 output black, instead of a random color from the background
+* 3DS Preset with Citra Fixed
 
 *  Performance of Base presets at 3840x2160 on Nvidia RTX2060:
   *  ADVANCED -                      80 FPS  -  No comparable old preset
@@ -23,30 +25,31 @@ Changes:
 Mega Bezel Still to Come:
 
 V1 TODO
-  * If Resolution is 0 output black
-  * First Pass for Downscaling, Anti-Flicker needs to go here because of OriginalHistory1
-  * Add Downscale res to res debug
-  * HD-CORE presets, try 2048, and Viewport
-  * Night Lighting Add Scaling
-  * Need an Preset for HD content, Vector Content
-  * LED over Frame?
-  * Fix LCD Shader
-  * Local vs FullScreen Blur on Corner reflection?
-  * Test performance for Reflection Only, or BASIC-BORDER + Reflection presets
+  * Option to scale sides of Bezel & Frame with screen width, Scale Mode, Screen Height, Screen Width
+  * Fix black line around the frame when shadow is on, Advanced only?
   * Fix frame inner edge color not picking up HSV, (Advanced Preset?)
   * Fix bright area of screen showing outside the black line when bezel is hidden
+  * Fix LCD Shader
+  * Viewport orientation Debug
+  * Night Lighting Add Scaling
+  * Add Cutout to STANDARD Preset?
+  * Inverse Cutout on Frame/Bezel? Shadow from Cutout?
+  * Need an Preset for HD content, Vector Content
+  * Local vs FullScreen Blur on Corner reflection?
   * HSV for Background for ADVANCED?
   * Logo
     * Put Logo on Screen 1 & Scale Properly, options for which screen?
     * Position offset?
   * Dual Screen
     * Combine frame shadows
+  * Square Pixels Preset? Trigger Res, Scanline Opacity, Turn Off Mask, or use CGWG then turn “0 & 7 Strength” to 0.00.
+  * First Pass for Downscaling, Anti-Flicker needs to go here because of OriginalHistory1
+  * Add Downscale res to res debug
+  * HD-CORE presets
   * Add Mode to show masks and color for output for a basic-border preset
   * Add Images and Readme to root of the Repo
   * Update Doc Readme
-  * Add Cutout to Simple Preset?
-  * Inverse Cutout on Frame/Bezel? Shadow from Cutout?
-  * Crop Black Only
+
 
 Examples
   * Punch Out - Dual Screen

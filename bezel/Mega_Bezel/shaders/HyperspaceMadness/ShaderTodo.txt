@@ -4,8 +4,11 @@ Changes:
 *  Fixed Black-Only cropping to leave lit pixels right at the edge
 *  Fixed Upside down error with 3DS Advanced
 *  Added Standard 3DS preset (Uses Guest-DrVenom instead of LCD)
+*  Dual Screen 2nd Screen Sides Cropping uses percentage
+ *  This allows you to change the core resolution to 2x etc and have the crop be correct on the bottom screen
+ *  Brings up the question of if the regular cropping should be in percentage as well
 *  Fixed Resolution Debug text to stay smaller longer so it doesn't' get clipped off
-
+*  
 
 *  Performance of Base presets at 3840x2160 on Nvidia RTX2060:
   *  ADVANCED -                      80 FPS  -  No comparable old preset

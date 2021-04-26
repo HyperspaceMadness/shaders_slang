@@ -61,6 +61,7 @@ float HSM_GetSwappedScreenIndex(float screen_index)
 vec2 HSM_GetCroppedSize(vec2 in_size, float screen_index){
 	vec2 out_size = in_size;
 	screen_index = HSM_GetSwappedScreenIndex(screen_index);
+	float dual_screen_sides_crop = floor(out_size.x * HSM_DUALSCREEN_2ND_SCREEN_SIDES_CROP);
 
 	if (HSM_DUALSCREEN_MODE > 0)
 		if (HSM_Get_Core_Image_Split_Direction() == 1)
@@ -70,7 +71,7 @@ vec2 HSM_GetCroppedSize(vec2 in_size, float screen_index){
 			else
 			{
 				out_size.y -= HSM_DUALSCREEN_CORE_IMAGE_SPLIT_OFFSET;
-				out_size.x -= 2 * HSM_DUALSCREEN_2ND_SCREEN_SIDES_CROP;
+				out_size.x -= 2 * dual_screen_sides_crop;
 			}
 		}
 		else
@@ -80,7 +81,7 @@ vec2 HSM_GetCroppedSize(vec2 in_size, float screen_index){
 			else
 			{
 				out_size.x -= HSM_DUALSCREEN_CORE_IMAGE_SPLIT_OFFSET;
-				out_size.y -= 2 * HSM_DUALSCREEN_2ND_SCREEN_SIDES_CROP;
+				out_size.y -= 2 * dual_screen_sides_crop;
 			}
 		}
 
@@ -94,18 +95,19 @@ vec2 HSM_GetSampleAreaStartPixelCoord(float screen_index)
 	screen_index = HSM_GetSwappedScreenIndex(screen_index);
 	vec2 raw_original_size = HSM_GetRawOriginalSize();
 	vec2 sample_start_coord = vec2(0);
+	float dual_screen_sides_crop = floor(raw_original_size.x * HSM_DUALSCREEN_2ND_SCREEN_SIDES_CROP);
 
 	if (screen_index == 2)
 	{
 		if (HSM_Get_Core_Image_Split_Direction() == 1)
 		{
 			sample_start_coord = vec2(0, raw_original_size.y / 2 + HSM_DUALSCREEN_CORE_IMAGE_SPLIT_OFFSET);
-			sample_start_coord.x += HSM_DUALSCREEN_2ND_SCREEN_SIDES_CROP;
+			sample_start_coord.x += dual_screen_sides_crop;
 		}
 		else
 		{
 			sample_start_coord = vec2(raw_original_size.x / 2 + HSM_DUALSCREEN_CORE_IMAGE_SPLIT_OFFSET, 0);
-			sample_start_coord.y += HSM_DUALSCREEN_2ND_SCREEN_SIDES_CROP;
+			sample_start_coord.y += dual_screen_sides_crop;
 		}
 	}
 

@@ -195,6 +195,7 @@ layout(location = 0) in vec4 Position;
 layout(location = 1) in vec2 TexCoord;
 
 layout(location = 6) out vec2 VIEWPORT_COORD;
+layout(location = 7) out vec2 UNFLIPPED_VIEWPORT_COORD;
 layout(location = 8) out vec3 BEZEL_FRAME_ORIGINAL_COLOR_RGB;
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
@@ -203,10 +204,13 @@ void main()
 	gl_Position = global.MVP * Position;
 	vec2 vTexCoord = TexCoord;
 
+	UNFLIPPED_VIEWPORT_COORD = vTexCoord * 1.0001;
+
 	if (HSM_FLIP_VIEWPORT_VERTICAL > 0.5)
 		vTexCoord.y =  1 - vTexCoord.y;
 
 	VIEWPORT_COORD = vTexCoord * 1.0001;
+
 	// Not sure why we need linearize this but it seems to have a smoother range this way
 	BEZEL_FRAME_ORIGINAL_COLOR_RGB = HSM_Linearize(vec4(HSM_HSVtoRGB(vec3(HSM_BZL_COLOR_HUE, HSM_BZL_COLOR_SATURATION, HSM_BZL_COLOR_VALUE)), 1), HSM_DEFAULT_SRGB_GAMMA).rgb;
 }
@@ -215,6 +219,7 @@ void main()
 #pragma stage fragment
 
 layout(location = 6) in vec2 VIEWPORT_COORD;
+layout(location = 7) in vec2 UNFLIPPED_VIEWPORT_COORD;
 layout(location = 8) in vec3 BEZEL_FRAME_ORIGINAL_COLOR_RGB;
 
 layout(location = 0) out vec4 FragColor;
@@ -246,7 +251,7 @@ void main()
 	// CRT Pass
 	//----------------------------------------------------
 	// Get the CRT pass and make it in linear space & mask the area outside the screen
-	vec4 crt_and_reflection_linear = texture(BR_CRTAndReflectionPass, VIEWPORT_COORD.xy); // HSM_Linearize(texture(BR_CRTAndReflectionPass, VIEWPORT_COORD.xy), HSM_DEFAULT_CRT_GAMMA);
+	vec4 crt_and_reflection_linear = texture(BR_CRTAndReflectionPass, UNFLIPPED_VIEWPORT_COORD.xy);
 	crt_and_reflection_linear.a = 1;
 	vec4 crt_linear = crt_and_reflection_linear;
 

@@ -995,12 +995,13 @@ vec4 HSM_GetBlackOnlyCrop(sampler2D in_sampler_2D, vec2 sample_start_pixel_coord
 	{
 		tex_sample = HSM_GetTexSampleFromSampleStartAndSize(in_sampler_2D, vec2((test_crop - 0.5) / window_size.x, 0.5), sample_start_pixel_coord, window_size);
 		brightness = tex_sample.r + tex_sample.g + tex_sample.b;
-		if (brightness > 0)
+		if (brightness > HSM_CROP_BLACK_THRESHOLD)
 		{
 			final_crop_left = min(final_crop_left, test_crop);
 		}
 		test_crop -= 1;
 	}
+	final_crop_left -= 1;
 
 	float final_crop_top = HSM_CROP_OVERSCAN_TOP;
 	test_crop = HSM_CROP_OVERSCAN_TOP;
@@ -1008,12 +1009,13 @@ vec4 HSM_GetBlackOnlyCrop(sampler2D in_sampler_2D, vec2 sample_start_pixel_coord
 	{
 		tex_sample = HSM_GetTexSampleFromSampleStartAndSize(in_sampler_2D, vec2(0.5, (test_crop - 0.5) / window_size.y), sample_start_pixel_coord, window_size);
 		brightness = tex_sample.r + tex_sample.g + tex_sample.b;
-		if (brightness > 0)
+		if (brightness > HSM_CROP_BLACK_THRESHOLD)
 		{
 			final_crop_top = test_crop;
 		}
 		test_crop -= 1;
 	}
+	final_crop_top -= 1;
 
 	float final_crop_right = HSM_CROP_OVERSCAN_RIGHT;
 	test_crop = HSM_CROP_OVERSCAN_RIGHT;
@@ -1021,7 +1023,7 @@ vec4 HSM_GetBlackOnlyCrop(sampler2D in_sampler_2D, vec2 sample_start_pixel_coord
 	{
 		tex_sample = HSM_GetTexSampleFromSampleStartAndSize(in_sampler_2D, vec2((window_size.x - test_crop + 0.5) / window_size.x, 0.5), sample_start_pixel_coord, window_size);
 		brightness = tex_sample.r + tex_sample.g + tex_sample.b;
-		if (brightness > 0)
+		if (brightness > HSM_CROP_BLACK_THRESHOLD)
 		{
 			final_crop_right = test_crop;
 		}
@@ -1043,7 +1045,7 @@ vec4 HSM_GetBlackOnlyCrop(sampler2D in_sampler_2D, vec2 sample_start_pixel_coord
 	}
 	final_crop_bottom -= 2;
 
-	return vec4(final_crop_top, final_crop_bottom, final_crop_left, final_crop_right);
+	return clamp(vec4(final_crop_top, final_crop_bottom, final_crop_left, final_crop_right), 0, 512);
 }
 
 vec4 HSM_GetColorForScreenInfoCache(vec2 viewport_coord, sampler2D original_pass, sampler2D screen_placement_image)

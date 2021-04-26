@@ -1,11 +1,11 @@
-Mega Bezel is updated to V 0.9.07 2021-04-XX
+Mega Bezel is updated to V 0.9.08 2021-04-XX
 
 Changes:
-*  Put back in performance optimization for the info caching step in the first pass
-  *  This is what caused the FFVII menu artifact before so let me know if anything similar happens
-* Added Crop Mode so you can choose between no cropping, only crop black and full cropping
-* If Resolution is 0 output black, instead of a random color from the background
-* 3DS Preset with Citra Fixed
+*  Fixed Black-Only cropping to leave lit pixels right at the edge
+*  Fixed Upside down error with 3DS Advanced
+*  Added Standard 3DS preset (Uses Guest-DrVenom instead of LCD)
+*  Fixed Resolution Debug text to stay smaller longer so it doesn't' get clipped off
+
 
 *  Performance of Base presets at 3840x2160 on Nvidia RTX2060:
   *  ADVANCED -                      80 FPS  -  No comparable old preset
@@ -25,7 +25,8 @@ Changes:
 Mega Bezel Still to Come:
 
 V1 TODO
-  * Option to scale sides of Bezel & Frame with screen width, Scale Mode, Screen Height, Screen Width
+  * ADVANCED Fix Optional curvature for following Bezel Scale
+  * Black Edge should be scaled with relation to screen height 
   * Fix black line around the frame when shadow is on, Advanced only?
   * Fix frame inner edge color not picking up HSV, (Advanced Preset?)
   * Fix bright area of screen showing outside the black line when bezel is hidden
@@ -54,6 +55,7 @@ V1 TODO
 Examples
   * Punch Out - Dual Screen
 
+  * Add Gameboy Palettes https://www.deviantart.com/thewolfbunny/gallery/69987002/game-boy-palettes
   * Split background (Background and Bezel image?) and shift halves to far left and right
   * Add Sharp Pixel Preset - No CRT Processing, Options for reflection area, Adjustable Quilez Sharpening?
   * Independent Bezel Scaling not the same as non-int scale, why? Maybe only in Portrait Res

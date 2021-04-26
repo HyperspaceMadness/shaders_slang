@@ -1,4 +1,4 @@
-#reference "../MBZ__2__STANDARD.slangp"
+#reference "../MBZ__1__ADVANCED.slangp"
 
 HSM_DUALSCREEN_MODE = 1
 HSM_ASPECT_RATIO_EXPLICIT = 1.333

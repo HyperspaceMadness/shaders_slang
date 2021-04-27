@@ -319,7 +319,7 @@ float DrawResolutions(vec2 uv, vec2 viewport_size, vec2 screen_size, vec2 origin
     col += GetChar(ch_4, uv);
     col += GetChar(ch_dsh, uv);
     col += GetChar(ch_2, uv);
-    col += GetChar(ch_8, uv);
+    col += GetChar(ch_6, uv);
 
     //Core Resolution
     printPos = vec2(2, 2.0 + STRHEIGHT(9));

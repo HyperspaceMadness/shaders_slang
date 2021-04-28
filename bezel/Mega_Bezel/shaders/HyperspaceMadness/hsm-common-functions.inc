@@ -86,7 +86,7 @@ vec2 HSM_GetCroppedSize(vec2 in_size, float screen_index){
 		}
 
 	if (screen_index == 1)
-		out_size -= vec2(HSM_CROP_OVERSCAN_RIGHT + HSM_CROP_OVERSCAN_LEFT, HSM_CROP_OVERSCAN_TOP + HSM_CROP_OVERSCAN_BOTTOM);
+		out_size -= vec2(floor(out_size.x * HSM_CROP_PERCENT_RIGHT) + floor(out_size.x * HSM_CROP_PERCENT_LEFT), floor(out_size.y * HSM_CROP_PERCENT_TOP) + floor(out_size.y * HSM_CROP_PERCENT_BOTTOM));
 	return out_size;
 }
 
@@ -888,15 +888,15 @@ vec2 HSM_GetMirrorWrapCoord(vec2 in_coord)
 	return ctr_mirror_coord + 0.5;
 }
 
-// Check to see if we are in the negative crop area
-float HSM_IsInNegativeCropArea(vec2 in_coord)
-{
-	float result = abs(clamp(HSM_CROP_OVERSCAN_TOP, -1, 0) * clamp(in_coord.y, -1, 0)) * 100000 +
-				   abs(clamp(HSM_CROP_OVERSCAN_BOTTOM, -1, 0) * (clamp(in_coord.y, 1, 2) - 1)) * 100000 +
-				   abs(clamp(HSM_CROP_OVERSCAN_LEFT, -1, 0) * clamp(in_coord.x, -1, 0)) * 100000 +
-				   abs(clamp(HSM_CROP_OVERSCAN_RIGHT, -1, 0) * (clamp(in_coord.x, 1, 2) - 1)) * 100000;
-	return clamp(result, 0, 1);
-}
+// // Check to see if we are in the negative crop area
+// float HSM_IsInNegativeCropArea(vec2 in_coord)
+// {
+// 	float result = abs(clamp(HSM_CROP_PERCENT_TOP, -1, 0) * clamp(in_coord.y, -1, 0)) * 100000 +
+// 				   abs(clamp(HSM_CROP_PERCENT_BOTTOM, -1, 0) * (clamp(in_coord.y, 1, 2) - 1)) * 100000 +
+// 				   abs(clamp(HSM_CROP_PERCENT_LEFT, -1, 0) * clamp(in_coord.x, -1, 0)) * 100000 +
+// 				   abs(clamp(HSM_CROP_PERCENT_RIGHT, -1, 0) * (clamp(in_coord.x, 1, 2) - 1)) * 100000;
+// 	return clamp(result, 0, 1);
+// }
 
 float HSM_rand(inout float r)
 {
@@ -990,10 +990,15 @@ vec4 HSM_GetBlackOnlyCrop(sampler2D in_sampler_2D, vec2 sample_start_pixel_coord
 	float brightness = 0;
 	float test_crop = 0;
 
+	float crop_left = floor(window_size.x * HSM_CROP_PERCENT_LEFT);
+	float crop_top = floor(window_size.y * HSM_CROP_PERCENT_TOP);
+	float crop_right = floor(window_size.x * HSM_CROP_PERCENT_RIGHT);
+	float crop_bottom = floor(window_size.y * HSM_CROP_PERCENT_BOTTOM);
+
 	// Should use as many samples as crop pixels
-	float final_crop_left = HSM_CROP_OVERSCAN_LEFT;
-	test_crop = HSM_CROP_OVERSCAN_LEFT;
-	for (int i=0; i < HSM_CROP_OVERSCAN_LEFT; i++)
+	float final_crop_left = crop_left;
+	test_crop = crop_left;
+	for (int i=0; i < crop_left; i++)
 	{
 		tex_sample = HSM_GetTexSampleFromSampleStartAndSize(in_sampler_2D, vec2((test_crop - 0.5) / window_size.x, 0.5), sample_start_pixel_coord, window_size);
 		brightness = tex_sample.r + tex_sample.g + tex_sample.b;
@@ -1005,9 +1010,9 @@ vec4 HSM_GetBlackOnlyCrop(sampler2D in_sampler_2D, vec2 sample_start_pixel_coord
 	}
 	final_crop_left -= 1;
 
-	float final_crop_top = HSM_CROP_OVERSCAN_TOP;
-	test_crop = HSM_CROP_OVERSCAN_TOP;
-	for (int i=0; i < HSM_CROP_OVERSCAN_TOP; i++)
+	float final_crop_top = crop_top;
+	test_crop = crop_top;
+	for (int i=0; i < crop_top; i++)
 	{
 		tex_sample = HSM_GetTexSampleFromSampleStartAndSize(in_sampler_2D, vec2(0.5, (test_crop - 0.5) / window_size.y), sample_start_pixel_coord, window_size);
 		brightness = tex_sample.r + tex_sample.g + tex_sample.b;
@@ -1019,9 +1024,9 @@ vec4 HSM_GetBlackOnlyCrop(sampler2D in_sampler_2D, vec2 sample_start_pixel_coord
 	}
 	final_crop_top -= 1;
 
-	float final_crop_right = HSM_CROP_OVERSCAN_RIGHT;
-	test_crop = HSM_CROP_OVERSCAN_RIGHT;
-	for (int i=0; i < HSM_CROP_OVERSCAN_RIGHT; i++)
+	float final_crop_right = crop_right;
+	test_crop = crop_right;
+	for (int i=0; i < crop_right; i++)
 	{
 		tex_sample = HSM_GetTexSampleFromSampleStartAndSize(in_sampler_2D, vec2((window_size.x - test_crop + 0.5) / window_size.x, 0.5), sample_start_pixel_coord, window_size);
 		brightness = tex_sample.r + tex_sample.g + tex_sample.b;
@@ -1033,9 +1038,9 @@ vec4 HSM_GetBlackOnlyCrop(sampler2D in_sampler_2D, vec2 sample_start_pixel_coord
 	}
 	final_crop_right -= 2;
 
-	float final_crop_bottom = HSM_CROP_OVERSCAN_BOTTOM;
-	test_crop = HSM_CROP_OVERSCAN_BOTTOM;
-	for (int i=0; i < HSM_CROP_OVERSCAN_BOTTOM; i++)
+	float final_crop_bottom = crop_bottom;
+	test_crop = crop_bottom;
+	for (int i=0; i < crop_bottom; i++)
 	{
 		tex_sample = HSM_GetTexSampleFromSampleStartAndSize(in_sampler_2D, vec2(0.5, (window_size.y - test_crop + 0.5) / window_size.y), sample_start_pixel_coord, window_size);
 		brightness = tex_sample.r + tex_sample.g + tex_sample.b;
@@ -1095,7 +1100,7 @@ vec4 HSM_GetColorForScreenInfoCache(vec2 viewport_coord, sampler2D original_pass
 	{
 		cropped_original_size_with_core_res_mult = HSM_GetCroppedRotatedOriginalSizeWithCoreResMult(1);
 		cropped_original_size = HSM_GetCroppedRotatedOriginalSize(1);
-		cropped_sample_area_start_pixel_coord = HSM_GetSampleAreaStartPixelCoord(1) + vec2(HSM_CROP_OVERSCAN_LEFT, HSM_CROP_OVERSCAN_TOP);
+		cropped_sample_area_start_pixel_coord = HSM_GetSampleAreaStartPixelCoord(1) + floor(vec2(rotated_original_size.x * HSM_CROP_PERCENT_LEFT, rotated_original_size.y * HSM_CROP_PERCENT_TOP));
 	}
 
 	// Second Screen

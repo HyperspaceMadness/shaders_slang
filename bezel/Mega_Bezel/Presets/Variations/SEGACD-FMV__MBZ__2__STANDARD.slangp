@@ -1,4 +1,4 @@
-#reference "../MBZ__2__STANDARD.slangp"
+#reference ":/shaders/shaders_slang/bezel/Mega_Bezel/Presets/Base_CRT_Presets/MBZ__2__STANDARD__GUEST-DrVENOM.slangp"
 
 HSM_CROP_PERCENT_TOP = 6.7
 HSM_CROP_PERCENT_BOTTOM = 6.7

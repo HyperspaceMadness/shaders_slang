@@ -26,26 +26,6 @@ layout(set = 0, binding = 8) uniform sampler2D InfoCachePass;
 
 #define eps 1e-3
 
-/*
-	Texture interpolation based on "Improved texture interpolation" by Inigo Quilez
-	Original description: http://www.iquilezles.org/www/articles/texture/texture.htm
-	Expects the texture to be using linear filtering
-*/
-vec4 TextureQuilez(sampler2D in_sampler_2D, vec2 in_texture_size, vec2 p)
-{
-	vec2 tex_size = textureSize(in_sampler_2D, 0);
-	p = p * in_texture_size + vec2(0.5, 0.5);
-
-	vec2 i = floor(p);
-	vec2 f = p - i;
-	f = f * f * f * (f * (f * 6.0 - vec2(15.0, 15.0)) + vec2(10.0, 10.0));
-	p = i + f;
-
-	p = (p - vec2(0.5, 0.5)) * (1/in_texture_size);
-
-	// final sum and weight normalization
-	return texture(in_sampler_2D, p);
-}
 
 vec4 AntiFlicker(vec2 in_coord, vec4 current)
 {
@@ -243,7 +223,7 @@ vec4 GetColorWithIntro(vec4 in_color, vec2 in_coord)
          coord_in_intro_image = (in_coord - (1 - intro_image_scale)) / intro_image_scale;
 
       // Quilez gives a better rescaling weighted more to the center of the pixel like bicubic
-      vec4 intro_image = TextureQuilez(IntroImage, intro_image_res, coord_in_intro_image);
+      vec4 intro_image = HSM_TextureQuilez(IntroImage, intro_image_res, coord_in_intro_image);
       float logo_opacity = 1 - HHLP_EasePowerOut(clamp(1 - (frame_count - mask_wait - mask_fade_horizontal/4) / intro_logo_fade_in, 0, 1), 1.5);
       logo_opacity *=  clamp(clamp((frame_count - intro_logo_wait) / intro_logo_fade_in, 0, 1) - 
                               clamp((frame_count - (intro_logo_wait + intro_logo_fade_in + intro_logo_hold)) / intro_logo_fade_out, 0, 1), 

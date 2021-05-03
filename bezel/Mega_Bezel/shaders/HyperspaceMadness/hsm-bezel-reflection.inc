@@ -44,12 +44,15 @@ layout(location = 0) in vec4 Position;
 layout(location = 1) in vec2 TexCoord;
 
 layout(location = 6) out vec2 VIEWPORT_COORD;
+layout(location = 7) out vec2 UNFLIPPED_VIEWPORT_COORD;
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
 void main()
 {
 	gl_Position = global.MVP * Position;
 	vec2 vTexCoord = TexCoord;
+
+	UNFLIPPED_VIEWPORT_COORD = vTexCoord * 1.0001;
 
 	if (HSM_FLIP_VIEWPORT_VERTICAL > 0.5)
 		vTexCoord.y =  1 - vTexCoord.y;
@@ -61,6 +64,7 @@ void main()
 #pragma stage fragment
 
 layout(location = 6) in vec2 VIEWPORT_COORD;
+layout(location = 7) in vec2 UNFLIPPED_VIEWPORT_COORD;
 
 layout(location = 0) out vec4 FragColor;
 
@@ -107,10 +111,10 @@ void main()
 	// CRT Pass
 	//----------------------------------------------------
 	// Get the CRT pass and make it in linear space & mask the area outside the screen
-	vec4 crt_linear = HSM_Linearize(texture(BR_CRTPass, VIEWPORT_COORD.xy), HSM_DEFAULT_CRT_GAMMA);
+	vec4 crt_linear = HSM_Linearize(texture(BR_CRTPass, UNFLIPPED_VIEWPORT_COORD.xy), HSM_DEFAULT_CRT_GAMMA);
 	crt_linear = HSM_ApplyGamma(crt_linear, HSM_DEFAULT_CRT_GAMMA / HSM_DEFAULT_SRGB_GAMMA);
 
-	vec4 blurred_reflection_color = HHLP_GetBilinearTextureSample(BR_MirrorBlurredPass, VIEWPORT_COORD.xy, params.BR_MirrorBlurredPassSize);
+	vec4 blurred_reflection_color = HHLP_GetBilinearTextureSample(BR_MirrorBlurredPass, UNFLIPPED_VIEWPORT_COORD.xy, params.BR_MirrorBlurredPassSize);
 
 	// Shrink the mask by 0.001 to clip off outer edge
 	float screen_edge_sharpness = 0.5;
@@ -391,17 +395,17 @@ float edge_highlight_mask = 0;
 		float stoichaic_blur_amount = HSM_REFLECT_NOISE_SAMPLE_DISTANCE;
 
 		// vec4 fullscreen_blurred_sampled_color = HSM_GetStoichaicBlurredSample(BR_MirrorFullscreenGlowPass, VIEWPORT_COORD.xy, stoichaic_blur_samples, (1 - corner_mask) * stoichaic_blur_max * 3, stoichaic_blur_amount);
-		vec4 fullscreen_blurred_sampled_color = HHLP_GetBilinearTextureSample(BR_MirrorFullscreenGlowPass, VIEWPORT_COORD.xy, params.BR_MirrorFullscreenGlowPassSize);
+		vec4 fullscreen_blurred_sampled_color = HHLP_GetBilinearTextureSample(BR_MirrorFullscreenGlowPass, UNFLIPPED_VIEWPORT_COORD.xy, params.BR_MirrorFullscreenGlowPassSize);
 
 		vec4 corner_reflection_color = fullscreen_blurred_sampled_color;
 		
 		vec4 fullscreen_glow_color = pow(fullscreen_blurred_sampled_color, vec4(HSM_REFLECT_FULLSCREEN_GLOW_GAMMA));
 		
-		vec4 diffused_reflection_color = HHLP_GetBilinearTextureSample(BR_MirrorReflectionDiffusedPass, VIEWPORT_COORD.xy, params.BR_MirrorReflectionDiffusedPassSize);
-		vec4 diffused_reflection_scatter_color = HSM_GetStoichaicBlurredSample(BR_MirrorReflectionDiffusedPass, VIEWPORT_COORD.xy, stoichaic_blur_samples, stoichaic_blur_max, stoichaic_blur_amount);
+		vec4 diffused_reflection_color = HHLP_GetBilinearTextureSample(BR_MirrorReflectionDiffusedPass, UNFLIPPED_VIEWPORT_COORD.xy, params.BR_MirrorReflectionDiffusedPassSize);
+		vec4 diffused_reflection_scatter_color = HSM_GetStoichaicBlurredSample(BR_MirrorReflectionDiffusedPass, UNFLIPPED_VIEWPORT_COORD.xy, stoichaic_blur_samples, stoichaic_blur_max, stoichaic_blur_amount);
 		vec4 diffused_reflection_blended_color = mix(diffused_reflection_color, diffused_reflection_scatter_color, HSM_REFLECT_NOISE_AMOUNT);
 
-		vec4 blurred_reflection_scatter_color = HSM_GetStoichaicBlurredSample(BR_MirrorBlurredPass, VIEWPORT_COORD.xy, stoichaic_blur_samples, stoichaic_blur_max, stoichaic_blur_amount);
+		vec4 blurred_reflection_scatter_color = HSM_GetStoichaicBlurredSample(BR_MirrorBlurredPass, UNFLIPPED_VIEWPORT_COORD.xy, stoichaic_blur_samples, stoichaic_blur_max, stoichaic_blur_amount);
 		vec4 blurred_reflection_blended_color = mix(blurred_reflection_color, blurred_reflection_scatter_color, HSM_REFLECT_NOISE_AMOUNT);
 
 		// Add Fullscreen Glow
@@ -557,37 +561,36 @@ float edge_highlight_mask = 0;
 	top_image_coord.y += HSM_TOP_POS_Y;
 	top_image_coord = (top_image_coord - 0.5) / HSM_TOP_SCALE + 0.5;
 
-	vec4 bg_layer = vec4(0);
+	vec4 bg_image = vec4(0);
 	if (SCREEN_ASPECT > 1) 
-		bg_layer = texture(BackgroundImage, bg_image_coord);
+		bg_image = texture(BackgroundImage, bg_image_coord);
 	else
-		bg_layer = texture(BackgroundVertImage, bg_image_coord);
+		bg_image = texture(BackgroundVertImage, bg_image_coord);
+	bg_image = HSM_GetPreMultipliedColorLinear(bg_image, HSM_BG_SOURCE_MATTE_TYPE, HSM_DEFAULT_SRGB_GAMMA);
 
-	bg_layer = HSM_Linearize(bg_layer, HSM_DEFAULT_SRGB_GAMMA);
+	vec4 led_image = texture(LEDImage, bg_image_coord);
+	led_image = HSM_GetPreMultipliedColorLinear(led_image, HSM_LED_SOURCE_MATTE_TYPE, HSM_DEFAULT_SRGB_GAMMA);
 
-	vec4 led_layer = texture(LEDImage, bg_image_coord);
-	led_layer = HSM_Linearize(led_layer, HSM_DEFAULT_SRGB_GAMMA);
+	vec4 decal_image = texture(DecalImage, decal_image_coord);
+	decal_image = HSM_GetPreMultipliedColorLinear(decal_image, HSM_DECAL_SOURCE_MATTE_TYPE, HSM_DEFAULT_SRGB_GAMMA);
 
-	vec4 decal_layer = texture(DecalImage, decal_image_coord);
-	decal_layer = HSM_Linearize(decal_layer, HSM_DEFAULT_SRGB_GAMMA);
-
-	vec4 top_layer = texture(TopLayerImage, top_image_coord);
-	top_layer = HSM_Linearize(top_layer, HSM_DEFAULT_SRGB_GAMMA);
+	vec4 top_image = texture(TopLayerImage, top_image_coord);
+	top_image = HSM_GetPreMultipliedColorLinear(top_image, HSM_DECAL_SOURCE_MATTE_TYPE, HSM_DEFAULT_SRGB_GAMMA);
 
 	if (HSM_STATIC_LAYERS_GAMMA != 1)
 	{
-		bg_layer = HSM_ApplyGamma(bg_layer, HSM_STATIC_LAYERS_GAMMA);
-		led_layer = HSM_ApplyGamma(led_layer, HSM_STATIC_LAYERS_GAMMA);
-		decal_layer = HSM_ApplyGamma(led_layer, HSM_STATIC_LAYERS_GAMMA);
-		top_layer = HSM_ApplyGamma(top_layer, HSM_STATIC_LAYERS_GAMMA);
+		bg_image = HSM_ApplyGamma(bg_image, HSM_STATIC_LAYERS_GAMMA);
+		led_image = HSM_ApplyGamma(led_image, HSM_STATIC_LAYERS_GAMMA);
+		decal_image = HSM_ApplyGamma(led_image, HSM_STATIC_LAYERS_GAMMA);
+		top_image = HSM_ApplyGamma(top_image, HSM_STATIC_LAYERS_GAMMA);
 	}
 
 	if (HSM_STANDARD_BG_SHOW_OVER_SCREEN == 0)
 	{
 		if (HSM_GLASS_BORDER_ON == 1)
-			bg_layer.a *= outside_tube_mask_wider * (1 - edge_mask);
+			bg_image.a *= outside_tube_mask_wider * (1 - edge_mask);
 		else
-			bg_layer *= outside_tube_mask;
+			bg_image *= outside_tube_mask;
 	}
 
 	// TODO Shift down and do all night lighting at once
@@ -598,17 +601,17 @@ float edge_highlight_mask = 0;
 		night_lighting_image = texture(NightLightingImage, VIEWPORT_COORD);
 		night_lighting_image = HSM_Linearize(night_lighting_image, HSM_DEFAULT_SRGB_GAMMA);
 
-		bg_layer = mix(bg_layer, bg_layer * night_lighting_image, HSM_NIGHT_OPACITY);
+		bg_image = mix(bg_image, bg_image * night_lighting_image, HSM_NIGHT_OPACITY);
 
 		if (HSM_DECAL_BLEND_MODE != BLEND_MODE_ADD)
-			decal_layer = mix(decal_layer, decal_layer * night_lighting_image, HSM_NIGHT_OPACITY);
+			decal_image = mix(decal_image, decal_image * night_lighting_image, HSM_NIGHT_OPACITY);
 
 		if (HSM_TOP_BLEND_MODE != BLEND_MODE_ADD)
-			top_layer = mix(top_layer, top_layer * night_lighting_image, HSM_NIGHT_OPACITY);
+			top_image = mix(top_image, top_image * night_lighting_image, HSM_NIGHT_OPACITY);
 	}
 
 	if (HSM_STANDARD_BG_SHOW_OVER_SCREEN == 0)
-		bg_layer *= outside_tube_mask_wider;
+		bg_image *= outside_tube_mask_wider;
 
 	vec4 bezel_layer = vec4(0);
 	vec4 frame_layer = vec4(0);
@@ -639,24 +642,34 @@ float edge_highlight_mask = 0;
 		vignette_layer.a += 0.75 * HHLP_QuadraticBezier(1 - HSM_GetVignetteFactor(VIEWPORT_COORD, HSM_VIEWPORT_VIGNETTE_OPACITY), vec2(1, 0.5)) * OUTSIDE_BEZEL_MASK;
 	}
 
-	frag_color_linear = HSM_BlendModeLayerMix(frag_color_linear, bg_layer, HSM_BG_BLEND_MODE, HSM_BG_OPACITY);
+	frag_color_linear = HSM_BlendModeLayerMix(frag_color_linear, bg_image, HSM_BG_BLEND_MODE, HSM_BG_OPACITY);
+
 	frag_color_linear = HSM_BlendModeLayerMix(frag_color_linear, vignette_layer, BLEND_MODE_NORMAL, 1);
-	frag_color_linear = HSM_BlendModeLayerMix(frag_color_linear, led_layer, HSM_LED_BLEND_MODE, HSM_LED_OPACITY);
+
+	frag_color_linear = HSM_BlendModeLayerMix(frag_color_linear, led_image, HSM_LED_BLEND_MODE, HSM_LED_OPACITY);
+
+	if (HSM_STANDARD_DECAL_SHOW_UNDER_FRAME == 1)
+		frag_color_linear = HSM_BlendModeLayerMix(frag_color_linear, decal_image, HSM_DECAL_BLEND_MODE, HSM_DECAL_OPACITY);
+
 	frag_color_linear = HSM_BlendModeLayerMix(frag_color_linear, bezel_layer, BLEND_MODE_NORMAL, 1);
+
 	frag_color_linear += reflected_color;
-	frag_color_linear = HSM_BlendModeLayerMix(frag_color_linear, decal_layer, HSM_DECAL_BLEND_MODE, HSM_DECAL_OPACITY);
-	frag_color_linear = HSM_BlendModeLayerMix(frag_color_linear, top_layer, HSM_TOP_BLEND_MODE, HSM_TOP_OPACITY);
+
+	if (HSM_STANDARD_DECAL_SHOW_UNDER_FRAME == 0)
+		frag_color_linear = HSM_BlendModeLayerMix(frag_color_linear, decal_image, HSM_DECAL_BLEND_MODE, HSM_DECAL_OPACITY);
+
+	frag_color_linear = HSM_BlendModeLayerMix(frag_color_linear, top_image, HSM_TOP_BLEND_MODE, HSM_TOP_OPACITY);
 
 	FragColor = HSM_ApplyGamma(clamp(frag_color_linear, 0, 1), HSM_DEFAULT_SRGB_GAMMA);
 #endif
 
 #ifdef IS_GLASS_PRESET
-	vec4 bg_layer = texture(BackgroundImage, bg_image_coord);
-	bg_layer = HSM_Linearize(bg_layer, HSM_DEFAULT_SRGB_GAMMA);
+	vec4 bg_image = texture(BackgroundImage, bg_image_coord);
+	bg_image = HSM_Linearize(bg_image, HSM_DEFAULT_SRGB_GAMMA);
 
-	bg_layer.a *= outside_tube_mask_wider * (1 - edge_mask);
+	bg_image.a *= outside_tube_mask_wider * (1 - edge_mask);
 
-	frag_color_linear = HSM_BlendModeLayerMix(frag_color_linear, bg_layer, HSM_BG_BLEND_MODE, HSM_BG_OPACITY);
+	frag_color_linear = HSM_BlendModeLayerMix(frag_color_linear, bg_image, HSM_BG_BLEND_MODE, HSM_BG_OPACITY);
 	frag_color_linear += reflected_color;
 	FragColor = HSM_ApplyGamma(clamp(frag_color_linear, 0, 1), HSM_DEFAULT_SRGB_GAMMA);
 #endif
@@ -675,17 +688,17 @@ float edge_highlight_mask = 0;
 	// Correct image coordinate for image aspect ratio
 	bg_image_coord.x = (VIEWPORT_COORD.x - 0.5) / (explicit_texture_aspect/final_viewport_aspect) + 0.5;
 
-	vec4 bg_layer = vec4(0);
+	vec4 bg_image = vec4(0);
 	if (SCREEN_ASPECT > 1) 
-		bg_layer = texture(BackgroundImage, bg_image_coord);
+		bg_image = texture(BackgroundImage, bg_image_coord);
 	else
-		bg_layer = texture(BackgroundVertImage, bg_image_coord);
-	bg_layer = HSM_Linearize(bg_layer, HSM_DEFAULT_SRGB_GAMMA);
+		bg_image = texture(BackgroundVertImage, bg_image_coord);
+	bg_image = HSM_Linearize(bg_image, HSM_DEFAULT_SRGB_GAMMA);
 
 	if (HSM_STANDARD_BG_SHOW_OVER_SCREEN == 0)
-		bg_layer.a *= outside_tube_mask_wider * (1 - edge_mask);
+		bg_image.a *= outside_tube_mask_wider * (1 - edge_mask);
 
-	frag_color_linear = HSM_BlendModeLayerMix(frag_color_linear, bg_layer, HSM_BG_BLEND_MODE, HSM_BG_OPACITY);
+	frag_color_linear = HSM_BlendModeLayerMix(frag_color_linear, bg_image, HSM_BG_BLEND_MODE, HSM_BG_OPACITY);
 	frag_color_linear += reflected_color;
 	FragColor = HSM_ApplyGamma(clamp(frag_color_linear, 0, 1), HSM_DEFAULT_SRGB_GAMMA);
 #endif

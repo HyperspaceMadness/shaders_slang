@@ -1417,9 +1417,10 @@ vec4 HSM_BlendModeLayerMix(vec4 color_under, vec4 color_over, float blend_mode, 
 	return out_color;
 }
 
-vec4 HSM_GetPostCrtPreppedColor(vec4 in_color_linear, vec2 VIEWPORT_COORD, vec2 screen_curved_coord, in sampler2D ColoredGelImage, in sampler2D TubeStaticReflectionImage, in sampler2D BackgroundImage, in sampler2D BackgroundVertImage)
+vec4 HSM_GetPostCrtPreppedColor(vec4 in_color_linear, vec2 VIEWPORT_COORD, vec2 screen_curved_coord, in sampler2D source_pass, bool source_is_linear, in sampler2D ColoredGelImage, in sampler2D TubeStaticReflectionImage, in sampler2D BackgroundImage, in sampler2D BackgroundVertImage)
 {
 	vec4 out_color = in_color_linear;
+
 	float screen_mask = HSM_GetCornerMask((screen_curved_coord - 0.5) * 0.999 + 0.5, SCREEN_ASPECT, HSM_SCREEN_CORNER_RADIUS, 0.9);
 	float screen_edge_mask = HSM_GetCornerMask(screen_curved_coord, SCREEN_ASPECT, HSM_SCREEN_CORNER_RADIUS, HSM_SCREEN_EDGE_SHARPNESS);
 	screen_edge_mask = 1 - ((1 - screen_edge_mask) * screen_mask);
@@ -1427,6 +1428,13 @@ vec4 HSM_GetPostCrtPreppedColor(vec4 in_color_linear, vec2 VIEWPORT_COORD, vec2 
 	// out_color *= screen_edge_mask;
 
 	vec2 mirrored_screen_coord = HSM_GetMirrorWrappedCoord(screen_curved_coord);
+
+	vec4 source_color = HSM_GetCroppedTexSample(source_pass, mirrored_screen_coord);
+	if (!source_is_linear)
+		source_color = HSM_Linearize(source_color, HSM_DEFAULT_CRT_GAMMA);
+	out_color = mix(out_color, source_color, mirrored_screen_coord.x < HSM_CRT_AB_TEST_BLEND_WITH_ORIGINAL_IMAGE ? 1 : 0);
+	// mix(out_color, source_color, mirrored_screen_coord.x < HSM_CRT_AB_TEST_BLEND_WITH_ORIGINAL_IMAGE ? 1 : 0);
+
 	float vignette_factor = HSM_GetScreenVignetteFactor(mirrored_screen_coord, HSM_SCREEN_VIGNETTE);
 
 	// // This affects if the vignette shows up in the reflection or not

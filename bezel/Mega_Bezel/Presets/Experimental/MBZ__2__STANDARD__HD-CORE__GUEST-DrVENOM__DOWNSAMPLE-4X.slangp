@@ -9,6 +9,7 @@ alias0  = "InfoCachePass"
 
 // Add Intro Animation
 shader1 = ../../shaders/HyperspaceMadness/hsm-prep-intro.slang
+alias1 = IntroPass
 float_framebuffer1 = true
 scale_type1 = source
 scale_y1 = 16
@@ -16,6 +17,10 @@ scale_y1 = 16
 // Color Correction with Dogway's awesome Grade shader
 shader2 = ../../shaders/HyperspaceMadness/hsm-dogway/hsm-grade.slang
 alias2  = "ColorCorrectPass"
+mipmap_input2 = true
+scale_type2 = source
+scale_x2 = 0.25
+scale_y2 = 0.25
 
 shader3 = ../../shaders/HyperspaceMadness/hsm-phosphor-persistence.slang
 filter_linear3 = false

@@ -287,9 +287,7 @@ float HSM_CURVATURE_3D_TILT_ANGLE_Y = global.HSM_CURVATURE_3D_TILT_ANGLE_Y / 100
 #pragma parameter HSM_COLOR_CRT_GAMMA   					"      CRT Gamma (Linear to Gamma Space Encode) Def 2.2" 2.2 0.1 5 0.05
 #define HSM_COLOR_CRT_GAMMA global.HSM_COLOR_CRT_GAMMA
 
-#pragma parameter HSM_CRTRAWABTEST_TITLE					"[ CRT vs ORIGINAL A/B TESTING ]________________________________" 0 0 0.01 0.01
-
-#pragma parameter HSM_CRT_AB_TEST_BLEND_WITH_ORIGINAL_IMAGE   	"      Blend With Original Image" 50 0 100 0.2
+#pragma parameter HSM_CRT_AB_TEST_BLEND_WITH_ORIGINAL_IMAGE   			"      Blend CRT with Raw Image" 0 0 100 1
 #define HSM_CRT_AB_TEST_BLEND_WITH_ORIGINAL_IMAGE global.HSM_CRT_AB_TEST_BLEND_WITH_ORIGINAL_IMAGE / 100
 
 #pragma parameter HSM_SCREENVIGNETTE_TITLE					"[ SCREEN VIGNETTE ]____________________________________________" 0 0 0.01 0.01

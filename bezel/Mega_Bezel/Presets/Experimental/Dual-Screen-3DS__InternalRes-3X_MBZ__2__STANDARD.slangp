@@ -1,4 +1,4 @@
-#reference ":/shaders/shaders_slang/bezel/Mega_Bezel/Presets/Base_CRT_Presets/MBZ__1__ADVANCED__GUEST-DrVENOM.slangp"
+#reference "MBZ__2__STANDARD__HD-CORE__GUEST-DrVENOM__DOWNSAMPLE-3X.slangp"
 
 HSM_FLIP_VIEWPORT_VERTICAL = 1
 HSM_ASPECT_RATIO_MODE = 5

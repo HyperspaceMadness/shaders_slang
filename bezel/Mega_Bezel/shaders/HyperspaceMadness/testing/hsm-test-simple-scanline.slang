@@ -58,5 +58,5 @@ void main()
 
     FragColor = HSM_Linearize(HSM_GetCroppedTexSample(Source, quantized_coord), HSM_DEFAULT_CRT_GAMMA);
 
-	FragColor = HSM_GetPostCrtPreppedColor(FragColor, vTexCoord, screen_curved_coord, ColoredGelImage, TubeStaticReflectionImage);
+	FragColor = HSM_GetPostCrtPreppedColor(FragColor, vTexCoord, screen_curved_coord, LinearizePass, true, ColoredGelImage, TubeStaticReflectionImage);
 }

@@ -9,6 +9,7 @@ alias0  = "InfoCachePass"
 
 // Add Intro Animation
 shader1 = ../../shaders/HyperspaceMadness/hsm-prep-intro.slang
+alias1 = IntroPass
 float_framebuffer1 = true
 scale_type1 = source
 scale_y1 = 16

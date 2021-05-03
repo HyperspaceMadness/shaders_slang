@@ -1,7 +1,7 @@
 // Add Mega Bezel parameters at the beginning of the list for easy access
 // A very small pass at 1/8th scale to cache values which are consistent across the frame
 // Read back these values later for better performance
-shader0 = ../../shaders/HyperspaceMadness/hsm-prep-info-cache-basic-border-with-reflect.slang
+shader0 = ../../shaders/HyperspaceMadness/hsm-prep-info-cache-standard.slang
 float_framebuffer0 = true
 scale_type0 = source
 scale_y0 = 0.0625
@@ -17,6 +17,10 @@ scale_y1 = 16
 // Color Correction with Dogway's awesome Grade shader
 shader2 = ../../shaders/HyperspaceMadness/hsm-dogway/hsm-grade.slang
 alias2  = "ColorCorrectPass"
+mipmap_input2 = true
+scale_type2 = source
+scale_x2 = 0.333333
+scale_y2 = 0.333333
 
 shader3 = ../../shaders/HyperspaceMadness/hsm-phosphor-persistence.slang
 filter_linear3 = false
@@ -73,6 +77,14 @@ filter_linear9 = true
 scale_type9 = viewport
 alias9 = BR_CRTPass
 
+// // Tube Scale Curvature Mapping
+// // Write mapping into the pass, of the 4 channels, x & y are tube warped coord and z & w are outside tube mask and edge mask
+// shader10 = ../../shaders/HyperspaceMadness/hsm-curvature-mapping.slang
+// filter_linear10 = true
+// scale_type10 = viewport
+// float_framebuffer10 = true
+// alias10 = BR_MappingPass
+
 // Reduce Resolution  ----------------------------------------------------------------
 //      Reduce the resolution to a small static size regardless of final resolution
 //      Allows consistent look and faster at different final resolutions for blur
@@ -123,7 +135,7 @@ alias14 = BR_MirrorFullscreenGlowPass
 
 
 // Bezel Reflection ----------------------------------------------------------------
-shader15 = ../../shaders/HyperspaceMadness/hsm-bezel-reflection-basic-border-with-reflect.slang
+shader15 = ../../shaders/HyperspaceMadness/hsm-bezel-reflection-standard.slang
 scale_type15 = viewport
 float_framebuffer15 = true
 alias15 = BR_CRTAndReflectionPass
@@ -154,10 +166,10 @@ ColoredGelImage_linear = true
 TubeStaticReflectionImage = ../../shaders/HyperspaceMadness/textures/TubeGlassOverlayImage_3840x2160.png
 TubeStaticReflectionImage_linear = true
 
-BackgroundImage = ../../shaders/HyperspaceMadness/textures/Baked_Frame_Carbonfiber_Background.png
+BackgroundImage = ../../shaders/HyperspaceMadness/textures/BackgroundImage_Carbon_3840x2160.png
 BackgroundImage_linear = true
 
-BackgroundVertImage = ../../shaders/HyperspaceMadness/textures/Baked_Frame_Carbonfiber_Background_Vert.png
+BackgroundVertImage = ../../shaders/HyperspaceMadness/textures/BackgroundImage_Carbon_3840x2160.png
 BackgroundVertImage_linear = true
 
 ReflectionMaskImage = ../../shaders/HyperspaceMadness/textures/Placeholder_White_16x16.png
@@ -175,9 +187,9 @@ LEDImage_linear = true
 DecalImage = ../../shaders/HyperspaceMadness/textures/Placeholder_Transparent_16x16.png
 DecalImage_linear = true
 
-
 TopLayerImage = ../../shaders/HyperspaceMadness/textures/Placeholder_Transparent_16x16.png
 TopLayerImage_linear = true
 
 // Parameters
-HSM_ASPECT_RATIO_MODE = 1
+HSM_REFLECT_IS_LAST_PASS = 1
+HSM_BG_OPACITY = 100

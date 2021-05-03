@@ -9,6 +9,7 @@ alias0  = "InfoCachePass"
 
 // Add Intro Animation
 shader1 = ../../shaders/HyperspaceMadness/hsm-prep-intro.slang
+alias1 = IntroPass
 float_framebuffer1 = true
 scale_type1 = source
 scale_y1 = 16
@@ -36,7 +37,7 @@ scale_type10 = "viewport"
 scale10 = "1.0"
 alias10 = BR_CRTPassAlternate
 
-shader11 = ../../shaders/HyperspaceMadness/hsm-lcd-cgwg/hsm-gba-color.slang
+shader11 = ../../../../stock.slang
 mipmap_input11 = true
 filter_linear11 = true
 scale_type11 = viewport
@@ -173,24 +174,3 @@ LEDImage_linear = true
 
 TopLayerImage = ../../shaders/HyperspaceMadness/textures/Placeholder_Transparent_16x16.png
 TopLayerImage_linear = true
-
-
-// Parameters
-HSM_ASPECT_RATIO_EXPLICIT = 1.5
-HSM_INT_SCALE_MODE = 2
-HSM_INT_SCALE_BORDER_MIN_HEIGHT = 15
-HSM_CURVATURE_MODE = -1
-HSM_SCREEN_CORNER_RADIUS = 4
-HSM_COLOR_CRT_PROFILE = 0
-HSM_TUBE_BLACK_EDGE_THICKNESS = 50
-HSM_BZL_WIDTH = 160
-HSM_BZL_HEIGHT = 150
-HSM_FRM_THICKNESS = 100
-
-LCD_RSUBPIX_R = 0.75
-LCD_GSUBPIX_G = 0.75
-LCD_BSUBPIX_B = 0.75
-LCD_GAIN = 1.8
-LCD_GAMMA = 2.2
-LCD_BLACK_LEVEL = 0
-LCD_BGR = 1

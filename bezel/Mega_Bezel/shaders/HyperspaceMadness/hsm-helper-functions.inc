@@ -6,6 +6,27 @@ Description:
 
 */
 
+/*
+	Texture interpolation based on "Improved texture interpolation" by Inigo Quilez
+	Original description: http://www.iquilezles.org/www/articles/texture/texture.htm
+	Expects the texture to be using linear filtering
+*/
+vec4 HSM_TextureQuilez(sampler2D in_sampler_2D, vec2 in_texture_size, vec2 p)
+{
+	vec2 tex_size = textureSize(in_sampler_2D, 0);
+	p = p * in_texture_size + vec2(0.5, 0.5);
+
+	vec2 i = floor(p);
+	vec2 f = p - i;
+	f = f * f * f * (f * (f * 6.0 - vec2(15.0, 15.0)) + vec2(10.0, 10.0));
+	p = i + f;
+
+	p = (p - vec2(0.5, 0.5)) * (1/in_texture_size);
+
+	// final sum and weight normalization
+	return texture(in_sampler_2D, p);
+}
+
 float HHLP_GetMaskCenteredOnValue(float in_value, float value_to_match, float threshold)
 {
 	float edge_0 = value_to_match - threshold;

@@ -263,6 +263,9 @@ void main()
 {
 	gl_Position = global.MVP * Position;
 	vTexCoord = TexCoord * 1.00001;
+
+	if (HSM_FLIP_VIEWPORT_VERTICAL == 1)
+		vTexCoord.y = 1 - vTexCoord.y;
 }
 
 #pragma stage fragment
@@ -271,6 +274,7 @@ layout(location = 0) in vec2 vTexCoord;
 
 layout(location = 0) out vec4 FragColor;
 
+layout(set = 0, binding = 1) uniform sampler2D IntroPass;
 layout(set = 0, binding = 2) uniform sampler2D Source;
 layout(set = 0, binding = 3) uniform sampler2D LinearizePass;
 
@@ -808,7 +812,7 @@ void main()
 	FragColor = vec4(color, 1);
 	
 	// Prep and add output gamma
-	FragColor = HSM_GetPostCrtPreppedColor(FragColor, vTexCoord, screen_curved_coord, ColoredGelImage, TubeStaticReflectionImage, BackgroundImage, BackgroundVertImage);
+	FragColor = HSM_GetPostCrtPreppedColor(FragColor, vTexCoord, screen_curved_coord, IntroPass, false, ColoredGelImage, TubeStaticReflectionImage, BackgroundImage, BackgroundVertImage);
 	// End Addition
 }
 

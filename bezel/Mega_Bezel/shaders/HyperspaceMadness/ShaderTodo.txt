@@ -1,9 +1,16 @@
 Mega Bezel is updated to V 0.9.08 2021-04-26
 
 Changes:
+*  Fixed up LCD color some, now it is pretty similar to standard LCD Grid V2
 *  Changed Cropping to use Percentage instead of pixels
   *  This is a bit more future proof and supports changing internal resolution and keeping the same cropping
 * Fixed BASIC-BORDER with Flip Vertical
+* Turned Off Phosphor Persistence by default
+* Use Standard Corners & Curvature for LCD base preset
+  * Presets in variations still have the original corners and curvature
+* Added Matte Modes for STANDARD presets
+* Added some Experimental presets, try out the 3DS with Downscaling for 3x Internal Resolution 
+
 
 *  Performance of Base presets at 3840x2160 on Nvidia RTX2060:
   *  ADVANCED -                      80 FPS  -  No comparable old preset
@@ -23,12 +30,16 @@ Changes:
 Mega Bezel Still to Come:
 
 V1 TODO
-  * ADVANCED Fix Optional curvature for following Bezel Scale
-  * Black Edge should be scaled with relation to screen height 
+  * Fix Scanline guess for dual screen, seems wrong for 3ds
+  * Fix LCD Shader Color
+  * Add 'Zoom' Crop & Shift?
+  * Hires Core for 3ds
+  * Fix Flip Vertical in BASIC-BORDER for other shaders - Easymode etc
+  * Black Edge should be scaled with relation to screen height
   * Fix black line around the frame when shadow is on, Advanced only?
   * Fix frame inner edge color not picking up HSV, (Advanced Preset?)
   * Fix bright area of screen showing outside the black line when bezel is hidden
-  * Fix LCD Shader
+  * Fix LCD Shader - Artifacts 
   * Viewport orientation Debug
   * Night Lighting Add Scaling
   * Add Cutout to STANDARD Preset?
@@ -48,11 +59,12 @@ V1 TODO
   * Add Mode to show masks and color for output for a basic-border preset
   * Add Images and Readme to root of the Repo
   * Update Doc Readme
+  * Possible LCD Replacements LCD 3x, Sameboy lcd
 
 
 Examples
   * Punch Out - Dual Screen
-
+  * Use MipMaps for image sampling when we have the image texture sizes
   * Add Gameboy Palettes https://www.deviantart.com/thewolfbunny/gallery/69987002/game-boy-palettes
   * Split background (Background and Bezel image?) and shift halves to far left and right
   * Add Sharp Pixel Preset - No CRT Processing, Options for reflection area, Adjustable Quilez Sharpening?
@@ -105,6 +117,32 @@ Examples
   * Reflection on areas outside the frame, e.g. Arcade Speaker Panel and Control Panel
   * Optimize presets using non-float frame buffers
   * Independent frame scaling?
+
+Documentation
+  Setup
+    Turn off video rotation 
+
+  Troubleshooting 
+    New install of retroarch 
+    Turn all overlays off 
+    I have rings, wavy distortions (Moire)
+
+  Vertical Arcade game setup
+    FBNeo
+    Mame 2003
+    Mame 2010
+
+Moire
+  The Waves you are seeing are called a Moire effect, it’s the same effect you see through a screen door sometimes.
+  It is caused by using a crt shader with scanlines and tube curvature and made worse when the resolution is limited. It is a thorny problem , and sometimes hard to get rid of at 1080, it is much less of a problem at 4k.
+  Things which can help/fix the problem
+    Reducing strength of scanlines, 
+    Reducing or curvature or setting it to 0 will definitely fix it.
+    If you keep using curvature using Integer scale in the shader parameters can sometimes help.
+
+    If making own presets reference from crt-Base presets 
+
+Old Megabezel https://github.com/HyperspaceMadness/shaders_slang/tree/adf6dc3c0f09db11ebf4fbcf85098ac8232acfcc
 
 Retroarch Features
   * Shader Textures in Sub Menu - Add ability to set texture overrides in retroarch UI

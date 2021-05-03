@@ -8,7 +8,7 @@ Description:
 */
 
 // Screen Scale Required Parameters
-#pragma parameter HSM_MEGA_BEZEL_TITLE					"[ --- HSM MEGA BEZEL 0.9.08 2021-04-26 --- ]" 0 0 0.01 0.01
+#pragma parameter HSM_MEGA_BEZEL_TITLE					"[ --- HSM MEGA BEZEL 0.9.09 2021-05-02 --- ]" 0 0 0.01 0.01
 
 //---------------------------------------------------------------------------------------------------
 //    FLIP & ROTATE
@@ -289,7 +289,7 @@ float HSM_CURVATURE_3D_TILT_ANGLE_Y = global.HSM_CURVATURE_3D_TILT_ANGLE_Y / 100
 
 #pragma parameter HSM_CRTRAWABTEST_TITLE					"[ CRT vs ORIGINAL A/B TESTING ]________________________________" 0 0 0.01 0.01
 
-#pragma parameter HSM_CRT_AB_TEST_BLEND_WITH_ORIGINAL_IMAGE   	"      Blend With Original Image" 50 0 100 0.2
+#pragma parameter HSM_CRT_AB_TEST_BLEND_WITH_ORIGINAL_IMAGE   	"      Blend With Original Image" 0 0 100 0.2
 #define HSM_CRT_AB_TEST_BLEND_WITH_ORIGINAL_IMAGE global.HSM_CRT_AB_TEST_BLEND_WITH_ORIGINAL_IMAGE / 100
 
 #pragma parameter HSM_SCREENVIGNETTE_TITLE					"[ SCREEN VIGNETTE ]____________________________________________" 0 0 0.01 0.01

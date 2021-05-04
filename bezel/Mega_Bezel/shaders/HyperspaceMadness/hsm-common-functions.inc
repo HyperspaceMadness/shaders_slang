@@ -232,7 +232,14 @@ float HSM_GetFinalViewportAspectRatio()
 float HSM_GetUseVerticalScanlines(float screen_aspect)
 {
 	float auto_use_vert_scanlines = screen_aspect < 1 ? 1 : 0;
-	return HSM_SCANLINE_DIRECTION < 1 ? auto_use_vert_scanlines : (HSM_SCANLINE_DIRECTION < 2 ? 0 : 1);
+
+	float scanline_direction = HSM_SCANLINE_DIRECTION < 2 ? 0 : 1;
+	
+	if (HSM_SCANLINE_DIRECTION < 1)
+		if (HSM_DUALSCREEN_MODE < 1) 
+			scanline_direction = auto_use_vert_scanlines;
+
+	return scanline_direction;
 }
 
 vec2 HSM_GetCoreSamplingResMult()
@@ -791,11 +798,11 @@ vec2 HSM_GetTubeCurvedCoord(vec2 screen_coord, float curvature_scale, vec2 scree
 	{
 		vec2 curvature_values = screen_aspect < 1 ? vec2(2 * HSM_BZL_INDEPENDENT_CURVATURE_SCALE_SHORT_AXIS * 2 / 100, HSM_BZL_INDEPENDENT_CURVATURE_SCALE_LONG_AXIS * 3 / 100)
 											: vec2(HSM_BZL_INDEPENDENT_CURVATURE_SCALE_LONG_AXIS * 3 / 100, 2 * HSM_BZL_INDEPENDENT_CURVATURE_SCALE_SHORT_AXIS * 2 / 100);
-		curvature_values *= curvature_scale * HSM_BZL_INNER_CURVATURE_SCALE;
+		curvature_values *= curvature_scale * HSM_TUBE_BLACK_EDGE_CURVATURE_SCALE * HSM_BZL_INNER_CURVATURE_SCALE;
 		tube_curved_coord = HSM_Get2DCurvedCoord(screen_coord, curvature_values);
 	}
 	else
-		tube_curved_coord = HSM_GetCurvedCoord(screen_coord, curvature_scale * HSM_BZL_INNER_CURVATURE_SCALE, screen_aspect);
+		tube_curved_coord = HSM_GetCurvedCoord(screen_coord, curvature_scale * HSM_TUBE_BLACK_EDGE_CURVATURE_SCALE * HSM_BZL_INNER_CURVATURE_SCALE, screen_aspect);
 
 	if (apply_black_edge_offset == 1)
 		tube_curved_coord = HSM_GetInverseScaledCoord(tube_curved_coord, black_edge_scale_offset);
@@ -1432,8 +1439,8 @@ vec4 HSM_GetPostCrtPreppedColor(vec4 in_color_linear, vec2 VIEWPORT_COORD, vec2 
 	vec4 source_color = HSM_GetCroppedTexSample(source_pass, mirrored_screen_coord);
 	if (!source_is_linear)
 		source_color = HSM_Linearize(source_color, HSM_DEFAULT_CRT_GAMMA);
-	out_color = mix(out_color, source_color, mirrored_screen_coord.x < HSM_CRT_AB_TEST_BLEND_WITH_ORIGINAL_IMAGE ? 1 : 0);
-	// mix(out_color, source_color, mirrored_screen_coord.x < HSM_CRT_AB_TEST_BLEND_WITH_ORIGINAL_IMAGE ? 1 : 0);
+	out_color = mix(out_color, source_color, mirrored_screen_coord.x < HSM_CRT_ORIGINAL_AB_COMPARE_SPLIT_POSITION ? 1 : 0);
+	// mix(out_color, source_color, mirrored_screen_coord.x < HSM_CRT_ORIGINAL_AB_COMPARE_SPLIT_POSITION ? 1 : 0);
 
 	float vignette_factor = HSM_GetScreenVignetteFactor(mirrored_screen_coord, HSM_SCREEN_VIGNETTE);
 

@@ -236,6 +236,19 @@ float HSM_CURVATURE_3D_TILT_ANGLE_Y = global.HSM_CURVATURE_3D_TILT_ANGLE_Y / 100
 #pragma parameter HSM_ANTI_FLICKER_THRESHOLD 				"      Luma Difference Threshold" 25 0 100 5
 #define HSM_ANTI_FLICKER_THRESHOLD global.HSM_ANTI_FLICKER_THRESHOLD / 100
 
+
+//---------------------------------------------------------------------------------------------------
+//    CRT vs ORIGINAL A/B TESTING
+//---------------------------------------------------------------------------------------------------
+#pragma parameter HSM_CRTRAWABTEST_TITLE					"[ CRT vs ORIGINAL A/B COMPARE ]________________________________" 0 0 0.01 0.01
+
+#pragma parameter HSM_CRT_ORIGINAL_AB_COMPARE_ON   			"      Compare ON" 0 0 1 1
+float HSM_CRT_ORIGINAL_AB_COMPARE_ON = global.HSM_CRT_ORIGINAL_AB_COMPARE_ON;
+
+#pragma parameter HSM_CRT_ORIGINAL_AB_COMPARE_SPLIT_POSITION   		"      Splitscreen Position" 50 0 100 0.2
+float HSM_CRT_ORIGINAL_AB_COMPARE_SPLIT_POSITION = HSM_CRT_ORIGINAL_AB_COMPARE_ON * global.HSM_CRT_ORIGINAL_AB_COMPARE_SPLIT_POSITION / 100;
+
+
 //---------------------------------------------------------------------------------------------------
 //    PHOSPHOR PERSISTENCE
 //---------------------------------------------------------------------------------------------------
@@ -252,6 +265,7 @@ float HSM_CURVATURE_3D_TILT_ANGLE_Y = global.HSM_CURVATURE_3D_TILT_ANGLE_Y / 100
 
 #pragma parameter HSM_PHOSPHOR_PERSISTENCE_BLUE          	"      Blue Persistence" 50 0 100 5
 #define HSM_PHOSPHOR_PERSISTENCE_BLUE global.HSM_PHOSPHOR_PERSISTENCE_BLUE / 100
+
 
 //---------------------------------------------------------------------------------------------------
 //    Black Level
@@ -287,11 +301,6 @@ float HSM_CURVATURE_3D_TILT_ANGLE_Y = global.HSM_CURVATURE_3D_TILT_ANGLE_Y / 100
 #pragma parameter HSM_COLOR_CRT_GAMMA   					"      CRT Gamma (Linear to Gamma Space Encode) Def 2.2" 2.2 0.1 5 0.05
 #define HSM_COLOR_CRT_GAMMA global.HSM_COLOR_CRT_GAMMA
 
-#pragma parameter HSM_CRTRAWABTEST_TITLE					"[ CRT vs ORIGINAL A/B TESTING ]________________________________" 0 0 0.01 0.01
-
-#pragma parameter HSM_CRT_AB_TEST_BLEND_WITH_ORIGINAL_IMAGE   	"      Blend With Original Image" 0 0 100 0.2
-#define HSM_CRT_AB_TEST_BLEND_WITH_ORIGINAL_IMAGE global.HSM_CRT_AB_TEST_BLEND_WITH_ORIGINAL_IMAGE / 100
-
 #pragma parameter HSM_SCREENVIGNETTE_TITLE					"[ SCREEN VIGNETTE ]____________________________________________" 0 0 0.01 0.01
 
 #pragma parameter HSM_SCREEN_VIGNETTE                		"      Screen Vignette Opacity" 0 0 100 1
@@ -312,6 +321,7 @@ float HSM_SCREEN_REFLECTION_POS_X = global.HSM_SCREEN_REFLECTION_POS_X / 600;
 #pragma parameter HSM_SCREEN_REFLECTION_POS_Y     			"      Screen Reflection Pos Y" 0 -100 100 1
 float HSM_SCREEN_REFLECTION_POS_Y = global.HSM_SCREEN_REFLECTION_POS_Y / 600;
 
+
 //---------------------------------------------------------------------------------------------------
 //    SCREEN EDGE
 //---------------------------------------------------------------------------------------------------
@@ -323,9 +333,11 @@ float HSM_SCREEN_REFLECTION_POS_Y = global.HSM_SCREEN_REFLECTION_POS_Y / 600;
 #pragma parameter HSM_SCREEN_EDGE_SHARPNESS 					"      Edge Sharpness - Def 40" 40 0 90 1
 #define HSM_SCREEN_EDGE_SHARPNESS global.HSM_SCREEN_EDGE_SHARPNESS / 100
 
-#pragma parameter HSM_TUBE_BLACK_EDGE_THICKNESS 				"      Black Border Thickness - Def 100" 100 -800 800 5
-#define HSM_TUBE_BLACK_EDGE_THICKNESS global.HSM_TUBE_BLACK_EDGE_THICKNESS / 100
+#pragma parameter HSM_TUBE_BLACK_EDGE_CURVATURE_SCALE 			"      Edge Curvature Scale Multiplier - Def 100" 100 0 8000 10
+#define HSM_TUBE_BLACK_EDGE_CURVATURE_SCALE global.HSM_TUBE_BLACK_EDGE_CURVATURE_SCALE / 100
 
+#pragma parameter HSM_TUBE_BLACK_EDGE_THICKNESS 				"      Black Edge Thickness - Def 100" 100 -800 800 5
+#define HSM_TUBE_BLACK_EDGE_THICKNESS global.HSM_TUBE_BLACK_EDGE_THICKNESS / 100
 
 
 //---------------------------------------------------------------------------------------------------
@@ -368,7 +380,6 @@ float HSM_TUBE_STATIC_REFLECTION_IMAGE_SCALE = global.HSM_TUBE_STATIC_REFLECTION
 
 #pragma parameter HSM_BZL_INDEPENDENT_CURVATURE_SCALE_SHORT_AXIS 		"      Independent Curvature Y - Def 100" 100 0 400 5
 #define HSM_BZL_INDEPENDENT_CURVATURE_SCALE_SHORT_AXIS global.HSM_BZL_INDEPENDENT_CURVATURE_SCALE_SHORT_AXIS / 100
-
 
 
 //---------------------------------------------------------------------------------------------------

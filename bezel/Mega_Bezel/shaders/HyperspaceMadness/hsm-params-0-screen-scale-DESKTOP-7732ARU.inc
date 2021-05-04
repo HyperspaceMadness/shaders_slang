@@ -225,6 +225,8 @@ float HSM_CURVATURE_3D_TILT_ANGLE_X = global.HSM_CURVATURE_3D_TILT_ANGLE_X / 100
 #pragma parameter HSM_CURVATURE_3D_TILT_ANGLE_Y 			"      3D Tilt Angle Y" 0 -120 120 1
 float HSM_CURVATURE_3D_TILT_ANGLE_Y = global.HSM_CURVATURE_3D_TILT_ANGLE_Y / 100;
 
+
+
 //---------------------------------------------------------------------------------------------------
 //    ANTI-FLICKER
 //---------------------------------------------------------------------------------------------------
@@ -235,6 +237,17 @@ float HSM_CURVATURE_3D_TILT_ANGLE_Y = global.HSM_CURVATURE_3D_TILT_ANGLE_Y / 100
 
 #pragma parameter HSM_ANTI_FLICKER_THRESHOLD 				"      Luma Difference Threshold" 25 0 100 5
 #define HSM_ANTI_FLICKER_THRESHOLD global.HSM_ANTI_FLICKER_THRESHOLD / 100
+
+
+
+//---------------------------------------------------------------------------------------------------
+//    ANTI-FLICKER
+//---------------------------------------------------------------------------------------------------
+#pragma parameter HSM_CRT_ORIGINAL_AB_SPLITSCREEN_TITLE		"[ CRT VS ORIGINAL AB SPLITSCREEN ]_______________________________________________" 0 0 0.01 0.01
+
+#pragma parameter HSM_CRT_ORIGINAL_AB_COMPARE_SPLIT_POSITION   			"      Blend CRT with Raw Image" 0 0 100 1
+#define HSM_CRT_ORIGINAL_AB_COMPARE_SPLIT_POSITION global.HSM_CRT_ORIGINAL_AB_COMPARE_SPLIT_POSITION / 100
+
 
 //---------------------------------------------------------------------------------------------------
 //    PHOSPHOR PERSISTENCE
@@ -286,9 +299,6 @@ float HSM_CURVATURE_3D_TILT_ANGLE_Y = global.HSM_CURVATURE_3D_TILT_ANGLE_Y / 100
 
 #pragma parameter HSM_COLOR_CRT_GAMMA   					"      CRT Gamma (Linear to Gamma Space Encode) Def 2.2" 2.2 0.1 5 0.05
 #define HSM_COLOR_CRT_GAMMA global.HSM_COLOR_CRT_GAMMA
-
-#pragma parameter HSM_CRT_AB_TEST_BLEND_WITH_ORIGINAL_IMAGE   			"      Blend CRT with Raw Image" 0 0 100 1
-#define HSM_CRT_AB_TEST_BLEND_WITH_ORIGINAL_IMAGE global.HSM_CRT_AB_TEST_BLEND_WITH_ORIGINAL_IMAGE / 100
 
 #pragma parameter HSM_SCREENVIGNETTE_TITLE					"[ SCREEN VIGNETTE ]____________________________________________" 0 0 0.01 0.01
 

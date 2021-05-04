@@ -1,20 +1,11 @@
 Mega Bezel is updated to V 0.9.09 2021-05-02
 
 Changes:
-*  Fixed up LCD color some, now it is pretty similar to standard LCD Grid V2
-*  Changed Cropping to use Percentage instead of pixels
-  *  This is a bit more future proof and supports changing internal resolution and keeping the same cropping
-* Fixed BASIC-BORDER with Flip Vertical
-* Turned Off Phosphor Persistence by default
-* Added Matte Modes for STANDARD presets
-* Added some Experimental presets, try out the 3DS with Downscaling for 3x Internal Resolution 
-* Preset Upkeep
-  * Use Standard Corners & Curvature for LCD base preset
-    * Presets in variations still have the original corners and curvature
-  * All Variation Presets reference the base crt presets using the root path, E.G. :/shaders/shaders_slang...
-    * This should help if you want to make a copy of one and put it somewhere else it will still work
-    * You can also just change the name of the referenced crt preset to a different crt preset
-* Probably some other stuff I forgot about ;)
+  * Rename to CRT vs ORIGINAL A/B COMPARE
+  * There is also now an on/off so you can turn it on and see the splitscreen down the center
+  * Added controls for adjusting the curvature of the black edge of the screen without affecting the screen distortion
+  * Fixed Auto scanline direction with Dual Screen
+
 
 *  Performance of Base presets at 3840x2160 on Nvidia RTX2060:
   *  ADVANCED -                      80 FPS  -  No comparable old preset
@@ -34,6 +25,7 @@ Changes:
 Mega Bezel Still to Come:
 
 V1 TODO
+
   * Fix Scanline guess for dual screen, seems wrong for 3ds
   * Fix LCD Shader Color
   * Add 'Zoom' Crop & Shift?

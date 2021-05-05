@@ -255,7 +255,7 @@ void main()
 	crt_and_reflection_linear.a = 1;
 	vec4 crt_linear = crt_and_reflection_linear;
 
-	vec2 screen_curved_coord = HSM_GetCurvedCoord(SCREEN_COORD, 1, SCREEN_ASPECT);
+	vec2 screen_curved_coord = HSM_GetCurvedCoord(SCREEN_COORD, HSM_TUBE_BLACK_EDGE_CURVATURE_SCALE, SCREEN_ASPECT);
 	
 	vec2 tube_curved_coord = HSM_GetTubeCurvedCoord(SCREEN_COORD, 1, SCREEN_SCALE, TUBE_SCALE, SCREEN_ASPECT, 1);
 	vec2 tube_curved_coord_ctr = tube_curved_coord - 0.5;
@@ -503,6 +503,8 @@ void main()
 	if (HSM_NIGHT_OPACITY > 0)
 	{
 		vec2 night_lighting_coord = VIEWPORT_COORD;
+		
+		night_lighting_coord = (night_lighting_coord - 0.5) / HSM_NIGHT_SCALE + 0.5;
 
 		if (HSM_NIGHT_MIRROR_HORZ == 1)
 			night_lighting_coord.x = (night_lighting_coord.x - 0.5) * -1 + 0.5;

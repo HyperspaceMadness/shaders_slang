@@ -1491,7 +1491,6 @@ vec4 HSM_GetPostCrtPreppedColor(vec4 in_color_linear, vec2 VIEWPORT_COORD, vec2 
 		
 		vec4 tube_highlight_image = texture(TubeStaticReflectionImage, tube_highlight_coord);
 		tube_highlight_image = HSM_Linearize(tube_highlight_image, HSM_DEFAULT_SRGB_GAMMA);
-
 		out_color.rgb += HSM_TUBE_STATIC_REFLECTION_IMAGE_OPACITY * tube_highlight_image.a * tube_highlight_image.rgb;
 	}
 

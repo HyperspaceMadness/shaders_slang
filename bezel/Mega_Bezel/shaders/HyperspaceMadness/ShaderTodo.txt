@@ -1,11 +1,12 @@
 Mega Bezel is updated to V 0.9.09 2021-05-02
 
 Changes:
-  * Rename to CRT vs ORIGINAL A/B COMPARE
-  * There is also now an on/off so you can turn it on and see the splitscreen down the center
+  * Rename the compare parameter to CRT vs ORIGINAL A/B COMPARE
+    * There is also now an on/off so you can turn it on and see the splitscreen down the center
   * Added controls for adjusting the curvature of the black edge of the screen without affecting the screen distortion
   * Fixed Auto scanline direction with Dual Screen
-
+  * Night Lighting can now be scaled. STANDARD now has Night Lighting mirror parameter
+  * Added Basic-Border Presets for DS
 
 *  Performance of Base presets at 3840x2160 on Nvidia RTX2060:
   *  ADVANCED -                      80 FPS  -  No comparable old preset
@@ -26,18 +27,14 @@ Mega Bezel Still to Come:
 
 V1 TODO
 
-  * Fix Scanline guess for dual screen, seems wrong for 3ds
-  * Fix LCD Shader Color
+
+  * Add DS BASIC-BORDER
   * Add 'Zoom' Crop & Shift?
-  * Hires Core for 3ds
-  * Fix Flip Vertical in BASIC-BORDER for other shaders - Easymode etc
   * Black Edge should be scaled with relation to screen height
   * Fix black line around the frame when shadow is on, Advanced only?
   * Fix frame inner edge color not picking up HSV, (Advanced Preset?)
   * Fix bright area of screen showing outside the black line when bezel is hidden
-  * Fix LCD Shader - Artifacts 
   * Viewport orientation Debug
-  * Night Lighting Add Scaling
   * Add Cutout to STANDARD Preset?
   * Inverse Cutout on Frame/Bezel? Shadow from Cutout?
   * Need an Preset for HD content, Vector Content

@@ -598,7 +598,14 @@ float edge_highlight_mask = 0;
 	vec4 night_lighting_image = vec4(0);
 	if (HSM_NIGHT_OPACITY > 0)
 	{
-		night_lighting_image = texture(NightLightingImage, VIEWPORT_COORD);
+		vec2 night_lighting_coord = VIEWPORT_COORD;
+		
+		night_lighting_coord = (night_lighting_coord - 0.5) / HSM_NIGHT_SCALE + 0.5;
+
+		if (HSM_NIGHT_MIRROR_HORZ == 1)
+			night_lighting_coord.x = (night_lighting_coord.x - 0.5) * -1 + 0.5;
+
+		night_lighting_image = texture(NightLightingImage, night_lighting_coord);
 		night_lighting_image = HSM_Linearize(night_lighting_image, HSM_DEFAULT_SRGB_GAMMA);
 
 		bg_image = mix(bg_image, bg_image * night_lighting_image, HSM_NIGHT_OPACITY);

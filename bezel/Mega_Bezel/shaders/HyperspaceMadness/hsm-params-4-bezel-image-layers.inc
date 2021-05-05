@@ -9,21 +9,15 @@
 //---------------------------------------------------------------------------------------------------
 
 //---------------------------------------------------------------------------------------------------
-//    STATIC ELEMENT GAMMA
-//---------------------------------------------------------------------------------------------------
-#pragma parameter HSM_STATIC_GAMMA_TITLE        "[ STATIC IMAGE LAYER GAMMA ]___________________________________" 0 0 0.01 0.01
-
-#pragma parameter HSM_STATIC_LAYERS_GAMMA		"      Static Image Layers Gamma Adjust" 1 0.01 5 0.01
-float HSM_STATIC_LAYERS_GAMMA = global.HSM_STATIC_LAYERS_GAMMA;
-
-
-//---------------------------------------------------------------------------------------------------
 //    NIGHT LIGHTING IMAGE
 //---------------------------------------------------------------------------------------------------
 #pragma parameter HSM_NIGHT_LIGHTING_TITLE "[ NIGHT LIGHTING ]_____________________________________________" 0 0 0.01 0.01
 
 #pragma parameter HSM_NIGHT_OPACITY             "      Opacity"  0 0 100 1
 float HSM_NIGHT_OPACITY = global.HSM_NIGHT_OPACITY / 100;
+
+#pragma parameter HSM_NIGHT_SCALE             "      Scale"  100 10 1000 1
+float HSM_NIGHT_SCALE = global.HSM_NIGHT_SCALE / 100;
 
 #pragma parameter HSM_NIGHT_MIRROR_HORZ         "      Mirror Horizontal"  0 0 1 1
 float HSM_NIGHT_MIRROR_HORZ = global.HSM_NIGHT_MIRROR_HORZ;
@@ -39,6 +33,15 @@ float HSM_NIGHT_VALUE = global.HSM_NIGHT_VALUE / 100;
 
 #pragma parameter HSM_NIGHT_DITHERING_SAMPLES   "      Dithering Noise Samples (Reduces Banding)" 0 0 10 1
 float HSM_NIGHT_DITHERING_SAMPLES = global.HSM_NIGHT_DITHERING_SAMPLES;
+
+
+//---------------------------------------------------------------------------------------------------
+//    IMAGES GAMMA
+//---------------------------------------------------------------------------------------------------
+#pragma parameter HSM_STATIC_GAMMA_TITLE        "[ IMAGE LAYER GAMMA ]___________________________________" 0 0 0.01 0.01
+
+#pragma parameter HSM_STATIC_LAYERS_GAMMA		"      Image Layers Gamma Adjust" 1 0.01 5 0.01
+float HSM_STATIC_LAYERS_GAMMA = global.HSM_STATIC_LAYERS_GAMMA;
 
 
 //---------------------------------------------------------------------------------------------------

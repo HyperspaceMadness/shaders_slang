@@ -8,7 +8,7 @@ Description:
 */
 
 // Screen Scale Required Parameters
-#pragma parameter HSM_MEGA_BEZEL_TITLE					"[ --- HSM MEGA BEZEL 0.9.09 2021-05-02 --- ]" 0 0 0.01 0.01
+#pragma parameter HSM_MEGA_BEZEL_TITLE					"[ --- HSM MEGA BEZEL 0.9.10 2021-05-04 --- ]" 0 0 0.01 0.01
 
 //---------------------------------------------------------------------------------------------------
 //    FLIP & ROTATE
@@ -343,7 +343,7 @@ float HSM_SCREEN_REFLECTION_POS_Y = global.HSM_SCREEN_REFLECTION_POS_Y / 600;
 //---------------------------------------------------------------------------------------------------
 //    TUBE IMAGES
 //---------------------------------------------------------------------------------------------------
-#pragma parameter HSM_TUBE_IMAGES_TITLE							"[ TUBE IMAGES ]________________________________________________" 0 0 0.01 0.01
+#pragma parameter HSM_TUBE_IMAGES_TITLE							"[ COLORED GEL IMAGE ]__________________________________________" 0 0 0.01 0.01
 
 #pragma parameter HSM_TUBE_COLORED_GEL_IMAGE_MULTIPLY_AMOUNT  	"      Colored Gel Multiply Amount" 0 0 100 1
 float HSM_TUBE_COLORED_GEL_IMAGE_MULTIPLY_AMOUNT = global.HSM_TUBE_COLORED_GEL_IMAGE_MULTIPLY_AMOUNT / 100;
@@ -353,6 +353,12 @@ float HSM_TUBE_COLORED_GEL_IMAGE_ADDITIVE_AMOUNT = global.HSM_TUBE_COLORED_GEL_I
 
 #pragma parameter HSM_TUBE_COLORED_GEL_IMAGE_NORMAL_AMOUNT  	"      Colored Gel Normal Amount" 0 0 100 1
 float HSM_TUBE_COLORED_GEL_IMAGE_NORMAL_AMOUNT = global.HSM_TUBE_COLORED_GEL_IMAGE_NORMAL_AMOUNT / 100;
+
+
+//---------------------------------------------------------------------------------------------------
+//    TUBE IMAGES
+//---------------------------------------------------------------------------------------------------
+#pragma parameter HSM_TUBE_STATIC_REFLECTION_IMAGE_TITLE		"[ TUBE STATIC REFLECTION IMAGE ]_______________________________" 0 0 0.01 0.01
 
 #pragma parameter HSM_TUBE_STATIC_REFLECTION_IMAGE_OPACITY  	"      Tube Static Reflection Opacity" 0 0 100 0.1
 float HSM_TUBE_STATIC_REFLECTION_IMAGE_OPACITY = global.HSM_TUBE_STATIC_REFLECTION_IMAGE_OPACITY / 100;

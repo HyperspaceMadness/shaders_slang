@@ -1,12 +1,13 @@
 Mega Bezel is updated to V 0.9.09 2021-05-02
 
 Changes:
-  * Rename the compare parameter to CRT vs ORIGINAL A/B COMPARE
-    * There is also now an on/off so you can turn it on and see the splitscreen down the center
-  * Added controls for adjusting the curvature of the black edge of the screen without affecting the screen distortion
-  * Fixed Auto scanline direction with Dual Screen
-  * Night Lighting can now be scaled. STANDARD now has Night Lighting mirror parameter
-  * Added Basic-Border Presets for DS
+  * Split The bezel scale and curvature independence into:
+    * 1 Parameter for Scale Independence
+    * 1 Parameter for Curvature Independence
+  * Edge of screen now stays locked in place so it does not expand with curvature
+    * This was causing uneven screen black edge thickness
+  * Screen Black Edge Curvature now has an option to affect or not the bezel
+    * Basically you turn this off if you want to adjust the screen black line without affecting the bezel
 
 *  Performance of Base presets at 3840x2160 on Nvidia RTX2060:
   *  ADVANCED -                      80 FPS  -  No comparable old preset
@@ -27,8 +28,6 @@ Mega Bezel Still to Come:
 
 V1 TODO
 
-
-  * Add DS BASIC-BORDER
   * Add 'Zoom' Crop & Shift?
   * Black Edge should be scaled with relation to screen height
   * Fix black line around the frame when shadow is on, Advanced only?

@@ -15,16 +15,16 @@ float HSM_BZL_BLEND_MODE = global.HSM_BZL_BLEND_MODE;
 #pragma parameter HSM_BZL_WIDTH 						"      Width - Def 125" 125 -250 5000 1
 float HSM_BZL_WIDTH = global.HSM_BZL_WIDTH * 0.0006;
 
-#pragma parameter HSM_BZL_HEIGHT 					    "      Height - Def 100" 100 -250 5000 1
+#pragma parameter HSM_BZL_HEIGHT 					    "      Height" 100 -250 5000 1
 float HSM_BZL_HEIGHT = global.HSM_BZL_HEIGHT * 0.0006;
 
-#pragma parameter HSM_BZL_INNER_EDGE_THICKNESS		    "      Inner Edge Thickness - Def 100" 100 0 700 10
+#pragma parameter HSM_BZL_INNER_EDGE_THICKNESS		    "      Inner Edge Thickness" 100 0 700 10
 float HSM_BZL_INNER_EDGE_THICKNESS = global.HSM_BZL_INNER_EDGE_THICKNESS  * 0.00007;
 
 #pragma parameter HSM_BZL_INNER_EDGE_SHARPNESS		    "      Inner Edge Sharpness - Def 95" 95 0 90 5
 float HSM_BZL_INNER_EDGE_SHARPNESS = global.HSM_BZL_INNER_EDGE_SHARPNESS  / 100;
 
-#pragma parameter HSM_BZL_OUTER_CORNER_RADIUS_SCALE 	"      Outer Corner Radius Scale - Def 100" 100 0 4000 1
+#pragma parameter HSM_BZL_OUTER_CORNER_RADIUS_SCALE 	"      Outer Corner Radius Scale" 100 0 4000 1
 float HSM_BZL_OUTER_CORNER_RADIUS_SCALE = global.HSM_BZL_OUTER_CORNER_RADIUS_SCALE / 100;
 
 #pragma parameter HSM_BZL_OUTER_CURVATURE_SCALE 		"      Outer Curvature Scale" 0 0 500 5

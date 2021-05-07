@@ -1498,8 +1498,11 @@ vec4 HSM_GetPostCrtPreppedColor(vec4 in_color_linear, vec2 VIEWPORT_COORD, vec2 
 		// float blur_amount = 0.2;
 		// vec4 tube_highlight_image = HSM_GetStoichaicBlurredSample(TubeStaticReflectionImage, tube_highlight_coord, HSM_TUBE_STATIC_REFLECTION_IMAGE_DITHERING_SAMPLES, blur_max_size, blur_amount);
 		
+		float tube_highlight_mask = HSM_GetCornerMask((tube_curved_coord - 0.5) * 0.995 + 0.5 , SCREEN_ASPECT, HSM_BZL_INNER_CORNER_RADIUS_SCALE * HSM_SCREEN_CORNER_RADIUS, 0.05);
+
 		vec4 tube_highlight_image = texture(TubeStaticReflectionImage, tube_highlight_coord);
-		tube_highlight_image = HSM_Linearize(tube_highlight_image, HSM_DEFAULT_SRGB_GAMMA);
+		tube_highlight_image = HSM_Linearize(tube_highlight_image, HSM_DEFAULT_SRGB_GAMMA) * tube_highlight_mask;
+
 		out_color.rgb += HSM_TUBE_STATIC_REFLECTION_IMAGE_OPACITY * tube_highlight_image.a * tube_highlight_image.rgb;
 	}
 

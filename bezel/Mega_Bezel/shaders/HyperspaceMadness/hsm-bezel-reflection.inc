@@ -499,15 +499,16 @@ float edge_highlight_mask = 0;
     if (HSM_TUBE_STATIC_REFLECTION_IMAGE_OPACITY > 0)
     {
 		vec2 tube_highlight_coord = (tube_curved_coord - 0.5) / HSM_TUBE_STATIC_REFLECTION_IMAGE_SCALE + 0.5;
-        // vec4 tube_highlight_image = texture(TubeStaticReflectionImage, tube_highlight_coord);
 
 		// // Dithering for the glass reflection if needed to reduce banding
 		// float blur_max_size = 1;
 		// float blur_amount = 0.2;
 		// vec4 tube_highlight_image = HSM_GetStoichaicBlurredSample(TubeStaticReflectionImage, tube_highlight_coord, HSM_TUBE_STATIC_REFLECTION_IMAGE_DITHERING_SAMPLES, blur_max_size, blur_amount);
 		
+		float tube_highlight_mask = HSM_GetCornerMask((tube_curved_coord - 0.5) * 0.995 + 0.5 , SCREEN_ASPECT, HSM_BZL_INNER_CORNER_RADIUS_SCALE * HSM_SCREEN_CORNER_RADIUS, 0.05);
+
 		vec4 tube_highlight_image = texture(TubeStaticReflectionImage, tube_highlight_coord);
-		tube_highlight_image = HSM_Linearize(tube_highlight_image, HSM_DEFAULT_SRGB_GAMMA);
+		tube_highlight_image = HSM_Linearize(tube_highlight_image, HSM_DEFAULT_SRGB_GAMMA) * tube_highlight_mask;
 
         // Since the tube highlight has already been applied in the crt pass and we've already masked it to the screen
 		// We just need to add the tube highlight on the black screen area
@@ -583,6 +584,11 @@ float edge_highlight_mask = 0;
 		led_image = HSM_ApplyGamma(led_image, HSM_STATIC_LAYERS_GAMMA);
 		decal_image = HSM_ApplyGamma(led_image, HSM_STATIC_LAYERS_GAMMA);
 		top_image = HSM_ApplyGamma(top_image, HSM_STATIC_LAYERS_GAMMA);
+	}
+
+	if (HSM_STANDARD_LED_SHOW_OVER_SCREEN == 0)
+	{
+		led_image *= outside_tube_mask_wider;
 	}
 
 	if (HSM_STANDARD_BG_SHOW_OVER_SCREEN == 0)

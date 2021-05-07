@@ -52,7 +52,7 @@ float HSM_BG_SOURCE_MATTE_TYPE = global.HSM_BG_SOURCE_MATTE_TYPE;
 float HSM_VIEWPORT_VIGNETTE_OPACITY = global.HSM_VIEWPORT_VIGNETTE_OPACITY / 100;
 
 #pragma parameter HSM_STANDARD_BG_SHOW_OVER_SCREEN 	"      Show over Screen" 0 0 1 1
-float HSM_STANDARD_BG_SHOW_OVER_SCREEN = global.HSM_STANDARD_BG_SHOW_OVER_SCREEN / 100;
+float HSM_STANDARD_BG_SHOW_OVER_SCREEN = global.HSM_STANDARD_BG_SHOW_OVER_SCREEN;
 
 
 //---------------------------------------------------------------------------------------------------
@@ -69,6 +69,8 @@ float HSM_LED_BLEND_MODE = global.HSM_LED_BLEND_MODE;
 #pragma parameter HSM_LED_SOURCE_MATTE_TYPE         "      Source Matte Color - Black | White | None"  0 0 2 1
 float HSM_LED_SOURCE_MATTE_TYPE = global.HSM_LED_SOURCE_MATTE_TYPE;
 
+#pragma parameter HSM_STANDARD_LED_SHOW_OVER_SCREEN "      Show over Screen" 0 0 1 1
+float HSM_STANDARD_LED_SHOW_OVER_SCREEN = global.HSM_STANDARD_LED_SHOW_OVER_SCREEN;
 
 //---------------------------------------------------------------------------------------------------
 //    DECAL IMAGE
@@ -78,7 +80,7 @@ float HSM_LED_SOURCE_MATTE_TYPE = global.HSM_LED_SOURCE_MATTE_TYPE;
 #pragma parameter HSM_DECAL_OPACITY 	            "      Opacity" 100 0 100 0.1
 float HSM_DECAL_OPACITY = global.HSM_DECAL_OPACITY / 100;
 
-#pragma parameter HSM_DECAL_BLEND_MODE 		        "      Blend Mode - OFF | NORM | ADD | MULT"  2 0 3 1
+#pragma parameter HSM_DECAL_BLEND_MODE 		        "      Blend Mode - OFF | NORM | ADD | MULT"  1 0 3 1
 float HSM_DECAL_BLEND_MODE = global.HSM_DECAL_BLEND_MODE;
 
 #pragma parameter HSM_DECAL_SOURCE_MATTE_TYPE       "      Source Matte Color - Black | White | None"  0 0 2 1

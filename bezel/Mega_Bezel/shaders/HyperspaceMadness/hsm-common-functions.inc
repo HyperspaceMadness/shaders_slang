@@ -464,7 +464,8 @@ vec2 HSM_GetTubeScale(vec2 screen_scale, float image_placement_screen_height)
 			screen_scale = screen_scale / screen_scale.y * image_placement_screen_height;
 	}
 
-	return HSM_GetScreenScaleWithEdgeHeight(1.2 * HSM_TUBE_BLACK_EDGE_THICKNESS / 100.0, screen_scale * HSM_BZL_SCALE_OFFSET);
+	float normalized_screen_height = screen_scale.y / DEFAULT_TUBE_SCALE_V;
+	return HSM_GetScreenScaleWithEdgeHeight(1.2 * HSM_TUBE_BLACK_EDGE_THICKNESS / 100.0 * normalized_screen_height, screen_scale * HSM_BZL_SCALE_OFFSET);
 }
 
 vec2 HSM_GetPositionOffset(vec2 placement_image_pos, vec2 screen_scale )
@@ -810,8 +811,7 @@ vec2 HSM_GetTubeCurvedCoord(vec2 screen_coord, float curvature_scale, vec2 scree
 	}
 	else
 	{
-		float black_edge_curvature_for_bezel = HSM_TUBE_BLACK_EDGE_CURVATURE_AFFECTS_BEZEL > 0 ? HSM_TUBE_BLACK_EDGE_CURVATURE_SCALE : 1;
-		tube_curved_coord = HSM_GetCurvedCoord(screen_coord, curvature_scale * black_edge_curvature_for_bezel * HSM_BZL_INNER_CURVATURE_SCALE, screen_aspect);
+		tube_curved_coord = HSM_GetCurvedCoord(screen_coord, curvature_scale * HSM_TUBE_BLACK_EDGE_CURVATURE_SCALE * HSM_BZL_INNER_CURVATURE_SCALE, screen_aspect);
 	}
 	if (apply_black_edge_offset == 1)
 		tube_curved_coord = HSM_GetInverseScaledCoord(tube_curved_coord, black_edge_scale_offset);

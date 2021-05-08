@@ -207,10 +207,10 @@ float HSM_DUALSCREEN_2ND_SCREEN_POS_Y = global.HSM_DUALSCREEN_2ND_SCREEN_POS_Y /
 #pragma parameter HSM_CURVATURE_MODE 						"      Curvature Mode  -1:OFF 0:2D 1-2:3D Sphere, 3:3D Cylinder" 0 -1 3 1
 float HSM_CURVATURE_MODE = global.HSM_CURVATURE_MODE;
 
-#pragma parameter HSM_CURVATURE_2D_SCALE_LONG_AXIS 			"      2D Curvature on Long Axis" 100 0 400 5
+#pragma parameter HSM_CURVATURE_2D_SCALE_LONG_AXIS 			"      2D Curvature on Long Axis" 100 5 400 5
 #define HSM_CURVATURE_2D_SCALE_LONG_AXIS global.HSM_CURVATURE_2D_SCALE_LONG_AXIS / 100
 
-#pragma parameter HSM_CURVATURE_2D_SCALE_SHORT_AXIS 		"      2D Curvature on Short Axis" 100 0 400 5
+#pragma parameter HSM_CURVATURE_2D_SCALE_SHORT_AXIS 		"      2D Curvature on Short Axis" 100 5 400 5
 #define HSM_CURVATURE_2D_SCALE_SHORT_AXIS global.HSM_CURVATURE_2D_SCALE_SHORT_AXIS / 100
 
 #pragma parameter HSM_CURVATURE_3D_RADIUS 					"      3D Radius" 200 16 102400 1
@@ -224,27 +224,6 @@ float HSM_CURVATURE_3D_TILT_ANGLE_X = global.HSM_CURVATURE_3D_TILT_ANGLE_X / 100
 
 #pragma parameter HSM_CURVATURE_3D_TILT_ANGLE_Y 			"      3D Tilt Angle Y" 0 -120 120 1
 float HSM_CURVATURE_3D_TILT_ANGLE_Y = global.HSM_CURVATURE_3D_TILT_ANGLE_Y / 100;
-
-
-//---------------------------------------------------------------------------------------------------
-//    SCREEN EDGE
-//---------------------------------------------------------------------------------------------------
-#pragma parameter HSM_SCREEN_EDGE_TITLE							"[ SCREEN BLACK EDGE ]__________________________________________" 0 0 0.01 0.01
-
-#pragma parameter HSM_SCREEN_CORNER_RADIUS 						"      Black Edge Corner Radius - Def 10" 10 4 500 1
-#define HSM_SCREEN_CORNER_RADIUS global.HSM_SCREEN_CORNER_RADIUS
-
-#pragma parameter HSM_SCREEN_EDGE_SHARPNESS 					"      Black Edge Sharpness - Def 40" 40 0 90 1
-#define HSM_SCREEN_EDGE_SHARPNESS global.HSM_SCREEN_EDGE_SHARPNESS / 100
-
-#pragma parameter HSM_TUBE_BLACK_EDGE_THICKNESS 				"      Black Edge Thickness" 100 -800 800 5
-#define HSM_TUBE_BLACK_EDGE_THICKNESS global.HSM_TUBE_BLACK_EDGE_THICKNESS / 100
-
-#pragma parameter HSM_TUBE_BLACK_EDGE_CURVATURE_SCALE 			"      Black Edge Curvature Scale Multiplier" 100 0 8000 10
-#define HSM_TUBE_BLACK_EDGE_CURVATURE_SCALE global.HSM_TUBE_BLACK_EDGE_CURVATURE_SCALE / 100
-
-#pragma parameter HSM_TUBE_BLACK_EDGE_CURVATURE_AFFECTS_BEZEL 	"      Black Edge Curvature Scale Affects Bezel" 1 0 1 1
-#define HSM_TUBE_BLACK_EDGE_CURVATURE_AFFECTS_BEZEL global.HSM_TUBE_BLACK_EDGE_CURVATURE_AFFECTS_BEZEL / 100
 
 
 //---------------------------------------------------------------------------------------------------
@@ -372,6 +351,24 @@ float HSM_TUBE_STATIC_REFLECTION_IMAGE_SCALE = global.HSM_TUBE_STATIC_REFLECTION
 
 // #pragma parameter HSM_TUBE_STATIC_REFLECTION_IMAGE_DITHERING_SAMPLES  "[ TUBE IMAGES ]   Tube Static Reflection Noise Samples (Reduces Banding)" 0 0 10 1
 // float HSM_TUBE_STATIC_REFLECTION_IMAGE_DITHERING_SAMPLES = global.HSM_TUBE_STATIC_REFLECTION_IMAGE_DITHERING_SAMPLES;
+
+
+//---------------------------------------------------------------------------------------------------
+//    SCREEN BLACK EDGE
+//---------------------------------------------------------------------------------------------------
+#pragma parameter HSM_SCREEN_EDGE_TITLE							"[ SCREEN BLACK EDGE ]__________________________________________" 0 0 0.01 0.01
+
+#pragma parameter HSM_SCREEN_CORNER_RADIUS 						"      Black Edge Corner Radius - Def 10" 10 4 500 1
+#define HSM_SCREEN_CORNER_RADIUS global.HSM_SCREEN_CORNER_RADIUS
+
+#pragma parameter HSM_SCREEN_EDGE_SHARPNESS 					"      Black Edge Sharpness - Def 40" 40 0 90 1
+#define HSM_SCREEN_EDGE_SHARPNESS global.HSM_SCREEN_EDGE_SHARPNESS / 100
+
+#pragma parameter HSM_TUBE_BLACK_EDGE_CURVATURE_SCALE 			"      Black Edge Curvature Scale Multiplier" 100 100 8000 10
+#define HSM_TUBE_BLACK_EDGE_CURVATURE_SCALE global.HSM_TUBE_BLACK_EDGE_CURVATURE_SCALE / 100
+
+#pragma parameter HSM_TUBE_BLACK_EDGE_THICKNESS 				"      Black Edge Thickness" 100 -800 800 5
+#define HSM_TUBE_BLACK_EDGE_THICKNESS global.HSM_TUBE_BLACK_EDGE_THICKNESS / 100
 
 
 //---------------------------------------------------------------------------------------------------

@@ -255,18 +255,23 @@ void main()
 	crt_and_reflection_linear.a = 1;
 	vec4 crt_linear = crt_and_reflection_linear;
 
-	vec2 screen_curved_coord = HSM_GetCurvedCoord(SCREEN_COORD, HSM_TUBE_BLACK_EDGE_CURVATURE_SCALE, SCREEN_ASPECT);
+	vec2 black_edge_curved_coord = HSM_GetCurvedCoord(SCREEN_COORD, HSM_TUBE_BLACK_EDGE_CURVATURE_SCALE, SCREEN_ASPECT);
 	
 	vec2 tube_curved_coord = HSM_GetTubeCurvedCoord(SCREEN_COORD, 1, SCREEN_SCALE, TUBE_SCALE, SCREEN_ASPECT, 1);
 	vec2 tube_curved_coord_ctr = tube_curved_coord - 0.5;
 	vec2 edge_mask_coord = tube_curved_coord_ctr * (1 - (HSM_BZL_INNER_EDGE_THICKNESS / vec2(SCREEN_ASPECT, 1))) + 0.5;
-	float edge_mask =  HSM_GetCornerMask(edge_mask_coord, SCREEN_ASPECT, HSM_BZL_INNER_CORNER_RADIUS_SCALE * HSM_SCREEN_CORNER_RADIUS, HSM_BZL_INNER_EDGE_SHARPNESS);
+	
+	float bezel_corner_radius = HSM_BZL_INNER_CORNER_RADIUS_SCALE * HSM_SCREEN_CORNER_RADIUS;
+	if(HSM_BZL_USE_INDEPENDENT_CURVATURE > 0)
+		bezel_corner_radius = HSM_BZL_INNER_CORNER_RADIUS_SCALE * DEFAULT_SCREEN_CORNER_RADIUS;
+	
+	float edge_mask =  HSM_GetCornerMask(edge_mask_coord, SCREEN_ASPECT, bezel_corner_radius, HSM_BZL_INNER_EDGE_SHARPNESS);
 
-	float outside_tube_mask = 1 - HSM_GetCornerMask(tube_curved_coord, SCREEN_ASPECT, HSM_BZL_INNER_CORNER_RADIUS_SCALE * HSM_SCREEN_CORNER_RADIUS, 0.99);
+	float outside_tube_mask = 1 - HSM_GetCornerMask(tube_curved_coord, SCREEN_ASPECT, bezel_corner_radius, 0.99);
 	TUBE_MASK = 1 - outside_tube_mask;
 
 	// Shrink the mask by 0.001 to clip off outer edge
-	SCREEN_MASK = HSM_GetCornerMask(((screen_curved_coord - 0.5) * 1.001) + 0.5, SCREEN_ASPECT, HSM_SCREEN_CORNER_RADIUS, HSM_SCREEN_EDGE_SHARPNESS);
+	SCREEN_MASK = HSM_GetCornerMask(((black_edge_curved_coord - 0.5) * 1.001) + 0.5, SCREEN_ASPECT, HSM_SCREEN_CORNER_RADIUS, HSM_SCREEN_EDGE_SHARPNESS);
 
 	//----------------------------------------------------
 	//  Calculate Outside mapping Coords
@@ -301,7 +306,7 @@ void main()
 
 	FRAME_SCALE = HSM_GetFrameScale(SCREEN_SCALE, TUBE_SCALE, SCREEN_ASPECT);
 
-	OUTSIDE_BEZEL_MASK = 1 - HSM_GetCornerMask(bezel_outside_curved_coord, SCREEN_ASPECT, HSM_FRM_INNER_CORNER_RADIUS_SCALE * HSM_BZL_OUTER_CORNER_RADIUS_SCALE * HSM_SCREEN_CORNER_RADIUS, 0.9);
+	OUTSIDE_BEZEL_MASK = 1 - HSM_GetCornerMask(bezel_outside_curved_coord, SCREEN_ASPECT, bezel_corner_radius * HSM_BZL_OUTER_CORNER_RADIUS_SCALE, 0.9);
 
 	//----------------------------------------------------
 	//  Calculate Corner Highlight Mask
@@ -339,7 +344,7 @@ void main()
 
 	float fade_out_to_corner = HHLP_QuadraticBezier(clamp(length(outermap_warped_outside_screen_vector) / (corner_crease_length * 2), 0, 1), vec2(0.5, HSM_REFLECT_CORNER_SPREAD_FALLOFF / 100));
 
-	float corner_fade_width_inner = HSM_REFLECT_CORNER_INNER_SPREAD * (SCREEN_SCALE.x + SCREEN_SCALE.y) * HSM_BZL_INNER_CORNER_RADIUS_SCALE * HSM_SCREEN_CORNER_RADIUS / 10 / 250 * 1.2;
+	float corner_fade_width_inner = HSM_REFLECT_CORNER_INNER_SPREAD * (SCREEN_SCALE.x + SCREEN_SCALE.y) * bezel_corner_radius / 10 / 250 * 1.2;
 	float corner_fade_width_outer = HSM_REFLECT_CORNER_OUTER_SPREAD * (SCREEN_SCALE.x + SCREEN_SCALE.y) * HSM_BZL_OUTER_CORNER_RADIUS_SCALE * HSM_SCREEN_CORNER_RADIUS / 10 / 250 * 1.6;
 	float corner_fade_width = (corner_fade_width_inner + fade_out_to_corner * (corner_fade_width_outer - corner_fade_width_inner));
 
@@ -368,10 +373,10 @@ void main()
 
 	float frame_inner_edge_mask = (HSM_FRM_INNER_EDGE_THICKNESS == 0) ? 0 : 1 - HSM_GetCornerMask(	(bezel_outside_curved_coord - 0.5) * (1 + (HSM_FRM_INNER_EDGE_THICKNESS / vec2(SCREEN_ASPECT, 1))) + 0.5, 
 																										SCREEN_ASPECT, 
-																										HSM_FRM_INNER_CORNER_RADIUS_SCALE * HSM_BZL_OUTER_CORNER_RADIUS_SCALE * HSM_SCREEN_CORNER_RADIUS, 
+																										bezel_corner_radius * HSM_BZL_OUTER_CORNER_RADIUS_SCALE, 
 																										0.9);
-	float outside_tube_mask_wider = 1 - HSM_GetCornerMask(tube_curved_coord_ctr * 0.996 + 0.5, SCREEN_ASPECT, HSM_BZL_INNER_CORNER_RADIUS_SCALE * HSM_SCREEN_CORNER_RADIUS, 0.9);
-	float tube_shadow_mask = HSM_GetCornerMask(tube_curved_coord_ctr + 0.5, SCREEN_ASPECT, HSM_BZL_INNER_CORNER_RADIUS_SCALE * HSM_SCREEN_CORNER_RADIUS, 0);
+	float outside_tube_mask_wider = 1 - HSM_GetCornerMask(tube_curved_coord_ctr * 0.996 + 0.5, SCREEN_ASPECT, bezel_corner_radius, 0.9);
+	float tube_shadow_mask = HSM_GetCornerMask(tube_curved_coord_ctr + 0.5, SCREEN_ASPECT, bezel_corner_radius, 0);
 	float tube_edge_shadow_mult = HSM_BZL_INNER_EDGE_SHADOW * (tube_shadow_mask) + (1 - HSM_BZL_INNER_EDGE_SHADOW);
 
 	crt_linear.rgb *= tube_edge_shadow_mult * (1 - outside_tube_mask_wider);
@@ -608,7 +613,7 @@ void main()
 	
 	if (HSM_BZL_IMG_USE_CURVATURE == 1)
 	{
-		screen_coord_for_bezel_image = screen_curved_coord;
+		screen_coord_for_bezel_image = black_edge_curved_coord;
 		bezel_coord_for_bezel_image = bezel_outside_curved_coord;
 	}
 	

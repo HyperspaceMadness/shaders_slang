@@ -1,0 +1,11 @@
+#reference ":/shaders/shaders_slang/bezel/Mega_Bezel/Presets/Base_CRT_Presets/MBZ__2__STANDARD__GUEST-DrVENOM.slangp"
+HSM_ASPECT_RATIO_MODE = "2.000000"
+HSM_BZL_NOISE = "10.000000"
+HSM_FRM_SHADOW_OPACITY = "100.000000"
+HSM_FRM_SHADOW_WIDTH = "50.000000"
+HSM_FRM_OUTER_EDGE_SHADING = "40.000000"
+HSM_LED_OPACITY = "0.000000"
+HSM_BZL_COLOR_VALUE = "30.000000"
+BackgroundImage = "textures/x68000.png"
+LEDImage = "textures/x68000_LED.png"
+

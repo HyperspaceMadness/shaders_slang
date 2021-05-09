@@ -123,7 +123,7 @@ layout(push_constant) uniform Push
 
 // #pragma parameter TATE "          TATE Mode" 0.0 0.0 1.0 1.0
 // #define TATE         params.TATE     // Screen orientation
-#define TATE         0     // Screen orientation
+// #define TATE         0     // Screen orientation
 
 // #pragma parameter IOS "          Integer Scaling: Odd:Y, Even:'X'+Y" 0.0 0.0 4.0 1.0
 // #define IOS          params.IOS     // Smart Integer Scaling
@@ -463,8 +463,22 @@ vec3 plant (vec3 tar, float r)
 
 void main()
 {
+	// HSM Added
+	HSM_UpdateGlobalScreenValuesFromCache(InfoCachePass, vTexCoord);
+
+	// HSM Changed
+	float TATE = USE_VERTICAL_SCANLINES;
+
+	/* HSM Removed
 	vec4 SourceSize = global.OriginalSize * vec4(prescalex, 1.0, 1.0/prescalex, 1.0);
+	*/
 	
+	// HSM Added
+	// FragColor = vec4(CROPPED_ROTATED_ORIGINAL_SIZE_WITH_CORE_RES_MULT.y / 256);
+	// return;
+
+	vec2 SourceSize = CROPPED_ROTATED_ORIGINAL_SIZE_WITH_CORE_RES_MULT;
+
 	float lum = COMPAT_TEXTURE(AvgLumPass, vec2(0.5,0.5)).a;
 	
 	float gamma_in = 1.0/COMPAT_TEXTURE(LinearizePass, vec2(0.25,0.25)).a;
@@ -472,15 +486,16 @@ void main()
 	bool interb  = (intera < 0.75);
 	bool notate  = (TATE < 0.5);
 
+	/*
 	float SourceY = mix(SourceSize.y, SourceSize.x, TATE);
 	float sy = 1.0;
 	if (params.intres == 0.5) sy = SourceY/224.0; else
 	if (params.intres == 1.0) sy = SourceY/240.0; else
 	if (params.intres > 1.25) sy = params.intres;
 	if (notate) SourceSize*=vec4(1.0, 1.0/sy, 1.0, sy); else SourceSize*=vec4(1.0/sy, 1.0, sy, 1.0);
+
 	
 	// Calculating texel coordinates
-	/*
 	vec2 texcoord = TEX0.xy;
 	if (IOS > 0.0){
 		vec2 ofactor = OutputSize.xy/SourceSize.xy;
@@ -500,12 +515,6 @@ void main()
 	vec2 pos0 = Warp(TEX0.xy);
 	*/
 
-	// HSM Added
-	HSM_UpdateGlobalScreenValuesFromCache(InfoCachePass, vTexCoord);
-
-	// HSM Removed
-	float TATE = USE_VERTICAL_SCANLINES;
-
 	vec2 screen_curved_coord = HSM_GetCurvedCoord(SCREEN_COORD, 1, SCREEN_ASPECT);
 	vec2 pos = HSM_GetMirrorWrappedCoord(screen_curved_coord);
 
@@ -513,7 +522,8 @@ void main()
 
 	vec2 coffset = vec2(0.5, 0.5);
 	
-	vec2 ps = SourceSize.zw;
+	// HSM Edited - Was SourceSize.zw
+	vec2 ps = 1 / SourceSize.xy;
 	vec2 OGL2Pos = pos * SourceSize.xy - coffset;
 	vec2 fp = fract(OGL2Pos);
 	
@@ -539,7 +549,12 @@ void main()
 	
 	vec2 pC4 = floor(OGL2Pos) * ps + 0.5*ps; 
 	
+	/* HSM Removed
 	if (interb)  pC4.y = pos.y - inters * SourceSize.w;
+	*/
+
+	// HSM Added
+	if (interb)  pC4.y = pos.y - inters * (1 / SourceSize.y);
 	
 	float zero = exp2(-h_sharp);
 	float sharp1 = s_sharp * zero;
@@ -640,9 +655,15 @@ void main()
 
 	vec3 scolor2, mcolor2;
 	
+	/* HSM Removed
 	if (interb) pC4.y = pos.y + inters * SourceSize.w; else
 	pC4+=offy;
-	
+	*/
+
+	// HSM Added
+	if (interb) pC4.y = pos.y + inters * (1 /SourceSize.y); else
+	pC4+=offy;
+
 	l3 = COMPAT_TEXTURE(LinearizePass, pC4 -off2).rgb;
 	l2 = COMPAT_TEXTURE(LinearizePass, pC4 -offx).rgb;
 	l1 = COMPAT_TEXTURE(LinearizePass, pC4      ).rgb;

@@ -21,6 +21,8 @@
    
 */  
 
+#include "../../hsm-globals-and-screen-scale-params.inc"
+
 layout(push_constant) uniform Push
 {
 	vec4 OriginalSize;
@@ -35,13 +37,6 @@ layout(push_constant) uniform Push
 	float downsample_level;
 	float prescalex;
 } params;
-
-
-layout(std140, set = 0, binding = 0) uniform UBO
-{
-	vec4 SourceSize;
-	mat4 MVP;
-} global;
 
 
 #pragma parameter GAMMA_INPUT "Gamma Input" 2.4 1.0 5.0 0.05
@@ -140,8 +135,15 @@ void main()
 
 	float r = m1;
 
-	float yres_div = 1.0; if (intres > 1.25) yres_div = intres;
-		
+	// HSM Removed
+	// float yres_div = 1.0; if (intres > 1.25) yres_div = intres;
+
+	// HSM Added
+	float yres_div = 1.0; 
+	
+	if (HSM_CORE_RES_SAMPLING_MULT_OPPOSITE_DIR < 1)
+		 yres_div = 1 / HSM_CORE_RES_SAMPLING_MULT_OPPOSITE_DIR;
+
 	if (inter < params.OriginalSize.y/yres_div && interm > 0.5 && intres != 1.0 && intres != 0.5) 
 	{
 		if (downsample_level > 0.5) c2 = fetch_pixel(vTexCoord + vec2(0.0, params.OriginalSize.w));	

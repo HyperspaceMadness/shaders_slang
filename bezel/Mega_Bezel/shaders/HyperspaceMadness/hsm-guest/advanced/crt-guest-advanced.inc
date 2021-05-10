@@ -38,8 +38,8 @@ layout(push_constant) uniform Push
 	// float smart_ei;
 	// float ei_limit;
 	// float sth;
-	float intres;
-	// float prescalex;
+	// float intres;
+	float prescalex;
 } params;
 
 
@@ -54,8 +54,11 @@ layout(push_constant) uniform Push
 #pragma parameter halation "          Halation Strength" 0.0 0.0 2.0 0.025
 #define halation         params.halation     // halation effect
 
-#pragma parameter gamma_c "          Gamma correct" 1.0 0.50 2.0 0.02
-#define gamma_c   params.gamma_c     // adjust brightness
+// #pragma parameter gamma_c "          Gamma correct" 1.0 0.50 2.0 0.02
+// #define gamma_c   params.gamma_c     // adjust brightness
+
+#define gamma_c   1    // adjust brightness
+
 
 #pragma parameter brightboost "          Bright Boost Dark Pixels" 1.40 0.25 10.0 0.05
 #define brightboost  params.brightboost     // adjust brightness
@@ -119,7 +122,7 @@ layout(push_constant) uniform Push
 
 #pragma parameter bogus_screen "[ SCREEN OPTIONS ]: " 0.0 0.0 1.0 1.0
 
-#pragma parameter intres "          Internal Resolution Y: 224p/240p, 1.5...y-dowsample" 0.0 0.0 6.0 0.5 // Joint parameter with linearize pass, values must match
+// #pragma parameter intres "          Internal Resolution Y: 224p/240p, 1.5...y-dowsample" 0.0 0.0 6.0 0.5 // Joint parameter with linearize pass, values must match
 
 // #pragma parameter TATE "          TATE Mode" 0.0 0.0 1.0 1.0
 // #define TATE         params.TATE     // Screen orientation
@@ -157,9 +160,8 @@ layout(push_constant) uniform Push
 // #define overscanY        params.overscanY     // OverscanY pixels
 #define overscanY        0     // OverscanY pixels
 
-// #pragma parameter prescalex "          Prescale-X Factor (for xBR...pre-shader)" 1.0 1.0 4.0 1.0
-// #define prescalex        params.prescalex     // prescale-x factor
-#define prescalex        1     // prescale-x factor
+#pragma parameter prescalex "          Prescale-X Factor (for xBR...pre-shader)" 1.0 1.0 4.0 1.0
+#define prescalex        params.prescalex     // prescale-x factor
 
 #pragma parameter bogus_masks "[ CRT MASK OPTIONS ]: " 0.0 0.0 1.0 1.0
 
@@ -206,7 +208,12 @@ layout(push_constant) uniform Push
 #pragma parameter inters "          Interlacing Effect Smoothness" 0.0 0.0 0.5 0.05 // Joint parameter with linearize pass, values must match
 #define inters  params.inters     // interlacing effect smoothing
 
-#define COMPAT_TEXTURE(c,d) texture(c,d)
+// HSM Removed
+// #define COMPAT_TEXTURE(c,d) texture(c,d)
+// HSM Added
+#define COMPAT_TEXTURE(c,d) HSM_GetCroppedTexSample(c,d)
+// End Addition
+
 #define TEX0 vTexCoord
 
 #define OutputSize global.OutputSize
@@ -477,7 +484,7 @@ void main()
 	// FragColor = vec4(CROPPED_ROTATED_ORIGINAL_SIZE_WITH_CORE_RES_MULT.y / 256);
 	// return;
 
-	vec2 SourceSize = CROPPED_ROTATED_ORIGINAL_SIZE_WITH_CORE_RES_MULT;
+	vec2 SourceSize = CROPPED_ROTATED_ORIGINAL_SIZE_WITH_CORE_RES_MULT * vec2(prescalex, 1.0);
 
 	float lum = COMPAT_TEXTURE(AvgLumPass, vec2(0.5,0.5)).a;
 	

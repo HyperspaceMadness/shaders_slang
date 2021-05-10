@@ -143,3 +143,6 @@ LEDImage_linear = true
 
 TopLayerImage = ../../shaders/HyperspaceMadness/textures/Placeholder_Transparent_16x16.png
 TopLayerImage_linear = true
+
+HSM_ASPECT_RATIO_MODE = 6
+HSM_CURVATURE_MODE = -1

@@ -123,10 +123,10 @@ float HSM_CROP_BLACK_THRESHOLD = global.HSM_CROP_BLACK_THRESHOLD / 100;
 //---------------------------------------------------------------------------------------------------
 #pragma parameter HSM_SAMPLING_TITLE								"[ CORE RES SAMPLING ]__________________________________________" 0 0 0.01 0.01
 
-#pragma parameter HSM_CORE_RES_SAMPLING_MULT_SCANLINE_DIR			"      Scanline Direction Multiplier (X for Horiz Scanline)"  100 25 1600 25
+#pragma parameter HSM_CORE_RES_SAMPLING_MULT_SCANLINE_DIR			"      Scanline Direction Multiplier (X-Prescale for H Scanline)"  100 100 1600 100
 float HSM_CORE_RES_SAMPLING_MULT_SCANLINE_DIR = global.HSM_CORE_RES_SAMPLING_MULT_SCANLINE_DIR / 100;
 
-#pragma parameter HSM_CORE_RES_SAMPLING_MULT_OPPOSITE_DIR			"      Opposite Direction Multiplier (Y for Horiz Scanlines)"  100 25 1600 25
+#pragma parameter HSM_CORE_RES_SAMPLING_MULT_OPPOSITE_DIR			"      Downsample Direction Multiplier (Y for H Scanline)"  100 25 1600 25
 float HSM_CORE_RES_SAMPLING_MULT_OPPOSITE_DIR = global.HSM_CORE_RES_SAMPLING_MULT_OPPOSITE_DIR / 100;
 
 

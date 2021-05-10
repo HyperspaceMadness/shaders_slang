@@ -25,17 +25,14 @@
 
 layout(push_constant) uniform Push
 {
-	vec4 OriginalSize;
-	vec4 OutputSize;
-	uint FrameCount;
 	float GAMMA_INPUT;
-	float inter;
+	// float inter;
 	float interm;
 	float inters;
 	float iscan;
-	float intres;
+	// float intres;
 	float downsample_level;
-	float prescalex;
+	// float prescalex;
 } params;
 
 
@@ -44,8 +41,8 @@ layout(push_constant) uniform Push
 
 #pragma parameter bogus_interlacing "[ INTERLACING OPTIONS ]: " 0.0 0.0 0.0 1.0
 
-#pragma parameter inter "          Interlace Trigger Resolution :" 350.0 0.0 800.0 25.0
-#define inter         params.inter     // interlace resolution
+// #pragma parameter inter "          Interlace Trigger Resolution :" 350.0 0.0 800.0 25.0
+// #define inter         params.inter     // interlace resolution
 
 #pragma parameter interm "          Interlace Mode: OFF, Normal 1-3, Interpolation 4-5" 1.0 0.0 5.0 1.0
 #define interm         params.interm     // interlace mode 
@@ -56,15 +53,14 @@ layout(push_constant) uniform Push
 #pragma parameter iscan "          Interlacing Scanline Effect" 0.20 0.0 1.0 0.05
 #define iscan  params.iscan     // interlacing effect scanlining
 
-#pragma parameter intres "          Internal Resolution Y: 224p/240p, 1.5...y-dowsample" 0.0 0.0 6.0 0.5 // Joint parameter with main pass, values must match
-
-#define intres         params.intres     // interlace resolution
+// #pragma parameter intres "          Internal Resolution Y: 224p/240p, 1.5...y-dowsample" 0.0 0.0 6.0 0.5 // Joint parameter with main pass, values must match
+// #define intres         params.intres     // internal resolution
 
 #pragma parameter downsample_level "          Downsampling (High-res content, pre-scalers)" 0.0 0.0 1.0 1.0
 #define downsample_level         params.downsample_level     // downsample level
 
-#pragma parameter prescalex "          Prescale-X Factor (for xBR...pre-shader)" 1.0 1.0 4.0 1.0  // Joint parameter with main pass, values must match
-#define prescalex        global.prescalex     // prescale-x factor
+// #pragma parameter prescalex "          Prescale-X Factor (for xBR...pre-shader)" 1.0 1.0 4.0 1.0  // Joint parameter with main pass, values must match
+// #define prescalex        global.prescalex     // prescale-x factor
 
 #pragma stage vertex
 layout(location = 0) in vec4 Position;
@@ -117,7 +113,7 @@ vec3 fetch_pixel(vec2 coord)
 void main()
 {
 	vec3  c1 = COMPAT_TEXTURE(PrePass, vTexCoord).rgb;
-	vec3  c2 = COMPAT_TEXTURE(PrePass, vTexCoord + vec2(0.0, params.OriginalSize.w)).rgb;	
+	vec3  c2 = COMPAT_TEXTURE(PrePass, vTexCoord + vec2(0.0, global.OriginalSize.w)).rgb;	
 
 	if (downsample_level > 0.5) c1 = fetch_pixel(vTexCoord);
 
@@ -144,12 +140,17 @@ void main()
 	if (HSM_CORE_RES_SAMPLING_MULT_OPPOSITE_DIR < 1)
 		 yres_div = 1 / HSM_CORE_RES_SAMPLING_MULT_OPPOSITE_DIR;
 
-	if (inter < params.OriginalSize.y/yres_div && interm > 0.5 && intres != 1.0 && intres != 0.5) 
+	// HSM Removed
+	// if (inter < params.OriginalSize.y/yres_div && interm > 0.5 && intres != 1.0 && intres != 0.5) 
+	
+	// HSM Added
+	// TODO should not do this if downsampling to 224 or 240
+	if (HSM_SCANLINE_INTERLACE_TRIGGER_RES < global.OriginalSize.y/yres_div && interm > 0.5) 
 	{
-		if (downsample_level > 0.5) c2 = fetch_pixel(vTexCoord + vec2(0.0, params.OriginalSize.w));	
+		if (downsample_level > 0.5) c2 = fetch_pixel(vTexCoord + vec2(0.0, global.OriginalSize.w));	
 		intera = 0.5;
-		float line_no  = clamp(floor(mod(params.OriginalSize.y*vTexCoord.y, 2.0)), 0.0, 1.0);
-		float frame_no = clamp(floor(mod(float(params.FrameCount),2.0)), 0.0, 1.0);
+		float line_no  = clamp(floor(mod(global.OriginalSize.y*vTexCoord.y, 2.0)), 0.0, 1.0);
+		float frame_no = clamp(floor(mod(float(global.FrameCount),2.0)), 0.0, 1.0);
 		float ii = abs(line_no-frame_no);
 		
 		if (interm < 3.5)

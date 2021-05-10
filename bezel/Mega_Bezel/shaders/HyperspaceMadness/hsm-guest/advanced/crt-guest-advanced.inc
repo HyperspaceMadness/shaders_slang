@@ -160,8 +160,8 @@ layout(push_constant) uniform Push
 // #define overscanY        params.overscanY     // OverscanY pixels
 #define overscanY        0     // OverscanY pixels
 
-#pragma parameter prescalex "          Prescale-X Factor (for xBR...pre-shader)" 1.0 1.0 4.0 1.0
-#define prescalex        params.prescalex     // prescale-x factor
+// #pragma parameter prescalex "          Prescale-X Factor (for xBR...pre-shader)" 1.0 1.0 4.0 1.0
+// #define prescalex        params.prescalex     // prescale-x factor
 
 #pragma parameter bogus_masks "[ CRT MASK OPTIONS ]: " 0.0 0.0 1.0 1.0
 
@@ -484,7 +484,7 @@ void main()
 	// FragColor = vec4(CROPPED_ROTATED_ORIGINAL_SIZE_WITH_CORE_RES_MULT.y / 256);
 	// return;
 
-	vec2 SourceSize = CROPPED_ROTATED_ORIGINAL_SIZE_WITH_CORE_RES_MULT * vec2(prescalex, 1.0);
+	vec2 SourceSize = CROPPED_ROTATED_ORIGINAL_SIZE_WITH_CORE_RES_MULT * vec2(HSM_CORE_RES_SAMPLING_MULT_SCANLINE_DIR, 1.0);
 
 	float lum = COMPAT_TEXTURE(AvgLumPass, vec2(0.5,0.5)).a;
 	
@@ -566,8 +566,13 @@ void main()
 	float zero = exp2(-h_sharp);
 	float sharp1 = s_sharp * zero;
 	
-	float fdivider = min(prescalex, 2.0);
+	// HSM Removed
+	// float fdivider = min(prescalex, 2.0);
 	
+	// HSM Added
+	float fdivider = min(HSM_CORE_RES_SAMPLING_MULT_SCANLINE_DIR, 2.0);
+	// End Addition
+
 	float wl3 = (2.0 + fpx)/fdivider;
 	float wl2 = (1.0 + fpx)/fdivider;
 	float wl1 = (      fpx)/fdivider;

@@ -1,7 +1,7 @@
 Mega Bezel is updated to V 0.9.012 2021-05-10
 
 Changes:
-  * Fixed Parameters not showing up in the right place
+  * Decreased Scale Increment for Cabinet Glass
 
 
 *  Performance of Base presets at 3840x2160 on Nvidia RTX2060:
@@ -22,15 +22,17 @@ Changes:
 Mega Bezel Still to Come:
 
 V1 TODO
-  * Parameters are not in the right spot
+  * Fix Cut-Out on all layers
+  * Raw Pixel Preset
   * Add 'Zoom' Crop & Shift?
+  * Split Images - Shift to Outer Edge, Distance Offset, Fade to center? Hor vs Vert
+  * Raw Pixels Sampling Modes? Quillez Nearest Neighbor, etc
   * Fix black line around the frame when shadow is on, Advanced only?
   * Fix frame inner edge color not picking up HSV, (Advanced Preset?)
   * Fix bright area of screen showing outside the black line when bezel is hidden
   * Viewport orientation Debug
   * Add Cutout to STANDARD Preset?
-  * Inverse Cutout on Frame/Bezel? Shadow from Cutout?
-  * Need an Preset for HD content, Vector Content
+  * Shadow from Cutout?
   * Local vs FullScreen Blur on Corner reflection?
   * HSV for Background for ADVANCED?
   * Logo
@@ -38,18 +40,21 @@ V1 TODO
     * Position offset?
   * Dual Screen
     * Combine frame shadows
-  * Square Pixels Preset? Trigger Res, Scanline Opacity, Turn Off Mask, or use CGWG then turn “0 & 7 Strength” to 0.00.
   * First Pass for Downscaling, Anti-Flicker needs to go here because of OriginalHistory1
   * Add Downscale res to res debug
   * HD-CORE presets
   * Add Mode to show masks and color for output for a basic-border preset
   * Add Images and Readme to root of the Repo
   * Update Doc Readme
-  * Possible LCD Replacements LCD 3x, Sameboy lcd
+  * LCD behavior when reaching resolution limit - Possible LCD Replacements LCD 3x, Sameboy lcd
+
+
+
 
 
 Examples
   * Punch Out - Dual Screen
+  * Vector Preset
   * Use MipMaps for image sampling when we have the image texture sizes
   * Add Gameboy Palettes https://www.deviantart.com/thewolfbunny/gallery/69987002/game-boy-palettes
   * Split background (Background and Bezel image?) and shift halves to far left and right

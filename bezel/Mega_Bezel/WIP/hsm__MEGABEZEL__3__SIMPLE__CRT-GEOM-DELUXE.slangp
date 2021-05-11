@@ -11,7 +11,7 @@ shader1 = shaders/HyperspaceMadness/hsm-dogway/hsm-grade.slang
 alias1  = "ColorCorrectPass"
 
 shader2 = ../../../../stock.slang
-alias2  = PreCRTPass
+alias2 = PreCRTPass
 
 shader3 = ../../../../stock.slang
 filter_linear3 = true

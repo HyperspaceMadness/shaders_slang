@@ -8,7 +8,7 @@ Description:
 */
 
 // Screen Scale Required Parameters
-#pragma parameter HSM_MEGA_BEZEL_TITLE					"[ --- HSM MEGA BEZEL 0.9.10 2021-05-04 --- ]" 0 0 0.01 0.01
+#pragma parameter HSM_MEGA_BEZEL_TITLE					"[ --- HSM MEGA BEZEL 0.9.012 2021-05-10 --- ]" 0 0 0.01 0.01
 
 //---------------------------------------------------------------------------------------------------
 //    FLIP & ROTATE

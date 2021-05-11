@@ -1,7 +1,7 @@
 // Add Mega Bezel parameters at the beginning of the list for easy access
 // A very small pass at 1/8th scale to cache values which are consistent across the frame
 // Read back these values later for better performance
-shader0 = ../../shaders/HyperspaceMadness/hsm-prep-info-cache-basic-border.slang
+shader0 = ../../shaders/HyperspaceMadness/hsm-prep-info-cache-standard.slang
 float_framebuffer0 = true
 scale_type0 = source
 scale_y0 = 0.25
@@ -16,7 +16,7 @@ alias1 = "IntroPass"
 
 // Color Correction with Dogway's awesome Grade shader
 shader2 = ../../shaders/HyperspaceMadness/hsm-dogway/hsm-grade.slang
-alias2  = "ColorCorrectPass"
+alias2 = "ColorCorrectPass"
 mipmap_input2 = true
 scale_type2 = absolute
 scale_x2 = 512

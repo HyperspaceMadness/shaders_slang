@@ -6,6 +6,8 @@ Changes:
     * Added Max-Int-Scale__BASIC-EXTRA-PASSES in Variations folder
     * Has the scaling and extra image processing of the Mega Bezel but no Bezel or Reflection
     * No Curvature, uses integer scale and will scale to slightly larger than the screen
+  * Fixed errors in rounding in resolution debug info
+    * This should now report the correct screen size and integer multiples
 
 
 *  Performance of Base presets at 3840x2160 on Nvidia RTX2060:
@@ -15,7 +17,7 @@ Changes:
   *  STANDARD-HD-CORE -             105 FPS
   *  BASIC-BORDER-WITH-REFLECTION - 175 FPS  -  Old Reflect Only Preset 165 FPS
   *  BASIC-BORDER -                 295 FPS  -  Old Screen Scale Preset 370 FPS
-  
+
 *  Performance on HD-CORE E.G. 1920x1080:
   *  ADVANCED -                     60 FPS 
   *  ADVANCED-HD-CORE -             70 FPS 
@@ -27,6 +29,8 @@ Changes:
 Mega Bezel Still to Come:
 
 V1 TODO
+  * Guest ADV - convergence, extra passes, mega bezel passes
+  * Add extra empty passes for Mega Bezel
   * Fix Cut-Out on all layers
   * Simple Preset with all passes but no reflection
   * Raw Pixel Preset

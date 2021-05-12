@@ -10,6 +10,9 @@ Description:
 // Screen Scale Required Parameters
 #pragma parameter HSM_MEGA_BEZEL_TITLE					"[ --- HSM MEGA BEZEL 0.9.012 2021-05-10 --- ]" 0 0 0.01 0.01
 
+#pragma parameter HSM_RESOLUTION_DEBUG_ON				"      Show Resolution Info" 0 0 1 1
+float HSM_RESOLUTION_DEBUG_ON = global.HSM_RESOLUTION_DEBUG_ON;
+
 //---------------------------------------------------------------------------------------------------
 //    FLIP & ROTATE
 //---------------------------------------------------------------------------------------------------
@@ -47,9 +50,6 @@ float HSM_ASPECT_RATIO_EXPLICIT = global.HSM_ASPECT_RATIO_EXPLICIT;
 //    SCALING
 //---------------------------------------------------------------------------------------------------
 #pragma parameter HSM_SCALING_TITLE						"[ SCALING ]____________________________________________________" 0 0 0.01 0.01
-
-#pragma parameter HSM_RESOLUTION_DEBUG_ON				"      Show Resolution Info" 0 0 1 1
-float HSM_RESOLUTION_DEBUG_ON = global.HSM_RESOLUTION_DEBUG_ON;
 
 #pragma parameter HSM_INT_SCALE_MODE 					"      Int Scale Mode - OFF | ShortAxis | BothAxes" 0 0 2 1
 #define HSM_INT_SCALE_MODE global.HSM_INT_SCALE_MODE
@@ -299,7 +299,7 @@ float HSM_CRT_ORIGINAL_AB_COMPARE_SPLIT_POSITION = HSM_CRT_ORIGINAL_AB_COMPARE_O
 
 #pragma parameter HSM_GAMMA_TITLE							"[ CRT GAMMA ]__________________________________________________" 0 0 0.01 0.01
 
-#pragma parameter HSM_COLOR_CRT_GAMMA   					"      CRT Gamma (Linear to Gamma Space Encode) Def 2.2" 2.2 0.1 5 0.05
+#pragma parameter HSM_COLOR_CRT_GAMMA   					"      CRT Gamma (Linear to Gamma Space Encode) Def 2.4" 2.4 0.1 5 0.05
 #define HSM_COLOR_CRT_GAMMA global.HSM_COLOR_CRT_GAMMA
 
 #pragma parameter HSM_SCREENVIGNETTE_TITLE					"[ SCREEN VIGNETTE ]____________________________________________" 0 0 0.01 0.01

@@ -300,9 +300,6 @@ float DrawResolutions(vec2 uv, vec2 viewport_size, vec2 screen_size, vec2 origin
     col += GetChar(ch_E, uv);
     col += GetChar(ch_L, uv);
     col += GetChar(ch_spc, uv);
-    col += GetChar(ch_spc, uv);
-    col += GetChar(ch_V, uv);
-    col += GetChar(ch_spc, uv);
     col += GetChar(ch_0, uv);
     col += GetChar(ch_per, uv);
     col += GetChar(ch_9, uv);
@@ -321,6 +318,83 @@ float DrawResolutions(vec2 uv, vec2 viewport_size, vec2 screen_size, vec2 origin
     col += GetChar(ch_dsh, uv);
     col += GetChar(ch_1, uv);
     col += GetChar(ch_0, uv);
+
+    //Preset Type
+    printPos = vec2(2, 2.0 + STRHEIGHT(11));
+    col += GetChar(ch_spc, uv);
+    
+#ifdef IS_ADVANCED_PRESET
+    col += GetChar(ch_A, uv);
+    col += GetChar(ch_D, uv);
+    col += GetChar(ch_V, uv);
+    col += GetChar(ch_A, uv);
+    col += GetChar(ch_N, uv);
+    col += GetChar(ch_C, uv);
+    col += GetChar(ch_E, uv);
+    col += GetChar(ch_D, uv);
+#endif
+
+#ifdef IS_STANDARD_PRESET
+    col += GetChar(ch_S, uv);
+    col += GetChar(ch_T, uv);
+    col += GetChar(ch_A, uv);
+    col += GetChar(ch_N, uv);
+    col += GetChar(ch_D, uv);
+    col += GetChar(ch_A, uv);
+    col += GetChar(ch_R, uv);
+    col += GetChar(ch_D, uv);
+#endif
+
+#ifdef IS_GLASS_PRESET
+    col += GetChar(ch_G, uv);
+    col += GetChar(ch_L, uv);
+    col += GetChar(ch_A, uv);
+    col += GetChar(ch_S, uv);
+    col += GetChar(ch_S, uv);
+#endif
+
+#ifdef IS_BASIC_BORDER_WITH_REFLECT_PRESET
+    col += GetChar(ch_B, uv);
+    col += GetChar(ch_A, uv);
+    col += GetChar(ch_S, uv);
+    col += GetChar(ch_I, uv);
+    col += GetChar(ch_C, uv);
+    col += GetChar(ch_dsh, uv);
+    col += GetChar(ch_B, uv);
+    col += GetChar(ch_O, uv);
+    col += GetChar(ch_R, uv);
+    col += GetChar(ch_D, uv);
+    col += GetChar(ch_E, uv);
+    col += GetChar(ch_R, uv);
+    col += GetChar(ch_dsh, uv);
+    col += GetChar(ch_W, uv);
+    col += GetChar(ch_I, uv);
+    col += GetChar(ch_T, uv);
+    col += GetChar(ch_H, uv);
+    col += GetChar(ch_dsh, uv);
+    col += GetChar(ch_R, uv);
+    col += GetChar(ch_E, uv);
+    col += GetChar(ch_F, uv);
+    col += GetChar(ch_L, uv);
+    col += GetChar(ch_E, uv);
+    col += GetChar(ch_C, uv);
+    col += GetChar(ch_T, uv);
+#endif
+
+#ifdef IS_BASIC_BORDER_PRESET
+    col += GetChar(ch_B, uv);
+    col += GetChar(ch_A, uv);
+    col += GetChar(ch_S, uv);
+    col += GetChar(ch_I, uv);
+    col += GetChar(ch_C, uv);
+    col += GetChar(ch_dsh, uv);
+    col += GetChar(ch_B, uv);
+    col += GetChar(ch_O, uv);
+    col += GetChar(ch_R, uv);
+    col += GetChar(ch_D, uv);
+    col += GetChar(ch_E, uv);
+    col += GetChar(ch_R, uv);
+#endif
 
     //Core Resolution
     printPos = vec2(2, 2.0 + STRHEIGHT(9));

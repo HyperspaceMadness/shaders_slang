@@ -1,0 +1,4 @@
+#reference ":/shaders/shaders_slang/bezel/Mega_Bezel/Presets/Base_CRT_Presets/MBZ__2__STANDARD__GUEST-DrVENOM.slangp"
+
+HSM_CRT_ORIGINAL_AB_COMPARE_ON = 1
+HSM_CRT_ORIGINAL_AB_COMPARE_SPLIT_POSITION = 100

@@ -7,12 +7,12 @@ scale_type0 = source
 scale0 = 1.0
 alias0  = "InfoCachePass"
 
-shader1 = ../../shaders/HyperspaceMadness/hsm-prep-intro.slang
+shader1 = ../../shaders/HyperspaceMadness/hsm-prep-intro-advanced.slang
 filter_linear1 = false
 float_framebuffer1 = true
 scale_type1 = source
 scale1 = 1.0
-alias1 = StockPass
+alias1 = "IntroPass"
 
 shader2 = :/shaders/shaders_slang/bezel/Mega_Bezel/shaders/HyperspaceMadness/hsm-guest/advanced/afterglow0.slang
 filter_linear2 = false
@@ -75,7 +75,7 @@ scale_y9 = 1.0
 float_framebuffer9 = true
 alias9 = BloomPass
 
-shader10 = :/shaders/shaders_slang/bezel/Mega_Bezel/shaders/HyperspaceMadness/hsm-guest/advanced/crt-guest-advanced.slang
+shader10 = :/shaders/shaders_slang/bezel/Mega_Bezel/shaders/HyperspaceMadness/hsm-guest/advanced/crt-guest-advanced-with-scaling.slang
 filter_linear10 = true
 scale_type10 = viewport
 scale_x10 = 1.0

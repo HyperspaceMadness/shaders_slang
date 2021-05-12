@@ -8,7 +8,7 @@ scale_y0 = 0.25
 alias0  = "InfoCachePass"
 
 // Add Intro Animation
-shader1 = ../../shaders/HyperspaceMadness/hsm-prep-intro.slang
+shader1 = ../../shaders/HyperspaceMadness/hsm-prep-intro-basic-border.slang
 alias1 = "IntroPass"
 float_framebuffer1 = true
 scale_type1 = source

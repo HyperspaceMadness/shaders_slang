@@ -407,7 +407,7 @@ vec2 HSM_GetScreenSize(vec2 screen_scale)
 {
 	vec2 screen_size = global.FinalViewportSize.xy * screen_scale;
 	// Round this so we get proper integers
-	screen_size = vec2(round(screen_size.x), round(screen_size.y));
+	screen_size = vec2(ceil(screen_size.x), ceil(screen_size.y));
 	return screen_size;
 }
 

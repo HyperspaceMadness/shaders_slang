@@ -151,13 +151,6 @@ filter_linear23 = true
 scale_type23 = viewport
 alias23 = BR_CRTPass
 
-// // Tube Scale Curvature Mapping
-// // Write mapping into the pass, of the 4 channels, x & y are tube warped coord and z & w are outside tube mask and edge mask
-// shader24 = ../../shaders/HyperspaceMadness/hsm-curvature-mapping.slang
-// filter_linear24 = true
-// scale_type24 = viewport
-// float_framebuffer24 = true
-// alias24 = BR_MappingPass
 
 // Reduce Resolution  ----------------------------------------------------------------
 //      Reduce the resolution to a small static size regardless of final resolution

@@ -203,7 +203,6 @@ layout(push_constant) uniform Push
 
 // #pragma parameter gamma_out "Gamma out" 2.4 1.0 5.0 0.05
 // #define gamma_out    params.gamma_out     // output gamma
-#define gamma_out    2.4     // output gamma
 
 #pragma parameter inters "          Interlacing Effect Smoothness" 0.0 0.0 0.5 0.05 // Joint parameter with linearize pass, values must match
 #define inters  params.inters     // interlacing effect smoothing
@@ -238,17 +237,21 @@ layout(location = 0) in vec2 vTexCoord;
 layout(location = 0) out vec4 FragColor;
 
 // HSM Added
-layout(set = 0, binding = 2) uniform sampler2D InfoCachePass;
-// layout(set = 0, binding = 3) uniform sampler2D ColoredGelImage;
-// layout(set = 0, binding = 4) uniform sampler2D TubeStaticReflectionImage;
-// layout(set = 0, binding = 5) uniform sampler2D BackgroundImage;
-// layout(set = 0, binding = 6)  uniform sampler2D BackgroundVertImage;
+layout(set = 0, binding = 1) uniform sampler2D InfoCachePass;
+layout(set = 0, binding = 2) uniform sampler2D IntroPass;
+layout(set = 0, binding = 3) uniform sampler2D ColoredGelImage;
+layout(set = 0, binding = 4) uniform sampler2D TubeStaticReflectionImage;
+layout(set = 0, binding = 5) uniform sampler2D BackgroundImage;
+layout(set = 0, binding = 6)  uniform sampler2D BackgroundVertImage;
 
 layout(set = 0, binding = 7) uniform sampler2D LinearizePass;
 layout(set = 0, binding = 8) uniform sampler2D AvgLumPass;
 layout(set = 0, binding = 9) uniform sampler2D GlowPass;
 layout(set = 0, binding = 10) uniform sampler2D BloomPass;
+
+/* HSM Removed - Seemingly only used for vignette
 layout(set = 0, binding = 11) uniform sampler2D PrePass;
+*/
 
 #define eps 1e-10 
 
@@ -818,7 +821,12 @@ if (!interb)
 	cmask = min(cmask*smask, 1.0);
 
 	if (interb) ctmp = color;
+	/* HSM Removed
 	float colmx = pow( max( max(ctmp.r, ctmp.g), ctmp.b), 1.40/gamma_out);
+	*/
+
+	float colmx = pow( max( max(ctmp.r, ctmp.g), ctmp.b), 1.40/HSM_COLOR_CRT_GAMMA);
+	
 	float bb = mix(brightboost, brightboost1, colmx);
 	if (interb) bb = (abs(intera-0.5)<0.1) ? pow(0.80*bb, 0.65) : pow(bb, 0.70);
 	color*=bb;
@@ -826,7 +834,10 @@ if (!interb)
 	vec3  Glow = COMPAT_TEXTURE(GlowPass, pos).rgb;
 	vec3  Bloom = COMPAT_TEXTURE(BloomPass, pos).rgb;
 	float maxb = COMPAT_TEXTURE(BloomPass, pos).a;
+
+	/* HSM Removed
 	float vig  = COMPAT_TEXTURE(PrePass, clamp(pos, 0.0+0.5*global.OriginalSize.zw, 1.0-0.5*global.OriginalSize.zw)).a;
+	*/
 
 	vec3 Bloom1 = min(Bloom*(orig1+color), max(0.5*(colmx + orig1 - color),0.0));
 	color = color + bloom*Bloom1;
@@ -840,7 +851,14 @@ if (!interb)
 	Glow = mix(Glow, 0.25*color, 0.7*colmx);
 	color = color + 0.5*glow*Glow;
 	
+	/* HSM Removed
 	color = pow(color, vec3(1.0/gamma_out));
 	
 	FragColor = vec4(color*vig, corner(pos));
+	*/
+
+	// Prep and add output gamma
+	FragColor = vec4(color, 1);
+	FragColor = HSM_GetPostCrtPreppedColor(FragColor, vTexCoord, screen_curved_coord, IntroPass, false, ColoredGelImage, TubeStaticReflectionImage, BackgroundImage, BackgroundVertImage);
+	// End Addition
 }

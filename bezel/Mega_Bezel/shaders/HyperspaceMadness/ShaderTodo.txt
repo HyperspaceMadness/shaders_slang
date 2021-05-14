@@ -6,8 +6,12 @@ Changes:
     * Added Max-Int-Scale__BASIC-EXTRA-PASSES in Variations folder
     * Has the scaling and extra image processing of the Mega Bezel but no Bezel or Reflection
     * No Curvature, uses integer scale and will scale to slightly larger than the screen
-  * Fixed errors in rounding in resolution debug info
-    * This should now report the correct screen size and integer multiples
+  * Resolution Debug Info
+    * Fixed errors in rounding in resolution debug info
+      * This should now report the correct screen size and integer multiples
+    * Added text to show which base preset type is loaded
+  * Added MBZ__3__BASIC-BORDER-WITH-REFLECT__EASYMODE
+    * Good for low spec systems, uses 1/3 less processing than Guest-DrVenom counterpart
 
 
 *  Performance of Base presets at 3840x2160 on Nvidia RTX2060:

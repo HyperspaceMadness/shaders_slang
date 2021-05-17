@@ -33,8 +33,11 @@ Changes:
 Mega Bezel Still to Come:
 
 V1 TODO
+  * Blend Amount For Downsample Blur?
   * Guest ADV - convergence, extra passes, mega bezel passes
   * Add extra empty passes for Mega Bezel
+  * CRT Geom Curvature, Guest Curvature
+  * Modulate Range on top of Hue & Value?
   * Fix Cut-Out on all layers
   * Simple Preset with all passes but no reflection
   * Raw Pixel Preset

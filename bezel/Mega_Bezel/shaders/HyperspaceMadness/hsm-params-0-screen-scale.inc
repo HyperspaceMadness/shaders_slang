@@ -119,6 +119,15 @@ float HSM_CROP_BLACK_THRESHOLD = global.HSM_CROP_BLACK_THRESHOLD / 100;
 
 
 //---------------------------------------------------------------------------------------------------
+//    SCANLINES
+//---------------------------------------------------------------------------------------------------
+#pragma parameter HSM_SCANLINE_TITLE								"[ SCANLINE DIRECTION ]:" 0 0 0.01 0.01
+
+#pragma parameter HSM_SCANLINE_DIRECTION 							"      Scanline Direction (GDV & Easymode) - Auto | Horiz | Vert"  0 0 2 1
+float HSM_SCANLINE_DIRECTION = global.HSM_SCANLINE_DIRECTION;
+
+
+//---------------------------------------------------------------------------------------------------
 //    CORE RES SAMPLING
 //---------------------------------------------------------------------------------------------------
 #pragma parameter HSM_SAMPLING_TITLE								"[ CORE RES SAMPLING ]__________________________________________" 0 0 0.01 0.01
@@ -131,22 +140,38 @@ float HSM_CORE_RES_SAMPLING_MULT_OPPOSITE_DIR = global.HSM_CORE_RES_SAMPLING_MUL
 
 
 //---------------------------------------------------------------------------------------------------
-//    SCANLINES
+//    INTERLACING
 //---------------------------------------------------------------------------------------------------
-#pragma parameter HSM_SCANLINE_TITLE								"[ SCANLINES ]__________________________________________________" 0 0 0.01 0.01
 
-#pragma parameter HSM_SCANLINE_DIRECTION 							"      Scanline Direction (GDV & Easymode) - Auto | Horiz | Vert"  0 0 2 1
-float HSM_SCANLINE_DIRECTION = global.HSM_SCANLINE_DIRECTION;
+#pragma parameter HSM_INTERLACE_TITLE								"[ INTERLACING ]:" 0 0 0.01 0.01
 
-#pragma parameter HSM_SCANLINE_INTERLACE_TRIGGER_RES 				"      Interlace and Fake Scanlines Trigger Res" 600.0 0.0 2000.0 25.0
-#define HSM_SCANLINE_INTERLACE_TRIGGER_RES global.HSM_SCANLINE_INTERLACE_TRIGGER_RES
+#pragma parameter HSM_INTERLACE_MODE 						"      Interlacing Mode: OFF | Normal 1-3 | Interpolation 4-5" 1.0 0.0 5.0 1.0
+#define HSM_INTERLACE_MODE global.HSM_INTERLACE_MODE
 
-#pragma parameter HSM_SCANLINE_FAKE_SCANLINE_OPACITY 				"      Fake Scanline Opacity - Def 70" 70 0 100 5
-#define HSM_SCANLINE_FAKE_SCANLINE_OPACITY global.HSM_SCANLINE_FAKE_SCANLINE_OPACITY / 100
+#pragma parameter HSM_INTERLACE_TRIGGER_RES 				"      Interlacing and Fake Scanlines Trigger Res" 600 0 2000 25
+#define HSM_INTERLACE_TRIGGER_RES global.HSM_INTERLACE_TRIGGER_RES
 
-// #pragma parameter HSM_SCANLINE_FAKE_SCANLINE_BRIGHTNESS_CUTOFF 	"[ SCREEN FX ]  Fake 240p Scanline Brightness Cutoff - Def 3" 3 0 10 0.05
-#ifndef HSM_SCANLINE_FAKE_SCANLINE_BRIGHTNESS_CUTOFF
-	#define HSM_SCANLINE_FAKE_SCANLINE_BRIGHTNESS_CUTOFF 3
+#pragma parameter HSM_INTERLACE_EFFECT_SMOOTHNESS 					"      Interlacing Effect Smoothness" 0 0 0.5 0.05
+#define HSM_INTERLACE_EFFECT_SMOOTHNESS global.HSM_INTERLACE_EFFECT_SMOOTHNESS
+
+#pragma parameter HSM_INTERLACE_SCANLINE_EFFECT 					"      Interlacing Scanline Effect" 0.2 0 1 0.05
+#define HSM_INTERLACE_SCANLINE_EFFECT global.HSM_INTERLACE_SCANLINE_EFFECT
+
+#pragma parameter HSM_DOWNSAMPLING_SMOOTHING 						"      Downsampling Smoothing (High-res core, Pre-scalers)" 0 0 1 1
+#define HSM_DOWNSAMPLING_SMOOTHING global.HSM_DOWNSAMPLING_SMOOTHING
+
+
+//---------------------------------------------------------------------------------------------------
+//    FAKE SCANLINES
+//---------------------------------------------------------------------------------------------------
+#pragma parameter HSM_FAKE_SCANLINE_TITLE								"[ FAKE SCANLINES ]" 0 0 0.01 0.01
+
+#pragma parameter HSM_FAKE_SCANLINE_OPACITY 				"      Fake Scanline Opacity - Def 70" 0 0 100 5
+#define HSM_FAKE_SCANLINE_OPACITY global.HSM_FAKE_SCANLINE_OPACITY / 100
+
+// #pragma parameter HSM_FAKE_SCANLINE_BRIGHTNESS_CUTOFF 	"[ SCREEN FX ]  Fake 240p Scanline Brightness Cutoff - Def 3" 3 0 10 0.05
+#ifndef HSM_FAKE_SCANLINE_BRIGHTNESS_CUTOFF
+	#define HSM_FAKE_SCANLINE_BRIGHTNESS_CUTOFF 3
 #endif
 
 
@@ -299,10 +324,14 @@ float HSM_CRT_ORIGINAL_AB_COMPARE_SPLIT_POSITION = HSM_CRT_ORIGINAL_AB_COMPARE_O
 
 #pragma parameter HSM_GAMMA_TITLE							"[ CRT GAMMA ]__________________________________________________" 0 0 0.01 0.01
 
-#pragma parameter HSM_COLOR_CRT_GAMMA   					"      CRT Gamma (Linear to Gamma Space Encode) Def 2.4" 2.4 0.1 5 0.05
-#define HSM_COLOR_CRT_GAMMA global.HSM_COLOR_CRT_GAMMA
+#pragma parameter HSM_GAMMA_IN_LINEARIZE   				"      Gamma In (Gamma to Linear Space Decode) Def 2.4" 2.4 0.1 5 0.05
+#define HSM_GAMMA_IN_LINEARIZE global.HSM_GAMMA_IN_LINEARIZE
 
-#pragma parameter HSM_SCREENVIGNETTE_TITLE					"[ SCREEN VIGNETTE ]____________________________________________" 0 0 0.01 0.01
+#pragma parameter HSM_GAMMA_OUT_CRT   					"      CRT Gamma Out (Linear to Gamma Space Encode) Def 2.4" 2.4 0.1 5 0.05
+#define HSM_GAMMA_OUT_CRT global.HSM_GAMMA_OUT_CRT
+
+
+#pragma parameter HSM_SCREEN_VIGNETTE_TITLE					"[ SCREEN VIGNETTE ]____________________________________________" 0 0 0.01 0.01
 
 #pragma parameter HSM_SCREEN_VIGNETTE                		"      Screen Vignette Opacity" 0 0 100 1
 #define HSM_SCREEN_VIGNETTE global.HSM_SCREEN_VIGNETTE / 200

@@ -193,7 +193,7 @@ void main()
     // HSM Removed
     // if (params.ESM_INTERLACING_TOGGLE > 0.5 && global.SourceSize.y >= 400)
 
-    if (params.ESM_INTERLACING_TOGGLE > 0.5 && tex_size.y >= HSM_SCANLINE_INTERLACE_TRIGGER_RES)
+    if (params.ESM_INTERLACING_TOGGLE > 0.5 && tex_size.y >= HSM_INTERLACE_TRIGGER_RES)
     {
         tex_size.y *= 0.5;
 

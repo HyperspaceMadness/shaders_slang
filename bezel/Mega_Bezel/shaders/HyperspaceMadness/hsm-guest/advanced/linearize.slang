@@ -23,41 +23,41 @@
 
 #include "../../hsm-globals-and-screen-scale-params.inc"
 
-layout(push_constant) uniform Push
-{
-	float GAMMA_INPUT;
-	// float inter;
-	float interm;
-	float inters;
-	float iscan;
-	// float intres;
-	float downsample_level;
-	// float prescalex;
-} params;
+// layout(push_constant) uniform Push
+// {
+// 	float GAMMA_INPUT;
+// 	float inter;
+// 	float interm;
+// 	float inters;
+// 	float iscan;
+// 	float intres;
+// 	float downsample_level;
+// 	float prescalex;
+// } params;
 
 
-#pragma parameter GAMMA_INPUT "Gamma Input" 2.4 1.0 5.0 0.05
-#define GAMMA_INPUT params.GAMMA_INPUT
+// #pragma parameter GAMMA_INPUT "Gamma Input" 2.4 1.0 5.0 0.05
+#define GAMMA_INPUT HSM_GAMMA_IN_LINEARIZE
 
-#pragma parameter bogus_interlacing "[ INTERLACING OPTIONS ]: " 0.0 0.0 0.0 1.0
+// #pragma parameter bogus_interlacing "[ INTERLACING OPTIONS ]: " 0.0 0.0 0.0 1.0
 
 // #pragma parameter inter "          Interlace Trigger Resolution :" 350.0 0.0 800.0 25.0
 // #define inter         params.inter     // interlace resolution
 
-#pragma parameter interm "          Interlace Mode: OFF, Normal 1-3, Interpolation 4-5" 1.0 0.0 5.0 1.0
-#define interm         params.interm     // interlace mode 
+// #pragma parameter interm "          Interlace Mode: OFF, Normal 1-3, Interpolation 4-5" 1.0 0.0 5.0 1.0
+#define interm         HSM_INTERLACE_MODE     // interlace mode 
 
-#pragma parameter inters "          Interlacing Effect Smoothness" 0.0 0.0 0.5 0.05 // Joint parameter with main pass, values must match
-#define inters  params.inters     // interlacing effect smoothing
+// #pragma parameter inters "          Interlacing Effect Smoothness" 0.0 0.0 0.5 0.05 // Joint parameter with main pass, values must match
+#define inters  HSM_INTERLACE_EFFECT_SMOOTHNESS     // interlacing effect smoothing
 
-#pragma parameter iscan "          Interlacing Scanline Effect" 0.20 0.0 1.0 0.05
-#define iscan  params.iscan     // interlacing effect scanlining
+// #pragma parameter iscan "          Interlacing Scanline Effect" 0.20 0.0 1.0 0.05
+#define iscan  HSM_INTERLACE_SCANLINE_EFFECT     // interlacing effect scanlining
 
 // #pragma parameter intres "          Internal Resolution Y: 224p/240p, 1.5...y-dowsample" 0.0 0.0 6.0 0.5 // Joint parameter with main pass, values must match
 // #define intres         params.intres     // internal resolution
 
-#pragma parameter downsample_level "          Downsampling (High-res content, pre-scalers)" 0.0 0.0 1.0 1.0
-#define downsample_level         params.downsample_level     // downsample level
+// #pragma parameter downsample_level "          Downsampling (High-res content, pre-scalers)" 0.0 0.0 1.0 1.0
+#define downsample_level         HSM_DOWNSAMPLING_SMOOTHING     // downsample level
 
 // #pragma parameter prescalex "          Prescale-X Factor (for xBR...pre-shader)" 1.0 1.0 4.0 1.0  // Joint parameter with main pass, values must match
 // #define prescalex        global.prescalex     // prescale-x factor
@@ -87,7 +87,7 @@ vec3 plant (vec3 tar, float r)
 	return tar * r / t;
 }
 
-
+// TODO Put in a blend amount? Multiply dx & dy?
 vec3 fetch_pixel(vec2 coord)
 {
 	vec2 dx = vec2(global.SourceSize.z, 0.0);
@@ -145,7 +145,7 @@ void main()
 	
 	// HSM Added
 	// TODO should not do this if downsampling to 224 or 240
-	if (HSM_SCANLINE_INTERLACE_TRIGGER_RES < global.OriginalSize.y/yres_div && interm > 0.5) 
+	if (HSM_INTERLACE_TRIGGER_RES < global.OriginalSize.y/yres_div && interm > 0.5) 
 	{
 		if (downsample_level > 0.5) c2 = fetch_pixel(vTexCoord + vec2(0.0, global.OriginalSize.w));	
 		intera = 0.5;

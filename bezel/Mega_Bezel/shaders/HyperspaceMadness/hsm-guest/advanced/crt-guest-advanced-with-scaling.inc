@@ -26,44 +26,44 @@ layout(push_constant) uniform Push
 {
 	float GDV_BRIGHT_BOOST_DARK_PIXELS;
 	float GDV_BRIGHT_BOOST_BRIGHT_PIXELS;
+	float GDV_GLOW_STRENGTH;
+	float GDV_BLOOM_STRENGTH;
+	float GDV_HALATION_STRENGTH;
+
 	float GDV_SCANLINE_TYPE;
 	float GDV_SCANLINE_SHAPE_CENTER;
 	float GDV_SCANLINE_SHAPE_EDGES;
 	float GDV_SCANLINE_BEAM_SIZE_DARK_MIN;
 	float GDV_SCANLINE_BEAM_SIZE_MAX_BRIGHT;
 	float GDV_SCANLINE_BEAM_SIZE;
+	float GDV_SCANLINE_SATURATION;
+
     float GDV_HORIZONTAL_SHARPNESS;
 	float GDV_SUBTRACTIVE_SHARPNESS;
-	float GDV_GLOW_STRENGTH;
+	float GDV_SMART_EDGES_STRENGTH;
+	float GDV_SMART_EDGES_STRENGTH_LIMIT;
+	float GDV_SMART_EDGES_SMOOTHING_THRESHOLD;
+
 	float GDV_MASK_TYPE;
 	float GDV_MASK_SIZE;
-	float GDV_SCANLINE_COLOR_DECONVERGENCE;
-    float GDV_SLOTMASK_STRENGTH;
-	float GDV_SLOTMASK_WIDTH;
-	float GDV_SLOTMASK_HEIGHT;
+	float GDV_MASK_GAMMA;
 	float GDV_MASK_TRINITRON_STRENGTH;
 	float GDV_MASK_LOTTES_DARK;
 	float GDV_MASK_LOTTES_LIGHT;
 	float GDV_MASK_0_5_TO_8_STRENGTH;
-	float GDV_SCANLINE_SPIKE_REMOVAL;
-	float GDV_INTERLACE_EFFECT_SMOOTHNESS;
-	float GDV_BLOOM_STRENGTH;
-	float GDV_HALATION_STRENGTH;
-	float GDV_SCANLINE_SATURATION;
-	// float scansub;
-	float GDV_SLOTMASK_SIZE;
 	float GDV_KEEP_MASK_WITH_CLIPPING;
+	float GDV_SCANLINE_COLOR_DECONVERGENCE;
+    float GDV_SLOTMASK_STRENGTH;
+	float GDV_SLOTMASK_SIZE;
+	float GDV_SLOTMASK_WIDTH;
+	float GDV_SLOTMASK_HEIGHT;
+	float GDV_SCANLINE_SPIKE_REMOVAL;
+	// float scansub;
 	float GDV_GAMMA_CORRECT;
-	float GDV_MASK_GAMMA;
-	float GDV_SMART_EDGES_STRENGTH;
-	float GDV_SMART_EDGES_STRENGTH_LIMIT;
-	// float GDV_SMART_EDGES_SMOOTHING_THRESHOLD;
-	// float intres;
-	// float prescalex;
 } params;
 
 
-#pragma parameter GDV_BRIGHNESS_TITLE 				"[ BRIGHTNESS SETTINGS ]:" 0.0 0.0 1.0 1.0
+#pragma parameter GDV_BRIGHTNESS_TITLE 				"[ BRIGHTNESS SETTINGS ]:" 0.0 0.0 1.0 1.0
 
 #pragma parameter GDV_GLOW_STRENGTH 				"          Glow Strength" 0.08 0.0 2.0 0.01
 #define glow         params.GDV_GLOW_STRENGTH     // Glow Strength
@@ -82,6 +82,7 @@ layout(push_constant) uniform Push
 
 #pragma parameter GDV_BRIGHT_BOOST_BRIGHT_PIXELS 	"          Bright Boost Bright Pixels" 1.10 0.25 3.00 0.025
 #define brightboost1  params.GDV_BRIGHT_BOOST_BRIGHT_PIXELS     // adjust brightness
+
 
 #pragma parameter GDV_SCANLINE_TITLE 				"[ SCANLINE OPTIONS ]: " 0.0 0.0 1.0 1.0
 
@@ -117,6 +118,7 @@ layout(push_constant) uniform Push
 #pragma parameter GDV_SCANLINE_SPIKE_REMOVAL 		"          Spike Removal" 1.0 0.0 2.0 0.10
 #define spike params.GDV_SCANLINE_SPIKE_REMOVAL
 
+
 #pragma parameter GDV_FILTERING_TITLE 				"[ FILTERING OPTIONS ]: " 0.0 0.0 1.0 1.0
 
 #pragma parameter GDV_HORIZONTAL_SHARPNESS 			"          Horizontal Sharpness" 5.20 0.20 15.0 0.20
@@ -131,9 +133,8 @@ layout(push_constant) uniform Push
 #pragma parameter GDV_SMART_EDGES_STRENGTH_LIMIT 	"          Smart Edges Effect Strength Limit" 2.0 1.0 12.0 0.1
 #define ei_limit      params.GDV_SMART_EDGES_STRENGTH_LIMIT     // smart edge handling
 
-// #pragma parameter GDV_SMART_EDGES_SMOOTHING_THRESHOLD     "          Smart Edges Smoothing Threshold" 0.20 0.0 1.0 0.01
-// #define sth        params.GDV_SMART_EDGES_SMOOTHING_THRESHOLD     // corner size
-#define sth        0.2     // corner size
+#pragma parameter GDV_SMART_EDGES_SMOOTHING_THRESHOLD     "          Smart Edges Smoothing Threshold" 0.20 0.0 1.0 0.01
+#define sth        params.GDV_SMART_EDGES_SMOOTHING_THRESHOLD
 
 // #pragma parameter bogus_screen 						"[ SCREEN OPTIONS ]: " 0.0 0.0 1.0 1.0
 
@@ -178,7 +179,7 @@ layout(push_constant) uniform Push
 #pragma parameter GDV_MASK_0_5_TO_8_STRENGTH 				"          Mask Strength (0, 5-8)" 0.3 -0.5 1.0 0.05
 #define maskstr         params.GDV_MASK_0_5_TO_8_STRENGTH      // CGWG Mask Strength
 
-#pragma parameter GDV_MASK_SIZE 							"          CRT Mask Size (2.0 is nice in 4k)" 1.0 1.0 4.0 1.0
+#pragma parameter GDV_MASK_SIZE 							"          CRT Mask Size - 0:Auto | 1:2K | 2:4k" 0 1 4 1
 #define masksize     params.GDV_MASK_SIZE     // Mask Size
 
 #pragma parameter GDV_MASK_LOTTES_DARK 						"          Lottes maskDark" 0.5 0.0 2.0 0.05
@@ -202,17 +203,17 @@ layout(push_constant) uniform Push
 #pragma parameter GDV_SLOTMASK_HEIGHT 						"          Slot Mask Height: 2x1 or 4x1" 1.0 1.0 2.0 1.0
 #define double_slot  params.GDV_SLOTMASK_HEIGHT     // Slot Mask Height
 
-#pragma parameter GDV_SLOTMASK_SIZE 						"          Slot Mask Size" 1.0 1.0 4.0 1.0
+#pragma parameter GDV_SLOTMASK_SIZE 						"          Slot Mask Size - 0:Auto | 1:2K | 2:4k" 0 1 4 1
 #define slotms  params.GDV_SLOTMASK_SIZE     // Slot Mask Size
 
 #pragma parameter GDV_KEEP_MASK_WITH_CLIPPING 				"          Keep Mask effect with clipping" 0.50 0.0 1.0 0.05
 #define mclip  params.GDV_KEEP_MASK_WITH_CLIPPING     // Slot Mask Size
 
 // #pragma parameter gamma_out "Gamma out" 2.4 1.0 5.0 0.05
-// #define gamma_out    params.gamma_out     // output gamma
+#define gamma_out    HSM_GAMMA_OUT_CRT     // output gamma
 
-#pragma parameter GDV_INTERLACE_EFFECT_SMOOTHNESS "          Interlacing Effect Smoothness" 0.0 0.0 0.5 0.05 // Joint parameter with linearize pass, values must match
-#define inters  params.GDV_INTERLACE_EFFECT_SMOOTHNESS     // interlacing effect smoothing
+// #pragma parameter HSM_INTERLACE_EFFECT_SMOOTHNESS "          Interlacing Effect Smoothness" 0.0 0.0 0.5 0.05 // Joint parameter with linearize pass, values must match
+#define inters  HSM_INTERLACE_EFFECT_SMOOTHNESS     // interlacing effect smoothing
 
 // HSM Removed
 // #define COMPAT_TEXTURE(c,d) texture(c,d)
@@ -295,7 +296,18 @@ float sw2(float x, float color, float scanline)
 
 vec3 Mask(vec2 pos, float mx)
 {
-	pos = floor(pos/masksize);
+	// HSM Added
+	float final_mask_size = masksize;
+	// If using automatic Mask Size
+	if (masksize < 0.5)
+	{
+		final_mask_size = (global.FinalViewportSize.x + global.FinalViewportSize.y) / 3 > 1900 ? 2 : 1;
+	}
+	pos = floor(pos/final_mask_size);
+	// End HSM Added
+
+	// HSM Removed
+	// pos = floor(pos/masksize);
 	vec3 mask = vec3(maskDark, maskDark, maskDark);
 	vec3 one = vec3(1.0);
 	float dark_compensate  = mix(max( clamp( mix (mcut, maskstr, mx),0.0, 1.0) - 0.3, 0.0) + 1.0, 1.0, mx);
@@ -419,7 +431,19 @@ float SlotMask(vec2 pos, float m)
 {
 	if (slotmask == 0.0) return 1.0;
 	
-	pos = floor(pos/slotms);
+	// HSM Added
+	float final_mask_size = slotms;
+	// If using automatic Mask Size
+	if (slotms < 0.5)
+	{
+		final_mask_size = (global.FinalViewportSize.x + global.FinalViewportSize.y) / 3 > 1900 ? 2 : 1;
+	}
+	pos = floor(pos/final_mask_size);
+	// End HSM Added
+
+	// HSM Removed
+	// pos = floor(pos/slotms);
+
 	float mlen = slotwidth*2.0;
 	float px = fract(pos.x/mlen);
 	float py = floor(fract(pos.y/(2.0*double_slot))*2.0*double_slot);
@@ -497,7 +521,6 @@ void main()
 	vec2 SourceSize = CROPPED_ROTATED_ORIGINAL_SIZE_WITH_CORE_RES_MULT * vec2(HSM_CORE_RES_SAMPLING_MULT_SCANLINE_DIR, 1.0);
 
 	float lum = COMPAT_TEXTURE(AvgLumPass, vec2(0.5,0.5)).a;
-	
 	float gamma_in = 1.0/COMPAT_TEXTURE(LinearizePass, vec2(0.25,0.25)).a;
 	float intera = COMPAT_TEXTURE(LinearizePass, vec2(0.75,0.25)).a;
 	bool interb  = (intera < 0.75);
@@ -828,12 +851,8 @@ if (!interb)
 	cmask = min(cmask*smask, 1.0);
 
 	if (interb) ctmp = color;
-	/* HSM Removed
 	float colmx = pow( max( max(ctmp.r, ctmp.g), ctmp.b), 1.40/gamma_out);
-	*/
 
-	float colmx = pow( max( max(ctmp.r, ctmp.g), ctmp.b), 1.40/HSM_COLOR_CRT_GAMMA);
-	
 	float bb = mix(brightboost, brightboost1, colmx);
 	if (interb) bb = (abs(intera-0.5)<0.1) ? pow(0.80*bb, 0.65) : pow(bb, 0.70);
 	color*=bb;

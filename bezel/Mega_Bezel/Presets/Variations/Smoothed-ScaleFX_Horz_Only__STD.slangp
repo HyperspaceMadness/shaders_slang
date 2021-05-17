@@ -4,7 +4,7 @@ BackgroundImage = :/shaders/shaders_slang/bezel/Mega_Bezel/shaders/HyperspaceMad
 BackgroundVertImage = :/shaders/shaders_slang/bezel/Mega_Bezel/shaders/HyperspaceMadness/textures/HSM_Duimon_Super_Famicom_3840x2160.png
 
 HSM_CORE_RES_SAMPLING_MULT_SCANLINE_DIR = "200"
-HSM_SCANLINE_INTERLACE_TRIGGER_RES = "800.000000"
+HSM_INTERLACE_TRIGGER_RES = "800.000000"
 HSM_VIEWPORT_VIGNETTE_OPACITY = 0
 HSM_BZL_COLOR_VALUE = 30
 HSM_NIGHT_OPACITY = 98

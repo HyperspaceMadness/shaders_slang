@@ -242,6 +242,13 @@ float HSM_GetUseVerticalScanlines(float screen_aspect)
 	return scanline_direction;
 }
 
+bool HSM_GetIsInterlaceModeActive()
+{
+	float scan_res = USE_VERTICAL_SCANLINES > 0.5 ? CROPPED_ROTATED_ORIGINAL_SIZE_WITH_CORE_RES_MULT.x : CROPPED_ROTATED_ORIGINAL_SIZE_WITH_CORE_RES_MULT.y;
+	return ( HSM_INTERLACE_MODE > 0.5 && HSM_INTERLACE_TRIGGER_RES < scan_res );
+}
+
+
 vec2 HSM_GetCoreSamplingResMult()
 {
 	vec2 original_size = HSM_GetRotatedRawOriginalSize();
@@ -1334,7 +1341,7 @@ vec4 HSM_ApplyScanlineMask(vec4 in_color, vec2 in_coord, vec2 screen_scale)
 	float scan_axis_res = use_vert_scanlines * sampling_res.x + (1 - use_vert_scanlines) * sampling_res.y;
 	float scan_axis_pos = use_vert_scanlines * in_coord.x + (1 - use_vert_scanlines) * in_coord.y;
 
-	if (HSM_SCANLINE_FAKE_SCANLINE_OPACITY < 0.001 || scan_axis_res < HSM_SCANLINE_INTERLACE_TRIGGER_RES )
+	if (HSM_FAKE_SCANLINE_OPACITY < 0.001 || scan_axis_res < HSM_INTERLACE_TRIGGER_RES )
 	{
 		return in_color;
 	}
@@ -1359,11 +1366,11 @@ vec4 HSM_ApplyScanlineMask(vec4 in_color, vec2 in_coord, vec2 screen_scale)
 
 	float final_scanline_mask = clamp(1 * scanline_mask, 0, 1);
 
-	color_brightness_modulation = HHLP_EasePowerOut(smoothstep(0.4, HSM_SCANLINE_FAKE_SCANLINE_BRIGHTNESS_CUTOFF + 1.5, (in_color.r + in_color.g +  in_color.b) / 3), 2);
-	final_scanline_mask = clamp(mix(1, mix(final_scanline_mask, 1, color_brightness_modulation), HSM_SCANLINE_FAKE_SCANLINE_OPACITY), 0, 1);
+	color_brightness_modulation = HHLP_EasePowerOut(smoothstep(0.4, HSM_FAKE_SCANLINE_BRIGHTNESS_CUTOFF + 1.5, (in_color.r + in_color.g +  in_color.b) / 3), 2);
+	final_scanline_mask = clamp(mix(1, mix(final_scanline_mask, 1, color_brightness_modulation), HSM_FAKE_SCANLINE_OPACITY), 0, 1);
 
 	vec4 masked_color = in_color;
-	masked_color *= 1 + 0.5 * HSM_SCANLINE_FAKE_SCANLINE_OPACITY;
+	masked_color *= 1 + 0.5 * HSM_FAKE_SCANLINE_OPACITY;
 	masked_color = clamp(final_scanline_mask * masked_color, 0, 1);
 	masked_color.w = in_color.w;
 
@@ -1462,7 +1469,7 @@ vec4 HSM_GetPostCrtPreppedColor(vec4 in_color_linear, vec2 VIEWPORT_COORD, vec2 
 
 	out_color *= vignette_factor;
 
-	if (HSM_SCANLINE_FAKE_SCANLINE_OPACITY > 0)
+	if (HSM_FAKE_SCANLINE_OPACITY > 0)
 	{
 		vec4 scanline_masked_color = HSM_ApplyScanlineMask(out_color, SCREEN_COORD, SCREEN_SCALE);
 		// out_color = mix(out_color, scanline_masked_color, screen_mask);
@@ -1550,7 +1557,7 @@ vec4 HSM_GetPostCrtPreppedColor(vec4 in_color_linear, vec2 VIEWPORT_COORD, vec2 
 	#endif
 
 	// Apply the final Gamma
-	out_color = HSM_Delinearize(out_color, HSM_COLOR_CRT_GAMMA);
+	out_color = HSM_Delinearize(out_color, HSM_GAMMA_OUT_CRT);
 
 	return out_color;
 }

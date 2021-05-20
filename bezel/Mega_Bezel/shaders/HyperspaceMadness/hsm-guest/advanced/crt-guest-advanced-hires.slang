@@ -49,6 +49,7 @@ layout(std140, set = 0, binding = 0) uniform UBO
 	float gamma_out;
 	float overscanX;
 	float overscanY;
+	float c_shape;
 } global;
 
 #pragma parameter bogus_brightness "[ BRIGHTNESS SETTINGS ]:" 0.0 0.0 1.0 1.0
@@ -137,11 +138,14 @@ layout(std140, set = 0, binding = 0) uniform UBO
 #pragma parameter bsize "          Border smoothness" 600.0 100.0 700.0 10.0
 #define bsize        params.bsize     // border smoothness
 
-#pragma parameter warpX "          CurvatureX (default 0.03)" 0.0 0.0 0.125 0.01
+#pragma parameter warpX "          CurvatureX (default 0.03)" 0.0 0.0 0.25 0.01
 #define warpX        params.warpX     // Curvature X
 
-#pragma parameter warpY "          CurvatureY (default 0.04)" 0.0 0.0 0.125 0.01
+#pragma parameter warpY "          CurvatureY (default 0.04)" 0.0 0.0 0.25 0.01
 #define warpY        params.warpY     // Curvature Y
+
+#pragma parameter c_shape "          Curvature Shape" 0.25 0.05 0.60 0.05
+#define c_shape        global.c_shape     // curvature shape
 
 #pragma parameter overscanX "          Overscan X original pixels" 0.0 -50.0 50.0 1.0
 #define overscanX        global.overscanX     // OverscanX pixels
@@ -390,11 +394,10 @@ float SlotMask(vec2 pos, float m)
 	return slot;
 }
  
-// Distortion of scanlines, and end of screen alpha (PD Lottes Curvature)
 vec2 Warp(vec2 pos)
 {
 	pos  = pos*2.0-1.0;    
-	pos *= vec2(1.0 + (pos.y*pos.y)*warpX, 1.0 + (pos.x*pos.x)*warpY);
+	pos  = mix(pos, vec2(pos.x/sqrt(1.0-c_shape*pos.y*pos.y), pos.y/sqrt(1.0-c_shape*pos.x*pos.x)), vec2(warpX, warpY)/c_shape);
 	return pos*0.5 + 0.5;
 } 
 
@@ -409,7 +412,6 @@ vec2 Overscan(vec2 pos, float dx, float dy){
 
 float corner(vec2 coord)
 {
-	coord = (coord - vec2(0.5)) * 1.0 + vec2(0.5);
 	coord = min(coord, vec2(1.0)-coord) * vec2(1.0, OutputSize.y/OutputSize.x);
 	vec2 cdist = vec2(max(csize/3.0, max((1.0-smoothstep(100.0,600.0,bsize))*0.01,0.002)));
 	coord = (cdist - min(coord,cdist));

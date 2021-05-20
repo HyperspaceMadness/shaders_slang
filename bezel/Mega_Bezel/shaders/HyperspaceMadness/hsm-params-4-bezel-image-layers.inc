@@ -100,6 +100,9 @@ float HSM_CUTOUT_SCALE = global.HSM_CUTOUT_SCALE / 100;
 #pragma parameter HSM_CUTOUT_SCALE_X 		    "      Scale X" 100 -100 200 0.1
 float HSM_CUTOUT_SCALE_X = global.HSM_CUTOUT_SCALE_X / 100;
 
+#pragma parameter HSM_CUTOUT_POS_X 		        "      Position XY" 0 -100 200 0.05
+float HSM_CUTOUT_POS_X = global.HSM_CUTOUT_POS_X / -100;
+
 #pragma parameter HSM_CUTOUT_POS_Y 		        "      Position Y" 0 -100 200 0.05
 float HSM_CUTOUT_POS_Y = global.HSM_CUTOUT_POS_Y / 100;
 
@@ -160,6 +163,9 @@ float HSM_BG_SCALE = global.HSM_BG_SCALE / 100;
 #pragma parameter HSM_BG_SCALE_X                  "      Scale X" 100 0 1000 0.1
 float HSM_BG_SCALE_X = global.HSM_BG_SCALE_X / 100;
 
+#pragma parameter HSM_BG_POS_X                    "      Position X"  0 -100 100 0.05
+float HSM_BG_POS_X = global.HSM_BG_POS_X / -100;
+
 #pragma parameter HSM_BG_POS_Y                    "      Position Y"  0 -100 100 0.05
 float HSM_BG_POS_Y = global.HSM_BG_POS_Y / 100;
 
@@ -188,6 +194,9 @@ float HSM_VIEWPORT_VIGNETTE_SCALE = global.HSM_VIEWPORT_VIGNETTE_SCALE / 100;
 
 #pragma parameter HSM_VIEWPORT_VIGNETTE_SCALE_X      "      Scale X" 100 0 1000 0.1
 float HSM_VIEWPORT_VIGNETTE_SCALE_X = global.HSM_VIEWPORT_VIGNETTE_SCALE_X / 100;
+
+#pragma parameter HSM_VIEWPORT_VIGNETTE_POS_X        "      Position X"  0 -100 100 0.05
+float HSM_VIEWPORT_VIGNETTE_POS_X = global.HSM_VIEWPORT_VIGNETTE_POS_X / -100;
 
 #pragma parameter HSM_VIEWPORT_VIGNETTE_POS_Y        "      Position Y"  0 -100 100 0.05
 float HSM_VIEWPORT_VIGNETTE_POS_Y = global.HSM_VIEWPORT_VIGNETTE_POS_Y / 100;
@@ -248,6 +257,9 @@ float HSM_BZL_IMG_SCALE = global.HSM_BZL_IMG_SCALE / 100;
 #pragma parameter HSM_BZL_IMG_SCALE_X                   "      Scale X" 100 0 1000 0.1
 float HSM_BZL_IMG_SCALE_X = global.HSM_BZL_IMG_SCALE_X / 100;
 
+#pragma parameter HSM_BZL_IMG_POS_X                     "      Position X"  0 -100 100 0.05
+float HSM_BZL_IMG_POS_X = global.HSM_BZL_IMG_POS_X / -100;
+
 #pragma parameter HSM_BZL_IMG_POS_Y                     "      Position Y"  0 -100 100 0.05
 float HSM_BZL_IMG_POS_Y = global.HSM_BZL_IMG_POS_Y / 100;
 
@@ -296,6 +308,9 @@ float HSM_CAB_GLASS_SCALE = global.HSM_CAB_GLASS_SCALE / 100;
 #pragma parameter HSM_CAB_GLASS_SCALE_X                     "      Scale X" 100 0 500 0.1
 float HSM_CAB_GLASS_SCALE_X = global.HSM_CAB_GLASS_SCALE_X / 100;
 
+#pragma parameter HSM_CAB_GLASS_POS_X                       "      Position X"  0 -100 100 0.05
+float HSM_CAB_GLASS_POS_X = global.HSM_CAB_GLASS_POS_X / -100;
+
 #pragma parameter HSM_CAB_GLASS_POS_Y                       "      Position Y"  0 -100 100 0.05
 float HSM_CAB_GLASS_POS_Y = global.HSM_CAB_GLASS_POS_Y / 100;
 
@@ -338,6 +353,9 @@ float HSM_DECAL_SCALE = global.HSM_DECAL_SCALE / 100;
 #pragma parameter HSM_DECAL_SCALE_X                     "      Scale X"  100 50 500 0.1
 float HSM_DECAL_SCALE_X = global.HSM_DECAL_SCALE_X / 100;
 
+#pragma parameter HSM_DECAL_POS_X                       "      Position X"  0 -100 100 0.05
+float HSM_DECAL_POS_X = global.HSM_DECAL_POS_X / -100;
+
 #pragma parameter HSM_DECAL_POS_Y                       "      Position Y"  0 -100 100 0.05
 float HSM_DECAL_POS_Y = global.HSM_DECAL_POS_Y / 100;
 
@@ -378,6 +396,9 @@ float HSM_LED_SCALE = global.HSM_LED_SCALE / 100;
 
 #pragma parameter HSM_LED_SCALE_X                       "      Scale X" 100 0 1000 0.1
 float HSM_LED_SCALE_X = global.HSM_LED_SCALE_X / 100;
+
+#pragma parameter HSM_LED_POS_X                         "      Position X"  0 -100 100 0.05
+float HSM_LED_POS_X = global.HSM_LED_POS_X / -100;
 
 #pragma parameter HSM_LED_POS_Y                         "      Position Y"  0 -100 100 0.05
 float HSM_LED_POS_Y = global.HSM_LED_POS_Y / 100;
@@ -420,6 +441,9 @@ float HSM_TOP_SCALE = global.HSM_TOP_SCALE / 100;
 
 #pragma parameter HSM_TOP_SCALE_X                       "      Scale X" 100 0 1000 0.1
 float HSM_TOP_SCALE_X = global.HSM_TOP_SCALE_X / 100;
+
+#pragma parameter HSM_TOP_POS_X                         "      Position X"  0 -100 100 0.05
+float HSM_TOP_POS_X = global.HSM_TOP_POS_X / -100;
 
 #pragma parameter HSM_TOP_POS_Y                         "      Position Y"  0 -100 100 0.05
 float HSM_TOP_POS_Y = global.HSM_TOP_POS_Y / 100;

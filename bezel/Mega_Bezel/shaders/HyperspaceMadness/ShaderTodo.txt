@@ -12,7 +12,7 @@ Changes:
     * Added text to show which base preset type is loaded
   * Added MBZ__3__BASIC-BORDER-WITH-REFLECT__EASYMODE
     * Good for low spec systems, uses 1/3 less processing than Guest-DrVenom counterpart
-
+  * X Position offset added to ADVANCED presets
 
 *  Performance of Base presets at 3840x2160 on Nvidia RTX2060:
   *  ADVANCED -                      80 FPS  -  No comparable old preset
@@ -33,13 +33,16 @@ Changes:
 Mega Bezel Still to Come:
 
 V1 TODO
-  * Blend Amount For Downsample Blur?
+  * Add X Offset
+  * Debug Info showing Shader Type
+  * Explicit Downsample Res? Target Res?
   * Guest ADV - convergence, extra passes, mega bezel passes
+  *   Sort difference between Guest Color Correct & Grade
   * Add extra empty passes for Mega Bezel
+  * Evaluate G-Sharp for Dithering to replace Sgenpt
   * CRT Geom Curvature, Guest Curvature
-  * Modulate Range on top of Hue & Value?
   * Fix Cut-Out on all layers
-  * Simple Preset with all passes but no reflection
+  * Modulate Range on top of Hue & Value?
   * Raw Pixel Preset
   * Add 'Zoom' Crop & Shift?
   * Split Images - Shift to Outer Edge, Distance Offset, Fade to center? Hor vs Vert
@@ -155,6 +158,7 @@ Old Megabezel https://github.com/HyperspaceMadness/shaders_slang/tree/adf6dc3c0f
 Retroarch Features
   * Shader Textures in Sub Menu - Add ability to set texture overrides in retroarch UI
   * Shader Passes in Sub Menu
+  * Reload Last Preset
   * Add Preset to beginning of chain (Autechre's request )
   * Next/Previous Shader sometimes uses different directories, probably related to shader_path in live shader rather than originally loaded preset
   * Replace Text, for shader type, game & core, content directory

@@ -136,40 +136,44 @@ layout(push_constant) uniform Push
 #pragma parameter GDV_SMART_EDGES_SMOOTHING_THRESHOLD     "          Smart Edges Smoothing Threshold" 0.20 0.0 1.0 0.01
 #define sth        params.GDV_SMART_EDGES_SMOOTHING_THRESHOLD
 
-// #pragma parameter bogus_screen 						"[ SCREEN OPTIONS ]: " 0.0 0.0 1.0 1.0
+/*
 
-// #pragma parameter intres "          Internal Resolution Y: 224p/240p, 1.5...y-dowsample" 0.0 0.0 6.0 0.5 // Joint parameter with linearize pass, values must match
+#pragma parameter intres "          Internal Resolution Y: 224p/240p, 1.5...y-dowsample" 0.0 0.0 6.0 0.5 // Joint parameter with linearize pass, values must match
 
-// #pragma parameter TATE "          TATE Mode" 0.0 0.0 1.0 1.0
-// #define TATE         params.TATE     // Screen orientation
-// #define TATE         0     // Screen orientation
+#pragma parameter TATE "          TATE Mode" 0.0 0.0 1.0 1.0
+#define TATE         params.TATE     // Screen orientation
 
-// #pragma parameter IOS "          Integer Scaling: Odd:Y, Even:'X'+Y" 0.0 0.0 4.0 1.0
-// #define IOS          params.IOS     // Smart Integer Scaling
+#pragma parameter IOS "          Integer Scaling: Odd:Y, Even:'X'+Y" 0.0 0.0 4.0 1.0
+#define IOS          params.IOS     // Smart Integer Scaling
 
-// #pragma parameter OS "          R. Bloom Overscan Mode" 1.0 0.0 2.0 1.0
-// #define OS           params.OS     // Do overscan
+#pragma parameter OS "          R. Bloom Overscan Mode" 1.0 0.0 2.0 1.0
+#define OS           params.OS     // Do overscan
 
-// #pragma parameter BLOOM "          Raster bloom %" 0.0 0.0 20.0 1.0
-// #define BLOOM        params.BLOOM     // Bloom overscan percentage
+#pragma parameter BLOOM "          Raster bloom %" 0.0 0.0 20.0 1.0
+#define BLOOM        params.BLOOM     // Bloom overscan percentage
 
-// #pragma parameter csize "          Corner size" 0.0 0.0 0.25 0.01
-// #define csize        params.csize     // corner size
+#pragma parameter csize "          Corner size" 0.0 0.0 0.25 0.01
+#define csize        params.csize     // corner size
 
-// #pragma parameter bsize "          Border smoothness" 600.0 100.0 700.0 10.0
-// #define bsize        params.bsize     // border smoothness
+#pragma parameter bsize "          Border smoothness" 600.0 100.0 700.0 10.0
+#define bsize        params.bsize     // border smoothness
 
-// #pragma parameter warpX "          CurvatureX (default 0.03)" 0.0 0.0 0.125 0.01
-// #define warpX        params.warpX     // Curvature X
+#pragma parameter warpX "          CurvatureX (default 0.03)" 0.0 0.0 0.25 0.01
+#define warpX        params.warpX     // Curvature X
 
-// #pragma parameter warpY "          CurvatureY (default 0.04)" 0.0 0.0 0.125 0.01
-// #define warpY        params.warpY     // Curvature Y
+#pragma parameter warpY "          CurvatureY (default 0.04)" 0.0 0.0 0.25 0.01
+#define warpY        params.warpY     // Curvature Y
 
-// #pragma parameter overscanY "          Overscan Y original pixels" 0.0 -50.0 50.0 1.0
-// #define overscanY        params.overscanY     // OverscanY pixels
+#pragma parameter c_shape "          Curvature Shape" 0.25 0.05 0.60 0.05
+#define c_shape        global.c_shape     // curvature shape
 
-// #pragma parameter prescalex "          Prescale-X Factor (for xBR...pre-shader)" 1.0 1.0 4.0 1.0
-// #define prescalex        params.prescalex     // prescale-x factor
+#pragma parameter overscanY "          Overscan Y original pixels" 0.0 -50.0 50.0 1.0
+#define overscanY        global.overscanY     // OverscanY pixels
+
+#pragma parameter prescalex "          Prescale-X Factor (for xBR...pre-shader)" 1.0 1.0 4.0 1.0
+#define prescalex        global.prescalex     // prescale-x factor
+*/
+
 
 #pragma parameter GDV_CRT_MASK_TITLE 						"[ CRT MASK OPTIONS ]: " 0.0 0.0 1.0 1.0
 
@@ -215,8 +219,10 @@ layout(push_constant) uniform Push
 // #pragma parameter HSM_INTERLACE_EFFECT_SMOOTHNESS "          Interlacing Effect Smoothness" 0.0 0.0 0.5 0.05 // Joint parameter with linearize pass, values must match
 #define inters  HSM_INTERLACE_EFFECT_SMOOTHNESS     // interlacing effect smoothing
 
-// HSM Removed
-// #define COMPAT_TEXTURE(c,d) texture(c,d)
+/* HSM Removed
+ #define COMPAT_TEXTURE(c,d) texture(c,d)
+*/
+
 // HSM Added
 #define COMPAT_TEXTURE(c,d) HSM_GetCroppedTexSample(c,d)
 // End Addition
@@ -236,6 +242,7 @@ void main()
    gl_Position = global.MVP * Position;
    vTexCoord = TexCoord * 1.000001;
    
+   // HSM Added
 	if (HSM_FLIP_VIEWPORT_VERTICAL == 1)
 		vTexCoord.y = 1 - vTexCoord.y;
 }
@@ -306,8 +313,9 @@ vec3 Mask(vec2 pos, float mx)
 	pos = floor(pos/final_mask_size);
 	// End HSM Added
 
-	// HSM Removed
-	// pos = floor(pos/masksize);
+	/* HSM Removed
+	 pos = floor(pos/masksize);
+	*/
 	vec3 mask = vec3(maskDark, maskDark, maskDark);
 	vec3 one = vec3(1.0);
 	float dark_compensate  = mix(max( clamp( mix (mcut, maskstr, mx),0.0, 1.0) - 0.3, 0.0) + 1.0, 1.0, mx);
@@ -441,8 +449,9 @@ float SlotMask(vec2 pos, float m)
 	pos = floor(pos/final_mask_size);
 	// End HSM Added
 
-	// HSM Removed
-	// pos = floor(pos/slotms);
+	/* HSM Removed
+	 pos = floor(pos/slotms);
+	*/
 
 	float mlen = slotwidth*2.0;
 	float px = fract(pos.x/mlen);
@@ -455,13 +464,14 @@ float SlotMask(vec2 pos, float m)
 	return slot;
 }   
  
-// // Distortion of scanlines, and end of screen alpha (PD Lottes Curvature)
-// vec2 Warp(vec2 pos)
-// {
-// 	pos  = pos*2.0-1.0;    
-// 	pos *= vec2(1.0 + (pos.y*pos.y)*warpX, 1.0 + (pos.x*pos.x)*warpY);
-// 	return pos*0.5 + 0.5;
-// } 
+/* // Distortion of scanlines, and end of screen alpha (PD Lottes Curvature)
+vec2 Warp(vec2 pos)
+{
+	pos  = pos*2.0-1.0;    
+	pos  = mix(pos, vec2(pos.x/sqrt(1.0-c_shape*pos.y*pos.y), pos.y/sqrt(1.0-c_shape*pos.x*pos.x)), vec2(warpX, warpY)/c_shape);
+	return pos*0.5 + 0.5;
+}
+*/
 
 vec2 Overscan(vec2 pos, float dx, float dy){
 	pos=pos*2.0-1.0;    
@@ -472,15 +482,16 @@ vec2 Overscan(vec2 pos, float dx, float dy){
 
 // // Borrowed from cgwg's crt-geom, under GPL
 
-// float corner(vec2 coord)
-// {
-// 	coord = (coord - vec2(0.5)) * 1.0 + vec2(0.5);
-// 	coord = min(coord, vec2(1.0)-coord) * vec2(1.0, OutputSize.y/OutputSize.x);
-// 	vec2 cdist = vec2(max(csize/3.0, max((1.0-smoothstep(100.0,600.0,bsize))*0.01,0.002)));
-// 	coord = (cdist - min(coord,cdist));
-// 	float dist = sqrt(dot(coord,coord));
-// 	return clamp((cdist.x-dist)*bsize,0.0, 1.0);
-// }
+/* HSM Removed
+float corner(vec2 coord)
+{
+	coord = min(coord, vec2(1.0)-coord) * vec2(1.0, OutputSize.y/OutputSize.x);
+	vec2 cdist = vec2(max(csize/3.0, max((1.0-smoothstep(100.0,600.0,bsize))*0.01,0.002)));
+	coord = (cdist - min(coord,cdist));
+	float dist = sqrt(dot(coord,coord));
+	return clamp((cdist.x-dist)*bsize,0.0, 1.0);
+}
+*/
 
 vec3 declip(vec3 c, float b)
 {
@@ -506,27 +517,24 @@ void main()
 {
 	// HSM Added
 	HSM_UpdateGlobalScreenValuesFromCache(InfoCachePass, vTexCoord);
-
-	// HSM Changed
 	float TATE = USE_VERTICAL_SCANLINES;
 
 	/* HSM Removed
 	vec4 SourceSize = global.OriginalSize * vec4(prescalex, 1.0, 1.0/prescalex, 1.0);
 	*/
-	
-	// HSM Added
-	// FragColor = vec4(CROPPED_ROTATED_ORIGINAL_SIZE_WITH_CORE_RES_MULT.y / 256);
-	// return;
 
+	// HSM Added
 	vec2 SourceSize = CROPPED_ROTATED_ORIGINAL_SIZE_WITH_CORE_RES_MULT * vec2(HSM_CORE_RES_SAMPLING_MULT_SCANLINE_DIR, 1.0);
 
 	float lum = COMPAT_TEXTURE(AvgLumPass, vec2(0.5,0.5)).a;
+
 	float gamma_in = 1.0/COMPAT_TEXTURE(LinearizePass, vec2(0.25,0.25)).a;
 	float intera = COMPAT_TEXTURE(LinearizePass, vec2(0.75,0.25)).a;
 	bool interb  = (intera < 0.75);
 	bool notate  = (TATE < 0.5);
 
-	/*
+
+	/* HSM Removed
 	float SourceY = mix(SourceSize.y, SourceSize.x, TATE);
 	float sy = 1.0;
 	if (params.intres == 0.5) sy = SourceY/224.0; else
@@ -534,8 +542,8 @@ void main()
 	if (params.intres > 1.25) sy = params.intres;
 	if (notate) SourceSize*=vec4(1.0, 1.0/sy, 1.0, sy); else SourceSize*=vec4(1.0/sy, 1.0, sy, 1.0);
 
-	
 	// Calculating texel coordinates
+
 	vec2 texcoord = TEX0.xy;
 	if (IOS > 0.0){
 		vec2 ofactor = OutputSize.xy/SourceSize.xy;
@@ -555,6 +563,7 @@ void main()
 	vec2 pos0 = Warp(TEX0.xy);
 	*/
 
+	// HSM Added
 	vec2 screen_curved_coord = HSM_GetCurvedCoord(SCREEN_COORD, 1, SCREEN_ASPECT);
 	vec2 pos = HSM_GetMirrorWrappedCoord(screen_curved_coord);
 
@@ -562,8 +571,13 @@ void main()
 
 	vec2 coffset = vec2(0.5, 0.5);
 	
-	// HSM Edited - Was SourceSize.zw
+	/* HSM Removed
+	vec2 ps = SourceSize.zw;
+	*/
+
+	// HSM Added
 	vec2 ps = 1 / SourceSize.xy;
+
 	vec2 OGL2Pos = pos * SourceSize.xy - coffset;
 	vec2 fp = fract(OGL2Pos);
 	
@@ -594,13 +608,15 @@ void main()
 	*/
 
 	// HSM Added
-	if (interb)  pC4.y = pos.y - inters * (1 / SourceSize.y);
+	if (interb)  
+		pC4.y = pos.y - inters * (1 / SourceSize.y);
 	
 	float zero = exp2(-h_sharp);
 	float sharp1 = s_sharp * zero;
 	
-	// HSM Removed
-	// float fdivider = min(prescalex, 2.0);
+	/* HSM Removed
+	 float fdivider = min(prescalex, 2.0);
+	*/
 	
 	// HSM Added
 	float fdivider = min(HSM_CORE_RES_SAMPLING_MULT_SCANLINE_DIR, 2.0);
@@ -705,9 +721,10 @@ void main()
 	pC4+=offy;
 	*/
 
-	// HSM Added
-	if (interb) pC4.y = pos.y + inters * (1 /SourceSize.y); else
-	pC4+=offy;
+	if (interb) 
+		pC4.y = pos.y + inters * (1 /SourceSize.y); 
+	else
+		pC4+=offy;
 
 	l3 = COMPAT_TEXTURE(LinearizePass, pC4 -off2).rgb;
 	l2 = COMPAT_TEXTURE(LinearizePass, pC4 -offx).rgb;
@@ -883,7 +900,7 @@ if (!interb)
 	FragColor = vec4(color*vig, corner(pos));
 	*/
 
-	// Prep and add output gamma
+	// HSM Added - Prep and add output gamma
 	FragColor = vec4(color, 1);
 	FragColor = HSM_GetPostCrtPreppedColor(FragColor, vTexCoord, screen_curved_coord, IntroPass, false, ColoredGelImage, TubeStaticReflectionImage, BackgroundImage, BackgroundVertImage);
 	// End Addition

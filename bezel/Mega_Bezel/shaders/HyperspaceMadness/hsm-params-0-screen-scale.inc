@@ -132,10 +132,10 @@ float HSM_SCANLINE_DIRECTION = global.HSM_SCANLINE_DIRECTION;
 //---------------------------------------------------------------------------------------------------
 #pragma parameter HSM_SAMPLING_TITLE								"[ CORE RES SAMPLING ]__________________________________________" 0 0 0.01 0.01
 
-#pragma parameter HSM_CORE_RES_SAMPLING_MULT_SCANLINE_DIR			"      Scanline Direction Multiplier (X-Prescale for H Scanline)"  100 100 1600 100
+#pragma parameter HSM_CORE_RES_SAMPLING_MULT_SCANLINE_DIR			"      Scanline Dir Multiplier (X-Prescale for H Scanline)"  100 100 1600 100
 float HSM_CORE_RES_SAMPLING_MULT_SCANLINE_DIR = global.HSM_CORE_RES_SAMPLING_MULT_SCANLINE_DIR / 100;
 
-#pragma parameter HSM_CORE_RES_SAMPLING_MULT_OPPOSITE_DIR			"      Downsample Direction Multiplier (Y for H Scanline)"  100 25 1600 25
+#pragma parameter HSM_CORE_RES_SAMPLING_MULT_OPPOSITE_DIR			"      Opposite Dir Multiplier (Y Downsample for H Scanline)"  100 25 1600 25
 float HSM_CORE_RES_SAMPLING_MULT_OPPOSITE_DIR = global.HSM_CORE_RES_SAMPLING_MULT_OPPOSITE_DIR / 100;
 
 
@@ -143,22 +143,25 @@ float HSM_CORE_RES_SAMPLING_MULT_OPPOSITE_DIR = global.HSM_CORE_RES_SAMPLING_MUL
 //    INTERLACING
 //---------------------------------------------------------------------------------------------------
 
-#pragma parameter HSM_INTERLACE_TITLE								"[ INTERLACING ]:" 0 0 0.01 0.01
+#pragma parameter HSM_INTERLACE_TITLE								"[ INTERLACING From Guest.r :) ]:" 0 0 0.01 0.01
 
-#pragma parameter HSM_INTERLACE_MODE 						"      Interlacing Mode: OFF | Normal 1-3 | Interpolation 4-5" 1.0 0.0 5.0 1.0
-#define HSM_INTERLACE_MODE global.HSM_INTERLACE_MODE
-
-#pragma parameter HSM_INTERLACE_TRIGGER_RES 				"      Interlacing and Fake Scanlines Trigger Res" 600 0 2000 25
+#pragma parameter HSM_INTERLACE_TRIGGER_RES 						"      Interlacing and Fake Scanlines Trigger Res" 400 240 2000 25
 #define HSM_INTERLACE_TRIGGER_RES global.HSM_INTERLACE_TRIGGER_RES
 
-#pragma parameter HSM_INTERLACE_EFFECT_SMOOTHNESS 					"      Interlacing Effect Smoothness" 0 0 0.5 0.05
-#define HSM_INTERLACE_EFFECT_SMOOTHNESS global.HSM_INTERLACE_EFFECT_SMOOTHNESS
+#pragma parameter HSM_INTERLACE_MODE 								"      Interlacing Mode: OFF | Normal 1-3 | Interpolation 4-5" 0 0.0 5.0 1.0
+#define HSM_INTERLACE_MODE global.HSM_INTERLACE_MODE
 
-#pragma parameter HSM_INTERLACE_SCANLINE_EFFECT 					"      Interlacing Scanline Effect" 0.2 0 1 0.05
-#define HSM_INTERLACE_SCANLINE_EFFECT global.HSM_INTERLACE_SCANLINE_EFFECT
+#pragma parameter HSM_INTERLACE_EFFECT_SMOOTHNESS 					"      Interlacing Effect Smoothness" 0 0 100 10
+#define HSM_INTERLACE_EFFECT_SMOOTHNESS global.HSM_INTERLACE_EFFECT_SMOOTHNESS / 200
 
-#pragma parameter HSM_DOWNSAMPLING_SMOOTHING 						"      Downsampling Smoothing (High-res core, Pre-scalers)" 0 0 1 1
-#define HSM_DOWNSAMPLING_SMOOTHING global.HSM_DOWNSAMPLING_SMOOTHING
+#pragma parameter HSM_INTERLACE_SCANLINE_EFFECT 					"      Interlacing Scanline Effect" 20 0 100 5
+#define HSM_INTERLACE_SCANLINE_EFFECT global.HSM_INTERLACE_SCANLINE_EFFECT / 100
+
+#pragma parameter GDV_INTERLACE_SCANLINE_SATURATION 				"      Interlacing (Scanline) Saturation" 40 0 100 5
+#define GDV_INTERLACE_SCANLINE_SATURATION global.GDV_INTERLACE_SCANLINE_SATURATION / 100
+
+#pragma parameter HSM_DOWNSAMPLE_BLUR 								"      Downsample Blur (High-res core, Pre-scalers)" 0 0 100 10
+#define HSM_DOWNSAMPLE_BLUR global.HSM_DOWNSAMPLE_BLUR / 100
 
 
 //---------------------------------------------------------------------------------------------------
@@ -218,10 +221,6 @@ float HSM_DUALSCREEN_2ND_SCREEN_POS_X = global.HSM_DUALSCREEN_2ND_SCREEN_POS_X /
 
 #pragma parameter HSM_DUALSCREEN_2ND_SCREEN_POS_Y					"      2nd Screen Pos Y" 0 -500 500 1
 float HSM_DUALSCREEN_2ND_SCREEN_POS_Y = global.HSM_DUALSCREEN_2ND_SCREEN_POS_Y / 1000;
-
-
-
-// // TODO add Split Position, also auto set position, catches for 3DS
 
 
 //---------------------------------------------------------------------------------------------------

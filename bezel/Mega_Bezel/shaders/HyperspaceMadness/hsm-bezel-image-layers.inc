@@ -540,7 +540,7 @@ void main()
 												HSM_BG_TEXTURE_ASPECT_MODE, 
 												HSM_BG_EXPLICIT_TEXTURE_ASPECT, 
 												vec2(HSM_BG_SCALE * HSM_BG_SCALE_X, HSM_BG_SCALE), 
-												vec2(0, HSM_BG_POS_Y), 
+												vec2(HSM_BG_POS_X, HSM_BG_POS_Y), 
 												HSM_BG_SCALE_MODE, 
 												HSM_BG_SCALE_KEEP_ASPECT);
 	vec2 background_coord = background_coord_no_mirror;
@@ -621,7 +621,7 @@ void main()
 											HSM_BZL_IMG_TEXTURE_ASPECT_MODE, 
 											HSM_BZL_IMG_EXPLICIT_TEXTURE_ASPECT,
 											vec2(HSM_BZL_IMG_SCALE * HSM_BZL_IMG_SCALE_X, HSM_BZL_IMG_SCALE), 
-											vec2(0, HSM_BZL_IMG_POS_Y), 
+											vec2(HSM_BZL_IMG_POS_X, HSM_BZL_IMG_POS_Y), 
 											HSM_BZL_IMG_SCALE_MODE, 
 											HSM_BZL_IMG_SCALE_KEEP_ASPECT);
 	if (HSM_BZL_IMG_OPACITY > 0)
@@ -674,7 +674,7 @@ void main()
 										HSM_DECAL_TEXTURE_ASPECT_MODE, 
 										HSM_DECAL_EXPLICIT_TEXTURE_ASPECT, 
 										vec2(HSM_DECAL_SCALE * HSM_DECAL_SCALE_X, HSM_DECAL_SCALE), 
-										vec2(0, HSM_DECAL_POS_Y), 
+										vec2(HSM_DECAL_POS_X, HSM_DECAL_POS_Y), 
 										HSM_DECAL_SCALE_MODE, 
 										HSM_DECAL_SCALE_KEEP_ASPECT);
 	if (HSM_DECAL_OPACITY > 0)
@@ -700,7 +700,7 @@ void main()
 						HSM_TOP_TEXTURE_ASPECT_MODE, 
 						HSM_TOP_EXPLICIT_TEXTURE_ASPECT, 
 						vec2(HSM_TOP_SCALE * HSM_TOP_SCALE_X, HSM_TOP_SCALE), 
-						vec2(0, HSM_TOP_POS_Y), 
+						vec2(HSM_TOP_POS_X, HSM_TOP_POS_Y), 
 						HSM_TOP_SCALE_MODE, 
 						HSM_TOP_SCALE_KEEP_ASPECT);
 	if (HSM_TOP_MIRROR_WRAP == 1)
@@ -734,7 +734,7 @@ void main()
 						HSM_CAB_GLASS_TEXTURE_ASPECT_MODE, 
 						HSM_CAB_GLASS_EXPLICIT_TEXTURE_ASPECT, 
 						vec2(HSM_CAB_GLASS_SCALE * HSM_CAB_GLASS_SCALE_X, HSM_CAB_GLASS_SCALE), 
-						vec2(0, HSM_CAB_GLASS_POS_Y), 
+						vec2(HSM_CAB_GLASS_POS_X, HSM_CAB_GLASS_POS_Y), 
 						HSM_CAB_GLASS_SCALE_MODE, 
 						HSM_CAB_GLASS_SCALE_KEEP_ASPECT);
 
@@ -771,7 +771,7 @@ void main()
 						HSM_LED_TEXTURE_ASPECT_MODE, 
 						HSM_LED_EXPLICIT_TEXTURE_ASPECT, 
 						vec2(HSM_LED_SCALE * HSM_LED_SCALE_X, HSM_LED_SCALE), 
-						vec2(0, HSM_LED_POS_Y), 
+						vec2(HSM_LED_POS_X, HSM_LED_POS_Y), 
 						HSM_LED_SCALE_MODE, 
 						HSM_LED_SCALE_KEEP_ASPECT);
 
@@ -796,7 +796,7 @@ void main()
 								TEXTURE_ASPECT_MODE_VIEWPORT,
 								1,
 								vec2(HSM_CUTOUT_SCALE * HSM_CUTOUT_SCALE_X, HSM_CUTOUT_SCALE), 
-								vec2(0, HSM_CUTOUT_POS_Y), 
+								vec2(HSM_CUTOUT_POS_X, HSM_CUTOUT_POS_Y), 
 								IMAGE_SCALE_MODE_VIEWPORT, 
 								0);
 	else if (HSM_CUTOUT_SCALE_MODE == 2)
@@ -804,7 +804,7 @@ void main()
 										TEXTURE_ASPECT_MODE_VIEWPORT,
 										1,
 										vec2(HSM_CUTOUT_SCALE * HSM_CUTOUT_SCALE_X, HSM_CUTOUT_SCALE), 
-										vec2(0, HSM_CUTOUT_POS_Y), 
+										vec2(HSM_CUTOUT_POS_X, HSM_CUTOUT_POS_Y), 
 										IMAGE_SCALE_MODE_VIEWPORT, 
 										0);
 	else
@@ -814,7 +814,7 @@ void main()
 												TEXTURE_ASPECT_MODE_VIEWPORT,
 												1,
 												vec2(HSM_CUTOUT_SCALE * HSM_CUTOUT_SCALE_X, HSM_CUTOUT_SCALE), 
-												vec2(0, HSM_CUTOUT_POS_Y), 
+												vec2(HSM_CUTOUT_POS_X, HSM_CUTOUT_POS_Y), 
 												HSM_CUTOUT_SCALE_MODE, 
 												0);
 		if (HSM_CUTOUT_SCALE_MODE > 2)
@@ -840,7 +840,7 @@ void main()
 					TEXTURE_ASPECT_MODE_VIEWPORT, 
 					1, 
 					vec2(HSM_VIEWPORT_VIGNETTE_SCALE * HSM_VIEWPORT_VIGNETTE_SCALE_X, HSM_VIEWPORT_VIGNETTE_SCALE), 
-					vec2(0, HSM_VIEWPORT_VIGNETTE_POS_Y), 
+					vec2(HSM_VIEWPORT_VIGNETTE_POS_X, HSM_VIEWPORT_VIGNETTE_POS_Y), 
 					HSM_VIEWPORT_VIGNETTE_SCALE_MODE, 
 					0);
 

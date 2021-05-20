@@ -21,60 +21,65 @@
    
 */
 
+#include "../../hsm-globals-and-screen-scale-params.inc"
+
 layout(push_constant) uniform Push
 {
 	vec4 OutputSize;
 	uint FrameCount;
     float deconr;
 	float TATE;
-	float decons;
-	float addnoise;
-	float shadowMask;
-	float masksize;
-	float deconrr;
-	float deconrg;
-	float deconrb;
-	float deconrry;
-	float deconrgy;
-	float deconrby;	
-	float deconsmooth;
+	float GDV_DECONVERGENCE_STRENGTH;
+	float GDV_NOISE_AMOUNT;
+	float GDV_MASK_TYPE;
+	float GDV_MASK_SIZE;
+	float GDV_DECONVERGENCE_H_RANGE_RED;
+	float GDV_DECONVERGENCE_H_RANGE_GREEN;
+	float GDV_DECONVERGENCE_H_RANGE_BLUE;
+	float GDV_DECONVERGENCE_V_RANGE_RED;
+	float GDV_DECONVERGENCE_V_RANGE_GREEN;
+	float GDV_DECONVERGENCE_V_RANGE_BLUE;	
+	float GDV_DECONVERGENCE_SMOOTHING;
 } params;
 
-#pragma parameter TATE "          TATE Mode" 0.0 0.0 1.0 1.0
-#define TATE         params.TATE     // Screen orientation
+// #pragma parameter TATE "          TATE Mode" 0.0 0.0 1.0 1.0
+// #define TATE         params.TATE     // Screen orientation
 
-#pragma parameter bogus_hdeconvergence "[ HORIZONTAL/VERTICAL DECONVERGENCE ]: " 0.0 0.0 1.0 1.0
+#pragma parameter GDV_DECONVERGENCE_TITLE "[ HORIZONTAL/VERTICAL DECONVERGENCE ]: " 0.0 0.0 1.0 1.0
 
-#pragma parameter deconrr "          Horizontal Deconvergence Red Range" 0.0 -7.0 7.0 0.5
+#pragma parameter GDV_DECONVERGENCE_H_RANGE_RED "          Horizontal Deconvergence Red Range" 0.0 -7.0 7.0 0.25
 
-#pragma parameter deconrg "          Horizontal Deconvergence Green Range" 0.0 -7.0 7.0 0.5
+#pragma parameter GDV_DECONVERGENCE_H_RANGE_GREEN "          Horizontal Deconvergence Green Range" 0.0 -7.0 7.0 0.25
 
-#pragma parameter deconrb "          Horizontal Deconvergence Blue Range" 0.0 -7.0 7.0 0.5
+#pragma parameter GDV_DECONVERGENCE_H_RANGE_BLUE "          Horizontal Deconvergence Blue Range" 0.0 -7.0 7.0 0.25
 
-#pragma parameter deconrry "          Vertical Deconvergence Red Range" 0.0 -7.0 7.0 0.5
+#pragma parameter GDV_DECONVERGENCE_V_RANGE_RED "          Vertical Deconvergence Red Range" 0.0 -7.0 7.0 0.25
 
-#pragma parameter deconrgy "          Vertical Deconvergence Green Range" 0.0 -7.0 7.0 0.5
+#pragma parameter GDV_DECONVERGENCE_V_RANGE_GREEN "          Vertical Deconvergence Green Range" 0.0 -7.0 7.0 0.25
 
-#pragma parameter deconrby "          Vertical Deconvergence Blue Range" 0.0 -7.0 7.0 0.5
+#pragma parameter GDV_DECONVERGENCE_V_RANGE_BLUE "          Vertical Deconvergence Blue Range" 0.0 -7.0 7.0 0.25
  
-#pragma parameter decons "          Deconvergence Strength" 0.5 0.0 2.0 0.05
-#define decons        params.decons     // Horizontal deconvergence colors strength
+#pragma parameter GDV_DECONVERGENCE_STRENGTH "          Deconvergence Strength" 0.5 0.0 2.0 0.05
+#define GDV_DECONVERGENCE_STRENGTH        params.GDV_DECONVERGENCE_STRENGTH     // Horizontal deconvergence colors strength
 
-#pragma parameter deconsmooth "          Deconvergence Smoothing" 0.0 0.0 1.0 0.25
+#pragma parameter GDV_DECONVERGENCE_SMOOTHING "          Deconvergence Smoothing" 0.0 0.0 1.0 0.10
 
-#pragma parameter addnoise "          Add Noise" 0.0 -1.0 1.0 0.05
-#define addnoise       params.addnoise    // Switch colors left/right
+#pragma parameter GDV_NOISE_AMOUNT "          Add Noise" 0.0 -1.0 1.0 0.05
+#define GDV_NOISE_AMOUNT       params.GDV_NOISE_AMOUNT    // Switch colors left/right
 
-#pragma parameter shadowMask "          CRT Mask: 0:CGWG, 1-4:Lottes, 5-7:'Trinitron'" 0.0 -1.0 8.0 1.0
-#define shadowMask   params.shadowMask     // Mask Style
+#pragma parameter GDV_MASK_TYPE "          CRT Mask: 0:CGWG, 1-4:Lottes, 5-7:'Trinitron'" 0.0 -1.0 8.0 1.0
+#define shadowMask   params.GDV_MASK_TYPE     // Mask Style
 
-#pragma parameter masksize "          CRT Mask Size (2.0 is nice in 4k)" 1.0 1.0 4.0 1.0
-#define masksize     params.masksize     // Mask Size
+#pragma parameter GDV_MASK_SIZE "          CRT Mask Size - 0:Auto | 1:2K | 2:4k" 0 1 4 1
+#define masksize     params.GDV_MASK_SIZE     // Mask Size
 
+/*
 layout(std140, set = 0, binding = 0) uniform UBO
 {
 	mat4 MVP;
+	vec2 FinalViewportSize;
 } global;
+*/
 
 #pragma stage vertex
 layout(location = 0) in vec4 Position;
@@ -90,6 +95,7 @@ void main()
 #pragma stage fragment
 layout(location = 0) in vec2 vTexCoord;
 layout(location = 0) out vec4 FragColor;
+layout(set = 0, binding = 1) uniform sampler2D InfoCachePass;
 layout(set = 0, binding = 2) uniform sampler2D Source;
 
 #define COMPAT_TEXTURE(c,d) texture(c,d)
@@ -109,7 +115,7 @@ vec3 plant (vec3 tar, float r)
 // Adapted from ChuckNorris - shadertoy: https://www.shadertoy.com/view/XtK3Dz
 
 vec3 noise(vec3 v){
-    if (addnoise < 0.0) v.z = -addnoise; else v.z = v.z/6000.0;
+    if (GDV_NOISE_AMOUNT < 0.0) v.z = -GDV_NOISE_AMOUNT; else v.z = v.z/6000.0;
 	// ensure reasonable range
     v = fract(v) + fract(v*1e4) + fract(v*1e-4);
     // seed
@@ -122,24 +128,36 @@ vec3 noise(vec3 v){
 
 void main()
 {
-	
+	HSM_UpdateGlobalScreenValuesFromCache(InfoCachePass, vTexCoord);
+	float TATE = USE_VERTICAL_SCANLINES;
+
 	vec3 color = COMPAT_TEXTURE(Source, vTexCoord).rgb;
 	vec3 result = color;
 	
-	if ((abs(params.deconrr) + abs(params.deconrg) + abs(params.deconrb)) > 0.25)
+	if ((abs(params.GDV_DECONVERGENCE_H_RANGE_RED) + abs(params.GDV_DECONVERGENCE_H_RANGE_GREEN) + abs(params.GDV_DECONVERGENCE_H_RANGE_BLUE) + abs(params.GDV_DECONVERGENCE_V_RANGE_RED) + abs(params.GDV_DECONVERGENCE_V_RANGE_GREEN) + abs(params.GDV_DECONVERGENCE_V_RANGE_BLUE)) > 0.20)
 	{	
+		/* HSM Removed
 		float step = masksizes[int(shadowMask)+1]*masksize;
+		*/
+
+		// HSM ADDED
+		float final_mask_size = masksize;
+		// If using automatic Mask Size
+		if (masksize < 0.5)
+			final_mask_size = (global.FinalViewportSize.x + global.FinalViewportSize.y) / 3 > 1900 ? 2 : 1;
+		float step = masksizes[int(shadowMask)+1]*final_mask_size;
+
 		step*= (TATE < 0.5) ? (params.OutputSize.z) : (params.OutputSize.w);
 		float stepy = (TATE < 0.5) ? (params.OutputSize.w) : (params.OutputSize.z);
 		
 		vec2 dx = (TATE < 0.5) ? vec2(step, 0.0) :  vec2(0.0, step);
 		vec2 dy = (TATE > 0.5) ? vec2(stepy, 0.0) :  vec2(0.0, stepy);		
 
-		vec2 rc = params.deconrr * dx + params.deconrry*dy;
-		vec2 gc = params.deconrg * dx + params.deconrgy*dy;
-		vec2 bc = params.deconrb * dx + params.deconrby*dy;		
+		vec2 rc = params.GDV_DECONVERGENCE_H_RANGE_RED * dx + params.GDV_DECONVERGENCE_V_RANGE_RED*dy;
+		vec2 gc = params.GDV_DECONVERGENCE_H_RANGE_GREEN * dx + params.GDV_DECONVERGENCE_V_RANGE_GREEN*dy;
+		vec2 bc = params.GDV_DECONVERGENCE_H_RANGE_BLUE * dx + params.GDV_DECONVERGENCE_V_RANGE_BLUE*dy;		
 
-		dx = (dx+dy) * params.deconsmooth;
+		dx = (dx+dy) * params.GDV_DECONVERGENCE_SMOOTHING;
 		
 		float r1 = COMPAT_TEXTURE(Source, vTexCoord + rc    ).r;
 		float g1 = COMPAT_TEXTURE(Source, vTexCoord + gc    ).g;
@@ -157,14 +175,14 @@ void main()
 		vec3 result2 = vec3(r2,g2,b2);
 		vec3 result3 = vec3(r3,g3,b3);
 		
-		result = clamp(mix(color, (result1+result2+result3)/3.0, decons), 0.0, 1.0);
+		result = clamp(mix(color, (result1+result2+result3)/3.0, GDV_DECONVERGENCE_STRENGTH), 0.0, 1.0);
 
 		float mc = max(max(color.r,color.g),color.b);		
 		float mr = max(max(result.r,result.g),result.b);
 		result = plant(result, clamp(mix(mc,mr,0.7*mc+0.3), 0.5*mc, 1.0));
 	}
 	
-	result = mix(result, noise(vec3(params.OutputSize.xy * vTexCoord, float(params.FrameCount))), 0.2*abs(addnoise));
+	result = mix(result, noise(vec3(params.OutputSize.xy * vTexCoord, float(params.FrameCount))), 0.2*abs(GDV_NOISE_AMOUNT));
 	
 	float corner = COMPAT_TEXTURE(Source, vTexCoord).a;	
 	

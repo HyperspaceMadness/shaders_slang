@@ -826,6 +826,24 @@ vec2 HSM_GetTubeCurvedCoord(vec2 screen_coord, float curvature_scale, vec2 scree
 	return tube_curved_coord;
 }
 
+// Light Illumination
+// vec3 evaluateLight(in vec3 pos)
+// {
+//     vec3 lightPos = LPOS;
+//     vec3 lightCol = LCOL;
+//     vec3 L = lightPos-pos;
+//     return lightCol * 1.0/dot(L,L);
+// }
+
+// vec3 evaluateLight(in vec3 pos, in vec3 normal)
+// {
+//     vec3 lightPos = LPOS;
+//     vec3 L = lightPos-pos;
+//     float distanceToL = length(L);
+//     vec3 Lnorm = L/distanceToL;
+//     return max(0.0,dot(normal,Lnorm)) * evaluateLight(pos);
+// }
+
 vec3 HSM_RGBtoHSV(vec3 c)
 {
     vec4 K = vec4(0.0, -1.0 / 3.0, 2.0 / 3.0, -1.0);

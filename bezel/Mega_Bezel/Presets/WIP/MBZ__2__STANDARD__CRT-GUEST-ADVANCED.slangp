@@ -14,27 +14,28 @@ scale_type1 = source
 scale1 = 1.0
 alias1 = "IntroPass"
 
-shader2 = :/shaders/shaders_slang/bezel/Mega_Bezel/shaders/HyperspaceMadness/hsm-guest/advanced/afterglow0.slang
+shader2 = :/shaders/shaders_slang/bezel/Mega_Bezel/shaders/HyperspaceMadness/hsm-guest/advanced/hsm-afterglow0.slang
 filter_linear2 = false
 scale_type2 = source
 scale2 = 1.0
 alias2 = AfterglowPass
 
-shader3 = :/shaders/shaders_slang/bezel/Mega_Bezel/shaders/HyperspaceMadness/hsm-guest/advanced/pre-shaders-afterglow.slang
+shader3 = :/shaders/shaders_slang/bezel/Mega_Bezel/shaders/HyperspaceMadness/hsm-guest/advanced/hsm-pre-shaders-afterglow.slang
 filter_linear3 = false
 scale_type3 = source
 mipmap_input3 = true
 scale3 = 1.0
 alias3 = PrePass
 
-shader4 = :/shaders/shaders_slang/bezel/Mega_Bezel/shaders/HyperspaceMadness/hsm-guest/advanced/avg-lum.slang
+shader4 = :/shaders/shaders_slang/bezel/Mega_Bezel/shaders/HyperspaceMadness/hsm-guest/advanced/hsm-avg-lum.slang
 filter_linear4 = true
 scale_type4 = source
 scale4 = 1.0
 mipmap_input4 = true
 alias4 = AvgLumPass
 
-shader5 = :/shaders/shaders_slang/bezel/Mega_Bezel/shaders/HyperspaceMadness/hsm-guest/advanced/linearize.slang
+// Pass referenced by subsequent blurring passes and crt pass
+shader5 = :/shaders/shaders_slang/bezel/Mega_Bezel/shaders/HyperspaceMadness/hsm-guest/advanced/hsm-interlace-and-linearize.slang
 filter_linear5 = true
 scale_type5 = source
 scale5 = 1.0

@@ -35,6 +35,7 @@ layout(push_constant) uniform Push
 	float intres;
 	float inters;
 	float iscan;
+	float iscans;	
 } params;
 
 #pragma parameter GAMMA_INPUT "Gamma Input" 2.4 1.0 5.0 0.05
@@ -65,6 +66,9 @@ layout(push_constant) uniform Push
 
 #pragma parameter intres "          Internal Resolution Y: 224p/240p, 1.5...y-dowsample" 0.0 0.0 6.0 0.5 // Joint parameter with linearize pass, values must match
 #define intres         params.intres     // interlace resolution
+
+#pragma parameter iscans "          Interlacing (Scanline) Saturation" 0.40 0.0 1.0 0.05
+#define iscans        params.iscans     // interlace saturation
 
 #define SourceSize  params.SourceSize
 
@@ -143,12 +147,14 @@ void main()
 		
 		if (interm < 3.5)
 		{
+			res2 = plant(mix(res2, res2*res2, iscans), max(max(res2.r,res2.g),res2.b));
 			r = clamp(max(m1*ii, (1.0-iscan)*min(m1,m2)), 0.0, 1.0);
 			res = plant( mix(mix(res1,res2, min(mix(m1, (1.0-m2), min(m1,1.0-m1))/(d+0.00001),1.0)), res1, ii), r);
 			if (interm == 3.0) res = (1.0-0.5*iscan)*mix(res2, res1, ii);			
 			intera = 0.0;
 		}
-		if (interm == 5.0) { res = mix(res2, res1, 0.5); intera = 0.5; }		
+		if (interm == 4.0) res = plant(mix(res, res*res, 0.5*iscans), max(max(res.r,res.g),res.b));
+		if (interm == 5.0) { res = mix(res2, res1, 0.5); res = plant(mix(res, res*res, 0.5*iscans), max(max(res.r,res.g),res.b));}
 	}
 	
 	res = pow(res, vec3(gamma_in));

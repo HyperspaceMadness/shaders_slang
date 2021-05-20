@@ -21,23 +21,26 @@
    
 */  
 
+#include "../../hsm-globals-and-screen-scale-params.inc"
+
 layout(push_constant) uniform Push
 {
 	vec4 OriginalSize;
 	vec4 OutputSize;
 	uint FrameCount;
-	float GAMMA_INPUT;
-	float inter;
-	float interm;
-	float inters;
-	float iscan;
-	float intres;
-	float iscans;
-	float downsample_level;
-	float prescalex;
+
+// // 	float GAMMA_INPUT;
+// // 	float inter;
+// // 	float interm;
+// // 	float inters;
+// // 	float iscan;
+// // 	float intres;
+// // 	float downsample_level;
+// // 	float prescalex;
 } params;
 
 
+/*
 layout(std140, set = 0, binding = 0) uniform UBO
 {
 	vec4 SourceSize;
@@ -45,35 +48,47 @@ layout(std140, set = 0, binding = 0) uniform UBO
 } global;
 
 
-#pragma parameter GAMMA_INPUT "Gamma Input" 2.4 1.0 5.0 0.05
-#define GAMMA_INPUT params.GAMMA_INPUT
+// #pragma parameter GAMMA_INPUT "Gamma Input" 2.4 1.0 5.0 0.05
+*/
+#define GAMMA_INPUT HSM_GAMMA_IN_LINEARIZE
 
-#pragma parameter bogus_interlacing "[ INTERLACING OPTIONS ]: " 0.0 0.0 0.0 1.0
+/*
+// #pragma parameter bogus_interlacing "[ INTERLACING OPTIONS ]: " 0.0 0.0 0.0 1.0
 
-#pragma parameter inter "          Interlace Trigger Resolution :" 350.0 0.0 800.0 25.0
-#define inter         params.inter     // interlace resolution
+// #pragma parameter inter "          Interlace Trigger Resolution :" 350.0 0.0 800.0 25.0
+// #define inter         params.inter     // interlace resolution
 
-#pragma parameter interm "          Interlace Mode: OFF, Normal 1-3, Interpolation 4-5" 1.0 0.0 5.0 1.0
-#define interm         params.interm     // interlace mode 
+// #pragma parameter interm "          Interlace Mode: OFF, Normal 1-3, Interpolation 4-5" 1.0 0.0 5.0 1.0
+*/
+#define interm      HSM_INTERLACE_MODE     // interlace mode 
 
-#pragma parameter inters "          Interlacing Effect Smoothness" 0.0 0.0 0.5 0.05 // Joint parameter with main pass, values must match
-#define inters  params.inters     // interlacing effect smoothing
+/*
+// #pragma parameter inters "          Interlacing Effect Smoothness" 0.0 0.0 0.5 0.05 // Joint parameter with main pass, values must match
+*/
+#define inters  	HSM_INTERLACE_EFFECT_SMOOTHNESS     // interlacing effect smoothing
 
-#pragma parameter iscan "          Interlacing Scanline Effect" 0.20 0.0 1.0 0.05
-#define iscan  params.iscan     // interlacing effect scanlining
+/*
+// #pragma parameter iscan "          Interlacing Scanline Effect" 0.20 0.0 1.0 0.05
+*/
+#define iscan  		HSM_INTERLACE_SCANLINE_EFFECT     // interlacing effect scanlining
 
-#pragma parameter intres "          Internal Resolution Y: 224p/240p, 1.5...y-dowsample" 0.0 0.0 6.0 0.5 // Joint parameter with main pass, values must match
+/*
+// #pragma parameter intres "          Internal Resolution Y: 224p/240p, 1.5...y-dowsample" 0.0 0.0 6.0 0.5 // Joint parameter with main pass, values must match
 
-#define intres         params.intres     // interlace resolution
+// #define intres         params.intres     // interlace resolution
 
-#pragma parameter downsample_level "          Downsampling (High-res content, pre-scalers)" 0.0 0.0 1.0 1.0
-#define downsample_level         params.downsample_level     // downsample level
+// #pragma parameter downsample_level "          Downsampling (High-res content, pre-scalers)" 0.0 0.0 1.0 1.0
+*/
+#define downsample_level         HSM_DOWNSAMPLE_BLUR     // downsample level
 
-#pragma parameter prescalex "          Prescale-X Factor (for xBR...pre-shader)" 1.0 1.0 4.0 1.0  // Joint parameter with main pass, values must match
-#define prescalex        params.prescalex     // prescale-x factor
+/*
+// #pragma parameter prescalex "          Prescale-X Factor (for xBR...pre-shader)" 1.0 1.0 4.0 1.0  // Joint parameter with main pass, values must match
+// #define prescalex        params.prescalex     // prescale-x factor
 
-#pragma parameter iscans "          Interlacing (Scanline) Saturation" 0.40 0.0 1.0 0.05
-#define iscans        params.iscans     // interlace saturation
+// #pragma parameter GDV_INTERLACE_SCANLINE_SATURATION "          Interlacing (Scanline) Saturation" 0.40 0.0 1.0 0.05
+*/
+
+#define iscans        GDV_INTERLACE_SCANLINE_SATURATION     // interlace saturation
 
 #pragma stage vertex
 layout(location = 0) in vec4 Position;
@@ -89,6 +104,7 @@ void main()
 #pragma stage fragment
 layout(location = 0) in vec2 vTexCoord;
 layout(location = 0) out vec4 FragColor;
+layout(set = 0, binding = 1) uniform sampler2D InfoCachePass;
 layout(set = 0, binding = 2) uniform sampler2D PrePass;
 
 #define COMPAT_TEXTURE(c,d) texture(c,d)
@@ -100,7 +116,7 @@ vec3 plant (vec3 tar, float r)
 	return tar * r / t;
 }
 
-
+// TODO Put in a blend amount? Multiply dx & dy?
 vec3 fetch_pixel(vec2 coord)
 {
 	vec2 dx = vec2(global.SourceSize.z, 0.0) * HSM_DOWNSAMPLE_BLUR;
@@ -125,6 +141,9 @@ vec3 fetch_pixel(vec2 coord)
 
 void main()
 {
+	// HSM Added
+	HSM_UpdateGlobalScreenValuesFromCache(InfoCachePass, vTexCoord);
+
 	vec3  c1 = COMPAT_TEXTURE(PrePass, vTexCoord).rgb;
 	vec3  c2 = COMPAT_TEXTURE(PrePass, vTexCoord + vec2(0.0, params.OriginalSize.w)).rgb;	
 
@@ -144,13 +163,38 @@ void main()
 
 	float r = m1;
 
-	float yres_div = 1.0; if (intres > 1.25) yres_div = intres;
-		
+	// HSM Removed
+	// float yres_div = 1.0; if (intres > 1.25) yres_div = intres;
+
+	// HSM Added
+	float orig_scan_res = params.OriginalSize.y;
+	float scaled_scan_res = orig_scan_res * HSM_CORE_RES_SAMPLING_MULT_OPPOSITE_DIR;
+	float tex_coord_scan_dir = vTexCoord.y;
+	vec2 downsample_offset = vec2(0.0, params.OriginalSize.w) * HSM_DOWNSAMPLE_BLUR;
+
+	/* HSM Removed
 	if (inter < params.OriginalSize.y/yres_div && interm > 0.5 && intres != 1.0 && intres != 0.5) 
+	*/
+
+	// HSM Added
+	if (HSM_INTERLACE_TRIGGER_RES < scaled_scan_res && interm > 0.5 && USE_VERTICAL_SCANLINES < 0.5) 
 	{
-		if (downsample_level > 0.0) c2 = fetch_pixel(vTexCoord + vec2(0.0, params.OriginalSize.w));	
+		/* HSM Removed
+		if (downsample_level > 0.5) c2 = fetch_pixel(vTexCoord + vec2(0.0, params.OriginalSize.w));	
+		*/
+		// HSM Added
+		if (downsample_level > 0) 
+			c2 = fetch_pixel(vTexCoord + downsample_offset);	
+
 		intera = 0.5;
+
+		/* HSM Removed
 		float line_no  = clamp(floor(mod(params.OriginalSize.y*vTexCoord.y, 2.0)), 0.0, 1.0);
+		*/
+
+		// HSM Added
+		float line_no  = clamp( floor( mod( orig_scan_res * tex_coord_scan_dir, 2.0 ) ), 0.0, 1.0 );
+
 		float frame_no = clamp(floor(mod(float(params.FrameCount),2.0)), 0.0, 1.0);
 		float ii = abs(line_no-frame_no);
 		

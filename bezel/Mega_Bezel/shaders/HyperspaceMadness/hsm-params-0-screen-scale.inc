@@ -130,7 +130,7 @@ float HSM_SCANLINE_DIRECTION = global.HSM_SCANLINE_DIRECTION;
 //---------------------------------------------------------------------------------------------------
 //    CORE RES SAMPLING
 //---------------------------------------------------------------------------------------------------
-#pragma parameter HSM_SAMPLING_TITLE								"[ CORE RES SAMPLING ]__________________________________________" 0 0 0.01 0.01
+#pragma parameter HSM_SAMPLING_TITLE								"[ CORE RES SAMPLING]:" 0 0 0.01 0.01
 
 #pragma parameter HSM_CORE_RES_SAMPLING_MULT_SCANLINE_DIR			"      Scanline Dir Multiplier (X-Prescale for H Scanline)"  100 100 1600 100
 float HSM_CORE_RES_SAMPLING_MULT_SCANLINE_DIR = global.HSM_CORE_RES_SAMPLING_MULT_SCANLINE_DIR / 100;
@@ -160,8 +160,8 @@ float HSM_CORE_RES_SAMPLING_MULT_OPPOSITE_DIR = global.HSM_CORE_RES_SAMPLING_MUL
 #pragma parameter GDV_INTERLACE_SCANLINE_SATURATION 				"      Interlacing (Scanline) Saturation" 40 0 100 5
 #define GDV_INTERLACE_SCANLINE_SATURATION global.GDV_INTERLACE_SCANLINE_SATURATION / 100
 
-#pragma parameter HSM_DOWNSAMPLE_BLUR 								"      Downsample Blur (High-res core, Pre-scalers)" 0 0 100 10
-#define HSM_DOWNSAMPLE_BLUR global.HSM_DOWNSAMPLE_BLUR / 100
+#pragma parameter HSM_DOWNSAMPLE_BLUR 					"      Downsample Blur (High-res core)" 0 0 100 10
+float HSM_DOWNSAMPLE_BLUR = global.HSM_DOWNSAMPLE_BLUR / 100;
 
 
 //---------------------------------------------------------------------------------------------------

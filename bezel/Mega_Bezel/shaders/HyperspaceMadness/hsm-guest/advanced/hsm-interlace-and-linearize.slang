@@ -120,7 +120,8 @@ vec3 plant (vec3 tar, float r)
 vec3 fetch_pixel(vec2 coord)
 {
 	vec2 dx = vec2(global.SourceSize.z, 0.0) * HSM_DOWNSAMPLE_BLUR;
-	vec2 dy = vec2(0.0, global.SourceSize.w) * HSM_DOWNSAMPLE_BLUR;	
+	vec2 dy = vec2(0.0, global.SourceSize.w) * HSM_DOWNSAMPLE_BLUR;
+
 	vec2 d1 = dx + dy;
 	vec2 d2 = dx - dy;
 	

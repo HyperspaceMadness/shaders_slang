@@ -33,7 +33,7 @@ Changes:
 Mega Bezel Still to Come:
 
 V1 TODO
-  * Add X Offset
+
   * Debug Info showing Shader Type
   * Explicit Downsample Res? Target Res?
   * Guest ADV - convergence, extra passes, mega bezel passes
@@ -69,10 +69,12 @@ V1 TODO
   * LCD behavior when reaching resolution limit - Possible LCD Replacements LCD 3x, Sameboy lcd
 
 
-
+Post V1  
+  * Do Hylian Sync Version
 
 
 Examples
+
   * Punch Out - Dual Screen
   * Vector Preset
   * Use MipMaps for image sampling when we have the image texture sizes

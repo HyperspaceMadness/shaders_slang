@@ -103,8 +103,8 @@ vec3 plant (vec3 tar, float r)
 
 vec3 fetch_pixel(vec2 coord)
 {
-	vec2 dx = vec2(global.SourceSize.z, 0.0) * HSM_DOWNSAMPLE_BLUR;
-	vec2 dy = vec2(0.0, global.SourceSize.w) * HSM_DOWNSAMPLE_BLUR;	
+	vec2 dx = vec2(global.SourceSize.z, 0.0);
+	vec2 dy = vec2(0.0, global.SourceSize.w);	
 	vec2 d1 = dx + dy;
 	vec2 d2 = dx - dy;
 	
@@ -128,7 +128,7 @@ void main()
 	vec3  c1 = COMPAT_TEXTURE(PrePass, vTexCoord).rgb;
 	vec3  c2 = COMPAT_TEXTURE(PrePass, vTexCoord + vec2(0.0, params.OriginalSize.w)).rgb;	
 
-	if (downsample_level > 0) c1 = fetch_pixel(vTexCoord);
+	if (downsample_level > 0.5) c1 = fetch_pixel(vTexCoord);
 
 	vec3  c  = c1;
 
@@ -148,7 +148,7 @@ void main()
 		
 	if (inter < params.OriginalSize.y/yres_div && interm > 0.5 && intres != 1.0 && intres != 0.5) 
 	{
-		if (downsample_level > 0.0) c2 = fetch_pixel(vTexCoord + vec2(0.0, params.OriginalSize.w));	
+		if (downsample_level > 0.5) c2 = fetch_pixel(vTexCoord + vec2(0.0, params.OriginalSize.w));	
 		intera = 0.5;
 		float line_no  = clamp(floor(mod(params.OriginalSize.y*vTexCoord.y, 2.0)), 0.0, 1.0);
 		float frame_no = clamp(floor(mod(float(params.FrameCount),2.0)), 0.0, 1.0);

@@ -98,7 +98,7 @@ void main()
 #pragma stage fragment
 layout(location = 0) in vec2 vTexCoord;
 layout(location = 0) out vec4 FragColor;
-layout(set = 0, binding = 2) uniform sampler2D IntroPass;
+layout(set = 0, binding = 2) uniform sampler2D LastUserPass;
 layout(set = 0, binding = 3) uniform sampler2D AfterglowPass;
 layout(set = 0, binding = 4) uniform sampler2D SamplerLUT1;
 layout(set = 0, binding = 5) uniform sampler2D SamplerLUT2;
@@ -219,7 +219,7 @@ float vignette (vec2 coords)
 
 void main()
 {
-   vec4 imgColor = COMPAT_TEXTURE(IntroPass, vTexCoord.xy);
+   vec4 imgColor = COMPAT_TEXTURE(LastUserPass, vTexCoord.xy);
    vec4 aftglow = COMPAT_TEXTURE(AfterglowPass, vTexCoord.xy);
    
    float w = 1.0-aftglow.w;

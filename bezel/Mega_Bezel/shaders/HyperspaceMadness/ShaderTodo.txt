@@ -159,6 +159,8 @@ Retroarch Features
   * Shader Textures in Sub Menu - Add ability to set texture overrides in retroarch UI
   * Shader Passes in Sub Menu
   * Reload Last Preset
+  * Original scaling Type?
+  * MaxAbsolute scaling type?
   * Add Preset to beginning of chain (Autechre's request )
   * Next/Previous Shader sometimes uses different directories, probably related to shader_path in live shader rather than originally loaded preset
   * Replace Text, for shader type, game & core, content directory

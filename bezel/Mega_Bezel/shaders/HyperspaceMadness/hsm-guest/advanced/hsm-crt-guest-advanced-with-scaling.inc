@@ -253,7 +253,7 @@ layout(location = 0) out vec4 FragColor;
 
 // HSM Added
 layout(set = 0, binding = 1) uniform sampler2D InfoCachePass;
-layout(set = 0, binding = 2) uniform sampler2D IntroPass;
+layout(set = 0, binding = 2) uniform sampler2D LastUserPass;
 layout(set = 0, binding = 3) uniform sampler2D ColoredGelImage;
 layout(set = 0, binding = 4) uniform sampler2D TubeStaticReflectionImage;
 layout(set = 0, binding = 5) uniform sampler2D BackgroundImage;
@@ -463,26 +463,26 @@ float SlotMask(vec2 pos, float m)
 	
 	return slot;
 }   
- 
-/* // Distortion of scanlines, and end of screen alpha (PD Lottes Curvature)
+
+/* HSM Removed
 vec2 Warp(vec2 pos)
 {
 	pos  = pos*2.0-1.0;    
-	pos  = mix(pos, vec2(pos.x/sqrt(1.0-c_shape*pos.y*pos.y), pos.y/sqrt(1.0-c_shape*pos.x*pos.x)), vec2(warpX, warpY)/c_shape);
+	pos  = mix(pos, vec2(pos.x*inversesqrt(1.0-c_shape*pos.y*pos.y), pos.y*inversesqrt(1.0-c_shape*pos.x*pos.x)), vec2(warpX, warpY)/c_shape);
 	return pos*0.5 + 0.5;
 }
-*/
 
 vec2 Overscan(vec2 pos, float dx, float dy){
 	pos=pos*2.0-1.0;    
 	pos*=vec2(dx,dy);
 	return pos*0.5+0.5;
 } 
+*/
 
-
-// // Borrowed from cgwg's crt-geom, under GPL
 
 /* HSM Removed
+// Borrowed from cgwg's crt-geom, under GPL
+
 float corner(vec2 coord)
 {
 	coord = min(coord, vec2(1.0)-coord) * vec2(1.0, OutputSize.y/OutputSize.x);
@@ -902,6 +902,6 @@ if (!interb)
 
 	// HSM Added - Prep and add output gamma
 	FragColor = vec4(color, 1);
-	FragColor = HSM_GetPostCrtPreppedColor(FragColor, vTexCoord, screen_curved_coord, IntroPass, false, ColoredGelImage, TubeStaticReflectionImage, BackgroundImage, BackgroundVertImage);
+	FragColor = HSM_GetPostCrtPreppedColor(FragColor, vTexCoord, screen_curved_coord, LastUserPass, false, ColoredGelImage, TubeStaticReflectionImage, BackgroundImage, BackgroundVertImage);
 	// End Addition
 }

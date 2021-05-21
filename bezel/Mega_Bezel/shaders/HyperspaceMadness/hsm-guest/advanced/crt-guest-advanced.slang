@@ -409,7 +409,7 @@ float SlotMask(vec2 pos, float m)
 vec2 Warp(vec2 pos)
 {
 	pos  = pos*2.0-1.0;    
-	pos  = mix(pos, vec2(pos.x/sqrt(1.0-c_shape*pos.y*pos.y), pos.y/sqrt(1.0-c_shape*pos.x*pos.x)), vec2(warpX, warpY)/c_shape);
+	pos  = mix(pos, vec2(pos.x*inversesqrt(1.0-c_shape*pos.y*pos.y), pos.y*inversesqrt(1.0-c_shape*pos.x*pos.x)), vec2(warpX, warpY)/c_shape);
 	return pos*0.5 + 0.5;
 }
 

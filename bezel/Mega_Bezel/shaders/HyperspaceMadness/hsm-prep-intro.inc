@@ -16,7 +16,7 @@ void main()
 #pragma stage fragment
 layout(location = 0) in vec2 VIEWPORT_COORD;
 layout(location = 0) out vec4 FragColor;
-layout(set = 0, binding = 2) uniform sampler2D Original;
+layout(set = 0, binding = 2) uniform sampler2D ReduceCoreRezPass;
 layout(set = 0, binding = 3) uniform sampler2D OriginalHistory1;
 layout(set = 0, binding = 4) uniform sampler2D OriginalHistory2;
 layout(set = 0, binding = 5) uniform sampler2D OriginalHistory3;
@@ -55,45 +55,6 @@ vec4 AntiFlicker(vec2 in_coord, vec4 current)
 	
 	return (!flicker) ? current : blended;
 }
-
-
-// Fixes Undefined values with different GPU vendors. 
-// Keeps values within a safe range
-vec4 mixfix(vec4 a, vec4 b, float c)
-{
-	return (a.z < 1.0) ? mix(a, b, c) : a;
-}
-
-// Borrowed from Guest's Guest-Venom Shader
-// LUT is from Torridgristle
-vec4 ApplyLUT(vec4 in_color, sampler2D in_LUT)
-{
-   float LUT_Size = 32;
-
-   float red = ( in_color.r * (LUT_Size - 1.0) + 0.499999 ) / (LUT_Size * LUT_Size);
-   float green = ( in_color.g * (LUT_Size - 1.0) + 0.499999 ) / LUT_Size;
-   float blue1 = (floor( in_color.b  * (LUT_Size - 1.0) ) / LUT_Size) + red;
-   float blue2 = (ceil( in_color.b  * (LUT_Size - 1.0) ) / LUT_Size) + red;
-   float mixer = clamp(max((in_color.b - blue1) / (blue2 - blue1), 0.0), 0.0, 32.0);
-
-   vec4 color1 = texture( in_LUT, vec2( blue1, green ));
-   vec4 color2 = texture( in_LUT, vec2( blue2, green ));
-   vec4 out_color = mixfix(color1, color2, mixer);
-
-   out_color.rgb = pow(out_color.rgb, vec3(1.0 / 1.20));
-
-   // HSM Added
-   // Avoids clipped pixels showing up black
-   out_color.rgb = clamp(out_color.rgb, 0, 1);
-   
-   float mx = max(out_color.r, max(out_color.g, out_color.b));
-   out_color.rgb = mix(in_color.rgb, out_color.rgb, clamp(25.0 * (mx - 0.05), 0, 1));		
-   float l = length(in_color.rgb);
-   out_color.rgb = normalize(out_color.rgb + 1e-10) * l;
-
-   return out_color;
-}
-
 
 vec4 AddText(vec2 in_coord, vec4 in_color)
 {
@@ -255,7 +216,7 @@ void main()
 	viewport_coord_adjusted.x = HSM_FLIP_CORE_HORIZONTAL * (1 - viewport_coord_adjusted.x) + (1 - HSM_FLIP_CORE_HORIZONTAL) * viewport_coord_adjusted.x;
 	viewport_coord_adjusted.y = abs(HSM_FLIP_VIEWPORT_VERTICAL - HSM_FLIP_CORE_VERTICAL) * (1 - viewport_coord_adjusted.y) + (1 - abs(HSM_FLIP_VIEWPORT_VERTICAL - HSM_FLIP_CORE_VERTICAL)) * viewport_coord_adjusted.y;
 
-   FragColor = texture(Original, viewport_coord_adjusted);
+   FragColor = texture(ReduceCoreRezPass, viewport_coord_adjusted);
 
    if (HSM_ANTI_FLICKER_ON == 1)
       FragColor = AntiFlicker(viewport_coord_adjusted, FragColor);

@@ -12,6 +12,7 @@ layout(std140, set = 0, binding = 0) uniform UBO
 	vec4 OutputSize;
 	vec4 FinalViewportSize;
 	vec4 internal1Size;
+	vec4 ReduceCoreRezPassSize;
 	uint FrameCount;
 
 	float HSM_RESOLUTION_DEBUG_ON;
@@ -425,6 +426,8 @@ vec2 SCREEN_POS_OFFSET = vec2(0.15);
 vec2 SCREEN_COORD = vec2(0.5);
 float AVERAGE_LUMA = 0;
 float USE_VERTICAL_SCANLINES = 0;
+
+vec2 ROTATED_CORE_ORIGINAL_SIZE = vec2(1);
 
 vec2 ROTATED_RAW_ORIGINAL_SIZE = vec2(1);
 

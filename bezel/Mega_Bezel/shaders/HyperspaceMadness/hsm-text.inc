@@ -283,7 +283,7 @@ float DrawResolutions(vec2 uv, vec2 viewport_size, vec2 screen_size, vec2 origin
     float col = 0.0;
     
     //Resolution Text
-    printPos = vec2(2, 2.0 + STRHEIGHT(12));
+    printPos = vec2(2, 2.0 + STRHEIGHT(13));
     
     TEXT_MODE = NORMAL;  
 
@@ -320,7 +320,7 @@ float DrawResolutions(vec2 uv, vec2 viewport_size, vec2 screen_size, vec2 origin
     col += GetChar(ch_0, uv);
 
     //Preset Type
-    printPos = vec2(2, 2.0 + STRHEIGHT(11));
+    printPos = vec2(2, 2.0 + STRHEIGHT(12));
     col += GetChar(ch_spc, uv);
     
 #ifdef IS_ADVANCED_PRESET
@@ -397,7 +397,7 @@ float DrawResolutions(vec2 uv, vec2 viewport_size, vec2 screen_size, vec2 origin
 #endif
 
     //Core Resolution
-    printPos = vec2(2, 2.0 + STRHEIGHT(9));
+    printPos = vec2(2, 2.0 + STRHEIGHT(10));
     
     col += GetChar(ch_spc, uv);
     col += GetChar(ch_C, uv);
@@ -416,20 +416,42 @@ float DrawResolutions(vec2 uv, vec2 viewport_size, vec2 screen_size, vec2 origin
     col += GetChar(ch_dsh, uv);
 
     col += GetChar(ch_spc, uv);
-    col += print_integer(original_size.x,0, uv);
+    col += print_integer(ROTATED_CORE_ORIGINAL_SIZE.x,0, uv);
     col += GetChar(ch_spc, uv);
     col += GetChar(ch_x, uv);
     col += GetChar(ch_spc, uv);
-    col += print_integer(original_size.y,0, uv);
+    col += print_integer(ROTATED_CORE_ORIGINAL_SIZE.y,0, uv);
+
+
+    //ReducedRez Resolution
+    printPos = vec2(2, 2.0 + STRHEIGHT(9));
+    
+    col += GetChar(ch_spc, uv);
+    col += GetChar(ch_R, uv);
+    col += GetChar(ch_e, uv);
+    col += GetChar(ch_d, uv);
+    col += GetChar(ch_u, uv);
+    col += GetChar(ch_c, uv);
+    col += GetChar(ch_e, uv);
+    col += GetChar(ch_d, uv);
+    col += GetChar(ch_spc, uv);
+    col += GetChar(ch_R, uv);
+    col += GetChar(ch_e, uv);
+    col += GetChar(ch_z, uv);
+    col += GetChar(ch_spc, uv);
+    col += GetChar(ch_dsh, uv);
+    col += GetChar(ch_dsh, uv);
+
+    col += GetChar(ch_spc, uv);
+    col += print_integer(ROTATED_RAW_ORIGINAL_SIZE.x,0, uv);
+    col += GetChar(ch_spc, uv);
+    col += GetChar(ch_x, uv);
+    col += GetChar(ch_spc, uv);
+    col += print_integer(ROTATED_RAW_ORIGINAL_SIZE.y,0, uv);
 
     //Core Resolution Cropped
     printPos = vec2(2, 2.0 + STRHEIGHT(8));
     
-    col += GetChar(ch_spc, uv);
-    col += GetChar(ch_C, uv);
-    col += GetChar(ch_o, uv);
-    col += GetChar(ch_r, uv);
-    col += GetChar(ch_e, uv);
     col += GetChar(ch_spc, uv);
     col += GetChar(ch_C, uv);
     col += GetChar(ch_r, uv);
@@ -438,6 +460,11 @@ float DrawResolutions(vec2 uv, vec2 viewport_size, vec2 screen_size, vec2 origin
     col += GetChar(ch_p, uv);
     col += GetChar(ch_e, uv);
     col += GetChar(ch_d, uv);
+    col += GetChar(ch_spc, uv);
+    col += GetChar(ch_dsh, uv);
+    col += GetChar(ch_dsh, uv);
+    col += GetChar(ch_dsh, uv);
+    col += GetChar(ch_dsh, uv);
     col += GetChar(ch_dsh, uv);
     col += GetChar(ch_dsh, uv);
 
@@ -465,7 +492,7 @@ float DrawResolutions(vec2 uv, vec2 viewport_size, vec2 screen_size, vec2 origin
     col += GetChar(ch_R, uv);
     col += GetChar(ch_e, uv);
     col += GetChar(ch_s, uv);
-    col += GetChar(ch_dsh, uv);
+    col += GetChar(ch_spc, uv);
     col += GetChar(ch_dsh, uv);
 
     col += GetChar(ch_spc, uv);

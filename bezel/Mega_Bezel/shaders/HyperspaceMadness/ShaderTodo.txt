@@ -13,6 +13,7 @@ Changes:
   * Added MBZ__3__BASIC-BORDER-WITH-REFLECT__EASYMODE
     * Good for low spec systems, uses 1/3 less processing than Guest-DrVenom counterpart
   * X Position offset added to ADVANCED presets
+  * HDCore presets or other presets where there is resolution reduction in the first pass this is reported properly
 
 *  Performance of Base presets at 3840x2160 on Nvidia RTX2060:
   *  ADVANCED -                      80 FPS  -  No comparable old preset
@@ -33,7 +34,6 @@ Changes:
 Mega Bezel Still to Come:
 
 V1 TODO
-  * Update GDV-Advanced Variables
   * Debug Info showing Shader Type
   * Explicit Downsample Res? Target Res?
   * Guest ADV - convergence, extra passes, mega bezel passes

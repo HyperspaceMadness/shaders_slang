@@ -12,10 +12,15 @@ Description:
 
 vec2 HSM_GetRawOriginalSize()
 {
-	return global.OriginalSize.xy;
+	return global.ReduceCoreRezPassSize.xy;
 }
 
 vec2 HSM_GetRotatedRawOriginalSize()
+{
+	return HSM_ROTATE_CORE_IMAGE * global.ReduceCoreRezPassSize.yx + (1 - HSM_ROTATE_CORE_IMAGE) * global.ReduceCoreRezPassSize.xy;
+}
+
+vec2 HSM_GetRotatedCoreOriginalSize()
 {
 	return HSM_ROTATE_CORE_IMAGE * global.OriginalSize.yx + (1 - HSM_ROTATE_CORE_IMAGE) * global.OriginalSize.xy;
 }
@@ -117,7 +122,7 @@ vec2 HSM_GetSampleAreaStartPixelCoord(float screen_index)
 // Get the original size with split area added
 vec2 HSM_GetOriginalSize(float screen_index)
 {
-	vec2 original_size = global.OriginalSize.xy;
+	vec2 original_size = global.ReduceCoreRezPassSize.xy;
 
 	if (HSM_DUALSCREEN_MODE > 0)
 		if (HSM_Get_Core_Image_Split_Direction() == 1)
@@ -1138,7 +1143,7 @@ vec4 HSM_GetColorForScreenInfoCache(vec2 viewport_coord, sampler2D original_pass
 	// 1st Sample
 	if (HSM_IsCoordIn2DRange(viewport_coord, sample_2d_range) == 1)
 	{
-		out_color.r = HSM_GetAverageLuma(original_pass, global.OriginalSize.xy);
+		out_color.r = HSM_GetAverageLuma(original_pass, global.ReduceCoreRezPassSize.xy);
 	}
 
 	// 2nd Sample
@@ -1211,7 +1216,7 @@ vec4 HSM_UpdateGlobalScreenValuesFromCache(sampler2D in_cache_pass, vec2 viewpor
 {
 	SCREEN_INDEX = HSM_GetScreenIndex(viewport_coord);
 	ROTATED_RAW_ORIGINAL_SIZE = HSM_GetRotatedRawOriginalSize();
-
+	ROTATED_CORE_ORIGINAL_SIZE = HSM_GetRotatedCoreOriginalSize();
 	vec2 sample_coord = vec2(0);
 	vec4 texture_sample = vec4(0);
 
@@ -1317,6 +1322,7 @@ float HSM_GetScreenVignetteFactor(vec2 coord, float amount)
 	else return vignette;
 }
 
+// TODO need to remove calls to Get RotatedOriginalSize etc
 // Torridgristle - ScanlineSimple pass - Public domain
 vec4 HSM_ApplyScanlineMask(vec4 in_color, vec2 in_coord, vec2 screen_scale)
 {

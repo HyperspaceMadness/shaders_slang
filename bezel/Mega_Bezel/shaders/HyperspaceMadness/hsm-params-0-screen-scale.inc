@@ -145,7 +145,7 @@ float HSM_CORE_RES_SAMPLING_MULT_OPPOSITE_DIR = global.HSM_CORE_RES_SAMPLING_MUL
 
 #pragma parameter HSM_INTERLACE_TITLE								"[ INTERLACING From Guest.r :) ]:" 0 0 0.01 0.01
 
-#pragma parameter HSM_INTERLACE_TRIGGER_RES 						"      Interlacing and Fake Scanlines Trigger Res" 400 240 2000 25
+#pragma parameter HSM_INTERLACE_TRIGGER_RES 						"      Interlacing and Fake Scanlines Trigger Res" 400 100 2000 25
 #define HSM_INTERLACE_TRIGGER_RES global.HSM_INTERLACE_TRIGGER_RES
 
 #pragma parameter HSM_INTERLACE_MODE 								"      Interlacing Mode: OFF | Normal 1-3 | Interpolation 4-5" 0 0.0 5.0 1.0
@@ -275,30 +275,12 @@ float HSM_CRT_ORIGINAL_AB_COMPARE_SPLIT_POSITION = HSM_CRT_ORIGINAL_AB_COMPARE_O
 
 
 //---------------------------------------------------------------------------------------------------
-//    PHOSPHOR PERSISTENCE
-//---------------------------------------------------------------------------------------------------
-#pragma parameter HSM_PERSISTENCE_TITLE						"[ PHOSPHOR PERSISTENCE ]_______________________________________" 0 0 0.01 0.01
-
-#pragma parameter HSM_PHOSPHOR_PERSISTENCE_BLEND          	"      Amount" 0 0 100 2
-#define HSM_PHOSPHOR_PERSISTENCE_BLEND global.HSM_PHOSPHOR_PERSISTENCE_BLEND / 100
-
-#pragma parameter HSM_PHOSPHOR_PERSISTENCE_RED          	"      Red Persistence" 50 0 100 5
-#define HSM_PHOSPHOR_PERSISTENCE_RED global.HSM_PHOSPHOR_PERSISTENCE_RED / 100
-
-#pragma parameter HSM_PHOSPHOR_PERSISTENCE_GREEN          	"      Green Persistence" 50 0 100 5
-#define HSM_PHOSPHOR_PERSISTENCE_GREEN global.HSM_PHOSPHOR_PERSISTENCE_GREEN / 100
-
-#pragma parameter HSM_PHOSPHOR_PERSISTENCE_BLUE          	"      Blue Persistence" 50 0 100 5
-#define HSM_PHOSPHOR_PERSISTENCE_BLUE global.HSM_PHOSPHOR_PERSISTENCE_BLUE / 100
-
-
-//---------------------------------------------------------------------------------------------------
 //    Black Level
 //---------------------------------------------------------------------------------------------------
-#pragma parameter HSM_COLOR_AND_PERSISTENCE_TITLE			"[ SCANLINES ON BLACK ]_________________________________________" 0 0 0.01 0.01
+// #pragma parameter HSM_COLOR_AND_PERSISTENCE_TITLE			"[ SCANLINES ON BLACK ]_________________________________________" 0 0 0.01 0.01
 
-#pragma parameter HSM_COLOR_BLACK_LEVEL 					"      Black Level - Def -4" -4 -100 100 1
-#define HSM_COLOR_BLACK_LEVEL global.HSM_COLOR_BLACK_LEVEL / 100
+// #pragma parameter HSM_COLOR_BLACK_LEVEL 					"      Black Level - Def -4" -4 -100 100 1
+// #define HSM_COLOR_BLACK_LEVEL global.HSM_COLOR_BLACK_LEVEL / 100
 
 // Not in use because negative cropping is disabled
 // #pragma parameter HSM_COLOR_NEGATIVE_CROP_BRIGHTNESS		"      Negative Crop Brightness - Def 1.8" 1.8 0 100 0.2

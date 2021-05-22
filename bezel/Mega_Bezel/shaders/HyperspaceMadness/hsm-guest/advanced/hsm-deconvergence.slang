@@ -27,8 +27,6 @@ layout(push_constant) uniform Push
 {
 	vec4 OutputSize;
 	uint FrameCount;
-    float deconr;
-	float TATE;
 	float GDV_DECONVERGENCE_STRENGTH;
 	float GDV_NOISE_AMOUNT;
 	float GDV_MASK_TYPE;
@@ -40,7 +38,8 @@ layout(push_constant) uniform Push
 	float GDV_DECONVERGENCE_V_RANGE_GREEN;
 	float GDV_DECONVERGENCE_V_RANGE_BLUE;	
 	float GDV_DECONVERGENCE_SMOOTHING;
-	float GDV_DECONVERGENCE_TYPE;
+	float GDV_DECONVERGENCE_TYPE_X;
+	float GDV_DECONVERGENCE_TYPE_Y;
 } params;
 
 // #pragma parameter TATE "          TATE Mode" 0.0 0.0 1.0 1.0
@@ -48,8 +47,11 @@ layout(push_constant) uniform Push
 
 #pragma parameter GDV_DECONVERGENCE_TITLE "[ HORIZONTAL/VERTICAL DECONVERGENCE ]: " 0.0 0.0 1.0 1.0
 
-#pragma parameter GDV_DECONVERGENCE_TYPE 			"          Deconvergence type: 0:STATIC | other:DYNAMIC" 0 0 1 0.05
-#define dctype params.GDV_DECONVERGENCE_TYPE
+#pragma parameter GDV_DECONVERGENCE_TYPE_X 			"          Deconvergence Type X - 0:STATIC | other:DYNAMIC" 0 0 1 0.05
+#define dctypex params.GDV_DECONVERGENCE_TYPE_X
+
+#pragma parameter GDV_DECONVERGENCE_TYPE_Y 			"          Deconvergence Type Y - 0:STATIC | other:DYNAMIC" 0 0 1 0.05
+#define dctypey params.GDV_DECONVERGENCE_TYPE_Y
 
 #pragma parameter GDV_DECONVERGENCE_H_RANGE_RED 	"          Horizontal Deconvergence Red Range" 0.0 -7.0 7.0 0.25
 #define deconrr params.GDV_DECONVERGENCE_H_RANGE_RED
@@ -69,7 +71,7 @@ layout(push_constant) uniform Push
 #pragma parameter GDV_DECONVERGENCE_V_RANGE_BLUE 	"          Vertical Deconvergence Blue Range" 0.0 -7.0 7.0 0.25
 #define deconrby params.GDV_DECONVERGENCE_V_RANGE_BLUE
  
-#pragma parameter GDV_DECONVERGENCE_STRENGTH 		"          Deconvergence Strength" 0.5 0.0 2.0 0.05
+#pragma parameter GDV_DECONVERGENCE_STRENGTH 		"          Deconvergence Strength (And Type)" 0.5 -4 5 0.1
 #define decons        params.GDV_DECONVERGENCE_STRENGTH     // Horizontal deconvergence colors strength
 
 #pragma parameter GDV_DECONVERGENCE_SMOOTHING "          Deconvergence Smoothing" 0.0 0.0 1.0 0.10
@@ -158,24 +160,37 @@ void main()
 			final_mask_size = (global.FinalViewportSize.x + global.FinalViewportSize.y) / 3 > 1900 ? 2 : 1;
 		float step = masksizes[int(shadowMask)+1]*final_mask_size;
 
+		float dstep = step;
 		step*= (TATE < 0.5) ? (params.OutputSize.z) : (params.OutputSize.w);
 		float stepy = (TATE < 0.5) ? (params.OutputSize.w) : (params.OutputSize.z);
-		
+		float stepx = (TATE < 0.5) ? (params.OutputSize.z) : (params.OutputSize.w);
+		float ds = decons;
+
 		vec2 dx = (TATE < 0.5) ? vec2(step, 0.0) :  vec2(0.0, step);
 		vec2 dy = (TATE > 0.5) ? vec2(stepy, 0.0) :  vec2(0.0, stepy);		
 
-		if (dctype > 0.0)
+		float posx = 2.0*vTexCoord.x - 1.0;
+		float posy = 2.0*vTexCoord.y - 1.0;
+
+		if (dctypex > 0.0)
 		{
-			vec2 pos = 2.0*vTexCoord - 1.0;
-			if (abs(pos.x) < 2.0*step) pos.x = 2.0*step;
-			pos = sign(pos)*pow(abs(pos), (1.1-dctype).xx);
-			dx = dx * pos.x;
-			dy = dy * pos.y;
+			posx = sign(posx)*pow(abs(posx), 1.05-dctypex);
+			dx = posx * dx;
 		}
+
+		if (dctypey > 0.0)
+		{
+
+			posy = sign(posy)*pow(abs(posy), 1.05-dctypey);
+			dy = posy * dy;
+		}
+
+		if (dctypex > 0.0 || dctypey > 0.0) ds *= sqrt(posx*posx*sign(dctypex) + posy*posy*sign(dctypey));
 
 		vec2 rc = deconrr * dx + deconrry*dy;
 		vec2 gc = deconrg * dx + deconrgy*dy;
 		vec2 bc = deconrb * dx + deconrby*dy;		
+	
 
 		dx = (dx+dy) * deconsmooth;
 		
@@ -196,8 +211,13 @@ void main()
 		vec3 result3 = vec3(r3,g3,b3);
 		result = (result1+result2+result3)/3.0;
 		
-		result = clamp(mix(color, sqrt(mix(color*result, result*result, 0.15)), decons), 0.0, 1.0);
-}
+		vec3 dcolor = max(max(COMPAT_TEXTURE(Source, vTexCoord + vec2(stepx,0.0)).rgb, COMPAT_TEXTURE(Source, vTexCoord - vec2(stepx,0.0)).rgb), color);
+		
+		float mc = max(max(dcolor.r, dcolor.g), dcolor.b);
+		if (decons < 0.0) mc = 1.0;
+		
+		result = clamp(mix(color, sqrt(mix(result*result, color*result, sqrt(mc))), abs(ds)), 0.0, 1.0);
+	}
 	
 	result = mix(result, noise(vec3(params.OutputSize.xy * vTexCoord, float(params.FrameCount))), 0.2*abs(addnoise));
 	

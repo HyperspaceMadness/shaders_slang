@@ -266,7 +266,7 @@ void main()
       FragColor = GetColorWithIntro(FragColor, viewport_coord_adjusted);
 
    // Apply black level & gamma with input as non linearized
-   FragColor = HSM_ApplyBlackLevel(FragColor, 0);
+   // FragColor = HSM_ApplyBlackLevel(FragColor, 0);
 
    // //--------------------------------------------------------------------------------------------
    // // Save values in the alpha of the different quadrants of the screen

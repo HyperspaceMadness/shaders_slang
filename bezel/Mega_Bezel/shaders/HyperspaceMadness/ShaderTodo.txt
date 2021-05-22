@@ -33,7 +33,7 @@ Changes:
 Mega Bezel Still to Come:
 
 V1 TODO
-
+  * Update GDV-Advanced Variables
   * Debug Info showing Shader Type
   * Explicit Downsample Res? Target Res?
   * Guest ADV - convergence, extra passes, mega bezel passes

@@ -136,43 +136,42 @@ layout(push_constant) uniform Push
 #pragma parameter GDV_SMART_EDGES_SMOOTHING_THRESHOLD     "          Smart Edges Smoothing Threshold" 0.20 0.0 1.0 0.01
 #define sth        params.GDV_SMART_EDGES_SMOOTHING_THRESHOLD
 
-/*
 
-#pragma parameter intres "          Internal Resolution Y: 224p/240p, 1.5...y-dowsample" 0.0 0.0 6.0 0.5 // Joint parameter with linearize pass, values must match
+// #pragma parameter intres "          Internal Resolution Y: 224p/240p, 1.5...y-dowsample" 0.0 0.0 6.0 0.5 // Joint parameter with linearize pass, values must match
 
-#pragma parameter TATE "          TATE Mode" 0.0 0.0 1.0 1.0
-#define TATE         params.TATE     // Screen orientation
+// #pragma parameter TATE "          TATE Mode" 0.0 0.0 1.0 1.0
+// #define TATE         params.TATE     // Screen orientation
 
-#pragma parameter IOS "          Integer Scaling: Odd:Y, Even:'X'+Y" 0.0 0.0 4.0 1.0
-#define IOS          params.IOS     // Smart Integer Scaling
+// #pragma parameter IOS "          Integer Scaling: Odd:Y, Even:'X'+Y" 0.0 0.0 4.0 1.0
+// #define IOS          params.IOS     // Smart Integer Scaling
 
-#pragma parameter OS "          R. Bloom Overscan Mode" 1.0 0.0 2.0 1.0
-#define OS           params.OS     // Do overscan
+// #pragma parameter OS "          R. Bloom Overscan Mode" 1.0 0.0 2.0 1.0
+// #define OS           params.OS     // Do overscan
 
-#pragma parameter BLOOM "          Raster bloom %" 0.0 0.0 20.0 1.0
-#define BLOOM        params.BLOOM     // Bloom overscan percentage
+// #pragma parameter BLOOM "          Raster bloom %" 0.0 0.0 20.0 1.0
+// #define BLOOM        params.BLOOM     // Bloom overscan percentage
 
-#pragma parameter csize "          Corner size" 0.0 0.0 0.25 0.01
-#define csize        params.csize     // corner size
+// #pragma parameter csize "          Corner size" 0.0 0.0 0.25 0.01
+// #define csize        params.csize     // corner size
 
-#pragma parameter bsize "          Border smoothness" 600.0 100.0 700.0 10.0
-#define bsize        params.bsize     // border smoothness
+// #pragma parameter bsize "          Border smoothness" 600.0 100.0 700.0 10.0
+// #define bsize        params.bsize     // border smoothness
 
-#pragma parameter warpX "          CurvatureX (default 0.03)" 0.0 0.0 0.25 0.01
-#define warpX        params.warpX     // Curvature X
+// #pragma parameter warpX "          CurvatureX (default 0.03)" 0.0 0.0 0.25 0.01
+// #define warpX        params.warpX     // Curvature X
 
-#pragma parameter warpY "          CurvatureY (default 0.04)" 0.0 0.0 0.25 0.01
-#define warpY        params.warpY     // Curvature Y
+// #pragma parameter warpY "          CurvatureY (default 0.04)" 0.0 0.0 0.25 0.01
+// #define warpY        params.warpY     // Curvature Y
 
-#pragma parameter c_shape "          Curvature Shape" 0.25 0.05 0.60 0.05
-#define c_shape        global.c_shape     // curvature shape
+// #pragma parameter c_shape "          Curvature Shape" 0.25 0.05 0.60 0.05
+// #define c_shape        global.c_shape     // curvature shape
 
-#pragma parameter overscanY "          Overscan Y original pixels" 0.0 -50.0 50.0 1.0
-#define overscanY        global.overscanY     // OverscanY pixels
+// #pragma parameter overscanY "          Overscan Y original pixels" 0.0 -50.0 50.0 1.0
+// #define overscanY        global.overscanY     // OverscanY pixels
 
-#pragma parameter prescalex "          Prescale-X Factor (for xBR...pre-shader)" 1.0 1.0 4.0 1.0
-#define prescalex        global.prescalex     // prescale-x factor
-*/
+// #pragma parameter prescalex "          Prescale-X Factor (for xBR...pre-shader)" 1.0 1.0 4.0 1.0
+// #define prescalex        global.prescalex     // prescale-x factor
+
 
 
 #pragma parameter GDV_CRT_MASK_TITLE 						"[ CRT MASK OPTIONS ]: " 0.0 0.0 1.0 1.0

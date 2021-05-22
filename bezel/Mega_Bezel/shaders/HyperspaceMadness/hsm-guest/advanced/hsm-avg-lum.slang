@@ -30,9 +30,11 @@ layout(push_constant) uniform Push
 	float sth;
 } params;
 
-#pragma parameter lsmooth "Raster Bloom Effect Smoothing" 0.70 0.50 0.99 0.01
+// #pragma parameter lsmooth "Raster Bloom Effect Smoothing" 0.70 0.50 0.99 0.01
 
-#define lsmooth params.lsmooth
+// #define lsmooth params.lsmooth
+
+#define lsmooth 0.7
 
 #define COMPAT_TEXTURE(c,d) texture(c,d)
 #define SourceSize params.SourceSize

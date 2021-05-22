@@ -1,5 +1,13 @@
 shaders = 28
 
+// shader0 = :/shaders/shaders_slang/stock.slang
+// filter_linear0 = true
+// srgb_framebuffer0 = true
+// scale_type0 = source
+// scale0 = 1
+// mipmap_input2 = true
+// alias0  = "DownrezPass"
+
 shader0 = ../../shaders/HyperspaceMadness/hsm-prep-info-cache-advanced.slang
 filter_linear0 = true
 float_framebuffer0 = true

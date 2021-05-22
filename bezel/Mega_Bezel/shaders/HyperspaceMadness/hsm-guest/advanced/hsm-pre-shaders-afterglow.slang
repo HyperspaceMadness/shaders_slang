@@ -27,57 +27,60 @@ layout(push_constant) uniform Push
    vec4 OriginalSize;
    vec4 OutputSize;
    uint FrameCount;
-   float TNTC;
-   float LS;
-   float LUTLOW, LUTBR;   
-   float CP, CS;
-   float WP;
-   float wp_saturation;
-   float AS, sat;
-   float BP;
-   float vigstr;
-   float vigdef;
+   float GDV_LUT_COLORS_INDEX;
+   float GDV_LUT_SIZE;
+   float GDV_LUT_FIX_RANGE_DARK;
+   float GDV_LUT_FIX_RANGE_BRIGHT;   
+   float GDV_COLOR_PROFILE;
+   float GDV_COLOR_SPACE;
+   float GDV_COLOR_TEMP_OFFSET;
+   float GDV_COLOR_SATURATION_MULT;
+   float GDV_AFTERGLOW_STRENGTH; 
+   float GDV_AFTERGLOW_SATURATION;
+   float GDV_COLOR_BRIGHTEN_BLACK;
+   // float vigstr;
+   // float vigdef;
 } params;
 
-#pragma parameter AS "          Afterglow Strength" 0.20 0.0 0.60 0.01
-#define AS params.AS
+#pragma parameter GDV_AFTERGLOW_STRENGTH     "          Afterglow Strength" 0.20 0.0 0.60 0.01
+#define AS params.GDV_AFTERGLOW_STRENGTH
 
-#pragma parameter sat "          Afterglow saturation" 0.20 0.0 1.0 0.01
-#define sat params.sat
+#pragma parameter GDV_AFTERGLOW_SATURATION   "          Afterglow saturation" 0.20 0.0 1.0 0.01
+#define sat params.GDV_AFTERGLOW_SATURATION
 
-#pragma parameter bogus_color "[ COLOR TWEAKS ]:" 0.0 0.0 1.0 1.0
+#pragma parameter GDV_COLOR_TITLE            "[ COLOR TWEAKS ]:" 0.0 0.0 1.0 1.0
 
-#pragma parameter TNTC "          LUT Number/Colors (1.0-4.0)" 0.0 0.0 4.0 1.0
-#define TNTC params.TNTC
+#pragma parameter GDV_LUT_COLORS_INDEX       "      LUT Colors: NONE | TRINIT 1 | TRINIT 2 | TORRIDGRISTLE" 0.0 0.0 4.0 1.0
+#define TNTC params.GDV_LUT_COLORS_INDEX
 
-#pragma parameter LS "          LUT Size" 32.0 32.0 64.0 32.0
-#define LS params.LS
+#pragma parameter GDV_LUT_SIZE               "          LUT Size" 32.0 32.0 64.0 32.0
+#define LS params.GDV_LUT_SIZE
 
-#pragma parameter LUTLOW "          Fix LUT Dark - Range" 5.0 0.0 50.0 1.0
-#define LUTLOW params.LUTLOW
+#pragma parameter GDV_LUT_FIX_RANGE_DARK     "          Fix LUT Dark - Range" 5.0 0.0 50.0 1.0
+#define LUTLOW params.GDV_LUT_FIX_RANGE_DARK
 
-#pragma parameter LUTBR "          Fix LUT Brightness" 1.0 0.0 1.0 0.10
-#define LUTBR params.LUTBR
+#pragma parameter GDV_LUT_FIX_RANGE_BRIGHT   "          Fix LUT Brightness" 1.0 0.0 1.0 0.10
+#define LUTBR params.GDV_LUT_FIX_RANGE_BRIGHT
 
-#pragma parameter CP "          CRT Color Profile" 0.0 -1.0 5.0 1.0 
-#pragma parameter CS "          Color Space: sRGB, DCI, Adobe, Rec.2020" 0.0 0.0 3.0 1.0 
+#pragma parameter GDV_COLOR_PROFILE          "   CRT Color Profile: -1:NONE|sRGB|BVM|P22|SMPTE-C|PHILIPS|TRIN" 0.0 -1.0 5.0 1.0 
+#pragma parameter GDV_COLOR_SPACE            "      Color Space: sRGB, DCI, Adobe, Rec.2020" 0.0 0.0 3.0 1.0 
 
-#define CP params.CP
-#define CS params.CS
+#define CP params.GDV_COLOR_PROFILE
+#define CS params.GDV_COLOR_SPACE
  
-#pragma parameter WP "          Color Temperature %" 0.0 -100.0 100.0 5.0 
-#pragma parameter wp_saturation "          Saturation Adjustment" 1.0 0.0 2.0 0.05 
+#pragma parameter GDV_COLOR_TEMP_OFFSET      "      Color Temperature %" 0.0 -100.0 100.0 5.0 
+#pragma parameter GDV_COLOR_SATURATION_MULT  "      Saturation Adjustment" 1.0 0.0 2.0 0.05 
 
-#pragma parameter BP "          Raise Black Level" 0.0 0.0 25.0 1.0
+#pragma parameter GDV_COLOR_BRIGHTEN_BLACK   "      Brighten Black (For Scanlines on Black)" 0.0 0.0 25.0 1.0
 
-#pragma parameter vigstr "          Vignette Strength" 0.0 0.0 2.0 0.025
+// #pragma parameter vigstr "          Vignette Strength" 0.0 0.0 2.0 0.025
 
-#pragma parameter vigdef "          Vignette Definition" 7.0 0.4 15.0 0.2
+// #pragma parameter vigdef "          Vignette Definition" 7.0 0.4 15.0 0.2
 
 
-#define WP params.WP
-#define wp_saturation params.wp_saturation
-#define BP params.BP
+#define WP params.GDV_COLOR_TEMP_OFFSET
+#define wp_saturation params.GDV_COLOR_SATURATION_MULT
+#define BP params.GDV_COLOR_BRIGHTEN_BLACK
 
 layout(std140, set = 0, binding = 0) uniform UBO
 {
@@ -208,6 +211,7 @@ vec2 ctransform (vec2 inputc)
 	return vec2( inputc.x * sqrt(1.0 - 0.5*inputc.y*inputc.y), inputc.y * sqrt(1.0 - 0.5*inputc.x*inputc.x));
 }
 
+/* HSM Removed
 float vignette (vec2 coords)
 {
 	vec2 ccoords = ctransform(2.0*(coords-0.5));
@@ -216,6 +220,7 @@ float vignette (vec2 coords)
 	vstr = pow(vstr, params.vigdef);
 	return max(mix(1.0, 1.0-vstr, params.vigstr), 0.0);
 }
+*/
 
 void main()
 {
@@ -337,5 +342,10 @@ void main()
 	
 	color = color + aftglow.rgb + bp;
 	
+   /* HSM Removed
 	FragColor = vec4(color, vignette(vTexCoord.xy)); 
+   */
+
+   // HSM Added (Vignette added in post crt processing)
+	FragColor = vec4(color, 0); 
 } 

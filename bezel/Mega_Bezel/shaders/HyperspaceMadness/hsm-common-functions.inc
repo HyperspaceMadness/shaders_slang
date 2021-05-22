@@ -617,47 +617,63 @@ vec2 HSM_GetCurvatureValues(float screen_aspect)
 	return curvature_values;
 }
 
-// float Geom_Intersect(vec2 in_coord , vec2 sinangle, vec2 cosangle, float in_radius)
-// {
-//   float A = dot(in_coord, in_coord) + d.x * d.x;
-//   float B = 2.0 * (in_radius * (dot(in_coord, sinangle) - d.x * cosangle.x * cosangle.y) - d.x * d.x);
-//   float C = d.x * d.x + 2.0 * in_radius * d.x * cosangle.x * cosangle.y;
-//   return (-B-sqrt(B * B - 4.0 * A * C)) / (2.0 * A);
-// }
+/*
+// CRT Geom Curvature
+float Geom_Intersect(vec2 in_coord , vec2 sinangle, vec2 cosangle, float in_radius)
+{
+  float A = dot(in_coord, in_coord) + d.x * d.x;
+  float B = 2.0 * (in_radius * (dot(in_coord, sinangle) - d.x * cosangle.x * cosangle.y) - d.x * d.x);
+  float C = d.x * d.x + 2.0 * in_radius * d.x * cosangle.x * cosangle.y;
+  return (-B-sqrt(B * B - 4.0 * A * C)) / (2.0 * A);
+}
 
-// vec2 Geom_Backward_Transform(vec2 in_coord, vec2 sinangle, vec2 cosangle, float in_radius)
-// {
-//   float c = Geom_Intersect(in_coord, sinangle, cosangle, in_radius);
-//   vec2 pt = vec2(c) * in_coord;
-//   pt -= vec2(-in_radius) * sinangle;
-//   pt /= vec2(in_radius);
-//   vec2 tang = sinangle / cosangle;
-//   vec2 poc = pt / cosangle;
-//   float A = dot(tang, tang) + 1.0;
-//   float B = -2.0 * dot(poc, tang);
-//   float C = dot(poc,poc)-1.0;
-//   float a = (-B + sqrt(B * B - 4.0 * A * C)) / (2.0 * A);
-//   vec2 uv = (pt - a * sinangle) / cosangle;
-//   float r = FIX(in_radius * acos(a));
-//   return uv * r / sin(r / in_radius);
-// }
+vec2 Geom_Backward_Transform(vec2 in_coord, vec2 sinangle, vec2 cosangle, float in_radius)
+{
+  float c = Geom_Intersect(in_coord, sinangle, cosangle, in_radius);
+  vec2 pt = vec2(c) * in_coord;
+  pt -= vec2(-in_radius) * sinangle;
+  pt /= vec2(in_radius);
+  vec2 tang = sinangle / cosangle;
+  vec2 poc = pt / cosangle;
+  float A = dot(tang, tang) + 1.0;
+  float B = -2.0 * dot(poc, tang);
+  float C = dot(poc,poc)-1.0;
+  float a = (-B + sqrt(B * B - 4.0 * A * C)) / (2.0 * A);
+  vec2 uv = (pt - a * sinangle) / cosangle;
+  float r = FIX(in_radius * acos(a));
+  return uv * r / sin(r / in_radius);
+}
 
-// vec2 Geom_Transform(vec2 coord, vec3 stretch, vec2 sinangle, vec2 cosangle, float in_radius, vec2 in_aspect)
-// {
-//   coord = (coord-vec2(0.5)) * in_aspect.xy * stretch.z + stretch.xy;
-//   return (Geom_Backward_Transform(coord, sinangle, cosangle, in_radius) / in_aspect.xy + vec2(0.5));
-// }
+vec2 Geom_Transform(vec2 coord, vec3 stretch, vec2 sinangle, vec2 cosangle, float in_radius, vec2 in_aspect)
+{
+  coord = (coord-vec2(0.5)) * in_aspect.xy * stretch.z + stretch.xy;
+  return (Geom_Backward_Transform(coord, sinangle, cosangle, in_radius) / in_aspect.xy + vec2(0.5));
+}
 
-// vec2 HSM_GetGeomCurvedCoord(vec2 in_coord, float tilt_x, float tilt_y)
-// {
-// 	vec2 ang = vec2(tilt_x, tilt_y);
-// 	float v_sinangle = sin(ang);
-// 	float v_cosangle = cos(ang);
-// 	float v_stretch = maxscale(v_sinangle, v_cosangle);
-// 	vec2 curved_coord = Geom_Transform(in_coord, v_stretch, v_sinangle, v_cosangle);
+vec2 HSM_GetGeomCurvedCoord(vec2 in_coord, float tilt_x, float tilt_y)
+{
+	vec2 ang = vec2(tilt_x, tilt_y);
+	float v_sinangle = sin(ang);
+	float v_cosangle = cos(ang);
+	float v_stretch = maxscale(v_sinangle, v_cosangle);
+	vec2 curved_coord = Geom_Transform(in_coord, v_stretch, v_sinangle, v_cosangle);
 
-// 	return curved_coord;
-// }
+	return curved_coord;
+}
+*/
+
+/*
+vec2 HSM_GetGuestCurvedCoord(vec2 in_coord, vec2 in_curvature)
+{
+	//Curvature Shape" 0.25 0.05 0.60 0.05
+	float c_shape = 0.25;
+	in_coord  = in_coord*2.0-1.0;    
+	in_coord  = mix(in_coord, 
+					vec2(in_coord.x*inversesqrt(1.0-c_shape*in_coord.y*in_coord.y), in_coord.y*inversesqrt(1.0-c_shape*in_coord.x*in_coord.x)), 
+					vec2(in_curvature.x * 1.8, in_curvature.y * 1.8)/c_shape);
+	return in_coord*0.5 + 0.5;
+}
+*/
 
 vec2 HSM_GetCrtPiCurvedCoord(vec2 in_coord, vec2 in_curvature)
 {
@@ -672,45 +688,6 @@ vec2 HSM_GetCrtPiCurvedCoord(vec2 in_coord, vec2 in_curvature)
     return in_coord;
 }
 
-vec2 HSM_GetTorridGristleCurvedCoord(vec2 in_coord, vec2 curvature_values)
-{
-	vec2 ctr_coord = in_coord - 0.5;
-	vec2 distortion = curvature_values * 15.0;
-	vec2 ctr_coord_0_1 = in_coord * 2.0 - 1.0;
-	vec2 ctr_curved_coord = ctr_coord_0_1;
-	float curved_coord_distance = sqrt(ctr_curved_coord.x * ctr_curved_coord.x + ctr_curved_coord.y * ctr_curved_coord.y);
-	ctr_curved_coord = ctr_curved_coord / curved_coord_distance;
-	ctr_curved_coord = ctr_curved_coord * (1.0 - pow(vec2(1.0 - (curved_coord_distance / 1.4142135623730950488016887242097)), (1.0 / (1.0 + distortion * 0.2))));
-	ctr_curved_coord = ctr_curved_coord / clamp(1.0 - pow(vec2(0.29289321881345247559915563789515), (1.0 / (vec2(1.0) + distortion * 0.2))), 0.0001, 10);
-	ctr_curved_coord = ctr_curved_coord * 0.5;
-
-	float max_curved_range = 1.41;
-	if (curved_coord_distance < max_curved_range)
-	{
-		if (abs(ctr_coord_0_1.x) > 1 || abs(ctr_coord_0_1.y) > 1)
-		{
-			float length_inside = length(clamp(abs(ctr_coord_0_1), 0, 1));
-			float length_outside = curved_coord_distance - length_inside;
-			float outside_range = max_curved_range - length_inside;
-			float outside_ratio = length_outside / outside_range;
-			
-			// vec2 normalized_vec = abs(normalize(ctr_coord_0_1));
-			// float pi = 3.1415;
-			// float corner_angle_degrees = atan(normalized_vec.y / normalized_vec.x) / (2 * pi) * 360;
-			//float corner_mask = smoothstep(40, 43, corner_angle_degrees);
-
-			float blend_to_uncurved = HHLP_EasePowerInOut(outside_ratio, 2);
-
-			ctr_curved_coord = blend_to_uncurved * ctr_coord + (1 - blend_to_uncurved) * ctr_curved_coord;
-		}
-	}
-	else
-		ctr_curved_coord = in_coord - 0.5;
-
-	return ctr_curved_coord + 0.5;
-}
-
-// Torridgristle's curvature
 vec2 HSM_Get2DCurvedCoord(vec2 in_coord, vec2 curvature_values)
 {
 	vec2 ctr_curved_coord =  HSM_GetCrtPiCurvedCoord(in_coord, curvature_values) - 0.5;
@@ -880,31 +857,31 @@ vec4 HSM_Delinearize(vec4 in_color, float in_gamma)
 	return HSM_ApplyGamma(in_color, in_gamma);
 }
 
-vec4 HSM_ApplyBlackLevel(vec4 in_color, float color_is_linear)
-{
-	vec4 out_color = in_color;
+// vec4 HSM_ApplyBlackLevel(vec4 in_color, float color_is_linear)
+// {
+// 	vec4 out_color = in_color;
 
-	// Linearize if color isn't linear
-	if (color_is_linear == 0)
-	{
-		out_color = HSM_Linearize(out_color, HSM_DEFAULT_CRT_GAMMA);
-	}
+// 	// Linearize if color isn't linear
+// 	if (color_is_linear == 0)
+// 	{
+// 		out_color = HSM_Linearize(out_color, HSM_DEFAULT_CRT_GAMMA);
+// 	}
 
-	// Black Level
-	out_color -= HSM_COLOR_BLACK_LEVEL / 100;
-	out_color *= 1 / vec4(1.0 - HSM_COLOR_BLACK_LEVEL / 100);
-	out_color = clamp(out_color, 0, 2);
+// 	// Black Level
+// 	out_color -= HSM_COLOR_BLACK_LEVEL / 100;
+// 	out_color *= 1 / vec4(1.0 - HSM_COLOR_BLACK_LEVEL / 100);
+// 	out_color = clamp(out_color, 0, 2);
 
-	// If color isn't linear put default gamma back on
-	if (color_is_linear == 0)
-	{
-		out_color = HSM_Delinearize(out_color, HSM_DEFAULT_CRT_GAMMA);
-	}
+// 	// If color isn't linear put default gamma back on
+// 	if (color_is_linear == 0)
+// 	{
+// 		out_color = HSM_Delinearize(out_color, HSM_DEFAULT_CRT_GAMMA);
+// 	}
 
-	out_color.w = in_color.w;
+// 	out_color.w = in_color.w;
 
-	return clamp(out_color, 0, 1);
-}
+// 	return clamp(out_color, 0, 1);
+// }
 
 vec2 HSM_RotateCoordinate(vec2 in_coord, float rotation_on)
 {

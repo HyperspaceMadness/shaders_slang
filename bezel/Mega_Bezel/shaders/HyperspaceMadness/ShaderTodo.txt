@@ -34,6 +34,7 @@ Changes:
 Mega Bezel Still to Come:
 
 V1 TODO
+  * Move Post CRT Prep to Deconvergence Pass
   * Debug Info showing Shader Type
   * Explicit Downsample Res? Target Res?
   * Guest ADV - convergence, extra passes, mega bezel passes

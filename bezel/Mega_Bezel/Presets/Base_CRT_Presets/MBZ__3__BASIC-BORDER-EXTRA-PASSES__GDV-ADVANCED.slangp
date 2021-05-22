@@ -1,5 +1,3 @@
-shaders = 29
-
 shader0 =  :/shaders/shaders_slang/stock.slang // :/shaders/shaders_slang/bezel/Mega_Bezel/shaders/HyperspaceMadness/hsm-guest/advanced/g-sharp_resampler.slang
 filter_linear0 = false
 srgb_framebuffer0 = true
@@ -8,14 +6,14 @@ scale_x0 = 1
 scale_y0 = 1
 alias0 = "ReduceCoreRezPass"
 
-shader1 = ../../shaders/HyperspaceMadness/hsm-prep-info-cache-advanced.slang
+shader1 = ../../shaders/HyperspaceMadness/hsm-prep-info-cache-basic-border-with-reflect.slang
 filter_linear1 = true
 float_framebuffer1 = true
 scale_type1 = source
 scale1 = 1.0
 alias1 = "InfoCachePass"
 
-shader2 = ../../shaders/HyperspaceMadness/hsm-prep-intro-advanced.slang
+shader2 = ../../shaders/HyperspaceMadness/hsm-prep-intro-basic-border-with-reflect.slang
 filter_linear2 = false
 float_framebuffer2 = true
 scale_type2 = source
@@ -175,12 +173,16 @@ scale_type27 = viewport
 scale_x27 = 1.0
 scale_y27 = 1.0
 
-
 shader28 = :/shaders/shaders_slang/bezel/Mega_Bezel/shaders/HyperspaceMadness/hsm-guest/advanced/hsm-deconvergence.slang
 filter_linear28 = true
 scale_type28 = viewport
 scale_x28 = 1.0
 scale_y28 = 1.0
+alias28 = BR_CRTPass
+
+// Define how many shaders will be used from this list
+shaders = 29
+
 
 
 textures = "SamplerLUT1;SamplerLUT2;SamplerLUT3;SamplerLUT4;IntroImage;ScreenPlacementImage;ColoredGelImage;TubeStaticReflectionImage;BackgroundImage;BackgroundVertImage;ReflectionMaskImage;FrameTextureImage;CabinetGlassImage;BezelImage;BezelVertImage;DecalImage;NightLightingImage;LEDImage;TopLayerImage;"
@@ -238,9 +240,6 @@ LEDImage_linear = true
 TopLayerImage = ../../shaders/HyperspaceMadness/textures/Placeholder_Transparent_16x16.png
 TopLayerImage_linear = true
 
-HSM_ASPECT_RATIO_MODE = 6
-HSM_CURVATURE_MODE = -1
-
-JINC2_WINDOW_SINC = 0.42
-JINC2_SINC = 0.92
-JINC2_AR_STRENGTH = 0.8
+// Use for matching vanilla GDV-Advanced
+// HSM_ASPECT_RATIO_MODE = 6
+// HSM_CURVATURE_MODE = -1

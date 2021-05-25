@@ -29,6 +29,7 @@ layout(push_constant) uniform Push
 	uint FrameCount;
 	float GDV_DECONVERGENCE_STRENGTH;
 	float GDV_NOISE_AMOUNT;
+	float GDV_NOISE_SIZE;
 	float GDV_MASK_TYPE;
 	float GDV_MASK_SIZE;
 	float GDV_DECONVERGENCE_H_RANGE_RED;
@@ -62,28 +63,31 @@ layout(push_constant) uniform Push
 #pragma parameter GDV_DECONVERGENCE_H_RANGE_BLUE 	"          Horizontal Deconvergence Blue Range" 0.0 -7.0 7.0 0.25
 #define deconrb params.GDV_DECONVERGENCE_H_RANGE_BLUE
 
-#pragma parameter GDV_DECONVERGENCE_V_RANGE_RED 	"          Vertical Deconvergence Red Range" 0.0 -7.0 7.0 0.25
+#pragma parameter GDV_DECONVERGENCE_V_RANGE_RED 	"          Vertical Deconvergence Red Range" 0.0 -12.0 12.0 0.25
 #define deconrry params.GDV_DECONVERGENCE_V_RANGE_RED
 
-#pragma parameter GDV_DECONVERGENCE_V_RANGE_GREEN 	"          Vertical Deconvergence Green Range" 0.0 -7.0 7.0 0.25
+#pragma parameter GDV_DECONVERGENCE_V_RANGE_GREEN 	"          Vertical Deconvergence Green Range" 0.0 -12.0 12.0 0.25
 #define deconrgy params.GDV_DECONVERGENCE_V_RANGE_GREEN
 
-#pragma parameter GDV_DECONVERGENCE_V_RANGE_BLUE 	"          Vertical Deconvergence Blue Range" 0.0 -7.0 7.0 0.25
+#pragma parameter GDV_DECONVERGENCE_V_RANGE_BLUE 	"          Vertical Deconvergence Blue Range" 0.0 -12.0 12.0 0.25
 #define deconrby params.GDV_DECONVERGENCE_V_RANGE_BLUE
  
 #pragma parameter GDV_DECONVERGENCE_STRENGTH 		"          Deconvergence Strength (And Type)" 0.5 -4 5 0.1
 #define decons        params.GDV_DECONVERGENCE_STRENGTH     // Horizontal deconvergence colors strength
 
-#pragma parameter GDV_DECONVERGENCE_SMOOTHING "          Deconvergence Smoothing" 0.0 0.0 1.0 0.10
+#pragma parameter GDV_DECONVERGENCE_SMOOTHING 		"          Deconvergence Smoothing" 0.0 0.0 1.0 0.10
 #define deconsmooth        params.GDV_DECONVERGENCE_SMOOTHING     // Horizontal deconvergence colors strength
 
-#pragma parameter GDV_NOISE_AMOUNT "          Add Noise" 0.0 -1.0 1.0 0.05
-#define addnoise       params.GDV_NOISE_AMOUNT    // Switch colors left/right
+#pragma parameter GDV_NOISE_AMOUNT 					"          Add Noise" 0.0 -1.0 1.0 0.02
+#define addnoised       params.GDV_NOISE_AMOUNT    // Switch colors left/right
 
-#pragma parameter GDV_MASK_TYPE "          CRT Mask: 0:CGWG, 1-4:Lottes, 5-7:'Trinitron'" 0.0 -1.0 8.0 1.0
+#pragma parameter GDV_NOISE_SIZE 					"          Noise Size" 2.0 0.0 10.0 1.0
+#define noiseresd       params.GDV_NOISE_SIZE    // Switch colors left/right
+
+#pragma parameter GDV_MASK_TYPE 					"          CRT Mask: 0:CGWG, 1-4:Lottes, 5-7:'Trinitron'" 0.0 -1.0 8.0 1.0
 #define shadowMask   params.GDV_MASK_TYPE     // Mask Style
 
-#pragma parameter GDV_MASK_SIZE "          CRT Mask Size - 0:Auto | 1:2K | 2:4k" 0 1 4 1
+#pragma parameter GDV_MASK_SIZE 					"          CRT Mask Size - 0:Auto | 1:2K | 2:4k" 0 1 4 1
 #define masksize     params.GDV_MASK_SIZE     // Mask Size
 
 /*
@@ -128,7 +132,7 @@ vec3 plant (vec3 tar, float r)
 // Adapted from ChuckNorris - shadertoy: https://www.shadertoy.com/view/XtK3Dz
 
 vec3 noise(vec3 v){
-    if (addnoise < 0.0) v.z = -addnoise; else v.z = v.z/6000.0;
+    if (addnoised < 0.0) v.z = -addnoised; else v.z = v.z/6000.0;
 	// ensure reasonable range
     v = fract(v) + fract(v*1e4) + fract(v*1e-4);
     // seed
@@ -136,6 +140,7 @@ vec3 noise(vec3 v){
     // more iterations => more random
     v = fract(v*dot(v, v)*123.456);
     v = fract(v*dot(v, v)*123.456);
+	v = fract(v*dot(v, v)*123.456);	
     return v;
 }
 
@@ -164,6 +169,9 @@ void main()
 		step*= (TATE < 0.5) ? (params.OutputSize.z) : (params.OutputSize.w);
 		float stepy = (TATE < 0.5) ? (params.OutputSize.w) : (params.OutputSize.z);
 		float stepx = (TATE < 0.5) ? (params.OutputSize.z) : (params.OutputSize.w);
+		
+		vec2 sx = mix(vec2(stepx, 0.0), vec2(0.0, stepx), TATE);
+		
 		float ds = decons;
 
 		vec2 dx = (TATE < 0.5) ? vec2(step, 0.0) :  vec2(0.0, step);
@@ -211,16 +219,17 @@ void main()
 		vec3 result3 = vec3(r3,g3,b3);
 		result = (result1+result2+result3)/3.0;
 		
-		vec3 dcolor = max(max(COMPAT_TEXTURE(Source, vTexCoord + vec2(stepx,0.0)).rgb, COMPAT_TEXTURE(Source, vTexCoord - vec2(stepx,0.0)).rgb), color);
+		vec3 dcolor = max(max(COMPAT_TEXTURE(Source, vTexCoord + sx).rgb, COMPAT_TEXTURE(Source, vTexCoord - sx).rgb), color);
 		
 		float mc = max(max(dcolor.r, dcolor.g), dcolor.b);
-		if (decons < 0.0) mc = 1.0;
+		if (decons < 0.0) mc = 0.9;
 		
-		result = clamp(mix(color, sqrt(mix(result*result, color*result, sqrt(mc))), abs(ds)), 0.0, 1.0);
+		result = clamp(mix(color, sqrt(mix(result*result, color*result, sqrt(mc))), abs(ds)), min(result,color), max(result, color));
 	}
 	
-	result = mix(result, noise(vec3(params.OutputSize.xy * vTexCoord, float(params.FrameCount))), 0.2*abs(addnoise));
+	float rc = 0.6*sqrt(max(max(result.r, result.g), result.b))+0.4;
 	
+	result = mix(result, noise(vec3(floor(params.OutputSize.xy * vTexCoord / noiseresd), float(params.FrameCount))), 0.25*abs(addnoised) * rc);
 
 	/* HSM Removed
 	float corner = COMPAT_TEXTURE(Source, vTexCoord).a;	

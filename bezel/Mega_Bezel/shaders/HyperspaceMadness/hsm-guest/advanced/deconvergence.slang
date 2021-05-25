@@ -28,7 +28,8 @@ layout(push_constant) uniform Push
 	float deconr;
 	float TATE;
 	float decons;
-	float addnoise;
+	float addnoised;
+	float noiseresd;
 	float shadowMask;
 	float masksize;
 	float deconrr;
@@ -57,19 +58,22 @@ layout(push_constant) uniform Push
 
 #pragma parameter deconrb "          Horizontal Deconvergence Blue Range" 0.0 -7.0 7.0 0.25
 
-#pragma parameter deconrry "          Vertical Deconvergence Red Range" 0.0 -7.0 7.0 0.25
+#pragma parameter deconrry "          Vertical Deconvergence Red Range" 0.0 -12.0 12.0 0.25
 
-#pragma parameter deconrgy "          Vertical Deconvergence Green Range" 0.0 -7.0 7.0 0.25
+#pragma parameter deconrgy "          Vertical Deconvergence Green Range" 0.0 -12.0 12.0 0.25
 
-#pragma parameter deconrby "          Vertical Deconvergence Blue Range" 0.0 -7.0 7.0 0.25
+#pragma parameter deconrby "          Vertical Deconvergence Blue Range" 0.0 -12.0 12.0 0.25
  
 #pragma parameter decons "          Deconvergence Strength (and Type)" 0.5 -4.0 4.0 0.10
 #define decons        params.decons     // Horizontal deconvergence colors strength
 
 #pragma parameter deconsmooth "          Deconvergence Smoothing" 0.0 0.0 1.0 0.10
 
-#pragma parameter addnoise "          Add Noise" 0.0 -1.0 1.0 0.01
-#define addnoise       params.addnoise    // add noise
+#pragma parameter addnoised "          Add Noise" 0.0 -1.0 1.0 0.02
+#define addnoised       params.addnoised   // add noise
+
+#pragma parameter noiseresd "          Noise Resolution" 2.0 0.0 10.0 1.0
+#define noiseresd       params.noiseresd   // add noise
 
 #pragma parameter shadowMask "          CRT Mask: 0:CGWG, 1-4:Lottes, 5-7:'Trinitron'" 0.0 -1.0 8.0 1.0
 #define shadowMask   params.shadowMask     // Mask Style
@@ -115,7 +119,7 @@ vec3 plant (vec3 tar, float r)
 // Adapted from ChuckNorris - shadertoy: https://www.shadertoy.com/view/XtK3Dz
 
 vec3 noise(vec3 v){
-    if (addnoise < 0.0) v.z = -addnoise; else v.z = v.z/6000.0;
+    if (addnoised < 0.0) v.z = -addnoised; else v.z = v.z/6000.0;
 	// ensure reasonable range
     v = fract(v) + fract(v*1e4) + fract(v*1e-4);
     // seed
@@ -123,6 +127,7 @@ vec3 noise(vec3 v){
     // more iterations => more random
     v = fract(v*dot(v, v)*123.456);
     v = fract(v*dot(v, v)*123.456);
+	v = fract(v*dot(v, v)*123.456);	
     return v;
 }
 
@@ -139,6 +144,9 @@ void main()
 		step*= (TATE < 0.5) ? (params.OutputSize.z) : (params.OutputSize.w);
 		float stepy = (TATE < 0.5) ? (params.OutputSize.w) : (params.OutputSize.z);
 		float stepx = (TATE < 0.5) ? (params.OutputSize.z) : (params.OutputSize.w);
+		
+		vec2 sx = mix(vec2(stepx, 0.0), vec2(0.0, stepx), TATE);
+		
 		float ds = decons;
 				
 		vec2 dx = (TATE < 0.5) ? vec2(step, 0.0) :  vec2(0.0, step);
@@ -185,15 +193,17 @@ void main()
 		vec3 result3 = vec3(r3,g3,b3);
 		result = (result1+result2+result3)/3.0;
 		
-		vec3 dcolor = max(max(COMPAT_TEXTURE(Source, vTexCoord + vec2(stepx,0.0)).rgb, COMPAT_TEXTURE(Source, vTexCoord - vec2(stepx,0.0)).rgb), color);
+		vec3 dcolor = max(max(COMPAT_TEXTURE(Source, vTexCoord + sx).rgb, COMPAT_TEXTURE(Source, vTexCoord - sx).rgb), color);
 		
 		float mc = max(max(dcolor.r, dcolor.g), dcolor.b);
-		if (decons < 0.0) mc = 1.0;
+		if (decons < 0.0) mc = 0.9;
 		
-		result = clamp(mix(color, sqrt(mix(result*result, color*result, sqrt(mc))), abs(ds)), 0.0, 1.0);
+		result = clamp(mix(color, sqrt(mix(result*result, color*result, sqrt(mc))), abs(ds)), min(result,color), max(result, color));
 	}
 	
-	result = mix(result, noise(vec3(params.OutputSize.xy * vTexCoord, float(params.FrameCount))), 0.2*abs(addnoise));
+	float rc = 0.6*sqrt(max(max(result.r, result.g), result.b))+0.4;
+	
+	result = mix(result, noise(vec3(floor(params.OutputSize.xy * vTexCoord / noiseresd), float(params.FrameCount))), 0.25*abs(addnoised) * rc);
 	
 	float corner = COMPAT_TEXTURE(Source, vTexCoord).a;	
 	

@@ -36,7 +36,8 @@ Changes:
 Mega Bezel Still to Come:
 
 V1 TODO
-  * Fix Brightness
+  * Fix Brightness * AB Testing
+  * Change Downsample Blur to be X & Y
   * Show Image per Screen Area
   * Debug Info showing Shader Type
   * Explicit Downsample Res? Target Res?

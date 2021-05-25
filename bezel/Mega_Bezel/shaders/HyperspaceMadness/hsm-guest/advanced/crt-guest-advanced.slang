@@ -54,6 +54,9 @@ layout(std140, set = 0, binding = 0) uniform UBO
 	float intres;
 	float prescalex;
 	float c_shape;
+	float barspeed;
+	float barintensity;
+	float bardir;	
 } global;
 
 
@@ -149,6 +152,12 @@ layout(std140, set = 0, binding = 0) uniform UBO
 
 #pragma parameter bsize "          Border smoothness" 600.0 100.0 700.0 10.0
 #define bsize        params.bsize     // border smoothness
+
+#pragma parameter barspeed "          Humbar Speed" 50.0 5.0 200.0 1.0
+
+#pragma parameter barintensity "          Humbar Intensity" 0.0 -1.0 1.0 0.01
+
+#pragma parameter bardir "          Humbar Direction" 0.0 0.0 1.0 1.0
 
 #pragma parameter warpX "          CurvatureX (default 0.03)" 0.0 0.0 0.25 0.01
 #define warpX        params.warpX     // Curvature X
@@ -419,6 +428,16 @@ vec2 Overscan(vec2 pos, float dx, float dy){
 	return pos*0.5+0.5;
 } 
 
+float humbar(float pos)
+{
+	if (global.barintensity == 0.0) return 1.0; else
+	{
+		pos = (global.barintensity >= 0.0) ? pos : (1.0-pos);
+		pos = fract(pos + mod(float(global.FrameCount),global.barspeed)/(global.barspeed-1.0));
+		pos = (global.barintensity <  0.0) ? pos : (1.0-pos);	
+		return (1.0-global.barintensity) + global.barintensity*pos;
+	}	
+}
 
 // Borrowed from cgwg's crt-geom, under GPL
 
@@ -789,5 +808,5 @@ if (!interb)
 	
 	color = pow(color, vec3(1.0/gamma_out));
 	
-	FragColor = vec4(color*vig, corner(pos0));
+	FragColor = vec4(color*vig*humbar(mix(pos.y, pos.x, global.bardir)), corner(pos0));
 }

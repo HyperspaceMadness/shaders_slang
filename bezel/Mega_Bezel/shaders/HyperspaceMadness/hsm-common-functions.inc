@@ -1447,8 +1447,8 @@ vec4 HSM_GetPostCrtPreppedColor(vec4 in_color_linear, vec2 VIEWPORT_COORD, vec2 
 	out_color *= HSM_POST_CRT_BRIGHTNESS;
 
 	float screen_mask = HSM_GetCornerMask((screen_curved_coord - 0.5) * 0.999 + 0.5, SCREEN_ASPECT, HSM_SCREEN_CORNER_RADIUS, 0.9);
-	float screen_edge_mask = HSM_GetCornerMask(screen_curved_coord, SCREEN_ASPECT, HSM_SCREEN_CORNER_RADIUS, HSM_SCREEN_EDGE_SHARPNESS);
-	screen_edge_mask = 1 - ((1 - screen_edge_mask) * screen_mask);
+	// float screen_edge_mask = HSM_GetCornerMask(screen_curved_coord, SCREEN_ASPECT, HSM_SCREEN_CORNER_RADIUS, HSM_SCREEN_EDGE_SHARPNESS);
+	// screen_edge_mask = 1 - ((1 - screen_edge_mask) * screen_mask);
 
 	// out_color *= screen_edge_mask;
 

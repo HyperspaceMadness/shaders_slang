@@ -1,7 +1,7 @@
 #reference ":/shaders/shaders_slang/bezel/Mega_Bezel/Presets/Base_CRT_Presets/MBZ__4__BASIC-BORDER__GUEST-DrVENOM.slangp"
 
-BackgroundImage = :/shaders/shaders_slang/bezel/Mega_Bezel/shaders/HyperspaceMadness/textures/Placeholder_Transparent_16x16.png
-BackgroundVertImage = :/shaders/shaders_slang/bezel/Mega_Bezel/shaders/HyperspaceMadness/textures/Placeholder_Transparent_16x16.png
+BackgroundImage = ../../shaders/HyperspaceMadness/textures/Placeholder_Transparent_16x16.png
+BackgroundVertImage = ../../shaders/HyperspaceMadness/textures/Placeholder_Transparent_16x16.png
 
 HSM_FLIP_VIEWPORT_VERTICAL = 1
 HSM_ASPECT_RATIO_MODE = 5

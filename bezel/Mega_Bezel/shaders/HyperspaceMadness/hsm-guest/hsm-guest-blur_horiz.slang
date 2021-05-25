@@ -26,9 +26,9 @@ layout(push_constant) uniform Push
 // #define GLOW_FALLOFF_H params.GLOW_FALLOFF_H
 
 // HSM Added
-#pragma parameter GDV_TITLE 		"______[ --- GUEST-DrVENOM --- ]________________________________" 0 0 0 1
+#pragma parameter GDV_TITLE 		"______[ --- GUEST-DrVENOM --- ]:" 0 0 0 1
 
-#pragma parameter GDV_GLOW_TITLE 		"[ GLOW ]_______________________________________________________" 0 0 0 1
+#pragma parameter GDV_GLOW_TITLE 		"[ GLOW ]:" 0 0 0 1
 #pragma parameter GST_GLOW_GRADE 	"      Glow Grade" 0.30 0.00 1.0 0.01 
 #define GLOW_FALLOFF_H params.GST_GLOW_GRADE
 

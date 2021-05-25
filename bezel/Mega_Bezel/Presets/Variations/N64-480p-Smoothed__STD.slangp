@@ -1,6 +1,6 @@
 #reference ":/shaders/shaders_slang/bezel/Mega_Bezel/Presets/Base_CRT_Presets/MBZ__2__STANDARD__GUEST-DrVENOM.slangp"
 
-BackgroundImage = :/shaders/shaders_slang/bezel/Mega_Bezel/shaders/HyperspaceMadness/textures/HSM_Duimon_Super_Famicom_3840x2160.png
+BackgroundImage = ../../shaders/HyperspaceMadness/textures/HSM_Duimon_Super_Famicom_3840x2160.png
 
 HSM_FLIP_VIEWPORT_VERTICAL = "1.000000"
 HSM_ASPECT_RATIO_MODE = 2

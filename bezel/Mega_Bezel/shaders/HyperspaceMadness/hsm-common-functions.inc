@@ -1443,7 +1443,8 @@ vec4 HSM_BlendModeLayerMix(vec4 color_under, vec4 color_over, float blend_mode, 
 
 vec4 HSM_GetPostCrtPreppedColor(vec4 in_color_linear, vec2 VIEWPORT_COORD, vec2 screen_curved_coord, in sampler2D source_pass, bool source_is_linear, in sampler2D ColoredGelImage, in sampler2D TubeStaticReflectionImage, in sampler2D BackgroundImage, in sampler2D BackgroundVertImage)
 {
-	vec4 out_color = in_color_linear;
+	vec4 out_color = HSM_Linearize(in_color_linear, HSM_DEFAULT_SRGB_GAMMA);
+	out_color *= HSM_POST_CRT_BRIGHTNESS;
 
 	float screen_mask = HSM_GetCornerMask((screen_curved_coord - 0.5) * 0.999 + 0.5, SCREEN_ASPECT, HSM_SCREEN_CORNER_RADIUS, 0.9);
 	float screen_edge_mask = HSM_GetCornerMask(screen_curved_coord, SCREEN_ASPECT, HSM_SCREEN_CORNER_RADIUS, HSM_SCREEN_EDGE_SHARPNESS);
@@ -1453,11 +1454,16 @@ vec4 HSM_GetPostCrtPreppedColor(vec4 in_color_linear, vec2 VIEWPORT_COORD, vec2 
 
 	vec2 mirrored_screen_coord = HSM_GetMirrorWrappedCoord(screen_curved_coord);
 
-	vec4 source_color = HSM_GetCroppedTexSample(source_pass, mirrored_screen_coord);
-	if (!source_is_linear)
-		source_color = HSM_Linearize(source_color, HSM_DEFAULT_CRT_GAMMA);
-	out_color = mix(out_color, source_color, mirrored_screen_coord.x < HSM_CRT_ORIGINAL_AB_COMPARE_SPLIT_POSITION ? 1 : 0);
-	// mix(out_color, source_color, mirrored_screen_coord.x < HSM_CRT_ORIGINAL_AB_COMPARE_SPLIT_POSITION ? 1 : 0);
+	if (HSM_CRT_ORIGINAL_AB_COMPARE_ON == 1)
+	{
+		vec4 source_color = HSM_GetCroppedTexSample(source_pass, mirrored_screen_coord);
+		if (!source_is_linear)
+			source_color = HSM_Linearize(source_color, HSM_GAMMA_IN_LINEARIZE);
+		source_color = HSM_Delinearize(source_color, HSM_GAMMA_OUT_CRT);
+		source_color = HSM_Linearize(source_color, HSM_DEFAULT_SRGB_GAMMA);
+
+		out_color = mix(out_color, source_color, mirrored_screen_coord.x < HSM_CRT_ORIGINAL_AB_COMPARE_SPLIT_POSITION ? 1 : 0);
+	}
 
 	float vignette_factor = HSM_GetScreenVignetteFactor(mirrored_screen_coord, HSM_SCREEN_VIGNETTE);
 
@@ -1494,7 +1500,6 @@ vec4 HSM_GetPostCrtPreppedColor(vec4 in_color_linear, vec2 VIEWPORT_COORD, vec2 
 
 		if (HSM_TUBE_COLORED_GEL_IMAGE_NORMAL_AMOUNT > 0)
 			out_color = HSM_BlendModeLayerMix(out_color, gel_image, BLEND_MODE_NORMAL, HSM_TUBE_COLORED_GEL_IMAGE_NORMAL_AMOUNT);
-
 	}
 
 	if (HSM_TUBE_STATIC_REFLECTION_IMAGE_OPACITY > 0)
@@ -1558,7 +1563,7 @@ vec4 HSM_GetPostCrtPreppedColor(vec4 in_color_linear, vec2 VIEWPORT_COORD, vec2 
 	#endif
 
 	// Apply the final Gamma
-	out_color = HSM_Delinearize(out_color, HSM_GAMMA_OUT_CRT);
+	out_color = HSM_Delinearize(out_color, HSM_DEFAULT_SRGB_GAMMA);
 
 	return out_color;
 }

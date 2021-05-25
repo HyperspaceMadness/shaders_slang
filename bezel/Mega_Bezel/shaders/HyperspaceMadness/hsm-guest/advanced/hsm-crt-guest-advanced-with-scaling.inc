@@ -252,16 +252,10 @@ layout(location = 0) out vec4 FragColor;
 
 // HSM Added
 layout(set = 0, binding = 1) uniform sampler2D InfoCachePass;
-layout(set = 0, binding = 2) uniform sampler2D LastUserPass;
-layout(set = 0, binding = 3) uniform sampler2D ColoredGelImage;
-layout(set = 0, binding = 4) uniform sampler2D TubeStaticReflectionImage;
-layout(set = 0, binding = 5) uniform sampler2D BackgroundImage;
-layout(set = 0, binding = 6)  uniform sampler2D BackgroundVertImage;
-
-layout(set = 0, binding = 7) uniform sampler2D LinearizePass;
-layout(set = 0, binding = 8) uniform sampler2D AvgLumPass;
-layout(set = 0, binding = 9) uniform sampler2D GlowPass;
-layout(set = 0, binding = 10) uniform sampler2D BloomPass;
+layout(set = 0, binding = 2) uniform sampler2D LinearizePass;
+layout(set = 0, binding = 3) uniform sampler2D AvgLumPass;
+layout(set = 0, binding = 4) uniform sampler2D GlowPass;
+layout(set = 0, binding = 5) uniform sampler2D BloomPass;
 
 /* HSM Removed - Seemingly only used for vignette
 layout(set = 0, binding = 11) uniform sampler2D PrePass;
@@ -900,7 +894,7 @@ if (!interb)
 	*/
 
 	// HSM Added - Prep and add output gamma
+	color = pow(color, vec3(1.0/HSM_GAMMA_OUT_CRT));
 	FragColor = vec4(color, 1);
-	FragColor = HSM_GetPostCrtPreppedColor(FragColor, vTexCoord, screen_curved_coord, LastUserPass, false, ColoredGelImage, TubeStaticReflectionImage, BackgroundImage, BackgroundVertImage);
 	// End Addition
 }

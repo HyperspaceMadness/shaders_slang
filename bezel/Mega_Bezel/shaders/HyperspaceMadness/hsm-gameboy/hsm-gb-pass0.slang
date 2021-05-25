@@ -28,7 +28,7 @@ layout(push_constant) uniform Push
 // Config                                                                     //
 ////////////////////////////////////////////////////////////////////////////////
 
-#pragma parameter GBY_TITLE	"[ --- GAMEBOY --- ]____________________________________________" 0 0 0.01 0.01
+#pragma parameter GBY_TITLE	"[ --- GAMEBOY --- ]:" 0 0 0.01 0.01
 
 #pragma parameter gameboy_color_palette    "      Palette - DMG0 | DMG1 | DMG2 | Pocket | Light | Custom" 0 0 5 1
 

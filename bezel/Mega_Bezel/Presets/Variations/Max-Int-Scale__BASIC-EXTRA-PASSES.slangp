@@ -1,9 +1,9 @@
 #reference ":/shaders/shaders_slang/bezel/Mega_Bezel/Presets/Base_CRT_Presets/MBZ__3__BASIC-BORDER-EXTRA-PASSES__GUEST-DrVENOM.slangp"
 
-BackgroundImage = :/shaders/shaders_slang/bezel/Mega_Bezel/shaders/HyperspaceMadness/textures/Placeholder_Transparent_16x16.png
-BackgroundVertImage = :/shaders/shaders_slang/bezel/Mega_Bezel/shaders/HyperspaceMadness/textures/Placeholder_Transparent_16x16.png
-NightLightingImage = :/shaders/shaders_slang/bezel/Mega_Bezel/shaders/HyperspaceMadness/textures/Placeholder_Transparent_16x16.png
-FrameTextureImage = :/shaders/shaders_slang/bezel/Mega_Bezel/shaders/HyperspaceMadness/textures/Placeholder_Transparent_16x16.png
+BackgroundImage = ../../shaders/HyperspaceMadness/textures/Placeholder_Transparent_16x16.png
+BackgroundVertImage = ../../shaders/HyperspaceMadness/textures/Placeholder_Transparent_16x16.png
+NightLightingImage = ../../shaders/HyperspaceMadness/textures/Placeholder_Transparent_16x16.png
+FrameTextureImage = ../../shaders/HyperspaceMadness/textures/Placeholder_Transparent_16x16.png
 
 // Parameters
 HSM_ASPECT_RATIO_MODE = 0

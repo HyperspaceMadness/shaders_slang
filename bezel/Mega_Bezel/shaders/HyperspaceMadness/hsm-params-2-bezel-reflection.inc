@@ -46,7 +46,7 @@ float HSM_BZL_INNER_EDGE_SHADOW = global.HSM_BZL_INNER_EDGE_SHADOW / 100;
 //---------------------------------------------------------------------------------------------------
 // Bezel & Frame Color
 //---------------------------------------------------------------------------------------------------
-#pragma parameter HSM_BEZEL_FRAME_COLOR_TITLE		"[ BEZEL & FRAME COLOR ]________________________________________" 0 0 0.01 0.01
+#pragma parameter HSM_BEZEL_FRAME_COLOR_TITLE		"[ BEZEL & FRAME COLOR ]:" 0 0 0.01 0.01
 
 #pragma parameter HSM_BZL_COLOR_HUE					"      Hue" 0 0 360 1
 float HSM_BZL_COLOR_HUE = global.HSM_BZL_COLOR_HUE / 360;
@@ -64,7 +64,7 @@ float HSM_BZL_NOISE = global.HSM_BZL_NOISE / 100;
 //---------------------------------------------------------------------------------------------------
 //    FRAME
 //---------------------------------------------------------------------------------------------------
-#pragma parameter HSM_FRAME_TITLE			            "[ FRAME ]______________________________________________________" 0 0 0.01 0.01
+#pragma parameter HSM_FRAME_TITLE			            "[ FRAME ]:" 0 0 0.01 0.01
 
 #pragma parameter HSM_FRM_OPACITY                       "      Opacity" 100 0 100 5
 float HSM_FRM_OPACITY = global.HSM_FRM_OPACITY / 100;
@@ -117,7 +117,7 @@ float HSM_FRM_SHADOW_WIDTH = global.HSM_FRM_SHADOW_WIDTH / 1000;
 //---------------------------------------------------------------------------------------------------
 //    REFLECTION
 //---------------------------------------------------------------------------------------------------
-#pragma parameter HSM_REFLECTION_TITLE			                "[ REFLECTION ]_________________________________________________" 0 0 0.01 0.01
+#pragma parameter HSM_REFLECTION_TITLE			                "[ REFLECTION ]:" 0 0 0.01 0.01
 
 #pragma parameter HSM_REFLECT_BLEND_MODE                        "      Blend Mode -  Off | Normal | Add"  2 0 2 1
 float HSM_REFLECT_BLEND_MODE = global.HSM_REFLECT_BLEND_MODE;
@@ -159,7 +159,7 @@ float HSM_REFLECT_FRAME_INNER_EDGE_SHARPNESS = global.HSM_REFLECT_FRAME_INNER_ED
 //---------------------------------------------------------------------------------------------------
 // Reflection Fading
 //---------------------------------------------------------------------------------------------------
-#pragma parameter HSM_REFLECTION_FADE_TITLE			            "[ REFLECTION FADE ]____________________________________________" 0 0 0.01 0.01
+#pragma parameter HSM_REFLECTION_FADE_TITLE			            "[ REFLECTION FADE ]:" 0 0 0.01 0.01
 
 #pragma parameter HSM_REFLECT_FADE_AMOUNT 					    "      Fade Amount" 100 0 100 5
 float HSM_REFLECT_FADE_AMOUNT = global.HSM_REFLECT_FADE_AMOUNT / 100;
@@ -180,7 +180,7 @@ float HSM_REFLECT_LATERAL_OUTER_FADE_DISTANCE = global.HSM_REFLECT_LATERAL_OUTER
 float HSM_REFLECT_VIGNETTE_AMOUNT = global.HSM_REFLECT_VIGNETTE_AMOUNT / 100;
 
 
-#pragma parameter HSM_REFLECT_CORNER_TITLE			            "[ REFLECTION CORNER ]__________________________________________" 0 0 0.01 0.01
+#pragma parameter HSM_REFLECT_CORNER_TITLE			            "[ REFLECTION CORNER ]:" 0 0 0.01 0.01
 
 // TODO how this is being used is strange
 #pragma parameter HSM_REFLECT_CORNER_FADE 						"      Corner Fade" 10 1 100 0.5
@@ -207,7 +207,7 @@ float HSM_REFLECT_CORNER_SPREAD_FALLOFF = global.HSM_REFLECT_CORNER_SPREAD_FALLO
 //---------------------------------------------------------------------------------------------------
 // Reflection Blur
 //---------------------------------------------------------------------------------------------------
-#pragma parameter HSM_REFLECT_BLUR_TITLE			                "[ REFLECTION BLUR ]____________________________________________" 0 0 0.01 0.01
+#pragma parameter HSM_REFLECT_BLUR_TITLE			                "[ REFLECTION BLUR ]:" 0 0 0.01 0.01
 
 #pragma parameter HSM_REFLECT_BLUR_NUM_SAMPLES 					    "      Blur Samples - 0 for OFF" 12 0 40 1
 float HSM_REFLECT_BLUR_NUM_SAMPLES = global.HSM_REFLECT_BLUR_NUM_SAMPLES;
@@ -224,7 +224,7 @@ float HSM_REFLECT_BLUR_FALLOFF_DISTANCE = global.HSM_REFLECT_BLUR_FALLOFF_DISTAN
 // float HSM_REFLECT_BLUR_FALLOFF_DISTANCE = 1;
 
 // Reflection Noise
-#pragma parameter HSM_REFLECT_NOISE_TITLE			                "[ REFLECTION NOISE ]___________________________________________" 0 0 0.01 0.01
+#pragma parameter HSM_REFLECT_NOISE_TITLE			                "[ REFLECTION NOISE ]:" 0 0 0.01 0.01
 
 #pragma parameter HSM_REFLECT_NOISE_AMOUNT 						    "      Noise Amount" 50 0 100 1
 float HSM_REFLECT_NOISE_AMOUNT = global.HSM_REFLECT_NOISE_AMOUNT / 100;
@@ -237,7 +237,7 @@ float HSM_REFLECT_NOISE_SAMPLE_DISTANCE = global.HSM_REFLECT_NOISE_SAMPLE_DISTAN
 
 
 // Reflection Mask
-#pragma parameter HSM_REFLECT_MASK_TITLE			                "[ REFLECTION MASK IMAGE ]______________________________________" 0 0 0.01 0.01
+#pragma parameter HSM_REFLECT_MASK_TITLE			                "[ REFLECTION MASK IMAGE ]:" 0 0 0.01 0.01
 
 #pragma parameter HSM_REFLECT_MASK_IMG_AMOUNT 		                "      Reflection Image Mask Amount" 0 0 100 1
 float HSM_REFLECT_MASK_IMG_AMOUNT = global.HSM_REFLECT_MASK_IMG_AMOUNT / 100;

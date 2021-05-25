@@ -90,65 +90,65 @@ layout(std140, set = 0, binding = 0) uniform UBO
     ##########################################################################################
 */
 
-#pragma parameter DG_TITLE "[ --- COLOR CORRECTION - GRADE --- ]___________________________" 0 0 0 1
+#pragma parameter DG_TITLE "[ --- COLOR CORRECTION - GRADE --- ]:" 0 0 0 1
 
-#pragma parameter DG_SIGNAL_GAMMA_TITLE         "[ GAMMA ]______________________________________________________" 0 0 0 1
+#pragma parameter DG_SIGNAL_GAMMA_TITLE         "[ GAMMA ]:" 0 0 0 1
 #pragma parameter DG_GAMMA_IN                    "CRT Gamma"                                        2.4 1.8 3 0.05
 
-#pragma parameter DG_SIGNAL_COLOR_SPACE_TITLE    "[ SIGNAL & COLOR SPACE ]_______________________________________" 0 0 0 1
+#pragma parameter DG_SIGNAL_COLOR_SPACE_TITLE    "[ SIGNAL & COLOR SPACE ]:" 0 0 0 1
 #pragma parameter DG_SIGNAL_TYPE                 "      Signal Type - RGB | Composite"                           1 0 1 1
 #pragma parameter DG_SIGNAL_GAMMA_TYPE           "      Signal Gamma Type - sRGB | SMPTE-C"                   1 0 1 1
 #pragma parameter DG_PHOSPHOR_CRT_GAMUT          "      Phosphor CRT GAMUT - NTSC-U | NTSC-J | PAL"      2 -4 3 1
 #pragma parameter DG_DISPLAY_COLOR_SPACE         "      Display Color Space -1:709 | 0:sRGB | DCI | 2020 | Adobe"       0 -1 3 1
 
-#pragma parameter DG_SIGNAL_PROCESS_TITLE        "[ COLOR SIGNAL PROCESS ]_______________________________________" 0 0 0 1
+#pragma parameter DG_SIGNAL_PROCESS_TITLE        "[ COLOR SIGNAL PROCESS ]:" 0 0 0 1
 #pragma parameter DG_I_SHIFT                     "      I/U Shift"                      0 -0.2 0.2 0.01
 #pragma parameter DG_Q_SHIFT                     "      Q/V Shift"                      0 -0.2 0.2 0.01
 #pragma parameter DG_I_MULTIPLIER                "      I/U Multiplier"                 1  0 2 0.01
 #pragma parameter DG_Q_MULTIPLIER                "      Q/V Multiplier"                 1  0 2 0.01
 
-#pragma parameter DG_VIGNETTE_TITLE              "[ DARKENING VIGNETTE ]_________________________________________" 0 0 0 1
+#pragma parameter DG_VIGNETTE_TITLE              "[ DARKENING VIGNETTE ]:" 0 0 0 1
 #pragma parameter DG_VIGNETTE_ON                 "      ON"                                 0  0 1 1
 #pragma parameter DG_VIGNETTE_STRENGTH           "      Center Brightness (AKA Strength)"   40 0 50 1
 #pragma parameter DG_VIGNETTE_POWER              "      Edge Darkening (AKA Power)"         0.20 0 0.5 0.01
 
-#pragma parameter DG_BRIGHTNESS_TITLE            "[ BRIGHTNESS & CONTRAST ]______________________________________" 0 0 0 1
+#pragma parameter DG_BRIGHTNESS_TITLE            "[ BRIGHTNESS & CONTRAST ]:" 0 0 0 1
 #pragma parameter DG_SEGA_LUMA_FIX               "      Sega Luma Fix"                   0  0 1 1
 #pragma parameter DG_BRIGHTNESS                  "      Brightness"                      0 -0.5 1 0.01
 #pragma parameter DG_BLACK_LEVEL                 "      Black Level"                     0 -0.5 0.5 0.01
 #pragma parameter DG_CONTRAST                    "      Contrast"                        0 -1 1 0.05
 #pragma parameter DG_CONTRAST_PIVOT              "      Contrast Pivot"                  0.5  0 1 0.01
 
-#pragma parameter DG_COLOR_TEMP_TITLE            "[ COLOR TEMP & HUE ]___________________________________________" 0 0 0 1
+#pragma parameter DG_COLOR_TEMP_TITLE            "[ COLOR TEMP & HUE ]:" 0 0 0 1
 #pragma parameter DG_WHITE_POINT_TEMP            "      White Point Temperature"         6504 5004 12004 100
 #pragma parameter DG_SATURATION                  "      Saturation"                      0 -1 2 0.01
 #pragma parameter DG_VIBRANCE                    "      Dullness/Vibrance"               0 -1 1 0.05
 #pragma parameter DG_HUE_DEGREES                 "      Hue"                             0 -360 360 1
 
-#pragma parameter DG_HUE_VS_SAT_TITLE            "[ HUE VS SATURATION ]__________________________________________" 0 0 0 1
+#pragma parameter DG_HUE_VS_SAT_TITLE            "[ HUE VS SATURATION ]:" 0 0 0 1
 #pragma parameter DG_HUE_VS_SAT_RED              "      Red"                            0 -1 1 0.01
 #pragma parameter DG_HUE_VS_SAT_GREEN            "      Green"                          0 -1 1 0.01
 #pragma parameter DG_HUE_VS_SAT_BLUE             "      Blue"                           0 -1 1 0.01
 
-#pragma parameter DG_BLACKTINT_TITLE             "[ BLACK TINT ]_________________________________________________" 0 0 0 1
+#pragma parameter DG_BLACKTINT_TITLE             "[ BLACK TINT ]:" 0 0 0 1
 #pragma parameter DG_BLACK_RED_TINT              "      Black-Red Tint"                        0  0 1 0.01
 #pragma parameter DG_BLACK_GREEN_TINT            "      Black-Green Tint"                      0  0 1 0.01
 #pragma parameter DG_BLACK_BLUE_TINT             "      Black-Blue Tint"                       0  0 1 0.01
-#pragma parameter DG_WHITETINT_TITLE             "[ WHITE TINT ]_________________________________________________" 0 0 0 1
+#pragma parameter DG_WHITETINT_TITLE             "[ WHITE TINT ]:" 0 0 0 1
 #pragma parameter DG_WHITE_RED_TINT              "      White-Red Tint"                        1  0 2 0.01
 #pragma parameter DG_WHITE_GREEN_TINT            "      White-Green Tint"                      1  0 2 0.01
 #pragma parameter DG_WHITE_BLUE_TINT             "      White-Blue Tint"                       1  0 2 0.01
-#pragma parameter DG_REDTINT_TITLE             "[ RED TINT ]_________________________________________________" 0 0 0 1
+#pragma parameter DG_REDTINT_TITLE             "[ RED TINT ]:" 0 0 0 1
 #pragma parameter DG_RED_GREEN_TINT              "      Red-Green Tint"                        0 -1 1 0.005
 #pragma parameter DG_RED_BLUE_TINT               "      Red-Blue Tint"                         0 -1 1 0.005
-#pragma parameter DG_GREENTINT_TITLE             "[ GREEN TINT ]_________________________________________________" 0 0 0 1
+#pragma parameter DG_GREENTINT_TITLE             "[ GREEN TINT ]:" 0 0 0 1
 #pragma parameter DG_GREEN_RED_TINT              "      Green-Red Tint"                        0 -1 1 0.005
 #pragma parameter DG_GREEN_BLUE_TINT             "      Green-Blue Tint"                       0 -1 1 0.005
-#pragma parameter DG_BLUETINT_TITLE             "[ BLUE TINT ]_________________________________________________" 0 0 0 1
+#pragma parameter DG_BLUETINT_TITLE             "[ BLUE TINT ]:" 0 0 0 1
 #pragma parameter DG_BLUE_RED_TINT               "      Blue-Red Tint"                         0 -1 1 0.005
 #pragma parameter DG_BLUE_GREEN_TINT             "      Blue-Green Tint"                       0 -1 1 0.005
 
-#pragma parameter DG_LUT_TITLE                   "[ LUT ]________________________________________________________" 0 0 0 1
+#pragma parameter DG_LUT_TITLE                   "[ LUT ]:" 0 0 0 1
 #pragma parameter DG_LUT1_ON                     "      LUT 1 ON"                               0  0 1  1
 #pragma parameter DG_LUT1_SIZE                   "      LUT 1 Size"                             16 8 64 16
 #pragma parameter DG_LUT2_ON                     "      LUT 2 ON"                               0  0 1  1

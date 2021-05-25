@@ -8,7 +8,7 @@ License: GPL
 //---------------------------------------------------------------------------------------------------
 //    INTRO IMAGE
 //---------------------------------------------------------------------------------------------------
-#pragma parameter HSM_INTRO_IMAGE_TITLE							"[ INTRO SEQUENCE ]_____________________________________________" 0 0 0.01 0.01
+#pragma parameter HSM_INTRO_IMAGE_TITLE							"[ INTRO SEQUENCE ]:" 0 0 0.01 0.01
 
 #pragma parameter HSM_INTRO_WHEN_TO_SHOW     					"      Show Intro - OFF | When Content Loads | Repeat"  1 0 2 1
 #define HSM_INTRO_WHEN_TO_SHOW global.HSM_INTRO_WHEN_TO_SHOW
@@ -17,7 +17,7 @@ License: GPL
 #define HSM_INTRO_SPEED (global.HSM_INTRO_SPEED / 100)
 
 
-#pragma parameter HSM_INTRO_LOGO_TITLE							"[ INTRO LOGO ]_________________________________________________" 0 0 0.01 0.01
+#pragma parameter HSM_INTRO_LOGO_TITLE							"[ INTRO LOGO ]:" 0 0 0.01 0.01
 
 #pragma parameter HSM_INTRO_LOGO_BLEND_MODE        				"      Logo Blend Mode - OFF | NORM | ADD | MULT"  1 0 3 1
 #define HSM_INTRO_LOGO_BLEND_MODE global.HSM_INTRO_LOGO_BLEND_MODE
@@ -53,7 +53,7 @@ License: GPL
 #define HSM_INTRO_LOGO_FADE_OUT global.HSM_INTRO_LOGO_FADE_OUT
 
 
-#pragma parameter HSM_INTRO_LOGO_SOLID_TITLE					"[ INTRO SOLID COLOR ]__________________________________________" 0 0 0.01 0.01
+#pragma parameter HSM_INTRO_LOGO_SOLID_TITLE					"[ INTRO SOLID COLOR ]:" 0 0 0.01 0.01
 
 #pragma parameter HSM_INTRO_SOLID_COLOR_BLEND_MODE      		"      Solid Color Blend Mode - OFF | NORM | ADD | MULT"  1 0 3 1
 #define HSM_INTRO_SOLID_COLOR_BLEND_MODE global.HSM_INTRO_SOLID_COLOR_BLEND_MODE
@@ -74,7 +74,7 @@ License: GPL
 #define HSM_INTRO_SOLID_COLOR_FADE_OUT global.HSM_INTRO_SOLID_COLOR_FADE_OUT
 
 
-#pragma parameter HSM_INTRO_NOISE_TITLE							"[ INTRO STATIC NOISE ]_________________________________________" 0 0 0.01 0.01
+#pragma parameter HSM_INTRO_NOISE_TITLE							"[ INTRO STATIC NOISE ]:" 0 0 0.01 0.01
 
 #pragma parameter HSM_INTRO_NOISE_BLEND_MODE        			"      Static Noise Blend Mode - OFF | NORM | ADD | MULT"  1 0 3 1
 #define HSM_INTRO_NOISE_BLEND_MODE global.HSM_INTRO_NOISE_BLEND_MODE
@@ -85,7 +85,7 @@ License: GPL
 #pragma parameter HSM_INTRO_NOISE_FADE_OUT       				"      Static Noise Fade Out Frames"  120 0 600 5
 #define HSM_INTRO_NOISE_FADE_OUT global.HSM_INTRO_NOISE_FADE_OUT
 
-#pragma parameter HSM_INTRO_SOLID_BLACK_TITLE					"[ INTRO SOLID BLACK ]_________________________________________" 0 0 0.01 0.01
+#pragma parameter HSM_INTRO_SOLID_BLACK_TITLE					"[ INTRO SOLID BLACK ]:" 0 0 0.01 0.01
 
 #pragma parameter HSM_INTRO_SOLID_BLACK_HOLD     				"      Solid Black Hold Frames"  0 0 600 5
 #define HSM_INTRO_SOLID_BLACK_HOLD global.HSM_INTRO_SOLID_BLACK_HOLD

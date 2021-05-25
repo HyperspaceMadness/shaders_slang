@@ -1,7 +1,7 @@
 //---------------------------------------------------------------------------------------------------
 //    STANDARD BACKGROUND IMAGE LAYER
 //---------------------------------------------------------------------------------------------------
-#pragma parameter HSM_STANDARD_IMG_TITLE	        "[ STANDARD IMAGE LAYERS ]______________________________________" 0 0 0.01 0.01
+#pragma parameter HSM_STANDARD_IMG_TITLE	        "[ STANDARD IMAGE LAYERS ]:" 0 0 0.01 0.01
 
 #pragma parameter HSM_STANDARD_IMG_ASPECT_RATIO_MODE 	    "      Aspect Ratio - FULL | EXPLICIT | 16:9 | 9:16"  2 0 3 1
 float HSM_STANDARD_IMG_ASPECT_RATIO_MODE = global.HSM_STANDARD_IMG_ASPECT_RATIO_MODE;

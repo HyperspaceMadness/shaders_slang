@@ -7,7 +7,7 @@
 //---------------------------------------------------------------------------------------------------
 //    PHOSPHOR PERSISTENCE
 //---------------------------------------------------------------------------------------------------
-#pragma parameter HSM_PERSISTENCE_TITLE						"[ PHOSPHOR PERSISTENCE ]_______________________________________" 0 0 0.01 0.01
+#pragma parameter HSM_PERSISTENCE_TITLE						"[ PHOSPHOR PERSISTENCE ]:" 0 0 0.01 0.01
 
 #pragma parameter HSM_PHOSPHOR_PERSISTENCE_BLEND          	"      Amount" 0 0 100 2
 #define HSM_PHOSPHOR_PERSISTENCE_BLEND global.HSM_PHOSPHOR_PERSISTENCE_BLEND / 100

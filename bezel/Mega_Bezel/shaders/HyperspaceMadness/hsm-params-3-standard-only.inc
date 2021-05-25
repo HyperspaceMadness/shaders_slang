@@ -1,7 +1,7 @@
 //---------------------------------------------------------------------------------------------------
 //    NIGHT LIGHTING IMAGE
 //---------------------------------------------------------------------------------------------------
-#pragma parameter HSM_NIGHT_LIGHTING_TITLE          "[ NIGHT LIGHTING ]_____________________________________________" 0 0 0.01 0.01
+#pragma parameter HSM_NIGHT_LIGHTING_TITLE          "[ NIGHT LIGHTING ]:" 0 0 0.01 0.01
 
 #pragma parameter HSM_NIGHT_OPACITY                 "      Opacity"  0 0 100 1
 float HSM_NIGHT_OPACITY = global.HSM_NIGHT_OPACITY / 100;
@@ -16,7 +16,7 @@ float HSM_NIGHT_MIRROR_HORZ = global.HSM_NIGHT_MIRROR_HORZ;
 //---------------------------------------------------------------------------------------------------
 //    IMAGES GAMMA
 //---------------------------------------------------------------------------------------------------
-#pragma parameter HSM_STATIC_GAMMA_TITLE            "[ STATIC IMAGE LAYER GAMMA ]___________________________________" 0 0 0.01 0.01
+#pragma parameter HSM_STATIC_GAMMA_TITLE            "[ STATIC IMAGE LAYER GAMMA ]:" 0 0 0.01 0.01
 
 #pragma parameter HSM_STATIC_LAYERS_GAMMA		    "      Image Layers Gamma Adjust" 1 0.01 5 0.01
 float HSM_STATIC_LAYERS_GAMMA = global.HSM_STATIC_LAYERS_GAMMA;
@@ -25,7 +25,7 @@ float HSM_STATIC_LAYERS_GAMMA = global.HSM_STATIC_LAYERS_GAMMA;
 //---------------------------------------------------------------------------------------------------
 //    STANDARD BACKGROUND IMAGE LAYER
 //---------------------------------------------------------------------------------------------------
-#pragma parameter HSM_STANDARD_IMG_TITLE	        "[ STANDARD IMAGE LAYERS ]______________________________________" 0 0 0.01 0.01
+#pragma parameter HSM_STANDARD_IMG_TITLE	        "[ STANDARD IMAGE LAYERS ]:" 0 0 0.01 0.01
 
 #pragma parameter HSM_STANDARD_IMG_ASPECT_RATIO_MODE 	    "      Aspect Ratio - FULL | EXPLICIT | 16:9 | 9:16"  2 0 3 1
 float HSM_STANDARD_IMG_ASPECT_RATIO_MODE = global.HSM_STANDARD_IMG_ASPECT_RATIO_MODE;
@@ -37,7 +37,7 @@ float HSM_STANDARD_IMG_ASPECT_RATIO_EXPLICIT = global.HSM_STANDARD_IMG_ASPECT_RA
 //---------------------------------------------------------------------------------------------------
 //    BG IMAGE
 //---------------------------------------------------------------------------------------------------
-#pragma parameter HSM_BACKGROUND_TITLE			    "[ BACKGROUND LAYER ]___________________________________________" 0 0 0.01 0.01
+#pragma parameter HSM_BACKGROUND_TITLE			    "[ BACKGROUND LAYER ]:" 0 0 0.01 0.01
 
 #pragma parameter HSM_BG_OPACITY 	                "      Opacity" 100 0 100 0.1
 float HSM_BG_OPACITY = global.HSM_BG_OPACITY / 100;
@@ -58,7 +58,7 @@ float HSM_STANDARD_BG_SHOW_OVER_SCREEN = global.HSM_STANDARD_BG_SHOW_OVER_SCREEN
 //---------------------------------------------------------------------------------------------------
 //    LED IMAGE
 //---------------------------------------------------------------------------------------------------
-#pragma parameter HSM_LED_TITLE			            "[ LED LAYER ]__________________________________________________" 0 0 0.01 0.01
+#pragma parameter HSM_LED_TITLE			            "[ LED LAYER ]:" 0 0 0.01 0.01
 
 #pragma parameter HSM_LED_OPACITY 	                "      Opacity" 100 0 100 0.1
 float HSM_LED_OPACITY = global.HSM_LED_OPACITY / 100;
@@ -75,7 +75,7 @@ float HSM_STANDARD_LED_SHOW_OVER_SCREEN = global.HSM_STANDARD_LED_SHOW_OVER_SCRE
 //---------------------------------------------------------------------------------------------------
 //    DECAL IMAGE
 //---------------------------------------------------------------------------------------------------
-#pragma parameter HSM_DECAL_TITLE			        "[ DECAL LAYER ]________________________________________________" 0 0 0.01 0.01
+#pragma parameter HSM_DECAL_TITLE			        "[ DECAL LAYER ]:" 0 0 0.01 0.01
 
 #pragma parameter HSM_DECAL_OPACITY 	            "      Opacity" 100 0 100 0.1
 float HSM_DECAL_OPACITY = global.HSM_DECAL_OPACITY / 100;
@@ -102,7 +102,7 @@ float HSM_DECAL_POS_Y = global.HSM_DECAL_POS_Y / 100;
 //---------------------------------------------------------------------------------------------------
 //    TOP IMAGE
 //---------------------------------------------------------------------------------------------------
-#pragma parameter HSM_TOP_TITLE			            "[ TOP EXTRA LAYER ]____________________________________________" 0 0 0.01 0.01
+#pragma parameter HSM_TOP_TITLE			            "[ TOP EXTRA LAYER ]:" 0 0 0.01 0.01
 
 #pragma parameter HSM_TOP_OPACITY 	                "      Opacity" 100 0 100 0.1
 float HSM_TOP_OPACITY = global.HSM_TOP_OPACITY / 100;

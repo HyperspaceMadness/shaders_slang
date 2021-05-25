@@ -45,7 +45,7 @@ layout(push_constant) uniform Push
 #pragma parameter bg_smoothing      "      Background Smooth" 0.75 0.0 1.0 0.05
 
 
-#pragma parameter GBY_SHADOW_TITLE	"[ SHADOW ]_____________________________________________________" 0 0 0.01 0.01
+#pragma parameter GBY_SHADOW_TITLE	"[ SHADOW ]:" 0 0 0.01 0.01
 
 // How strongly shadows affect the background
 // Higher values darken the shadows - [0, 1] [DEFAULT: 0.55]
@@ -60,7 +60,7 @@ layout(push_constant) uniform Push
 #pragma parameter shadow_offset_y   "      Shadow Offset Vert" 1.0 -5.0 5.0 0.5
 
 
-#pragma parameter GBY_SCREENOFFSET_TITLE	"[ SCREEN OFFSET ]______________________________________________" 0 0 0.01 0.01
+#pragma parameter GBY_SCREENOFFSET_TITLE	"[ SCREEN OFFSET ]:" 0 0 0.01 0.01
 
 // Screen offset - [-infinity, infinity] [DEFAULT: 0]
 #pragma parameter screen_offset_x   "      Screen Offset Horiz" 0.0 -5.0 5.0 0.5

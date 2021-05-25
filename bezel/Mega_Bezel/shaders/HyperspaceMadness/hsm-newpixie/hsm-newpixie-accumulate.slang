@@ -55,7 +55,7 @@ layout(push_constant) uniform Push
 	float NPX_ACCUMULATE_MODULATION;
 } params;
 
-#pragma parameter NPX_TITLE		"[ --- NEWPIXIE --- ]___________________________________________" 0 0 0.01 0.01
+#pragma parameter NPX_TITLE		"[ --- NEWPIXIE --- ]:" 0 0 0.01 0.01
 
 #pragma parameter NPX_ACCUMULATE_MODULATION "      Accumulate Modulation" 0.65 0.0 1.0 0.01
 #define modulate params.NPX_ACCUMULATE_MODULATION

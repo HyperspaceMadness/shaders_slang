@@ -1,7 +1,7 @@
 #reference ":/shaders/shaders_slang/bezel/Mega_Bezel/Presets/Base_CRT_Presets/MBZ__2__STANDARD__GUEST-DrVENOM.slangp"
 
-BackgroundImage = :/shaders/shaders_slang/bezel/Mega_Bezel/shaders/HyperspaceMadness/textures/HSM_Duimon_Super_Famicom_3840x2160.png
-BackgroundVertImage = :/shaders/shaders_slang/bezel/Mega_Bezel/shaders/HyperspaceMadness/textures/HSM_Duimon_Super_Famicom_3840x2160.png
+BackgroundImage = ../../shaders/HyperspaceMadness/textures/HSM_Duimon_Super_Famicom_3840x2160.png
+BackgroundVertImage = ../../shaders/HyperspaceMadness/textures/HSM_Duimon_Super_Famicom_3840x2160.png
 
 HSM_CORE_RES_SAMPLING_MULT_SCANLINE_DIR = "200"
 HSM_INTERLACE_TRIGGER_RES = "800.000000"

@@ -1,7 +1,7 @@
 #version 450
 
 /*
-   Average Luminance Shader, Smart Edge Interpolation Coefficients Calculation
+   Average Luminance Shader
    
    Copyright (C) 2018-2020 guest(r) - guest.r@gmail.com
 

@@ -81,7 +81,7 @@ layout(push_constant) uniform Push
 #pragma parameter GDV_NOISE_AMOUNT 					"          Add Noise" 0.0 -1.0 1.0 0.02
 #define addnoised       params.GDV_NOISE_AMOUNT    // Switch colors left/right
 
-#pragma parameter GDV_NOISE_SIZE 					"          Noise Size" 2.0 0.0 10.0 1.0
+#pragma parameter GDV_NOISE_SIZE 					"          Noise Size" 2.0 1.0 10.0 1.0
 #define noiseresd       params.GDV_NOISE_SIZE    // Switch colors left/right
 
 #pragma parameter GDV_MASK_TYPE 					"          CRT Mask: 0:CGWG, 1-4:Lottes, 5-7:'Trinitron'" 0.0 -1.0 8.0 1.0

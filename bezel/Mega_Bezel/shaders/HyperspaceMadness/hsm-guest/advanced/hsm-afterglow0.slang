@@ -23,17 +23,19 @@
 
 layout(push_constant) uniform Push
 {
-   float PR, PG, PB;
+   float GDV_PERSISTENCE_RED, GDV_PERSISTENCE_GREEN, GDV_PERSISTENCE_BLUE;
 } params;
 
-#pragma parameter bogus_afterglow "[ AFTERGLOW SETTINGS ]:" 0.0 0.0 1.0 1.0
-#pragma parameter PR "          Persistence Red" 0.25 0.0 0.50 0.01
-#pragma parameter PG "          Persistence Green"  0.25 0.0 0.50 0.01
-#pragma parameter PB "          Persistence Blue"  0.25 0.0 0.50 0.01
+#pragma parameter GDV_GDV_ADV_TITLE 		"[ --- GUEST-DrVenom Advanced - 2021-05-24 --- ]:" 0.0 0.0 1.0 1.0
 
-#define PR params.PR
-#define PG params.PG
-#define PB params.PB
+#pragma parameter GDV_AFTERGLOW_TITLE     "[ AFTERGLOW SETTINGS ]:" 0.0 0.0 1.0 1.0
+#pragma parameter GDV_PERSISTENCE_RED     "          Persistence Red" 0.25 0.0 0.50 0.01
+#pragma parameter GDV_PERSISTENCE_GREEN   "          Persistence Green"  0.25 0.0 0.50 0.01
+#pragma parameter GDV_PERSISTENCE_BLUE    "          Persistence Blue"  0.25 0.0 0.50 0.01
+
+#define PR params.GDV_PERSISTENCE_RED
+#define PG params.GDV_PERSISTENCE_GREEN
+#define PB params.GDV_PERSISTENCE_BLUE
 
 #define COMPAT_TEXTURE(c,d) texture(c,d)
 

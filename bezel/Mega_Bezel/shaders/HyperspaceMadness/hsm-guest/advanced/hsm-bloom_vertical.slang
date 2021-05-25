@@ -27,16 +27,16 @@ layout(push_constant) uniform Push
 	vec4 OriginalSize;
 	vec4 OutputSize;
 	uint FrameCount;
-	float SIZEVB;
-	float SIGMA_VB;
+	float GDV_BLOOM_V_RADIUS;
+	float GDV_BLOOM_V_SIGMA;
 } params;
 
 
-#pragma parameter SIZEVB "          Vertical Bloom/Halation/(Glow) Radius" 4.0 1.0 50.0 1.0 
-#define SIZEVB params.SIZEVB
+#pragma parameter GDV_BLOOM_V_RADIUS "          Vertical Bloom/Halation/(Glow) Radius" 4.0 1.0 50.0 1.0 
+#define SIZEVB params.GDV_BLOOM_V_RADIUS
 
-#pragma parameter SIGMA_VB "          Vertical Bloom/Halation/(Glow) Sigma" 0.70 0.25 15.0 0.05
-#define SIGMA_VB params.SIGMA_VB
+#pragma parameter GDV_BLOOM_V_SIGMA "          Vertical Bloom/Halation/(Glow) Sigma" 0.70 0.25 15.0 0.05
+#define SIGMA_VB params.GDV_BLOOM_V_SIGMA
 
 layout(std140, set = 0, binding = 0) uniform UBO
 {

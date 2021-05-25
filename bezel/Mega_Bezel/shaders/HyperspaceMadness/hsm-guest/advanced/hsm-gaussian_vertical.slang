@@ -27,16 +27,16 @@ layout(push_constant) uniform Push
 	vec4 OriginalSize;
 	vec4 OutputSize;
 	uint FrameCount;
-	float SIZEV;
-	float SIGMA_V;
+	float GDV_GLOW_V_RADIUS;
+	float GDV_GLOW_V_SIGMA;
 } params;
 
 
-#pragma parameter SIZEV "          Vertical Glow Radius" 6.0 1.0 50.0 1.0 
-#define SIZEV params.SIZEV
+#pragma parameter GDV_GLOW_V_RADIUS "          Vertical Glow Radius" 6.0 1.0 50.0 1.0 
+#define SIZEV params.GDV_GLOW_V_RADIUS
 
-#pragma parameter SIGMA_V "          Vertical Glow Sigma" 1.20 0.20 15.0 0.10
-#define SIGMA_V params.SIGMA_V
+#pragma parameter GDV_GLOW_V_SIGMA 	"          Vertical Glow Sigma" 1.20 0.20 15.0 0.10
+#define SIGMA_V params.GDV_GLOW_V_SIGMA
 
 layout(std140, set = 0, binding = 0) uniform UBO
 {

@@ -27,17 +27,17 @@ layout(push_constant) uniform Push
 	vec4 OriginalSize;
 	vec4 OutputSize;
 	uint FrameCount;
-	float SIZEH;
-	float SIGMA_H;
+	float GDV_GLOW_H_RADIUS;
+	float GDV_GLOW_H_SIGMA;
 } params;
 
 #pragma parameter bogus_glow "[ GLOW PASS SETTINGS ]:" 0.0 0.0 1.0 1.0
 
-#pragma parameter SIZEH "          Horizontal Glow Radius" 6.0 1.0 50.0 1.0 
-#define SIZEH params.SIZEH
+#pragma parameter GDV_GLOW_H_RADIUS "          Horizontal Glow Radius" 6.0 1.0 50.0 1.0 
+#define SIZEH params.GDV_GLOW_H_RADIUS
 
-#pragma parameter SIGMA_H "          Horizontal Glow Sigma" 1.20 0.20 15.0 0.10
-#define SIGMA_H params.SIGMA_H
+#pragma parameter GDV_GLOW_H_SIGMA "          Horizontal Glow Sigma" 1.20 0.20 15.0 0.10
+#define SIGMA_H params.GDV_GLOW_H_SIGMA
 
 layout(std140, set = 0, binding = 0) uniform UBO
 {

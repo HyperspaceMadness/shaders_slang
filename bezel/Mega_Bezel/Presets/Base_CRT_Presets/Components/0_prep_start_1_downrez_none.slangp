@@ -1,0 +1,8 @@
+shaders = 1
+
+shader10 =  :/shaders/shaders_slang/stock.slang // ../../shaders/HyperspaceMadness/hsm-guest/advanced/g-sharp_resampler.slang
+filter_linear10 = false
+srgb_framebuffer10 = true
+scale_type10 = source
+scale_x10 = 1
+scale_y10 = 1

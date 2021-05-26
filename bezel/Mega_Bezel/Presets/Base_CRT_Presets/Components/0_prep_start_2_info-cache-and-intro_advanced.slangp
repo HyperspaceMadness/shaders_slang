@@ -1,0 +1,18 @@
+shaders = 3
+
+shader10 = :/shaders/shaders_slang/stock.slang
+alias10 = "ReduceCoreRezPass"
+
+shader11 = ../../shaders/HyperspaceMadness/hsm-prep-info-cache-advanced.slang
+filter_linear11 = true
+float_framebuffer11 = true
+scale_type11 = source
+scale11 = 1.0
+alias11 = "InfoCachePass"
+
+shader12 = ../../shaders/HyperspaceMadness/hsm-prep-intro-advanced.slang
+filter_linear12 = false
+float_framebuffer12 = true
+scale_type12 = source
+scale12 = 1.0
+alias12 = "IntroPass"

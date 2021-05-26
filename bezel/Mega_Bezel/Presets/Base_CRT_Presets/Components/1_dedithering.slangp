@@ -1,0 +1,46 @@
+shaders = 13
+
+// Color Correction with Dogway's awesome Grade shader
+shader10 = :/shaders/shaders_slang/stock.slang
+alias10 = "PreDeDitheringPass"
+
+// De-Dithering - Mdapt
+shader11 = ../../shaders/HyperspaceMadness/hsm-mdapt/hsm-mdapt-pass0.slang
+shader12 = ../../shaders/HyperspaceMadness/hsm-mdapt/hsm-mdapt-pass1.slang
+shader13 = ../../shaders/HyperspaceMadness/hsm-mdapt/hsm-mdapt-pass2.slang
+shader14 = ../../shaders/HyperspaceMadness/hsm-mdapt/hsm-mdapt-pass3.slang
+shader15 = ../../shaders/HyperspaceMadness/hsm-mdapt/hsm-mdapt-pass4.slang
+
+// SGENDPT - Hyllian's great de-dither shader
+shader16 = ../../shaders/HyperspaceMadness/hsm-sgenpt-mix/hsm-sgenpt-mix.slang
+
+shader17 = ../../shaders/HyperspaceMadness/hsm-ps1dither/hsm-PS1-Undither-BoxBlur.slang
+alias17 = refpass
+
+shader18 = ../../shaders/HyperspaceMadness/hsm-scalefx/hsm-scalefx-pass0.slang
+filter_linear18 = false
+scale_type18 = source
+scale18 = 1.0
+float_framebuffer18 = true
+alias18 = scalefx_pass0
+
+shader19 = ../../shaders/HyperspaceMadness/hsm-scalefx/hsm-scalefx-pass1.slang
+filter_linear19 = false
+scale_type19 = source
+scale19 = 1.0
+float_framebuffer19 = true
+
+shader20 = ../../shaders/HyperspaceMadness/hsm-scalefx/hsm-scalefx-pass2.slang
+filter_linear20 = false
+scale_type20 = source
+scale20 = 1.0
+
+shader21 = ../../shaders/HyperspaceMadness/hsm-scalefx/hsm-scalefx-pass3.slang
+filter_linear21 = false
+scale_type21 = source
+scale21 = 1.0
+
+shader22 = ../../shaders/HyperspaceMadness/hsm-scalefx/hsm-scalefx-pass4.slang
+filter_linear22 = false
+scale_type22 = source
+scale22 = 3

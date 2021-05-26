@@ -16,7 +16,7 @@ alias1 = "IntroPass"
 
 // Color Correction with Dogway's awesome Grade shader
 shader2 = ../../shaders/HyperspaceMadness/hsm-dogway/hsm-grade.slang
-alias2 = "ColorCorrectPass"
+alias2 = "PreDeDitheringPass"
 mipmap_input2 = true
 scale_type2 = absolute
 scale_x2 = 2048

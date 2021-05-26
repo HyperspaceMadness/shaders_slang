@@ -8,7 +8,7 @@ float_framebuffer0 = true
 
 // Color Correction with Dogway's awesome Grade shader
 shader1 = shaders/HyperspaceMadness/hsm-dogway/hsm-grade.slang
-alias1  = "ColorCorrectPass"
+alias1  = "PreDeDitheringPass"
 
 shader2 = ../../../../stock.slang
 alias2 = PreCRTPass

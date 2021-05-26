@@ -120,7 +120,7 @@ layout(location = 1) in vec2 texel;
 layout(location = 2) in vec2 MY_SCREEN_COORD;
 layout(location = 0) out vec4 FragColor;
 layout(set = 0, binding = 1) uniform sampler2D Source;
-layout(set = 0, binding = 2) uniform sampler2D ColorCorrectPass;
+layout(set = 0, binding = 2) uniform sampler2D PreDeDitheringPass;
 layout(set = 0, binding = 3) uniform sampler2D DMG0ColorPaletteImage;
 layout(set = 0, binding = 4) uniform sampler2D DMG1ColorPaletteImage;
 layout(set = 0, binding = 5) uniform sampler2D DMG2ColorPaletteImage;
@@ -176,7 +176,7 @@ void main()
     tex = (tex + 0.5) * params.PassOutputSize1.zw;
     
     // Sample all the relevant textures
-    vec4 foreground = texture(ColorCorrectPass, tex - screen_offset);
+    vec4 foreground = texture(PreDeDitheringPass, tex - screen_offset);
     vec4 background = texture(LCDBackgroundImage, MY_SCREEN_COORD);
     vec4 shadows    = texture(Source, vTexCoord - (shadow_offset + screen_offset));
     vec4 background_color = bg_color;

@@ -16,7 +16,7 @@ scale_y1 = 4
 
 // Color Correction with Dogway's awesome Grade shader
 shader2 = ../../shaders/HyperspaceMadness/hsm-dogway/hsm-grade.slang
-alias2 = "ColorCorrectPass"
+alias2 = "PreDeDitheringPass"
 
 shader3 = ../../shaders/HyperspaceMadness/hsm-phosphor-persistence.slang
 filter_linear3 = false

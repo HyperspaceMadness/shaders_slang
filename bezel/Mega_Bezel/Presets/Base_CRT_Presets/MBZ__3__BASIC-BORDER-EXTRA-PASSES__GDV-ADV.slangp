@@ -22,7 +22,7 @@ alias2 = "IntroPass"
 
 // Color Correction with Dogway's awesome Grade shader
 shader3 = ../../shaders/HyperspaceMadness/hsm-dogway/hsm-grade.slang
-alias3 = "ColorCorrectPass"
+alias3 = "PreDeDitheringPass"
 
 // De-Dithering - Mdapt
 shader4 = ../../shaders/HyperspaceMadness/hsm-mdapt/hsm-mdapt-pass0.slang
@@ -103,7 +103,7 @@ float_framebuffer17 = true
 // filter_linear17 = false
 
 shader18 = :/shaders/shaders_slang/stock.slang
-alias18 = "LastUserPass"
+alias18 = "PreCRTPass"
 
 shader19 = ../../shaders/HyperspaceMadness/hsm-guest/advanced/hsm-afterglow0.slang
 filter_linear19 = false

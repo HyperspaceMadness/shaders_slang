@@ -31,7 +31,7 @@ shader5 = ":/shaders/shaders_slang/windowed/shaders/jinc2.slang"
 srgb_framebuffer5 = "true"
 
 shader6 = :/shaders/shaders_slang/stock.slang
-alias6 = "LastUserPass"
+alias6 = "PreCRTPass"
 
 shader7 = ../../shaders/HyperspaceMadness/hsm-guest/advanced/hsm-afterglow0.slang
 filter_linear7 = false

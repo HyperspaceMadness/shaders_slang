@@ -58,7 +58,7 @@ void main()
 #pragma stage fragment
 layout(location = 0) in vec2 vTexCoord;
 layout(location = 0) out vec4 FragColor;
-layout(set = 0, binding = 2) uniform sampler2D LastUserPass;
+layout(set = 0, binding = 2) uniform sampler2D PreCRTPass;
 layout(set = 0, binding = 3) uniform sampler2D AfterglowPassFeedback;
 
 #define TEX0 vTexCoord
@@ -66,7 +66,7 @@ layout(set = 0, binding = 3) uniform sampler2D AfterglowPassFeedback;
 
 void main()
 {
-	vec3 color  = COMPAT_TEXTURE(LastUserPass, TEX0.xy).rgb;
+	vec3 color  = COMPAT_TEXTURE(PreCRTPass, TEX0.xy).rgb;
 	vec3 accumulate = COMPAT_TEXTURE(AfterglowPassFeedback, TEX0.xy).rgb;
 
 	float w = 1.0;

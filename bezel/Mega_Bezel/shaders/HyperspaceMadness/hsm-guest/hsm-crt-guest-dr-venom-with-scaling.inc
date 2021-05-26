@@ -279,7 +279,7 @@ layout(set = 0, binding = 2) uniform sampler2D Source;
 layout(set = 0, binding = 3) uniform sampler2D LinearizePass;
 
 // HSM Removed
-// layout(set = 0, binding = 4) uniform sampler2D ColorCorrectPass;
+// layout(set = 0, binding = 4) uniform sampler2D PreDeDitheringPass;
 
 layout(set = 0, binding = 4) uniform sampler2D GlowPass;
 
@@ -293,7 +293,7 @@ layout(set = 0, binding = 9)  uniform sampler2D BackgroundVertImage;
 #define Texture Source
 
 // HSM Removed
-// #define PassPrev5Texture ColorCorrectPass
+// #define PassPrev5Texture PreDeDitheringPass
 
 #define PassPrev4Texture LinearizePass
 #define PassPrev2Texture GlowPass

@@ -22,12 +22,12 @@ alias2 = "IntroPass"
 
 // Color Correction with Dogway's awesome Grade shader
 shader3 = ../../shaders/HyperspaceMadness/hsm-dogway/hsm-grade.slang
-alias3 = "ColorCorrectPass"
+alias3 = "PreDeDitheringPass"
 
 shader4 = :/shaders/shaders_slang/stock.slang
 
 shader5 = :/shaders/shaders_slang/stock.slang
-alias5 = "LastUserPass"
+alias5 = "PreCRTPass"
 
 shader6 = ../../shaders/HyperspaceMadness/hsm-guest/advanced/hsm-afterglow0.slang
 filter_linear6 = false

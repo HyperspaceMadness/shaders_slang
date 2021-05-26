@@ -1,0 +1,7 @@
+shaders = 1
+
+// Bezel Generation & Composite of Image Layers ----------------------------------------------------------------
+
+shader10 = ../../shaders/HyperspaceMadness/hsm-bezel-image-layers.slang
+filter_linear10 = true
+scale_type10 = viewport

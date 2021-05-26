@@ -1,0 +1,14 @@
+shaders = 2
+
+shader10 = :\shaders\shaders_slang\ntsc\shaders\ntsc-adaptive\ntsc-pass1.slang
+scale_type10 = source
+scale_x10 = 4.0
+filter_linear10 = false
+scale_type10 = 1.0
+float_framebuffer10 = true
+
+shader11 = :\shaders\shaders_slang\ntsc\shaders\ntsc-adaptive\ntsc-pass2.slang
+scale_type11 = source
+scale_x11 = 0.5
+scale_y11 = 1.0
+filter_linear11 = false

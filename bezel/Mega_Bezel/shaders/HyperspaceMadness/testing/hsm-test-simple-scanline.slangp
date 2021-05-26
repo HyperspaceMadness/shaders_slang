@@ -5,7 +5,7 @@
 //      Debug Drawing of the resolution & screen scaling info
 shader0 = shaders/HyperspaceMadness/hsm-prep-intro.slang
 float_framebuffer0 = true
-alias0  = "ColorCorrectPass"
+alias0  = "PreDeDitheringPass"
 
 // De-Dithering - Mdapt
 shader1 = shaders/HyperspaceMadness/hsm-mdapt/hsm-mdapt-pass0.slang

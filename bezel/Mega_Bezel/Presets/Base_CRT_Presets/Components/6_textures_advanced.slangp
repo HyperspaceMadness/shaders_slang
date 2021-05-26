@@ -1,40 +1,3 @@
-// Add Mega Bezel parameters at the beginning of the list for easy access
-// A very small pass at 1/8th scale to cache values which are consistent across the frame
-// Read back these values later for better performance
-shader0 = ../../shaders/HyperspaceMadness/hsm-prep-info-cache-basic-border.slang
-float_framebuffer0 = true
-scale_type0 = source
-scale_y0 = 0.25
-alias0  = "InfoCachePass"
-
-// Add Intro Animation
-shader1 = ../../shaders/HyperspaceMadness/hsm-prep-intro-basic-border.slang
-alias1 = "IntroPass"
-float_framebuffer1 = true
-scale_type1 = source
-scale_y1 = 4
-
-// Color Correction with Dogway's awesome Grade shader
-shader2 = ../../shaders/HyperspaceMadness/hsm-dogway/hsm-grade.slang
-alias2 = "PreDeDitheringPass"
-
-shader3 = ../../shaders/HyperspaceMadness/hsm-phosphor-persistence.slang
-filter_linear3 = false
-scale_type3 = source
-scale3 = 1.0
-alias3 = "PersistencePass"
-
-shader4 = ../../shaders/HyperspaceMadness/hsm-lcd-cgwg/hsm-lcd-grid-v2-basic-border.slang
-filter_linear4 = "false"
-scale_type4 = "viewport"
-scale4 = "1.0"
-wrap_mode4 = mirrored_repeat
-alias4 = BR_CRTPass
-
-// Define how many shaders will be used from this list
-shaders = 5
-
-
 // Define textures to be used by the different passes
 textures = "SamplerLUT1;SamplerLUT2;SamplerLUT3;SamplerLUT4;IntroImage;ScreenPlacementImage;ColoredGelImage;TubeStaticReflectionImage;BackgroundImage;BackgroundVertImage;ReflectionMaskImage;FrameTextureImage;CabinetGlassImage;BezelImage;BezelVertImage;DecalImage;NightLightingImage;LEDImage;TopLayerImage;"
 
@@ -65,10 +28,10 @@ ReflectionMaskImage_linear = true
 FrameTextureImage = ../../shaders/HyperspaceMadness/textures/FrameTexture_2800x2120.png
 FrameTextureImage_linear = true
 
-BackgroundImage = ../../shaders/HyperspaceMadness/textures/Placeholder_Transparent_16x16.png
+BackgroundImage = ../../shaders/HyperspaceMadness/textures/BackgroundImage_Carbon_3840x2160.png
 BackgroundImage_linear = true
 
-BackgroundVertImage = ../../shaders/HyperspaceMadness/textures/Placeholder_Transparent_16x16.png
+BackgroundVertImage = ../../shaders/HyperspaceMadness/textures/BackgroundImage_Carbon_3840x2160.png
 BackgroundVertImage_linear = true
 
 CabinetGlassImage = ../../shaders/HyperspaceMadness/textures/Placeholder_Transparent_16x16.png
@@ -91,3 +54,7 @@ LEDImage_linear = true
 
 TopLayerImage = ../../shaders/HyperspaceMadness/textures/Placeholder_Transparent_16x16.png
 TopLayerImage_linear = true
+
+// Use for matching vanilla GDV-Advanced
+// HSM_ASPECT_RATIO_MODE = 6
+// HSM_CURVATURE_MODE = -1

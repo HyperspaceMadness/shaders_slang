@@ -16,7 +16,7 @@ scale_y1 = 16
 
 // Color Correction with Dogway's awesome Grade shader
 shader2 = ../../shaders/HyperspaceMadness/hsm-dogway/hsm-grade.slang
-alias2  = "ColorCorrectPass"
+alias2  = "PreDeDitheringPass"
 
 // De-Dithering - Mdapt
 shader3 = ../../shaders/HyperspaceMadness/hsm-mdapt/hsm-mdapt-pass0.slang

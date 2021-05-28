@@ -255,7 +255,7 @@ float HSM_CURVATURE_3D_TILT_ANGLE_Y = global.HSM_CURVATURE_3D_TILT_ANGLE_Y / 100
 //---------------------------------------------------------------------------------------------------
 #pragma parameter HSM_ANTI_FLICKER_TITLE					"[ ANTI-FLICKER ]:" 0 0 0.01 0.01
 
-#pragma parameter HSM_ANTI_FLICKER_ON 						"      Anti-Flicker ON" 1 0 1 1
+#pragma parameter HSM_ANTI_FLICKER_ON 						"      Anti-Flicker ON" 0 0 1 1
 #define HSM_ANTI_FLICKER_ON global.HSM_ANTI_FLICKER_ON
 
 #pragma parameter HSM_ANTI_FLICKER_THRESHOLD 				"      Luma Difference Threshold" 25 0 100 5

@@ -1,6 +1,7 @@
 Mega Bezel is updated to V 0.9.012 2021-05-10
 
 Changes:
+  * Turned OFF Anti-Flicker by default
   * Decreased Scale Increment for Cabinet Glass
   * Added BASIC-BORDER-EXTRA-PASSES preset
     * Added Max-Int-Scale__BASIC-EXTRA-PASSES in Variations folder
@@ -15,7 +16,6 @@ Changes:
   * X Position offset added to ADVANCED presets
   * HDCore presets or other presets where there is resolution reduction in the first pass this is reported properly
   * Added Brightness parameter to the gamma in and out to adjust brightness after the CRT pass, should be helpful for things like vector games
-
 
 *  Performance of Base presets at 3840x2160 on Nvidia RTX2060:
   *  ADVANCED -                      80 FPS  -  No comparable old preset
@@ -36,10 +36,11 @@ Changes:
 Mega Bezel Still to Come:
 
 V1 TODO
+  * Adjust Black adjustment so it affects not just black
   * Fix Brightness * AB Testing
   * Change Downsample Blur to be X & Y
   * Show Image per Screen Area
-  * Debug Info showing Shader Type
+  * Debug Info showing Shader Type?
   * Explicit Downsample Res? Target Res?
   * Guest ADV - convergence, extra passes, mega bezel passes
   *   Sort difference between Guest Color Correct & Grade

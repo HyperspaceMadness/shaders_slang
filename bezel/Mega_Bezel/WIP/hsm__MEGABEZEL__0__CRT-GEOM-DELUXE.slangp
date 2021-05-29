@@ -83,7 +83,7 @@ alias18 = blur
 shader19 = shaders/HyperspaceMadness/hsm-geom-deluxe/hsm-crt-geom-deluxe.slang
 filter_linear19 = true
 scale_type19 = viewport
-alias19 = BR_CRTPass
+alias19 = MBZ_PostCRTPass
 
 // Tube Scale Curvature Mapping
 // Write mapping into the pass, of the 4 channels, x & y are tube warped coord and z & w are outside tube mask and edge mask

@@ -46,7 +46,7 @@ shader8 = ../../shaders/HyperspaceMadness/hsm-easymode/hsm-crt-easymode-halation
 filter_linear8 = true
 scale_type8 = viewport
 float_framebuffer8 = true
-alias8 = BR_CRTPass
+alias8 = MBZ_PostCRTPass
 
 // Define how many shaders will be used from this list
 shaders = 9

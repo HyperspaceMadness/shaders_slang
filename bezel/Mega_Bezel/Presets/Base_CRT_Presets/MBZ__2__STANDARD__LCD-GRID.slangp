@@ -42,7 +42,7 @@ mipmap_input11 = true
 filter_linear11 = true
 scale_type11 = viewport
 scale11 = 1.0
-alias11 = BR_CRTPass
+alias11 = MBZ_PostCRTPass
 
 // Reduce Resolution  ----------------------------------------------------------------
 //      Reduce the resolution to a small static size regardless of final resolution

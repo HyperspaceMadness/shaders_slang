@@ -124,7 +124,7 @@ shader22 = ../../shaders/HyperspaceMadness/hsm-easymode/hsm-crt-easymode-halatio
 filter_linear22 = true
 scale_type22 = viewport
 float_framebuffer22 = true
-alias22 = BR_CRTPass
+alias22 = MBZ_PostCRTPass
 
 // Reduce Resolution  ----------------------------------------------------------------
 //      Reduce the resolution to a small static size regardless of final resolution

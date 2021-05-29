@@ -15,7 +15,7 @@ successes = []
 
 # Go through all template files
 for template_path in [p for p in template_paths if os.path.splitext(p)[1] == '.protoslangp'] :
-    print('\n' + os.path.split(template_path)[1])
+    # print('\n' + os.path.split(template_path)[1])
     template_path = os.path.join(dir_path, template_path)
     template_contents = open(template_path, "r").read()
     next_pass_index = 0
@@ -24,11 +24,11 @@ for template_path in [p for p in template_paths if os.path.splitext(p)[1] == '.p
     template_lines = template_contents.splitlines()
     template_errors = []
     if template_lines:
-        print('    Component Presets:')
+        # print('    Component Presets:')
         for line in template_lines:
             if line.startswith('#reference '):
                 line_split = line.split('"')
-                print('        ' + os.path.split(line_split[1])[1])
+                # print('        ' + os.path.split(line_split[1])[1])
                 component_preset_path = os.path.join(dir_path, line_split[1])
                 
                 if os.path.exists(component_preset_path):
@@ -57,7 +57,7 @@ for template_path in [p for p in template_paths if os.path.splitext(p)[1] == '.p
 
                         next_pass_index += num_shaders
                     else:
-                        print("            Can't find Shaders line at first line of the preset, adding all lines without processing")
+                        # print("            Can't find Shaders line at first line of the preset, adding all lines without processing")
 
                         for line in component_lines:
                             out_preset_contents += line + '\n'
@@ -92,4 +92,4 @@ if errors:
     for error in errors:
         print('    ' + error)
 else:
-    print('Completed without Errors!!!')
+    print('Completed without Errors!!!') 

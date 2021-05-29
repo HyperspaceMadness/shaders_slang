@@ -104,7 +104,7 @@ scale_x15 = 1.0
 scale_y15 = 1.0
 
 shader16 = ../../shaders/HyperspaceMadness/hsm-prep-post-crt-basic-border.slang
-alias16 = BR_CRTPass
+alias16 = MBZ_PostCRTPass
 
 // Define how many shaders will be used from this list
 shaders = 17

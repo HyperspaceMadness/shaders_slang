@@ -180,7 +180,7 @@ scale_x28 = 1.0
 scale_y28 = 1.0
 
 shader29 = ../../shaders/HyperspaceMadness/hsm-prep-post-crt.slang
-alias29 = BR_CRTPass
+alias29 = MBZ_PostCRTPass
 
 // Reduce Resolution  ----------------------------------------------------------------
 //      Reduce the resolution to a small static size regardless of final resolution

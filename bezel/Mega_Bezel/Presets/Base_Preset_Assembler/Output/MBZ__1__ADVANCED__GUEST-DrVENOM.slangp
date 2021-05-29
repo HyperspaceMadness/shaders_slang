@@ -165,7 +165,7 @@ scale_x31 = 1.0
 scale_y31 = 1.0
 
 shader32 = :/shaders/shaders_slang/bezel/Mega_Bezel/shaders/HyperspaceMadness/hsm-prep-post-crt.slang
-alias32 = "BR_CRTPass"
+alias32 = "MBZ_PostCRTPass"
 
 // Reduce Resolution  ----------------------------------------------------------------
 //      Reduce the resolution to a small static size regardless of final resolution
@@ -216,7 +216,7 @@ scale_y37 = 12
 alias37 = "BR_MirrorFullscreenGlowPass"
 
 // Bezel Reflection ----------------------------------------------------------------
-shader38 = :/shaders/shaders_slang/bezel/Mega_Bezel/shaders/HyperspaceMadness/hsm-bezel-reflection.slang
+shader38 = :/shaders/shaders_slang/bezel/Mega_Bezel/shaders/HyperspaceMadness/hsm-bezel-reflection-advanced.slang
 scale_type38 = viewport
 float_framebuffer38 = true
 alias38 = "BR_CRTAndReflectionPass"

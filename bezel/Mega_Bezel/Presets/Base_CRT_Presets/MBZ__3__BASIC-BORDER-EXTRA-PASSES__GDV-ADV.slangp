@@ -180,7 +180,7 @@ scale_x28 = 1.0
 scale_y28 = 1.0
 
 shader29 = ../../shaders/HyperspaceMadness/hsm-prep-post-crt-basic-border.slang
-alias29 = BR_CRTPass
+alias29 = MBZ_PostCRTPass
 
 // Define how many shaders will be used from this list
 shaders = 30

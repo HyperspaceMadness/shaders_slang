@@ -73,7 +73,7 @@ filter_linear9 = true
 scale_type9 = viewport
 scale9 = 1.0
 float_framebuffer9 = true
-alias9 = BR_CRTPass
+alias9 = MBZ_PostCRTPass
 
 // Define how many shaders will be used from this list
 shaders = 10

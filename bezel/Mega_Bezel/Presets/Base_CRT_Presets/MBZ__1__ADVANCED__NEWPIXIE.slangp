@@ -85,7 +85,7 @@ shader18 = ../../shaders/HyperspaceMadness/hsm-newpixie/hsm-newpixie-crt-with-sc
 filter_linear18 = true
 scale_type18 = viewport
 float_framebuffer18 = true
-alias18 = BR_CRTPass
+alias18 = MBZ_PostCRTPass
 
 // Reduce Resolution  ----------------------------------------------------------------
 //      Reduce the resolution to a small static size regardless of final resolution

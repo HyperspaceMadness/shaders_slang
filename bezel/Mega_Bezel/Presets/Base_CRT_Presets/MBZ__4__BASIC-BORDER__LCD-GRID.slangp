@@ -29,7 +29,7 @@ filter_linear4 = "false"
 scale_type4 = "viewport"
 scale4 = "1.0"
 wrap_mode4 = mirrored_repeat
-alias4 = BR_CRTPass
+alias4 = MBZ_PostCRTPass
 
 // Define how many shaders will be used from this list
 shaders = 5

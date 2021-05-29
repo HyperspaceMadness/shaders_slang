@@ -131,7 +131,7 @@ filter_linear21 = true
 shader22 = ../../shaders/HyperspaceMadness/hsm-guest/hsm-crt-guest-sm-with-scaling.slang
 filter_linear22 = true
 scale_type22 = viewport
-alias22 = BR_CRTPass
+alias22 = MBZ_PostCRTPass
 
 // Reduce Resolution  ----------------------------------------------------------------
 //      Reduce the resolution to a small static size regardless of final resolution

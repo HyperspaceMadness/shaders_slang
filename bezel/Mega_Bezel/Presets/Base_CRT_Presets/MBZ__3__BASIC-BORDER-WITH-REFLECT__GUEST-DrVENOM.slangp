@@ -71,7 +71,7 @@ shader9 = ../../shaders/HyperspaceMadness/hsm-guest/hsm-crt-guest-dr-venom-with-
 mipmap_input9 = true
 filter_linear9 = true
 scale_type9 = viewport
-alias9 = BR_CRTPass
+alias9 = MBZ_PostCRTPass
 
 // Reduce Resolution  ----------------------------------------------------------------
 //      Reduce the resolution to a small static size regardless of final resolution

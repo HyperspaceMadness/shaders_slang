@@ -70,7 +70,7 @@ layout(location = 0) out vec4 FragColor;
 
 // Pass Framebuffer Textures
 layout(set = 0, binding = 1) uniform sampler2D InfoCachePass;
-layout(set = 0, binding = 2) uniform sampler2D BR_CRTPass;
+layout(set = 0, binding = 2) uniform sampler2D MBZ_PostCRTPass;
 layout(set = 0, binding = 3) uniform sampler2D BR_MirrorBlurredPass;
 layout(set = 0, binding = 4) uniform sampler2D BR_MirrorReflectionDiffusedPass;
 layout(set = 0, binding = 5) uniform sampler2D BR_MirrorFullscreenGlowPass;
@@ -116,7 +116,7 @@ void main()
 	// CRT Pass
 	//----------------------------------------------------
 	// Get the CRT pass and make it in linear space & mask the area outside the screen
-	vec4 crt_linear = HSM_Linearize(texture(BR_CRTPass, UNFLIPPED_VIEWPORT_COORD.xy), HSM_DEFAULT_CRT_GAMMA);
+	vec4 crt_linear = HSM_Linearize(texture(MBZ_PostCRTPass, UNFLIPPED_VIEWPORT_COORD.xy), HSM_DEFAULT_CRT_GAMMA);
 	crt_linear = HSM_ApplyGamma(crt_linear, HSM_DEFAULT_CRT_GAMMA / HSM_DEFAULT_SRGB_GAMMA);
 
 	vec4 blurred_reflection_color = HHLP_GetBilinearTextureSample(BR_MirrorBlurredPass, UNFLIPPED_VIEWPORT_COORD.xy, params.BR_MirrorBlurredPassSize);

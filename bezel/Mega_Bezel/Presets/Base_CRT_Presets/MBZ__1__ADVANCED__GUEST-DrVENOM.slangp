@@ -149,7 +149,7 @@ shader23 = ../../shaders/HyperspaceMadness/hsm-guest/hsm-crt-guest-dr-venom-with
 mipmap_input23 = true
 filter_linear23 = true
 scale_type23 = viewport
-alias23 = BR_CRTPass
+alias23 = MBZ_PostCRTPass
 
 
 // Reduce Resolution  ----------------------------------------------------------------

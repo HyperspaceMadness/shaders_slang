@@ -172,7 +172,7 @@ filter_linear27 = true
 scale_type27 = viewport
 scale_x27 = 1.0
 scale_y27 = 1.0
-alias27 = BR_CRTPass
+alias27 = MBZ_PostCRTPass
 
 shader28 = ../../shaders/HyperspaceMadness/hsm-guest/advanced/hsm-deconvergence.slang
 filter_linear28 = true

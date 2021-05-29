@@ -148,11 +148,11 @@ layout(std140, set = 0, binding = 0) uniform UBO
 #pragma parameter DG_BLUE_RED_TINT               "      Blue-Red Tint"                         0 -1 1 0.005
 #pragma parameter DG_BLUE_GREEN_TINT             "      Blue-Green Tint"                       0 -1 1 0.005
 
-#pragma parameter DG_LUT_TITLE                   "[ LUT ]:" 0 0 0 1
-#pragma parameter DG_LUT1_ON                     "      LUT 1 ON"                               0  0 1  1
-#pragma parameter DG_LUT1_SIZE                   "      LUT 1 Size"                             16 8 64 16
-#pragma parameter DG_LUT2_ON                     "      LUT 2 ON"                               0  0 1  1
-#pragma parameter DG_LUT2_SIZE                   "      LUT 2 Size"                             64 8 64 16
+// #pragma parameter DG_LUT_TITLE                   "[ LUT ]:" 0 0 0 1
+// #pragma parameter DG_LUT1_ON                     "      LUT 1 ON"                               0  0 1  1
+// #pragma parameter DG_LUT1_SIZE                   "      LUT 1 Size"                             16 8 64 16
+// #pragma parameter DG_LUT2_ON                     "      LUT 2 ON"                               0  0 1  1
+// #pragma parameter DG_LUT2_SIZE                   "      LUT 2 Size"                             64 8 64 16
 
 #define M_PI            3.1415926535897932384626433832795
 #define gamma_in        global.DG_GAMMA_IN
@@ -190,10 +190,10 @@ layout(std140, set = 0, binding = 0) uniform UBO
 #define gb              global.DG_GREEN_BLUE_TINT
 #define br              global.DG_BLUE_RED_TINT
 #define bg              global.DG_BLUE_GREEN_TINT
-float lut1_size =       global.DG_LUT1_SIZE;
-float lut1_on =         global.DG_LUT1_ON;
-float lut2_size =       global.DG_LUT2_SIZE;
-float lut2_on =         global.DG_LUT2_ON;
+float lut1_size =       32; //global.DG_LUT1_SIZE;
+float lut1_on =         0; //global.DG_LUT1_ON;
+float lut2_size =       32; //global.DG_LUT2_SIZE;
+float lut2_on =         0; //global.DG_LUT2_ON;
 
 #pragma stage vertex
 layout(location = 0) in vec4 Position;

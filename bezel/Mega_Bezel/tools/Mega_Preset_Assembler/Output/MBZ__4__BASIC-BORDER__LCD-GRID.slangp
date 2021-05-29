@@ -10,14 +10,14 @@ scale_y0 = 1
 shader1 = :/shaders/shaders_slang/stock.slang
 alias1 = "ReduceCoreRezPass"
 
-shader2 = :/shaders/shaders_slang/bezel/Mega_Bezel/shaders/HyperspaceMadness/hsm-prep-info-cache-basic-border.slang
+shader2 = :/shaders/shaders_slang/bezel/Mega_Bezel/shaders/HyperspaceMadness/hsm/hsm-prep-info-cache-basic-border.slang
 filter_linear2 = true
 float_framebuffer2 = true
 scale_type2 = source
 scale2 = 1.0
 alias2 = "InfoCachePass"
 
-shader3 = :/shaders/shaders_slang/bezel/Mega_Bezel/shaders/HyperspaceMadness/hsm-prep-intro-basic-border.slang
+shader3 = :/shaders/shaders_slang/bezel/Mega_Bezel/shaders/HyperspaceMadness/hsm/hsm-prep-intro-basic-border.slang
 filter_linear3 = false
 float_framebuffer3 = true
 scale_type3 = source
@@ -58,7 +58,7 @@ scale9 = 1.0
 alias9 = "LinearizePass"
 float_framebuffer9 = true
 
-shader10 = :/shaders/shaders_slang/bezel/Mega_Bezel/shaders/HyperspaceMadness/hsm-delinearize.slang
+shader10 = :/shaders/shaders_slang/bezel/Mega_Bezel/shaders/HyperspaceMadness/hsm/hsm-delinearize.slang
 
 shader11 = :/shaders/shaders_slang/bezel/Mega_Bezel/shaders/HyperspaceMadness/hsm-lcd-cgwg/hsm-lcd-grid-v2.slang
 filter_linear11 = "false"
@@ -71,7 +71,7 @@ scale_type12 = viewport
 scale_x12 = 1.0
 scale_y12 = 1.0
 
-shader13 = :/shaders/shaders_slang/bezel/Mega_Bezel/shaders/HyperspaceMadness/hsm-prep-post-crt-basic-border.slang
+shader13 = :/shaders/shaders_slang/bezel/Mega_Bezel/shaders/HyperspaceMadness/hsm/hsm-prep-post-crt-basic-border.slang
 alias13 = "MBZ_PostCRTPass"
 // Define textures to be used by the different passes
 textures = "SamplerLUT1;SamplerLUT2;SamplerLUT3;SamplerLUT4;IntroImage;ScreenPlacementImage;ColoredGelImage;TubeStaticReflectionImage;BackgroundImage;BackgroundVertImage;"

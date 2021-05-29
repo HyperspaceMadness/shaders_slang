@@ -7,6 +7,7 @@ layout(std140, set = 0, binding = 0) uniform UBO
     vec4 OriginalSize;
     vec4 OutputSize;
     uint FrameCount;
+    float DG_GRADE_ON;
     float DG_GAMMA_IN;
     float DG_SIGNAL_TYPE;
     float DG_SIGNAL_GAMMA_TYPE;
@@ -92,8 +93,9 @@ layout(std140, set = 0, binding = 0) uniform UBO
 
 #pragma parameter DG_TITLE "[ --- COLOR CORRECTION - GRADE --- ]:" 0 0 0 1
 
+#pragma parameter DG_GRADE_ON                   "      Grade ON" 0 0 1 1
 #pragma parameter DG_SIGNAL_GAMMA_TITLE         "[ GAMMA ]:" 0 0 0 1
-#pragma parameter DG_GAMMA_IN                    "CRT Gamma"                                        2.4 1.8 3 0.05
+#pragma parameter DG_GAMMA_IN                    "      CRT Gamma"                                        2.2 1.8 3 0.05
 
 #pragma parameter DG_SIGNAL_COLOR_SPACE_TITLE    "[ SIGNAL & COLOR SPACE ]:" 0 0 0 1
 #pragma parameter DG_SIGNAL_TYPE                 "      Signal Type - RGB | Composite"                           1 0 1 1
@@ -107,10 +109,10 @@ layout(std140, set = 0, binding = 0) uniform UBO
 #pragma parameter DG_I_MULTIPLIER                "      I/U Multiplier"                 1  0 2 0.01
 #pragma parameter DG_Q_MULTIPLIER                "      Q/V Multiplier"                 1  0 2 0.01
 
-#pragma parameter DG_VIGNETTE_TITLE              "[ DARKENING VIGNETTE ]:" 0 0 0 1
-#pragma parameter DG_VIGNETTE_ON                 "      ON"                                 0  0 1 1
-#pragma parameter DG_VIGNETTE_STRENGTH           "      Center Brightness (AKA Strength)"   40 0 50 1
-#pragma parameter DG_VIGNETTE_POWER              "      Edge Darkening (AKA Power)"         0.20 0 0.5 0.01
+// #pragma parameter DG_VIGNETTE_TITLE              "[ DARKENING VIGNETTE ]:" 0 0 0 1
+// #pragma parameter DG_VIGNETTE_ON                 "      ON"                                 0  0 1 1
+// #pragma parameter DG_VIGNETTE_STRENGTH           "      Center Brightness (AKA Strength)"   40 0 50 1
+// #pragma parameter DG_VIGNETTE_POWER              "      Edge Darkening (AKA Power)"         0.20 0 0.5 0.01
 
 #pragma parameter DG_BRIGHTNESS_TITLE            "[ BRIGHTNESS & CONTRAST ]:" 0 0 0 1
 #pragma parameter DG_SEGA_LUMA_FIX               "      Sega Luma Fix"                   0  0 1 1
@@ -154,6 +156,7 @@ layout(std140, set = 0, binding = 0) uniform UBO
 // #pragma parameter DG_LUT2_ON                     "      LUT 2 ON"                               0  0 1  1
 // #pragma parameter DG_LUT2_SIZE                   "      LUT 2 Size"                             64 8 64 16
 
+#define DG_GRADE_ON     global.DG_GRADE_ON
 #define M_PI            3.1415926535897932384626433832795
 #define gamma_in        global.DG_GAMMA_IN
 #define signal          global.DG_SIGNAL_TYPE
@@ -166,9 +169,9 @@ layout(std140, set = 0, binding = 0) uniform UBO
 #define I_MUL           global.DG_I_MULTIPLIER
 #define Q_MUL           global.DG_Q_MULTIPLIER
 #define lum_fix         global.DG_SEGA_LUMA_FIX
-#define vignette        global.DG_VIGNETTE_ON
-#define vstr            global.DG_VIGNETTE_STRENGTH
-#define vpower          global.DG_VIGNETTE_POWER
+// #define vignette        global.DG_VIGNETTE_ON
+// #define vstr            global.DG_VIGNETTE_STRENGTH
+// #define vpower          global.DG_VIGNETTE_POWER
 #define g_sat           global.DG_SATURATION
 #define vibr            global.DG_VIBRANCE
 #define satr            global.DG_HUE_VS_SAT_RED
@@ -736,7 +739,16 @@ void main()
 // Retro Sega Systems: Genesis, 32x, CD and Saturn 2D had color palettes designed in TV levels to save on transformations.
     float lum_exp = (lum_fix ==  1.0) ? (255./239.) : 1.;
 
-    vec3 src = texture(Source, vTexCoord.xy).rgb;
+    //HSM Added
+    vec4 src_rgba = texture(Source, vTexCoord.xy);
+
+    if (DG_GRADE_ON == 0)
+    {
+        FragColor = src_rgba;
+        return;
+    }
+
+    vec3 src = src_rgba.rgb;
          src = (signal == 0.0) ? moncurve_f_f3(src * lum_exp, 2.40, 0.055) : \
                                  moncurve_f_f3(src,           2.40, 0.055) ;
 
@@ -828,6 +840,7 @@ void main()
     contrast = (cntrst == 0.0) ? XYZ_to_RGB(vcolor, SPC) : XYZsrgb;
 
 
+    /* HSM Removed
 // Vignetting & Black Level
     vec2 vpos = vTexCoord*(global.OriginalSize.xy/global.SourceSize.xy);
 
@@ -835,6 +848,7 @@ void main()
     float vig = vpos.x * vpos.y * vstr;
     vig = min(pow(vig, vpower), 1.0);
     contrast *= (vignette == 1.0) ? vig : 1.0;
+    */
 
     contrast += (lift / 20.0) * (1.0 - contrast);
 
@@ -942,5 +956,5 @@ void main()
     LUT2_output = (lut2_on == 0.0) ? TRC : LUT2_output;
 
 
-    FragColor = vec4(LUT2_output, 1.0);
+    FragColor = vec4(LUT2_output, src_rgba.a);
 }

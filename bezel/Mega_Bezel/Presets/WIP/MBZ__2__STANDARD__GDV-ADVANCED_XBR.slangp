@@ -1,13 +1,13 @@
 shaders = 17
 
-shader0 = ../../shaders/HyperspaceMadness/hsm-prep-info-cache-advanced.slang
+shader0 = ../../shaders/HyperspaceMadness/hsm/hsm-prep-info-cache-advanced.slang
 filter_linear0 = true
 float_framebuffer0 = true
 scale_type0 = source
 scale0 = 1.0
 alias0  = "InfoCachePass"
 
-shader1 = ../../shaders/HyperspaceMadness/hsm-prep-intro-advanced.slang
+shader1 = ../../shaders/HyperspaceMadness/hsm/hsm-prep-intro-advanced.slang
 filter_linear1 = false
 float_framebuffer1 = true
 scale_type1 = source

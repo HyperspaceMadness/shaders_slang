@@ -3,7 +3,7 @@
 //      Add Color Correction
 //      Calculate Average Luminance and put in alpha channel
 //      Debug Drawing of the resolution & screen scaling info
-shader0 = shaders/HyperspaceMadness/hsm-prep-intro.slang
+shader0 = shaders/HyperspaceMadness/hsm/hsm-prep-intro.slang
 float_framebuffer0 = true
 
 // Color Correction with Dogway's awesome Grade shader
@@ -98,7 +98,7 @@ alias20 = BR_MappingPass
 //      Reduce the resolution to a small static size regardless of final resolution
 //      Allows consistent look and faster at different final resolutions for blur
 //      Mipmap option allows downscaling without artifacts
-shader21 = shaders/HyperspaceMadness/hsm-linearize-crt.slang
+shader21 = shaders/HyperspaceMadness/hsm/hsm-linearize-crt.slang
 mipmap_input21 = true
 filter_linear21 = true
 scale_type21 = absolute
@@ -114,7 +114,7 @@ float_framebuffer21 = true
 alias21 = BR_MirrorLowResPass
 
 // Add Blur for the Reflection (Horizontal) ----------------------------------------------------------------
-shader22 = shaders/HyperspaceMadness/hsm-blur-outside-screen-horiz.slang
+shader22 = shaders/HyperspaceMadness/hsm/hsm-blur-outside-screen-horiz.slang
 mipmap_input22 = true
 filter_linear22 = true
 float_framebuffer22 = true
@@ -122,7 +122,7 @@ scale_type23 = source
 wrap_mode22 = mirrored_repeat
 
 // Add Blur for the Reflection (Vertical) ----------------------------------------------------------------
-shader23 = shaders/HyperspaceMadness/hsm-blur-outside-screen-vert.slang
+shader23 = shaders/HyperspaceMadness/hsm/hsm-blur-outside-screen-vert.slang
 filter_linear23 = false
 scale_type23 = source
 float_framebuffer23 = true
@@ -157,7 +157,7 @@ alias25 = BR_MirrorFullscreenGlowPass
 
 
 // Bezel Reflection ----------------------------------------------------------------
-shader26 = shaders/HyperspaceMadness/hsm-bezel-reflection.slang
+shader26 = shaders/HyperspaceMadness/hsm/hsm-bezel-reflection.slang
 mipmap_input26 = true
 filter_linear26 = true
 scale_type26 = viewport
@@ -167,7 +167,7 @@ alias26 = BR_CRTAndReflectionPass
 // Bezel Generation & Composite of Image Layers ----------------------------------------------------------------
 
 
-shader27 = shaders/HyperspaceMadness/hsm-bezel-image-layers.slang
+shader27 = shaders/HyperspaceMadness/hsm/hsm-bezel-image-layers.slang
 mipmap_input27 = true
 filter_linear27 = true
 scale_type27 = viewport

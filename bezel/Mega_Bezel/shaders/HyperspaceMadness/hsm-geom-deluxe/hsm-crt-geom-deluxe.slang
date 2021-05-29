@@ -10,7 +10,7 @@
  *  any later version.
  */
 // HSM Added
-#include "../hsm-globals-and-screen-scale-params.inc"
+#include "../hsm/hsm-globals-and-screen-scale-params.inc"
 // End Addition
 
 #include "hsm-geom-deluxe-params.inc"

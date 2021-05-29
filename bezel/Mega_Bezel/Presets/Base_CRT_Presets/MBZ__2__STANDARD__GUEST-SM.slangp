@@ -1,14 +1,14 @@
 // Add Mega Bezel parameters at the beginning of the list for easy access
 // A very small pass at 1/8th scale to cache values which are consistent across the frame
 // Read back these values later for better performance
-shader0 = ../../shaders/HyperspaceMadness/hsm-prep-info-cache-standard.slang
+shader0 = ../../shaders/HyperspaceMadness/hsm/hsm-prep-info-cache-standard.slang
 float_framebuffer0 = true
 scale_type0 = source
 scale_y0 = 0.25
 alias0  = "InfoCachePass"
 
 // Add Intro Animation
-shader1 = ../../shaders/HyperspaceMadness/hsm-prep-intro-standard.slang
+shader1 = ../../shaders/HyperspaceMadness/hsm/hsm-prep-intro-standard.slang
 float_framebuffer1 = true
 scale_type1 = source
 scale_y1 = 4
@@ -96,7 +96,7 @@ float_framebuffer16 = true
 // scale_y16 = 1.0
 // filter_linear16 = false
 
-shader17 = ../../shaders/HyperspaceMadness/hsm-phosphor-persistence.slang
+shader17 = ../../shaders/HyperspaceMadness/hsm/hsm-phosphor-persistence.slang
 filter_linear17 = false
 scale_type17 = source
 scale17 = 1.0
@@ -137,7 +137,7 @@ alias22 = MBZ_PostCRTPass
 //      Reduce the resolution to a small static size regardless of final resolution
 //      Allows consistent look and faster at different final resolutions for blur
 //      Mipmap option allows downscaling without artifacts
-shader23 = ../../shaders/HyperspaceMadness/hsm-linearize-crt.slang
+shader23 = ../../shaders/HyperspaceMadness/hsm/hsm-linearize-crt.slang
 mipmap_input23 = true
 filter_linear23 = true
 scale_type23 = absolute
@@ -146,13 +146,13 @@ scale_y23 = 600
 alias23 = BR_MirrorLowResPass
 
 // Add Blur for the Reflection (Horizontal) ----------------------------------------------------------------
-shader24 = ../../shaders/HyperspaceMadness/hsm-blur-outside-screen-horiz.slang
+shader24 = ../../shaders/HyperspaceMadness/hsm/hsm-blur-outside-screen-horiz.slang
 mipmap_input24 = true
 filter_linear24 = true
 scale_type25 = source
 
 // Add Blur for the Reflection (Vertical) ----------------------------------------------------------------
-shader25 = ../../shaders/HyperspaceMadness/hsm-blur-outside-screen-vert.slang
+shader25 = ../../shaders/HyperspaceMadness/hsm/hsm-blur-outside-screen-vert.slang
 mipmap_input25 = true
 filter_linear25 = true
 alias25 = BR_MirrorBlurredPass
@@ -181,7 +181,7 @@ alias27 = BR_MirrorFullscreenGlowPass
 
 // Bezel Reflection ----------------------------------------------------------------
 // Float Framebuffer is TRUE here on purpose, otherwise we get banding
-shader28 = ../../shaders/HyperspaceMadness/hsm-bezel-reflection-standard.slang
+shader28 = ../../shaders/HyperspaceMadness/hsm/hsm-bezel-reflection-standard.slang
 filter_linear28 = true
 scale_type28 = viewport
 float_framebuffer28 = true

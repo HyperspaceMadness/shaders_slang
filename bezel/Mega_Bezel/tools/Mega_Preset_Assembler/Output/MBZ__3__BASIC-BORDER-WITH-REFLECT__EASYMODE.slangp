@@ -10,14 +10,14 @@ scale_y0 = 1
 shader1 = :/shaders/shaders_slang/stock.slang
 alias1 = "ReduceCoreRezPass"
 
-shader2 = :/shaders/shaders_slang/bezel/Mega_Bezel/shaders/HyperspaceMadness/hsm-prep-info-cache-basic-border-with-reflect.slang
+shader2 = :/shaders/shaders_slang/bezel/Mega_Bezel/shaders/HyperspaceMadness/hsm/hsm-prep-info-cache-basic-border-with-reflect.slang
 filter_linear2 = true
 float_framebuffer2 = true
 scale_type2 = source
 scale2 = 1.0
 alias2 = "InfoCachePass"
 
-shader3 = :/shaders/shaders_slang/bezel/Mega_Bezel/shaders/HyperspaceMadness/hsm-prep-intro-basic-border-with-reflect.slang
+shader3 = :/shaders/shaders_slang/bezel/Mega_Bezel/shaders/HyperspaceMadness/hsm/hsm-prep-intro-basic-border-with-reflect.slang
 filter_linear3 = false
 float_framebuffer3 = true
 scale_type3 = source
@@ -82,14 +82,14 @@ scale_type14 = viewport
 scale_x14 = 1.0
 scale_y14 = 1.0
 
-shader15 = :/shaders/shaders_slang/bezel/Mega_Bezel/shaders/HyperspaceMadness/hsm-prep-post-crt.slang
+shader15 = :/shaders/shaders_slang/bezel/Mega_Bezel/shaders/HyperspaceMadness/hsm/hsm-prep-post-crt.slang
 alias15 = "MBZ_PostCRTPass"
 
 // Reduce Resolution  ----------------------------------------------------------------
 //      Reduce the resolution to a small static size regardless of final resolution
 //      Allows consistent look and faster at different final resolutions for blur
 //      Mipmap option allows downscaling without artifacts
-shader16 = :/shaders/shaders_slang/bezel/Mega_Bezel/shaders/HyperspaceMadness/hsm-linearize-crt.slang
+shader16 = :/shaders/shaders_slang/bezel/Mega_Bezel/shaders/HyperspaceMadness/hsm/hsm-linearize-crt.slang
 mipmap_input16 = true
 filter_linear16 = true
 scale_type16 = absolute
@@ -102,12 +102,12 @@ scale_y16 = 600
 alias16 = "BR_MirrorLowResPass"
 
 // Add Blur for the Reflection (Horizontal) ----------------------------------------------------------------
-shader17 = :/shaders/shaders_slang/bezel/Mega_Bezel/shaders/HyperspaceMadness/hsm-blur-outside-screen-horiz.slang
+shader17 = :/shaders/shaders_slang/bezel/Mega_Bezel/shaders/HyperspaceMadness/hsm/hsm-blur-outside-screen-horiz.slang
 mipmap_input17 = true
 filter_linear17 = true
 
 // Add Blur for the Reflection (Vertical) ----------------------------------------------------------------
-shader18 = :/shaders/shaders_slang/bezel/Mega_Bezel/shaders/HyperspaceMadness/hsm-blur-outside-screen-vert.slang
+shader18 = :/shaders/shaders_slang/bezel/Mega_Bezel/shaders/HyperspaceMadness/hsm/hsm-blur-outside-screen-vert.slang
 filter_linear18 = true
 alias18 = "BR_MirrorBlurredPass"
 
@@ -134,7 +134,7 @@ scale_y20 = 12
 alias20 = "BR_MirrorFullscreenGlowPass"
 
 // Bezel Reflection ----------------------------------------------------------------
-shader21 = :/shaders/shaders_slang/bezel/Mega_Bezel/shaders/HyperspaceMadness/hsm-bezel-reflection-basic-border-with-reflect.slang
+shader21 = :/shaders/shaders_slang/bezel/Mega_Bezel/shaders/HyperspaceMadness/hsm/hsm-bezel-reflection-basic-border-with-reflect.slang
 scale_type21 = viewport
 float_framebuffer21 = true
 alias21 = "BR_CRTAndReflectionPass"

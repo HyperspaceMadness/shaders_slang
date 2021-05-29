@@ -16,7 +16,10 @@ Changes:
   * X Position offset added to ADVANCED presets
   * HDCore presets or other presets where there is resolution reduction in the first pass this is reported properly
   * Added Brightness parameter to the gamma in and out to adjust brightness after the CRT pass, should be helpful for things like vector games
-  * Removed the LUT options from Grade since Guest's LUT is now included
+  * Grade
+    * Added On/Off Switch, is off by default because default settings darken the image
+    * Removed the LUT options from Grade since Guest's LUT is now included
+    * Removed Vignette since we already have a vignette in the Mega Bezel
   * Additional Guest features added to other CRT shaders, e.g. interlacing, deconvergence
 
 *  Performance of Base presets at 3840x2160 on Nvidia RTX2060:

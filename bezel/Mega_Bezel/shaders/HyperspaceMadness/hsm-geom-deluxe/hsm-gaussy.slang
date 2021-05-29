@@ -1,6 +1,6 @@
 #version 450
 
-#include "../hsm-globals.inc"
+#include "../hsm/hsm-globals.inc"
 #include "hsm-geom-deluxe-params.inc"
 
 #define tex_size0 global.SourceSize

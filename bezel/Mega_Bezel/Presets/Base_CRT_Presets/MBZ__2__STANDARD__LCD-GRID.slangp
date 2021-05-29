@@ -1,14 +1,14 @@
 // Add Mega Bezel parameters at the beginning of the list for easy access
 // A very small pass at 1/8th scale to cache values which are consistent across the frame
 // Read back these values later for better performance
-shader0 = ../../shaders/HyperspaceMadness/hsm-prep-info-cache-standard.slang
+shader0 = ../../shaders/HyperspaceMadness/hsm/hsm-prep-info-cache-standard.slang
 float_framebuffer0 = true
 scale_type0 = source
 scale_y0 = 0.25
 alias0  = "InfoCachePass"
 
 // Add Intro Animation
-shader1 = ../../shaders/HyperspaceMadness/hsm-prep-intro-standard.slang
+shader1 = ../../shaders/HyperspaceMadness/hsm/hsm-prep-intro-standard.slang
 float_framebuffer1 = true
 scale_type1 = source
 scale_y1 = 4
@@ -48,7 +48,7 @@ alias11 = MBZ_PostCRTPass
 //      Reduce the resolution to a small static size regardless of final resolution
 //      Allows consistent look and faster at different final resolutions for blur
 //      Mipmap option allows downscaling without artifacts
-shader12 = ../../shaders/HyperspaceMadness/hsm-linearize-crt-alternate.slang
+shader12 = ../../shaders/HyperspaceMadness/hsm/hsm-linearize-crt-alternate.slang
 mipmap_input12 = true
 filter_linear12 = true
 scale_type12 = absolute
@@ -63,14 +63,14 @@ float_framebuffer12 = true
 alias12 = BR_MirrorLowResPass
 
 // Add Blur for the Reflection (Horizontal) ----------------------------------------------------------------
-shader13 = ../../shaders/HyperspaceMadness/hsm-blur-outside-screen-horiz.slang
+shader13 = ../../shaders/HyperspaceMadness/hsm/hsm-blur-outside-screen-horiz.slang
 mipmap_input13 = true
 filter_linear13 = true
 float_framebuffer13 = true
 scale_type14 = source
 
 // Add Blur for the Reflection (Vertical) ----------------------------------------------------------------
-shader14 = ../../shaders/HyperspaceMadness/hsm-blur-outside-screen-vert.slang
+shader14 = ../../shaders/HyperspaceMadness/hsm/hsm-blur-outside-screen-vert.slang
 filter_linear14 = false
 scale_type14 = source
 float_framebuffer14 = true
@@ -101,7 +101,7 @@ scale_y16 = 12
 alias16 = BR_MirrorFullscreenGlowPass
 
 // Bezel Reflection ----------------------------------------------------------------
-shader17 = ../../shaders/HyperspaceMadness/hsm-bezel-reflection-standard.slang
+shader17 = ../../shaders/HyperspaceMadness/hsm/hsm-bezel-reflection-standard.slang
 mipmap_input17 = true
 filter_linear17 = true
 scale_type17 = viewport

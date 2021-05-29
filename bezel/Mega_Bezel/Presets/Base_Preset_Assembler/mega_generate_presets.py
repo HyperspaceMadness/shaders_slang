@@ -68,16 +68,16 @@ for template_path in [p for p in template_paths if os.path.splitext(p)[1] == '.p
 
         out_preset_contents = "shaders = " + str(next_pass_index) + '\n' + out_preset_contents
 
-        output_file_path = os.path.join(output_path, os.path.split(template_path)[1].replace('protoslangp', 'slangp'))
-        f = open(output_file_path, "w")
-        f.write(out_preset_contents)
-        f.close()
-        if template_errors:
+        if not template_errors:
+            output_file_path = os.path.join(output_path, os.path.split(template_path)[1].replace('protoslangp', 'slangp'))
+            f = open(output_file_path, "w")
+            f.write(out_preset_contents)
+            f.close()
+            successes.append(os.path.split(output_file_path)[1])
+        else:
             errors.append(os.path.split(template_path)[1])
             errors.extend(template_errors)
             errors.append( '\n' )
-        else:
-            successes.append(os.path.split(output_file_path)[1])
     else:
         errors.append( os.path.split(template_path)[1] + ':' )
         errors.append( '    is Empty\n' )

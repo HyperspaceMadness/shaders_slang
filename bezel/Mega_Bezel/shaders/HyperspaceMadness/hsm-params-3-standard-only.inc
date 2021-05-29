@@ -16,7 +16,7 @@ float HSM_NIGHT_MIRROR_HORZ = global.HSM_NIGHT_MIRROR_HORZ;
 //---------------------------------------------------------------------------------------------------
 //    IMAGES GAMMA
 //---------------------------------------------------------------------------------------------------
-#pragma parameter HSM_STATIC_GAMMA_TITLE            "[ STATIC IMAGE LAYER GAMMA ]:" 0 0 0.01 0.01
+#pragma parameter HSM_STATIC_GAMMA_TITLE        "[ IMAGE LAYER GAMMA ]:" 0 0 0.01 0.01
 
 #pragma parameter HSM_STATIC_LAYERS_GAMMA		    "      Image Layers Gamma Adjust" 1 0.01 5 0.01
 float HSM_STATIC_LAYERS_GAMMA = global.HSM_STATIC_LAYERS_GAMMA;

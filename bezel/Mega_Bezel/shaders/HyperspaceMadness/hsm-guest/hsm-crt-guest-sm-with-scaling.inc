@@ -594,8 +594,8 @@ void main()
 	FragColor = vec4(color1g, 1.0);
 	*/
 
-	// // HSM Addition
-	FragColor = vec4(color, 1.0);
-	FragColor = HSM_GetPostCrtPreppedColor(FragColor, vTexCoord, screen_curved_coord, IntroPass, false, ColoredGelImage, TubeStaticReflectionImage, BackgroundImage, BackgroundVertImage);
-	// // End Addition
+	// HSM Added - Prep and add output gamma
+	color = pow(color, vec3(1.0/HSM_GAMMA_OUT_CRT));
+	FragColor = vec4(color, 1);
+	// End Addition
 }

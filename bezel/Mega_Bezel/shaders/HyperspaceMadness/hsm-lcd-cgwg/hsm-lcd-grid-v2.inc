@@ -156,9 +156,7 @@ void main()
     // HSM Added
     FragColor = vec4(averageColor, 1);
 
-    // Linearize so it is linear when it goes to the post prep
-    // FragColor = HSM_Linearize(FragColor, HSM_DEFAULT_CRT_GAMMA);
-
-	FragColor = HSM_GetPostCrtPreppedColor(FragColor, vTexCoord, screen_curved_coord, IntroPass, false, ColoredGelImage, TubeStaticReflectionImage, BackgroundImage, BackgroundVertImage);
-    // End Addition
+	// HSM add output gamma
+	FragColor = HSM_Delinearize(FragColor, HSM_GAMMA_OUT_CRT);
+	// End Addition
 }

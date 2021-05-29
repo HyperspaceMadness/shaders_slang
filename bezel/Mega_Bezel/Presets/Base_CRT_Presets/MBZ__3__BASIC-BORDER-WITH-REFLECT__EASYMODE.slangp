@@ -27,7 +27,7 @@ alias3 = "PersistencePass"
 shader4 = ../../shaders/HyperspaceMadness/hsm-linearize.slang
 filter_linear4 = false
 srgb_framebuffer4 = true
-alias4 = ORIG_LINEARIZED
+alias4 = LinearizePass
 
 shader5 = ../../shaders/HyperspaceMadness/hsm-easymode/hsm-crt-easymode-blur_horiz.slang
 filter_linear5 = false

@@ -33,27 +33,27 @@ layout(push_constant) uniform Push
 // HSM Removed
 // #pragma parameter GAMMA_OUTPUT          "    Gamma Output" 2.2 0.1 5.0 0.01
 #pragma parameter ESM_EASYMODE_TITLE        "[ --- EASYMODE--- ]:" 0 0 0 1
-#pragma parameter ESM_SCANLINE_TITLE         "[ SCANLINE ]:" 0 0 0 1
+#pragma parameter ESM_SCANLINE_TITLE        "[ SCANLINE ]:" 0 0 0 1
 #pragma parameter ESM_INTERLACING_TOGGLE    "[EASYMODE SCANLINE]  Interlace ON" 0 0.0 1.0 1.0
-#pragma parameter ESM_SCANLINE_STRENGTH_MIN "      Strength Min." 0.2 0.0 1.0 0.05
-#pragma parameter ESM_SCANLINE_STRENGTH_MAX "      Strength Max." 0.4 0.0 1.0 0.05
-#pragma parameter ESM_SCANLINE_BEAM_MIN     "      Beam Min." 1.0 0.25 5.0 0.05
-#pragma parameter ESM_SCANLINE_BEAM_MAX     "      Beam Max." 1.0 0.25 5.0 0.05
+#pragma parameter ESM_SCANLINE_STRENGTH_MIN "          Strength Min." 0.2 0.0 1.0 0.05
+#pragma parameter ESM_SCANLINE_STRENGTH_MAX "          Strength Max." 0.4 0.0 1.0 0.05
+#pragma parameter ESM_SCANLINE_BEAM_MIN     "          Beam Min." 1.0 0.25 5.0 0.05
+#pragma parameter ESM_SCANLINE_BEAM_MAX     "          Beam Max." 1.0 0.25 5.0 0.05
 
-#pragma parameter ESM_SHARPNESS_TITLE        "[ SHARPNESS ]:" 0 0 0 1
-#pragma parameter ESM_SHARPNESS_H           "      Horizontal" 0.6 0.0 1.0 0.05
-#pragma parameter ESM_SHARPNESS_V           "      Vertical" 1.0 0.0 1.0 0.05
+#pragma parameter ESM_SHARPNESS_TITLE       "[ SHARPNESS ]:" 0 0 0 1
+#pragma parameter ESM_SHARPNESS_H           "          Horizontal" 0.6 0.0 1.0 0.05
+#pragma parameter ESM_SHARPNESS_V           "          Vertical" 1.0 0.0 1.0 0.05
 
 #pragma parameter ESM_MASK_TITLE            "[ MASK ]:" 0 0 0 1
-#pragma parameter ESM_MASK_TYPE             "      Type" 4.0 0.0 7.0 1.0
-#pragma parameter ESM_MASK_SIZE             "      Size - 0:Auto, 1:2K, 2:4K" 0 0 100 1
-#pragma parameter ESM_MASK_STRENGTH_MIN     "      Strength Min." 0.2 0.0 0.5 0.01
-#pragma parameter ESM_MASK_STRENGTH_MAX     "      Strength Max." 0.2 0.0 0.5 0.01
+#pragma parameter ESM_MASK_TYPE             "          Type" 4.0 0.0 7.0 1.0
+#pragma parameter ESM_MASK_SIZE             "          Size - 0:Auto, 1:2K, 2:4K" 0 0 100 1
+#pragma parameter ESM_MASK_STRENGTH_MIN     "          Strength Min." 0.2 0.0 0.5 0.01
+#pragma parameter ESM_MASK_STRENGTH_MAX     "          Strength Max." 0.2 0.0 0.5 0.01
 
-#pragma parameter ESM_GLOW_TITLE        "[ GLOW ]:" 0 0 0 1
-#pragma parameter ESM_HALATION              "      Halation" 0.03 0.0 1.0 0.01
-#pragma parameter ESM_DIFFUSION             "      Diffusion" 0.0 0.0 1.0 0.01
-#pragma parameter ESM_BRIGHTNESS            "      Brightness" 1.0 0.0 2.0 0.05
+#pragma parameter ESM_GLOW_TITLE            "[ GLOW ]:" 0 0 0 1
+#pragma parameter ESM_HALATION              "          Halation" 0.03 0.0 1.0 0.01
+#pragma parameter ESM_DIFFUSION             "          Diffusion" 0.0 0.0 1.0 0.01
+#pragma parameter ESM_BRIGHTNESS            "          Brightness" 1.0 0.0 2.0 0.05
 
 // HSM Removed
 // #pragma parameter GEOM_CURVATURE "Geom Curvature" 0.0 0.0 0.1 0.01
@@ -167,7 +167,7 @@ layout(location = 0) out vec4 FragColor;
 layout(set = 0, binding = 1) uniform sampler2D IntroPass;
 layout(set = 0, binding = 2) uniform sampler2D Source;
 layout(set = 0, binding = 3) uniform sampler2D InfoCachePass;
-layout(set = 0, binding = 4) uniform sampler2D ORIG_LINEARIZED;
+layout(set = 0, binding = 4) uniform sampler2D LinearizePass;
 
 layout(set = 0, binding = 5) uniform sampler2D ColoredGelImage;
 layout(set = 0, binding = 6) uniform sampler2D TubeStaticReflectionImage;
@@ -247,10 +247,10 @@ void main()
 
     mat4x4 color_matrix;
 
-    color_matrix[0] = filter_lanczos(coeffs_x, get_color_matrix(ORIG_LINEARIZED, tex_co - dy, dx));
-    color_matrix[1] = filter_lanczos(coeffs_x, get_color_matrix(ORIG_LINEARIZED, tex_co, dx));
-    color_matrix[2] = filter_lanczos(coeffs_x, get_color_matrix(ORIG_LINEARIZED, tex_co + dy, dx));
-    color_matrix[3] = filter_lanczos(coeffs_x, get_color_matrix(ORIG_LINEARIZED, tex_co + 2.0 * dy, dx));
+    color_matrix[0] = filter_lanczos(coeffs_x, get_color_matrix(LinearizePass, tex_co - dy, dx));
+    color_matrix[1] = filter_lanczos(coeffs_x, get_color_matrix(LinearizePass, tex_co, dx));
+    color_matrix[2] = filter_lanczos(coeffs_x, get_color_matrix(LinearizePass, tex_co + dy, dx));
+    color_matrix[3] = filter_lanczos(coeffs_x, get_color_matrix(LinearizePass, tex_co + 2.0 * dy, dx));
 
     col = filter_lanczos(coeffs_y, color_matrix).rgb;
     diff = HSM_GetCroppedTexSample(Source, xy).rgb;
@@ -351,7 +351,7 @@ void main()
     
     FragColor = vec4(col, 1);
 
-	// HSM Added Prep and add output gamma
-	FragColor = HSM_GetPostCrtPreppedColor(FragColor, vTexCoord, screen_curved_coord, IntroPass, false, ColoredGelImage, TubeStaticReflectionImage, BackgroundImage, BackgroundVertImage);
+	// HSM add output gamma
+	FragColor = HSM_Delinearize(FragColor, HSM_GAMMA_OUT_CRT);
 	// End Addition
 }

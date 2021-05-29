@@ -28,10 +28,10 @@ void main()
 layout(location = 0) in vec2 vTexCoord;
 layout(location = 0) out vec4 FragColor;
 layout(set = 0, binding = 2) uniform sampler2D Source;
-layout(set = 0, binding = 3) uniform sampler2D ORIG_LINEARIZED;
+layout(set = 0, binding = 3) uniform sampler2D LinearizePass;
 
 void main()
 {
-vec3 diff = clamp(texture(Source, vTexCoord).rgb - texture(ORIG_LINEARIZED, vTexCoord).rgb, 0.0, 1.0);
+vec3 diff = clamp(texture(Source, vTexCoord).rgb - texture(LinearizePass, vTexCoord).rgb, 0.0, 1.0);
    FragColor = vec4(diff, 1.0);
 }

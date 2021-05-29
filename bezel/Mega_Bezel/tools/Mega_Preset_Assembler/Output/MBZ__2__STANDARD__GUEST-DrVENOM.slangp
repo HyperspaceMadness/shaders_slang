@@ -115,7 +115,7 @@ shader25 = :/shaders/shaders_slang/bezel/Mega_Bezel/shaders/HyperspaceMadness/hs
 filter_linear25 = true
 scale_type25 = source
 scale25 = 1.0
-alias25 = LinearizePass
+alias25 = "LinearizePass"
 float_framebuffer25 = true
 
 shader26 = :/shaders/shaders_slang/bezel/Mega_Bezel/shaders/HyperspaceMadness/hsm-guest/advanced/hsm-gaussian_horizontal.slang

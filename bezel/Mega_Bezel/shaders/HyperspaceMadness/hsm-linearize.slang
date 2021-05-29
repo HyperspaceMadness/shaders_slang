@@ -28,5 +28,5 @@ layout(set = 0, binding = 2) uniform sampler2D Source;
 
 void main()
 {
-   FragColor = HSM_Linearize(texture(Source, vTexCoord), HSM_DEFAULT_CRT_GAMMA);
+   FragColor = HSM_Linearize(texture(Source, vTexCoord), HSM_GAMMA_IN_LINEARIZE);
 }

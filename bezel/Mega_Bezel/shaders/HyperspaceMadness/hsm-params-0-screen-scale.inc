@@ -138,6 +138,8 @@ float HSM_CORE_RES_SAMPLING_MULT_SCANLINE_DIR = global.HSM_CORE_RES_SAMPLING_MUL
 #pragma parameter HSM_CORE_RES_SAMPLING_MULT_OPPOSITE_DIR			"      Opposite Dir Multiplier (Y Downsample for H Scanline)"  100 25 1600 25
 float HSM_CORE_RES_SAMPLING_MULT_OPPOSITE_DIR = global.HSM_CORE_RES_SAMPLING_MULT_OPPOSITE_DIR / 100;
 
+#pragma parameter HSM_DOWNSAMPLE_BLUR 								"      Downsample Blur (High-res core)" 0 0 100 10
+float HSM_DOWNSAMPLE_BLUR = global.HSM_DOWNSAMPLE_BLUR / 100;
 
 //---------------------------------------------------------------------------------------------------
 //    INTERLACING
@@ -159,9 +161,6 @@ float HSM_CORE_RES_SAMPLING_MULT_OPPOSITE_DIR = global.HSM_CORE_RES_SAMPLING_MUL
 
 #pragma parameter GDV_INTERLACE_SCANLINE_SATURATION 				"      Interlacing (Scanline) Saturation" 40 0 100 5
 #define GDV_INTERLACE_SCANLINE_SATURATION global.GDV_INTERLACE_SCANLINE_SATURATION / 100
-
-#pragma parameter HSM_DOWNSAMPLE_BLUR 					"      Downsample Blur (High-res core)" 0 0 100 10
-float HSM_DOWNSAMPLE_BLUR = global.HSM_DOWNSAMPLE_BLUR / 100;
 
 
 //---------------------------------------------------------------------------------------------------

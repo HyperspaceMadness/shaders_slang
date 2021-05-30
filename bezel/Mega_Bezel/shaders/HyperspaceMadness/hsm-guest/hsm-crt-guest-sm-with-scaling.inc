@@ -84,76 +84,76 @@ layout(push_constant) uniform Push
 //	float autobrm;	
 //	float sclip;
 //} global;
-#pragma parameter GSM_GLOW_STRENGTH 	"      Base Glow Strength" 0.0 0.0 1.0 0.01
+#pragma parameter GSM_GLOW_STRENGTH 	"          Base Glow Strength" 0.0 0.0 1.0 0.01
 #define bglow params.GSM_GLOW_STRENGTH
 
-#pragma parameter GSM_BLOOM_STRENGTH 	"      Bloom Strength" 0.40 0.0 2.0 0.05
+#pragma parameter GSM_BLOOM_STRENGTH 	"          Bloom Strength" 0.40 0.0 2.0 0.05
 #define bloom params.GSM_BLOOM_STRENGTH
 
 #pragma parameter GDV_BRIGHTNESS_TITLE				"[ BRIGHTNESS ]:" 0 0 0.01 0.01
 
-#pragma parameter GSM_AUTO_BRIGHTNESS 	"      Automatic Brightness (Mask)" 0.5 0.0 1.0 0.1
+#pragma parameter GSM_AUTO_BRIGHTNESS 	"          Automatic Brightness (Mask)" 0.5 0.0 1.0 0.1
 #define autobrm params.GSM_AUTO_BRIGHTNESS
 
 // HSM Removed
 // #pragma parameter smart "1:Smart 2:Crop 3:Overscan Y Integer Scaling" 0.0 0.0 3.0 1.0
 // #define smart params.smart
 
-#pragma parameter GSM_BRIGHT_BOOST_DARK_COLORS "      Boost Dark Colors" 1.40 0.5 5.0 0.10
+#pragma parameter GSM_BRIGHT_BOOST_DARK_COLORS "          Boost Dark Colors" 1.40 0.5 5.0 0.10
 #define brightboost1 params.GSM_BRIGHT_BOOST_DARK_COLORS
 
-#pragma parameter GSM_BRIGHT_BOOST_BRIGHT_COLORS "      Boost Bright Colors" 1.15 0.5 3.0 0.05
+#pragma parameter GSM_BRIGHT_BOOST_BRIGHT_COLORS "          Boost Bright Colors" 1.15 0.5 3.0 0.05
 #define brightboost2 params.GSM_BRIGHT_BOOST_BRIGHT_COLORS
 
 
 #pragma parameter GDV_SCANLINE_TITLE				"[ SCANLINE ]:" 0 0 0.01 0.01
 
-#pragma parameter GSM_SCANLINE_TYPE 				"      Type" 1.0 0.0 3.0 1.0
+#pragma parameter GSM_SCANLINE_TYPE 				"          Type" 1.0 0.0 3.0 1.0
 #define stype params.GSM_SCANLINE_TYPE
 
-#pragma parameter GSM_SCANLINE_SHAPE_CENTER_HIGH 	"      Shape Center (High)" 5.0 2.0 20.0 0.5
+#pragma parameter GSM_SCANLINE_SHAPE_CENTER_HIGH 	"          Shape Center (High)" 5.0 2.0 20.0 0.5
 #define scanline1 params.GSM_SCANLINE_SHAPE_CENTER_HIGH
 
-#pragma parameter GSM_SCANLINE_SHAPE_EDGES_LOW 		"      Shape Edges (Low)"  7.0 4.0 20.0 0.5
+#pragma parameter GSM_SCANLINE_SHAPE_EDGES_LOW 		"          Shape Edges (Low)"  7.0 4.0 20.0 0.5
 #define scanline2 params.GSM_SCANLINE_SHAPE_EDGES_LOW
 
-#pragma parameter GSM_SCANLINE_DARK_BEAM_SIZE_MIN 	"      Dark Beam Size" 1.25 0.5 3.0 0.05
+#pragma parameter GSM_SCANLINE_DARK_BEAM_SIZE_MIN 	"          Dark Beam Size" 1.25 0.5 3.0 0.05
 #define beam_min params.GSM_SCANLINE_DARK_BEAM_SIZE_MIN
 
-#pragma parameter GSM_SCANLINE_BRIGHT_BEAM_SIZE_MAX "      Bright Beam Size" 1.10 0.5 3.0 0.05
+#pragma parameter GSM_SCANLINE_BRIGHT_BEAM_SIZE_MAX "          Bright Beam Size" 1.10 0.5 3.0 0.05
 #define beam_max params.GSM_SCANLINE_BRIGHT_BEAM_SIZE_MAX
 
-#pragma parameter GSM_SCANLINE_MASK_CLIPPING_WITH_BLOOM "      Allow Scanline/Mask Clipping with Bloom" 0.50 0.0 1.0 0.05
+#pragma parameter GSM_SCANLINE_MASK_CLIPPING_WITH_BLOOM "          Allow Scanline/Mask Clipping with Bloom" 0.50 0.0 1.0 0.05
 #define sclip params.GSM_SCANLINE_MASK_CLIPPING_WITH_BLOOM
 
-#pragma parameter GSM_SCANLINE_OVERGROWN_BRIGHT_BEAM "      Overgrown Bright Beam (Increased Bright Beam)" 0.70 0.0 1.0 0.05
+#pragma parameter GSM_SCANLINE_OVERGROWN_BRIGHT_BEAM "          Overgrown Bright Beam (Increased Bright Beam)" 0.70 0.0 1.0 0.05
 #define s_beam params.GSM_SCANLINE_OVERGROWN_BRIGHT_BEAM
 
 
 #pragma parameter GDV_SHARPNESS_TITLE				"[ SHARPNESS ]:" 0 0 0.01 0.01
 
-#pragma parameter GSM_HORIZONTAL_SHARPNESS 			"      Horizontal Sharpness" 3.0 1.0 10.0 0.10
+#pragma parameter GSM_HORIZONTAL_SHARPNESS 			"          Horizontal Sharpness" 3.0 1.0 10.0 0.10
 #define h_sharp params.GSM_HORIZONTAL_SHARPNESS
 
-#pragma parameter GSM_SCANLINE_CUBIC_FILTERING 		"      Cubic Filtering" 1.0 0.0 1.0 0.10
+#pragma parameter GSM_SCANLINE_CUBIC_FILTERING 		"          Cubic Filtering" 1.0 0.0 1.0 0.10
 #define cubic params.GSM_SCANLINE_CUBIC_FILTERING
 
 
 #pragma parameter GDV_MASK_TITLE					"[ MASK ]:" 0 0 0.01 0.01
 
-#pragma parameter GSM_MASK_TYPE 					"      Type (4&5 are 4k masks)" 0.0 0.0 5.0 1.0
+#pragma parameter GSM_MASK_TYPE 					"          Type (4&5 are 4k masks)" 0.0 0.0 5.0 1.0
 #define mask params.GSM_MASK_TYPE
 
-#pragma parameter GSM_MASK_SIZE 					"      Size - 0:Auto, 1:2K, 2:4K" 0 0 2 1
+#pragma parameter GSM_MASK_SIZE 					"          Size - 0:Auto, 1:2K, 2:4K" 0 0 2 1
 #define masksize params.GSM_MASK_SIZE
 
-#pragma parameter GSM_MASK_MODE 					"      Mode: Classic, Fine, Coarse" 0.0 0.0 2.0 1.0
+#pragma parameter GSM_MASK_MODE 					"          Mode: Classic, Fine, Coarse" 0.0 0.0 2.0 1.0
 #define maskmode params.GSM_MASK_MODE
 
-#pragma parameter GSM_MASK_STRENGTH_DARK 			"      Strength Dark Pixels" 1.0 0.0 1.5 0.05
+#pragma parameter GSM_MASK_STRENGTH_DARK 			"          Strength Dark Pixels" 1.0 0.0 1.5 0.05
 #define maskdark params.GSM_MASK_STRENGTH_DARK
 
-#pragma parameter GSM_MASK_STRENGTH_BRIGHT 			"      Strength Bright Pixels" 0.25 -0.5 1.0 0.05
+#pragma parameter GSM_MASK_STRENGTH_BRIGHT 			"          Strength Bright Pixels" 0.25 -0.5 1.0 0.05
 #define maskbright params.GSM_MASK_STRENGTH_BRIGHT
 
 // HSM Removed

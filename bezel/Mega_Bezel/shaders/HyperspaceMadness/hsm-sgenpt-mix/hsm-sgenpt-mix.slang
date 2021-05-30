@@ -44,7 +44,7 @@ layout(push_constant) uniform Push
 #pragma parameter SGPT_ON 				"    SGENPT-MIX ON" 0 0 1 1
 #pragma parameter SGPT_BLEND_OPTION 	"    Pass 1 Blend - OFF | VL | CB | CB-S | Both | Both2 | Both-S" 4.0 0.0 6.0 1.0
 #pragma parameter SGPT_BLEND_LEVEL 		"    Pass 1 Both Blend Level" 1.0 0.0 1.0 0.1
-// #pragma parameter SGPT_ADJUST_VIEW 		"      Adjust View (Debug)" 0.0 0.0 1.0 1.0
+// #pragma parameter SGPT_ADJUST_VIEW 	"          Adjust View (Debug)" 0.0 0.0 1.0 1.0
 #pragma parameter SGPT_LINEAR_GAMMA 	"    Pass 1 Use Linear Gamma" 0.0 0.0 1.0 1.0
 #define SGPT_BLEND_OPTION (params.SGPT_BLEND_OPTION * params.SGPT_ON)
 #define SGPT_BLEND_LEVEL params.SGPT_BLEND_LEVEL

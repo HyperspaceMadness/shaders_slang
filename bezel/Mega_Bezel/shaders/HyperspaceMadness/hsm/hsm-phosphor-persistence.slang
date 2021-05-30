@@ -9,16 +9,16 @@
 //---------------------------------------------------------------------------------------------------
 #pragma parameter HSM_PERSISTENCE_TITLE						"[ PHOSPHOR PERSISTENCE ]:" 0 0 0.01 0.01
 
-#pragma parameter HSM_PHOSPHOR_PERSISTENCE_BLEND          	"      Amount" 0 0 100 2
+#pragma parameter HSM_PHOSPHOR_PERSISTENCE_BLEND          	"          Amount" 0 0 100 2
 #define HSM_PHOSPHOR_PERSISTENCE_BLEND global.HSM_PHOSPHOR_PERSISTENCE_BLEND / 100
 
-#pragma parameter HSM_PHOSPHOR_PERSISTENCE_RED          	"      Red Persistence" 50 0 100 5
+#pragma parameter HSM_PHOSPHOR_PERSISTENCE_RED          	"          Red Persistence" 50 0 100 5
 #define HSM_PHOSPHOR_PERSISTENCE_RED global.HSM_PHOSPHOR_PERSISTENCE_RED / 100
 
-#pragma parameter HSM_PHOSPHOR_PERSISTENCE_GREEN          	"      Green Persistence" 50 0 100 5
+#pragma parameter HSM_PHOSPHOR_PERSISTENCE_GREEN          	"          Green Persistence" 50 0 100 5
 #define HSM_PHOSPHOR_PERSISTENCE_GREEN global.HSM_PHOSPHOR_PERSISTENCE_GREEN / 100
 
-#pragma parameter HSM_PHOSPHOR_PERSISTENCE_BLUE          	"      Blue Persistence" 50 0 100 5
+#pragma parameter HSM_PHOSPHOR_PERSISTENCE_BLUE          	"          Blue Persistence" 50 0 100 5
 #define HSM_PHOSPHOR_PERSISTENCE_BLUE global.HSM_PHOSPHOR_PERSISTENCE_BLUE / 100
 
 

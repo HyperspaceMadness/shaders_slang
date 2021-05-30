@@ -18,7 +18,7 @@ layout(std140, set = 0, binding = 0) uniform UBO
 
 #pragma parameter NTA_TITLE		"[ --- TV PROCESS NTSC ADAPTIVE --- ]:" 0 0 0.01 0.01
 
-#pragma parameter ntsc_mode "      Mode - OFF | Svideo | Composite" 0 0 2 1
+#pragma parameter ntsc_mode      "          Mode - OFF | Svideo | Composite" 0 0 2 1
 
 
 float quality = 1;

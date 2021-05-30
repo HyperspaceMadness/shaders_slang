@@ -30,18 +30,18 @@ layout(push_constant) uniform Push
 
 #pragma parameter GBY_TITLE	"[ --- GAMEBOY --- ]:" 0 0 0.01 0.01
 
-#pragma parameter gameboy_color_palette    "      Palette - DMG0 | DMG1 | DMG2 | Pocket | Light | Custom" 0 0 5 1
+#pragma parameter gameboy_color_palette    "          Palette - DMG0 | DMG1 | DMG2 | Pocket | Light | Custom" 0 0 5 1
 
 // The alpha value of dots in their "off" state
 // Does not affect the border region of the screen - [0, 1]
-#pragma parameter baseline_alpha    "      Baseline Alpha" 0.10 0.0 1.0 0.01
+#pragma parameter baseline_alpha    "          Baseline Alpha" 0.10 0.0 1.0 0.01
 
 // Fine-tune the balance between the different shades of grey
-#pragma parameter grey_balance      "      Grey Balance" 3.0 2.0 4.0 0.1
+#pragma parameter grey_balance      "          Grey Balance" 3.0 2.0 4.0 0.1
 
 // Simulate response time
 // Higher values result in longer color transition periods - [0, 1]
-#pragma parameter response_time     "      LCD Response Time" 0.333 0.0 0.777 0.111
+#pragma parameter response_time     "          LCD Response Time" 0.333 0.0 0.777 0.111
 
 ///////////////////////////////////////////////////////////////////////////
 //                                                                       //

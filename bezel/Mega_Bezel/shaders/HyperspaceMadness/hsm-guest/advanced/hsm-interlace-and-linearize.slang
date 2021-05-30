@@ -120,7 +120,13 @@ vec3 plant (vec3 tar, float r)
 vec3 fetch_pixel(vec2 coord)
 {
 	vec2 dx = vec2(global.SourceSize.z, 0.0) * HSM_DOWNSAMPLE_BLUR;
-	vec2 dy = vec2(0.0, global.SourceSize.w) * HSM_DOWNSAMPLE_BLUR;
+	vec2 dy = vec2(0.0, global.SourceSize.w) * HSM_DOWNSAMPLE_BLUR * HSM_DOWNSAMPLE_BLUR_OPPOSITE_MULT;
+
+	if (USE_VERTICAL_SCANLINES > 0.5)
+	{
+		vec2 dx = vec2(global.SourceSize.z, 0.0) * HSM_DOWNSAMPLE_BLUR * HSM_DOWNSAMPLE_BLUR_OPPOSITE_MULT;
+		vec2 dy = vec2(0.0, global.SourceSize.w) * HSM_DOWNSAMPLE_BLUR;
+	}
 
 	vec2 d1 = dx + dy;
 	vec2 d2 = dx - dy;
@@ -172,6 +178,9 @@ void main()
 	float scaled_scan_res = orig_scan_res * HSM_CORE_RES_SAMPLING_MULT_OPPOSITE_DIR;
 	float tex_coord_scan_dir = vTexCoord.y;
 	vec2 downsample_offset = vec2(0.0, params.OriginalSize.w) * HSM_DOWNSAMPLE_BLUR;
+
+	if (USE_VERTICAL_SCANLINES > 0.5)
+		downsample_offset = vec2(0.0, params.OriginalSize.w) * HSM_DOWNSAMPLE_BLUR * HSM_DOWNSAMPLE_BLUR_OPPOSITE_MULT;
 
 	/* HSM Removed
 	if (inter < params.OriginalSize.y/yres_div && interm > 0.5 && intres != 1.0 && intres != 0.5) 

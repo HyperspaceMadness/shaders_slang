@@ -1,8 +1,10 @@
 Mega Bezel is updated to V 0.9.012 2021-05-10
 
 Changes:
-  * Guest-DrVenom updated to Guest-DrVenom Advanced
-  * Additional Guest features added to other CRT shaders, e.g. interlacing, deconvergence
+  * Guest-DrVenom Advanced
+    * Guest-DrVenom updated to Guest-DrVenom Advanced!!!
+    * Additional Guest features added to other CRT shaders, e.g. interlacing, deconvergence
+    * Added Threshold where afterflow appears
   * Turned OFF Anti-Flicker by default
   * Decreased Scale Increment for Cabinet Glass
   * Added BASIC-BORDER-EXTRA-PASSES preset
@@ -194,6 +196,8 @@ Retroarch Features
   * Video Aspect Ratio which uses Monitor
   * Stop Reloading Shader multiple times on Save (Keep optional param)
   * GIF support
+  * Check for alias used multiple times appears as semantic error now
+  * global.x is semantic error if x not in global
 
 
   Notes:

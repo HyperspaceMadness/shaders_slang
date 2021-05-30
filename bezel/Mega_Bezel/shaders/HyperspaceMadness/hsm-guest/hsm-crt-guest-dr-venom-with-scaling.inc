@@ -107,63 +107,63 @@ layout(std140, set = 0, binding = 0) uniform UBO
 
 // HSM Added (Moved from the bottom)
 
-#pragma parameter GDV_GLOW_STRENGTH 				"      Glow Strength" 0.02 0.0 0.5 0.01
+#pragma parameter GDV_GLOW_STRENGTH 				"          Glow Strength" 0.02 0.0 0.5 0.01
 #define glow         params.GDV_GLOW_STRENGTH     // Glow Strength
 
 // HSM Changed from default of 0 to 0.1
-#pragma parameter GDV_BLOOM_STRENGTH 				"      Bloom Strength" 0.1 0 2 0.05
+#pragma parameter GDV_BLOOM_STRENGTH 				"          Bloom Strength" 0.1 0 2 0.05
 #define bloom          params.GDV_BLOOM_STRENGTH     // bloom effect
 
 #pragma parameter GDV_BRIGHTNESS_TITLE				"[ BRIGHTNESS ]:" 0 0 0.01 0.01
 
-#pragma parameter GDV_BRIGHT_BOOST_DARK_COLORS 		"      Boost Dark Colors" 1.40 0.50 4.00 0.05
+#pragma parameter GDV_BRIGHT_BOOST_DARK_COLORS 		"          Boost Dark Colors" 1.40 0.50 4.00 0.05
 #define brightboost  params.GDV_BRIGHT_BOOST_DARK_COLORS     // adjust brightness
 
-#pragma parameter GDV_BRIGHT_BOOST_BRIGHT_COLORS 	"      Boost Bright Colors" 1.15 0.50 3.00 0.05
+#pragma parameter GDV_BRIGHT_BOOST_BRIGHT_COLORS 	"          Boost Bright Colors" 1.15 0.50 3.00 0.05
 #define brightboost1  params.GDV_BRIGHT_BOOST_BRIGHT_COLORS     // adjust brightness
 
 
 #pragma parameter GDV_SCANLINE_TITLE	"[ SCANLINE ]:" 0 0 0.01 0.01
 
-#pragma parameter GDV_SCANLINE_TYPE "      Type" 0.0 0.0 2.0 1.0
+#pragma parameter GDV_SCANLINE_TYPE "          Type" 0.0 0.0 2.0 1.0
 #define gsl          params.GDV_SCANLINE_TYPE      // Alternate scanlines
 // HSM Added (Moved From Bottom)
-#pragma parameter GDV_SCANLINE_1_2_SATURATION "      Type 1 & 2 Saturation" 0.5 0.0 1.0 0.1
+#pragma parameter GDV_SCANLINE_1_2_SATURATION "          Type 1 & 2 Saturation" 0.5 0.0 1.0 0.1
 #define scans         	params.GDV_SCANLINE_1_2_SATURATION     // scanline saturation
 
-#pragma parameter GDV_SCANLINE_SHAPE_CENTER_HIGH "      Shape Center (High)" 8.0 5.0 23.0 1.0 
+#pragma parameter GDV_SCANLINE_SHAPE_CENTER_HIGH "          Shape Center (High)" 8.0 5.0 23.0 1.0 
 #define scanline2    params.GDV_SCANLINE_SHAPE_CENTER_HIGH      // scanline param, vertical sharpness
 
-#pragma parameter GDV_SCANLINE_SHAPE_EDGES_LOW "      Shape Edges (Low)" 6.0 1.0 15.0 1.0
+#pragma parameter GDV_SCANLINE_SHAPE_EDGES_LOW "          Shape Edges (Low)" 6.0 1.0 15.0 1.0
 #define scanline1    params.GDV_SCANLINE_SHAPE_EDGES_LOW      // scanline param, vertical sharpness
 
-#pragma parameter GDV_SCANLINE_DARK_BEAM_SIZE_MIN "      Dark Beam Thinness (Higher = Thinner)" 1.35 0.5 2.5 0.05
+#pragma parameter GDV_SCANLINE_DARK_BEAM_SIZE_MIN "          Dark Beam Thinness (Higher = Thinner)" 1.35 0.5 2.5 0.05
 #define beam_min     params.GDV_SCANLINE_DARK_BEAM_SIZE_MIN     // dark area beam min - narrow
 
-#pragma parameter GDV_SCANLINE_BRIGHT_BEAM_SIZE_MAX "      Bright Beam Thickness" 1.05 0.5 2.5 0.05
+#pragma parameter GDV_SCANLINE_BRIGHT_BEAM_SIZE_MAX "          Bright Beam Thickness" 1.05 0.5 2.5 0.05
 #define beam_max     params.GDV_SCANLINE_BRIGHT_BEAM_SIZE_MAX     // bright area beam max - wide
 
-#pragma parameter GDV_SCANLINE_OVERGROWN_BRIGHT_BEAM "      Overgrown Bright Beam (Increased Bright Beam)" 0.70 0.0 1.0 0.05
+#pragma parameter GDV_SCANLINE_OVERGROWN_BRIGHT_BEAM "          Overgrown Bright Beam (Increased Bright Beam)" 0.70 0.0 1.0 0.05
 #define beam_size    params.GDV_SCANLINE_OVERGROWN_BRIGHT_BEAM     // increased max. beam size
 
-#pragma parameter GDV_SCANLINE_SPIKE_REMOVAL "      Spike Removal (E.G. White pixel next to black)" 1.0 0.0 2.0 0.10
+#pragma parameter GDV_SCANLINE_SPIKE_REMOVAL "          Spike Removal (E.G. White pixel next to black)" 1.0 0.0 2.0 0.10
 #define spike params.GDV_SCANLINE_SPIKE_REMOVAL
 
-#pragma parameter GDV_PVM_LIKE_COLORS 		"      PVM Like Colors (Vertical Deconvergence) Def 0.08" 0.08 -0.3 0.3 0.02
+#pragma parameter GDV_PVM_LIKE_COLORS 		"          PVM Like Colors (Vertical Deconvergence) Def 0.08" 0.08 -0.3 0.3 0.02
 #define vertmask     params.GDV_PVM_LIKE_COLORS     // Vertical mask
 
 
 #pragma parameter GDV_SHARPNESS_TITLE	"[ SHARPNESS ]:" 0 0 0.01 0.01
 
-#pragma parameter GDV_HORIZONTAL_SHARPNESS "      Horizontal Sharpness" 5.25 1.0 15.0 0.25
+#pragma parameter GDV_HORIZONTAL_SHARPNESS "          Horizontal Sharpness" 5.25 1.0 15.0 0.25
 #define h_sharp      params.GDV_HORIZONTAL_SHARPNESS     // pixel sharpness
 
-#pragma parameter GDV_SUBTRACTIVE_SHARPNESS "      Subtractive Sharpness (Relative)" 0.40 0.0 1.0 0.10
+#pragma parameter GDV_SUBTRACTIVE_SHARPNESS "          Subtractive Sharpness (Relative)" 0.40 0.0 1.0 0.10
 #define s_sharp      params.GDV_SUBTRACTIVE_SHARPNESS     // subtractive sharpness
 
 // HSM Modified, Turned Interlace Mode Off, some parameters moved from global to params 
 #pragma parameter GDV_INTERLACE_TITLE	"[ INTERLACE ]:" 0 0 0.01 0.01
-#pragma parameter GDV_INTERLACE_MODE "      Interlace Mode at Trigger Res  - OFF | ON | Blend | Sharp" 3 0 3 1
+#pragma parameter GDV_INTERLACE_MODE "          Interlace Mode at Trigger Res  - OFF | ON | Blend | Sharp" 3 0 3 1
 #define interlace_mode         params.GDV_INTERLACE_MODE     // interlace mode 
 
 // HSM Removed
@@ -183,39 +183,39 @@ layout(std140, set = 0, binding = 0) uniform UBO
 
 #pragma parameter GDV_MASK_TITLE		"[ MASK ]:" 0 0 0.01 0.01
 
-#pragma parameter GDV_MASK_TYPE 		"      Type - 0:CGWG, 1-4:Lottes, 5-6:Trinitron" 7 -1 7 1
+#pragma parameter GDV_MASK_TYPE 		"          Type - 0:CGWG, 1-4:Lottes, 5-6:Trinitron" 7 -1 7 1
 #define shadowMask   params.GDV_MASK_TYPE     // Mask Style
 
-#pragma parameter GDV_MASK_SIZE 		"      Size - 0:Auto, 1:2K, 2:4k" 0 0 2 1
+#pragma parameter GDV_MASK_SIZE 		"          Size - 0:Auto, 1:2K, 2:4k" 0 0 2 1
 #define masksize     params.GDV_MASK_SIZE     // Mask Size
 
-#pragma parameter GDV_MASK_4_TO_6_DARK 	"      4-6 Strength Dark (Lottes & Trinitron)" 0.5 0.0 2.0 0.05
+#pragma parameter GDV_MASK_4_TO_6_DARK 	"          4-6 Strength Dark (Lottes & Trinitron)" 0.5 0.0 2.0 0.05
 #define maskDark     params.GDV_MASK_4_TO_6_DARK     // Dark "Phosphor"
 
-#pragma parameter GDV_MASK_4_TO_6_LIGHT "      4-6 Strength Light (Lottes & Trinitron)" 1.5 0.0 2.0 0.05
+#pragma parameter GDV_MASK_4_TO_6_LIGHT "          4-6 Strength Light (Lottes & Trinitron)" 1.5 0.0 2.0 0.05
 #define maskLight    params.GDV_MASK_4_TO_6_LIGHT     // Light "Phosphor"
 
-#pragma parameter GDV_MASK_5_TO_7_CUTOFF "      5-7 Cutoff (Trinitron)" 0.25 0.0 0.5 0.05
+#pragma parameter GDV_MASK_5_TO_7_CUTOFF "          5-7 Cutoff (Trinitron)" 0.25 0.0 0.5 0.05
 #define mcut         params.GDV_MASK_5_TO_7_CUTOFF     // Mask 5-7 cutoff
 
-#pragma parameter GDV_MASK_0_7_STRENGTH  "      0 & 7 Strength (CGWG)" 0.3 0.0 1.0 0.05
+#pragma parameter GDV_MASK_0_7_STRENGTH  "          0 & 7 Strength (CGWG)" 0.3 0.0 1.0 0.05
 #define CGWG         params.GDV_MASK_0_7_STRENGTH     // CGWG Mask Strength
 
 
 // Slotmask
 #pragma parameter GDV_SLOTMASK_TITLE	"[ SLOTMASK ]:" 0 0 0.01 0.01
 
-#pragma parameter GDV_SLOTMASK_STRENGTH "      Strength - Def 0" 0 0.0 1.0 0.05
+#pragma parameter GDV_SLOTMASK_STRENGTH "          Strength - Def 0" 0 0.0 1.0 0.05
 #define slotmask     params.GDV_SLOTMASK_STRENGTH     // Slot Mask ON/OFF
 
 // HSM Modified, parameters moved from global to params 
-#pragma parameter GDV_SLOTMASK_SIZE 	"      Size - 0:Auto, 1:2K, 2:4k" 0 0 2 1
+#pragma parameter GDV_SLOTMASK_SIZE 	"          Size - 0:Auto, 1:2K, 2:4k" 0 0 2 1
 #define slotms  	params.GDV_SLOTMASK_SIZE     // Slot Mask Size
 
-#pragma parameter GDV_SLOTMASK_WIDTH 	"      Width" 2.0 1.0 6.0 0.5
+#pragma parameter GDV_SLOTMASK_WIDTH 	"          Width" 2.0 1.0 6.0 0.5
 #define slotwidth    params.GDV_SLOTMASK_WIDTH     // Slot Mask Width
 
-#pragma parameter GDV_SLOTMASK_HEIGHT 	"      Height: 2x1 or 4x1" 1.0 1.0 2.0 1.0
+#pragma parameter GDV_SLOTMASK_HEIGHT 	"          Height: 2x1 or 4x1" 1.0 1.0 2.0 1.0
 #define double_slot  params.GDV_SLOTMASK_HEIGHT     // Slot Mask Height
 
 

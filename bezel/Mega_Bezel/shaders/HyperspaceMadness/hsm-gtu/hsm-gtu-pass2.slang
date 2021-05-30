@@ -11,7 +11,7 @@ layout(push_constant) uniform Push
    float GTU_MODE;
 } params;
 
-#pragma parameter GTU_SIGNAL_RESOLUTION  "      Signal Resolution Y" 256.0 16.0 1024.0 16.0
+#pragma parameter GTU_SIGNAL_RESOLUTION  "          Signal Resolution Y" 256.0 16.0 1024.0 16.0
 // #pragma parameter GTU_SIGNAL_RESOLUTIONI "[ TV PROCESS GTU ]  Signal Resolution I" 83.0 1.0 350.0 2.0
 // #pragma parameter GTU_SIGNAL_RESOLUTIONQ "[ TV PROCESS GTU ]  Signal Resolution Q" 25.0 1.0 350.0 2.0
 

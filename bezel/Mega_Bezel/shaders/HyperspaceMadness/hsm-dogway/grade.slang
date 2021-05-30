@@ -1,5 +1,40 @@
 #version 450
 
+layout(push_constant) uniform Push
+{
+    float g_gamma_in;
+    float g_signal_type;
+    float g_crtgamut;
+    float g_space_out;
+    float g_hue_degrees;
+    float g_I_SHIFT;
+    float g_Q_SHIFT;
+    float g_I_MUL;
+    float g_Q_MUL;
+    float g_lum_fix;
+    float g_vignette;
+    float g_vstr;
+    float g_vpower;
+    float g_sat;
+    float g_vibr;
+    float g_lum;
+    float g_cntrst;
+    float g_mid;
+    float g_lift;
+    float blr;
+    float blg;
+    float blb;
+    float wlr;
+    float wlg;
+    float wlb;
+    float rg;
+    float rb;
+    float gr;
+    float gb;
+    float br;
+    float bg;
+} params;
+
 layout(std140, set = 0, binding = 0) uniform UBO
 {
     mat4 MVP;
@@ -7,48 +42,15 @@ layout(std140, set = 0, binding = 0) uniform UBO
     vec4 OriginalSize;
     vec4 OutputSize;
     uint FrameCount;
-    float DG_GRADE_ON;
-    float DG_GAMMA_IN;
-    float DG_GAMMA_OUT;
-    float DG_SIGNAL_TYPE;
-    float DG_SIGNAL_GAMMA_TYPE;
-    float DG_PHOSPHOR_CRT_GAMUT;
-    float DG_DISPLAY_COLOR_SPACE;
-    float DG_HUE_DEGREES;
-    float DG_I_SHIFT;
-    float DG_Q_SHIFT;
-    float DG_I_MULTIPLIER;
-    float DG_Q_MULTIPLIER;
-    float DG_SEGA_LUMA_FIX;
-    float DG_VIGNETTE_ON;
-    float DG_VIGNETTE_STRENGTH;
-    float DG_VIGNETTE_POWER;
-    float DG_SATURATION;
-    float DG_VIBRANCE;
-    float DG_BRIGHTNESS;
-    float DG_CONTRAST;
-    float DG_CONTRAST_PIVOT;
-    float DG_BLACK_LEVEL;
-    float DG_BLACK_RED_TINT;
-    float DG_BLACK_GREEN_TINT;
-    float DG_BLACK_BLUE_TINT;
-    float DG_WHITE_RED_TINT;
-    float DG_WHITE_GREEN_TINT;
-    float DG_WHITE_BLUE_TINT;
-    float DG_RED_GREEN_TINT;
-    float DG_RED_BLUE_TINT;
-    float DG_GREEN_RED_TINT;
-    float DG_GREEN_BLUE_TINT;
-    float DG_BLUE_RED_TINT;
-    float DG_BLUE_GREEN_TINT;
-    float DG_WHITE_POINT_TEMP;
-    float DG_HUE_VS_SAT_RED;
-    float DG_HUE_VS_SAT_GREEN;
-    float DG_HUE_VS_SAT_BLUE;
-    float DG_LUT1_SIZE;
-    float DG_LUT1_ON;
-    float DG_LUT2_SIZE;
-    float DG_LUT2_ON;
+    float wp_temperature;
+    float g_gamma_out;
+    float g_satr;
+    float g_satg;
+    float g_satb;
+    float LUT_Size1;
+    float LUT1_toggle;
+    float LUT_Size2;
+    float LUT2_toggle;
 } global;
 
 /*
@@ -92,113 +94,85 @@ layout(std140, set = 0, binding = 0) uniform UBO
     ##########################################################################################
 */
 
-#pragma parameter DG_TITLE                       "[ --- COLOR CORRECTION - GRADE --- ]:" 0 0 0 1
 
-#pragma parameter DG_GRADE_ON                    "          Grade ON" 0 0 1 1
-#pragma parameter DG_SIGNAL_GAMMA_TITLE          "[ GAMMA ]:" 0 0 0 1
-#pragma parameter DG_GAMMA_IN                    "          Signal Gamma"                                            2.50 1.80 3.0 0.05
-#pragma parameter DG_GAMMA_OUT                  "          CRT Gamma"                                            2.2 1.8 3 0.05
+#pragma parameter g_gamma_in     "Signal Gamma"                                            2.50 1.80 3.0 0.05
+#pragma parameter g_gamma_out    "CRT Gamma"                                               2.50 1.80 3.0 0.05
+#pragma parameter g_signal_type  "Signal Type (0:RGB 1:Composite)"                         1.0 0.0 1.0 1.0
+#pragma parameter g_crtgamut     "Phosphor (1:NTSC-U 2:NTSC-J 3:PAL)"                      2.0 -4.0 3.0 1.0
+#pragma parameter g_space_out    "Diplay Color Space (-1:709 0:sRGB 1:DCI 2:2020 3:Adobe)" 0.0 -1.0 3.0 1.0
 
-#pragma parameter DG_SIGNAL_COLOR_SPACE_TITLE    "[ SIGNAL & COLOR SPACE ]:" 0 0 0 1
-#pragma parameter DG_SIGNAL_TYPE                 "          Signal Type - RGB | Composite"                               1 0 1 1
-#pragma parameter DG_SIGNAL_GAMMA_TYPE           "          Signal Gamma Type - sRGB | SMPTE-C"                       1 0 1 1
-#pragma parameter DG_PHOSPHOR_CRT_GAMUT          "          Phosphor CRT GAMUT - NTSC-U | NTSC-J | PAL"          2 -4 3 1
-#pragma parameter DG_DISPLAY_COLOR_SPACE         "      Display Color Space -1:709 | 0:sRGB | DCI | 2020 | Adobe"           0 -1 3 1
+#pragma parameter g_hue_degrees  "Hue"                  0.0 -360.0 360.0 1.0
+#pragma parameter g_I_SHIFT      "I/U Shift"            0.0 -0.2 0.2 0.01
+#pragma parameter g_Q_SHIFT      "Q/V Shift"            0.0 -0.2 0.2 0.01
+#pragma parameter g_I_MUL        "I/U Multiplier"           1.0  0.0 2.0 0.01
+#pragma parameter g_Q_MUL        "Q/V Multiplier"           1.0  0.0 2.0 0.01
+#pragma parameter g_lum_fix      "Sega Luma Fix"            0.0  0.0 1.0 1.0
+#pragma parameter g_vignette     "Vignette Toggle"          1.0  0.0 1.0 1.0
+#pragma parameter g_vstr         "Vignette Strength"    40.0 0.0 50.0 1.0
+#pragma parameter g_vpower       "Vignette Power"           0.20 0.0 0.5 0.01
+#pragma parameter g_lum          "Brightness"           0.0 -0.5 1.0 0.01
+#pragma parameter g_cntrst       "Contrast"             0.0 -1.0 1.0 0.05
+#pragma parameter g_mid          "Contrast Pivot"           0.5  0.0 1.0 0.01
+#pragma parameter wp_temperature "White Point"          6504.0 5004.0 12004.0 100.0
+#pragma parameter g_sat          "Saturation"           0.0 -1.0 2.0 0.01
+#pragma parameter g_vibr         "Dullness/Vibrance"    0.0 -1.0 1.0 0.05
+#pragma parameter g_satr         "Hue vs Sat Red"           0.0 -1.0 1.0 0.01
+#pragma parameter g_satg         "Hue vs Sat Green"     0.0 -1.0 1.0 0.01
+#pragma parameter g_satb         "Hue vs Sat Blue"          0.0 -1.0 1.0 0.01
+#pragma parameter g_lift         "Black Level"          0.0 -0.5 0.5 0.01
+#pragma parameter blr            "Black-Red Tint"           0.0  0.0 1.0 0.01
+#pragma parameter blg            "Black-Green Tint"     0.0  0.0 1.0 0.01
+#pragma parameter blb            "Black-Blue Tint"          0.0  0.0 1.0 0.01
+#pragma parameter wlr            "White-Red Tint"           1.0  0.0 2.0 0.01
+#pragma parameter wlg            "White-Green Tint"     1.0  0.0 2.0 0.01
+#pragma parameter wlb            "White-Blue Tint"          1.0  0.0 2.0 0.01
+#pragma parameter rg             "Red-Green Tint"           0.0 -1.0 1.0 0.005
+#pragma parameter rb             "Red-Blue Tint"            0.0 -1.0 1.0 0.005
+#pragma parameter gr             "Green-Red Tint"           0.0 -1.0 1.0 0.005
+#pragma parameter gb             "Green-Blue Tint"          0.0 -1.0 1.0 0.005
+#pragma parameter br             "Blue-Red Tint"            0.0 -1.0 1.0 0.005
+#pragma parameter bg             "Blue-Green Tint"          0.0 -1.0 1.0 0.005
+#pragma parameter LUT_Size1      "LUT Size 1"           16.0 8.0 64.0 16.0
+#pragma parameter LUT1_toggle    "LUT 1 Toggle"             0.0  0.0 1.0 1.0
+#pragma parameter LUT_Size2      "LUT Size 2"           64.0 0.0 64.0 16.0
+#pragma parameter LUT2_toggle    "LUT 2 Toggle"             0.0  0.0 1.0 1.0
 
-#pragma parameter DG_SIGNAL_PROCESS_TITLE        "[ COLOR SIGNAL PROCESS ]:" 0 0 0 1
-#pragma parameter DG_I_SHIFT                     "          I/U Shift"                          0 -0.2 0.2 0.01
-#pragma parameter DG_Q_SHIFT                     "          Q/V Shift"                          0 -0.2 0.2 0.01
-#pragma parameter DG_I_MULTIPLIER                "          I/U Multiplier"                     1  0 2 0.01
-#pragma parameter DG_Q_MULTIPLIER                "          Q/V Multiplier"                     1  0 2 0.01
-
-// #pragma parameter DG_VIGNETTE_TITLE              "[ DARKENING VIGNETTE ]:" 0 0 0 1
-// #pragma parameter DG_VIGNETTE_ON                 "          ON"                                     0  0 1 1
-// #pragma parameter DG_VIGNETTE_STRENGTH           "          Center Brightness (AKA Strength)"   40 0 50 1
-// #pragma parameter DG_VIGNETTE_POWER              "          Edge Darkening (AKA Power)"             0.20 0 0.5 0.01
-
-#pragma parameter DG_BRIGHTNESS_TITLE            "[ BRIGHTNESS & CONTRAST ]:" 0 0 0 1
-#pragma parameter DG_SEGA_LUMA_FIX               "          Sega Luma Fix"                       0  0 1 1
-#pragma parameter DG_BRIGHTNESS                  "          Brightness"                          0 -0.5 1 0.01
-#pragma parameter DG_BLACK_LEVEL                 "          Black Level"                         0 -0.5 0.5 0.01
-#pragma parameter DG_CONTRAST                    "          Contrast"                            0 -1 1 0.05
-#pragma parameter DG_CONTRAST_PIVOT              "          Contrast Pivot"                      0.5  0 1 0.01
-
-#pragma parameter DG_COLOR_TEMP_TITLE            "[ COLOR TEMP & HUE ]:" 0 0 0 1
-#pragma parameter DG_WHITE_POINT_TEMP            "          White Point Temperature"             6504 5004 12004 100
-#pragma parameter DG_SATURATION                  "          Saturation"                          0 -1 2 0.01
-#pragma parameter DG_VIBRANCE                    "          Dullness/Vibrance"                   0 -1 1 0.05
-#pragma parameter DG_HUE_DEGREES                 "          Hue"                                 0 -360 360 1
-
-#pragma parameter DG_HUE_VS_SAT_TITLE            "[ HUE VS SATURATION ]:" 0 0 0 1
-#pragma parameter DG_HUE_VS_SAT_RED              "          Red"                                0 -1 1 0.01
-#pragma parameter DG_HUE_VS_SAT_GREEN            "          Green"                              0 -1 1 0.01
-#pragma parameter DG_HUE_VS_SAT_BLUE             "          Blue"                               0 -1 1 0.01
-
-#pragma parameter DG_BLACKTINT_TITLE             "[ BLACK TINT ]:" 0 0 0 1
-#pragma parameter DG_BLACK_RED_TINT              "          Black-Red Tint"                            0  0 1 0.01
-#pragma parameter DG_BLACK_GREEN_TINT            "          Black-Green Tint"                          0  0 1 0.01
-#pragma parameter DG_BLACK_BLUE_TINT             "          Black-Blue Tint"                           0  0 1 0.01
-#pragma parameter DG_WHITETINT_TITLE             "[ WHITE TINT ]:" 0 0 0 1
-#pragma parameter DG_WHITE_RED_TINT              "          White-Red Tint"                            1  0 2 0.01
-#pragma parameter DG_WHITE_GREEN_TINT            "          White-Green Tint"                          1  0 2 0.01
-#pragma parameter DG_WHITE_BLUE_TINT             "          White-Blue Tint"                           1  0 2 0.01
-#pragma parameter DG_REDTINT_TITLE              "[ RED TINT ]:" 0 0 0 1
-#pragma parameter DG_RED_GREEN_TINT              "          Red-Green Tint"                            0 -1 1 0.005
-#pragma parameter DG_RED_BLUE_TINT               "          Red-Blue Tint"                             0 -1 1 0.005
-#pragma parameter DG_GREENTINT_TITLE             "[ GREEN TINT ]:" 0 0 0 1
-#pragma parameter DG_GREEN_RED_TINT              "          Green-Red Tint"                            0 -1 1 0.005
-#pragma parameter DG_GREEN_BLUE_TINT             "          Green-Blue Tint"                           0 -1 1 0.005
-#pragma parameter DG_BLUETINT_TITLE             "[ BLUE TINT ]:" 0 0 0 1
-#pragma parameter DG_BLUE_RED_TINT               "          Blue-Red Tint"                             0 -1 1 0.005
-#pragma parameter DG_BLUE_GREEN_TINT             "          Blue-Green Tint"                           0 -1 1 0.005
-
-// #pragma parameter DG_LUT_TITLE                   "[ LUT ]:" 0 0 0 1
-// #pragma parameter DG_LUT1_ON                     "          LUT 1 ON"                                   0  0 1  1
-// #pragma parameter DG_LUT1_SIZE                   "          LUT 1 Size"                                 16 8 64 16
-// #pragma parameter DG_LUT2_ON                     "          LUT 2 ON"                                   0  0 1  1
-// #pragma parameter DG_LUT2_SIZE                   "          LUT 2 Size"                                 64 8 64 16
-
-#define DG_GRADE_ON     global.DG_GRADE_ON
 #define M_PI            3.1415926535897932384626433832795
-#define gamma_in        global.DG_GAMMA_IN
-#define gamma_out     global.DG_GAMMA_OUT
-#define signal          global.DG_SIGNAL_TYPE
-#define crtgamut        global.DG_PHOSPHOR_CRT_GAMUT
-#define SPC             global.DG_DISPLAY_COLOR_SPACE
-#define hue_degrees     global.DG_HUE_DEGREES
-#define I_SHIFT         global.DG_I_SHIFT
-#define Q_SHIFT         global.DG_Q_SHIFT
-#define I_MUL           global.DG_I_MULTIPLIER
-#define Q_MUL           global.DG_Q_MULTIPLIER
-#define lum_fix         global.DG_SEGA_LUMA_FIX
-// #define vignette        global.DG_VIGNETTE_ON
-// #define vstr            global.DG_VIGNETTE_STRENGTH
-// #define vpower          global.DG_VIGNETTE_POWER
-#define g_sat           global.DG_SATURATION
-#define vibr            global.DG_VIBRANCE
-#define satr            global.DG_HUE_VS_SAT_RED
-#define satg            global.DG_HUE_VS_SAT_GREEN
-#define satb            global.DG_HUE_VS_SAT_BLUE
-#define lum             global.DG_BRIGHTNESS
-#define cntrst          global.DG_CONTRAST
-#define mid             global.DG_CONTRAST_PIVOT
-#define lift            global.DG_BLACK_LEVEL
-#define blr             global.DG_BLACK_RED_TINT
-#define blg             global.DG_BLACK_GREEN_TINT
-#define blb             global.DG_BLACK_BLUE_TINT
-#define wlr             global.DG_WHITE_RED_TINT
-#define wlg             global.DG_WHITE_GREEN_TINT
-#define wlb             global.DG_WHITE_BLUE_TINT
-#define rg              global.DG_RED_GREEN_TINT
-#define rb              global.DG_RED_BLUE_TINT
-#define gr              global.DG_GREEN_RED_TINT
-#define gb              global.DG_GREEN_BLUE_TINT
-#define br              global.DG_BLUE_RED_TINT
-#define bg              global.DG_BLUE_GREEN_TINT
-float lut1_size =       32; //global.DG_LUT1_SIZE;
-float lut1_on =         0; //global.DG_LUT1_ON;
-float lut2_size =       32; //global.DG_LUT2_SIZE;
-float lut2_on =         0; //global.DG_LUT2_ON;
+#define gamma_in        params.g_gamma_in
+#define gamma_out       global.g_gamma_out
+#define signal          params.g_signal_type
+#define crtgamut        params.g_crtgamut
+#define SPC             params.g_space_out
+#define hue_degrees     params.g_hue_degrees
+#define I_SHIFT         params.g_I_SHIFT
+#define Q_SHIFT         params.g_Q_SHIFT
+#define I_MUL           params.g_I_MUL
+#define Q_MUL           params.g_Q_MUL
+#define lum_fix         params.g_lum_fix
+#define vignette        params.g_vignette
+#define vstr            params.g_vstr
+#define vpower          params.g_vpower
+#define g_sat           params.g_sat
+#define vibr            params.g_vibr
+#define satr            global.g_satr
+#define satg            global.g_satg
+#define satb            global.g_satb
+#define lum             params.g_lum
+#define cntrst          params.g_cntrst
+#define mid             params.g_mid
+#define lift            params.g_lift
+#define blr             params.blr
+#define blg             params.blg
+#define blb             params.blb
+#define wlr             params.wlr
+#define wlg             params.wlg
+#define wlb             params.wlb
+#define rg              params.rg
+#define rb              params.rb
+#define gr              params.gr
+#define gb              params.gb
+#define br              params.br
+#define bg              params.bg
 
 #pragma stage vertex
 layout(location = 0) in vec4 Position;
@@ -735,16 +709,7 @@ void main()
 // Retro Sega Systems: Genesis, 32x, CD and Saturn 2D had color palettes designed in TV levels to save on transformations.
     float lum_exp = (lum_fix ==  1.0) ? (255./239.) : 1.;
 
-    //HSM Added
-    vec4 src_rgba = texture(Source, vTexCoord.xy);
-    vec3 src = src_rgba.rgb;
-
-    if (DG_GRADE_ON == 0)
-    {
-        FragColor = src_rgba;
-        return;
-    }
-
+    vec3 src = texture(Source, vTexCoord.xy).rgb;
     vec3 col = src;
 
 // Assumes framebuffer in Rec.601 with baked gamma
@@ -838,14 +803,14 @@ void main()
 
 
 // Look LUT - (in sRGB space)
-    float red =   (adj.r * (lut1_size - 1.0) + 0.4999) / (lut1_size * lut1_size);
-    float green = (adj.g * (lut1_size - 1.0) + 0.4999) /  lut1_size;
-    float blue1 = (floor(adj.b * (lut1_size - 1.0)) / lut1_size) + red;
-    float blue2 =  (ceil(adj.b * (lut1_size - 1.0)) / lut1_size) + red;
+    float red =   (adj.r * (global.LUT_Size1 - 1.0) + 0.4999) / (global.LUT_Size1 * global.LUT_Size1);
+    float green = (adj.g * (global.LUT_Size1 - 1.0) + 0.4999) /  global.LUT_Size1;
+    float blue1 = (floor(adj.b * (global.LUT_Size1 - 1.0)) / global.LUT_Size1) + red;
+    float blue2 =  (ceil(adj.b * (global.LUT_Size1 - 1.0)) / global.LUT_Size1) + red;
     float mixer = clamp(max((adj.b - blue1) / (blue2 - blue1), 0.0), 0.0, 32.0);
     vec3 color1 = texture(SamplerLUT1, vec2(blue1, green)).rgb;
     vec3 color2 = texture(SamplerLUT1, vec2(blue2, green)).rgb;
-    vec3 vcolor = (lut1_on == 0.0) ? adj : mixfix(color1, color2, mixer);
+    vec3 vcolor = (global.LUT1_toggle == 0.0) ? adj : mixfix(color1, color2, mixer);
 
 
 
@@ -870,7 +835,6 @@ void main()
     contrast = (cntrst == 0.0) ? XYZ_to_RGB(vcolor, SPC) : XYZsrgb;
 
 
-    /* HSM Removed
 // Vignetting & Black Level
     vec2 vpos = vTexCoord*(global.OriginalSize.xy/global.SourceSize.xy);
 
@@ -878,7 +842,6 @@ void main()
     float vig = vpos.x * vpos.y * vstr;
     vig = min(pow(vig, vpower), 1.0);
     contrast *= (vignette == 1.0) ? vig : 1.0;
-    */
 
     contrast += (lift / 20.0) * (1.0 - contrast);
 
@@ -945,17 +908,17 @@ void main()
 
 
 // Technical LUT - (in SPC space)
-    float red_2 =   (TRC.r * (lut2_size - 1.0) + 0.4999) / (lut2_size * lut2_size);
-    float green_2 = (TRC.g * (lut2_size - 1.0) + 0.4999) / lut2_size;
-    float blue1_2 = (floor(TRC.b * (lut2_size - 1.0)) / lut2_size) + red_2;
-    float blue2_2 =  (ceil(TRC.b * (lut2_size - 1.0)) / lut2_size) + red_2;
+    float red_2 =   (TRC.r * (global.LUT_Size2 - 1.0) + 0.4999) / (global.LUT_Size2 * global.LUT_Size2);
+    float green_2 = (TRC.g * (global.LUT_Size2 - 1.0) + 0.4999) / global.LUT_Size2;
+    float blue1_2 = (floor(TRC.b * (global.LUT_Size2 - 1.0)) / global.LUT_Size2) + red_2;
+    float blue2_2 =  (ceil(TRC.b * (global.LUT_Size2 - 1.0)) / global.LUT_Size2) + red_2;
     float mixer_2 = clamp(max((TRC.b - blue1_2) / (blue2_2 - blue1_2), 0.0), 0.0, 32.0);
     vec3 color1_2 = texture(SamplerLUT2, vec2(blue1_2, green_2)).rgb;
     vec3 color2_2 = texture(SamplerLUT2, vec2(blue2_2, green_2)).rgb;
     vec3 LUT2_output = mixfix(color1_2, color2_2, mixer_2);
 
-    LUT2_output = (lut2_on == 0.0) ? TRC : LUT2_output;
+    LUT2_output = (global.LUT2_toggle == 0.0) ? TRC : LUT2_output;
 
 
-    FragColor = vec4(LUT2_output, src_rgba.a);
+    FragColor = vec4(LUT2_output, 1.0);
 }

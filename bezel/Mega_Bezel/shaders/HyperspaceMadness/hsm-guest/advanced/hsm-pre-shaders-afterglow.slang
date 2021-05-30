@@ -48,9 +48,11 @@ layout(push_constant) uniform Push
 #pragma parameter GDV_AFTERGLOW_SATURATION   "          Afterglow saturation" 0.20 0.0 1.0 0.01
 #define sat params.GDV_AFTERGLOW_SATURATION
 
+#pragma parameter GDV_COLOR_BRIGHTEN_BLACK   "          Brighten Black (For Scanlines on Black)" 0.0 0.0 100.0 1.0
+
 #pragma parameter GDV_COLOR_TITLE            "[ COLOR TWEAKS ]:" 0.0 0.0 1.0 1.0
 
-#pragma parameter GDV_LUT_COLORS_INDEX       "      LUT Colors: NONE | TRINIT 1 | TRINIT 2 | TORRIDGRISTLE" 0.0 0.0 4.0 1.0
+#pragma parameter GDV_LUT_COLORS_INDEX       "      LUT Colors: NONE | TRINIT 1 | TRINIT 2 | TORRIDG | CUSTOM" 0.0 0.0 4.0 1.0
 #define TNTC params.GDV_LUT_COLORS_INDEX
 
 #pragma parameter GDV_LUT_SIZE               "          LUT Size" 32.0 32.0 64.0 32.0
@@ -63,15 +65,14 @@ layout(push_constant) uniform Push
 #define LUTBR params.GDV_LUT_FIX_RANGE_BRIGHT
 
 #pragma parameter GDV_COLOR_PROFILE          "   CRT Color Profile: -1:NONE|sRGB|BVM|P22|SMPTE-C|PHILIPS|TRIN" 0.0 -1.0 5.0 1.0 
-#pragma parameter GDV_COLOR_SPACE            "      Color Space: sRGB, DCI, Adobe, Rec.2020" 0.0 0.0 3.0 1.0 
+#pragma parameter GDV_COLOR_SPACE            "          Color Space: sRGB, DCI, Adobe, Rec.2020" 0.0 0.0 3.0 1.0 
 
 #define CP params.GDV_COLOR_PROFILE
 #define CS params.GDV_COLOR_SPACE
  
-#pragma parameter GDV_COLOR_TEMP_OFFSET      "      Color Temperature %" 0.0 -100.0 100.0 5.0 
-#pragma parameter GDV_COLOR_SATURATION_MULT  "      Saturation Adjustment" 1.0 0.0 2.0 0.05 
+#pragma parameter GDV_COLOR_TEMP_OFFSET      "          Color Temperature %" 0.0 -100.0 100.0 5.0 
+#pragma parameter GDV_COLOR_SATURATION_MULT  "          Saturation Adjustment" 1.0 0.0 2.0 0.05 
 
-#pragma parameter GDV_COLOR_BRIGHTEN_BLACK   "      Brighten Black (For Scanlines on Black)" 0.0 0.0 25.0 1.0
 
 // #pragma parameter vigstr "          Vignette Strength" 0.0 0.0 2.0 0.025
 

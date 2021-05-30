@@ -23,7 +23,7 @@ Changes:
   * Additional Guest features added to other CRT shaders, e.g. interlacing, deconvergence
 
 *  Performance of Base presets at 3840x2160 on Nvidia RTX2060:
-  *  ADVANCED -                      80 FPS  -  No comparable old preset
+  *  ADVANCED -                      78 FPS  -  No comparable old preset
   *  GLASS -                        150 FPS  -  Old Glass Preset        128 FPS
   *  STANDARD -                     135 FPS  -  Old Full Preset         140 FPS
   *  STANDARD-HD-CORE -             105 FPS

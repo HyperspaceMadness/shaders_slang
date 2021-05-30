@@ -536,7 +536,7 @@ void main()
 	*/
 
 	// HSM Added
-	vec2 SourceSize = CROPPED_ROTATED_ORIGINAL_SIZE_WITH_CORE_RES_MULT * vec2(HSM_CORE_RES_SAMPLING_MULT_SCANLINE_DIR, 1.0);
+	vec2 SourceSize = CROPPED_ROTATED_ORIGINAL_SIZE_WITH_CORE_RES_MULT;
 
 	float lum = COMPAT_TEXTURE(AvgLumPass, vec2(0.5,0.5)).a;
 
@@ -631,7 +631,10 @@ void main()
 	*/
 	
 	// HSM Added
-	float fdivider = min(HSM_CORE_RES_SAMPLING_MULT_SCANLINE_DIR, 2.0);
+	float fdivider = min((1 - USE_VERTICAL_SCANLINES) * HSM_CORE_RES_SAMPLING_MULT_SCANLINE_DIR + 
+			   				USE_VERTICAL_SCANLINES *  HSM_CORE_RES_SAMPLING_MULT_OPPOSITE_DIR, 
+			   				2.0);
+
 	// End Addition
 
 	float wl3 = (2.0 + fpx)/fdivider;

@@ -1,6 +1,8 @@
 Mega Bezel is updated to V 0.9.012 2021-05-10
 
 Changes:
+  * Guest-DrVenom updated to Guest-DrVenom Advanced
+  * Additional Guest features added to other CRT shaders, e.g. interlacing, deconvergence
   * Turned OFF Anti-Flicker by default
   * Decreased Scale Increment for Cabinet Glass
   * Added BASIC-BORDER-EXTRA-PASSES preset
@@ -17,10 +19,11 @@ Changes:
   * HDCore presets or other presets where there is resolution reduction in the first pass this is reported properly
   * Added Brightness parameter to the gamma in and out to adjust brightness after the CRT pass, should be helpful for things like vector games
   * Grade
-    * Added On/Off Switch, is off by default because default settings darken the image
+    * Updated to latest version from 2020-11-20
+    * This fixes the darkening which seemed to be happening before
+    * Added On/Off Switch
     * Removed the LUT options from Grade since Guest's LUT is now included
     * Removed Vignette since we already have a vignette in the Mega Bezel
-  * Additional Guest features added to other CRT shaders, e.g. interlacing, deconvergence
 
 *  Performance of Base presets at 3840x2160 on Nvidia RTX2060:
   *  ADVANCED -                      78 FPS  -  No comparable old preset
@@ -42,6 +45,7 @@ Mega Bezel Still to Come:
 
 V1 TODO
   * Adjust Black adjustment so it affects not just black
+  * Separate Interlaceing Scanline Effect
   * Fix Brightness * AB Testing
   * Change Downsample Blur to be X & Y
   * Show Image per Screen Area

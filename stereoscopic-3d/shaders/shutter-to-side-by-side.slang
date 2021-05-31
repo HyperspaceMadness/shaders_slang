@@ -60,7 +60,7 @@ layout(location = 1) in vec2 right_coord;
 layout(location = 2) in float timer;
 layout(location = 0) out vec4 FragColor;
 layout(set = 0, binding = 2) uniform sampler2D Source;
-layout(set = 0, binding = 2) uniform sampler2D OriginalHistory1;
+layout(set = 0, binding = 3) uniform sampler2D OriginalHistory1;
 
 #define PrevTexture OriginalHistory1
 

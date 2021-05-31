@@ -22,10 +22,11 @@ layout(push_constant) uniform Push
 	vec4 OriginalSize;
 	vec4 OutputSize;
 	uint FrameCount;
-   float SM_MODE, SM_PWR, SM_STRMIN, SM_STRMAX, SM_CUTLO, SM_CUTHI, SM_DEBUG;
+   float SM_MODE, SM_RANGE, SM_PWR, SM_STRMIN, SM_STRMAX, SM_CUTLO, SM_CUTHI, SM_DEBUG;
 } params;
 
 #pragma parameter SM_MODE   "SmartMorph Dilation / Erosion"	0.0 0.0 1.0 1.0		// Switches between dilation and erosion (line thinning or thickening).
+#pragma parameter SM_RANGE  "SmartMorph Range 0-multi 1-hor 2-vert"	0.0 0.0 2.0 1.0	// Switches between all directions / horizontal only / vertical only.
 #pragma parameter SM_PWR    "SmartMorph Luma Exponent"		0.5 0.0 10.0 0.1	// range: [0.0, +inf)   - Raises d by the exponent of PWR. Smaller values for stronger morphing.
 #pragma parameter SM_STRMIN "SmartMorph MIN Strength"		0.0 0.0 1.0 0.01	// range: [0.0, STRMAX] - Minimal strength to apply
 #pragma parameter SM_STRMAX "SmartMorph MAX Strength"		1.0 0.0 1.0 0.01	// range: [STRMIN, 1.0] - Maximal strength to apply.
@@ -68,20 +69,39 @@ void main()
 	vec3 E = TEX( 0., 0.).rgb;
 	vec3 F = TEX( 1., 0.).rgb;
 	vec3 H = TEX( 0., 1.).rgb;
+   vec3 res;
 
-	vec4 b = mul( mat4x3(B, D, H, F), y_weights );
 	float  e = dot(E, y_weights);
-	
 	float di = 0.0;
 
-	if(params.SM_MODE > 0.5){
-		di = min(min(b.x, b.y), min(b.z, min(b.w, e)));
-	}
-	else{
-		di = max(max(b.x, b.y), max(b.z, max(b.w, e)));
-	}	
+   if (params.SM_RANGE == 2.0){
+      vec2 b = mul( mat2x3(B, H), y_weights );
+      if(params.SM_MODE > 0.5)
+         di = max(b.x, b.y);
+      else
+         di = min(b.x, b.y);
 
-	vec3 res = (di==b.x) ? B : (di==b.y) ? D : (di==b.z) ? H : F;
+      res = (di==b.y) ? B : H;
+   }
+   else if (params.SM_RANGE == 1.0){
+      vec2 b = mul( mat2x3(D,F), y_weights );
+      if(params.SM_MODE > 0.5)
+         di = max(b.x, b.y);
+      else
+         di = min(b.x, b.y);
+
+      res = (di==b.y) ? D : F;
+   }
+   else{
+      vec4 b = mul( mat4x3(B, D, H, F), y_weights );
+      if(params.SM_MODE > 0.5)
+         di = min(min(b.x, b.y), min(b.z, min(b.w, e)));
+      else
+         di = max(max(b.x, b.y), max(b.z, max(b.w, e)));
+
+      res = (di==b.x) ? B : (di==b.y) ? D : (di==b.z) ? H : F;
+   }
+
 	di = abs(e-di);
 
 	float str = (di<=params.SM_CUTLO) ? params.SM_STRMIN : (di>=params.SM_CUTHI) ? params.SM_STRMAX : smoothstep( 0.0, 1.0, pow((di-params.SM_CUTLO)/(params.SM_CUTHI-params.SM_CUTLO), params.SM_PWR) ) * (params.SM_STRMAX-params.SM_STRMIN) + params.SM_STRMIN;

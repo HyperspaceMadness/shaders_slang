@@ -84,10 +84,10 @@ layout(push_constant) uniform Push
 #pragma parameter GDV_NOISE_SIZE 					"          Noise Size" 2.0 1.0 10.0 1.0
 #define noiseresd       params.GDV_NOISE_SIZE    // Switch colors left/right
 
-#pragma parameter GDV_MASK_TYPE 					"          CRT Mask: 0:CGWG, 1-4:Lottes, 5-7:'Trinitron'" 0.0 -1.0 8.0 1.0
+#pragma parameter GDV_MASK_TYPE 					"        CRT Mask: -1:None | 0:CGWG | 1-4:Lottes | 5-7:Trinitron" 0.0 -1.0 8.0 1.0
 #define shadowMask   params.GDV_MASK_TYPE     // Mask Style
 
-#pragma parameter GDV_MASK_SIZE 					"          CRT Mask Size - 0:Auto | 1:2K | 2:4k" 0 1 4 1
+#pragma parameter GDV_MASK_SIZE 					"          CRT Mask Size - Auto | 2K | 4k" 0 0 4 1
 #define masksize     params.GDV_MASK_SIZE     // Mask Size
 
 /*

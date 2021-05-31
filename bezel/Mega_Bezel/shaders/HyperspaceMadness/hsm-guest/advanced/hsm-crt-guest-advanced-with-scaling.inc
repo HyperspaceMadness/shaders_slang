@@ -79,7 +79,7 @@ layout(push_constant) uniform Push
 #pragma parameter GDV_HALATION_STRENGTH 			"          Halation Strength" 0.0 0.0 2.0 0.025
 #define halation         params.GDV_HALATION_STRENGTH     // halation effect
 
-#pragma parameter GDV_GAMMA_CORRECT 							"          Gamma correct" 1.0 0.50 2.0 0.02
+#pragma parameter GDV_GAMMA_CORRECT 				"          Gamma correct" 1.0 0.50 2.0 0.02
 #define gamma_c   params.GDV_GAMMA_CORRECT     // adjust brightness
 
 #pragma parameter GDV_BRIGHT_BOOST_DARK_PIXELS 		"          Bright Boost Dark Pixels" 1.40 0.25 10.0 0.05
@@ -187,13 +187,13 @@ layout(push_constant) uniform Push
 
 #pragma parameter GDV_CRT_MASK_TITLE 						"[ CRT MASK OPTIONS ]: " 0.0 0.0 1.0 1.0
 
-#pragma parameter GDV_MASK_TYPE 							"          CRT Mask: 0:CGWG, 1-4:Lottes, 5-7:'Trinitron'" 0.0 -1.0 8.0 1.0
+#pragma parameter GDV_MASK_TYPE 							"        CRT Mask: -1:None | 0:CGWG | 1-4:Lottes | 5-7:Trinitron" 0.0 -1.0 8.0 1.0
 #define shadowMask   params.GDV_MASK_TYPE     // Mask Style
 
 #pragma parameter GDV_MASK_0_5_TO_8_STRENGTH 				"          Mask Strength (0, 5-8)" 0.3 -0.5 1.0 0.05
 #define maskstr         params.GDV_MASK_0_5_TO_8_STRENGTH      // CGWG Mask Strength
 
-#pragma parameter GDV_MASK_SIZE 							"          CRT Mask Size - 0:Auto | 1:2K | 2:4k" 0 1 4 1
+#pragma parameter GDV_MASK_SIZE 							"          CRT Mask Size - Auto | 2K | 4k" 0 0 4 1
 #define masksize     params.GDV_MASK_SIZE     // Mask Size
 
 #pragma parameter GDV_MASK_LOTTES_DARK 						"          Lottes maskDark" 0.5 0.0 2.0 0.05
@@ -217,7 +217,7 @@ layout(push_constant) uniform Push
 #pragma parameter GDV_SLOTMASK_HEIGHT 						"          Slot Mask Height: 2x1 or 4x1" 1.0 1.0 2.0 1.0
 #define double_slot  params.GDV_SLOTMASK_HEIGHT     // Slot Mask Height
 
-#pragma parameter GDV_SLOTMASK_SIZE 						"          Slot Mask Size - 0:Auto | 1:2K | 2:4k" 0 1 4 1
+#pragma parameter GDV_SLOTMASK_SIZE 						"          Slot Mask Size - Auto | 2K | 4k" 0 1 4 1
 #define slotms  params.GDV_SLOTMASK_SIZE     // Slot Mask Size
 
 #pragma parameter GDV_KEEP_MASK_WITH_CLIPPING 				"          Keep Mask effect with clipping" 0.50 0.0 1.0 0.05

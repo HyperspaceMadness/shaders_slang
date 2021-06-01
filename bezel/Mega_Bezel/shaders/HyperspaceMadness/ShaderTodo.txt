@@ -2,11 +2,10 @@ Mega Bezel is updated to V 0.9.014 2021-05-31
 
 Changes:
   * Guest-DrVenom Advanced
-    * Adjusted default interlace option so it is like the last version and will more easily used with fake scan lines
-    * Changed presets to local paths
+    * HumBar?
   * Grade
-    * Removed the Vignette from the Mega Bezel and added back Grade's Vignette which is looking good!
-    * Set the CRT Phosphor Gamut back to the grade default 2
+    * Adjusted Vignette Ranges 
+    * Set the CRT Phosphor Gamut to 0 so it is not as different from default
 
 
 *  Performance of Base presets at 3840x2160 on Nvidia RTX2060:
@@ -28,14 +27,13 @@ Changes:
 Mega Bezel Still to Come:
 
 V1 TODO
-  * Adjust Vignette
-  * Try to get interlace and fake scanlines easier
-  * Adjust Black adjustment so it affects not just black
-  * Separate Interlaceing Scanline Effect
-  * Fix Brightness * AB Testing
-  * Change Downsample Blur to be X & Y
+  * Move Vignette back to Post CRT, test difference
+  * Add Humbar in Post CRT
   * Show Image per Screen Area
-  * Debug Info showing Shader Type?
+  * Debug Info showing Shader Type? Num Shaders x Num Flavors = ~20 files :(, Add text in extra pass
+  * Adjust Black adjustment so it affects not just black, Falloff? Tweak Afterglow?
+  * Separate Interlaceing Scanline Effect?
+  * Fix Brightness * AB Testing
   * Explicit Downsample Res? Target Res?
   * Guest ADV - convergence, extra passes, mega bezel passes
   *   Sort difference between Guest Color Correct & Grade

@@ -104,9 +104,9 @@ layout(std140, set = 0, binding = 0) uniform UBO
 #pragma parameter DG_GAMMA_OUT                       "          CRT Gamma"               2.50 1.80 3.0 0.05        
 
 #pragma parameter DG_SIGNAL_COLOR_SPACE_TITLE       "[ SIGNAL & COLOR SPACE ]:" 0 0 0 1
-#pragma parameter DG_SIGNAL_TYPE                     "          Signal Type (0:RGB 1:Composite)"                         1.0 0.0 1.0 1.0
+#pragma parameter DG_SIGNAL_TYPE                     "          Signal Type (0:RGB 1:Composite)"                         0.0 0.0 1.0 1.0
 // Phosphor was changed from 2 to 1 to look similar to the input by default
-#pragma parameter DG_PHOSPHOR_CRT_GAMUT              "          CRT Phosphor Gamut - 1:NTSC-U | 2:NTSC-J | 3:PAL"                      2.0 -4.0 3.0 1.0
+#pragma parameter DG_PHOSPHOR_CRT_GAMUT              "          CRT Phosphor Gamut - 1:NTSC-U | 2:NTSC-J | 3:PAL"                      0.0 -4.0 3.0 1.0
 #pragma parameter DG_DISPLAY_COLOR_SPACE             "       Display Color Space -1:709 | 0:sRGB | DCI | 2020 | Adobe" 0.0 -1.0 3.0 1.0
 
 #pragma parameter DG_HUE_DEGREES                     "          Hue"                  0.0 -360.0 360.0 1.0
@@ -124,9 +124,9 @@ layout(std140, set = 0, binding = 0) uniform UBO
 #pragma parameter DG_CONTRAST_PIVOT                 "          Contrast Pivot"           0.5  0.0 1.0 0.01
 
 #pragma parameter DG_VIGNETTE_TITLE               "[ VIGNETTE ]:" 0 0 0 1
-#pragma parameter DG_VIGNETTE_ON                  "          Vignette Toggle"          0.0  0.0 1.0 1.0
-#pragma parameter DG_VIGNETTE_STRENGTH            "          Vignette Amount (Strength)"    10.0 0.0 50.0 1.0
-#pragma parameter DG_VIGNETTE_POWER               "          Vignette Corner Amount (Power)"           0.20 0.0 0.5 0.01
+#pragma parameter DG_VIGNETTE_ON                  "          Use Vignette"          0.0  0.0 1.0 1.0
+#pragma parameter DG_VIGNETTE_STRENGTH            "          Amount (Strength)"    20.0 0.0 98.0 2.0
+#pragma parameter DG_VIGNETTE_POWER               "          Corner Amount (Power)"           20 0.0 200 2
 
 #pragma parameter DG_COLOR_TEMP_TITLE               "[ COLOR TEMP & HUE ]:" 0 0 0 1
 #pragma parameter DG_WHITE_POINT_TEMP               "          White Point"          6504.0 5004.0 12004.0 100.0
@@ -179,8 +179,8 @@ layout(std140, set = 0, binding = 0) uniform UBO
 #define Q_MUL           params.DG_Q_MULTIPLIER
 #define lum_fix         params.DG_SEGA_LUMA_FIX
 #define vignette        params.DG_VIGNETTE_ON
-#define vstr            (1 - params.DG_VIGNETTE_STRENGTH / 50) * 50
-#define vpower          params.DG_VIGNETTE_POWER
+#define vstr            (1 - params.DG_VIGNETTE_STRENGTH / 100) * 50
+#define vpower          params.DG_VIGNETTE_POWER / 100
 #define DG_SATURATION   params.DG_SATURATION
 #define vibr            params.DG_VIBRANCE
 #define satr            global.DG_HUE_VS_SAT_RED

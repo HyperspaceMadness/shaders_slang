@@ -8,7 +8,7 @@ Description:
 */
 
 // Screen Scale Required Parameters
-#pragma parameter HSM_MEGA_BEZEL_TITLE								"[ --- HSM MEGA BEZEL 0.9.012 2021-05-10 --- ]" 0 0 0.01 0.01
+#pragma parameter HSM_MEGA_BEZEL_TITLE								"[ --- HSM MEGA BEZEL 0.9.014 2021-05-31 --- ]" 0 0 0.01 0.01
 
 #pragma parameter HSM_RESOLUTION_DEBUG_ON							"          Show Resolution Info" 0 0 1 1
 float HSM_RESOLUTION_DEBUG_ON = global.HSM_RESOLUTION_DEBUG_ON;
@@ -150,10 +150,10 @@ float HSM_DOWNSAMPLE_BLUR_OPPOSITE_MULT = global.HSM_DOWNSAMPLE_BLUR_OPPOSITE_MU
 
 #pragma parameter HSM_INTERLACE_TITLE								"[ INTERLACING From Guest.r :) ]:" 0 0 0.01 0.01
 
-#pragma parameter HSM_INTERLACE_TRIGGER_RES 						"          Interlacing and Fake Scanlines Trigger Res" 400 100 2000 25
+#pragma parameter HSM_INTERLACE_TRIGGER_RES 						"          Interlacing and Fake Scanlines Trigger Res" 600 100 2000 25
 #define HSM_INTERLACE_TRIGGER_RES global.HSM_INTERLACE_TRIGGER_RES
 
-#pragma parameter HSM_INTERLACE_MODE 								"         Interlacing Mode: OFF | Normal 1-3 | Interpolation 4-5" 0 0.0 5.0 1.0
+#pragma parameter HSM_INTERLACE_MODE 								"         Interlacing Mode: OFF | Normal 1-3 | Interpolation 4-5" 4 0.0 5.0 1.0
 #define HSM_INTERLACE_MODE global.HSM_INTERLACE_MODE
 
 #pragma parameter HSM_INTERLACE_EFFECT_SMOOTHNESS 					"          Interlacing Effect Smoothness" 0 0 100 10
@@ -316,16 +316,16 @@ float HSM_CRT_ORIGINAL_AB_COMPARE_SPLIT_POSITION = global.HSM_CRT_ORIGINAL_AB_CO
 #pragma parameter HSM_POST_CRT_BRIGHTNESS  							"          CRT Brightness" 100 1 500 1
 #define HSM_POST_CRT_BRIGHTNESS global.HSM_POST_CRT_BRIGHTNESS / 100
 
-#pragma parameter HSM_SCREEN_VIGNETTE_TITLE							"[ SCREEN VIGNETTE ]:" 0 0 0.01 0.01
+// #pragma parameter HSM_SCREEN_VIGNETTE_TITLE							"[ SCREEN VIGNETTE ]:" 0 0 0.01 0.01
 
-#pragma parameter HSM_SCREEN_VIGNETTE                				"          Screen Vignette Opacity" 0 0 100 1
-#define HSM_SCREEN_VIGNETTE global.HSM_SCREEN_VIGNETTE / 200
+// #pragma parameter HSM_SCREEN_VIGNETTE                				"          Screen Vignette Opacity" 0 0 100 1
+// #define HSM_SCREEN_VIGNETTE global.HSM_SCREEN_VIGNETTE / 200
 
 
-#pragma parameter HSM_REFLECTIONAPPEARANCE_TITLE					"[ REFLECTION APPEARANCE ]:" 0 0 0.01 0.01
+#pragma parameter HSM_REFLECTIONAPPEARANCE_TITLE					"[ REFLECTION TRANSFORM ]:" 0 0 0.01 0.01
 
-#pragma parameter HSM_SCREEN_VIGNETTE_IN_REFLECTION     			"          Screen Vignette Opacity in Reflection" 100 0 100 1
-float HSM_SCREEN_VIGNETTE_IN_REFLECTION = global.HSM_SCREEN_VIGNETTE_IN_REFLECTION / 100;
+// #pragma parameter HSM_SCREEN_VIGNETTE_IN_REFLECTION     			"          Screen Vignette Opacity in Reflection" 100 0 100 1
+// float HSM_SCREEN_VIGNETTE_IN_REFLECTION = global.HSM_SCREEN_VIGNETTE_IN_REFLECTION / 100;
 
 #pragma parameter HSM_SCREEN_REFLECTION_SCALE     					"          Screen Reflection Scale" 100 1 300 1
 float HSM_SCREEN_REFLECTION_SCALE = global.HSM_SCREEN_REFLECTION_SCALE / 100;

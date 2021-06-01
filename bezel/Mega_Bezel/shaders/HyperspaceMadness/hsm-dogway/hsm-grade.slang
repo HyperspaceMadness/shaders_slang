@@ -12,9 +12,9 @@ layout(push_constant) uniform Push
     float DG_I_MULTIPLIER;
     float DG_Q_MULTIPLIER;
     float DG_SEGA_LUMA_FIX;
-    float g_vignette;
-    float g_vstr;
-    float g_vpower;
+    float DG_VIGNETTE_ON;
+    float DG_VIGNETTE_STRENGTH;
+    float DG_VIGNETTE_POWER;
     float DG_SATURATION;
     float DG_VIBRANCE;
     float DG_BRIGHTNESS;
@@ -106,7 +106,7 @@ layout(std140, set = 0, binding = 0) uniform UBO
 #pragma parameter DG_SIGNAL_COLOR_SPACE_TITLE       "[ SIGNAL & COLOR SPACE ]:" 0 0 0 1
 #pragma parameter DG_SIGNAL_TYPE                     "          Signal Type (0:RGB 1:Composite)"                         1.0 0.0 1.0 1.0
 // Phosphor was changed from 2 to 1 to look similar to the input by default
-#pragma parameter DG_PHOSPHOR_CRT_GAMUT              "          CRT Phosphor Gamut - 1:NTSC-U | 2:NTSC-J | 3:PAL"                      1.0 -4.0 3.0 1.0
+#pragma parameter DG_PHOSPHOR_CRT_GAMUT              "          CRT Phosphor Gamut - 1:NTSC-U | 2:NTSC-J | 3:PAL"                      2.0 -4.0 3.0 1.0
 #pragma parameter DG_DISPLAY_COLOR_SPACE             "       Display Color Space -1:709 | 0:sRGB | DCI | 2020 | Adobe" 0.0 -1.0 3.0 1.0
 
 #pragma parameter DG_HUE_DEGREES                     "          Hue"                  0.0 -360.0 360.0 1.0
@@ -118,13 +118,15 @@ layout(std140, set = 0, binding = 0) uniform UBO
 #pragma parameter DG_Q_MULTIPLIER                    "          Q/V Multiplier"           1.0  0.0 2.0 0.01
 
 #pragma parameter DG_BRIGHTNESS_TITLE               "[ BRIGHTNESS & CONTRAST ]:" 0 0 0 1
-#pragma parameter DG_SEGA_LUMA_FIX                         "          Sega Luma Fix"            0.0  0.0 1.0 1.0
-// #pragma parameter g_vignette                     "          Vignette Toggle"          1.0  0.0 1.0 1.0
-// #pragma parameter g_vstr                         "          Vignette Strength"    40.0 0.0 50.0 1.0
-// #pragma parameter g_vpower                       "          Vignette Power"           0.20 0.0 0.5 0.01
+#pragma parameter DG_SEGA_LUMA_FIX                  "          Sega Luma Fix"            0.0  0.0 1.0 1.0
 #pragma parameter DG_BRIGHTNESS                     "          Brightness"           0.0 -0.5 1.0 0.01
 #pragma parameter DG_CONTRAST                       "          Contrast"             0.0 -1.0 1.0 0.05
 #pragma parameter DG_CONTRAST_PIVOT                 "          Contrast Pivot"           0.5  0.0 1.0 0.01
+
+#pragma parameter DG_VIGNETTE_TITLE               "[ VIGNETTE ]:" 0 0 0 1
+#pragma parameter DG_VIGNETTE_ON                  "          Vignette Toggle"          0.0  0.0 1.0 1.0
+#pragma parameter DG_VIGNETTE_STRENGTH            "          Vignette Amount (Strength)"    10.0 0.0 50.0 1.0
+#pragma parameter DG_VIGNETTE_POWER               "          Vignette Corner Amount (Power)"           0.20 0.0 0.5 0.01
 
 #pragma parameter DG_COLOR_TEMP_TITLE               "[ COLOR TEMP & HUE ]:" 0 0 0 1
 #pragma parameter DG_WHITE_POINT_TEMP               "          White Point"          6504.0 5004.0 12004.0 100.0
@@ -176,10 +178,10 @@ layout(std140, set = 0, binding = 0) uniform UBO
 #define I_MUL           params.DG_I_MULTIPLIER
 #define Q_MUL           params.DG_Q_MULTIPLIER
 #define lum_fix         params.DG_SEGA_LUMA_FIX
-// #define vignette        params.g_vignette
-// #define vstr            params.g_vstr
-// #define vpower          params.g_vpower
-#define DG_SATURATION           params.DG_SATURATION
+#define vignette        params.DG_VIGNETTE_ON
+#define vstr            (1 - params.DG_VIGNETTE_STRENGTH / 50) * 50
+#define vpower          params.DG_VIGNETTE_POWER
+#define DG_SATURATION   params.DG_SATURATION
 #define vibr            params.DG_VIBRANCE
 #define satr            global.DG_HUE_VS_SAT_RED
 #define satg            global.DG_HUE_VS_SAT_GREEN
@@ -873,7 +875,6 @@ vec3 vcolor = adj;
     contrast = (cntrst == 0.0) ? XYZ_to_RGB(vcolor, SPC) : XYZsrgb;
 
 
-/* HSM Removed
 // Vignetting & Black Level
     vec2 vpos = vTexCoord*(global.OriginalSize.xy/global.SourceSize.xy);
 
@@ -881,7 +882,7 @@ vec3 vcolor = adj;
     float vig = vpos.x * vpos.y * vstr;
     vig = min(pow(vig, vpower), 1.0);
     contrast *= (vignette == 1.0) ? vig : 1.0;
-*/
+
     contrast += (lift / 20.0) * (1.0 - contrast);
 
 

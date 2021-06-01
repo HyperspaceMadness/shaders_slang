@@ -1309,6 +1309,7 @@ float HSM_GetVignetteFactor(vec2 coord, float amount)
 	return 1 - vignette_multiplier + vignette * vignette_multiplier;
 }
 
+/*
 float HSM_GetScreenVignetteFactor(vec2 coord, float amount)
 {
 	coord = (coord - 0.5) * 0.999 + 0.5;
@@ -1321,6 +1322,7 @@ float HSM_GetScreenVignetteFactor(vec2 coord, float amount)
 	if (amount < 0.01) return 1;
 	else return vignette;
 }
+*/
 
 // TODO need to remove calls to Get RotatedOriginalSize etc
 // Torridgristle - ScanlineSimple pass - Public domain
@@ -1465,21 +1467,17 @@ vec4 HSM_GetPostCrtPreppedColor(vec4 in_color_linear, vec2 VIEWPORT_COORD, vec2 
 		out_color = mix(out_color, source_color, mirrored_screen_coord.x < HSM_CRT_ORIGINAL_AB_COMPARE_SPLIT_POSITION ? 1 : 0);
 	}
 
+/*
 	float vignette_factor = HSM_GetScreenVignetteFactor(mirrored_screen_coord, HSM_SCREEN_VIGNETTE);
-
-	// // This affects if the vignette shows up in the reflection or not
-	// if (HSM_SCREEN_VIGNETTE_IN_REFLECTION == 0)
-	// 	vignette_factor = 1 - ((1 - vignette_factor) * screen_mask);
 
 	float vignette_factor_outside_screen = HSM_SCREEN_VIGNETTE_IN_REFLECTION * vignette_factor + (1 - HSM_SCREEN_VIGNETTE_IN_REFLECTION) * 1;
 	vignette_factor = screen_mask * vignette_factor + (1 - screen_mask) * vignette_factor_outside_screen;
 
 	out_color *= vignette_factor;
-
+*/
 	if (HSM_FAKE_SCANLINE_OPACITY > 0)
 	{
 		vec4 scanline_masked_color = HSM_ApplyScanlineMask(out_color, SCREEN_COORD, SCREEN_SCALE);
-		// out_color = mix(out_color, scanline_masked_color, screen_mask);
 		out_color = scanline_masked_color;
 	}
 
@@ -1506,11 +1504,12 @@ vec4 HSM_GetPostCrtPreppedColor(vec4 in_color_linear, vec2 VIEWPORT_COORD, vec2 
 	{
 		vec2 tube_highlight_coord = (mirrored_tube_coord - 0.5) / HSM_TUBE_STATIC_REFLECTION_IMAGE_SCALE + 0.5;
 
-		// // Dithering for the glass reflection if needed to reduce banding
-		// float blur_max_size = 1;
-		// float blur_amount = 0.2;
-		// vec4 tube_highlight_image = HSM_GetStoichaicBlurredSample(TubeStaticReflectionImage, tube_highlight_coord, HSM_TUBE_STATIC_REFLECTION_IMAGE_DITHERING_SAMPLES, blur_max_size, blur_amount);
-		
+/*
+		// Dithering for the glass reflection if needed to reduce banding
+		float blur_max_size = 1;
+		float blur_amount = 0.2;
+		vec4 tube_highlight_image = HSM_GetStoichaicBlurredSample(TubeStaticReflectionImage, tube_highlight_coord, HSM_TUBE_STATIC_REFLECTION_IMAGE_DITHERING_SAMPLES, blur_max_size, blur_amount);
+*/
 		float tube_highlight_mask = HSM_GetCornerMask((tube_curved_coord - 0.5) * 0.995 + 0.5 , SCREEN_ASPECT, HSM_BZL_INNER_CORNER_RADIUS_SCALE * HSM_SCREEN_CORNER_RADIUS, 0.05);
 
 		vec4 tube_highlight_image = texture(TubeStaticReflectionImage, tube_highlight_coord);

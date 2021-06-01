@@ -1,31 +1,13 @@
-Mega Bezel is updated to V 0.9.013 2021-05-30
+Mega Bezel is updated to V 0.9.014 2021-05-31
 
 Changes:
   * Guest-DrVenom Advanced
-    * Guest-DrVenom updated to Guest-DrVenom Advanced!!!
-    * Additional Guest features added to other CRT shaders, e.g. interlacing, deconvergence
-    * Added Threshold where afterflow appears
-  * Turned OFF Anti-Flicker by default
-  * Decreased Scale Increment for Cabinet Glass
-  * Added BASIC-BORDER-EXTRA-PASSES preset
-    * Added Max-Int-Scale__BASIC-EXTRA-PASSES in Variations folder
-    * Has the scaling and extra image processing of the Mega Bezel but no Bezel or Reflection
-    * No Curvature, uses integer scale and will scale to slightly larger than the screen
-  * Resolution Debug Info
-    * Fixed errors in rounding in resolution debug info
-      * This should now report the correct screen size and integer multiples
-    * Added text to show which base preset type is loaded
-  * Added MBZ__3__BASIC-BORDER-WITH-REFLECT__EASYMODE
-    * Good for low spec systems, uses 1/3 less processing than Guest-DrVenom counterpart
-  * X Position offset added to ADVANCED presets
-  * HDCore presets or other presets where there is resolution reduction in the first pass this is reported properly
-  * Added Brightness parameter to the gamma in and out to adjust brightness after the CRT pass, should be helpful for things like vector games
+    * Adjusted default interlace option so it is like the last version and will more easily used with fake scan lines
+    * Changed presets to local paths
   * Grade
-    * Updated to latest version from 2020-11-20
-    * This fixes the darkening which seemed to be happening before
-    * Added On/Off Switch
-    * Removed the LUT options from Grade since Guest's LUT is now included
-    * Removed Vignette since we already have a vignette in the Mega Bezel
+    * Removed the Vignette from the Mega Bezel and added back Grade's Vignette which is looking good!
+    * Set the CRT Phosphor Gamut back to the grade default 2
+
 
 *  Performance of Base presets at 3840x2160 on Nvidia RTX2060:
   *  ADVANCED -                      78 FPS  -  No comparable old preset
@@ -46,6 +28,8 @@ Changes:
 Mega Bezel Still to Come:
 
 V1 TODO
+  * Adjust Vignette
+  * Try to get interlace and fake scanlines easier
   * Adjust Black adjustment so it affects not just black
   * Separate Interlaceing Scanline Effect
   * Fix Brightness * AB Testing

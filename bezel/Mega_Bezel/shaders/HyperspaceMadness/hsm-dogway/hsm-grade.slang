@@ -73,7 +73,7 @@ layout(std140, set = 0, binding = 0) uniform UBO
     ###                                                                                    ###
     ###    PAL                                                                             ###
     ###        Phosphor: EBU (#3)            (or an EBU T3213 based CRT phosphor gamut)    ###
-    ###        WP: D65 (6489K)               (in practice more like ~7500K)                ###
+    ###        WP: D65 (6504K)               (in practice more like ~7500K)                ###
     ###        TRC: 2.8 SMPTE-C Gamma                                                      ###
     ###        Saturation: -0.02                                                           ###
     ###                                                                                    ###
@@ -100,13 +100,13 @@ layout(std140, set = 0, binding = 0) uniform UBO
 
 #pragma parameter g_grade_on                       "          Grade ON" 0 0 1 1
 #pragma parameter DG_SIGNAL_GAMMA_TITLE             "[ GAMMA ]:" 0 0 0 1
-#pragma parameter g_gamma_in                        "          Signal Gamma"            2.50 1.80 3.0 0.05
-#pragma parameter g_gamma_out                       "          CRT Gamma"               2.50 1.80 3.0 0.05        
+#pragma parameter g_gamma_in                        "          Game Embedded Gamma"            2.222 1.80 3.0 0.05
+#pragma parameter g_gamma_out                       "          CRT Electron Gun Gamma"         2.50 1.80 3.0 0.05        
 
 #pragma parameter DG_SIGNAL_COLOR_SPACE_TITLE       "[ SIGNAL & COLOR SPACE ]:" 0 0 0 1
 #pragma parameter g_signal_type                     "          Signal Type (0:RGB 1:Composite)"                         1.0 0.0 1.0 1.0
 // Phosphor was changed from 2 to 1 to look similar to the input by default
-#pragma parameter g_crtgamut                        "          CRT Phosphor Gamut - 1:NTSC-U | 2:NTSC-J | 3:PAL"        0.0 -4.0 3.0 1.0
+#pragma parameter g_crtgamut                        "          CRT Phosphor Gamut - 1:NTSC-U | 2:NTSC-J | 3:PAL"        2.0 -4.0 3.0 1.0
 #pragma parameter g_space_out                       "       Display Color Space -1:709 | 0:sRGB | DCI | 2020 | Adobe"   0.0 -1.0 3.0 1.0
 
 #pragma parameter g_hue_degrees                     "          Hue (Composite Only)"                  0.0 -360.0 360.0 1.0
@@ -118,52 +118,52 @@ layout(std140, set = 0, binding = 0) uniform UBO
 #pragma parameter g_Q_MUL                           "          Q/V Multiplier"       1.0  0.0 2.0 0.01
 
 #pragma parameter DG_BRIGHTNESS_TITLE               "[ BRIGHTNESS & CONTRAST ]:" 0 0 0 1
-#pragma parameter g_lum_fix                         "          Sega Luma Fix"            0.0  0.0 1.0 1.0
+#pragma parameter g_lum_fix                         "          Sega Luma Fix"        0.0  0.0 1.0 1.0
 #pragma parameter g_lum                             "          Brightness"           0.0 -0.5 1.0 0.01
 #pragma parameter g_cntrst                          "          Contrast"             0.0 -1.0 1.0 0.05
-#pragma parameter g_mid                             "          Contrast Pivot"           0.5  0.0 1.0 0.01
+#pragma parameter g_mid                             "          Contrast Pivot"       0.5  0.0 1.0 0.01
 
 #pragma parameter DG_VIGNETTE_TITLE                 "[ VIGNETTE ]:" 0 0 0 1
 #pragma parameter g_vignette                        "          Use Vignette"          1.0  0.0 1.0 1.0
-#pragma parameter g_vstr                            "          Amount (Strength)"    40.0 0.0 98.0 2.0
-#pragma parameter g_vpower                          "          Corner Amount (Power)"           26 0.0 200 2
+#pragma parameter g_vstr                            "          Amount (Strength)"     40.0 0.0 98.0 2.0
+#pragma parameter g_vpower                          "          Corner Amount (Power)" 26 0.0 200 2
 
 #pragma parameter DG_COLOR_TEMP_TITLE               "[ COLOR TEMP & HUE ]:" 0 0 0 1
-#pragma parameter g_wp_temperature                  "          White Point"          6504.0 5004.0 12004.0 100.0
+#pragma parameter g_wp_temperature                  "          White Point"          6500.0 5000.0 12000.0 100.0
 #pragma parameter g_sat                             "          Saturation"           0.0 -1.0 2.0 0.01
 #pragma parameter g_vibr                            "          Dullness/Vibrance"    0.0 -1.0 1.0 0.05
 
 #pragma parameter DG_HUE_VS_SAT_TITLE               "[ HUE VS SATURATION ]:" 0 0 0 1
-#pragma parameter g_satr                            "          Red"           0.0 -1.0 1.0 0.01
-#pragma parameter g_satg                            "          Hue vs Sat Green"     0.0 -1.0 1.0 0.01
-#pragma parameter g_satb                            "          Hue vs Sat Blue"          0.0 -1.0 1.0 0.01
-#pragma parameter g_lift                            "          Black Level"          0.0 -0.5 0.5 0.01
+#pragma parameter g_satr                            "          Red"                 0.0 -1.0 1.0 0.01
+#pragma parameter g_satg                            "          Hue vs Sat Green"    0.0 -1.0 1.0 0.01
+#pragma parameter g_satb                            "          Hue vs Sat Blue"     0.0 -1.0 1.0 0.01
+#pragma parameter g_lift                            "          Black Level"         0.0 -0.5 0.5 0.01
 
 #pragma parameter DG_BLACKTINT_TITLE                "[ BLACK TINT ]:" 0 0 0 1
-#pragma parameter g_blr                             "          Black-Red Tint"           0.0  0.0 1.0 0.01
+#pragma parameter g_blr                             "          Black-Red Tint"       0.0  0.0 1.0 0.01
 #pragma parameter g_blg                             "          Black-Green Tint"     0.0  0.0 1.0 0.01
-#pragma parameter g_blb                             "          Black-Blue Tint"          0.0  0.0 1.0 0.01
+#pragma parameter g_blb                             "          Black-Blue Tint"      0.0  0.0 1.0 0.01
 
 #pragma parameter DG_WHITETINT_TITLE                "[ WHITE TINT ]:" 0 0 0 1
-#pragma parameter g_wlr                             "          White-Red Tint"           1.0  0.0 2.0 0.01
+#pragma parameter g_wlr                             "          White-Red Tint"       1.0  0.0 2.0 0.01
 #pragma parameter g_wlg                             "          White-Green Tint"     1.0  0.0 2.0 0.01
-#pragma parameter g_wlb                             "          White-Blue Tint"          1.0  0.0 2.0 0.01
+#pragma parameter g_wlb                             "          White-Blue Tint"      1.0  0.0 2.0 0.01
 
 #pragma parameter DG_REDTINT_TITLE                  "[ RED TINT ]:" 0 0 0 1
-#pragma parameter g_rg                              "          Red-Green Tint"           0.0 -1.0 1.0 0.005
-#pragma parameter g_rb                              "          Red-Blue Tint"            0.0 -1.0 1.0 0.005
+#pragma parameter g_rg                              "          Red-Green Tint"       0.0 -1.0 1.0 0.005
+#pragma parameter g_rb                              "          Red-Blue Tint"        0.0 -1.0 1.0 0.005
 
 #pragma parameter DG_GREENTINT_TITLE                "[ GREEN TINT ]:" 0 0 0 1
-#pragma parameter g_gr                              "          Green-Red Tint"           0.0 -1.0 1.0 0.005
-#pragma parameter g_gb                              "          Green-Blue Tint"          0.0 -1.0 1.0 0.005
+#pragma parameter g_gr                              "          Green-Red Tint"       0.0 -1.0 1.0 0.005
+#pragma parameter g_gb                              "          Green-Blue Tint"      0.0 -1.0 1.0 0.005
 
 #pragma parameter DG_BLUETINT_TITLE                 "[ BLUE TINT ]:" 0 0 0 1
-#pragma parameter g_br                              "          Blue-Red Tint"            0.0 -1.0 1.0 0.005
-#pragma parameter g_bg                              "          Blue-Green Tint"          0.0 -1.0 1.0 0.005
+#pragma parameter g_br                              "          Blue-Red Tint"        0.0 -1.0 1.0 0.005
+#pragma parameter g_bg                              "          Blue-Green Tint"      0.0 -1.0 1.0 0.005
 // #pragma parameter LUT_Size1                      "          LUT Size 1"           16.0 8.0 64.0 16.0
-// #pragma parameter LUT1_toggle                    "          LUT 1 Toggle"             0.0  0.0 1.0 1.0
+// #pragma parameter LUT1_toggle                    "          LUT 1 Toggle"         0.0  0.0 1.0 1.0
 // #pragma parameter LUT_Size2                      "          LUT Size 2"           64.0 0.0 64.0 16.0
-// #pragma parameter LUT2_toggle                    "          LUT 2 Toggle"             0.0  0.0 1.0 1.0
+// #pragma parameter LUT2_toggle                    "          LUT 2 Toggle"         0.0  0.0 1.0 1.0
 
 #define g_grade_on     global.g_grade_on
 #define M_PI            3.1415926535897932384626433832795
@@ -181,7 +181,7 @@ layout(std140, set = 0, binding = 0) uniform UBO
 #define vignette        params.g_vignette
 #define vstr            (1 - params.g_vstr / 100) * 50
 #define vpower          params.g_vpower / 100
-#define g_sat   params.g_sat
+#define g_sat           params.g_sat
 #define vibr            params.g_vibr
 #define satr            global.g_satr
 #define satg            global.g_satg
@@ -304,11 +304,11 @@ vec3 YxytoXYZ(vec3 Yxy){
 ///////////////////////// White Point Mapping /////////////////////////
 //
 //
-// PAL: D65      NTSC-U: D65      NTSC-J: CCT NTSC-J NTSC-FCC: C
-// PAL: 6489K    NTSC-U: 6504K    NTSC-J: 8942K      NTSC-FCC: 6780K
-// 0.313 0.329   0.3127 0.3290    0.281 0.311        0.310, 0.316
+// PAL: D65       NTSC-U: D65     NTSC-J: CCT NTSC-J NTSC-FCC: C
+// PAL: 6504K     NTSC-U: 6504K   NTSC-J: 8942K      NTSC-FCC: 6780K
+// 0.3127 0.3290  0.3127 0.3290   0.281 0.311        0.310 0.316
 
-vec3 wp_adjust(float temperature){
+vec3 wp_adjust(float temperature, vec3 color){
 
     float temp3 = pow(10.,3.) / temperature;
     float temp6 = pow(10.,6.) / pow(temperature, 2.);
@@ -322,7 +322,15 @@ vec3 wp_adjust(float temperature){
     wp.y = -3.000 * pow(wp.x,2.) + 2.870 * wp.x - 0.275;
     wp.z = 1. - wp.x - wp.y;
 
-    return wp.xyz;
+    const mat3x3 CAT02 = mat3x3(
+     0.7328,  0.4296, -0.1624,
+    -0.70360, 1.6975,  0.0061,
+     0.003,  -0.0136,  0.9834);
+
+    vec3 fw_trans = (vec3(wp.x/wp.y,1.,wp.z/wp.y) * CAT02) / (vec3(0.95045,1.,1.088917) * CAT02) ;
+
+    return color.xyz * fw_trans.xyz ;
+
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -578,7 +586,7 @@ vec3 r709_YUV(vec3 RGB)
  }
 
 
-//------------------------- SMPTE-240M Y’PbPr --------------------------
+//------------------------- SMPTE-240M YPbPr --------------------------
 
 
 //  Umax 0.886
@@ -650,17 +658,6 @@ mat3(
 //*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/
 
 
-
-const mat3 C_D65_Brad =
-mat3(
- 1.0062731504440308000, 0.0028941007331013680, -0.0070838485844433310,
- 0.0036507491022348404, 0.9992200732231140000, -0.0023814644664525986,
--0.0013438384048640728, 0.0022154981270432472,  0.9643852710723877000);
-
-
-//----------------------------------------------------------------------
-
-
 // ITU-R BT.470/601 (M) (proof of concept, actually never used)
 // SMPTE 170M-1999
 // NTSC-FCC 1953 Standard Phosphor (use with temperature C: 6780K)
@@ -694,7 +691,7 @@ mat3(
  0.1799621731042862, 0.07518967241048813, 0.977465748786926300);
 
 // SMPTE RP 145-1994 (SMPTE-C), 170M-1999
-// SMPTE-C - Standard Phosphor
+// SMPTE-C - Standard Phosphor (Rec.601 NTSC)
 const mat3 SMPTE_transform =
 mat3(
  0.39354196190834045, 0.21238772571086884, 0.01874009333550930,
@@ -702,7 +699,7 @@ mat3(
  0.19164848327636720, 0.08655092865228653, 0.95824241638183590);
 
 // SMPTE RP 145-1994 (SMPTE-C), 170M-1999
-// NTSC-J - Standard Phosphor
+// NTSC-J - Standard Phosphor (https://web.archive.org/web/20130413104152/http://arib.or.jp/english/html/overview/doc/4-TR-B09v1_0.pdf)
 const mat3 NTSC_J_transform =
 mat3(
  0.39603787660598755, 0.22429330646991730, 0.02050681784749031,
@@ -710,19 +707,13 @@ mat3(
  0.24496731162071228, 0.10153251141309738, 1.26512730121612550);
 
 // ITU-R BT.470/601 (B/G)
-// EBU Tech.3213 PAL - Standard Phosphor for Studio Monitors
+// EBU Tech.3213-E PAL - Standard Phosphor for Studio Monitors
 const mat3 EBU_transform =
 mat3(
  0.43194326758384705, 0.22272075712680817, 0.020247340202331543,
  0.34123489260673523, 0.70600330829620360, 0.129433929920196530,
  0.17818950116634370, 0.07127580046653748, 0.938464701175689700);
 
-// P22-EBU - ColorMatch RGB (compensate with D50 Brad) (Radius PressView Monitors)
-const mat3 EBU_CM_transform =
-mat3(
- 0.5093, 0.2749, 0.0243,
- 0.3209, 0.6581, 0.1088,
- 0.1340, 0.0670, 0.6922);
 
 
 
@@ -740,7 +731,7 @@ void main()
 
     //HSM Added
     vec4 src_rgba = texture(Source, vTexCoord.xy);
-    vec3 src = src_rgba.rgb;
+    vec3 src = src_rgba.rgb * lum_exp;
 
     if (g_grade_on == 0)
     {
@@ -748,15 +739,13 @@ void main()
         return;
     }
 
-    vec3 col = src;
-
 // Assumes framebuffer in Rec.601 with baked gamma
 // make a YUV * NTSC Phosphor option too and a FCC * NTSC phosphor
-    col = (crtgamut ==  3.0) ? r601_YUV(col*lum_exp)   : \
-          (crtgamut ==  2.0) ?  RGB_YIQ(col*lum_exp)   : \
-          (crtgamut == -3.0) ?  RGB_FCC(col*lum_exp)   : \
-          (crtgamut == -4.0) ?  RGB_FCC(col*lum_exp)   : \
-                                RGB_YIQ(col*lum_exp)   ;
+    vec3 col = (crtgamut ==  3.0) ? r601_YUV(src)   : \
+               (crtgamut ==  2.0) ?  RGB_YIQ(src)   : \
+               (crtgamut == -3.0) ?  RGB_FCC(src)   : \
+               (crtgamut == -4.0) ?  RGB_FCC(src)   : \
+                                     RGB_YIQ(src)   ;
 
 
 // Clipping Logic / Gamut Limiting
@@ -807,40 +796,41 @@ void main()
 // \_/ \_/ \_/ \_/ \_/ \_/ \_/ \_/ \_/ \_/ \_/ \_/ \_/ \_/ \_/ \_/ \_/ \_/ \_/ \
 
 
-// Developer baked CRT gamma
+// Developer baked CRT gamma (2.20 - 2.25)
     col = moncurve_f_f3(col, gamma_in, 0.099);
 
-// CRT Phosphor Gamut; Warning needs to be applied on Rec.601 content (reconvert SPC to Rec.601)
+// CRT Phosphor Gamut
     mat3 m_in;
 
     if (crtgamut == -4.0) { m_in = NTSC_FCC_transform;          } else
     if (crtgamut == -3.0) { m_in = Conrac_transform;            } else
     if (crtgamut == -2.0) { m_in = Sony20_20_transform;         } else
+    if (crtgamut == -1.0) { m_in = SMPTE_transform;             } else
     if (crtgamut ==  1.0) { m_in = P22_transform;               } else
     if (crtgamut ==  2.0) { m_in = NTSC_J_transform;            } else
     if (crtgamut ==  3.0) { m_in = EBU_transform;               }
 
-    vec3 gamut = (crtgamut == -3.0) ? (m_in*col)*C_D65_Brad    : \
-                                       m_in*col;
+    vec3 gamut = m_in*col;
 
-// 8000 is eye balled
 // White Point Mapping
-    vec3 wp   = (crtgamut == -4.0) ? wp_adjust(global.g_wp_temperature - 1000. - (7291.943 - 6504.)) : \
-                (crtgamut == -2.0) ? wp_adjust(global.g_wp_temperature - 1000. - (7120.069 - 6504.)) : \
-                (crtgamut ==  1.0) ? wp_adjust(global.g_wp_temperature - 1000. - (7072.948 - 6504.)) : \
-                (crtgamut ==  2.0) ? wp_adjust(global.g_wp_temperature - 1000. - (8002.309 - 6504.)) : \
-                (crtgamut ==  3.0) ? wp_adjust(global.g_wp_temperature - 1000. - (7063.915 - 6504.)) : \
-                                     wp_adjust(global.g_wp_temperature - 1000.) ;
-    vec3 base = XYZtoYxy(gamut);
-    vec3 adj  = XYZtoYxy(gamut * wp);
-         adj  = clamp(XYZ_to_RGB(YxytoXYZ(vec3(base.x , adj.y , adj.z)), SPC), 0., 1.);
+    vec3 wp   = (crtgamut == -4.0) ? wp_adjust(global.g_wp_temperature - (6404. - 6504.), gamut) : \
+                (crtgamut == -3.0) ? wp_adjust(global.g_wp_temperature - (6504. - 6504.), gamut) : \
+                (crtgamut == -2.0) ? wp_adjust(global.g_wp_temperature - (7600. - 6504.), gamut) : \
+                (crtgamut == -1.0) ? wp_adjust(global.g_wp_temperature - (6504. - 6504.), gamut) : \
+                (crtgamut ==  1.0) ? wp_adjust(global.g_wp_temperature - (6504. - 6504.), gamut) : \
+                (crtgamut ==  2.0) ? wp_adjust(global.g_wp_temperature - (7400. - 6504.), gamut) : \
+                (crtgamut ==  3.0) ? wp_adjust(global.g_wp_temperature - (6504. - 6504.), gamut) : \
+                                     wp_adjust(global.g_wp_temperature, gamut) ;
+
+    vec3 adj  = clamp(XYZ_to_RGB(wp, SPC), 0., 1.);
 
 
-// End-user emulated CRT gamma
-    adj = moncurve_r_f3(adj, gamma_out, 0.099);
+// Guest Emulated CRT Electron Gun gamma (2.35 - 2.50) (phosphor gamma brings it up back to ~2.222)
+    adj = moncurve_r_f3(crtgamut ==  0.0 ? col : adj, pow(gamma_in, 2.) / gamma_out, 0.099);
+
 
 /* HSM Removed
-// Look LUT - (in sRGB space)
+// Look LUT - (in SPC space)
     float red =   (adj.r * (global.LUT_Size1 - 1.0) + 0.4999) / (global.LUT_Size1 * global.LUT_Size1);
     float green = (adj.g * (global.LUT_Size1 - 1.0) + 0.4999) /  global.LUT_Size1;
     float blue1 = (floor(adj.b * (global.LUT_Size1 - 1.0)) / global.LUT_Size1) + red;
@@ -854,7 +844,7 @@ void main()
 // HSM Added
 vec3 vcolor = adj;
 
-// OETF - Opto-Electronic Transfer Function
+// OETF - Opto-Electronic Transfer Function (Rec.709 does a Dim to Dark Surround adaptation)
     vcolor = (SPC == 3.0) ?     clamp(pow(vcolor,                     vec3(563./256.)),     0., 1.) : \
              (SPC == 2.0) ? moncurve_f_f3(vcolor,                          2.20 + 0.022222, 0.0993) : \
              (SPC == 1.0) ?     clamp(pow(vcolor,                     vec3(2.20 + 0.40)),   0., 1.) : \
@@ -897,10 +887,11 @@ vec3 vcolor = adj;
                       blr/20., blg/20., blb/20., 0.0);  //black tint
 
 
-    vec3 coeff = (SPC ==  3.0) ? vec3(0.29734000563621520, 0.62735998630523680,  0.07529000192880630) : \
-                 (SPC ==  2.0) ? vec3(0.24840137362480164, 0.67799961566925050,  0.03913172334432602) : \
-                 (SPC ==  1.0) ? vec3(0.22898375988006592, 0.69173991680145260,  0.07927616685628891) : \
-                                 vec3(0.21264933049678802, 0.71516913175582890,  0.07218152284622192) ;
+    vec3 coeff = (SPC == 3.0) ? vec3(0.29734000563621520, 0.62735998630523680,  0.07529000192880630) : \
+                 (SPC == 2.0) ? vec3(0.24840137362480164, 0.67799961566925050,  0.03913172334432602) : \
+                 (SPC == 1.0) ? vec3(0.22898375988006592, 0.69173991680145260,  0.07927616685628891) : \
+                                vec3(0.21264933049678802, 0.71516913175582890,  0.07218152284622192) ;
+
 
     mat3 adjust = mat3((1.0 - sat) * coeff.x + sat, (1.0 - sat) * coeff.x,       (1.0 - sat) * coeff.x,
                        (1.0 - sat) * coeff.y,       (1.0 - sat) * coeff.y + sat, (1.0 - sat) * coeff.y,

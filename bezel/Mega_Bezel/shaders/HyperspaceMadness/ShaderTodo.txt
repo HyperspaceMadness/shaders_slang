@@ -6,8 +6,9 @@ Changes:
   * Grade
     * Adjusted Vignette Ranges 
     * Set the CRT Phosphor Gamut to 0 so it is not as different from default
+  * Change X Position range to 1000
 
-
+  * Add Royale Preset
 *  Performance of Base presets at 3840x2160 on Nvidia RTX2060:
   *  ADVANCED -                      78 FPS  -  No comparable old preset
   *  GLASS -                        150 FPS  -  Old Glass Preset        128 FPS
@@ -27,21 +28,23 @@ Changes:
 Mega Bezel Still to Come:
 
 V1 TODO
-  * Change X Position range to 1000
-  * Add Royale Preset
+
+Update all GDV variables to have name at end
+  Show Decal under frame is still showing on top of the screen
   * Add Humbar in Post CRT
   * Show Image per Screen Area
+  * Night light single glow - Place Glows
+  * Fix Cut-Out on all layers
+  Update Docs & add some notes about GDV & Grade
+  * Rotate Dual Screen 
   * Debug Info showing Shader Type? Num Shaders x Num Flavors = ~20 files :(, Add text in extra pass
   * Adjust Black adjustment so it affects not just black, Falloff? Tweak Afterglow?
   * Separate Interlaceing Scanline Effect?
   * Fix Brightness * AB Testing
   * Explicit Downsample Res? Target Res?
-  * Guest ADV - convergence, extra passes, mega bezel passes
-  *   Sort difference between Guest Color Correct & Grade
+  * Guest ADV - Deconvergence before CRT? 2 Passes, one before one after and switch?
   * Add extra empty passes for Mega Bezel
-  * Evaluate G-Sharp for Dithering to replace Sgenpt
   * CRT Geom Curvature, Guest Curvature
-  * Fix Cut-Out on all layers
   * Modulate Range on top of Hue & Value?
   * Raw Pixel Preset
   * Add 'Zoom' Crop & Shift?
@@ -52,21 +55,19 @@ V1 TODO
   * Fix bright area of screen showing outside the black line when bezel is hidden
   * Viewport orientation Debug
   * Add Cutout to STANDARD Preset?
-  * Shadow from Cutout?
-  * Local vs FullScreen Blur on Corner reflection?
   * HSV for Background for ADVANCED?
   * Logo
     * Put Logo on Screen 1 & Scale Properly, options for which screen?
     * Position offset?
   * Dual Screen
     * Combine frame shadows
-  * First Pass for Downscaling, Anti-Flicker needs to go here because of OriginalHistory1
-  * Add Downscale res to res debug
-  * HD-CORE presets
+  * Test Anti-Flicker
+  * Decide what HD-CORE presets are Base presets
   * Add Mode to show masks and color for output for a basic-border preset
   * Add Images and Readme to root of the Repo
-  * Update Doc Readme
   * LCD behavior when reaching resolution limit - Possible LCD Replacements LCD 3x, Sameboy lcd
+  * Local vs FullScreen Blur on Corner reflection?
+  * Shadow from Cutout?
 
 
 Post V1  

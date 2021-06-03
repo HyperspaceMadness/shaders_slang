@@ -27,7 +27,8 @@ Changes:
 Mega Bezel Still to Come:
 
 V1 TODO
-  * Move Vignette back to Post CRT, test difference
+  * Change X Position range to 1000
+  * Add Royale Preset
   * Add Humbar in Post CRT
   * Show Image per Screen Area
   * Debug Info showing Shader Type? Num Shaders x Num Flavors = ~20 files :(, Add text in extra pass

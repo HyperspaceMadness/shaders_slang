@@ -87,10 +87,10 @@ float HSM_SNAP_TO_INT_SCALE_TOLERANCE = global.HSM_SNAP_TO_INT_SCALE_TOLERANCE;
 //---------------------------------------------------------------------------------------------------
 #pragma parameter HSM_SCREEN_POSITION_TITLE							"[ POSITION OFFSET ]:" 0 0 0.01 0.01
 
-#pragma parameter HSM_SCREEN_POSITION_X 							"          Position X" 0 -250 250 1
+#pragma parameter HSM_SCREEN_POSITION_X 							"          Position X" 0 -1000 1000 1
 float HSM_SCREEN_POSITION_X = global.HSM_SCREEN_POSITION_X / 1000;
 
-#pragma parameter HSM_SCREEN_POSITION_Y 							"          Position Y" 0 -250 250 1
+#pragma parameter HSM_SCREEN_POSITION_Y 							"          Position Y" 0 -1000 1000 1
 float HSM_SCREEN_POSITION_Y = -1 * global.HSM_SCREEN_POSITION_Y / 1000;
 
 
@@ -156,8 +156,8 @@ float HSM_DOWNSAMPLE_BLUR_OPPOSITE_MULT = global.HSM_DOWNSAMPLE_BLUR_OPPOSITE_MU
 #pragma parameter HSM_INTERLACE_MODE 								"         Interlacing Mode: OFF | Normal 1-3 | Interpolation 4-5" 4 0.0 5.0 1.0
 #define HSM_INTERLACE_MODE global.HSM_INTERLACE_MODE
 
-#pragma parameter HSM_INTERLACE_EFFECT_SMOOTHNESS 					"          Interlacing Effect Smoothness" 0 0 100 10
-#define HSM_INTERLACE_EFFECT_SMOOTHNESS global.HSM_INTERLACE_EFFECT_SMOOTHNESS / 200
+#pragma parameter HSM_INTERLACE_EFFECT_SMOOTHNESS__INTERS 					"          Interlacing Effect Smoothness" 0 0 100 10
+#define HSM_INTERLACE_EFFECT_SMOOTHNESS__INTERS global.HSM_INTERLACE_EFFECT_SMOOTHNESS__INTERS / 200
 
 #pragma parameter HSM_INTERLACE_SCANLINE_EFFECT 					"          Interlacing Scanline Effect" 20 0 100 5
 #define HSM_INTERLACE_SCANLINE_EFFECT global.HSM_INTERLACE_SCANLINE_EFFECT / 100

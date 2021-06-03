@@ -21,7 +21,7 @@
    
 */  
 
-#include "../../hsm/hsm-globals-and-screen-scale-params.inc"
+#include "../hsm/hsm-globals-and-screen-scale-params.inc"
 
 layout(push_constant) uniform Push
 {
@@ -65,7 +65,7 @@ layout(std140, set = 0, binding = 0) uniform UBO
 /*
 // #pragma parameter inters "          Interlacing Effect Smoothness" 0.0 0.0 0.5 0.05 // Joint parameter with main pass, values must match
 */
-#define inters  	HSM_INTERLACE_EFFECT_SMOOTHNESS     // interlacing effect smoothing
+#define inters  	HSM_INTERLACE_EFFECT_SMOOTHNESS__INTERS     // interlacing effect smoothing
 
 /*
 // #pragma parameter iscan "          Interlacing Scanline Effect" 0.20 0.0 1.0 0.05

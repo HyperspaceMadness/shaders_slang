@@ -1,6 +1,6 @@
 shaders = 24
 
-shader0 =  ../../../../stock.slang // ../../shaders/HyperspaceMadness/hsm-guest/advanced/g-sharp_resampler.slang
+shader0 =  ../../../../stock.slang // ../../shaders/HyperspaceMadness/hsm-guest/g-sharp_resampler.slang
 filter_linear0 = false
 srgb_framebuffer0 = true
 scale_type0 = source
@@ -30,20 +30,20 @@ shader4 = ../../shaders/HyperspaceMadness/hsm-dogway/hsm-grade.slang
 shader5 = ../../../../stock.slang
 alias5 = "PreCRTPass"
 
-shader6 = ../../shaders/HyperspaceMadness/hsm-guest/advanced/hsm-afterglow0.slang
+shader6 = ../../shaders/HyperspaceMadness/hsm-guest/hsm-afterglow0.slang
 filter_linear6 = false
 scale_type6 = source
 scale6 = 1.0
 alias6 = "AfterglowPass"
 
-shader7 = ../../shaders/HyperspaceMadness/hsm-guest/advanced/hsm-pre-shaders-afterglow.slang
+shader7 = ../../shaders/HyperspaceMadness/hsm-guest/hsm-pre-shaders-afterglow.slang
 filter_linear7 = false
 scale_type7 = source
 mipmap_input7 = true
 scale7 = 1.0
 alias7 = "PrePass"
 
-shader8 = ../../shaders/HyperspaceMadness/hsm-guest/advanced/hsm-avg-lum.slang
+shader8 = ../../shaders/HyperspaceMadness/hsm-guest/hsm-avg-lum.slang
 filter_linear8 = true
 scale_type8 = source
 scale8 = 1.0
@@ -51,14 +51,14 @@ mipmap_input8 = true
 alias8 = "AvgLumPass"
 
 // Pass referenced by subsequent blurring passes and crt pass
-shader9 = ../../shaders/HyperspaceMadness/hsm-guest/advanced/hsm-interlace-and-linearize.slang
+shader9 = ../../shaders/HyperspaceMadness/hsm-guest/hsm-interlace-and-linearize.slang
 filter_linear9 = true
 scale_type9 = source
 scale9 = 1.0
 alias9 = "LinearizePass"
 float_framebuffer9 = true
 
-shader10 = ../../shaders/HyperspaceMadness/hsm-guest/advanced/hsm-gaussian_horizontal.slang
+shader10 = ../../shaders/HyperspaceMadness/hsm-guest/hsm-gaussian_horizontal.slang
 filter_linear10 = true
 scale_type_x10 = absolute
 scale_x10 = 800.0
@@ -66,7 +66,7 @@ scale_type_y10 = source
 scale_y10 = 1.0 
 float_framebuffer10 = true
 
-shader11 = ../../shaders/HyperspaceMadness/hsm-guest/advanced/hsm-gaussian_vertical.slang
+shader11 = ../../shaders/HyperspaceMadness/hsm-guest/hsm-gaussian_vertical.slang
 filter_linear11 = true
 scale_type_x11 = absolute
 scale_x11 = 800.0
@@ -75,7 +75,7 @@ scale_y11 = 600.0
 float_framebuffer11 = true
 alias11 = GlowPass
 
-shader12 = ../../shaders/HyperspaceMadness/hsm-guest/advanced/hsm-bloom_horizontal.slang
+shader12 = ../../shaders/HyperspaceMadness/hsm-guest/hsm-bloom_horizontal.slang
 filter_linear12 = true
 scale_type_x12 = absolute
 scale_x12 = 800.0
@@ -83,7 +83,7 @@ scale_type_y12 = absolute
 scale_y12 = 600.0 
 float_framebuffer12 = true
 
-shader13 = ../../shaders/HyperspaceMadness/hsm-guest/advanced/hsm-bloom_vertical.slang
+shader13 = ../../shaders/HyperspaceMadness/hsm-guest/hsm-bloom_vertical.slang
 filter_linear13 = true
 scale_type_x13 = source
 scale_x13 = 1.0
@@ -92,13 +92,13 @@ scale_y13 = 1.0
 float_framebuffer13 = true
 alias13 = BloomPass
 
-shader14 = ../../shaders/HyperspaceMadness/hsm-guest/advanced/hsm-crt-guest-advanced-with-scaling.slang
+shader14 = ../../shaders/HyperspaceMadness/hsm-guest/hsm-crt-guest-advanced-with-scaling.slang
 filter_linear14 = true
 scale_type14 = viewport
 scale_x14 = 1.0
 scale_y14 = 1.0
 
-shader15 = ../../shaders/HyperspaceMadness/hsm-guest/advanced/hsm-deconvergence.slang
+shader15 = ../../shaders/HyperspaceMadness/hsm-guest/hsm-deconvergence.slang
 filter_linear15 = true
 scale_type15 = viewport
 scale_x15 = 1.0

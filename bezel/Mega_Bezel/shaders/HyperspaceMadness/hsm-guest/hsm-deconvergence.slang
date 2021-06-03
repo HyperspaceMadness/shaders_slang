@@ -21,7 +21,7 @@
    
 */
 
-#include "../../hsm/hsm-globals-and-screen-scale-params.inc"
+#include "../hsm/hsm-globals-and-screen-scale-params.inc"
 
 layout(push_constant) uniform Push
 {
@@ -30,8 +30,8 @@ layout(push_constant) uniform Push
 	float GDV_DECONVERGENCE_STRENGTH;
 	float GDV_NOISE_AMOUNT;
 	float GDV_NOISE_SIZE;
-	float GDV_MASK_TYPE;
-	float GDV_MASK_SIZE;
+	float GDV_MASK_TYPE__SHADOWMASK;
+	float GDV_MASKSIZE;
 	float GDV_DECONVERGENCE_H_RANGE_RED;
 	float GDV_DECONVERGENCE_H_RANGE_GREEN;
 	float GDV_DECONVERGENCE_H_RANGE_BLUE;
@@ -84,11 +84,11 @@ layout(push_constant) uniform Push
 #pragma parameter GDV_NOISE_SIZE 					"          Noise Size" 2.0 1.0 10.0 1.0
 #define noiseresd       params.GDV_NOISE_SIZE    // Switch colors left/right
 
-#pragma parameter GDV_MASK_TYPE 					"        CRT Mask: -1:None | 0:CGWG | 1-4:Lottes | 5-7:Trinitron" 0.0 -1.0 8.0 1.0
-#define shadowMask   params.GDV_MASK_TYPE     // Mask Style
+#pragma parameter GDV_MASK_TYPE__SHADOWMASK 					"        CRT Mask: -1:None | 0:CGWG | 1-4:Lottes | 5-7:Trinitron" 0.0 -1.0 8.0 1.0
+#define shadowMask   params.GDV_MASK_TYPE__SHADOWMASK     // Mask Style
 
-#pragma parameter GDV_MASK_SIZE 					"          CRT Mask Size - Auto | 2K | 4k" 0 0 4 1
-#define masksize     params.GDV_MASK_SIZE     // Mask Size
+#pragma parameter GDV_MASKSIZE 					"          CRT Mask Size - Auto | 2K | 4k" 0 0 4 1
+#define masksize     params.GDV_MASKSIZE     // Mask Size
 
 /*
 layout(std140, set = 0, binding = 0) uniform UBO

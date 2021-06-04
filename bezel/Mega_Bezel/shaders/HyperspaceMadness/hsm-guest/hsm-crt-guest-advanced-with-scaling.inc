@@ -24,122 +24,122 @@
 
 layout(push_constant) uniform Push
 {
-	float GDV_BRIGHT_BOOST_DARK_PIXELS__BRIGHTBOOST;
-	float GDV_BRIGHT_BOOST_BRIGHT_PIXELS__BRIGHTBOOST1;
-	float GDV_GLOW;
-	float GDV_BLOOM;
-	float GDV_HALATION;
-
-	float GDV_SCANLINE_TYPE__GSL;
-	float GDV_SCANLINE_BEAM_SHAPE_CENTER__SCANLINE1;
-	float GDV_SCANLINE_BEAM_SHAPE_EDGES__SCANLINE2;
-	float GDV_SCANLINE_SHAPE_DARK_PIXELS__BEAM_MIN;
-	float GDV_SCANLINE_SHAPE_BRIGHT_PIXELS__BEAM_MAX;
-	float GDV_SCANLINE_INCREASED_BRIGHT_BEAM__BEAM_SIZE;
-	float GDV_SCANLINE_SATURATION__SCANS;
-
-    float GDV_HORIZONTAL_SHARPNESS__H_SHARP;
-	float GDV_SUBTRACTIVE_SHARPNESS__S_SHARP;
-	float GDV_SMART_EDGES_STRENGTH__SMART_EI;
-	float GDV_SMART_EDGES_STRENGTH_LIMIT__EI_LIMIT;
-	float GDV_SMART_EDGES_SMOOTHING_THRESHOLD__STH;
-
-	float GDV_MASK_TYPE__SHADOWMASK;
-	float GDV_MASKSIZE;
-	float GDV_MASK_GAMMA;
-	float GDV_MASK_5_TO_7_TRINITRON_STRENGTH__MCUT;
-	float GDV_MASK_LOTTES_DARK__MASKDARK;
-	float GDV_MASK_LOTTES_LIGHT__MASKLIGHT;
-	float GDV_MASK_0_5_TO_8_STRENGTH__MASKSTR;
-	float GDV_KEEP_MASK_WITH_CLIPPING__MCLIP;
-	float GDV_SCANLINE_COLOR_DECONVERGENCE__VERTMASK;
-    float GDV_SLOTMASK_STRENGTH__SLOTMASK;
-	float GDV_SLOTMASK_SIZE__SLOTMS;
-	float GDV_SLOTMASK_WIDTH__SLOTWIDTH;
-	float GDV_SLOTMASK_HEIGHT__DOUBLE_SLOT;
-	float GDV_SCANLINE_SPIKE_REMOVAL__SPIKE;
+	float brightboost;
+	float brightboost1;
+	float glow;
+	float gsl;
+	float scanline1;
+	float scanline2;
+	float beam_min;
+	float beam_max;
+	float beam_size;
+    float h_sharp;
+	float s_sharp;
+	float bloom;
+	float halation;
+	float scans;
 	// float scansub;
-	float GDV_GAMMA_CORRECT__GAMMA_C;
+	float slotms;
+	float mclip;
+	float gamma_c;
+	float mask_gamma;
+	float smart_ei;
+	float ei_limit;
+	float sth;
+	// float gamma_out;
+	// float overscanY;
+	// float intres;
+	// float prescalex;
+	// float c_shape;
+	float shadowMask;
+	float masksize;
+	float mcut;
+	float maskDark;
+	float maskLight;
+	float maskstr;
+	float vertmask;
+    float slotmask;
+	float slotwidth;
+	float double_slot;
+	float spike;
 
-	// HSM Removed
+	// HSM Removed because over push constant limit
 	// float barspeed;
 	// float barintensity;
-	// float bardir;	
+	// float bardir;
 } params;
 
 
-#pragma parameter GDV_BRIGHTNESS_TITLE 				"[ BRIGHTNESS SETTINGS ]:" 0.0 0.0 1.0 1.0
+#pragma parameter bogus_brightness "[ BRIGHTNESS SETTINGS ]:" 0.0 0.0 1.0 1.0
 
-#pragma parameter GDV_GLOW 				"          Glow Strength" 0.08 0.0 2.0 0.01
-#define glow         params.GDV_GLOW     // Glow Strength
+#pragma parameter glow "          Glow Strength" 0.08 0.0 2.0 0.01
+#define glow         params.glow     // Glow Strength
 
-#pragma parameter GDV_BLOOM 				"          Bloom Strength" 0.0 0.0 2.0 0.05
-#define bloom         params.GDV_BLOOM     // bloom effect
+#pragma parameter bloom "          Bloom Strength" 0.0 0.0 2.0 0.05
+#define bloom         params.bloom     // bloom effect
 
-#pragma parameter GDV_HALATION 			"          Halation Strength" 0.0 0.0 2.0 0.025
-#define halation         params.GDV_HALATION     // halation effect
+#pragma parameter halation "          Halation Strength" 0.0 0.0 2.0 0.025
+#define halation         params.halation     // halation effect
 
-#pragma parameter GDV_GAMMA_CORRECT__GAMMA_C 				"          Gamma correct" 1.0 0.50 2.0 0.02
-#define gamma_c   params.GDV_GAMMA_CORRECT__GAMMA_C     // adjust brightness
+#pragma parameter gamma_c "          Gamma correct" 1.0 0.50 2.0 0.02
+#define gamma_c   params.gamma_c     // adjust brightness
 
-#pragma parameter GDV_BRIGHT_BOOST_DARK_PIXELS__BRIGHTBOOST 		"          Bright Boost Dark Pixels" 1.40 0.25 10.0 0.05
-#define brightboost  params.GDV_BRIGHT_BOOST_DARK_PIXELS__BRIGHTBOOST     // adjust brightness
+#pragma parameter brightboost "          Bright Boost Dark Pixels" 1.40 0.25 10.0 0.05
+#define brightboost  params.brightboost     // adjust brightness
 
-#pragma parameter GDV_BRIGHT_BOOST_BRIGHT_PIXELS__BRIGHTBOOST1 	"          Bright Boost Bright Pixels" 1.10 0.25 3.00 0.025
-#define brightboost1  params.GDV_BRIGHT_BOOST_BRIGHT_PIXELS__BRIGHTBOOST1     // adjust brightness
+#pragma parameter brightboost1 "          Bright Boost Bright Pixels" 1.10 0.25 3.00 0.025
+#define brightboost1  params.brightboost1     // adjust brightness
 
+#pragma parameter bogus_scanline "[ SCANLINE OPTIONS ]: " 0.0 0.0 1.0 1.0
 
-#pragma parameter GDV_SCANLINE_TITLE 				"[ SCANLINE OPTIONS ]: " 0.0 0.0 1.0 1.0
+#pragma parameter gsl "          Scanline Type" 0.0 -1.0 2.0 1.0
+#define gsl          params.gsl      // Alternate scanlines
 
-#pragma parameter GDV_SCANLINE_TYPE__GSL 				"          Scanline Type" 0.0 -1.0 2.0 1.0
-#define gsl          params.GDV_SCANLINE_TYPE__GSL      // Alternate scanlines
+#pragma parameter scanline1 "          Scanline Beam Shape Center" 6.0 0.0 20.0 0.5
+#define scanline1    params.scanline1      // scanline param, vertical sharpness
 
-#pragma parameter GDV_SCANLINE_BEAM_SHAPE_CENTER__SCANLINE1 		"          Scanline Beam Shape Center" 6.0 0.0 20.0 0.5
-#define scanline1    params.GDV_SCANLINE_BEAM_SHAPE_CENTER__SCANLINE1      // scanline param, vertical sharpness
+#pragma parameter scanline2 "          Scanline Beam Shape Edges" 8.0 3.0 40.0 1.0 
+#define scanline2    params.scanline2      // scanline param, vertical sharpness
 
-#pragma parameter GDV_SCANLINE_BEAM_SHAPE_EDGES__SCANLINE2 			"          Scanline Beam Shape Edges" 8.0 3.0 40.0 1.0 
-#define scanline2    params.GDV_SCANLINE_BEAM_SHAPE_EDGES__SCANLINE2      // scanline param, vertical sharpness
+#pragma parameter beam_min "          Scanline Shape Dark Pixels" 1.30 0.25 3.5 0.05
+#define beam_min     params.beam_min     // dark area beam min - narrow
 
-#pragma parameter GDV_SCANLINE_SHAPE_DARK_PIXELS__BEAM_MIN 	"          Scanline Shape Dark Pixels (Higher = Thinner)" 1.30 0.25 3.5 0.05
-#define beam_min     params.GDV_SCANLINE_SHAPE_DARK_PIXELS__BEAM_MIN     // dark area beam min - narrow
+#pragma parameter beam_max "          Scanline Shape Bright Pixels" 1.00 0.4 2.5 0.05
+#define beam_max     params.beam_max     // bright area beam max - wide
 
-#pragma parameter GDV_SCANLINE_SHAPE_BRIGHT_PIXELS__BEAM_MAX "          Scanline Shape Bright Pixels (Higher = Thicker)" 1.00 0.4 2.5 0.05
-#define beam_max     params.GDV_SCANLINE_SHAPE_BRIGHT_PIXELS__BEAM_MAX     // bright area beam max - wide
+#pragma parameter beam_size "          Increased Bright Scanline Beam" 0.60 0.0 1.0 0.05
+#define beam_size    params.beam_size     // increased max. beam size
 
-#pragma parameter GDV_SCANLINE_INCREASED_BRIGHT_BEAM__BEAM_SIZE   			"          Scanline Increased Bright Beam" 0.60 0.0 1.0 0.05
-#define beam_size    params.GDV_SCANLINE_INCREASED_BRIGHT_BEAM__BEAM_SIZE     // increased max. beam size
+#pragma parameter vertmask "          Scanline Color Deconvergence" 0.0 -1.0 1.0 0.1
+#define vertmask     params.vertmask     // Scanline deconvergence colors
 
-#pragma parameter GDV_SCANLINE_COLOR_DECONVERGENCE__VERTMASK 	"          Scanline Color Deconvergence" 0.0 -1.0 1.0 0.1
-#define vertmask     params.GDV_SCANLINE_COLOR_DECONVERGENCE__VERTMASK     // Scanline deconvergence colors
-
-#pragma parameter GDV_SCANLINE_SATURATION__SCANS 			"          Scanline Saturation" 0.60 0.0 1.0 0.05
-#define scans        params.GDV_SCANLINE_SATURATION__SCANS     // scanline saturation
+#pragma parameter scans "          Scanline Saturation" 0.60 0.0 1.0 0.05
+#define scans        params.scans     // scanline saturation
 
 // Scanline darken 'edges' effect - need to uncomment it.
 	
 // #pragma parameter scansub "          Scanline darken 'edges'" 0.0 0.0 0.30 0.005
 // #define scansub      params.scansub   // scanline substraction
 
-#pragma parameter GDV_SCANLINE_SPIKE_REMOVAL__SPIKE 		"          Spike Removal" 1.0 0.0 2.0 0.10
-#define spike params.GDV_SCANLINE_SPIKE_REMOVAL__SPIKE
+#pragma parameter spike "          Scanline Spike Removal" 1.0 0.0 2.0 0.10
+#define spike params.spike
 
+#pragma parameter bogus_filtering "[ FILTERING OPTIONS ]: " 0.0 0.0 1.0 1.0
 
-#pragma parameter GDV_FILTERING_TITLE 				"[ FILTERING OPTIONS ]: " 0.0 0.0 1.0 1.0
+#pragma parameter h_sharp "          Horizontal sharpness" 5.20 0.20 15.0 0.20
+#define h_sharp      params.h_sharp     // pixel sharpness
 
-#pragma parameter GDV_HORIZONTAL_SHARPNESS__H_SHARP 			"          Horizontal Sharpness" 5.20 0.20 15.0 0.20
-#define h_sharp      params.GDV_HORIZONTAL_SHARPNESS__H_SHARP     // pixel sharpness
+#pragma parameter s_sharp "          Substractive sharpness (1.0 recommended)" 0.50 0.0 1.5 0.10
+#define s_sharp      params.s_sharp     // substractive sharpness
 
-#pragma parameter GDV_SUBTRACTIVE_SHARPNESS__S_SHARP 		"          Subtractive Sharpness (1.0 recommended)" 0.50 0.0 1.5 0.10
-#define s_sharp      params.GDV_SUBTRACTIVE_SHARPNESS__S_SHARP     // substractive sharpness
+#pragma parameter smart_ei "          Smart Edges Effect Strength" 0.0 0.0 20.0 0.25
+#define smart_ei      params.smart_ei     // smart edge handling
 
-#pragma parameter GDV_SMART_EDGES_STRENGTH__SMART_EI 			"          Smart Edges Effect Strength" 0.0 0.0 20.0 0.25
-#define smart_ei      params.GDV_SMART_EDGES_STRENGTH__SMART_EI     // smart edge handling
+#pragma parameter ei_limit "          Smart Edges Effect Strength Limit" 2.0 1.0 12.0 0.1
+#define ei_limit      params.ei_limit     // smart edge handling
 
-#pragma parameter GDV_SMART_EDGES_STRENGTH_LIMIT__EI_LIMIT 	"          Smart Edges Effect Strength Limit" 2.0 1.0 12.0 0.1
-#define ei_limit      params.GDV_SMART_EDGES_STRENGTH_LIMIT__EI_LIMIT     // smart edge handling
-
-#pragma parameter GDV_SMART_EDGES_SMOOTHING_THRESHOLD__STH     "          Smart Edges Smoothing Threshold" 0.20 0.0 1.0 0.01
-#define sth        params.GDV_SMART_EDGES_SMOOTHING_THRESHOLD__STH
+#pragma parameter sth     "          Smart Edges Smoothing Threshold" 0.20 0.0 1.0 0.01
+#define sth        params.sth     // corner size
 
 
 // #pragma parameter intres "          Internal Resolution Y: 224p/240p, 1.5...y-dowsample" 0.0 0.0 6.0 0.5 // Joint parameter with linearize pass, values must match
@@ -162,6 +162,8 @@ layout(push_constant) uniform Push
 // #pragma parameter bsize "          Border smoothness" 600.0 100.0 700.0 10.0
 // #define bsize        params.bsize     // border smoothness
 
+// #pragma parameter gdv_humbar_title "[ Humbar ]: " 0.0 0.0 1.0 1.0
+
 // #pragma parameter barspeed "          Humbar Speed" 50.0 5.0 200.0 1.0
 
 // #pragma parameter barintensity "          Humbar Intensity" 0.0 -1.0 1.0 0.01
@@ -183,51 +185,52 @@ layout(push_constant) uniform Push
 // #pragma parameter prescalex "          Prescale-X Factor (for xBR...pre-shader)" 1.0 1.0 4.0 1.0
 // #define prescalex        global.prescalex     // prescale-x factor
 
+// #pragma parameter prescalex "          Prescale-X Factor (for xBR...pre-shader)" 1.0 1.0 4.0 1.0
+// #define prescalex        global.prescalex     // prescale-x factor
 
+#pragma parameter bogus_masks "[ CRT MASK OPTIONS ]: " 0.0 0.0 1.0 1.0
 
-#pragma parameter GDV_CRT_MASK_TITLE 						"[ CRT MASK OPTIONS ]: " 0.0 0.0 1.0 1.0
+#pragma parameter shadowMask "        CRT Mask: -1:None | 0:CGWG | 1-4:Lottes | 5-7:Trinitron" 0.0 -1.0 8.0 1.0
+#define shadowMask   params.shadowMask     // Mask Style
 
-#pragma parameter GDV_MASK_TYPE__SHADOWMASK 							"        CRT Mask: -1:None | 0:CGWG | 1-4:Lottes | 5-7:Trinitron" 0.0 -1.0 8.0 1.0
-#define shadowMask   params.GDV_MASK_TYPE__SHADOWMASK     // Mask Style
+#pragma parameter maskstr "          Mask Strength (0, 5-8)" 0.3 -0.5 1.0 0.05
+#define maskstr         params.maskstr      // CGWG Mask Strength
 
-#pragma parameter GDV_MASK_0_5_TO_8_STRENGTH__MASKSTR 				"          Mask Strength (0, 5-8)" 0.3 -0.5 1.0 0.05
-#define maskstr         params.GDV_MASK_0_5_TO_8_STRENGTH__MASKSTR      // CGWG Mask Strength
+#pragma parameter masksize "          CRT Mask Size (2.0 is nice in 4k) - Auto | 2K | 4k" 0 0 4 1
+#define masksize     params.masksize     // Mask Size
 
-#pragma parameter GDV_MASKSIZE 							"          CRT Mask Size - Auto | 2K | 4k" 0 0 4 1
-#define masksize     params.GDV_MASKSIZE     // Mask Size
+#pragma parameter maskDark "          Lottes maskDark" 0.5 0.0 2.0 0.05
+#define maskDark     params.maskDark     // Dark "Phosphor"
 
-#pragma parameter GDV_MASK_LOTTES_DARK__MASKDARK 						"          Lottes maskDark" 0.5 0.0 2.0 0.05
-#define maskDark     params.GDV_MASK_LOTTES_DARK__MASKDARK     // Dark "Phosphor"
+#pragma parameter maskLight "          Lottes maskLight" 1.5 0.0 2.0 0.05
+#define maskLight    params.maskLight     // Light "Phosphor"
 
-#pragma parameter GDV_MASK_LOTTES_LIGHT__MASKLIGHT 					"          Lottes maskLight" 1.5 0.0 2.0 0.05
-#define maskLight    params.GDV_MASK_LOTTES_LIGHT__MASKLIGHT     // Light "Phosphor"
+#pragma parameter mcut "          Mask 5-7 Trinitron Low Strength" 1.10 0.0 2.0 0.05
+#define mcut         params.mcut      // Mask 5-7 cutoff
 
-#pragma parameter GDV_MASK_5_TO_7_TRINITRON_STRENGTH__MCUT 				"          Mask 5-7 Trinitron Low Strength" 1.10 0.0 2.0 0.05
-#define mcut         params.GDV_MASK_5_TO_7_TRINITRON_STRENGTH__MCUT      // Mask 5-7 cutoff
+#pragma parameter mask_gamma "          Mask gamma" 2.40 1.0 5.0 0.05
+#define mask_gamma   params.mask_gamma     // Mask application gamma
 
-#pragma parameter GDV_MASK_GAMMA 							"          Mask Gamma" 2.40 1.0 5.0 0.05
-#define mask_gamma   params.GDV_MASK_GAMMA     // Mask application gamma
+#pragma parameter slotmask "          Slot Mask Strength" 0.0 0.0 1.0 0.05
+#define slotmask     params.slotmask     // Slot Mask ON/OFF
 
-#pragma parameter GDV_SLOTMASK_STRENGTH__SLOTMASK 					"          Slot Mask Strength" 0.0 0.0 1.0 0.05
-#define slotmask     params.GDV_SLOTMASK_STRENGTH__SLOTMASK     // Slot Mask ON/OFF
+#pragma parameter slotwidth "          Slot Mask Width" 2.0 1.0 6.0 0.5
+#define slotwidth    params.slotwidth     // Slot Mask Width
 
-#pragma parameter GDV_SLOTMASK_WIDTH__SLOTWIDTH 						"          Slot Mask Width" 2.0 1.0 6.0 0.5
-#define slotwidth    params.GDV_SLOTMASK_WIDTH__SLOTWIDTH     // Slot Mask Width
+#pragma parameter double_slot "          Slot Mask Height: 2x1 or 4x1" 1.0 1.0 2.0 1.0
+#define double_slot  params.double_slot     // Slot Mask Height
 
-#pragma parameter GDV_SLOTMASK_HEIGHT__DOUBLE_SLOT 						"          Slot Mask Height: 2x1 or 4x1" 1.0 1.0 2.0 1.0
-#define double_slot  params.GDV_SLOTMASK_HEIGHT__DOUBLE_SLOT     // Slot Mask Height
+#pragma parameter slotms "          Slot Mask Size - Auto | 2K | 4k" 0 1 4 1
+#define slotms  params.slotms     // Slot Mask Size
 
-#pragma parameter GDV_SLOTMASK_SIZE__SLOTMS 						"          Slot Mask Size - Auto | 2K | 4k" 0 1 4 1
-#define slotms  params.GDV_SLOTMASK_SIZE__SLOTMS     // Slot Mask Size
-
-#pragma parameter GDV_KEEP_MASK_WITH_CLIPPING__MCLIP 				"          Keep Mask effect with clipping" 0.50 0.0 1.0 0.05
-#define mclip  params.GDV_KEEP_MASK_WITH_CLIPPING__MCLIP     // Slot Mask Size
+#pragma parameter mclip "          Keep Mask effect with clipping" 0.50 0.0 1.0 0.05
+#define mclip  params.mclip     // Slot Mask Size
 
 // #pragma parameter gamma_out "Gamma out" 2.4 1.0 5.0 0.05
 #define gamma_out    HSM_GAMMA_OUT_CRT     // output gamma
 
-// #pragma parameter HSM_INTERLACE_EFFECT_SMOOTHNESS__INTERS "          Interlacing Effect Smoothness" 0.0 0.0 0.5 0.05 // Joint parameter with linearize pass, values must match
-#define inters  HSM_INTERLACE_EFFECT_SMOOTHNESS__INTERS     // interlacing effect smoothing
+// #pragma parameter HSM_INTERLACE_EFFECT_SMOOTHNESS_INTERS "          Interlacing Effect Smoothness" 0.0 0.0 0.5 0.05 // Joint parameter with linearize pass, values must match
+#define inters  HSM_INTERLACE_EFFECT_SMOOTHNESS_INTERS     // interlacing effect smoothing
 
 /* HSM Removed
  #define COMPAT_TEXTURE(c,d) texture(c,d)
@@ -481,18 +484,20 @@ vec2 Overscan(vec2 pos, float dx, float dy){
 	pos*=vec2(dx,dy);
 	return pos*0.5+0.5;
 } 
+*/
 
-float humbar(float pos)
-{
-	if (global.barintensity == 0.0) return 1.0; else
-	{
-		pos = (global.barintensity >= 0.0) ? pos : (1.0-pos);
-		pos = fract(pos + mod(float(global.FrameCount),global.barspeed)/(global.barspeed-1.0));
-		pos = (global.barintensity <  0.0) ? pos : (1.0-pos);	
-		return (1.0-global.barintensity) + global.barintensity*pos;
-	}	
-}
+// float humbar(float pos)
+// {
+// 	if (params.barintensity == 0.0) return 1.0; else
+// 	{
+// 		pos = (params.barintensity >= 0.0) ? pos : (1.0-pos);
+// 		pos = fract(pos + mod(float(global.FrameCount),params.barspeed)/(params.barspeed-1.0));
+// 		pos = (params.barintensity <  0.0) ? pos : (1.0-pos);	
+// 		return (1.0-params.barintensity) + params.barintensity*pos;
+// 	}		
+// }
 
+/* HSM Removed
 // Borrowed from cgwg's crt-geom, under GPL
 
 float corner(vec2 coord)
@@ -545,17 +550,16 @@ void main()
 	bool interb  = (intera < 0.75);
 	bool notate  = (TATE < 0.5);
 
-
 	/* HSM Removed
 	float SourceY = mix(SourceSize.y, SourceSize.x, TATE);
 	float sy = 1.0;
-	if (params.intres == 0.5) sy = SourceY/224.0; else
-	if (params.intres == 1.0) sy = SourceY/240.0; else
-	if (params.intres > 1.25) sy = params.intres;
+	if (global.intres == 0.5) sy = SourceY/224.0; else
+	if (global.intres == 1.0) sy = SourceY/240.0; else
+	if (global.intres > 1.25) sy = global.intres;
 	if (notate) SourceSize*=vec4(1.0, 1.0/sy, 1.0, sy); else SourceSize*=vec4(1.0/sy, 1.0, sy, 1.0);
 
 	// Calculating texel coordinates
-
+	
 	vec2 texcoord = TEX0.xy;
 	if (IOS > 0.0){
 		vec2 ofactor = OutputSize.xy/SourceSize.xy;
@@ -884,7 +888,6 @@ if (!interb)
 
 	if (interb) ctmp = color;
 	float colmx = pow( max( max(ctmp.r, ctmp.g), ctmp.b), 1.40/gamma_out);
-
 	float bb = mix(brightboost, brightboost1, colmx);
 	if (interb) bb = (abs(intera-0.5)<0.1) ? pow(0.80*bb, 0.65) : pow(bb, 0.70);
 	color*=bb;
@@ -916,6 +919,7 @@ if (!interb)
 	*/
 
 	// HSM Added - Prep and add output gamma
+	// color = pow(color * humbar(mix(pos.y, pos.x, params.bardir)), vec3(1.0/HSM_GAMMA_OUT_CRT));
 	color = pow(color, vec3(1.0/HSM_GAMMA_OUT_CRT));
 	FragColor = vec4(color, 1);
 	// End Addition

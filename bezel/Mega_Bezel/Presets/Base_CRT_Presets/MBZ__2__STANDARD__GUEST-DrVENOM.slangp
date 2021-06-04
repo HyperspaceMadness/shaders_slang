@@ -118,7 +118,7 @@ scale25 = 1.0
 alias25 = "LinearizePass"
 float_framebuffer25 = true
 
-shader26 = ../../shaders/HyperspaceMadness/hsm-guest/hsm-gaussian_horizontal.slang
+shader26 = ../../shaders/HyperspaceMadness/hsm-guest/gaussian_horizontal.slang
 filter_linear26 = true
 scale_type_x26 = absolute
 scale_x26 = 800.0
@@ -126,7 +126,7 @@ scale_type_y26 = source
 scale_y26 = 1.0 
 float_framebuffer26 = true
 
-shader27 = ../../shaders/HyperspaceMadness/hsm-guest/hsm-gaussian_vertical.slang
+shader27 = ../../shaders/HyperspaceMadness/hsm-guest/gaussian_vertical.slang
 filter_linear27 = true
 scale_type_x27 = absolute
 scale_x27 = 800.0
@@ -135,7 +135,7 @@ scale_y27 = 600.0
 float_framebuffer27 = true
 alias27 = GlowPass
 
-shader28 = ../../shaders/HyperspaceMadness/hsm-guest/hsm-bloom_horizontal.slang
+shader28 = ../../shaders/HyperspaceMadness/hsm-guest/bloom_horizontal.slang
 filter_linear28 = true
 scale_type_x28 = absolute
 scale_x28 = 800.0
@@ -143,7 +143,7 @@ scale_type_y28 = absolute
 scale_y28 = 600.0 
 float_framebuffer28 = true
 
-shader29 = ../../shaders/HyperspaceMadness/hsm-guest/hsm-bloom_vertical.slang
+shader29 = ../../shaders/HyperspaceMadness/hsm-guest/bloom_vertical.slang
 filter_linear29 = true
 scale_type_x29 = source
 scale_x29 = 1.0

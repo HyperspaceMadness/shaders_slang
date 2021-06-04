@@ -65,7 +65,7 @@ layout(std140, set = 0, binding = 0) uniform UBO
 /*
 // #pragma parameter inters "          Interlacing Effect Smoothness" 0.0 0.0 0.5 0.05 // Joint parameter with main pass, values must match
 */
-#define inters  	HSM_INTERLACE_EFFECT_SMOOTHNESS__INTERS     // interlacing effect smoothing
+#define inters  	HSM_INTERLACE_EFFECT_SMOOTHNESS_INTERS     // interlacing effect smoothing
 
 /*
 // #pragma parameter iscan "          Interlacing Scanline Effect" 0.20 0.0 1.0 0.05
@@ -116,7 +116,7 @@ vec3 plant (vec3 tar, float r)
 	return tar * r / t;
 }
 
-// TODO Put in a blend amount? Multiply dx & dy?
+
 vec3 fetch_pixel(vec2 coord)
 {
 	vec2 dx = vec2(global.SourceSize.z, 0.0) * HSM_DOWNSAMPLE_BLUR;

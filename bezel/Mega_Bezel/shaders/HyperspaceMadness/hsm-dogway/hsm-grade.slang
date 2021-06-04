@@ -3,6 +3,7 @@
 layout(push_constant) uniform Push
 {
     float g_gamma_in;
+    float g_gamma_out;
     float g_signal_type;
     float g_crtgamut;
     float g_space_out;
@@ -21,18 +22,18 @@ layout(push_constant) uniform Push
     float g_cntrst;
     float g_mid;
     float g_lift;
-    float g_blr;
-    float g_blg;
-    float g_blb;
-    float g_wlr;
-    float g_wlg;
-    float g_wlb;
-    float g_rg;
-    float g_rb;
-    float g_gr;
-    float g_gb;
-    float g_br;
-    float g_bg;
+    float blr;
+    float blg;
+    float blb;
+    float wlr;
+    float wlg;
+    float wlb;
+    float rg;
+    float rb;
+    float gr;
+    float gb;
+    float br;
+    float bg;
 } params;
 
 layout(std140, set = 0, binding = 0) uniform UBO
@@ -43,8 +44,7 @@ layout(std140, set = 0, binding = 0) uniform UBO
     vec4 OutputSize;
     uint FrameCount;
     float g_grade_on;
-    float g_wp_temperature;
-    float g_gamma_out;
+    float wp_temperature;
     float g_satr;
     float g_satg;
     float g_satb;
@@ -98,7 +98,7 @@ layout(std140, set = 0, binding = 0) uniform UBO
 
 #pragma parameter DG_TITLE                          "[ --- COLOR CORRECTION - GRADE --- ]:" 0 0 0 1
 
-#pragma parameter g_grade_on                       "          Grade ON" 0 0 1 1
+#pragma parameter g_grade_on                       "          Grade ON" 1 0 1 1
 #pragma parameter DG_SIGNAL_GAMMA_TITLE             "[ GAMMA ]:" 0 0 0 1
 #pragma parameter g_gamma_in                        "          Game Embedded Gamma"            2.222 1.80 3.0 0.05
 #pragma parameter g_gamma_out                       "          CRT Electron Gun Gamma"         2.50 1.80 3.0 0.05        
@@ -129,7 +129,8 @@ layout(std140, set = 0, binding = 0) uniform UBO
 #pragma parameter g_vpower                          "          Corner Amount (Power)" 26 0.0 200 2
 
 #pragma parameter DG_COLOR_TEMP_TITLE               "[ COLOR TEMP & HUE ]:" 0 0 0 1
-#pragma parameter g_wp_temperature                  "          White Point"          6500.0 5000.0 12000.0 100.0
+// Color temp changed to 7000 (Used to be 6500) because this seems to be better for the default crt phosphor gamut of NTSC-J
+#pragma parameter wp_temperature                  "          White Point"          7000.0 5000.0 12000.0 100.0
 #pragma parameter g_sat                             "          Saturation"           0.0 -1.0 2.0 0.01
 #pragma parameter g_vibr                            "          Dullness/Vibrance"    0.0 -1.0 1.0 0.05
 
@@ -140,26 +141,26 @@ layout(std140, set = 0, binding = 0) uniform UBO
 #pragma parameter g_lift                            "          Black Level"         0.0 -0.5 0.5 0.01
 
 #pragma parameter DG_BLACKTINT_TITLE                "[ BLACK TINT ]:" 0 0 0 1
-#pragma parameter g_blr                             "          Black-Red Tint"       0.0  0.0 1.0 0.01
-#pragma parameter g_blg                             "          Black-Green Tint"     0.0  0.0 1.0 0.01
-#pragma parameter g_blb                             "          Black-Blue Tint"      0.0  0.0 1.0 0.01
+#pragma parameter blr                             "          Black-Red Tint"       0.0  0.0 1.0 0.01
+#pragma parameter blg                             "          Black-Green Tint"     0.0  0.0 1.0 0.01
+#pragma parameter blb                             "          Black-Blue Tint"      0.0  0.0 1.0 0.01
 
 #pragma parameter DG_WHITETINT_TITLE                "[ WHITE TINT ]:" 0 0 0 1
-#pragma parameter g_wlr                             "          White-Red Tint"       1.0  0.0 2.0 0.01
-#pragma parameter g_wlg                             "          White-Green Tint"     1.0  0.0 2.0 0.01
-#pragma parameter g_wlb                             "          White-Blue Tint"      1.0  0.0 2.0 0.01
+#pragma parameter wlr                             "          White-Red Tint"       1.0  0.0 2.0 0.01
+#pragma parameter wlg                             "          White-Green Tint"     1.0  0.0 2.0 0.01
+#pragma parameter wlb                             "          White-Blue Tint"      1.0  0.0 2.0 0.01
 
 #pragma parameter DG_REDTINT_TITLE                  "[ RED TINT ]:" 0 0 0 1
-#pragma parameter g_rg                              "          Red-Green Tint"       0.0 -1.0 1.0 0.005
-#pragma parameter g_rb                              "          Red-Blue Tint"        0.0 -1.0 1.0 0.005
+#pragma parameter rg                              "          Red-Green Tint"       0.0 -1.0 1.0 0.005
+#pragma parameter rb                              "          Red-Blue Tint"        0.0 -1.0 1.0 0.005
 
 #pragma parameter DG_GREENTINT_TITLE                "[ GREEN TINT ]:" 0 0 0 1
-#pragma parameter g_gr                              "          Green-Red Tint"       0.0 -1.0 1.0 0.005
-#pragma parameter g_gb                              "          Green-Blue Tint"      0.0 -1.0 1.0 0.005
+#pragma parameter gr                              "          Green-Red Tint"       0.0 -1.0 1.0 0.005
+#pragma parameter gb                              "          Green-Blue Tint"      0.0 -1.0 1.0 0.005
 
 #pragma parameter DG_BLUETINT_TITLE                 "[ BLUE TINT ]:" 0 0 0 1
-#pragma parameter g_br                              "          Blue-Red Tint"        0.0 -1.0 1.0 0.005
-#pragma parameter g_bg                              "          Blue-Green Tint"      0.0 -1.0 1.0 0.005
+#pragma parameter br                              "          Blue-Red Tint"        0.0 -1.0 1.0 0.005
+#pragma parameter bg                              "          Blue-Green Tint"      0.0 -1.0 1.0 0.005
 // #pragma parameter LUT_Size1                      "          LUT Size 1"           16.0 8.0 64.0 16.0
 // #pragma parameter LUT1_toggle                    "          LUT 1 Toggle"         0.0  0.0 1.0 1.0
 // #pragma parameter LUT_Size2                      "          LUT Size 2"           64.0 0.0 64.0 16.0
@@ -168,7 +169,7 @@ layout(std140, set = 0, binding = 0) uniform UBO
 #define g_grade_on     global.g_grade_on
 #define M_PI            3.1415926535897932384626433832795
 #define gamma_in        params.g_gamma_in
-#define gamma_out       global.g_gamma_out
+#define gamma_out       params.g_gamma_out
 #define signal          params.g_signal_type
 #define crtgamut        params.g_crtgamut
 #define SPC             params.g_space_out
@@ -190,18 +191,18 @@ layout(std140, set = 0, binding = 0) uniform UBO
 #define cntrst          params.g_cntrst
 #define mid             params.g_mid
 #define lift            params.g_lift
-#define blr             params.g_blr
-#define blg             params.g_blg
-#define blb             params.g_blb
-#define wlr             params.g_wlr
-#define wlg             params.g_wlg
-#define wlb             params.g_wlb
-#define rg              params.g_rg
-#define rb              params.g_rb
-#define gr              params.g_gr
-#define gb              params.g_gb
-#define br              params.g_br
-#define bg              params.g_bg
+#define blr             params.blr
+#define blg             params.blg
+#define blb             params.blb
+#define wlr             params.wlr
+#define wlg             params.wlg
+#define wlb             params.wlb
+#define rg              params.rg
+#define rb              params.rb
+#define gr              params.gr
+#define gb              params.gb
+#define br              params.br
+#define bg              params.bg
 
 #pragma stage vertex
 layout(location = 0) in vec4 Position;
@@ -813,14 +814,14 @@ void main()
     vec3 gamut = m_in*col;
 
 // White Point Mapping
-    vec3 wp   = (crtgamut == -4.0) ? wp_adjust(global.g_wp_temperature - (6404. - 6504.), gamut) : \
-                (crtgamut == -3.0) ? wp_adjust(global.g_wp_temperature - (6504. - 6504.), gamut) : \
-                (crtgamut == -2.0) ? wp_adjust(global.g_wp_temperature - (7600. - 6504.), gamut) : \
-                (crtgamut == -1.0) ? wp_adjust(global.g_wp_temperature - (6504. - 6504.), gamut) : \
-                (crtgamut ==  1.0) ? wp_adjust(global.g_wp_temperature - (6504. - 6504.), gamut) : \
-                (crtgamut ==  2.0) ? wp_adjust(global.g_wp_temperature - (7400. - 6504.), gamut) : \
-                (crtgamut ==  3.0) ? wp_adjust(global.g_wp_temperature - (6504. - 6504.), gamut) : \
-                                     wp_adjust(global.g_wp_temperature, gamut) ;
+    vec3 wp   = (crtgamut == -4.0) ? wp_adjust(global.wp_temperature - (6404. - 6504.), gamut) : \
+                (crtgamut == -3.0) ? wp_adjust(global.wp_temperature - (6504. - 6504.), gamut) : \
+                (crtgamut == -2.0) ? wp_adjust(global.wp_temperature - (7600. - 6504.), gamut) : \
+                (crtgamut == -1.0) ? wp_adjust(global.wp_temperature - (6504. - 6504.), gamut) : \
+                (crtgamut ==  1.0) ? wp_adjust(global.wp_temperature - (6504. - 6504.), gamut) : \
+                (crtgamut ==  2.0) ? wp_adjust(global.wp_temperature - (7400. - 6504.), gamut) : \
+                (crtgamut ==  3.0) ? wp_adjust(global.wp_temperature - (6504. - 6504.), gamut) : \
+                                     wp_adjust(global.wp_temperature, gamut) ;
 
     vec3 adj  = clamp(XYZ_to_RGB(wp, SPC), 0., 1.);
 

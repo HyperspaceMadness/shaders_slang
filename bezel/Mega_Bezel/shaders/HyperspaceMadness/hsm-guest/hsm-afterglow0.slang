@@ -23,21 +23,22 @@
 
 layout(push_constant) uniform Push
 {
-   float GDV_Threshold, GDV_PERSISTENCE_RED, GDV_PERSISTENCE_GREEN, GDV_PERSISTENCE_BLUE;
+   float GDV_AFTERGLOW_THRESHOLD;
+   float PR, PG, PB;
 } params;
 
 #pragma parameter GDV_GDV_ADV_TITLE 		"[ --- GUEST-DrVenom Advanced - 2021-05-24 --- ]:" 0.0 0.0 1.0 1.0
 
-#pragma parameter GDV_AFTERGLOW_TITLE     "[ AFTERGLOW SETTINGS ]:" 0.0 0.0 1.0 1.0
-#pragma parameter GDV_Threshold           "          Threshold where Afterglow Appears" 0.5 0.0 100 0.5
-#pragma parameter GDV_PERSISTENCE_RED     "          Persistence Red" 0.25 0.0 0.50 0.01
-#pragma parameter GDV_PERSISTENCE_GREEN   "          Persistence Green"  0.25 0.0 0.50 0.01
-#pragma parameter GDV_PERSISTENCE_BLUE    "          Persistence Blue"  0.25 0.0 0.50 0.01
+#pragma parameter bogus_afterglow "[ AFTERGLOW SETTINGS ]:" 0.0 0.0 1.0 1.0
+#pragma parameter GDV_AFTERGLOW_THRESHOLD           "          Threshold ( Afterglow Appears Under Threshold )" 0.5 0.0 100 0.5
+#pragma parameter PR "          Persistence Red" 0.25 0.0 0.50 0.01
+#pragma parameter PG "          Persistence Green"  0.25 0.0 0.50 0.01
+#pragma parameter PB "          Persistence Blue"  0.25 0.0 0.50 0.01
 
-#define GDV_Threshold params.GDV_Threshold / 100
-#define PR params.GDV_PERSISTENCE_RED
-#define PG params.GDV_PERSISTENCE_GREEN
-#define PB params.GDV_PERSISTENCE_BLUE
+#define GDV_AFTERGLOW_THRESHOLD params.GDV_AFTERGLOW_THRESHOLD / 100
+#define PR params.PR
+#define PG params.PG
+#define PB params.PB
 
 #define COMPAT_TEXTURE(c,d) texture(c,d)
 
@@ -72,7 +73,7 @@ void main()
 	vec3 accumulate = COMPAT_TEXTURE(AfterglowPassFeedback, TEX0.xy).rgb;
 
 	float w = 1.0;
-	if ((color.r + color.g + color.b < GDV_Threshold)) { w = 0.0; }
+	if ((color.r + color.g + color.b < GDV_AFTERGLOW_THRESHOLD)) { w = 0.0; }
 
 	vec3 result = mix( max(mix(color, accumulate, 0.49 + vec3(PR, PG, PB))- 3.0/255.0, 0.0), color, w);
 

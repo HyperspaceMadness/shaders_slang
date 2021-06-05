@@ -2,10 +2,9 @@
 
 // Thanks to BendBombBoom from the Libretro forum for this great preset!
 
-g_crtgamut = "0.000000"
-g_space_out = "-1.000000"
+g_grade_on = "1.000000"
 g_vignette = "1.000000"
-wp_temperature = "7004.000000"
+wp_temperature = "7000.000000"
 
 LUT_Size1 = "32.000000"
 LUT_Size2 = "32.000000"

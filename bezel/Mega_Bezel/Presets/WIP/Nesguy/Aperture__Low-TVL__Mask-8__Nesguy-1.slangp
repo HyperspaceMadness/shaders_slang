@@ -1,10 +1,6 @@
 #reference ":/shaders/shaders_slang/bezel/Mega_Bezel/Presets/Variations/Max-Int-Scale__BASIC-EXTRA-PASSES.slangp"
-// #reference ":/shaders/shaders_slang/bezel/Mega_Bezel/Presets/Variations/MBZ__3__BASIC-BORDER-EXTRA-PASSES__GUEST-DrVENOM.slangp"
 
-// BackgroundImage = :/shaders/shaders_slang/bezel/Mega_Bezel/shaders/HyperspaceMadness/textures/Placeholder_Transparent_16x16.png
-// BackgroundVertImage = :/shaders/shaders_slang/bezel/Mega_Bezel/shaders/HyperspaceMadness/textures/Placeholder_Transparent_16x16.png
-// NightLightingImage = :/shaders/shaders_slang/bezel/Mega_Bezel/shaders/HyperspaceMadness/textures/Placeholder_Transparent_16x16.png
-// FrameTextureImage = :/shaders/shaders_slang/bezel/Mega_Bezel/shaders/HyperspaceMadness/textures/Placeholder_Transparent_16x16.png
+// Thanks to Nesguy from the Libretro forum for this great preset!
 
 // Parameters
 HSM_ASPECT_RATIO_MODE = 0

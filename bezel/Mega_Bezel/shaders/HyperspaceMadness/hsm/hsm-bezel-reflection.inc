@@ -667,7 +667,10 @@ float edge_highlight_mask = 0;
 	frag_color_linear = HSM_BlendModeLayerMix(frag_color_linear, led_image, HSM_LED_BLEND_MODE, HSM_LED_OPACITY);
 
 	if (HSM_STANDARD_DECAL_SHOW_UNDER_FRAME == 1)
+	{
+		decal_image *= outside_tube_mask_wider;
 		frag_color_linear = HSM_BlendModeLayerMix(frag_color_linear, decal_image, HSM_DECAL_BLEND_MODE, HSM_DECAL_OPACITY);
+	}
 
 	frag_color_linear = HSM_BlendModeLayerMix(frag_color_linear, bezel_layer, BLEND_MODE_NORMAL, 1);
 

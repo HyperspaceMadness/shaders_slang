@@ -392,7 +392,6 @@ void main()
 	INSIDE_BEZEL_MASK = 1 - OUTSIDE_BEZEL_MASK;
 	BEZEL_MASK = INSIDE_BEZEL_MASK * outside_tube_mask;
 	float FRAME_MASK = OUTSIDE_BEZEL_MASK * (1 - OUTSIDE_FRAME_MASK);
-	FRAME_MASK_FOR_IMAGE = OUTSIDE_BEZEL_MASK * (1 - OUTSIDE_FRAME_MASK_FOR_IMAGE);
 	float FRAME_AND_BEZEL_MASK = outside_tube_mask * (1 - OUTSIDE_FRAME_MASK);
 
 	// ----------------------------------------------------
@@ -469,7 +468,7 @@ void main()
 
 	float dist_inside_outer_edge = min(0.5 - abs(frame_outside_coord_ctr.x), 0.5 - abs(frame_outside_coord_ctr.y));
 	float frame_outer_edge_width = HSM_FRM_OUTER_EDGE_THICKNESS;
-	vec3 frame_diffuse_color = mix(frame_color, (1 - HSM_FRM_OUTER_EDGE_SHADING) * frame_color, smoothstep(frame_outer_edge_width, 0, dist_inside_outer_edge));
+	vec3 frame_diffuse_color = mix(frame_color, 0.2 * frame_color, HSM_FRM_OUTER_EDGE_SHADING * smoothstep(frame_outer_edge_width, 0, dist_inside_outer_edge));
 	
 	if (HSM_FRM_TEXTURE_OPACITY > 0)
 	{
@@ -486,8 +485,7 @@ void main()
 
 	// Get masks on side of frame to multiply together to get a shadow around the frame
 	// Get vector from the screen edge outward
-	float dist_outside_frame = length(clamp(abs(frame_outside_coord_ctr) - frame_edge, 0, 1) * vec2(SCREEN_ASPECT, 1));
-
+	float dist_outside_frame = length(clamp(abs(frame_outside_coord_ctr * 1.01) - frame_edge, 0, 1) * vec2(SCREEN_ASPECT, 1));
 
 	vec4 frame_shadow_layer = vec4(0);
 	if (HSM_FRM_OPACITY > 0.001)
@@ -584,7 +582,7 @@ void main()
 
 	if (HSM_BZL_OPACITY > 0 || HSM_FRM_OPACITY > 0)
 	{
-		vec4 bezel_and_frame_rgba = vec4(bezel_and_frame_rgb, 1);
+		vec4 bezel_and_frame_rgba = vec4(bezel_and_frame_rgb * (1 - OUTSIDE_FRAME_MASK), (1 - OUTSIDE_FRAME_MASK));
 		
 		if (HSM_STATIC_LAYERS_GAMMA != 1)
 			bezel_and_frame_rgba = HSM_ApplyGamma(bezel_and_frame_rgba, HSM_STATIC_LAYERS_GAMMA);

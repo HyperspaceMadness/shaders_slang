@@ -1,20 +1,9 @@
 Mega Bezel is updated to V 0.9.015 2021-06-05
 
 Changes:
-  * Guest-DrVenom Advanced
-    * Updated Variables to be the standard naming to support using settings from community presets
-    * HumBar?
-  * Grade
-    * Updated Variables to be the standard naming to support using settings from community presets
-    * Now ON by default
-    * Default Color TEmp changed to 7000 which seems to work well with the default crt phosphor gamut of NTSC-J
-    * Adjusted Vignette Ranges
-    * Set the CRT Phosphor Gamut to 0 so it is not as different from default
-  * Change X Position range to 1000
-  * Tube Static Highlight now gets flipped properly
-  * Fixed Decal Under Frame appearing on top of the screen
+  * Adjusted Royale preset to turn on Grade
+  * Fixed black line around frame
 
-  * Add Royale Preset
 *  Performance of Base presets at 3840x2160 on Nvidia RTX2060:
   *  ADVANCED -                      78 FPS  -  No comparable old preset
   *  GLASS -                        150 FPS  -  Old Glass Preset        128 FPS

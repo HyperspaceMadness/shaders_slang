@@ -139,6 +139,9 @@ float HSM_BG_MASK_MODE = global.HSM_BG_MASK_MODE;
 #pragma parameter HSM_BG_CUTOUT_MODE              "          Cutout Mask - OFF | ON | Invert" 0 0 2 1
 float HSM_BG_CUTOUT_MODE = global.HSM_BG_CUTOUT_MODE;
 
+#pragma parameter HSM_BG_DUALSCREEN_VIS_MODE      "          Dual Screen Visibility - BOTH | SCREEN 1 | Screen 2" 0 0 2 1
+float HSM_BG_DUALSCREEN_VIS_MODE = global.HSM_BG_DUALSCREEN_VIS_MODE;
+
 #pragma parameter HSM_BG_BRIGHTNESS               "          Brightness" 100 0 600 0.5
 float HSM_BG_BRIGHTNESS = global.HSM_BG_BRIGHTNESS / 100;
 
@@ -171,6 +174,8 @@ float HSM_BG_POS_Y = global.HSM_BG_POS_Y / 100;
 
 #pragma parameter HSM_BG_MIRROR_WRAP              "          Mirror Wrap" 1 0 1 1
 float HSM_BG_MIRROR_WRAP = global.HSM_BG_MIRROR_WRAP;
+
+// TODO Add DUAL Screen where to show Image
 
 //---------------------------------------------------------------------------------------------------
 //    VIEWPORT VIGNETTE
@@ -239,6 +244,9 @@ float HSM_BZL_IMG_MASK_MODE = global.HSM_BZL_IMG_MASK_MODE;
 #pragma parameter HSM_BZL_IMG_CUTOUT_MODE               "          Cutout Mask - OFF | ON | Invert" 0 0 2 1
 float HSM_BZL_IMG_CUTOUT_MODE = global.HSM_BZL_IMG_CUTOUT_MODE;
 
+#pragma parameter HSM_BZL_DUALSCREEN_VIS_MODE      "          Dual Screen Visibility - BOTH | SCREEN 1 | Screen 2" 0 0 2 1
+float HSM_BZL_DUALSCREEN_VIS_MODE = global.HSM_BZL_DUALSCREEN_VIS_MODE;
+
 #pragma parameter HSM_BZL_IMG_TEXTURE_ASPECT_MODE       "         Texture Aspect - Full | Expl.| 4:3 | 3:4 | 16:9 | 9:16" 0 0 5 1
 float HSM_BZL_IMG_TEXTURE_ASPECT_MODE = global.HSM_BZL_IMG_TEXTURE_ASPECT_MODE;
 
@@ -290,6 +298,9 @@ float HSM_CAB_GLASS_MASK_MODE = global.HSM_CAB_GLASS_MASK_MODE;
 #pragma parameter HSM_CAB_GLASS_CUTOUT_MODE                 "          Cutout Mask - OFF | ON | Invert" 0 0 2 1
 float HSM_CAB_GLASS_CUTOUT_MODE = global.HSM_CAB_GLASS_CUTOUT_MODE;
 
+#pragma parameter HSM_CAB_GLASS_DUALSCREEN_VIS_MODE      "          Dual Screen Visibility - BOTH | SCREEN 1 | Screen 2" 0 0 2 1
+float HSM_CAB_GLASS_DUALSCREEN_VIS_MODE = global.HSM_CAB_GLASS_DUALSCREEN_VIS_MODE;
+
 #pragma parameter HSM_CAB_GLASS_TEXTURE_ASPECT_MODE         "          TexturAspect- Full | Expl. | 4:3 | 3:4 | 16:9 | 9:16" 0 0 5 1
 float HSM_CAB_GLASS_TEXTURE_ASPECT_MODE = global.HSM_CAB_GLASS_TEXTURE_ASPECT_MODE;
 
@@ -335,6 +346,9 @@ float HSM_DECAL_MASK_MODE = global.HSM_DECAL_MASK_MODE;
 #pragma parameter HSM_DECAL_CUTOUT_MODE                 "          Cutout Mask - OFF | ON | Invert" 0 0 2 1
 float HSM_DECAL_CUTOUT_MODE = global.HSM_DECAL_CUTOUT_MODE;
 
+#pragma parameter HSM_DECAL_DUALSCREEN_VIS_MODE      "          Dual Screen Visibility - BOTH | SCREEN 1 | Screen 2" 0 0 2 1
+float HSM_DECAL_DUALSCREEN_VIS_MODE = global.HSM_DECAL_DUALSCREEN_VIS_MODE;
+
 #pragma parameter HSM_DECAL_TEXTURE_ASPECT_MODE         "         TextureAspect- Full | Expl. | 4:3 | 3:4 | 16:9 | 9:16" 0 0 5 1
 float HSM_DECAL_TEXTURE_ASPECT_MODE = global.HSM_DECAL_TEXTURE_ASPECT_MODE;
 
@@ -378,6 +392,9 @@ float HSM_LED_MASK_MODE = global.HSM_LED_MASK_MODE;
 
 #pragma parameter HSM_LED_CUTOUT_MODE                   "          Cutout Mask - OFF | ON | Invert" 0 0 2 1
 float HSM_LED_CUTOUT_MODE = global.HSM_LED_CUTOUT_MODE;
+
+#pragma parameter HSM_LED_DUALSCREEN_VIS_MODE      "          Dual Screen Visibility - BOTH | SCREEN 1 | Screen 2" 0 0 2 1
+float HSM_LED_DUALSCREEN_VIS_MODE = global.HSM_LED_DUALSCREEN_VIS_MODE;
 
 #pragma parameter HSM_LED_TEXTURE_ASPECT_MODE           "         Texture Aspect- Full | Expl. | 4:3 | 3:4 | 16:9 | 9:16" 0 0 5 1
 float HSM_LED_TEXTURE_ASPECT_MODE = global.HSM_LED_TEXTURE_ASPECT_MODE;
@@ -423,6 +440,9 @@ float HSM_TOP_MASK_MODE = global.HSM_TOP_MASK_MODE;
 
 #pragma parameter HSM_TOP_CUTOUT_MODE                   "          Cutout Mask - OFF | ON | Invert" 0 0 2 1
 float HSM_TOP_CUTOUT_MODE = global.HSM_TOP_CUTOUT_MODE;
+
+#pragma parameter HSM_TOP_DUALSCREEN_VIS_MODE      "          Dual Screen Visibility - BOTH | SCREEN 1 | Screen 2" 0 0 2 1
+float HSM_TOP_DUALSCREEN_VIS_MODE = global.HSM_TOP_DUALSCREEN_VIS_MODE;
 
 #pragma parameter HSM_TOP_TEXTURE_ASPECT_MODE           "         Texture Aspect- Full | Expl. | 4:3 | 3:4 | 16:9 | 9:16" 0 0 5 1
 float HSM_TOP_TEXTURE_ASPECT_MODE = global.HSM_TOP_TEXTURE_ASPECT_MODE;

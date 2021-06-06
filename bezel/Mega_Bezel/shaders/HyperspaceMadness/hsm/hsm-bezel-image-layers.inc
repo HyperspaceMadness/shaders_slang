@@ -57,6 +57,10 @@ Thanks to:
 #define TEXTURE_ASPECT_MODE_16_9 4
 #define TEXTURE_ASPECT_MODE_9_16 5
 
+#define IMAGE_DUALSCREEN_MODE_BOTH 0
+#define IMAGE_DUALSCREEN_MODE_SCREEN_1 1
+#define IMAGE_DUALSCREEN_MODE_SCREEN_2 2
+
 /////////////// Helper Functions ///////////////
 
 
@@ -148,9 +152,9 @@ float GetMask(float mask_mode)
 }
 
 // Assumes Opacity is already encoded in alpha
-vec4 BlendModeMaskLayerMix(vec4 color_under, vec4 color_over, float blend_mode, float mask_mode, float cutout_mode, float layer_opacity)
+vec4 BlendModeMaskLayerMix(vec4 color_under, vec4 color_over, float blend_mode, float mask_mode, float cutout_mode, float dualscreen_mode, float layer_opacity)
 {
-	if (blend_mode == 0)
+	if ( blend_mode == 0 || (dualscreen_mode != IMAGE_DUALSCREEN_MODE_BOTH && dualscreen_mode != SCREEN_INDEX) )
 		return color_under;
 	
 	float cutout_mask = 1;
@@ -473,7 +477,7 @@ void main()
 	if (HSM_FRM_TEXTURE_OPACITY > 0)
 	{
 		vec4 frame_texture_color = HSM_Linearize(texture(FrameTextureImage, frame_outside_coord), HSM_DEFAULT_SRGB_GAMMA);
-		frame_diffuse_color = BlendModeMaskLayerMix(vec4(frame_diffuse_color, 1), frame_texture_color, HSM_FRM_TEXTURE_BLEND_MODE, MASK_MODE_ALL, CUTOUT_MODE_OFF, HSM_FRM_TEXTURE_OPACITY).rgb;
+		frame_diffuse_color = BlendModeMaskLayerMix(vec4(frame_diffuse_color, 1), frame_texture_color, HSM_FRM_TEXTURE_BLEND_MODE, MASK_MODE_ALL, CUTOUT_MODE_OFF, IMAGE_DUALSCREEN_MODE_BOTH, HSM_FRM_TEXTURE_OPACITY).rgb;
 	}
 
 	frame_diffuse_color = mix(frame_diffuse_color, outside_frame_color, OUTSIDE_FRAME_MASK);
@@ -860,6 +864,7 @@ void main()
 													HSM_BG_BLEND_MODE, 
 													HSM_BG_MASK_MODE, 
 													HSM_BG_CUTOUT_MODE,
+													HSM_BG_DUALSCREEN_VIS_MODE,
 													HSM_BG_OPACITY);
 
 		// VIGNETTE
@@ -869,6 +874,7 @@ void main()
 													BLEND_MODE_NORMAL, 
 													HSM_VIEWPORT_VIGNETTE_MASK_MODE, 
 													HSM_VIEWPORT_VIGNETTE_CUTOUT_MODE,
+													IMAGE_DUALSCREEN_MODE_BOTH,
 													HSM_VIEWPORT_VIGNETTE_OPACITY);
 
 		// CRT SCREEN
@@ -878,6 +884,7 @@ void main()
 													HSM_CRT_SCREEN_BLEND_MODE, 
 													MASK_MODE_ALL, 
 													0, 
+													IMAGE_DUALSCREEN_MODE_BOTH,
 													1);
 
 		// BEZEL IMAGE
@@ -888,6 +895,7 @@ void main()
 														HSM_BZL_IMG_BLEND_MODE, 
 														HSM_BZL_IMG_MASK_MODE, 
 														HSM_BZL_IMG_CUTOUT_MODE, 
+														HSM_BZL_DUALSCREEN_VIS_MODE,
 														HSM_BZL_IMG_OPACITY);
 		// GENERATED BEZEL LAYER
 		if (HSM_BZL_LAYER_ORDER == i)
@@ -897,6 +905,7 @@ void main()
 														HSM_BZL_BLEND_MODE, 
 														MASK_MODE_ALL, 
 														0, 
+														IMAGE_DUALSCREEN_MODE_BOTH,
 														HSM_BZL_OPACITY);
 
 		// ADD SHADOW OUTSIDE FRAME
@@ -909,6 +918,7 @@ void main()
 															BLEND_MODE_NORMAL, 
 															MASK_MODE_OUTSIDE_BEZEL,
 															0, 
+															IMAGE_DUALSCREEN_MODE_BOTH,
 															HSM_FRM_OPACITY * HSM_FRM_SHADOW_OPACITY);
 
 
@@ -918,6 +928,7 @@ void main()
 														HSM_FRM_BLEND_MODE, 
 														MASK_MODE_ALL, 
 														0, 
+														IMAGE_DUALSCREEN_MODE_BOTH,
 														HSM_FRM_OPACITY);
 			}
 
@@ -929,6 +940,7 @@ void main()
 														HSM_CAB_GLASS_BLEND_MODE, 
 														HSM_CAB_GLASS_MASK_MODE, 
 														HSM_CAB_GLASS_CUTOUT_MODE, 
+														HSM_CAB_GLASS_DUALSCREEN_VIS_MODE,
 														HSM_CAB_GLASS_OPACITY);
 
 		// DECAL IMAGE
@@ -939,6 +951,7 @@ void main()
 														HSM_DECAL_BLEND_MODE, 
 														HSM_DECAL_MASK_MODE, 
 														HSM_DECAL_CUTOUT_MODE, 
+														HSM_DECAL_DUALSCREEN_VIS_MODE,
 														HSM_DECAL_OPACITY);
 
 		// LED IMAGE
@@ -949,6 +962,7 @@ void main()
 														HSM_LED_BLEND_MODE, 
 														HSM_LED_MASK_MODE, 
 														HSM_LED_CUTOUT_MODE, 
+														HSM_LED_DUALSCREEN_VIS_MODE,
 														HSM_LED_OPACITY);
 
 		// REFLECTION
@@ -960,6 +974,7 @@ void main()
 															HSM_REFLECT_BLEND_MODE, 
 															HSM_REFLECT_MASK_MODE, 
 															0, 
+															IMAGE_DUALSCREEN_MODE_BOTH,
 															1);
 
 		// Top Layer
@@ -970,6 +985,7 @@ void main()
 														HSM_TOP_BLEND_MODE, 
 														HSM_TOP_MASK_MODE, 
 														HSM_TOP_CUTOUT_MODE, 
+														HSM_TOP_DUALSCREEN_VIS_MODE,
 														HSM_TOP_OPACITY);
 	}
 

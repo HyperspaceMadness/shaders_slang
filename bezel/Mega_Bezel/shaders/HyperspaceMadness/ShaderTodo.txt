@@ -1,13 +1,14 @@
 Mega Bezel is updated to V 0.9.015 2021-06-05
 
+Changes:
   * Changed GTU param names back to default & added separate ON/OFF as well as the Composite parameter
   * Added Deconvergence On/Off so you can AB test the difference
-
-
-Changes:
   * Adjusted Royale preset to turn on Grade
   * Fixed black line around frame
   * Added parameters to show/hide images per screen on dual screen presets
+  * Fixed Cut-Out for Advanced Presets
+
+
 
 *  Performance of Base presets at 3840x2160 on Nvidia RTX2060:
   *  ADVANCED -                      78 FPS  -  No comparable old preset
@@ -29,10 +30,7 @@ Mega Bezel Still to Come:
 
 V1 TODO
 
-Fix 3DS upside down
   * Add Humbar in Post CRT
-  * Show Image per Screen Area
-  * Night light single glow - Place Glows
   * Fix Cut-Out on all layers
   Update Docs & add some notes about GDV & Grade
   * Rotate Dual Screen 
@@ -72,6 +70,7 @@ Fix 3DS upside down
 
 Post V1  
   * Do Hylian Sync Version
+  * Night light single glow - Place Glows
 
 
 Examples

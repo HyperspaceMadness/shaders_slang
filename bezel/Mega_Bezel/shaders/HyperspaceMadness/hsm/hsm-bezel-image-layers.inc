@@ -823,13 +823,8 @@ void main()
 			cutout_coord = (cutout_coord - 0.5) / vec2(DEFAULT_BEZEL_SCALE_V * SCREEN_ASPECT / output_aspect, DEFAULT_BEZEL_SCALE_V) + 0.5;
 
 	}
-
-	// vec2 cutout_coord = VIEWPORT_COORD; //(VIEWPORT_COORD - 0.5) * 2 + 0.5;
-
-	if (HSM_CUTOUT_CORNER_RADIUS > 0)
-		CUTOUT_MASK = 1 - HSM_GetCornerMask(cutout_coord, SCREEN_ASPECT, HSM_CUTOUT_CORNER_RADIUS, 1);
-	else
-		CUTOUT_MASK = 1 - HSM_GetCornerMask(cutout_coord, SCREEN_ASPECT, HSM_CUTOUT_CORNER_RADIUS, 1);
+	
+	CUTOUT_MASK = 1 - HSM_GetCornerMask(cutout_coord, SCREEN_ASPECT, HSM_CUTOUT_CORNER_RADIUS, 0.8);
 
 	//-----------------------------------------------------------------------------------------
 	// Full Viewport Vignette

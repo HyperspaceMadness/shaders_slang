@@ -25,6 +25,7 @@ layout(push_constant) uniform Push
 {
 	vec4 OutputSize;
 	uint FrameCount;
+	float GDV_DECONVERGENCE_ON;
 	float decons;
 	float addnoised;
 	float noiseresd;
@@ -45,6 +46,9 @@ layout(push_constant) uniform Push
 // #define TATE         params.TATE     // Screen orientation
 
 #pragma parameter bogus_deconvergence11 "[ HORIZONTAL/VERTICAL DECONVERGENCE ]: " 0.0 0.0 1.0 1.0
+
+#pragma parameter GDV_DECONVERGENCE_ON "          Deconvergence ON" 1 0 1 1
+#define GDV_DECONVERGENCE_ON params.GDV_DECONVERGENCE_ON
 
 #pragma parameter dctypex "          Deconvergence type X : 0.0 - static, other - dynamic" 0.0 0.0 1.0 0.05
 
@@ -135,6 +139,12 @@ vec3 noise(vec3 v){
 
 void main()
 {
+	if (GDV_DECONVERGENCE_ON < 0.5)
+	{
+		FragColor = texture(Source, vTexCoord);
+		return;
+	}
+
 	HSM_UpdateGlobalScreenValuesFromCache(InfoCachePass, vTexCoord);
 	float TATE = USE_VERTICAL_SCANLINES;
 

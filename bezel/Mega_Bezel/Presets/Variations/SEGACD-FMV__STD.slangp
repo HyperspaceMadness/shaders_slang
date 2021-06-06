@@ -45,8 +45,8 @@ MDAPT_MODE = 2
 
 PS1_BOX_BLUR_MODE = 1
 
-GTU_MODE = 1
-GTU_SIGNAL_RESOLUTION = 128
+GTU_ON = 1
+signalResolution = 128
 
 // Guest Venom specific parameters
 GDV_GLOW = 0.1

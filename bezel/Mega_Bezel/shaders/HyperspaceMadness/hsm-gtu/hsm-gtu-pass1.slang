@@ -2,9 +2,11 @@
 
 layout(push_constant) uniform Push
 {
-	// HSM Addition:
-	float GTU_MODE;
-	// End Addition
+	vec4 OutputSize;
+	vec4 OriginalSize;
+	vec4 SourceSize;
+	float GTU_ON;
+	float compositeConnection;
 } params;
 
 
@@ -43,15 +45,14 @@ layout(set = 0, binding = 2) uniform sampler2D Source;
 void main()
 {
 	vec4	c	=	texture(Source, vTexCoord);
-
 	// If GTU is off return the color from the last pass
-	if (params.GTU_MODE < 1)
+	if (params.GTU_ON < 1)
 	{
 		FragColor = c;
 		return;
 	}
 
-	if(params.GTU_MODE > 1)
+	if(params.compositeConnection > 0.0)
 		c.rgb	=	c.rgb * RGB_to_YIQ;
    FragColor = c;
 }

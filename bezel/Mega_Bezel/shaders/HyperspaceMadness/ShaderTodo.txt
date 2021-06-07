@@ -7,6 +7,8 @@ Changes:
   * Fixed black line around frame
   * Added parameters to show/hide images per screen on dual screen presets
   * Fixed Cut-Out for Advanced Presets
+  * Added BendBombBoom's latest soft aperture, dotty and RGB as a preset in teh experimental folder
+  * Added a Zoom Crop parameter to crop all sides at once to easily zoom in
 
 
 
@@ -31,7 +33,6 @@ Mega Bezel Still to Come:
 V1 TODO
 
   * Add Humbar in Post CRT
-  * Fix Cut-Out on all layers
   Update Docs & add some notes about GDV & Grade
   * Rotate Dual Screen 
   * Fix static reflection to be applied only once

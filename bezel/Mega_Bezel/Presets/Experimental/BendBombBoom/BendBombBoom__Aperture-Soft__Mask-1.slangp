@@ -1,6 +1,6 @@
 #reference ":/shaders/shaders_slang/bezel/Mega_Bezel/Presets/Variations/Max-Int-Scale__BASIC-EXTRA-PASSES.slangp"
 
-// Thanks to Nesguy from the Libretro forum for the settings in this preset!
+// Thanks to BendBombBoom from the Libretro forum for the settings in this preset!
 
 // Parameters
 HSM_ASPECT_RATIO_MODE = 0
@@ -16,17 +16,21 @@ compositeConnection = "1.000000"
 signalResolution = "336.000000"
 signalResolutionI = "111.000000"
 signalResolutionQ = "35.000000"
+
 g_crtgamut = "1.000000"
 g_vignette = "0.000000"
 g_mid = "0.250000"
 wp_temperature = "6904.000000"
 wlg = "0.900000"
 wlb = "1.100000"
+
 LUT_Size1 = "32.000000"
 LUT_Size2 = "32.000000"
+
 PR = "0.140000"
 PG = "0.140000"
 PB = "0.140000"
+
 vigdef = "3.600000"
 interm = "4.000000"
 SIZEHB = "1.000000"
@@ -46,6 +50,7 @@ shadowMask = "1.000000"
 maskDark = "0.400000"
 mask_gamma = "3.000000"
 slotwidth = "3.000000"
+
 dctypex = "0.450000"
 dctypey = "0.500000"
 deconrr = "-2.000000"

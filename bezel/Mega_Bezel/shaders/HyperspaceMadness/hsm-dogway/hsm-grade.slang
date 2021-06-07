@@ -135,7 +135,7 @@ layout(std140, set = 0, binding = 0) uniform UBO
 #pragma parameter g_vibr                            "          Dullness/Vibrance"    0.0 -1.0 1.0 0.05
 
 #pragma parameter DG_HUE_VS_SAT_TITLE               "[ HUE VS SATURATION ]:" 0 0 0 1
-#pragma parameter g_satr                            "          Red"                 0.0 -1.0 1.0 0.01
+#pragma parameter g_satr                            "          Hue vs Sat Red"                 0.0 -1.0 1.0 0.01
 #pragma parameter g_satg                            "          Hue vs Sat Green"    0.0 -1.0 1.0 0.01
 #pragma parameter g_satb                            "          Hue vs Sat Blue"     0.0 -1.0 1.0 0.01
 #pragma parameter g_lift                            "          Black Level"         0.0 -0.5 0.5 0.01

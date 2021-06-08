@@ -3,14 +3,6 @@
 // Thanks to BendBombBoom from the Libretro forum for the settings in this preset!
 
 // Parameters
-HSM_ASPECT_RATIO_MODE = 0
-HSM_INT_SCALE_MODE = 1
-HSM_INT_SCALE_BORDER_MIN_HEIGHT = -10
-HSM_CURVATURE_MODE = -1
-HSM_SCREEN_CORNER_RADIUS = 2
-HSM_SCREEN_EDGE_SHARPNESS = 90
-HSM_BG_OPACITY = "0.000000"
-
 HSM_GAMMA_IN_LINEARIZE = "2.200000"
 HSM_GAMMA_OUT_CRT = "2.200000"
 
@@ -50,6 +42,7 @@ maskDark = "0.250000"
 mcut = "1.850000"
 mask_gamma = "3.000000"
 
+GDV_DECONVERGENCE_ON = "1.0"
 deconrr = "-1.000000"
 deconrb = "1.000000"
 decons = "0.250000"

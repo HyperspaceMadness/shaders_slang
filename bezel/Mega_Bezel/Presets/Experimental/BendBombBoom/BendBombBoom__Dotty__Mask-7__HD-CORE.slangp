@@ -1,8 +1,7 @@
-#reference ":/shaders/shaders_slang/bezel/Mega_Bezel/Presets/Variations/Max-Int-Scale__BASIC-EXTRA-PASSES.slangp"
+#reference ":/shaders/shaders_slang/bezel/Mega_Bezel/Presets/Base_CRT_Presets/MBZ__2__STANDARD__HD-CORE__GUEST-DrVENOM.slangp"
 
 // Thanks to BendBombBoom from the Libretro forum for the settings in this preset!
 
-// Parameters
 HSM_GAMMA_IN_LINEARIZE = "2.200000"
 HSM_GAMMA_OUT_CRT = "2.200000"
 

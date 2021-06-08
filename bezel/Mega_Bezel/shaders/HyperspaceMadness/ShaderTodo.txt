@@ -1,14 +1,22 @@
 Mega Bezel is updated to V 0.9.015 2021-06-05
 
 Changes:
-  * Changed GTU param names back to default & added separate ON/OFF as well as the Composite parameter
-  * Added Deconvergence On/Off so you can AB test the difference
-  * Adjusted Royale preset to turn on Grade
-  * Fixed black line around frame
-  * Added parameters to show/hide images per screen on dual screen presets
-  * Fixed Cut-Out for Advanced Presets
-  * Added BendBombBoom's latest soft aperture, dotty and RGB as a preset in teh experimental folder
-  * Added a Zoom Crop parameter to crop all sides at once to easily zoom in
+  * GTU
+    * Changed GTU param names back to default & added separate ON/OFF as well as the Composite parameter
+  * Deconvergence
+    * Added Deconvergence On/Off (OFF by default) this allows you to AB test the difference
+    * Adjusted default Deconvergence settings so that when deconvergence is set to on you get some default deconvergence
+  * Cropping
+    * Added a Zoom Crop parameter to crop all sides at once to easily zoom in
+  * Dual Screen
+    * Added parameters to show/hide images per screen on dual screen presets
+  * Bug Fixes
+    * Fixed black line around frame
+    * Fixed Cut-Out for Advanced Presets
+    * Static Reflection image application should be more consistent
+  * Presets
+    * Adjusted Royale preset to turn on Grade
+    * Added BendBombBoom's latest soft aperture, dotty and RGB as a preset in teh experimental folder
 
 
 
@@ -34,8 +42,7 @@ V1 TODO
 
   * Add Humbar in Post CRT
   Update Docs & add some notes about GDV & Grade
-  * Rotate Dual Screen 
-  * Fix static reflection to be applied only once
+  * Rotate Dual Screen
   * Debug Info showing Shader Type? Num Shaders x Num Flavors = ~20 files :(, Add text in extra pass
   * Adjust Black adjustment so it affects not just black, Falloff? Tweak Afterglow?
   * Fix Brightness * AB Testing
@@ -45,7 +52,7 @@ V1 TODO
   * CRT Geom Curvature, Guest Curvature
   * Modulate Range on top of Hue & Value?
   * Raw Pixel Preset
-  * Add 'Zoom' Crop & Shift?
+  * Add Crop Shift X & Y?
   * Split Images - Shift to Outer Edge, Distance Offset, Fade to center? Hor vs Vert
   * Raw Pixels Sampling Modes? Quillez Nearest Neighbor, etc
   * Fix black line around the frame when shadow is on, Advanced only?

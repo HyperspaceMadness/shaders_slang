@@ -47,26 +47,27 @@ layout(push_constant) uniform Push
 
 #pragma parameter bogus_deconvergence11 "[ HORIZONTAL/VERTICAL DECONVERGENCE ]: " 0.0 0.0 1.0 1.0
 
-#pragma parameter GDV_DECONVERGENCE_ON "          Deconvergence ON" 1 0 1 1
+#pragma parameter GDV_DECONVERGENCE_ON "          Deconvergence ON" 0 0 1 1
 #define GDV_DECONVERGENCE_ON params.GDV_DECONVERGENCE_ON
 
 #pragma parameter dctypex "          Deconvergence type X : 0.0 - static, other - dynamic" 0.0 0.0 1.0 0.05
 
 #pragma parameter dctypey "          Deconvergence type Y : 0.0 - static, other - dynamic" 0.0 0.0 1.0 0.05
 
-#pragma parameter deconrr "          Horizontal Deconvergence Red Range" 0.0 -7.0 7.0 0.25
+#pragma parameter deconrr "          Horizontal Deconvergence Red Range" -1.0 -7.0 7.0 0.25
 
 #pragma parameter deconrg "          Horizontal Deconvergence Green Range" 0.0 -7.0 7.0 0.25
 
-#pragma parameter deconrb "          Horizontal Deconvergence Blue Range" 0.0 -7.0 7.0 0.25
+#pragma parameter deconrb "          Horizontal Deconvergence Blue Range" 1.0 -7.0 7.0 0.25
 
-#pragma parameter deconrry "          Vertical Deconvergence Red Range" 0.0 -12.0 12.0 0.25
+#pragma parameter deconrry "          Vertical Deconvergence Red Range" -1.0 -12.0 12.0 0.25
 
 #pragma parameter deconrgy "          Vertical Deconvergence Green Range" 0.0 -12.0 12.0 0.25
 
-#pragma parameter deconrby "          Vertical Deconvergence Blue Range" 0.0 -12.0 12.0 0.25
- 
-#pragma parameter decons "          Deconvergence Strength (and Type)" 0.5 -4.0 4.0 0.10
+#pragma parameter deconrby "          Vertical Deconvergence Blue Range" 1.0 -12.0 12.0 0.25
+
+// Default was 0.5
+#pragma parameter decons "          Deconvergence Strength (and Type)" 2 -4.0 4.0 0.10
 #define decons        params.decons     // Horizontal deconvergence colors strength
 
 #pragma parameter deconsmooth "          Deconvergence Smoothing" 0.0 0.0 1.0 0.10

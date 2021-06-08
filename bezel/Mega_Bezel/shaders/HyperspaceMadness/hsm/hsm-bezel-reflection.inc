@@ -517,7 +517,7 @@ float edge_highlight_mask = 0;
 
         // Since the tube highlight has already been applied in the crt pass and we've already masked it to the screen
 		// We just need to add the tube highlight on the black screen area
-		frag_color_linear += black_edge_mask * HSM_TUBE_STATIC_REFLECTION_IMAGE_OPACITY * tube_highlight_image * tube_highlight_image.a;
+		frag_color_linear += HSM_TUBE_STATIC_REFLECTION_IMAGE_OPACITY * tube_highlight_image * tube_highlight_image.a;
 	}
 
 	// Clamp otherwise we get artifacts (blue overlays of brighter parts of image)

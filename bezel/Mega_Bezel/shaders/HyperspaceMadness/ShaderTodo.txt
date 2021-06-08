@@ -38,7 +38,6 @@ V1 TODO
   * Fix static reflection to be applied only once
   * Debug Info showing Shader Type? Num Shaders x Num Flavors = ~20 files :(, Add text in extra pass
   * Adjust Black adjustment so it affects not just black, Falloff? Tweak Afterglow?
-  * Separate Interlaceing Scanline Effect?
   * Fix Brightness * AB Testing
   * Explicit Downsample Res? Target Res?
   * Guest ADV - Deconvergence before CRT? 2 Passes, one before one after and switch?
@@ -67,6 +66,7 @@ V1 TODO
   * LCD behavior when reaching resolution limit - Possible LCD Replacements LCD 3x, Sameboy lcd
   * Local vs FullScreen Blur on Corner reflection?
   * Shadow from Cutout?
+  * Large Slotmask Bitmap Mask
 
 
 Post V1  

@@ -1501,25 +1501,6 @@ vec4 HSM_GetPostCrtPreppedColor(vec4 in_color_linear, vec2 VIEWPORT_COORD, vec2 
 			out_color = HSM_BlendModeLayerMix(out_color, gel_image, BLEND_MODE_NORMAL, HSM_TUBE_COLORED_GEL_IMAGE_NORMAL_AMOUNT);
 	}
 
-	if (HSM_TUBE_STATIC_REFLECTION_IMAGE_OPACITY > 0)
-	{
-		vec2 tube_highlight_coord = (mirrored_tube_coord - 0.5) / HSM_TUBE_STATIC_REFLECTION_IMAGE_SCALE + 0.5;
-
-		tube_highlight_coord = mix( tube_highlight_coord, -1 * (tube_highlight_coord - 0.5) + 0.5 , HSM_FLIP_VIEWPORT_VERTICAL);
-/*
-		// Dithering for the glass reflection if needed to reduce banding
-		float blur_max_size = 1;
-		float blur_amount = 0.2;
-		vec4 tube_highlight_image = HSM_GetStoichaicBlurredSample(TubeStaticReflectionImage, tube_highlight_coord, HSM_TUBE_STATIC_REFLECTION_IMAGE_DITHERING_SAMPLES, blur_max_size, blur_amount);
-*/
-		float tube_highlight_mask = HSM_GetCornerMask((tube_curved_coord - 0.5) * 0.995 + 0.5 , SCREEN_ASPECT, HSM_BZL_INNER_CORNER_RADIUS_SCALE * HSM_SCREEN_CORNER_RADIUS, 0.05);
-
-		vec4 tube_highlight_image = texture(TubeStaticReflectionImage, tube_highlight_coord);
-		tube_highlight_image = HSM_Linearize(tube_highlight_image, HSM_DEFAULT_SRGB_GAMMA) * tube_highlight_mask;
-
-		out_color.rgb += HSM_TUBE_STATIC_REFLECTION_IMAGE_OPACITY * tube_highlight_image.a * tube_highlight_image.rgb;
-	}
-
 	out_color.a = in_color_linear.a;
 
 	#ifdef IS_BASIC_BORDER_PRESET
@@ -1558,6 +1539,26 @@ vec4 HSM_GetPostCrtPreppedColor(vec4 in_color_linear, vec2 VIEWPORT_COORD, vec2 
 			}
 
 			out_color = HSM_BlendModeLayerMix(out_color, bg_layer, HSM_BG_BLEND_MODE, HSM_BG_OPACITY);
+		}
+
+		if (HSM_TUBE_STATIC_REFLECTION_IMAGE_OPACITY > 0)
+		{
+			vec2 tube_highlight_coord = (mirrored_tube_coord - 0.5) / HSM_TUBE_STATIC_REFLECTION_IMAGE_SCALE + 0.5;
+
+			tube_highlight_coord = mix( tube_highlight_coord, -1 * (tube_highlight_coord - 0.5) + 0.5 , HSM_FLIP_VIEWPORT_VERTICAL);
+	/*
+			// Dithering for the glass reflection if needed to reduce banding
+			float blur_max_size = 1;
+			float blur_amount = 0.2;
+			vec4 tube_highlight_image = HSM_GetStoichaicBlurredSample(TubeStaticReflectionImage, tube_highlight_coord, HSM_TUBE_STATIC_REFLECTION_IMAGE_DITHERING_SAMPLES, blur_max_size, blur_amount);
+	*/
+			// Mask the very outer edge of the tube for a very small shadowing effect
+			float tube_highlight_mask = HSM_GetCornerMask((tube_curved_coord - 0.5) * 0.995 + 0.5 , SCREEN_ASPECT, HSM_BZL_INNER_CORNER_RADIUS_SCALE * HSM_SCREEN_CORNER_RADIUS, 0.05);
+
+			vec4 tube_highlight_image = texture(TubeStaticReflectionImage, tube_highlight_coord);
+			tube_highlight_image = HSM_Linearize(tube_highlight_image, HSM_DEFAULT_SRGB_GAMMA) * tube_highlight_mask;
+
+			out_color.rgb += HSM_TUBE_STATIC_REFLECTION_IMAGE_OPACITY * tube_highlight_image.a * tube_highlight_image.rgb;
 		}
 	}
 

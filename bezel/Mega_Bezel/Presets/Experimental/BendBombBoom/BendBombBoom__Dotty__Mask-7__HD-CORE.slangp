@@ -11,7 +11,7 @@ CONTR = "0.250000"
 g_vignette = "0.000000"
 g_cntrst = "-0.050000"
 g_mid = "0.250000"
-wp_temperature = "7104.000000"
+wp_temperature = "7100.000000"
 
 LUT_Size1 = "32.000000"
 LUT_Size2 = "32.000000"

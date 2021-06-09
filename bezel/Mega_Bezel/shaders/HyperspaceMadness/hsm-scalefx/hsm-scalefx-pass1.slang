@@ -47,6 +47,7 @@ layout(push_constant) uniform Push
 	float SFX_CLR;
 	float SFX_SAA;
 	float HSM_SCALEFX_ON;
+	// float HSM_SCALEFX_SOURCE_RES_DIVISION_FACTOR;
 } params;
 
 
@@ -61,8 +62,7 @@ layout(set = 0, binding = 0, std140) uniform UBO
    mat4 MVP;
 } global;
 
-#pragma parameter HSM_SCALEFX_ON 	"          ScaleFx ON - Must Increase Core Res Sampling" 1 0 1 1
-#define HSM_SCALEFX_ON params.HSM_SCALEFX_ON
+#include "hsm-scalefx.inc"
 
 #pragma stage vertex
 layout(location = 0) in vec4 Position;
@@ -106,8 +106,11 @@ void main()
 		G H I
 	*/
 
+// HSM Removed
+// #define TEX(x, y) textureOffset(Source, vTexCoord, ivec2(x, y))
 
-#define TEX(x, y) textureOffset(Source, vTexCoord, ivec2(x, y))
+// HSM Added
+#define TEX(x, y) HSM_TextureOffset(Source, vTexCoord, vec2(x, y), params.SourceSize.xy)
 
 	// metric data
 	vec4 A = TEX(-1,-1), B = TEX( 0,-1);

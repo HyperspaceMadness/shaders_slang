@@ -44,7 +44,9 @@ THE SOFTWARE.
 layout(push_constant) uniform Push
 {
 	vec4 SourceSize;
+	vec4 scalefx_pass0Size;
 	float HSM_SCALEFX_ON;
+	float HSM_SCALEFX_SOURCE_RES_DIVISION_FACTOR;
 } params;
 
 layout(set = 0, binding = 0, std140) uniform UBO
@@ -52,8 +54,7 @@ layout(set = 0, binding = 0, std140) uniform UBO
    mat4 MVP;
 } global;
 
-#pragma parameter HSM_SCALEFX_ON 	"          ScaleFx ON - Must Increase Core Res Sampling" 1 0 1 1
-#define HSM_SCALEFX_ON params.HSM_SCALEFX_ON
+#include "hsm-scalefx.inc"
 
 #pragma stage vertex
 layout(location = 0) in vec4 Position;
@@ -106,10 +107,13 @@ void main()
 		G H I
 	*/
 
+// HSM Removed
+// #define TEXm(x, y) textureOffset(scalefx_pass0, vTexCoord, ivec2(x, y))
+// #define TEXs(x, y) textureOffset(Source, vTexCoord, ivec2(x, y))
 
-#define TEXm(x, y) textureOffset(scalefx_pass0, vTexCoord, ivec2(x, y))
-#define TEXs(x, y) textureOffset(Source, vTexCoord, ivec2(x, y))
-
+// HSM Added
+#define TEXm(x, y) HSM_TextureOffset(scalefx_pass0, vTexCoord, vec2(x, y), params.scalefx_pass0Size.xy)
+#define TEXs(x, y) HSM_TextureOffset(Source, 		vTexCoord, vec2(x, y), params.SourceSize.xy)
 
 	// metric data
 	vec4 A = TEXm(-1,-1), B = TEXm( 0,-1);

@@ -44,12 +44,13 @@ THE SOFTWARE.
 layout(push_constant) uniform Push
 {
 	vec4 SourceSize;
+	vec4 refpassSize;
 	float SFX_RAA;
 	float HSM_SCALEFX_ON;
+	// float HSM_SCALEFX_SOURCE_RES_DIVISION_FACTOR;
 } params;
 
-#pragma parameter HSM_SCALEFX_ON 	"          ScaleFx ON - Must Increase Core Res Sampling" 1 0 1 1
-#define HSM_SCALEFX_ON params.HSM_SCALEFX_ON
+#include "hsm-scalefx.inc"
 
 // #pragma parameter SFX_RAA "ScaleFX rAA Sharpness" 2.0 0.0 10.0 0.05
 #define SFX_RAA 2
@@ -137,9 +138,12 @@ void main()
 	vec4 mid = loadMid(E), hm = loadMid(hn), vm = loadMid(vn);
 
 	vec3 res = fp.y == 0 ? (fp.x == 0 ? vec3(crn.x, hc.y, vc.w) : fp.x == 1 ? vec3(mid.x, 0, vm.z) : vec3(crn.y, hc.x, vc.z)) : (fp.y == 1 ? (fp.x == 0 ? vec3(mid.w, hm.y, 0) : fp.x == 1 ? vec3(0) : vec3(mid.y, hm.w, 0)) : (fp.x == 0 ? vec3(crn.w, hc.z, vc.x) : fp.x == 1 ? vec3(mid.z, 0, vm.x) : vec3(crn.z, hc.w, vc.y)));	
-	
 
-#define TEX(x, y) textureOffset(refpass, vTexCoord, ivec2(x, y)).rgb
+// HSM Removed
+// #define TEX(x, y) textureOffset(refpass, vTexCoord, ivec2(x, y)).rgb
+
+// HSM Added
+#define TEXs(x, y) HSM_TextureOffset(refpass, vTexCoord, vec2(x, y), params.refpassSize.xy).rgb
 
 	// reverseAA
 	vec3 E0 = TEX( 0, 0);

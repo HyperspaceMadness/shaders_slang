@@ -10,13 +10,13 @@ Changes:
     * Added a Zoom Crop parameter to crop all sides at once to easily zoom in
   * Dual Screen
     * Added parameters to show/hide images per screen on dual screen presets
+  * Presets
+    * Adjusted Royale preset to turn on Grade
+    * Added BendBombBoom's latest soft aperture, dotty and RGB as a preset in teh experimental folder
   * Bug Fixes
     * Fixed black line around frame
     * Fixed Cut-Out for Advanced Presets
     * Static Reflection image application should be more consistent
-  * Presets
-    * Adjusted Royale preset to turn on Grade
-    * Added BendBombBoom's latest soft aperture, dotty and RGB as a preset in teh experimental folder
 
 
 

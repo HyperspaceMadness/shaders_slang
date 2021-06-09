@@ -47,10 +47,10 @@ layout(push_constant) uniform Push
 	vec4 SourceSize;
 	float SFX_SCN;
 	float HSM_SCALEFX_ON;
+	// float HSM_SCALEFX_SOURCE_RES_DIVISION_FACTOR;
 } params;
 
-#pragma parameter HSM_SCALEFX_ON 	"          ScaleFx ON - Must Increase Core Res Sampling" 1 0 1 1
-#define HSM_SCALEFX_ON params.HSM_SCALEFX_ON
+#include "hsm-scalefx.inc"
 
 // #pragma parameter SFX_SCN "ScaleFX Filter Corners" 1.0 0.0 1.0 1.0
 #define SFX_SCN 1
@@ -117,7 +117,11 @@ void main()
 		  H		w   z	  	  z
 	*/
 
-#define TEX(x, y) textureOffset(Source, vTexCoord, ivec2(x, y))
+// HSM Removed
+// #define TEX(x, y) textureOffset(Source, vTexCoord, ivec2(x, y))
+
+// HSM Added
+#define TEX(x, y) HSM_TextureOffset(Source, vTexCoord, vec2(x, y), params.SourceSize.xy)
 
 	// read data
 	vec4 E = TEX( 0, 0);

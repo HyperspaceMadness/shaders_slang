@@ -45,6 +45,7 @@ layout(push_constant) uniform Push
 {
 	vec4 SourceSize;
 	float HSM_SCALEFX_ON;
+	// float HSM_SCALEFX_SOURCE_RES_DIVISION_FACTOR;
 } params;
 
 
@@ -53,8 +54,7 @@ layout(set = 0, binding = 0, std140) uniform UBO
    mat4 MVP;
 } global;
 
-#pragma parameter HSM_SCALEFX_ON 	"          ScaleFx ON - Must Increase Core Res Sampling" 1 0 1 1
-#define HSM_SCALEFX_ON params.HSM_SCALEFX_ON
+#include "hsm-scalefx.inc"
 
 #pragma stage vertex
 layout(location = 0) in vec4 Position;

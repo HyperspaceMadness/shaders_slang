@@ -12,9 +12,9 @@ layout(push_constant) uniform Push
 	float compositeConnection;
 } params;
 
-#pragma parameter signalResolution "Signal Resolution Y" 256.0 16.0 1024.0 16.0
-#pragma parameter signalResolutionI "Signal Resolution I" 83.0 1.0 350.0 2.0
-#pragma parameter signalResolutionQ "Signal Resolution Q" 25.0 1.0 350.0 2.0
+#pragma parameter signalResolution     "          Signal Resolution Y" 256.0 16.0 1024.0 16.0
+#pragma parameter signalResolutionI    "          Signal Resolution I" 83.0 1.0 350.0 2.0
+#pragma parameter signalResolutionQ    "          Signal Resolution Q" 25.0 1.0 350.0 2.0
 
 layout(std140, set = 0, binding = 0) uniform UBO
 {

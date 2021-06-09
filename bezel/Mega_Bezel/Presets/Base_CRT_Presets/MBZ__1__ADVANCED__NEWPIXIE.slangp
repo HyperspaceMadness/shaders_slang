@@ -24,23 +24,23 @@ scale_type3 = source
 scale3 = 1.0
 alias3 = "IntroPass"
 
-// Color Correction with Dogway's awesome Grade shader
-shader4 = ../../shaders/HyperspaceMadness/hsm-dogway/hsm-grade.slang
-
-shader5 = ../../../../stock.slang
-alias5 = "PreDeDitheringPass"
+shader4 = ../../../../stock.slang
+alias4 = "PreDeDitheringPass"
 
 // De-Dithering - Mdapt
-shader6 = ../../shaders/HyperspaceMadness/hsm-mdapt/hsm-mdapt-pass0.slang
-shader7 = ../../shaders/HyperspaceMadness/hsm-mdapt/hsm-mdapt-pass1.slang
-shader8 = ../../shaders/HyperspaceMadness/hsm-mdapt/hsm-mdapt-pass2.slang
-shader9 = ../../shaders/HyperspaceMadness/hsm-mdapt/hsm-mdapt-pass3.slang
-shader10 = ../../shaders/HyperspaceMadness/hsm-mdapt/hsm-mdapt-pass4.slang
+shader5 = ../../shaders/HyperspaceMadness/hsm-mdapt/hsm-mdapt-pass0.slang
+shader6 = ../../shaders/HyperspaceMadness/hsm-mdapt/hsm-mdapt-pass1.slang
+shader7 = ../../shaders/HyperspaceMadness/hsm-mdapt/hsm-mdapt-pass2.slang
+shader8 = ../../shaders/HyperspaceMadness/hsm-mdapt/hsm-mdapt-pass3.slang
+shader9 = ../../shaders/HyperspaceMadness/hsm-mdapt/hsm-mdapt-pass4.slang
 
 // SGENDPT - Hyllian's great de-dither shader
-shader11 = ../../shaders/HyperspaceMadness/hsm-sgenpt-mix/hsm-sgenpt-mix.slang
+shader10 = ../../shaders/HyperspaceMadness/hsm-sgenpt-mix/hsm-sgenpt-mix.slang
 
-shader12 = ../../shaders/HyperspaceMadness/hsm-ps1dither/hsm-PS1-Undither-BoxBlur.slang
+shader11 = ../../shaders/HyperspaceMadness/hsm-ps1dither/hsm-PS1-Undither-BoxBlur.slang
+
+// Color Correction with Dogway's awesome Grade shader
+shader12 = ../../shaders/HyperspaceMadness/hsm-dogway/hsm-grade.slang
 
 // GTU TV Processing
 shader13 = ../../shaders/HyperspaceMadness/hsm-gtu/hsm-gtu-pass1.slang

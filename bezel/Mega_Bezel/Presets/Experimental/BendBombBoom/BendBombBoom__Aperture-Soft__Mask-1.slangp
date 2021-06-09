@@ -10,7 +10,6 @@ signalResolutionI = "111.000000"
 signalResolutionQ = "35.000000"
 
 g_crtgamut = "1.000000"
-g_vignette = "0.000000"
 g_mid = "0.250000"
 wp_temperature = "6900.000000"
 wlg = "0.900000"

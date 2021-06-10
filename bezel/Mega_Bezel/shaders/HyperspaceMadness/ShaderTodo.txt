@@ -46,8 +46,6 @@ V1 TODO
   * Debug Info showing Shader Type? Num Shaders x Num Flavors = ~20 files :(, Add text in extra pass
   * Adjust Black adjustment so it affects not just black, Falloff? Tweak Afterglow?
   * Fix Brightness * AB Testing
-  * Explicit Downsample Res? Target Res?
-  * Guest ADV - Deconvergence before CRT? 2 Passes, one before one after and switch?
   * Add extra empty passes for Mega Bezel
   * CRT Geom Curvature, Guest Curvature
   * Modulate Range on top of Hue & Value?
@@ -82,7 +80,7 @@ Post V1
 
 
 Examples
-
+  * Guest ADV - Deconvergence before CRT? 2 Passes, one before one after and switch?
   * Punch Out - Dual Screen
   * Vector Preset
   * Use MipMaps for image sampling when we have the image texture sizes

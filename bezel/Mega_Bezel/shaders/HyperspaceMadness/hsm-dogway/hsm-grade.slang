@@ -867,7 +867,12 @@ vec3 vcolor = adj;
 
 
 // Vignetting & Black Level
+/* HSM Removed
     vec2 vpos = vTexCoord*(global.OriginalSize.xy/global.SourceSize.xy);
+*/
+
+    // HSM Added
+    vec2 vpos = vTexCoord;
 
     vpos *= 1.0 - vpos.xy;
     float vig = vpos.x * vpos.y * vstr;

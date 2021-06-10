@@ -34,7 +34,7 @@ scale_y3 = 1.0
 float_framebuffer3 = true
 alias3 = BloomPass
 
-shader4 = :/shaders/shaders_slang/bezel/Mega_Bezel/shaders/HyperspaceMadness/hsm-guest/hsm-crt-guest-advanced-with-scaling.slang
+shader4 = :/shaders/shaders_slang/bezel/Mega_Bezel/shaders/HyperspaceMadness/hsm-guest/hsm-crt-guest-advanced.slang
 filter_linear4 = true
 scale_type4 = viewport
 scale_x4 = 1.0

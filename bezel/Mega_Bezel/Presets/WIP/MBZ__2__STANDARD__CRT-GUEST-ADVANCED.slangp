@@ -167,7 +167,7 @@ scale_y26 = 1.0
 float_framebuffer26 = true
 alias26 = BloomPass
 
-shader27 = ../../shaders/HyperspaceMadness/hsm-guest/hsm-crt-guest-advanced-with-scaling.slang
+shader27 = ../../shaders/HyperspaceMadness/hsm-guest/hsm-crt-guest-advanced.slang
 filter_linear27 = true
 scale_type27 = viewport
 scale_x27 = 1.0

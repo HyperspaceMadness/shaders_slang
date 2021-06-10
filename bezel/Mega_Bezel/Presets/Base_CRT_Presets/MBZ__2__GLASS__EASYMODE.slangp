@@ -131,7 +131,7 @@ filter_linear28 = false
 srgb_framebuffer28 = true
 
 // Easymode's Shader!
-shader29 = ../../shaders/HyperspaceMadness/hsm-easymode/hsm-crt-easymode-halation-with-scaling.slang
+shader29 = ../../shaders/HyperspaceMadness/hsm-easymode/hsm-crt-easymode-halation.slang
 filter_linear29 = true
 scale_type29 = viewport
 float_framebuffer29 = true

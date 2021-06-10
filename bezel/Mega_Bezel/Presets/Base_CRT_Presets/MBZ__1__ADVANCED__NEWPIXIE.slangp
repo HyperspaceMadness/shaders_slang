@@ -102,7 +102,7 @@ filter_linear23 = true
 alias23 = blur2
 
 // Easymode's Shader!
-shader24 = ../../shaders/HyperspaceMadness/hsm-newpixie/hsm-newpixie-crt-with-scaling.slang
+shader24 = ../../shaders/HyperspaceMadness/hsm-newpixie/hsm-newpixie-crt.slang
 filter_linear24 = true
 scale_type24 = viewport
 float_framebuffer24 = true

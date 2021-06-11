@@ -393,6 +393,9 @@ layout(std140, set = 0, binding = 0) uniform UBO
 	float HSM_INTRO_SOLID_COLOR_HOLD;
 	float HSM_INTRO_SOLID_COLOR_FADE_OUT;
 
+	float GDV_GLOW_CRTMASK_AMOUNT;
+	float GDV_BLOOM_CRTMASK_AMOUNT;
+	float GDV_HALATION_CRTMASK_AMOUNT;
 
 } global;
 

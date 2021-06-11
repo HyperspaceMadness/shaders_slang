@@ -72,8 +72,11 @@ layout(push_constant) uniform Push
 
 #pragma parameter bogus_brightness "[ BRIGHTNESS SETTINGS ]:" 0.0 0.0 1.0 1.0
 
-#pragma parameter glow "          Glow Strength" 0.08 0.0 2.0 0.01
+#pragma parameter glow "          Strength" 0.08 0.0 2.0 0.01
 #define glow         params.glow     // Glow Strength
+
+#pragma parameter GDV_GLOW_CRTMASK_AMOUNT "          Mask Amount" 0.0 0.0 1.0 0.05
+#define GDV_GLOW_CRTMASK_AMOUNT         global.GDV_GLOW_CRTMASK_AMOUNT
 
 #pragma parameter bloom "          Bloom Strength" 0.0 0.0 2.0 0.05
 #define bloom         params.bloom     // bloom effect
@@ -895,6 +898,7 @@ if (!interb)
 	vec3  Glow = COMPAT_TEXTURE(GlowPass, pos).rgb;
 	vec3  Bloom = COMPAT_TEXTURE(BloomPass, pos).rgb;
 	float maxb = COMPAT_TEXTURE(BloomPass, pos).a;
+	// maxb *= cmask;
 
 	/* HSM Removed
 	float vig  = COMPAT_TEXTURE(PrePass, clamp(pos, 0.0+0.5*global.OriginalSize.zw, 1.0-0.5*global.OriginalSize.zw)).a;
@@ -907,7 +911,11 @@ if (!interb)
 	if (!interb) color = declip(color, pow(w3,0.60));
 
 	Bloom = mix(0.5*(Bloom + Bloom*Bloom), Bloom*Bloom, colmx);	
+
 	color = color + (1.1-0.25*colmx)*(0.75+maxb)*Bloom*(0.75 + 0.70*pow(colmx,0.33333))*mix(1.0,w3,0.5*colmx)*mix(one,cmask,0.35 + 0.4*maxb)*halation;
+
+	// HSM Added - Mask the glow with the CRT mask to the amount requested
+	Glow = mix(Glow, cmask*cmask*cmask*Glow, GDV_GLOW_CRTMASK_AMOUNT);
 
 	Glow = mix(Glow, 0.25*color, 0.7*colmx);
 	color = color + 0.5*glow*Glow;

@@ -1,4 +1,4 @@
-Mega Bezel is updated to V 0.9.016 2021-06-09
+Mega Bezel is updated to V 0.9.017 2021-06-12
 
 Changes:
   * 3DS

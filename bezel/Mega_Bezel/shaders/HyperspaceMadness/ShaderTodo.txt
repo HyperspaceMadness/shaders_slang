@@ -2,6 +2,7 @@ Mega Bezel is updated to V 0.9.016 2021-06-09
 
 Changes:
   * 3DS
+    * Fixed Basic Preset
     * Added Dual-Screen-3DS__STD__DREZ-3DS-400x480.slangp to Variations
       * This uses MBZ__2__STANDARD__DREZ-3DS-400x480__GUEST-DrVENOM.slangp in Base_CRT_Presets
       * This preset allows you to run the standard mega bezel while running citra at which ever internal resolution desired
@@ -9,6 +10,7 @@ Changes:
   * Down res
     * MBZ__2__STANDARD__DREZ-240p__GUEST-DrVENOM.slangp added for downrezing in the first pass to 240p
       * Good for games like MVC2 on Dreamcast
+    * Added Marvel Vs Capcom 2 preset SegaDC-MVC2__STD__DEREZ-480p.slangp 
 
 
 *  Performance of Base presets at 3840x2160 on Nvidia RTX2060:

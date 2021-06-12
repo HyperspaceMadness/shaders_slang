@@ -1,5 +1,5 @@
 /*
-   CRT - Guest - Advanced - Deconvergence pass + noise
+   CRT - Guest - Advanced - pass + noise
    
    Copyright (C) 2021 guest(r) - guest.r@gmail.com
    
@@ -45,43 +45,43 @@ layout(push_constant) uniform Push
 // #pragma parameter TATE "          TATE Mode" 0.0 0.0 1.0 1.0
 // #define TATE         params.TATE     // Screen orientation
 
-#pragma parameter bogus_deconvergence11 "[ HORIZONTAL/VERTICAL DECONVERGENCE ]: " 0.0 0.0 1.0 1.0
+#pragma parameter bogus_deconvergence11 "[ DECONVERGENCE ]: " 0.0 0.0 1.0 1.0
 
-#pragma parameter GDV_DECONVERGENCE_ON "          Deconvergence ON" 0 0 1 1
+#pragma parameter GDV_DECONVERGENCE_ON "          ON" 0 0 1 1
 #define GDV_DECONVERGENCE_ON params.GDV_DECONVERGENCE_ON
 
-#pragma parameter dctypex "          Deconvergence type X : 0.0 - static, other - dynamic" 0.0 0.0 1.0 0.05
+#pragma parameter dctypex  "          Type X : 0.0 - static, other - dynamic -- dctypex" 0.0 0.0 1.0 0.05
 
-#pragma parameter dctypey "          Deconvergence type Y : 0.0 - static, other - dynamic" 0.0 0.0 1.0 0.05
+#pragma parameter dctypey  "          Type Y : 0.0 - static, other - dynamic -- dctypey" 0.0 0.0 1.0 0.05
 
-#pragma parameter deconrr "          Horizontal Deconvergence Red Range" -1.0 -7.0 7.0 0.25
+#pragma parameter deconrr  "          Horizontal Red Range -- deconrr" -1.0 -7.0 7.0 0.25
 
-#pragma parameter deconrg "          Horizontal Deconvergence Green Range" 0.0 -7.0 7.0 0.25
+#pragma parameter deconrg  "          Horizontal Green Range -- deconrg" 0.0 -7.0 7.0 0.25
 
-#pragma parameter deconrb "          Horizontal Deconvergence Blue Range" 1.0 -7.0 7.0 0.25
+#pragma parameter deconrb  "          Horizontal Blue Range -- deconrb" 1.0 -7.0 7.0 0.25
 
-#pragma parameter deconrry "          Vertical Deconvergence Red Range" -1.0 -12.0 12.0 0.25
+#pragma parameter deconrry "          Vertical Red Range -- deconrry" -1.0 -12.0 12.0 0.25
 
-#pragma parameter deconrgy "          Vertical Deconvergence Green Range" 0.0 -12.0 12.0 0.25
+#pragma parameter deconrgy "          Vertical Green Range -- deconrgy" 0.0 -12.0 12.0 0.25
 
-#pragma parameter deconrby "          Vertical Deconvergence Blue Range" 1.0 -12.0 12.0 0.25
+#pragma parameter deconrby "          Vertical Blue Range -- deconrby" 1.0 -12.0 12.0 0.25
 
 // Default was 0.5
-#pragma parameter decons "          Deconvergence Strength (and Type)" 2 -4.0 4.0 0.10
+#pragma parameter decons   		"          Strength (and Type) -- decons" 2 -4.0 4.0 0.10
 #define decons        params.decons     // Horizontal deconvergence colors strength
 
-#pragma parameter deconsmooth "          Deconvergence Smoothing" 0.0 0.0 1.0 0.10
+#pragma parameter deconsmooth	"          Smoothing -- deconsmooth" 0.0 0.0 1.0 0.10
 
-#pragma parameter addnoised "          Add Noise" 0.0 -1.0 1.0 0.02
+#pragma parameter addnoised 	"          Add Noise -- addnoised" 0.0 -1.0 1.0 0.02
 #define addnoised       params.addnoised   // add noise
 
-#pragma parameter noiseresd "          Noise Size / Resolution" 2.0 0.0 10.0 1.0
+#pragma parameter noiseresd 	"          Noise Size / Resolution -- noiseresd" 2.0 0.0 10.0 1.0
 #define noiseresd       params.noiseresd   // add noise
 
-#pragma parameter shadowMask "        CRT Mask: -1:None | 0:CGWG | 1-4:Lottes | 5-7:Trinitron" 0.0 -1.0 8.0 1.0
+#pragma parameter shadowMask 	"     CRT Mask: -1:None|0:CGWG|1-4:Lottes|5-7:Trin -- shadowMask" 0.0 -1.0 8.0 1.0
 #define shadowMask   params.shadowMask     // Mask Style
 
-#pragma parameter masksize "          CRT Mask Size (2.0 is nice in 4k) - Auto | 2K | 4k" 0 0 4 1
+#pragma parameter masksize 		"          CRT Mask Size - 0:Auto | 2K | 4k -- masksize" 0 0 4 1
 #define masksize     params.masksize     // Mask Size
 
 /*

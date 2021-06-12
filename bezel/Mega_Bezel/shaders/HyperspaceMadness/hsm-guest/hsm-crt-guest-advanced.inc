@@ -72,51 +72,51 @@ layout(push_constant) uniform Push
 
 #pragma parameter bogus_brightness "[ BRIGHTNESS SETTINGS ]:" 0.0 0.0 1.0 1.0
 
-#pragma parameter glow "          Strength" 0.08 0.0 2.0 0.01
+#pragma parameter glow "          Strength -- glow" 0.08 0.0 2.0 0.01
 #define glow         params.glow     // Glow Strength
 
-#pragma parameter GDV_GLOW_CRTMASK_AMOUNT "          Mask Amount" 0.0 0.0 1.0 0.05
+#pragma parameter GDV_GLOW_CRTMASK_AMOUNT "          Mask Amount -- GDV_GLOW_CRTMASK_AMOUNT" 0.0 0.0 1.0 0.05
 #define GDV_GLOW_CRTMASK_AMOUNT         global.GDV_GLOW_CRTMASK_AMOUNT
 
-#pragma parameter bloom "          Bloom Strength" 0.0 0.0 2.0 0.05
+#pragma parameter bloom "          Bloom Strength -- bloom" 0.0 0.0 2.0 0.05
 #define bloom         params.bloom     // bloom effect
 
-#pragma parameter halation "          Halation Strength" 0.0 0.0 2.0 0.025
+#pragma parameter halation "          Halation Strength -- halation" 0.0 0.0 2.0 0.025
 #define halation         params.halation     // halation effect
 
-#pragma parameter gamma_c "          Gamma correct" 1.0 0.50 2.0 0.02
+#pragma parameter gamma_c "          Gamma Correct -- gamma_c" 1.0 0.50 2.0 0.02
 #define gamma_c   params.gamma_c     // adjust brightness
 
-#pragma parameter brightboost "          Bright Boost Dark Pixels" 1.40 0.25 10.0 0.05
+#pragma parameter brightboost "          Bright Boost Dark Pixels -- brightboost" 1.40 0.25 10.0 0.05
 #define brightboost  params.brightboost     // adjust brightness
 
-#pragma parameter brightboost1 "          Bright Boost Bright Pixels" 1.10 0.25 3.00 0.025
+#pragma parameter brightboost1 "          Bright Boost Bright Pixels -- brightboost1" 1.10 0.25 3.00 0.025
 #define brightboost1  params.brightboost1     // adjust brightness
 
 #pragma parameter bogus_scanline "[ SCANLINE OPTIONS ]: " 0.0 0.0 1.0 1.0
 
-#pragma parameter gsl "          Scanline Type" 0.0 -1.0 2.0 1.0
+#pragma parameter gsl "          Scanline Type -- gsl" 0.0 -1.0 2.0 1.0
 #define gsl          params.gsl      // Alternate scanlines
 
-#pragma parameter scanline1 "          Scanline Beam Shape Center" 6.0 0.0 20.0 0.5
+#pragma parameter scanline1 "          Scanline Beam Shape Center -- scanline1" 6.0 0.0 20.0 0.5
 #define scanline1    params.scanline1      // scanline param, vertical sharpness
 
-#pragma parameter scanline2 "          Scanline Beam Shape Edges" 8.0 3.0 40.0 1.0 
+#pragma parameter scanline2 "          Scanline Beam Shape Edges -- scanline2" 8.0 3.0 40.0 1.0 
 #define scanline2    params.scanline2      // scanline param, vertical sharpness
 
-#pragma parameter beam_min "          Scanline Shape Dark Pixels" 1.30 0.25 3.5 0.05
+#pragma parameter beam_min "          Scanline Shape Dark Pixels -- beam_min" 1.30 0.25 3.5 0.05
 #define beam_min     params.beam_min     // dark area beam min - narrow
 
-#pragma parameter beam_max "          Scanline Shape Bright Pixels" 1.00 0.4 2.5 0.05
+#pragma parameter beam_max "          Scanline Shape Bright Pixels -- beam_max" 1.00 0.4 2.5 0.05
 #define beam_max     params.beam_max     // bright area beam max - wide
 
-#pragma parameter beam_size "          Increased Bright Scanline Beam" 0.60 0.0 1.0 0.05
+#pragma parameter beam_size "          Increased Bright Scanline Beam -- beam_size" 0.60 0.0 1.0 0.05
 #define beam_size    params.beam_size     // increased max. beam size
 
-#pragma parameter vertmask "          Scanline Color Deconvergence" 0.0 -1.0 1.0 0.1
+#pragma parameter vertmask "          Scanline Color Deconvergence -- vertmask" 0.0 -1.0 1.0 0.1
 #define vertmask     params.vertmask     // Scanline deconvergence colors
 
-#pragma parameter scans "          Scanline Saturation" 0.60 0.0 1.0 0.05
+#pragma parameter scans "          Scanline Saturation -- scans" 0.60 0.0 1.0 0.05
 #define scans        params.scans     // scanline saturation
 
 // Scanline darken 'edges' effect - need to uncomment it.
@@ -124,24 +124,24 @@ layout(push_constant) uniform Push
 // #pragma parameter scansub "          Scanline darken 'edges'" 0.0 0.0 0.30 0.005
 // #define scansub      params.scansub   // scanline substraction
 
-#pragma parameter spike "          Scanline Spike Removal" 1.0 0.0 2.0 0.10
+#pragma parameter spike "          Scanline Spike Removal -- spike" 1.0 0.0 2.0 0.10
 #define spike params.spike
 
 #pragma parameter bogus_filtering "[ FILTERING OPTIONS ]: " 0.0 0.0 1.0 1.0
 
-#pragma parameter h_sharp "          Horizontal sharpness" 5.20 0.20 15.0 0.20
+#pragma parameter h_sharp "          Horizontal sharpness -- h_sharp" 5.20 0.20 15.0 0.20
 #define h_sharp      params.h_sharp     // pixel sharpness
 
-#pragma parameter s_sharp "          Substractive sharpness (1.0 recommended)" 0.50 0.0 1.5 0.10
+#pragma parameter s_sharp "          Substractive sharpness (1.0 recommended) -- s_sharp" 0.50 0.0 1.5 0.10
 #define s_sharp      params.s_sharp     // substractive sharpness
 
-#pragma parameter smart_ei "          Smart Edges Effect Strength" 0.0 0.0 20.0 0.25
+#pragma parameter smart_ei "          Smart Edges Effect Strength -- smart_ei" 0.0 0.0 20.0 0.25
 #define smart_ei      params.smart_ei     // smart edge handling
 
-#pragma parameter ei_limit "          Smart Edges Effect Strength Limit" 2.0 1.0 12.0 0.1
+#pragma parameter ei_limit "          Smart Edges Effect Strength Limit -- ei_limit" 2.0 1.0 12.0 0.1
 #define ei_limit      params.ei_limit     // smart edge handling
 
-#pragma parameter sth     "          Smart Edges Smoothing Threshold" 0.20 0.0 1.0 0.01
+#pragma parameter sth     "          Smart Edges Smoothing Threshold -- sth" 0.20 0.0 1.0 0.01
 #define sth        params.sth     // corner size
 
 
@@ -193,13 +193,13 @@ layout(push_constant) uniform Push
 
 #pragma parameter bogus_masks "[ CRT MASK OPTIONS ]: " 0.0 0.0 1.0 1.0
 
-#pragma parameter shadowMask "        CRT Mask: -1:None | 0:CGWG | 1-4:Lottes | 5-7:Trinitron" 0.0 -1.0 8.0 1.0
+#pragma parameter shadowMask "     CRT Mask: -1:None|0:CGWG|1-4:Lottes|5-7:Trin -- shadowMask" 0.0 -1.0 8.0 1.0
 #define shadowMask   params.shadowMask     // Mask Style
 
-#pragma parameter maskstr "          Mask Strength (0, 5-8)" 0.3 -0.5 1.0 0.05
+#pragma parameter maskstr "          Mask Strength (0, 5-8) -- maskstr" 0.3 -0.5 1.0 0.05
 #define maskstr         params.maskstr      // CGWG Mask Strength
 
-#pragma parameter masksize "          CRT Mask Size (2.0 is nice in 4k) - Auto | 2K | 4k" 0 0 4 1
+#pragma parameter masksize "          CRT Mask Size - 0:Auto | 2K | 4k -- masksize" 0 0 4 1
 #define masksize     params.masksize     // Mask Size
 
 #pragma parameter maskDark "          Lottes maskDark" 0.5 0.0 2.0 0.05
@@ -208,25 +208,25 @@ layout(push_constant) uniform Push
 #pragma parameter maskLight "          Lottes maskLight" 1.5 0.0 2.0 0.05
 #define maskLight    params.maskLight     // Light "Phosphor"
 
-#pragma parameter mcut "          Mask 5-7 Trinitron Low Strength" 1.10 0.0 2.0 0.05
+#pragma parameter mcut "          Mask 5-7 Trinitron Low Strength -- mcut" 1.10 0.0 2.0 0.05
 #define mcut         params.mcut      // Mask 5-7 cutoff
 
-#pragma parameter mask_gamma "          Mask gamma" 2.40 1.0 5.0 0.05
+#pragma parameter mask_gamma "          Mask gamma -- mask_gamma" 2.40 1.0 5.0 0.05
 #define mask_gamma   params.mask_gamma     // Mask application gamma
 
-#pragma parameter slotmask "          Slot Mask Strength" 0.0 0.0 1.0 0.05
+#pragma parameter slotmask "          Slot Mask Strength -- slotmask" 0.0 0.0 1.0 0.05
 #define slotmask     params.slotmask     // Slot Mask ON/OFF
 
-#pragma parameter slotwidth "          Slot Mask Width" 2.0 1.0 6.0 0.5
+#pragma parameter slotwidth "          Slot Mask Width -- slotwidth" 2.0 1.0 6.0 0.5
 #define slotwidth    params.slotwidth     // Slot Mask Width
 
-#pragma parameter double_slot "          Slot Mask Height: 2x1 or 4x1" 1.0 1.0 2.0 1.0
+#pragma parameter double_slot "          Slot Mask Height: 2x1 or 4x1 -- double_slot" 1.0 1.0 2.0 1.0
 #define double_slot  params.double_slot     // Slot Mask Height
 
-#pragma parameter slotms "          Slot Mask Size - Auto | 2K | 4k" 0 1 4 1
+#pragma parameter slotms "          Slot Mask Size - Auto | 2K | 4k -- slotms" 0 1 4 1
 #define slotms  params.slotms     // Slot Mask Size
 
-#pragma parameter mclip "          Keep Mask effect with clipping" 0.50 0.0 1.0 0.05
+#pragma parameter mclip "          Keep Mask effect with clipping -- mclip" 0.50 0.0 1.0 0.05
 #define mclip  params.mclip     // Slot Mask Size
 
 // #pragma parameter gamma_out "Gamma out" 2.4 1.0 5.0 0.05

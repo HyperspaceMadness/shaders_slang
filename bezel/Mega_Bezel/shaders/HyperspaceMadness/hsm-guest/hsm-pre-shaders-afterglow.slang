@@ -39,36 +39,36 @@ layout(push_constant) uniform Push
    // float vigdef;
 } params;
 
-#pragma parameter AS "          Afterglow Strength" 0.20 0.0 0.60 0.01
+#pragma parameter AS          "          Afterglow Strength -- AS" 0.20 0.0 0.60 0.01
 #define AS params.AS
 
-#pragma parameter sat "          Afterglow Saturation" 0.20 0.0 1.0 0.01
+#pragma parameter sat         "          Afterglow Saturation  -- sat" 0.20 0.0 1.0 0.01
 #define sat params.sat
 
-#pragma parameter BP   "          Brighten Black (For Scanlines on Black)" 0.0 0.0 100.0 1.0
+#pragma parameter BP          "          Brighten Black (For Scanlines on Black) -- BP" 0.0 0.0 100.0 1.0
 
 #pragma parameter bogus_color "[ COLOR TWEAKS ]:" 0.0 0.0 1.0 1.0
 
-#pragma parameter TNTC       "      LUT Colors: NONE | TRINIT 1 | TRINIT 2 | TORRIDG | CUSTOM" 0.0 0.0 4.0 1.0
+#pragma parameter TNTC        "     LUT Colors: NONE | TRIN 1 | TRIN 2 | TORRID | CUST -- TNTC" 0.0 0.0 4.0 1.0
 #define TNTC params.TNTC
 
-#pragma parameter LS "          LUT Size" 32.0 32.0 64.0 32.0
+#pragma parameter LS          "          LUT Size -- LS" 32.0 32.0 64.0 32.0
 #define LS params.LS
 
-#pragma parameter LUTLOW "          Fix LUT Dark - Range" 5.0 0.0 50.0 1.0
+#pragma parameter LUTLOW      "          Fix LUT Dark - Range -- LUTLOW" 5.0 0.0 50.0 1.0
 #define LUTLOW params.LUTLOW
 
-#pragma parameter LUTBR "          Fix LUT Brightness" 1.0 0.0 1.0 0.10
+#pragma parameter LUTBR       "          Fix LUT Brightness -- LUTBR" 1.0 0.0 1.0 0.10
 #define LUTBR params.LUTBR
 
-#pragma parameter CP           "   CRT Color Profile: -1:NONE|sRGB|BVM|P22|SMPTE-C|PHILIPS|TRIN" 0.0 -1.0 5.0 1.0 
-#pragma parameter CS "          Color Space: sRGB, DCI, Adobe, Rec.2020" 0.0 0.0 3.0 1.0 
+#pragma parameter CP          "Color Profile -1:NONE|sRGB|BVM|P22|SMPTE-C|PHILIP|TRIN -- CP" 0.0 -1.0 5.0 1.0 
+#pragma parameter CS          "          Color Space: sRGB, DCI, Adobe, Rec.2020 -- CS" 0.0 0.0 3.0 1.0 
 
 #define CP params.CP
 #define CS params.CS
  
-#pragma parameter WP "          Color Temperature %" 0.0 -100.0 100.0 5.0 
-#pragma parameter wp_saturation "          Saturation Adjustment" 1.0 0.0 2.0 0.05 
+#pragma parameter WP          "          Color Temperature % -- wp" 0.0 -100.0 100.0 5.0 
+#pragma parameter wp_saturation "          Saturation Adjustment -- wp_saturation" 1.0 0.0 2.0 0.05 
 
 
 // #pragma parameter vigstr "          Vignette Strength" 0.0 0.0 2.0 0.025

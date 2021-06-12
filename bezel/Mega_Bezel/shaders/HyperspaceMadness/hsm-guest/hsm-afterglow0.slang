@@ -29,11 +29,11 @@ layout(push_constant) uniform Push
 
 #pragma parameter GDV_GDV_ADV_TITLE 		"[ --- GUEST-DrVenom Advanced - 2021-05-24 --- ]:" 0.0 0.0 1.0 1.0
 
-#pragma parameter bogus_afterglow "[ AFTERGLOW SETTINGS ]:" 0.0 0.0 1.0 1.0
-#pragma parameter GDV_AFTERGLOW_THRESHOLD           "          Threshold ( Afterglow Appears Under Threshold )" 0.5 0.0 100 0.5
-#pragma parameter PR "          Persistence Red" 0.25 0.0 0.50 0.01
-#pragma parameter PG "          Persistence Green"  0.25 0.0 0.50 0.01
-#pragma parameter PB "          Persistence Blue"  0.25 0.0 0.50 0.01
+#pragma parameter bogus_afterglow         "[ AFTERGLOW ]:" 0.0 0.0 1.0 1.0
+#pragma parameter GDV_AFTERGLOW_THRESHOLD "          Threshold ( Afterglow Appears Under Threshold )" 0.5 0.0 100 0.5
+#pragma parameter PR                      "          Persistence Red -- PR" 0.25 0.0 0.50 0.01
+#pragma parameter PG                      "          Persistence Green -- PG"  0.25 0.0 0.50 0.01
+#pragma parameter PB                      "          Persistence Blue -- PB"  0.25 0.0 0.50 0.01
 
 #define GDV_AFTERGLOW_THRESHOLD params.GDV_AFTERGLOW_THRESHOLD / 100
 #define PR params.PR

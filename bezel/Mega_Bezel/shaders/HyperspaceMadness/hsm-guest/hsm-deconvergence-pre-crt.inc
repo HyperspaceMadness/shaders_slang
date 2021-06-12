@@ -41,32 +41,32 @@ layout(push_constant) uniform Push
 // #pragma parameter TATE "          TATE Mode" 0.0 0.0 1.0 1.0
 // #define TATE         params.TATE     // Screen orientation
 
-#pragma parameter bogus_deconvergence_pre_crt "[ PRE-CRT DECONVERGENCE ]: " 0.0 0.0 1.0 1.0
+#pragma parameter bogus_deconvergence_pre_crt 	"[ PRE-CRT DECONVERGENCE ]: " 0.0 0.0 1.0 1.0
 
-#pragma parameter GDV_PRECRT_DECONVERGENCE_ON "          Deconvergence ON" 0 0 1 1
+#pragma parameter GDV_PRECRT_DECONVERGENCE_ON 	"          Deconvergence ON" 0 0 1 1
 #define GDV_PRECRT_DECONVERGENCE_ON params.GDV_PRECRT_DECONVERGENCE_ON
 
-#pragma parameter precrt_dctypex "          Deconvergence type X : 0.0 - static, other - dynamic" 0.0 0.0 1.0 0.05
+#pragma parameter precrt_dctypex 				"          Type X : 0.0 - static, other - dynamic -- precrt_dctypex" 0.0 0.0 1.0 0.05
 
-#pragma parameter precrt_dctypey "          Deconvergence type Y : 0.0 - static, other - dynamic" 0.0 0.0 1.0 0.05
+#pragma parameter precrt_dctypey 				"          Type Y : 0.0 - static, other - dynamic -- precrt_dctypey" 0.0 0.0 1.0 0.05
 
-#pragma parameter precrt_deconrr "          Horizontal Deconvergence Red Range" -1.0 -7.0 7.0 0.25
+#pragma parameter precrt_deconrr 				"          Horizontal Red Range -- precrt_deconrr" -1.0 -7.0 7.0 0.25
 
-#pragma parameter precrt_deconrg "          Horizontal Deconvergence Green Range" 0.0 -7.0 7.0 0.25
+#pragma parameter precrt_deconrg 				"          Horizontal Green Range -- precrt_deconrg" 0.0 -7.0 7.0 0.25
 
-#pragma parameter precrt_deconrb "          Horizontal Deconvergence Blue Range" 1.0 -7.0 7.0 0.25
+#pragma parameter precrt_deconrb 				"          Horizontal Blue Range -- precrt_deconrb" 1.0 -7.0 7.0 0.25
 
-#pragma parameter precrt_deconrry "          Vertical Deconvergence Red Range" -1.0 -12.0 12.0 0.25
+#pragma parameter precrt_deconrry 				"          Vertical Red Range -- precrt_deconrry" -1.0 -12.0 12.0 0.25
 
-#pragma parameter precrt_deconrgy "          Vertical Deconvergence Green Range" 0.0 -12.0 12.0 0.25
+#pragma parameter precrt_deconrgy 				"          Vertical Green Range -- precrt_deconrgy" 0.0 -12.0 12.0 0.25
 
-#pragma parameter precrt_deconrby "          Vertical Deconvergence Blue Range" 1.0 -12.0 12.0 0.25
+#pragma parameter precrt_deconrby 				"          Vertical Blue Range -- precrt_deconrby" 1.0 -12.0 12.0 0.25
 
 // Default was 0.5
-#pragma parameter precrt_decons "          Deconvergence Strength (and Type)" 2 -4.0 4.0 0.10
+#pragma parameter precrt_decons 				"          Strength (and Type) -- precrt_decons" 2 -4.0 4.0 0.10
 #define precrt_decons        params.precrt_decons     // Horizontal deconvergence colors strength
 
-#pragma parameter precrt_deconsmooth "          Deconvergence Smoothing" 0.0 0.0 1.0 0.10
+#pragma parameter precrt_deconsmooth 			"          Smoothing -- precrt_decons" 0.0 0.0 1.0 0.10
 
 
 /*

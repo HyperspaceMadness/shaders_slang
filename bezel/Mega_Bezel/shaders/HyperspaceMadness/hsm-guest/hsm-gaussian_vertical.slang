@@ -32,10 +32,10 @@ layout(push_constant) uniform Push
 } params;
 
 
-#pragma parameter SIZEV "          Vertical Radius" 6.0 1.0 50.0 1.0 
+#pragma parameter SIZEV "          Vertical Radius (Num Samples) -- SIZEV" 6.0 1.0 50.0 1.0 
 #define SIZEV params.SIZEV
 
-#pragma parameter SIGMA_V "          Vertical Sigma" 1.20 0.20 15.0 0.10
+#pragma parameter SIGMA_V "          Vertical Sigma ( Spread ) -- SIGMA_V" 1.20 0.20 15.0 0.10
 #define SIGMA_V params.SIGMA_V
 
 layout(std140, set = 0, binding = 0) uniform UBO

@@ -1,23 +1,14 @@
 Mega Bezel is updated to V 0.9.016 2021-06-09
 
 Changes:
-  * GTU
-    * Changed GTU param names back to default & added separate ON/OFF as well as the Composite parameter
-  * Deconvergence
-    * Added Deconvergence On/Off (OFF by default) this allows you to AB test the difference
-    * Adjusted default Deconvergence settings so that when deconvergence is set to on you get some default deconvergence
-  * Cropping
-    * Added a Zoom Crop parameter to crop all sides at once to easily zoom in
-  * Dual Screen
-    * Added parameters to show/hide images per screen on dual screen presets
-  * Presets
-    * Adjusted Royale preset to turn on Grade
-    * Added BendBombBoom's latest soft aperture, dotty and RGB as a preset in teh experimental folder
-  * Bug Fixes
-    * Fixed black line around frame
-    * Fixed Cut-Out for Advanced Presets
-    * Static Reflection image application should be more consistent
-
+  * 3DS
+    * Added Dual-Screen-3DS__STD__DREZ-3DS-400x480.slangp to Variations
+      * This uses MBZ__2__STANDARD__DREZ-3DS-400x480__GUEST-DrVENOM.slangp in Base_CRT_Presets
+      * This preset allows you to run the standard mega bezel while running citra at which ever internal resolution desired
+      * So you can run it at 4x for example and it will downres to standard 3ds resolution with anti-aliasing you were getting from the 4X res
+  * Down res
+    * MBZ__2__STANDARD__DREZ-240p__GUEST-DrVENOM.slangp added for downrezing in the first pass to 240p
+      * Good for games like MVC2 on Dreamcast
 
 
 *  Performance of Base presets at 3840x2160 on Nvidia RTX2060:

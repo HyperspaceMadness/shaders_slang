@@ -1,0 +1,5 @@
+#reference "Orionsangel_Base/OrionsAngel-Console__BASIC-BORDER-WITH-REFLECT.slangp"
+
+ScreenPlacementImage = TMNTraphleo.png
+BackgroundImage = TMNTraphleo.png
+TopLayerImage = TMNTraphleo.png

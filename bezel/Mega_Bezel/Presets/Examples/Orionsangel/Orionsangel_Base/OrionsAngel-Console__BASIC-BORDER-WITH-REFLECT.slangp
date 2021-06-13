@@ -1,0 +1,23 @@
+#reference ":/shaders/shaders_slang/bezel/Mega_Bezel/Presets/Base_CRT_Presets/MBZ__3__BASIC-BORDER-WITH-REFLECT__GUEST-DrVENOM.slangp"
+
+ScreenPlacementImage = SuperMetroid.png
+BackgroundImage = SuperMetroid.png
+
+// Scale and Position image inside the transparent area
+USE_IMAGE_FOR_PLACEMENT = "1.000000"
+HSM_NON_INTEGER_SCALE_OFFSET = "87.799973"
+
+// Small horizontal offset because the images have the transparent area off center
+HSM_SCREEN_POSITION_X = "000000"
+
+HSM_TUBE_STATIC_REFLECTION_IMAGE_OPACITY = "1.200000"
+
+HSM_BZL_WIDTH = "618.000000"
+HSM_BZL_HEIGHT = "577.000000"
+
+HSM_REFLECT_CORNER_ROTATION_OFFSET_TOP = "5.000000"
+HSM_REFLECT_CORNER_ROTATION_OFFSET_BOTTOM = "8.000000"
+
+// Set Image aspect ratio to 16:9
+HSM_STANDARD_BG_SHOW_OVER_SCREEN = 1
+HSM_STANDARD_IMG_ASPECT_RATIO_MODE = "2.000000"

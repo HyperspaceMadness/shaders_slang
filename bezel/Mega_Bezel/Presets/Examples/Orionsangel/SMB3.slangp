@@ -1,0 +1,5 @@
+#reference "Orionsangel_Base/OrionsAngel-Console__BASIC-BORDER-WITH-REFLECT.slangp"
+
+ScreenPlacementImage = SMB3.png
+BackgroundImage = SMB3.png
+TopLayerImage = SMB3.png

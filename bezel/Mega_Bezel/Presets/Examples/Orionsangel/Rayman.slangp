@@ -1,0 +1,5 @@
+#reference "Orionsangel_Base/OrionsAngel-Console__BASIC-BORDER-WITH-REFLECT.slangp"
+
+ScreenPlacementImage = Rayman.png
+BackgroundImage = Rayman.png
+TopLayerImage = Rayman.png

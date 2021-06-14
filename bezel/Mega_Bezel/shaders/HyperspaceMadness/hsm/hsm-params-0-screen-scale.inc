@@ -174,8 +174,17 @@ float HSM_DOWNSAMPLE_BLUR_OPPOSITE_MULT = global.HSM_DOWNSAMPLE_BLUR_OPPOSITE_MU
 //---------------------------------------------------------------------------------------------------
 #pragma parameter HSM_FAKE_SCANLINE_TITLE							"[ FAKE SCANLINES ]" 0 0 0.01 0.01
 
-#pragma parameter HSM_FAKE_SCANLINE_OPACITY 						"          Fake Scanline Opacity - Def 70" 0 0 100 5
+#pragma parameter HSM_FAKE_SCANLINE_OPACITY 						"          Opacity - Def 70" 0 0 100 5
 #define HSM_FAKE_SCANLINE_OPACITY global.HSM_FAKE_SCANLINE_OPACITY / 100
+
+#pragma parameter HSM_FAKE_SCANLINE_RES 							"          Scan Resolution" 240 0 480 8
+#define HSM_FAKE_SCANLINE_RES global.HSM_FAKE_SCANLINE_RES
+
+#pragma parameter HSM_FAKE_SCANLINE_INT_SCALE 						"          Int Scale Scanlines" 1 0 1 1
+#define HSM_FAKE_SCANLINE_INT_SCALE global.HSM_FAKE_SCANLINE_INT_SCALE
+
+#pragma parameter HSM_FAKE_SCANLINE_ROLL 							"          Rolling Scanline" 0 -100 100 5
+#define HSM_FAKE_SCANLINE_ROLL global.HSM_FAKE_SCANLINE_ROLL / 100
 
 // #pragma parameter HSM_FAKE_SCANLINE_BRIGHTNESS_CUTOFF 	"[ SCREEN FX ]  Fake 240p Scanline Brightness Cutoff - Def 3" 3 0 10 0.05
 #ifndef HSM_FAKE_SCANLINE_BRIGHTNESS_CUTOFF
@@ -423,8 +432,8 @@ float HSM_TUBE_STATIC_REFLECTION_IMAGE_SCALE = global.HSM_TUBE_STATIC_REFLECTION
 #pragma parameter HSM_BZL_INNER_CORNER_RADIUS_SCALE	    			"          Inner Corner Radius Scale - Def 50" 50 0 8000 1
 float HSM_BZL_INNER_CORNER_RADIUS_SCALE = global.HSM_BZL_INNER_CORNER_RADIUS_SCALE / 100;
 
-#ifndef HSM_SCREENFX_SCANLINE_RES
-	#define HSM_SCREENFX_SCANLINE_RES 240
+#ifndef HSM_FAKE_SCANLINE_RES
+	#define HSM_FAKE_SCANLINE_RES 240
 #endif
 
 #ifndef HSM_DEFAULT_CRT_GAMMA

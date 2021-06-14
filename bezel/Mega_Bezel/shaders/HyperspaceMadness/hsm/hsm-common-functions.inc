@@ -256,6 +256,14 @@ bool HSM_GetIsInterlaceModeActive()
 
 vec2 HSM_GetCoreSamplingResMult()
 {
+	// TODO when using target resolution
+	// float epsilon = 0.25;
+	// float original_res = 1464;
+	// float target_res
+	// float multiple = 1464 / 224;
+	// float int_multiple = floor(multiple + epsilon);
+	// float int_div_res_near_target_res = original_res / int_multiple;
+
 	vec2 original_size = HSM_GetRotatedRawOriginalSize();
 	float use_vert_scanlines = HSM_GetUseVerticalScanlines(original_size.x/original_size.y);
 	vec2 sampling_mult = (1 - use_vert_scanlines) * vec2(HSM_CORE_RES_SAMPLING_MULT_SCANLINE_DIR, HSM_CORE_RES_SAMPLING_MULT_OPPOSITE_DIR) + 
@@ -1329,20 +1337,25 @@ float HSM_GetScreenVignetteFactor(vec2 coord, float amount)
 vec4 HSM_ApplyScanlineMask(vec4 in_color, vec2 in_coord, vec2 screen_scale)
 {
 	//   Stuff to try implementing
-	//   Parameter for simulated line count
     //   Option to try to match a integer division of the core resolution
-    //   Option for integer "perfect" scanlines
-    //   Offset on scan axis
     //   Curvature Multiplier
     //   Try mame hlsl darkening
     //   Check Lottes tone mapping
     //   Crawl
+
+    /* Scanlines */
+	float scanline_roll_offset = float(mod(global.FrameCount, 1280)) / 1280 * HSM_FAKE_SCANLINE_ROLL; 
+
+    // float scans = clamp( 0.35+0.18*sin(6.0*time-curved_uv.y*resolution.y*1.5), 0.0, 1.0);
+    // float s = pow(scans,0.9);
+    // col = col * vec3(s);
 
 	vec2 original_size = HSM_GetRotatedOriginalSize(SCREEN_INDEX);
 	float use_vert_scanlines = HSM_GetUseVerticalScanlines(original_size.x / original_size.y);
 	vec2 sampling_res = HSM_GetRotatedOriginalSizeWithCoreResMult(SCREEN_INDEX);
 	float scan_axis_res = use_vert_scanlines * sampling_res.x + (1 - use_vert_scanlines) * sampling_res.y;
 	float scan_axis_pos = use_vert_scanlines * in_coord.x + (1 - use_vert_scanlines) * in_coord.y;
+	scan_axis_pos += scanline_roll_offset;
 
 	if (HSM_FAKE_SCANLINE_OPACITY < 0.001 || scan_axis_res < HSM_INTERLACE_TRIGGER_RES )
 	{
@@ -1354,9 +1367,12 @@ vec4 HSM_ApplyScanlineMask(vec4 in_color, vec2 in_coord, vec2 screen_scale)
 	vec2 screen_size = global.OutputSize.xy * screen_scale;
 	float scan_axis_screen_scale_res = use_vert_scanlines * screen_size.x + (1 - use_vert_scanlines) * screen_size.y;
 	
-	float simulated_scanline_res = HSM_SCREENFX_SCANLINE_RES;
+	float simulated_scanline_res = HSM_FAKE_SCANLINE_RES;
 
-	float scanline_size = ceil(scan_axis_screen_scale_res / simulated_scanline_res);
+	float scanline_size = scan_axis_screen_scale_res / simulated_scanline_res;
+
+	if (HSM_FAKE_SCANLINE_INT_SCALE == 1)
+		scanline_size = ceil(scanline_size);
 
 	float scan = mod(scan_axis_pos * scan_axis_screen_scale_res, scanline_size) / scanline_size;
 
@@ -1475,14 +1491,21 @@ vec4 HSM_GetPostCrtPreppedColor(vec4 in_color_linear, vec2 VIEWPORT_COORD, vec2 
 
 	out_color *= vignette_factor;
 */
+	vec2 tube_curved_coord = HSM_GetTubeCurvedCoord(SCREEN_COORD, 1, SCREEN_SCALE, TUBE_SCALE, SCREEN_ASPECT, 1);
+	vec2 mirrored_tube_coord = HSM_GetMirrorWrappedCoord(tube_curved_coord);
+
 	if (HSM_FAKE_SCANLINE_OPACITY > 0)
 	{
 		vec4 scanline_masked_color = HSM_ApplyScanlineMask(out_color, SCREEN_COORD, SCREEN_SCALE);
-		out_color = scanline_masked_color;
-	}
+		
+		// Darken the outside image a bit
+		out_color = mix(out_color, out_color * 0.9, HSM_FAKE_SCANLINE_OPACITY);
 
-	vec2 tube_curved_coord = HSM_GetTubeCurvedCoord(SCREEN_COORD, 1, SCREEN_SCALE, TUBE_SCALE, SCREEN_ASPECT, 1);
-	vec2 mirrored_tube_coord = HSM_GetMirrorWrappedCoord(tube_curved_coord);
+		// Show scanlines only in the tube area
+		float tube_highlight_mask = HSM_GetCornerMask((tube_curved_coord - 0.5) * 0.995 + 0.5 , SCREEN_ASPECT, HSM_BZL_INNER_CORNER_RADIUS_SCALE * HSM_SCREEN_CORNER_RADIUS, 0.05);
+		out_color = mix(out_color, scanline_masked_color, tube_highlight_mask);
+
+	}
 
 	// Add a Colored Gel image on top of the screen, this is what colors games like space invaders or battlezone
 	if (HSM_TUBE_COLORED_GEL_IMAGE_MULTIPLY_AMOUNT > 0 || HSM_TUBE_COLORED_GEL_IMAGE_ADDITIVE_AMOUNT > 0 || HSM_TUBE_COLORED_GEL_IMAGE_NORMAL_AMOUNT > 0)

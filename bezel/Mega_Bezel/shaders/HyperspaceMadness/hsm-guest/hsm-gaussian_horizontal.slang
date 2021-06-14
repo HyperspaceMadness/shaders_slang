@@ -29,6 +29,7 @@ layout(push_constant) uniform Push
 	uint FrameCount;
 	float glow;
 	float GDV_GLOW_CRTMASK_AMOUNT;
+	float GDV_GLOW_SCANLINE_AMOUNT;
 	float SIZEH;
 	float SIGMA_H;
 } params;
@@ -38,7 +39,9 @@ layout(push_constant) uniform Push
 #pragma parameter glow "          Strength -- glow" 0.08 0.0 2.0 0.01
 #define glow         params.glow     // Glow Strength
 
-#pragma parameter GDV_GLOW_CRTMASK_AMOUNT "          Mask Amount -- GDV_GLOW_CRTMASK_AMOUNT" 0.0 0.0 1.0 0.05
+// #pragma parameter GDV_GLOW_SCANLINE_AMOUNT "          Scanlines Over Glow -- GDV_GLOW_SCANLINE_AMOUNT" 0 0 100 5
+
+#pragma parameter GDV_GLOW_CRTMASK_AMOUNT "          Mask Amount -- GDV_GLOW_CRTMASK_AMOUNT" 0 0 100 5
 
 #pragma parameter SIZEH "          Horizontal Radius (Num Samples) -- SIZEH" 6.0 1.0 50.0 1.0 
 #define SIZEH params.SIZEH

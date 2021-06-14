@@ -75,8 +75,11 @@ layout(push_constant) uniform Push
 #pragma parameter glow "          Strength -- glow" 0.08 0.0 2.0 0.01
 #define glow         params.glow     // Glow Strength
 
-#pragma parameter GDV_GLOW_CRTMASK_AMOUNT "          Mask Amount -- GDV_GLOW_CRTMASK_AMOUNT" 0.0 0.0 1.0 0.05
-#define GDV_GLOW_CRTMASK_AMOUNT         global.GDV_GLOW_CRTMASK_AMOUNT
+// #pragma parameter GDV_GLOW_SCANLINE_AMOUNT "          Scanlines Over Glow -- GDV_GLOW_SCANLINE_AMOUNT" 0 0 100 5
+// #define GDV_GLOW_SCANLINE_AMOUNT         global.GDV_GLOW_SCANLINE_AMOUNT/100
+
+#pragma parameter GDV_GLOW_CRTMASK_AMOUNT "          Mask Amount -- GDV_GLOW_CRTMASK_AMOUNT" 0 0 100 5
+#define GDV_GLOW_CRTMASK_AMOUNT         global.GDV_GLOW_CRTMASK_AMOUNT/100
 
 #pragma parameter bloom "          Bloom Strength -- bloom" 0.0 0.0 2.0 0.05
 #define bloom         params.bloom     // bloom effect

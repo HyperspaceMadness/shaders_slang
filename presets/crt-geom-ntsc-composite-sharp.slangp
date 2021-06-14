@@ -60,7 +60,7 @@ float_framebuffer5 = "false"
 srgb_framebuffer5 = "false"
 
 intensity = "0.0"
-quality = "0.0"
+quality = "1.0"
 SM_RANGE = "1.0"
 SM_PWR = "0.7"
 CONTR = "0.15"

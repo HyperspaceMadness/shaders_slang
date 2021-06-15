@@ -13,6 +13,20 @@ output_path = os.path.join(dir_path, 'Output')
 errors = []
 successes = []
 
+preset_keys = [ 'shader', 
+                'filter_linear', 
+                'frame_count_mod', 
+                'srgb_framebuffer', 
+                'float_framebuffer', 
+                'mipmap_input', 
+                'alias', 
+                'scale', 
+                'scale_x', 
+                'scale_y', 
+                'scale_type', 
+                'scale_type_x', 
+                'scale_type_y']
+
 # Go through all template files
 for template_path in [p for p in template_paths if os.path.splitext(p)[1] == '.protoslangp'] :
     # print('\n' + os.path.split(template_path)[1])
@@ -48,9 +62,10 @@ for template_path in [p for p in template_paths if os.path.splitext(p)[1] == '.p
                         for old_index, new_index in zipped_indexes:
                             for i in range(len(component_lines)):
                                 if i not in processed_line_indexes:
-                                    if str(old_index) + " =" in component_lines[i]:
-                                        processed_line_indexes.append(i)
-                                        component_lines[i] = component_lines[i].replace(str(old_index) + " =", str(new_index) + " =")
+                                    for key in preset_keys:
+                                        if key + str(old_index) + " =" in component_lines[i]:
+                                            processed_line_indexes.append(i)
+                                            component_lines[i] = component_lines[i].replace(str(old_index) + " =", str(new_index) + " =")
                         # Add all the component lines to the output preset
                         for line in component_lines:
                             out_preset_contents += line + '\n'

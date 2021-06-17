@@ -577,7 +577,7 @@ void main()
 	vec2 screen_curved_coord = HSM_GetCurvedCoord(SCREEN_COORD, 1, SCREEN_ASPECT);
 	vec2 pos = HSM_GetMirrorWrappedCoord(screen_curved_coord);
 
-	bool smarte  = (smart_ei > 0.0 && notate); // smart edge interpolation on / off
+	bool smarte  = (smart_ei > 0.0); // smart edge interpolation on / off
 
 	vec2 coffset = vec2(0.5, 0.5);
 	

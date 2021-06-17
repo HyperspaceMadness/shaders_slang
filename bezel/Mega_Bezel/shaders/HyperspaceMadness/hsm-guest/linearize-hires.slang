@@ -60,7 +60,6 @@ layout(std140, set = 0, binding = 0) uniform UBO
 #define iscan  params.iscan     // interlacing effect scanlining
 
 #pragma parameter intres "          Internal Resolution Y: 224p/240p, 1.5...y-dowsample" 0.0 0.0 6.0 0.5 // Joint parameter with main pass, values must match
-
 #define intres         params.intres     // interlace resolution
 
 #pragma parameter downsample_levelx "          Downsampling-X (High-res content, pre-scalers)" 0.0 0.0 2.0 0.25
@@ -68,9 +67,6 @@ layout(std140, set = 0, binding = 0) uniform UBO
 
 #pragma parameter downsample_levely "          Downsampling-Y (High-res content, pre-scalers)" 0.0 0.0 2.0 0.25
 #define downsample_levely         params.downsample_levely     // downsample level
-
-#pragma parameter prescalex "          Prescale-X Factor (for xBR...pre-shader)" 1.0 1.0 4.0 1.0  // Joint parameter with main pass, values must match
-#define prescalex        params.prescalex     // prescale-x factor
 
 #pragma parameter iscans "          Interlacing (Scanline) Saturation" 0.40 0.0 1.0 0.05
 #define iscans        params.iscans     // interlace saturation
@@ -133,7 +129,7 @@ void main()
 		c1 = fetch_pixel(vTexCoord);
 		c2 = fetch_pixel(vTexCoord + vec2(0.0, params.OriginalSize.w));	
 	}
-	
+
 	vec3  c  = c1;
 
 	float intera = 1.0;

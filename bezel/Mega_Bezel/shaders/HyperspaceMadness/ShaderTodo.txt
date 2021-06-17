@@ -24,6 +24,7 @@ Mega Bezel Still to Come:
 
 V1 TODO
 
+  * Fix interlacing for vertical
   * Fix frame inner edge color not picking up HSV, (Advanced Preset?)
   * Fix bright area of screen showing outside the black line when bezel is hidden
   * Add Humbar in Post CRT

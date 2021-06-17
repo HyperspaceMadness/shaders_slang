@@ -52,11 +52,11 @@ layout(push_constant) uniform Push
 
 #pragma parameter dctypey "          Deconvergence type Y : 0.0 - static, other - dynamic" 0.0 0.0 1.0 0.05
 
-#pragma parameter deconrr "          Horizontal Deconvergence Red Range" 0.0 -7.0 7.0 0.25
+#pragma parameter deconrr "          Horizontal Deconvergence Red Range" 0.0 -12.0 12.0 0.25
 
-#pragma parameter deconrg "          Horizontal Deconvergence Green Range" 0.0 -7.0 7.0 0.25
+#pragma parameter deconrg "          Horizontal Deconvergence Green Range" 0.0 -12.0 12.0 0.25
 
-#pragma parameter deconrb "          Horizontal Deconvergence Blue Range" 0.0 -7.0 7.0 0.25
+#pragma parameter deconrb "          Horizontal Deconvergence Blue Range" 0.0 -12.0 12.0 0.25
 
 #pragma parameter deconrry "          Vertical Deconvergence Red Range" 0.0 -12.0 12.0 0.25
 
@@ -75,11 +75,6 @@ layout(push_constant) uniform Push
 #pragma parameter noiseresd "          Noise Resolution" 2.0 0.0 10.0 1.0
 #define noiseresd       params.noiseresd   // add noise
 
-#pragma parameter shadowMask "          CRT Mask: 0:CGWG, 1-4:Lottes, 5-7:'Trinitron'" 0.0 -1.0 8.0 1.0
-#define shadowMask   params.shadowMask     // Mask Style
-
-#pragma parameter masksize "          CRT Mask Size (2.0 is nice in 4k)" 1.0 1.0 4.0 1.0
-#define masksize     params.masksize     // Mask Size
 
 layout(std140, set = 0, binding = 0) uniform UBO
 {
@@ -104,14 +99,6 @@ layout(set = 0, binding = 2) uniform sampler2D Source;
 
 #define COMPAT_TEXTURE(c,d) texture(c,d)
 
-
-const float masksizes[10] = float[10](2.0, 2.0, 3.0, 3.0, 3.0, 3.0, 2.0, 3.0, 2.0, 4.0);
-
-vec3 plant (vec3 tar, float r)
-{
-	float t = max(max(tar.r,tar.g),tar.b) + 0.00001;
-	return tar * r / t;
-}
 
 // noise function:
 // Dedicated to the public domain.
@@ -139,7 +126,7 @@ void main()
 	
 	if ((abs(params.deconrr) + abs(params.deconrg) + abs(params.deconrb) + abs(params.deconrry) + abs(params.deconrgy) + abs(params.deconrby)) > 0.20)
 	{	
-		float step = masksizes[int(shadowMask)+1]*masksize;
+		float step = 1.0;
 		float dstep = step;
 		step*= (TATE < 0.5) ? (params.OutputSize.z) : (params.OutputSize.w);
 		float stepy = (TATE < 0.5) ? (params.OutputSize.w) : (params.OutputSize.z);
@@ -155,20 +142,20 @@ void main()
 		float posx = 2.0*vTexCoord.x - 1.0;
 		float posy = 2.0*vTexCoord.y - 1.0;
 		
-		if (params.dctypex > 0.0)
+		if (params.dctypex > 0.025)
 		{
 			posx = sign(posx)*pow(abs(posx), 1.05-params.dctypex);
 			dx = posx * dx;
 		}
 
-		if (params.dctypey > 0.0)
+		if (params.dctypey > 0.025)
 		{
 
 			posy = sign(posy)*pow(abs(posy), 1.05-params.dctypey);
 			dy = posy * dy;
 		}
 
-		if (params.dctypex > 0.0 || params.dctypey > 0.0) ds *= sqrt(posx*posx*sign(params.dctypex) + posy*posy*sign(params.dctypey));
+		if (params.dctypex > 0.025 || params.dctypey > 0.025) ds *= sqrt(posx*posx*sign(params.dctypex) + posy*posy*sign(params.dctypey));
 
 		vec2 rc = params.deconrr * dx + params.deconrry*dy;
 		vec2 gc = params.deconrg * dx + params.deconrgy*dy;
@@ -197,13 +184,13 @@ void main()
 		
 		float mc = max(max(dcolor.r, dcolor.g), dcolor.b);
 		if (decons < 0.0) mc = 0.9;
-		
+	
 		result = clamp(mix(color, sqrt(mix(result*result, color*result, sqrt(mc))), abs(ds)), min(result,color), max(result, color));
 	}
 	
 	float rc = 0.6*sqrt(max(max(result.r, result.g), result.b))+0.4;
 	
-	result = mix(result, noise(vec3(floor(params.OutputSize.xy * vTexCoord / noiseresd), float(params.FrameCount))), 0.25*abs(addnoised) * rc);
+	if (abs(addnoised) > 0.01) result = mix(result, noise(vec3(floor(params.OutputSize.xy * vTexCoord / noiseresd), float(params.FrameCount))), 0.25*abs(addnoised) * rc);
 	
 	float corner = COMPAT_TEXTURE(Source, vTexCoord).a;	
 	

@@ -27,8 +27,8 @@
 layout(push_constant) uniform Push
 {
 	float TATE, IOS, OS, BLOOM, brightboost, brightboost1, gsl, scanline1, scanline2, beam_min, beam_max, beam_size,
-      h_sharp, s_sharp, csize, bsize, warpX, warpY, glow, shadowMask, masksize, vertmask,
-      slotmask, slotwidth, double_slot, mcut, maskDark, maskLight, maskstr, spike, inters;
+	h_sharp, s_sharp, csize, bsize, warpX, warpY, glow, shadowMask, masksize, vertmask,
+	slotmask, slotwidth, double_slot, mcut, maskDark, maskLight, maskstr, spike;
 } params;
 
 layout(std140, set = 0, binding = 0) uniform UBO
@@ -62,7 +62,7 @@ layout(std140, set = 0, binding = 0) uniform UBO
 
 #pragma parameter bogus_brightness "[ BRIGHTNESS SETTINGS ]:" 0.0 0.0 1.0 1.0
 
-#pragma parameter glow "          Glow Strength" 0.08 0.0 2.0 0.01
+#pragma parameter glow "          Glow Strength" 0.08 -2.0 2.0 0.01
 #define glow         params.glow     // Glow Strength
 
 #pragma parameter bloom "          Bloom Strength" 0.0 0.0 2.0 0.05
@@ -88,7 +88,7 @@ layout(std140, set = 0, binding = 0) uniform UBO
 #pragma parameter scanline1 "          Scanline Beam Shape Center" 6.0 0.0 20.0 0.5
 #define scanline1    params.scanline1      // scanline param, vertical sharpness
 
-#pragma parameter scanline2 "          Scanline Beam Shape Edges" 8.0 3.0 40.0 1.0 
+#pragma parameter scanline2 "          Scanline Beam Shape Edges" 8.0 0.0 40.0 1.0 
 #define scanline2    params.scanline2      // scanline param, vertical sharpness
 
 #pragma parameter beam_min "          Scanline Shape Dark Pixels" 1.30 0.25 3.5 0.05
@@ -116,7 +116,7 @@ layout(std140, set = 0, binding = 0) uniform UBO
 
 #pragma parameter bogus_filtering "[ FILTERING OPTIONS ]: " 0.0 0.0 1.0 1.0
 
-#pragma parameter h_sharp "          Horizontal sharpness" 5.20 0.20 15.0 0.20
+#pragma parameter h_sharp "          Horizontal sharpness" 5.20 0.20 15.0 0.10
 #define h_sharp      params.h_sharp     // pixel sharpness
 
 #pragma parameter s_sharp "          Substractive sharpness (1.0 recommended)" 0.50 0.0 1.5 0.10
@@ -153,11 +153,11 @@ layout(std140, set = 0, binding = 0) uniform UBO
 #pragma parameter bsize "          Border smoothness" 600.0 100.0 700.0 10.0
 #define bsize        params.bsize     // border smoothness
 
-#pragma parameter barspeed "          Humbar Speed" 50.0 5.0 200.0 1.0
+#pragma parameter barspeed "          Hum Bar Speed" 50.0 5.0 200.0 1.0
 
-#pragma parameter barintensity "          Humbar Intensity" 0.0 -1.0 1.0 0.01
+#pragma parameter barintensity "          Hum Bar Intensity" 0.0 -1.0 1.0 0.01
 
-#pragma parameter bardir "          Humbar Direction" 0.0 0.0 1.0 1.0
+#pragma parameter bardir "          Hum Bar Direction" 0.0 0.0 1.0 1.0
 
 #pragma parameter warpX "          CurvatureX (default 0.03)" 0.0 0.0 0.25 0.01
 #define warpX        params.warpX     // Curvature X
@@ -215,9 +215,6 @@ layout(std140, set = 0, binding = 0) uniform UBO
 #pragma parameter gamma_out "Gamma out" 2.4 1.0 5.0 0.05
 #define gamma_out    global.gamma_out     // output gamma
 
-#pragma parameter inters "          Interlacing Effect Smoothness" 0.0 0.0 0.5 0.05 // Joint parameter with linearize pass, values must match
-#define inters  params.inters     // interlacing effect smoothing
-
 #define COMPAT_TEXTURE(c,d) texture(c,d)
 #define TEX0 vTexCoord
 
@@ -269,7 +266,7 @@ float sw1(float x, float color, float scanline)
 
 float sw2(float x, float color, float scanline)
 {
-	float tmp = mix(2.5*beam_min, beam_max, color);
+	float tmp = mix((2.75-color)*beam_min, beam_max, color);
 	tmp = mix(beam_max, tmp, pow(x, color+0.3));
 	float ex = x*tmp;
 	return exp2(-scanline*ex*ex);
@@ -538,7 +535,7 @@ void main()
 	
 	vec2 pC4 = floor(OGL2Pos) * ps + 0.5*ps; 
 	
-	if (interb)  pC4.y = pos.y - inters * SourceSize.w;
+	if (interb)  pC4.y = pos.y;
 	
 	float zero = exp2(-h_sharp);
 	float sharp1 = s_sharp * zero;
@@ -564,10 +561,10 @@ void main()
 	float wnorm = max(wl1, wr1);
 
 	float twl3 = max(wl3 - sharp1, 0.0);
-	float twl2 = max(wl2 - sharp1, mix(-0.12, 0.0, 1.0-fp1*fp1)); float swl2 = max(twl2, 0.0);
+	float twl2 = max(wl2 - sharp1, mix(-0.12, 0.0, 1.0-fp1*fp1)); float scl2 = max(twl2, 0.0);
 	float twl1 = max(wl1 - sharp1, 0.0);
 	float twr1 = max(wr1 - sharp1, 0.0);
-	float twr2 = max(wr2 - sharp1, mix(-0.12, 0.0, 1.0-fpx*fpx)); float swr2 = max(twr2, 0.0);
+	float twr2 = max(wr2 - sharp1, mix(-0.12, 0.0, 1.0-fpx*fpx)); float scr2 = max(twr2, 0.0);
 	float twr3 = max(wr3 - sharp1, 0.0);
 	
 	bool sharp = (sharp1 > 0.0);
@@ -591,8 +588,6 @@ void main()
 		c1 = (h_sharp > 2.6) ? a : min(a,(t + a + b)/3.0); c1 = max(c1 - sth, 0.0);
 		c2 = (h_sharp > 2.6) ? b : min(b,(a + b + d)/3.0); c2 = max(c2 - sth, 0.0);
 	}
-
-	float wts = 1.0/(swl2 + rwl1 + rwr1 + swr2);
 	
 	vec3 l3, l2, l1, r1, r2, r3, sl2, sl1, sr1, sr2, color1, color2, colmin, colmax;
 
@@ -602,11 +597,6 @@ void main()
 	r1 = COMPAT_TEXTURE(LinearizePass, pC4 +offx).rgb;
 	r2 = COMPAT_TEXTURE(LinearizePass, pC4 +off2).rgb;
 	r3 = COMPAT_TEXTURE(LinearizePass, pC4 +offx+off2).rgb;
-	
-	sl2 = l2*l2*l2; sl2*=sl2;
-	sl1 = l1*l1*l1; sl1*=sl1;
-	sr1 = r1*r1*r1; sr1*=sr1;
-	sr2 = r2*r2*r2; sr2*=sr2;
 
 	colmin = min(min(l1,r1), min(l2,r2));
 	colmax = max(max(l1,r1), max(l2,r2));
@@ -616,30 +606,38 @@ void main()
 		float pc = min(1.0 + smart_ei*c1.y, ei_limit);
 		float pl = min(1.0 + smart_ei*max(c1.y,c1.x), ei_limit);
 		float pr = min(1.0 + smart_ei*max(c1.y,c1.z), ei_limit);
-		twl1 = pow(rwl1, pc); twr1 = pow(rwr1, pc);
-		twl2 = pow(rwl2, pl); twr2 = pow(rwr2, pr);
+		twl1 = pow(abs(rwl1), pc); twr1 = pow(abs(rwr1), pc);
+		twl2 = pow(abs(rwl2), pl); twr2 = pow(abs(rwr2), pr);
 		float wmax = max(twl1, twr1);
 		float sharp_ei = s_sharp*pow(zero, pc)/wmax;		
-		twl2 = max(twl2/wmax - sharp_ei, mix(-0.15, 0.0, 1.0-fp1*fp1));
+		twl2 = max(twl2/wmax - sharp_ei, mix(-0.12, 0.0, 1.0-fp1*fp1));
 		twl1 = max(twl1/wmax - sharp_ei, 0.0);
 		twr1 = max(twr1/wmax - sharp_ei, 0.0);
-		twr2 = max(twr2/wmax - sharp_ei, mix(-0.15, 0.0, 1.0-fpx*fpx));
+		twr2 = max(twr2/wmax - sharp_ei, mix(-0.12, 0.0, 1.0-fpx*fpx));
 	}
 	color1 = (l3*twl3 + l2*twl2 + l1*twl1 + r1*twr1 + r2*twr2 + r3*twr3)/(twl3+twl2+twl1+twr1+twr2+twr3);
 
 	if (sharp) color1 = clamp(color1, colmin, colmax);
-
+	float ts = 0.033;
 	
-	vec3 gtmp = vec3(1.0/6.0); 
-	vec3 scolor1 = color1;
+	float lm2 = max(max(l2.r,l2.g),l2.b);
+	float lm1 = max(max(l1.r,l1.g),l1.b);
+	float rm1 = max(max(r1.r,r1.g),r1.b);
+	float rm2 = max(max(r2.r,r2.g),r2.b);	
 	
-	scolor1 = (sl2*swl2 + sl1*rwl1 + sr1*rwr1 + sr2*swr2)*wts;
-	scolor1 = pow(scolor1, gtmp);	vec3 mcolor1 = scolor1;
-	scolor1 = min(mix(color1, scolor1, spike),1.0);
+	float swl2 = max(twl2, 0.0) * (lm2+ts);
+	float swl1 = twl1 * (lm1+ts);
+	float swr1 = twr1 * (rm1+ts);
+	float swr2 = max(twr2, 0.0) * (rm2+ts);
+	
+	vec3 scolor1 = vec3((lm2*swl2 + lm1*swl1 + rm1*swr1 + rm2*swr2)/(swl2+swl1+swr1+swr2));
+	vec3 mcolor1 = scolor1;
+	scolor1 = min(mix(color1, scolor1, spike), 1.0);
 
 	vec3 scolor2, mcolor2;
 	
-	if (interb) pC4.y = pos.y + inters * SourceSize.w; else
+	if (!interb)
+{	
 	pC4+=offy;
 	
 	l3 = COMPAT_TEXTURE(LinearizePass, pC4 -off2).rgb;
@@ -648,11 +646,6 @@ void main()
 	r1 = COMPAT_TEXTURE(LinearizePass, pC4 +offx).rgb;
 	r2 = COMPAT_TEXTURE(LinearizePass, pC4 +off2).rgb;
 	r3 = COMPAT_TEXTURE(LinearizePass, pC4 +offx+off2).rgb;
-	
-	sl2 = l2*l2*l2; sl2*=sl2;
-	sl1 = l1*l1*l1; sl1*=sl1;
-	sr1 = r1*r1*r1; sr1*=sr1;
-	sr2 = r2*r2*r2; sr2*=sr2;
 
 	colmin = min(min(l1,r1), min(l2,r2));
 	colmax = max(max(l1,r1), max(l2,r2));
@@ -662,31 +655,42 @@ void main()
 		float pc = min(1.0 + smart_ei*c2.y, ei_limit);
 		float pl = min(1.0 + smart_ei*max(c2.y,c2.x), ei_limit);
 		float pr = min(1.0 + smart_ei*max(c2.y,c2.z), ei_limit);
-		twl1 = pow(rwl1, pc); twr1 = pow(rwr1, pc);
-		twl2 = pow(rwl2, pl); twr2 = pow(rwr2, pr);
+		twl1 = pow(abs(rwl1), pc); twr1 = pow(abs(rwr1), pc);
+		twl2 = pow(abs(rwl2), pl); twr2 = pow(abs(rwr2), pr);
 		float wmax = max(twl1, twr1);
 		float sharp_ei = s_sharp*pow(zero, pc)/wmax;		
-		twl2 = max(twl2/wmax - sharp_ei, mix(-0.15, 0.0, 1.0-fp1*fp1));
+		twl2 = max(twl2/wmax - sharp_ei, mix(-0.12, 0.0, 1.0-fp1*fp1));
 		twl1 = max(twl1/wmax - sharp_ei, 0.0);
 		twr1 = max(twr1/wmax - sharp_ei, 0.0);
-		twr2 = max(twr2/wmax - sharp_ei, mix(-0.15, 0.0, 1.0-fpx*fpx));
+		twr2 = max(twr2/wmax - sharp_ei, mix(-0.12, 0.0, 1.0-fpx*fpx));
 	}	
 	color2 = (l3*twl3 + l2*twl2 + l1*twl1 + r1*twr1 + r2*twr2 + r3*twr3)/(twl3+twl2+twl1+twr1+twr2+twr3);
 	
 	if (sharp) color2 = clamp(color2, colmin, colmax);
+
+	lm2 = max(max(l2.r,l2.g),l2.b);
+	lm1 = max(max(l1.r,l1.g),l1.b);
+	rm1 = max(max(r1.r,r1.g),r1.b);
+	rm2 = max(max(r2.r,r2.g),r2.b);
 	
-	scolor2 = color2;
-	scolor2 = (sl2*swl2 + sl1*rwl1 + sr1*rwr1 + sr2*swr2)*wts;
-	scolor2 = pow(scolor2, gtmp);	mcolor2 = scolor2;
-	scolor2 = min(mix(color2, scolor2, spike),1.0);
+	swl2 = max(twl2, 0.0) * (lm2+ts);
+	swl1 = twl1 * (lm1+ts);
+	swr1 = twr1 * (rm1+ts);
+	swr2 = max(twr2, 0.0) * (rm2+ts);
 	
-	// calculating scanlines
+	scolor2 = vec3((lm2*swl2 + lm1*swl1 + rm1*swr1 + rm2*swr2)/(swl2+swl1+swr1+swr2));
+	mcolor2 = scolor2;
+	scolor2 = min(mix(color2, scolor2, spike), 1.0);
+	
+}
 
 	vec3 ctmp; vec3 mcolor; float w3; vec3 color;
 	vec3 one = vec3(1.0);
 
 if (!interb)
 {	
+	// calculating scanlines
+
 	float shape1 = mix(scanline1, scanline2, f);
 	float shape2 = mix(scanline1, scanline2, 1.0-f);	
 	
@@ -699,6 +703,7 @@ if (!interb)
 	
 	ctmp = color00/(wt1+wt2);
 	vec3 sctmp = scolor0/(wt1+wt2);
+	mcolor = clamp(mix(ctmp, mcolor, 1.5), 0.0, 1.0);
 	
 	float wf1, wf2;
 	
@@ -710,7 +715,7 @@ if (!interb)
 	
 	if (gsl <  0.5) { wf1 = sw0(f1,creff1,shape1); wf2 = sw0(f2,creff2,shape2);} else
 	if (gsl == 1.0) { wf1 = sw1(f1,creff1,shape1); wf2 = sw1(f2,creff2,shape2);} else
-	if (gsl == 2.0) { wf1 = sw2(f1,creff1,shape1); wf2 = sw2(f2,creff2,shape2);}
+	                { wf1 = sw2(f1,creff1,shape1); wf2 = sw2(f2,creff2,shape2);}
 	
 	if ((wf1 + wf2) > 1.0) { float wtmp = 1.0/(wf1+wf2); wf1*=wtmp; wf2*=wtmp; }
 
@@ -722,6 +727,7 @@ if (!interb)
 	// Scanline saturation application
 	
 	vec3 w1 = vec3(wf1); vec3 w2 = vec3(wf2);
+	w3 = wf1+wf2;	
 	
 	cref1 = color1 / (max(max(color1.r,color1.g),color1.b) + 0.00001);
 	cref2 = color2 / (max(max(color2.r,color2.g),color2.b) + 0.00001);	
@@ -735,8 +741,8 @@ if (!interb)
 	float v_high2 = 1.0 + 0.6*vm;	
 	float v_low  = 1.0 - vm;
 	
-	float ds1 = min(pow(2.0*f1 + 0.01, f2), 1.0);
-	float ds2 = min(pow(2.0*f2 + 0.01, f1), 1.0);
+	float ds1 = min(max(1.0-w3*w3, 2.0*f1), 1.0);
+	float ds2 = min(max(1.0-w3*w3, 2.0*f2), 1.0);
 	
 	if (vertmask < 0.0) 
 	{
@@ -752,12 +758,11 @@ if (!interb)
 	color = gc(color1)*w1*cd1 + gc(color2)*w2*cd2;
 	
 	color = min(color, 1.0);
-	w3 = wf1+wf2;
 }
 	
 	if (interb) 
 	{
-		color = gc(0.5*(color1+color2));
+		color = gc(color1);
 		mcolor = vec3(max(max(color.r,color.g), color.b));		
 	}
 
@@ -800,11 +805,14 @@ if (!interb)
 	color = min(color, mix(one, cmask, mclip));
 	if (!interb) color = declip(color, pow(w3,0.60));
 
-	Bloom = mix(0.5*(Bloom + Bloom*Bloom), Bloom*Bloom, colmx);	
-	color = color + (1.1-0.25*colmx)*(0.75+maxb)*Bloom*(0.75 + 0.70*pow(colmx,0.33333))*mix(1.0,w3,0.5*colmx)*mix(one,cmask,0.35 + 0.4*maxb)*halation;
+	if (halation > 0.025) {
+		Bloom = mix(0.5*(Bloom + Bloom*Bloom), Bloom*Bloom, colmx);	
+		color = color + (1.1-0.25*colmx)*(0.75+maxb)*Bloom*(0.75 + 0.70*pow(colmx,0.33333))*mix(1.0,w3,0.5*colmx)*mix(one,cmask,0.35 + 0.4*maxb)*halation; }
 
 	Glow = mix(Glow, 0.25*color, 0.7*colmx);
-	color = color + 0.5*glow*Glow;
+	if (glow >= 0.0) color = color + 0.5*Glow*glow; else { cmask*=cmask; cmask*=cmask; color = color + (-glow)*cmask*Glow; }
+
+	color = min(color, 1.0);
 	
 	color = pow(color, vec3(1.0/gamma_out));
 	

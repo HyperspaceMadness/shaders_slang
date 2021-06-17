@@ -35,6 +35,5 @@ gamma_out = "2.500000"
 GDV_DECONVERGENCE_ON = "1.000000"
 deconrr = "1.000000"
 deconrb = "-1.000000"
-
 deconrry = "0"
 deconrby = "0"

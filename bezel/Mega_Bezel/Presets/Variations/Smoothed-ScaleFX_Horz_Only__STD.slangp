@@ -4,8 +4,8 @@ BackgroundImage = ../../shaders/HyperspaceMadness/textures/HSM_Duimon_Super_Fami
 BackgroundVertImage = ../../shaders/HyperspaceMadness/textures/HSM_Duimon_Super_Famicom_3840x2160.png
 
 HSM_CORE_RES_SAMPLING_MULT_SCANLINE_DIR = "500"
-HSM_DOWNSAMPLE_BLUR = "100"
-HSM_DOWNSAMPLE_BLUR_OPPOSITE_MULT = "0"
+HSM_DOWNSAMPLE_BLUR_SCANLINE_DIR = "100"
+HSM_DOWNSAMPLE_BLUR_OPPOSITE_DIR = "0"
 
 HSM_INTERLACE_TRIGGER_RES = "800.000000"
 HSM_VIEWPORT_VIGNETTE_OPACITY = 0

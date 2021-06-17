@@ -29,14 +29,14 @@ layout(push_constant) uniform Push
 	vec4 OutputSize;
 	uint FrameCount;
 
-// // 	float GAMMA_INPUT;
-// // 	float inter;
-// // 	float interm;
-// // 	float inters;
-// // 	float iscan;
-// // 	float intres;
-// // 	float downsample_level;
-// // 	float prescalex;
+// 	float GAMMA_INPUT;
+// 	float inter;
+// 	float interm;
+// 	float inters;
+// 	float iscan;
+// 	float intres;
+// 	float downsample_level;
+// 	float prescalex;
 } params;
 
 
@@ -77,16 +77,18 @@ layout(std140, set = 0, binding = 0) uniform UBO
 
 // #define intres         params.intres     // interlace resolution
 
-// #pragma parameter downsample_level "          Downsampling (High-res content, pre-scalers)" 0.0 0.0 1.0 1.0
+// #pragma parameter downsample_levelx "          Downsampling-X (High-res content, pre-scalers)" 0.0 0.0 2.0 0.25
 */
-#define downsample_level         HSM_DOWNSAMPLE_BLUR     // downsample level
+#define downsample_level         HSM_DOWNSAMPLE_BLUR_SCANLINE_DIR     // downsample level
 
-/*
+#pragma parameter downsample_levely "          Downsampling-Y (High-res content, pre-scalers)" 0.0 0.0 2.0 0.25
+
+
 // #pragma parameter prescalex "          Prescale-X Factor (for xBR...pre-shader)" 1.0 1.0 4.0 1.0  // Joint parameter with main pass, values must match
 // #define prescalex        params.prescalex     // prescale-x factor
 
 // #pragma parameter GDV_INTERLACE_SCANLINE_SATURATION "          Interlacing (Scanline) Saturation" 0.40 0.0 1.0 0.05
-*/
+
 
 #define iscans        GDV_INTERLACE_SCANLINE_SATURATION     // interlace saturation
 
@@ -119,13 +121,13 @@ vec3 plant (vec3 tar, float r)
 
 vec3 fetch_pixel(vec2 coord)
 {
-	vec2 dx = vec2(global.SourceSize.z, 0.0) * HSM_DOWNSAMPLE_BLUR;
-	vec2 dy = vec2(0.0, global.SourceSize.w) * HSM_DOWNSAMPLE_BLUR * HSM_DOWNSAMPLE_BLUR_OPPOSITE_MULT;
+	vec2 dx = vec2(global.SourceSize.z, 0.0) * HSM_DOWNSAMPLE_BLUR_SCANLINE_DIR;
+	vec2 dy = vec2(0.0, global.SourceSize.w) * HSM_DOWNSAMPLE_BLUR_OPPOSITE_DIR;
 
 	if (USE_VERTICAL_SCANLINES > 0.5)
 	{
-		vec2 dx = vec2(global.SourceSize.z, 0.0) * HSM_DOWNSAMPLE_BLUR * HSM_DOWNSAMPLE_BLUR_OPPOSITE_MULT;
-		vec2 dy = vec2(0.0, global.SourceSize.w) * HSM_DOWNSAMPLE_BLUR;
+		dx = vec2(global.SourceSize.z, 0.0) * HSM_DOWNSAMPLE_BLUR_OPPOSITE_DIR;
+		dy = vec2(0.0, global.SourceSize.w) * HSM_DOWNSAMPLE_BLUR_SCANLINE_DIR;
 	}
 
 	vec2 d1 = dx + dy;
@@ -148,14 +150,41 @@ vec3 fetch_pixel(vec2 coord)
 
 void main()
 {
+	/* HSM Removed
+	vec3 c1 = COMPAT_TEXTURE(PrePass, vTexCoord).rgb;
+	vec3 c2 = COMPAT_TEXTURE(PrePass, vTexCoord + vec2(0.0, params.OriginalSize.w)).rgb;
+	*/
+
+	vec3  c1 = vec3(0);
+	vec3  c2 = vec3(0);
+	
 	// HSM Added
 	HSM_UpdateGlobalScreenValuesFromCache(InfoCachePass, vTexCoord);
 
-	vec3  c1 = COMPAT_TEXTURE(PrePass, vTexCoord).rgb;
-	vec3  c2 = COMPAT_TEXTURE(PrePass, vTexCoord + vec2(0.0, params.OriginalSize.w)).rgb;	
+	// HSM Added
+	float orig_scan_res = USE_VERTICAL_SCANLINES < 0.5 ? ROTATED_RAW_ORIGINAL_SIZE.y : ROTATED_RAW_ORIGINAL_SIZE.x;
+	float scaled_scan_res = orig_scan_res * HSM_CORE_RES_SAMPLING_MULT_OPPOSITE_DIR;
 
-	if (downsample_level > 0) c1 = fetch_pixel(vTexCoord);
+	float orig_scanline_res = USE_VERTICAL_SCANLINES < 0.5 ? ROTATED_RAW_ORIGINAL_SIZE.x : ROTATED_RAW_ORIGINAL_SIZE.y;
+	float scaled_scanline_res = orig_scanline_res * HSM_CORE_RES_SAMPLING_MULT_SCANLINE_DIR;
 
+	float tex_coord_scan_dir = USE_VERTICAL_SCANLINES < 0.5 ? vTexCoord.y : vTexCoord.x;
+
+	vec2 downsample_offset = vec2(0, 1 / orig_scan_res );
+
+	if (USE_VERTICAL_SCANLINES > 0.5)
+		downsample_offset = vec2(1 / orig_scan_res, 0 );
+
+	if ((HSM_DOWNSAMPLE_BLUR_SCANLINE_DIR + HSM_DOWNSAMPLE_BLUR_OPPOSITE_DIR) > 0.0)
+	{
+		c1 = fetch_pixel(vTexCoord);
+		c2 = fetch_pixel(vTexCoord + downsample_offset);	
+	}
+	else
+	{
+		c1 = COMPAT_TEXTURE(PrePass, vTexCoord).rgb;
+		c2 = COMPAT_TEXTURE(PrePass, vTexCoord + downsample_offset).rgb;
+	}
 	vec3  c  = c1;
 
 	float intera = 1.0;
@@ -170,32 +199,15 @@ void main()
 
 	float r = m1;
 
-	// HSM Removed
-	// float yres_div = 1.0; if (intres > 1.25) yres_div = intres;
-
-	// HSM Added
-	float orig_scan_res = params.OriginalSize.y;
-	float scaled_scan_res = orig_scan_res * HSM_CORE_RES_SAMPLING_MULT_OPPOSITE_DIR;
-	float tex_coord_scan_dir = vTexCoord.y;
-	vec2 downsample_offset = vec2(0.0, params.OriginalSize.w) * HSM_DOWNSAMPLE_BLUR;
-
-	if (USE_VERTICAL_SCANLINES > 0.5)
-		downsample_offset = vec2(0.0, params.OriginalSize.w) * HSM_DOWNSAMPLE_BLUR * HSM_DOWNSAMPLE_BLUR_OPPOSITE_MULT;
-
 	/* HSM Removed
+	 float yres_div = 1.0; if (intres > 1.25) yres_div = intres;
+
 	if (inter < params.OriginalSize.y/yres_div && interm > 0.5 && intres != 1.0 && intres != 0.5) 
 	*/
 
 	// HSM Added
-	if (HSM_INTERLACE_TRIGGER_RES < scaled_scan_res && interm > 0.5 && USE_VERTICAL_SCANLINES < 0.5) 
+	if (HSM_INTERLACE_TRIGGER_RES < scaled_scan_res && interm > 0.5) 
 	{
-		/* HSM Removed
-		if (downsample_level > 0.5) c2 = fetch_pixel(vTexCoord + vec2(0.0, params.OriginalSize.w));	
-		*/
-		// HSM Added
-		if (downsample_level > 0) 
-			c2 = fetch_pixel(vTexCoord + downsample_offset);	
-
 		intera = 0.5;
 
 		/* HSM Removed
@@ -221,6 +233,9 @@ void main()
 	}
 	c = pow(c, vec3(gamma_in));
 	
+	if (USE_VERTICAL_SCANLINES > 0.5)
+		intera = 1;
+
 	if (vTexCoord.x > 0.5) gamma_in = intera; else gamma_in = 1.0/gamma_in;
 	
 	FragColor = vec4(c, gamma_in);

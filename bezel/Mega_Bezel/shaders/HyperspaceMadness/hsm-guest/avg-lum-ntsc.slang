@@ -1,7 +1,7 @@
 #version 450
 
 /*
-   Average Luminance Shader
+   Average Luminance Shader, Smart Edge Interpolation Coefficients Calculation
    
    Copyright (C) 2018-2020 guest(r) - guest.r@gmail.com
 
@@ -27,6 +27,7 @@ layout(push_constant) uniform Push
 	uint FrameCount;
 	vec4 SourceSize;
 	float lsmooth;
+	float sth;
 } params;
 
 #pragma parameter lsmooth "Raster Bloom Effect Smoothing" 0.70 0.50 0.99 0.01
@@ -35,7 +36,6 @@ layout(push_constant) uniform Push
 
 #define COMPAT_TEXTURE(c,d) texture(c,d)
 #define SourceSize params.SourceSize
-#define InputSize SourceSize
 #define TEX0 vTexCoord
 
 layout(std140, set = 0, binding = 0) uniform UBO
@@ -60,13 +60,27 @@ layout(location = 0) out vec4 FragColor;
 layout(set = 0, binding = 2) uniform sampler2D Source; 
 layout(set = 0, binding = 3) uniform sampler2D AvgLumPassFeedback;
 
+// Reference: http://www.compuphase.com/cmetric.htm
+// Reference: ScaleFX, author Sp00kyFox
+
+float dist(vec3 A, vec3 B)
+{
+	float r = 0.5 * (A.r + B.r);
+	vec3 d = A - B;
+	vec3 c = vec3(2. + r, 4., 3. - r);
+
+	return sqrt(dot(c*d, d)) / 3.;
+} 
 
 void main()
 {
-	if (vTexCoord.x > 0.2 || vTexCoord.y > 0.2) discard;
-	
 	float m = max(log2(SourceSize.x), log2(SourceSize.y));
 	m = floor(max(m, 1.0));
+
+	vec2 dx = vec2(1.0/SourceSize.x, 0.0); 
+	vec2 dy = vec2(0.0, 1.0/SourceSize.y);
+	vec2 y2 = 2.0*dy;
+	vec2 x2 = 2.0*dx;
 	
 	float ltotal = 0.0;
 	
@@ -79,9 +93,18 @@ void main()
 	
 	ltotal = pow(0.577350269 * ltotal, 0.65);
 	
-	float lhistory = texture(AvgLumPassFeedback, vec2(0.1,0.1)).a;
+	float lhistory = texture(AvgLumPassFeedback, vec2(0.5,0.5)).a;
 
 	ltotal = mix(ltotal, lhistory, lsmooth);	
+
+	vec3 l1 = COMPAT_TEXTURE(Source, TEX0.xy           ).rgb;	   
+	vec3 r1 = COMPAT_TEXTURE(Source, TEX0.xy +dx       ).rgb;
+	vec3 l2 = COMPAT_TEXTURE(Source, TEX0.xy -dx       ).rgb;
+	vec3 r2 = COMPAT_TEXTURE(Source, TEX0.xy +x2       ).rgb;
+
+	float c1 = dist(l2,l1);
+	float c2 = dist(l1,r1);
+	float c3 = dist(r2,r1);
 	
-	FragColor = vec4(ltotal);
+	FragColor = vec4(c1,c2,c3,ltotal);
 }

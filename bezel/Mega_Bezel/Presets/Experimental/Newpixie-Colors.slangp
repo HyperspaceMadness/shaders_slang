@@ -1,12 +1,11 @@
 #reference ":/shaders/shaders_slang/bezel/Mega_Bezel/Presets/Base_CRT_Presets/MBZ__2__STANDARD__GUEST-DrVENOM.slangp"
-HSM_DOWNSAMPLE_BLUR = "100.000000"
+HSM_DOWNSAMPLE_BLUR_SCANLINE_DIR = "100.000000"
 g_cntrst = "0.500000"
 
 GDV_AFTERGLOW_THRESHOLD = "7.5"
 BP = "16"
 
-glow = "0.300000"
-GDV_GLOW_CRTMASK_AMOUNT = "1.000000"
+glow = "-0.300000"
 SIZEH = "7.000000"
 SIGMA_H = "2.300000"
 halation = "0.2"

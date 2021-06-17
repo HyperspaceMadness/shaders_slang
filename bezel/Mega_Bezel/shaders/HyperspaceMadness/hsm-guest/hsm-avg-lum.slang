@@ -27,7 +27,6 @@ layout(push_constant) uniform Push
 	uint FrameCount;
 	vec4 SourceSize;
 	float lsmooth;
-	float sth;
 } params;
 
 // #pragma parameter lsmooth "Raster Bloom Effect Smoothing" 0.70 0.50 0.99 0.01

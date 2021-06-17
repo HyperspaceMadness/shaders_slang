@@ -29,8 +29,6 @@ layout(push_constant) uniform Push
 	float decons;
 	float addnoised;
 	float noiseresd;
-	float shadowMask;
-	float masksize;
 	float deconrr;
 	float deconrg;
 	float deconrb;
@@ -54,11 +52,11 @@ layout(push_constant) uniform Push
 
 #pragma parameter dctypey  "          Type Y : 0.0 - static, other - dynamic -- dctypey" 0.0 0.0 1.0 0.05
 
-#pragma parameter deconrr  "          Horizontal Red Range -- deconrr" -1.0 -7.0 7.0 0.25
+#pragma parameter deconrr  "          Horizontal Red Range -- deconrr" -1.0 -12.0 12.0 0.25
 
-#pragma parameter deconrg  "          Horizontal Green Range -- deconrg" 0.0 -7.0 7.0 0.25
+#pragma parameter deconrg  "          Horizontal Green Range -- deconrg" 0.0 -12.0 12.0 0.25
 
-#pragma parameter deconrb  "          Horizontal Blue Range -- deconrb" 1.0 -7.0 7.0 0.25
+#pragma parameter deconrb  "          Horizontal Blue Range -- deconrb" 1.0 -12.0 12.0 0.25
 
 #pragma parameter deconrry "          Vertical Red Range -- deconrry" -1.0 -12.0 12.0 0.25
 
@@ -78,17 +76,10 @@ layout(push_constant) uniform Push
 #pragma parameter noiseresd 	"          Noise Size / Resolution -- noiseresd" 2.0 0.0 10.0 1.0
 #define noiseresd       params.noiseresd   // add noise
 
-#pragma parameter shadowMask 	"     CRT Mask: -1:None|0:CGWG|1-4:Lottes|5-7:Trin -- shadowMask" 0.0 -1.0 8.0 1.0
-#define shadowMask   params.shadowMask     // Mask Style
-
-#pragma parameter masksize 		"          CRT Mask Size - 0:Auto | 2K | 4k -- masksize" 0 0 4 1
-#define masksize     params.masksize     // Mask Size
-
 /*
 layout(std140, set = 0, binding = 0) uniform UBO
 {
 	mat4 MVP;
-	vec2 FinalViewportSize;
 } global;
 */
 
@@ -111,14 +102,6 @@ layout(set = 0, binding = 2) uniform sampler2D Source;
 
 #define COMPAT_TEXTURE(c,d) texture(c,d)
 
-
-const float masksizes[10] = float[10](2.0, 2.0, 3.0, 3.0, 3.0, 3.0, 2.0, 3.0, 2.0, 4.0);
-
-vec3 plant (vec3 tar, float r)
-{
-	float t = max(max(tar.r,tar.g),tar.b) + 0.00001;
-	return tar * r / t;
-}
 
 // noise function:
 // Dedicated to the public domain.
@@ -152,21 +135,9 @@ void main()
 	vec3 color = COMPAT_TEXTURE(Source, vTexCoord).rgb;
 	vec3 result = color;
 	
-	//GDV_DECONVERGENCE_IS_PRE_CRT
-
 	if ((abs(params.deconrr) + abs(params.deconrg) + abs(params.deconrb) + abs(params.deconrry) + abs(params.deconrgy) + abs(params.deconrby)) > 0.20)
 	{	
-		/* HSM Removed
-		float step = masksizes[int(shadowMask)+1]*masksize;
-		*/
-
-		// HSM ADDED
-		float final_mask_size = masksize;
-		// If using automatic Mask Size
-		if (masksize < 0.5)
-			final_mask_size = (global.FinalViewportSize.x + global.FinalViewportSize.y) / 3 > 1900 ? 2 : 1;
-		float step = masksizes[int(shadowMask)+1]*final_mask_size;
-
+		float step = 1.0;
 		float dstep = step;
 		step*= (TATE < 0.5) ? (params.OutputSize.z) : (params.OutputSize.w);
 		float stepy = (TATE < 0.5) ? (params.OutputSize.w) : (params.OutputSize.z);
@@ -182,20 +153,20 @@ void main()
 		float posx = 2.0*vTexCoord.x - 1.0;
 		float posy = 2.0*vTexCoord.y - 1.0;
 
-		if (params.dctypex > 0.0)
+		if (params.dctypex > 0.025)
 		{
 			posx = sign(posx)*pow(abs(posx), 1.05-params.dctypex);
 			dx = posx * dx;
 		}
 
-		if (params.dctypey > 0.0)
+		if (params.dctypey > 0.025)
 		{
 
 			posy = sign(posy)*pow(abs(posy), 1.05-params.dctypey);
 			dy = posy * dy;
 		}
 
-		if (params.dctypex > 0.0 || params.dctypey > 0.0) ds *= sqrt(posx*posx*sign(params.dctypex) + posy*posy*sign(params.dctypey));
+		if (params.dctypex > 0.025 || params.dctypey > 0.025) ds *= sqrt(posx*posx*sign(params.dctypex) + posy*posy*sign(params.dctypey));
 
 		vec2 rc = params.deconrr * dx + params.deconrry*dy;
 		vec2 gc = params.deconrg * dx + params.deconrgy*dy;
@@ -230,8 +201,8 @@ void main()
 	
 	float rc = 0.6*sqrt(max(max(result.r, result.g), result.b))+0.4;
 	
-	result = mix(result, noise(vec3(floor(params.OutputSize.xy * vTexCoord / noiseresd), float(params.FrameCount))), 0.25*abs(addnoised) * rc);
-
+	if (abs(addnoised) > 0.01) result = mix(result, noise(vec3(floor(params.OutputSize.xy * vTexCoord / noiseresd), float(params.FrameCount))), 0.25*abs(addnoised) * rc);
+	
 	/* HSM Removed
 	float corner = COMPAT_TEXTURE(Source, vTexCoord).a;	
 	

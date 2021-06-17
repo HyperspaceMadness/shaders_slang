@@ -254,7 +254,7 @@ float sw1(float x, float color, float scanline)
 
 float sw2(float x, float color, float scanline)
 {
-	float tmp = mix((2.75-color)*beam_min, beam_max, color);
+	float tmp = mix((2.5-0.5*color)*beam_min, beam_max, color);
 	tmp = mix(beam_max, tmp, pow(x, color+0.3));
 	float ex = x*tmp;
 	return exp2(-scanline*ex*ex);
@@ -690,8 +690,8 @@ if (!interb)
 	float v_high2 = 1.0 + 0.6*vm;	
 	float v_low  = 1.0 - vm;
 	
-	float ds1 = min(max(1.0-w3*w3, 2.0*f1), 1.0);
-	float ds2 = min(max(1.0-w3*w3, 2.0*f2), 1.0);
+	float ds1 = min(max(1.0-w3*w3, 2.5*f1), 1.0);
+	float ds2 = min(max(1.0-w3*w3, 2.5*f2), 1.0);
 	
 	if (vertmask < 0.0) 
 	{

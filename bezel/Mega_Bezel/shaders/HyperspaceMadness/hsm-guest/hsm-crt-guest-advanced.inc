@@ -296,16 +296,20 @@ float sw1(float x, float color, float scanline)
 
 float sw2(float x, float color, float scanline)
 {
-	float tmp = mix((2.75-color)*beam_min, beam_max, color);
+	float tmp = mix((2.5-0.5*color)*beam_min, beam_max, color);
 	tmp = mix(beam_max, tmp, pow(x, color+0.3));
 	float ex = x*tmp;
 	return exp2(-scanline*ex*ex);
-}  
+}   
 
 // Shadow mask (1-4 from PD CRT Lottes shader).
 
 vec3 Mask(vec2 pos, float mx)
 {
+	/* HSM Removed
+	pos = floor(pos/masksize);
+	*/
+
 	// HSM Added
 	float final_mask_size = masksize;
 	// If using automatic Mask Size
@@ -316,9 +320,6 @@ vec3 Mask(vec2 pos, float mx)
 	pos = floor(pos/final_mask_size);
 	// End HSM Added
 
-	/* HSM Removed
-	 pos = floor(pos/masksize);
-	*/
 	vec3 mask = vec3(maskDark, maskDark, maskDark);
 	vec3 one = vec3(1.0);
 	float dark_compensate  = mix(max( clamp( mix (mcut, maskstr, mx),0.0, 1.0) - 0.3, 0.0) + 1.0, 1.0, mx);
@@ -453,9 +454,8 @@ float SlotMask(vec2 pos, float m)
 	// End HSM Added
 
 	/* HSM Removed
-	 pos = floor(pos/slotms);
+	pos = floor(pos/slotms);
 	*/
-
 	float mlen = slotwidth*2.0;
 	float px = fract(pos.x/mlen);
 	float py = floor(fract(pos.y/(2.0*double_slot))*2.0*double_slot);
@@ -466,7 +466,7 @@ float SlotMask(vec2 pos, float m)
 	
 	return slot;
 }   
-
+ 
 /* HSM Removed
 vec2 Warp(vec2 pos)
 {
@@ -489,7 +489,7 @@ float humbar(float pos)
 		pos = fract(pos + mod(float(global.FrameCount),global.barspeed)/(global.barspeed-1.0));
 		pos = (global.barintensity <  0.0) ? pos : (1.0-pos);	
 		return (1.0-global.barintensity) + global.barintensity*pos;
-	}		
+	}	
 }
 
 // Borrowed from cgwg's crt-geom, under GPL
@@ -536,9 +536,9 @@ void main()
 
 	// HSM Added
 	vec2 SourceSize = CROPPED_ROTATED_ORIGINAL_SIZE_WITH_CORE_RES_MULT;
-
+	
 	float lum = COMPAT_TEXTURE(AvgLumPass, vec2(0.5,0.5)).a;
-
+	
 	float gamma_in = 1.0/COMPAT_TEXTURE(LinearizePass, vec2(0.25,0.25)).a;
 	float intera = COMPAT_TEXTURE(LinearizePass, vec2(0.75,0.25)).a;
 	bool interb  = (intera < 0.75);
@@ -553,7 +553,7 @@ void main()
 	if (notate) SourceSize*=vec4(1.0, 1.0/sy, 1.0, sy); else SourceSize*=vec4(1.0/sy, 1.0, sy, 1.0);
 
 	// Calculating texel coordinates
-	
+   
 	vec2 texcoord = TEX0.xy;
 	if (IOS > 0.0){
 		vec2 ofactor = OutputSize.xy/SourceSize.xy;
@@ -828,8 +828,8 @@ if (!interb)
 	float v_high2 = 1.0 + 0.6*vm;	
 	float v_low  = 1.0 - vm;
 	
-	float ds1 = min(max(1.0-w3*w3, 2.0*f1), 1.0);
-	float ds2 = min(max(1.0-w3*w3, 2.0*f2), 1.0);
+	float ds1 = min(max(1.0-w3*w3, 2.5*f1), 1.0);
+	float ds2 = min(max(1.0-w3*w3, 2.5*f2), 1.0);
 	
 	if (vertmask < 0.0) 
 	{

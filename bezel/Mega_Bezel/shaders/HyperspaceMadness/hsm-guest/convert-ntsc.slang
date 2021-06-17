@@ -38,12 +38,13 @@ vec3 plant (vec3 tar, float r)
 
 void main()
 {
-	vec3 col = texture(Source, vTexCoord).rgb;
+	vec2 dx = vec2(params.SourceSize.z * 0.5, 0.0);
+
+	vec3 col1 = texture(Source, vTexCoord -dx).rgb;
+	vec3 col2 = texture(Source, vTexCoord +dx).rgb;	
+	vec3 col = max(col1,col2);
 	vec3 orig = texture(PrePass0, vTexCoord).rgb;
-	vec3 res = plant(col, max(max(orig.r, orig.g), orig.b));
-	vec3 res1 = min(res, col);
+	vec3 res = normalize(col + 0.00001) * min(length(col), length(orig));
 	
-	res1 = clamp(mix(orig, sqrt(col*orig), 5.0), plant(0.5*(res1+res1*res1), max(max(res1.r, res1.g), res1.b)), min(max(col,orig),res));
-	
-	FragColor = vec4(res1, 1.0);
+	FragColor = vec4(res, 1.0);
 }

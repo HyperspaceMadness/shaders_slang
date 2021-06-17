@@ -37,7 +37,7 @@ layout(push_constant) uniform Push
 	float deconrby;	
 	float deconsmooth;
 	float dctypex;
-	float dctypey;
+	float dctypey; 
 } params;
 
 // #pragma parameter TATE "          TATE Mode" 0.0 0.0 1.0 1.0
@@ -131,7 +131,7 @@ void main()
 
 	HSM_UpdateGlobalScreenValuesFromCache(InfoCachePass, vTexCoord);
 	float TATE = USE_VERTICAL_SCANLINES;
-
+	
 	vec3 color = COMPAT_TEXTURE(Source, vTexCoord).rgb;
 	vec3 result = color;
 	
@@ -146,13 +146,13 @@ void main()
 		vec2 sx = mix(vec2(stepx, 0.0), vec2(0.0, stepx), TATE);
 		
 		float ds = decons;
-
+				
 		vec2 dx = (TATE < 0.5) ? vec2(step, 0.0) :  vec2(0.0, step);
 		vec2 dy = (TATE > 0.5) ? vec2(stepy, 0.0) :  vec2(0.0, stepy);		
-
+		
 		float posx = 2.0*vTexCoord.x - 1.0;
 		float posy = 2.0*vTexCoord.y - 1.0;
-
+		
 		if (params.dctypex > 0.025)
 		{
 			posx = sign(posx)*pow(abs(posx), 1.05-params.dctypex);
@@ -195,7 +195,7 @@ void main()
 		
 		float mc = max(max(dcolor.r, dcolor.g), dcolor.b);
 		if (decons < 0.0) mc = 0.9;
-		
+	
 		result = clamp(mix(color, sqrt(mix(result*result, color*result, sqrt(mc))), abs(ds)), min(result,color), max(result, color));
 	}
 	

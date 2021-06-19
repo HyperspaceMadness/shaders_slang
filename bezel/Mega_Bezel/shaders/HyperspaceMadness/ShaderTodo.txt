@@ -5,6 +5,7 @@ Changes:
   * Smart Edges now works in Tate Mode (although it needs more work to work with presets with the scalefx upscale in it)
   * Negative Glow adds glow with mask (This is something Guest added)
   * Fix interlacing for vertical, so Interlace Mode 4 now looks the same as when in horizontal
+  * Nesguy TVL presets in Experimental
 
 *  Performance of Base presets at 3840x2160 on Nvidia RTX2060:
   *  ADVANCED -                      78 FPS  -  No comparable old preset

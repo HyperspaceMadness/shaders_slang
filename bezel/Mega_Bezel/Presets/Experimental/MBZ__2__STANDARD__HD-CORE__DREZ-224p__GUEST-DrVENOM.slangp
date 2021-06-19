@@ -8,7 +8,7 @@ scale_x0 = 384
 scale_y0 = 224
 
 shader1 = ../../../../stock.slang
-alias1 = "ReduceCoreRezPass"
+alias1 = "DerezedPass"
 
 shader2 = ../../shaders/HyperspaceMadness/hsm/hsm-prep-info-cache-standard.slang
 filter_linear2 = true

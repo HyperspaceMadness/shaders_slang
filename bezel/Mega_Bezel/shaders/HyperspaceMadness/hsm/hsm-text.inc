@@ -306,7 +306,7 @@ float DrawResolutions(vec2 uv, vec2 viewport_size, vec2 screen_size, vec2 origin
     col += GetChar(ch_per, uv);
     col += GetChar(ch_0, uv);
     col += GetChar(ch_1, uv);
-    col += GetChar(ch_7, uv);
+    col += GetChar(ch_8, uv);
     col += GetChar(ch_spc, uv);
     col += GetChar(ch_2, uv);
     col += GetChar(ch_0, uv);
@@ -317,7 +317,7 @@ float DrawResolutions(vec2 uv, vec2 viewport_size, vec2 screen_size, vec2 origin
     col += GetChar(ch_6, uv);
     col += GetChar(ch_dsh, uv);
     col += GetChar(ch_1, uv);
-    col += GetChar(ch_2, uv);
+    col += GetChar(ch_9, uv);
 
     //Preset Type
     printPos = vec2(2, 2.0 + STRHEIGHT(12));

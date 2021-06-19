@@ -4,7 +4,7 @@ srgb_framebuffer0 = true
 scale_type0 = source
 scale_x0 = 1
 scale_y0 = 1
-alias0 = "ReduceCoreRezPass"
+alias0 = "DerezedPass"
 
 shader1 = ../../shaders/HyperspaceMadness/hsm/hsm-prep-info-cache-advanced.slang
 filter_linear1 = true

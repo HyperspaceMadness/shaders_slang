@@ -16,7 +16,7 @@ void main()
 #pragma stage fragment
 layout(location = 0) in vec2 VIEWPORT_COORD;
 layout(location = 0) out vec4 FragColor;
-layout(set = 0, binding = 2) uniform sampler2D ReduceCoreRezPass;
+layout(set = 0, binding = 2) uniform sampler2D DerezedPass;
 layout(set = 0, binding = 3) uniform sampler2D OriginalHistory1;
 layout(set = 0, binding = 4) uniform sampler2D OriginalHistory2;
 layout(set = 0, binding = 5) uniform sampler2D OriginalHistory3;
@@ -65,8 +65,8 @@ vec4 AddText(vec2 in_coord, vec4 in_color)
    vec2 screen_scale = SCREEN_SCALE;
    vec2 screen_size = HSM_GetScreenSize(screen_scale);
    vec2 int_scale_mult = HSM_GetIntegerScaleMult(screen_size, SCREEN_INDEX);
-   vec2 original_size = HSM_GetRotatedOriginalSize(SCREEN_INDEX);
-   vec2 cropped_original_size = HSM_GetCroppedRotatedOriginalSize(SCREEN_INDEX);
+   vec2 original_size = HSM_GetRotatedScreenDerezedSize(SCREEN_INDEX);
+   vec2 cropped_original_size = HSM_GetCroppedRotatedDerezedSize(SCREEN_INDEX);
    vec2 cropped_original_size_with_core_res_mult = CROPPED_ROTATED_ORIGINAL_SIZE_WITH_CORE_RES_MULT;
    
    vec4 out_color = in_color;
@@ -216,7 +216,7 @@ void main()
 	viewport_coord_adjusted.x = HSM_FLIP_CORE_HORIZONTAL * (1 - viewport_coord_adjusted.x) + (1 - HSM_FLIP_CORE_HORIZONTAL) * viewport_coord_adjusted.x;
 	viewport_coord_adjusted.y = abs(HSM_FLIP_VIEWPORT_VERTICAL - HSM_FLIP_CORE_VERTICAL) * (1 - viewport_coord_adjusted.y) + (1 - abs(HSM_FLIP_VIEWPORT_VERTICAL - HSM_FLIP_CORE_VERTICAL)) * viewport_coord_adjusted.y;
 
-   FragColor = texture(ReduceCoreRezPass, viewport_coord_adjusted);
+   FragColor = texture(DerezedPass, viewport_coord_adjusted);
 
    if (HSM_ANTI_FLICKER_ON == 1)
       FragColor = AntiFlicker(viewport_coord_adjusted, FragColor);

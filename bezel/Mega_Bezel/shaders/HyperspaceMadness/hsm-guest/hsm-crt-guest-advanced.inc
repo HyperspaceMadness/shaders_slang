@@ -544,6 +544,9 @@ void main()
 	bool interb  = (intera < 0.75);
 	bool notate  = (TATE < 0.5);
 
+	if (USE_VERTICAL_SCANLINES > 0.5 && interb)
+		notate = true;
+
 	/* HSM Removed
 	float SourceY = mix(SourceSize.y, SourceSize.x, TATE);
 	float sy = 1.0;

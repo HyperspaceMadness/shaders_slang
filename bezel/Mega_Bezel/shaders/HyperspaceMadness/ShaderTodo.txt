@@ -1,10 +1,10 @@
-Mega Bezel is updated to V 0.9.017 2021-06-12
+Mega Bezel is updated to V 0.9.018 2021-06-19
 
 Changes:
   * Updated to latest Guest-DrVenom-Advanced
-  * Smart Edges now works in Tate Mode
+  * Smart Edges now works in Tate Mode (although it needs more work to work with presets with the scalefx upscale in it)
   * Negative Glow adds glow with mask (This is something Guest added)
-
+  * Fix interlacing for vertical, so Interlace Mode 4 now looks the same as when in horizontal
 
 *  Performance of Base presets at 3840x2160 on Nvidia RTX2060:
   *  ADVANCED -                      78 FPS  -  No comparable old preset
@@ -26,7 +26,7 @@ Mega Bezel Still to Come:
 
 V1 TODO
 
-  * Fix interlacing for vertical, should look the same as when in horizontal
+
   * When in interlacing mode for vertical opposite mult should do something
   * Fix frame inner edge color not picking up HSV, (Advanced Preset?)
   * Fix bright area of screen showing outside the black line when bezel is hidden

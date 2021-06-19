@@ -92,6 +92,7 @@ layout(std140, set = 0, binding = 0) uniform UBO
 
 #define iscans        GDV_INTERLACE_SCANLINE_SATURATION     // interlace saturation
 
+bool use_vert_scanlines_bool = false;
 #pragma stage vertex
 layout(location = 0) in vec4 Position;
 layout(location = 1) in vec2 TexCoord;
@@ -124,7 +125,7 @@ vec3 fetch_pixel(vec2 coord)
 	vec2 dx = vec2(global.SourceSize.z, 0.0) * HSM_DOWNSAMPLE_BLUR_SCANLINE_DIR;
 	vec2 dy = vec2(0.0, global.SourceSize.w) * HSM_DOWNSAMPLE_BLUR_OPPOSITE_DIR;
 
-	if (USE_VERTICAL_SCANLINES > 0.5)
+	if (use_vert_scanlines_bool)
 	{
 		dx = vec2(global.SourceSize.z, 0.0) * HSM_DOWNSAMPLE_BLUR_OPPOSITE_DIR;
 		dy = vec2(0.0, global.SourceSize.w) * HSM_DOWNSAMPLE_BLUR_SCANLINE_DIR;
@@ -161,19 +162,26 @@ void main()
 	// HSM Added
 	HSM_UpdateGlobalScreenValuesFromCache(InfoCachePass, vTexCoord);
 
+	use_vert_scanlines_bool = (USE_VERTICAL_SCANLINES > 0.5);
+
 	// HSM Added
-	float orig_scan_res = USE_VERTICAL_SCANLINES < 0.5 ? ROTATED_RAW_ORIGINAL_SIZE.y : ROTATED_RAW_ORIGINAL_SIZE.x;
-	float scaled_scan_res = orig_scan_res * HSM_CORE_RES_SAMPLING_MULT_OPPOSITE_DIR;
+	if (HSM_ROTATE_CORE_IMAGE > 0.5)
+	{
+		use_vert_scanlines_bool = !use_vert_scanlines_bool;
+	}
 
-	float orig_scanline_res = USE_VERTICAL_SCANLINES < 0.5 ? ROTATED_RAW_ORIGINAL_SIZE.x : ROTATED_RAW_ORIGINAL_SIZE.y;
-	float scaled_scanline_res = orig_scanline_res * HSM_CORE_RES_SAMPLING_MULT_SCANLINE_DIR;
+	float orig_opposite_dir_res = use_vert_scanlines_bool ? ROTATED_RAW_ORIGINAL_SIZE.x : ROTATED_RAW_ORIGINAL_SIZE.y;
+	float scaled_opposite_dir_res = orig_opposite_dir_res * HSM_CORE_RES_SAMPLING_MULT_OPPOSITE_DIR;
 
-	float tex_coord_scan_dir = USE_VERTICAL_SCANLINES < 0.5 ? vTexCoord.y : vTexCoord.x;
+	float orig_scanline_dir_res = use_vert_scanlines_bool ? ROTATED_RAW_ORIGINAL_SIZE.y : ROTATED_RAW_ORIGINAL_SIZE.x;
+	float scaled_scanline_dir_res = orig_scanline_dir_res * HSM_CORE_RES_SAMPLING_MULT_SCANLINE_DIR;
 
-	vec2 downsample_offset = vec2(0, 1 / orig_scan_res );
+	float tex_coord_scan_dir = use_vert_scanlines_bool ? vTexCoord.x : vTexCoord.y;
 
-	if (USE_VERTICAL_SCANLINES > 0.5)
-		downsample_offset = vec2(1 / orig_scan_res, 0 );
+	vec2 downsample_offset = vec2(0, 1 / orig_opposite_dir_res );
+
+	if (use_vert_scanlines_bool)
+		downsample_offset = vec2(1 / orig_opposite_dir_res, 0 );
 
 	if ((HSM_DOWNSAMPLE_BLUR_SCANLINE_DIR + HSM_DOWNSAMPLE_BLUR_OPPOSITE_DIR) > 0.0)
 	{
@@ -206,7 +214,7 @@ void main()
 	*/
 
 	// HSM Added
-	if (HSM_INTERLACE_TRIGGER_RES < scaled_scan_res && interm > 0.5) 
+	if (HSM_INTERLACE_TRIGGER_RES < scaled_opposite_dir_res && interm > 0.5) 
 	{
 		intera = 0.5;
 
@@ -215,7 +223,7 @@ void main()
 		*/
 
 		// HSM Added
-		float line_no  = clamp( floor( mod( orig_scan_res * tex_coord_scan_dir, 2.0 ) ), 0.0, 1.0 );
+		float line_no  = clamp( floor( mod( orig_opposite_dir_res * tex_coord_scan_dir, 2.0 ) ), 0.0, 1.0 );
 
 		float frame_no = clamp(floor(mod(float(params.FrameCount),2.0)), 0.0, 1.0);
 		float ii = abs(line_no-frame_no);
@@ -233,8 +241,8 @@ void main()
 	}
 	c = pow(c, vec3(gamma_in));
 	
-	if (USE_VERTICAL_SCANLINES > 0.5)
-		intera = 1;
+	// if (USE_VERTICAL_SCANLINES > 0.5)
+	// 	intera = 1;
 
 	if (vTexCoord.x > 0.5) gamma_in = intera; else gamma_in = 1.0/gamma_in;
 	

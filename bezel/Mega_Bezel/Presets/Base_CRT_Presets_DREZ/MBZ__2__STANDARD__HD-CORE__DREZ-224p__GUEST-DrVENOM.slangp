@@ -7,30 +7,30 @@ filter_linear1 = true
 mipmap_input1 = true
 srgb_framebuffer1 = true
 scale_type1 = absolute
-scale_x1 = 384
+scale_x1 = 320
 scale_y1 = 224
+alias1 = "DerezedPass"
 
-shader2 =  ../../shaders/HyperspaceMadness/hsm/hsm-guest-fast-sharpen.slang // ../../shaders/HyperspaceMadness/hsm-guest/g-sharp_resampler.slang
-filter_linear2 = false
-srgb_framebuffer2 = true
-alias2 = "DerezedPass"
+shader2 = ../../shaders/HyperspaceMadness/hsm/hsm-prep-info-cache-standard.slang
+filter_linear2 = true
+float_framebuffer2 = true
+scale_type2 = source
+scale2 = 1.0
+alias2 = "InfoCachePass"
 
-shader3 = ../../shaders/HyperspaceMadness/hsm/hsm-prep-info-cache-standard.slang
-filter_linear3 = true
+shader3 = ../../shaders/HyperspaceMadness/hsm/hsm-prep-intro-standard.slang
+filter_linear3 = false
 float_framebuffer3 = true
 scale_type3 = source
 scale3 = 1.0
-alias3 = "InfoCachePass"
-
-shader4 = ../../shaders/HyperspaceMadness/hsm/hsm-prep-intro-standard.slang
-filter_linear4 = false
-float_framebuffer4 = true
-scale_type4 = source
-scale4 = 1.0
-alias4 = "IntroPass"
+alias3 = "IntroPass"
 
 // Color Correction with Dogway's awesome Grade shader
-shader5 = ../../shaders/HyperspaceMadness/hsm-dogway/hsm-grade.slang
+shader4 = ../../shaders/HyperspaceMadness/hsm-dogway/hsm-grade.slang
+
+shader5 =  ../../shaders/HyperspaceMadness/hsm-guest/guest-extras/hsm-guest-fast-sharpen.slang // ../../shaders/HyperspaceMadness/hsm-guest/g-sharp_resampler.slang
+filter_linear5 = false
+srgb_framebuffer5 = true
 
 shader6 = ../../../../stock.slang
 alias6 = "PreCRTPass"

@@ -1,4 +1,5 @@
-#reference "Components/00__downrez__none.slangp"
+#reference "Components/00__mbz__add-params__advanced.slangp"
+#reference "Components/01__downrez__none.slangp"
 #reference "Components/10__mbz__info-cache-and-intro__advanced.slangp"
 #reference "Components/30__dedithering__0-mdapt.slangp"
 #reference "Components/30__dedithering__1-sgenpt-mix.slangp"

@@ -152,6 +152,16 @@ float HSM_DOWNSAMPLE_BLUR_OPPOSITE_DIR = global.HSM_DOWNSAMPLE_BLUR_OPPOSITE_DIR
 //    INTERLACING
 //---------------------------------------------------------------------------------------------------
 
+#pragma parameter SHARPEN_TITLE  	"[ SHARPENING ]:"       			0.00 0.0 2.00 0.05
+#pragma parameter SHARPEN  			"          Sharpen Strength"       	0.00 0.0 2.00 0.05
+#pragma parameter CONTR    			"          Amount of Sharpening"  	0.07 0.0 0.25 0.01
+#pragma parameter DETAILS  			"          Details Sharpened"     	1.00 0.0 1.00 0.05
+
+
+//---------------------------------------------------------------------------------------------------
+//    INTERLACING
+//---------------------------------------------------------------------------------------------------
+
 #pragma parameter HSM_INTERLACE_TITLE								"[ INTERLACING From Guest.r :) ]:" 0 0 0.01 0.01
 
 #pragma parameter HSM_INTERLACE_TRIGGER_RES 						"          Interlacing and Fake Scanlines Trigger Res" 600 100 2000 25

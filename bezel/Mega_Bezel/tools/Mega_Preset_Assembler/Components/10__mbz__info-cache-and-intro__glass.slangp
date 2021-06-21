@@ -1,18 +1,15 @@
-shaders = 3
+shaders = 2
 
-shader0 = :/shaders/shaders_slang/stock.slang
-alias0 = "DerezedPass"
+shader0 = :/shaders/shaders_slang/bezel/Mega_Bezel/shaders/HyperspaceMadness/hsm/hsm-prep-info-cache-glass.slang
+filter_linear0 = true
+float_framebuffer0 = true
+scale_type0 = source
+scale0 = 1.0
+alias0 = "InfoCachePass"
 
-shader1 = :/shaders/shaders_slang/bezel/Mega_Bezel/shaders/HyperspaceMadness/hsm/hsm-prep-info-cache-glass.slang
-filter_linear1 = true
+shader1 = :/shaders/shaders_slang/bezel/Mega_Bezel/shaders/HyperspaceMadness/hsm/hsm-prep-intro-glass.slang
+filter_linear1 = false
 float_framebuffer1 = true
 scale_type1 = source
 scale1 = 1.0
-alias1 = "InfoCachePass"
-
-shader2 = :/shaders/shaders_slang/bezel/Mega_Bezel/shaders/HyperspaceMadness/hsm/hsm-prep-intro-glass.slang
-filter_linear2 = false
-float_framebuffer2 = true
-scale_type2 = source
-scale2 = 1.0
-alias2 = "IntroPass"
+alias1 = "IntroPass"

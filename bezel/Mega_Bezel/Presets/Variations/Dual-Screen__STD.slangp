@@ -1,4 +1,4 @@
-#reference ":/shaders/shaders_slang/bezel/Mega_Bezel/Presets/Base_CRT_Presets/MBZ__2__STANDARD__GUEST-DrVENOM.slangp"
+#reference ":/shaders/shaders_slang/bezel/Mega_Bezel/Presets/Base_CRT_Presets/MBZ__2__STD__GDV.slangp"
 
 HSM_DUALSCREEN_MODE = 1
 HSM_ASPECT_RATIO_EXPLICIT = 1.333

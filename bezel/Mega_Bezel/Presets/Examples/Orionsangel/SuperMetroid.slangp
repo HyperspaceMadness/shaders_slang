@@ -1,4 +1,4 @@
-#reference "Orionsangel_Base/OrionsAngel-Console__BASIC-BORDER-WITH-REFLECT.slangp"
+#reference "Orionsangel_Base/OrionsAngel-Console__BASIC-REFLECT.slangp"
 
 ScreenPlacementImage = SuperMetroid.png
 BackgroundImage = SuperMetroid.png

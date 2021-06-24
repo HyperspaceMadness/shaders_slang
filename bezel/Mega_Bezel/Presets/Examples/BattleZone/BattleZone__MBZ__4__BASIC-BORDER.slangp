@@ -1,4 +1,4 @@
-#reference ":/shaders/shaders_slang/bezel/Mega_Bezel/Presets/MBZ__4__BASIC-BORDER.slangp"
+#reference ":/shaders/shaders_slang/bezel/Mega_Bezel/Presets/MBZ__4__BASIC.slangp"
 
 ColoredGelImage = "textures/ColoredGel_Red_Green.png"
 BackgroundImage = "textures/BattleZoneBG.png"

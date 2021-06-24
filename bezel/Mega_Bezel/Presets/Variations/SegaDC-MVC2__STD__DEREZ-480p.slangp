@@ -1,4 +1,4 @@
-#reference ":/shaders/shaders_slang/bezel/Mega_Bezel/Presets/Base_CRT_Presets/MBZ__2__STANDARD__DREZ-480p__GUEST-DrVENOM.slangp"
+#reference ":/shaders/shaders_slang/bezel/Mega_Bezel/Presets/Base_CRT_Presets_DREZ/MBZ__2__STD__DREZ-480p__GDV.slangp"
 
 HSM_CORE_RES_SAMPLING_MULT_OPPOSITE_DIR = "50.000000"
 HSM_DOWNSAMPLE_BLUR_OPPOSITE_DIR = "100.000000"

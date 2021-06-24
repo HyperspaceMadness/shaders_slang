@@ -39,43 +39,43 @@ shader10 = ../../shaders/HyperspaceMadness/hsm-sgenpt-mix/hsm-sgenpt-mix.slang
 
 shader11 = ../../shaders/HyperspaceMadness/hsm-ps1dither/hsm-PS1-Undither-BoxBlur.slang
 
+shader12 =  ../../shaders/HyperspaceMadness/hsm-guest/guest-extras/hsm-guest-fast-sharpen.slang // ../../shaders/HyperspaceMadness/hsm-guest/g-sharp_resampler.slang
+filter_linear12 = false
+srgb_framebuffer12 = true
+
 // Color Correction with Dogway's awesome Grade shader
-shader12 = ../../shaders/HyperspaceMadness/hsm-dogway/hsm-grade.slang
+shader13 = ../../shaders/HyperspaceMadness/hsm-dogway/hsm-grade.slang
 
-shader13 = ../../../../stock.slang
-alias13 = refpass
+shader14 = ../../../../stock.slang
+alias14 = refpass
 
-shader14 = ../../shaders/HyperspaceMadness/hsm-scalefx/hsm-scalefx-pass0.slang
-filter_linear14 = false
-scale_type14 = source
-scale14 = 1.0
-float_framebuffer14 = true
-alias14 = scalefx_pass0
-
-shader15 = ../../shaders/HyperspaceMadness/hsm-scalefx/hsm-scalefx-pass1.slang
+shader15 = ../../shaders/HyperspaceMadness/hsm-scalefx/hsm-scalefx-pass0.slang
 filter_linear15 = false
 scale_type15 = source
 scale15 = 1.0
-float_framebuffer12 = true
+float_framebuffer15 = true
+alias15 = scalefx_pass0
 
-shader16 = ../../shaders/HyperspaceMadness/hsm-scalefx/hsm-scalefx-pass2.slang
+shader16 = ../../shaders/HyperspaceMadness/hsm-scalefx/hsm-scalefx-pass1.slang
 filter_linear16 = false
 scale_type16 = source
 scale16 = 1.0
+float_framebuffer12 = true
 
-shader17 = ../../shaders/HyperspaceMadness/hsm-scalefx/hsm-scalefx-pass3.slang
+shader17 = ../../shaders/HyperspaceMadness/hsm-scalefx/hsm-scalefx-pass2.slang
 filter_linear17 = false
 scale_type17 = source
 scale17 = 1.0
 
-shader18 = ../../shaders/HyperspaceMadness/hsm-scalefx/hsm-scalefx-pass4.slang
+shader18 = ../../shaders/HyperspaceMadness/hsm-scalefx/hsm-scalefx-pass3.slang
 filter_linear18 = false
 scale_type18 = source
-scale18 = 3
+scale18 = 1.0
 
-shader19 =  ../../shaders/HyperspaceMadness/hsm-guest/guest-extras/hsm-guest-fast-sharpen.slang // ../../shaders/HyperspaceMadness/hsm-guest/g-sharp_resampler.slang
+shader19 = ../../shaders/HyperspaceMadness/hsm-scalefx/hsm-scalefx-pass4.slang
 filter_linear19 = false
-srgb_framebuffer19 = true
+scale_type19 = source
+scale19 = 3
 
 // GTU TV Processing
 shader20 = ../../shaders/HyperspaceMadness/hsm-gtu/hsm-gtu-pass1.slang

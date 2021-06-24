@@ -1,4 +1,4 @@
-#reference ":/shaders/shaders_slang/bezel/Mega_Bezel/Presets/Base_CRT_Presets/MBZ__1__ADVANCED__GUEST-DrVENOM.slangp"
+#reference ":/shaders/shaders_slang/bezel/Mega_Bezel/Presets/Base_CRT_Presets/MBZ__1__ADV__GDV.slangp"
 HSM_ASPECT_RATIO_MODE = "2.000000"
 HSM_BZL_NOISE = "10.000000"
 HSM_FRM_SHADOW_OPACITY = "100.000000"

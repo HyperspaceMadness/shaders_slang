@@ -1,4 +1,4 @@
-#reference ":/shaders/shaders_slang/bezel/Mega_Bezel/Presets/MBZ__3__BASIC-BORDER.slangp"
+#reference ":/shaders/shaders_slang/bezel/Mega_Bezel/Presets/MBZ__4__BASIC.slangp"
 
 BackgroundImage = textures/DOT_Flat.png
 TopLayerImage = textures/DOT_Bezel_Combined.png

@@ -1,4 +1,4 @@
-#reference "../../Presets/MBZ__2__STANDARD.slangp"
+#reference "../../Presets/MBZ__2__STD.slangp"
 
 BackgroundImage = ../../shaders/HyperspaceMadness/textures/HSM_Duimon_Super_Famicom_3840x2160.png
 

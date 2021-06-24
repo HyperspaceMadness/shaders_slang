@@ -6,6 +6,7 @@ shader1 =  ../../../../stock.slang // ../../shaders/HyperspaceMadness/hsm-guest/
 filter_linear1 = true
 mipmap_input1 = true
 srgb_framebuffer1 = true
+scale_type1 = source
 scale_x1 = 0.333
 scale_y1 = 0.333
 alias1 = "DerezedPass"

@@ -47,7 +47,14 @@ layout(push_constant) uniform Push
 
 #pragma parameter bogus_color "[ COLOR TWEAKS ]:" 0.0 0.0 1.0 1.0
 
-#pragma parameter TNTC "          LUT Number/Colors (1.0-4.0)" 0.0 0.0 4.0 1.0
+#pragma parameter CS "          Display Gamut: sRGB, Modern, DCI, Adobe, Rec.2020" 0.0 0.0 4.0 1.0 
+
+#pragma parameter CP "          CRT Profile: EBU | P22 | SMPTE-C | Philips | Trin." 0.0 -1.0 5.0 1.0 
+
+#define CP params.CP
+#define CS params.CS
+
+#pragma parameter TNTC "          LUT Colors: Trin. | invTrin. | Nec Mult. | NTSC" 0.0 0.0 4.0 1.0
 #define TNTC params.TNTC
 
 #pragma parameter LS "          LUT Size" 32.0 32.0 64.0 32.0
@@ -59,12 +66,6 @@ layout(push_constant) uniform Push
 #pragma parameter LUTBR "          Fix LUT Brightness" 1.0 0.0 1.0 0.10
 #define LUTBR params.LUTBR
 
-#pragma parameter CP "          CRT Color Profile" 0.0 -1.0 5.0 1.0 
-#pragma parameter CS "          Color Space: sRGB, DCI, Adobe, Rec.2020" 0.0 0.0 3.0 1.0 
-
-#define CP params.CP
-#define CS params.CS
- 
 #pragma parameter WP "          Color Temperature %" 0.0 -100.0 100.0 5.0 
 #pragma parameter wp_saturation "          Saturation Adjustment" 1.0 0.0 2.0 0.05 
 
@@ -159,11 +160,18 @@ mat3(
 -0.498611,  0.041555,  1.056972
 );
 
+const mat3 ToModern = 
+mat3(
+ 2.791723,	-0.894766,	0.041678,
+-1.173165,	 1.815586, -0.130886,
+-0.440973,	 0.032000,	1.002034
+);
+
 const mat3 ToDCI = 
 mat3(
- 2.725394,  -0.795168,   0.041242,
--1.018003,   1.689732,  -0.087639,
--0.440163,   0.022647,   1.100929
+ 2.493497,	-0.829489,	0.035846,
+-0.931384,	 1.762664, -0.076172,
+-0.402711,	 0.023625,	0.956885
 );
 
 const mat3 ToAdobe = 
@@ -272,10 +280,6 @@ void main()
          res = mix(color1, color2, f);
       }	
 
-      if (imgColor.r == 0.0) res.r = 0.0;
-      if (imgColor.g == 0.0) res.g = 0.0;
-      if (imgColor.b == 0.0) res.b = 0.0;
-
       res.rgb = fix_lut (res.rgb, imgColor.rgb);
 	  
       color = mix(imgColor.rgb, res.rgb, min(TNTC,1.0));
@@ -286,10 +290,11 @@ void main()
 	float p;
 	mat3 m_out;
 	
-	if (CS == 0.0) { p = 2.4; m_out =  ToSRGB; } else
-	if (CS == 1.0) { p = 2.6; m_out =  ToDCI;  } else
-	if (CS == 2.0) { p = 2.2; m_out =  ToAdobe;} else
-	if (CS == 3.0) { p = 2.4; m_out =  ToREC;  }
+	if (CS == 0.0) { p = 2.2; m_out =  ToSRGB;   } else
+	if (CS == 1.0) { p = 2.2; m_out =  ToModern; } else	
+	if (CS == 2.0) { p = 2.6; m_out =  ToDCI;    } else
+	if (CS == 3.0) { p = 2.2; m_out =  ToAdobe;  } else
+	if (CS == 4.0) { p = 2.4; m_out =  ToREC;    }
 	
 	color = pow(c, vec3(p));
 	

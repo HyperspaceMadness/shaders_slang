@@ -630,10 +630,10 @@ void main()
 	float swr1 = twr1 * (rm1+ts);
 	float swr2 = max(twr2, 0.0) * (rm2+ts);
 	
-	vec3 scolor1 = vec3((lm2*swl2 + lm1*swl1 + rm1*swr1 + rm2*swr2)/(swl2+swl1+swr1+swr2));
-	vec3 mcolor1 = scolor1;
-	scolor1 = min(mix(color1, scolor1, spike), 1.0);
-
+	float fscolor1 = (lm2*swl2 + lm1*swl1 + rm1*swr1 + rm2*swr2)/(swl2+swl1+swr1+swr2);
+	vec3 mcolor1 = vec3(fscolor1);	
+	vec3 scolor1 = vec3(clamp(mix(max(max(color1.r,color1.g),color1.b), fscolor1, spike), 0.0, max(lm1,rm1)));
+	
 	vec3 scolor2, mcolor2;
 	
 	if (!interb)
@@ -678,10 +678,9 @@ void main()
 	swr1 = twr1 * (rm1+ts);
 	swr2 = max(twr2, 0.0) * (rm2+ts);
 	
-	scolor2 = vec3((lm2*swl2 + lm1*swl1 + rm1*swr1 + rm2*swr2)/(swl2+swl1+swr1+swr2));
-	mcolor2 = scolor2;
-	scolor2 = min(mix(color2, scolor2, spike), 1.0);
-	
+	float fscolor2 = (lm2*swl2 + lm1*swl1 + rm1*swr1 + rm2*swr2)/(swl2+swl1+swr1+swr2);
+	mcolor2 = vec3(fscolor2);
+	scolor2 = vec3(clamp(mix(max(max(color2.r,color2.g),color2.b), fscolor2, spike), 0.0, max(lm1,rm1)));
 }
 
 	vec3 ctmp; vec3 mcolor; float w3; vec3 color;

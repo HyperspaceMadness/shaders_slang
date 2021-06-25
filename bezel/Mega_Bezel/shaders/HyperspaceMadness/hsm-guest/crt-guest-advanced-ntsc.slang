@@ -56,11 +56,14 @@ layout(std140, set = 0, binding = 0) uniform UBO
 	float c_shape;
 	float barspeed;
 	float barintensity;
-	float bardir;	
+	float bardir;
+	float blendMode;	
 } global;
 
 
 #pragma parameter bogus_brightness "[ BRIGHTNESS SETTINGS ]:" 0.0 0.0 1.0 1.0
+
+#pragma parameter blendMode "NTSC Blend Mode (use 2-3 for dithering)" 0.0 0.0 3.0 1.0
 
 #pragma parameter glow "          Glow Strength" 0.08 -2.0 2.0 0.01
 #define glow         params.glow     // Glow Strength
@@ -620,29 +623,37 @@ void main()
 	if (sharp) color1 = clamp(color1, colmin, colmax);
 	float ts = 0.033;
 
+	bool ntscbm = (global.blendMode == 0.0 || global.blendMode == 2.0);
+
+if (ntscbm)
+{
 	l2 = COMPAT_TEXTURE(PrePass0, pC4 -offx).rgb;
 	l1 = COMPAT_TEXTURE(PrePass0, pC4      ).rgb;
 	r1 = COMPAT_TEXTURE(PrePass0, pC4 +offx).rgb;
 	r2 = COMPAT_TEXTURE(PrePass0, pC4 +off2).rgb;
+}
 	
 	float lm2 = max(max(l2.r,l2.g),l2.b);
 	float lm1 = max(max(l1.r,l1.g),l1.b);
 	float rm1 = max(max(r1.r,r1.g),r1.b);
 	float rm2 = max(max(r2.r,r2.g),r2.b);	
-	
+
+if (ntscbm)
+{	
 	lm2 = pow(lm2, gamma_in);
 	lm1 = pow(lm1, gamma_in);
 	rm1 = pow(rm1, gamma_in);
 	rm2 = pow(rm2, gamma_in);
+}
 	
 	float swl2 = max(twl2, eps) * (lm2+ts);
 	float swl1 = twl1 * (lm1+ts);
 	float swr1 = twr1 * (rm1+ts);
 	float swr2 = max(twr2, eps) * (rm2+ts);
 	
-	vec3 scolor1 = vec3((lm2*swl2 + lm1*swl1 + rm1*swr1 + rm2*swr2)/(swl2+swl1+swr1+swr2));
-	vec3 mcolor1 = scolor1;
-	scolor1 = min(mix(color1, scolor1, spike), 1.0);
+	float fscolor1 = (lm2*swl2 + lm1*swl1 + rm1*swr1 + rm2*swr2)/(swl2+swl1+swr1+swr2);
+	vec3 mcolor1 = vec3(fscolor1);	
+	vec3 scolor1 = vec3(clamp(mix(max(max(color1.r,color1.g),color1.b), fscolor1, spike), 0.0, max(lm1,rm1)));
 
 	vec3 scolor2, mcolor2;
 	
@@ -678,30 +689,35 @@ void main()
 	
 	if (sharp) color2 = clamp(color2, colmin, colmax);
 
+if (ntscbm)
+{
 	l2 = COMPAT_TEXTURE(PrePass0, pC4 -offx).rgb;
 	l1 = COMPAT_TEXTURE(PrePass0, pC4      ).rgb;
 	r1 = COMPAT_TEXTURE(PrePass0, pC4 +offx).rgb;
 	r2 = COMPAT_TEXTURE(PrePass0, pC4 +off2).rgb;
+}
 
 	lm2 = max(max(l2.r,l2.g),l2.b);
 	lm1 = max(max(l1.r,l1.g),l1.b);
 	rm1 = max(max(r1.r,r1.g),r1.b);
 	rm2 = max(max(r2.r,r2.g),r2.b);
 
+if (ntscbm)
+{
 	lm2 = pow(lm2, gamma_in);
 	lm1 = pow(lm1, gamma_in);
 	rm1 = pow(rm1, gamma_in);
 	rm2 = pow(rm2, gamma_in);
+}
 	
 	swl2 = max(twl2, 0.0) * (lm2+ts);
 	swl1 = twl1 * (lm1+ts);
 	swr1 = twr1 * (rm1+ts);
 	swr2 = max(twr2, 0.0) * (rm2+ts);
 	
-	scolor2 = vec3((lm2*swl2 + lm1*swl1 + rm1*swr1 + rm2*swr2)/(swl2+swl1+swr1+swr2));
-	mcolor2 = scolor2;
-	scolor2 = min(mix(color2, scolor2, spike), 1.0);
-	
+	float fscolor2 = (lm2*swl2 + lm1*swl1 + rm1*swr1 + rm2*swr2)/(swl2+swl1+swr1+swr2);
+	mcolor2 = vec3(fscolor2);
+	scolor2 = vec3(clamp(mix(max(max(color2.r,color2.g),color2.b), fscolor2, spike), 0.0, max(lm1,rm1)));
 }
 
 	vec3 ctmp; vec3 mcolor; float w3; vec3 color;
